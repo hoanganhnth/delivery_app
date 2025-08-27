@@ -1,0 +1,10 @@
+{
+    "@@locale": "en",
+    "appTitle": "Delivery App",
+    "helloWorld": "Hello World",
+    "login": "Login",
+    "logout": "Logout",
+    "test": "test",
+    "test2": "test2",
+    "test3": "test3"
+}

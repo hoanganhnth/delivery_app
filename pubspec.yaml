@@ -1,0 +1,35 @@
+name: delivery_app
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ">=3.7.0 <4.0.0"
+
+dependencies:
+  dio: ^5.9.0
+  retrofit: ^4.7.2
+  logger: ^2.6.0  # for logging purpose
+  json_annotation: ^4.9.0
+  intl: ^0.20.2
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+dev_dependencies:
+  retrofit_generator: ^10.0.1
+  build_runner: ^2.6.0
+  intl_utils: ^2.8.1 # for localization
+  json_serializable: ^6.10.0
+
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+flutter_intl:
+  enabled: true
+  arb_dir: lib/l10n
+  output_dir: lib/generated
+flutter:
+  uses-material-design: true
+  # generate: true
