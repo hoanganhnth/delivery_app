@@ -1,33 +1,31 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../core/error/failures.dart';
 import '../../core/logger/app_logger.dart';
-import 'auth_injection.dart';
 import 'domain/entities/user_entity.dart';
 import 'domain/usecases/login_usecase.dart';
 import 'domain/usecases/register_usecase.dart';
 import 'domain/usecases/refresh_token_usecase.dart';
+import 'presentation/providers/auth_providers.dart';
 
 class AuthExample {
-  static Future<void> demonstrateAuthFlow() async {
-    // Initialize auth dependencies
-    AuthInjection.init();
-
-    AppLogger.i('=== Auth Module Demo with Either ===');
+  static Future<void> demonstrateAuthFlow(ProviderContainer container) async {
+    AppLogger.i('=== Auth Module Demo with Either and Riverpod ===');
 
     // Demo login
-    await _demoLogin();
+    await _demoLogin(container);
 
     // Demo register
-    await _demoRegister();
+    await _demoRegister(container);
 
     // Demo refresh token
-    await _demoRefreshToken();
+    await _demoRefreshToken(container);
   }
 
-  static Future<void> _demoLogin() async {
+  static Future<void> _demoLogin(ProviderContainer container) async {
     AppLogger.i('\n--- Login Demo ---');
-    
-    final loginUseCase = AuthInjection.loginUseCase;
+
+    final loginUseCase = container.read(loginUseCaseProvider);
     
     // Test with valid credentials
     final validParams = LoginParams(
@@ -61,10 +59,10 @@ class AuthExample {
     );
   }
 
-  static Future<void> _demoRegister() async {
+  static Future<void> _demoRegister(ProviderContainer container) async {
     AppLogger.i('\n--- Register Demo ---');
-    
-    final registerUseCase = AuthInjection.registerUseCase;
+
+    final registerUseCase = container.read(registerUseCaseProvider);
     
     // Test with valid data
     final validParams = RegisterParams(
@@ -101,10 +99,10 @@ class AuthExample {
     );
   }
 
-  static Future<void> _demoRefreshToken() async {
+  static Future<void> _demoRefreshToken(ProviderContainer container) async {
     AppLogger.i('\n--- Refresh Token Demo ---');
-    
-    final refreshTokenUseCase = AuthInjection.refreshTokenUseCase;
+
+    final refreshTokenUseCase = container.read(refreshTokenUseCaseProvider);
     
     // Test with valid refresh token
     final validParams = RefreshTokenParams(

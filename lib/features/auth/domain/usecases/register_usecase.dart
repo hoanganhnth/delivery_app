@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:delivery_app/core/utils/validators.dart';
 import '../../../../core/error/failures.dart';
 import '../entities/user_entity.dart';
 import '../repositories/auth_repository.dart';
@@ -9,11 +10,11 @@ class RegisterUseCase {
   RegisterUseCase(this.repository);
 
   Future<Either<Failure, UserEntity>> call(RegisterParams params) async {
-    if (!_isEmailValid(params.email)) {
+    if (!Validators.isEmailValid(params.email)) {
       return left(const ValidationFailure('Invalid email format'));
     }
 
-    if (!_isPasswordValid(params.password)) {
+    if (!Validators.isPasswordValid(params.password)) {
       return left(const ValidationFailure('Password must be at least 6 characters'));
     }
 
@@ -24,13 +25,7 @@ class RegisterUseCase {
     return await repository.register(params.email, params.password);
   }
 
-  bool _isEmailValid(String email) {
-    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
-  }
 
-  bool _isPasswordValid(String password) {
-    return password.length >= 6;
-  }
 }
 
 class RegisterParams {
