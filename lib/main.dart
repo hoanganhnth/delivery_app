@@ -1,12 +1,37 @@
+import 'dart:async';
+
 import 'package:delivery_app/core/app_setup.dart';
 import 'package:delivery_app/core/routing/app_router.dart';
+import 'package:delivery_app/firebase_options.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/generated/l10n.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
-  runApp(AppSetup.setupApp(child: const MainApp()));
+Future<void> main() async {
+  runZonedGuarded<Future<void>>(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+
+      // ✅ Khởi tạo Firebase
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+
+      // Bắt lỗi Flutter framework
+      FlutterError.onError = (FlutterErrorDetails details) {
+        FlutterError.presentError(details);
+        FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+      };
+
+      runApp(AppSetup.setupApp(child: const MainApp()));
+    },
+    (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    },
+  );
 }
 
 class MainApp extends ConsumerWidget {
@@ -32,10 +57,7 @@ class MainApp extends ConsumerWidget {
       supportedLocales: S.delegate.supportedLocales,
 
       // Theme configuration
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
 
       // Debug banner
       debugShowCheckedModeBanner: false,
