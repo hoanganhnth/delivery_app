@@ -1,18 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/services/share_service.dart';
 
 /// Restaurant Details Screen
-class RestaurantDetailsScreen extends StatelessWidget {
+class RestaurantDetailsScreen extends ConsumerWidget {
   final String restaurantId;
-  
+
   const RestaurantDetailsScreen({super.key, required this.restaurantId});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final shareService = ref.watch(shareServiceProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Restaurant Details'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () async {
+              try {
+                await shareService.shareRestaurant(restaurantId, 'Amazing Restaurant');
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Restaurant link copied to clipboard!')),
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to share: $e')),
+                  );
+                }
+              }
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.menu_book),
             onPressed: () => context.pushNamed(

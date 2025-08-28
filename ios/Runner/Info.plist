@@ -45,5 +45,35 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<!-- Deep Link URL Schemes -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<!-- Custom URL scheme -->
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>deliveryapp.deeplink</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>deliveryapp</string>
+			</array>
+		</dict>
+		<!-- HTTPS URL scheme for universal links -->
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>deliveryapp.universal</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>https</string>
+			</array>
+		</dict>
+	</array>
+
+	<!-- Associated Domains for Universal Links -->
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:deliveryapp.com</string>
+		<string>applinks:deliveryapp.dev</string>
+	</array>
 </dict>
 </plist>

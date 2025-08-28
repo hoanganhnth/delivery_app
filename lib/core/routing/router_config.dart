@@ -61,6 +61,7 @@ final devRouterConfigProvider = Provider<AppRouterConfig>((ref) {
     enableRedirects: true,
     enableDeepLinking: true,
     enableLogging: true,
+    baseUrl: 'https://deliveryapp.dev', // Development deep link base
   );
 });
 
@@ -72,6 +73,7 @@ final prodRouterConfigProvider = Provider<AppRouterConfig>((ref) {
     enableRedirects: true,
     enableDeepLinking: true,
     enableLogging: false,
+    baseUrl: 'https://deliveryapp.com', // Production deep link base
   );
 });
 

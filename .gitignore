@@ -61,3 +61,7 @@ android/app/build/
 # FVM
 .fvm/flutter_sdk
 .fvm/versions/
+
+**/GeneratedPluginRegistrant.*
+**/generated_plugin_registrant.*
+**/generated_plugins.cmake

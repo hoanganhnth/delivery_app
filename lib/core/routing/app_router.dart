@@ -16,15 +16,15 @@ import '../presentation/screens/admin_screen.dart';
 import 'app_routes.dart';
 import 'router_config.dart';
 import 'guard_manager.dart';
+import '../services/deep_link_service.dart';
 
 /// Router provider for the entire app
 final routerProvider = Provider<GoRouter>((ref) {
   final config = ref.watch(routerConfigProvider);
   final guardManager = GuardManager(ref);
 
-  // Guard functions using GuardManager
-
-  return GoRouter(
+  // Create router
+  final router = GoRouter(
     initialLocation: config.initialLocation,
     debugLogDiagnostics: config.debugLogDiagnostics,
     redirect: config.enableRedirects ? (context, state) {
@@ -224,6 +224,11 @@ final routerProvider = Provider<GoRouter>((ref) {
     // Error handling
     errorBuilder: (context, state) => ErrorScreen(error: state.error),
   );
+
+  // Initialize deep links with router
+  DeepLinkService.initialize(router);
+
+  return router;
 });
 
 /// Extension for easy navigation

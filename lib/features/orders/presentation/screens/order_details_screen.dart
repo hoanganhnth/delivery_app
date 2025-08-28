@@ -1,18 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/services/share_service.dart';
 
 /// Order Details Screen
-class OrderDetailsScreen extends StatelessWidget {
+class OrderDetailsScreen extends ConsumerWidget {
   final String orderId;
-  
+
   const OrderDetailsScreen({super.key, required this.orderId});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final shareService = ref.watch(shareServiceProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text('Order #$orderId'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () async {
+              try {
+                await shareService.shareOrder(orderId);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Order link copied to clipboard!')),
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to share: $e')),
+                  );
+                }
+              }
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.location_on),
             onPressed: () => context.pushNamed(

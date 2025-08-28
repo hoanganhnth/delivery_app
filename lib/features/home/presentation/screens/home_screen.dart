@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
 import '../../../../core/presentation/widgets/guard_demo_widget.dart';
+import '../../../../core/presentation/widgets/app_links_demo_widget.dart';
 
 /// Home Screen
 class HomeScreen extends ConsumerWidget {
@@ -91,6 +92,9 @@ class HomeScreen extends ConsumerWidget {
 
             // GuardManager Demo (for development/testing)
             const GuardDemoWidget(),
+
+            // App Links Demo (for development/testing)
+            const AppLinksDemoWidget(),
           ],
         ),
       ),
