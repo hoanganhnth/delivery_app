@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/logger/app_logger.dart';
+import '../../../../core/routing/navigation_helper.dart';
 import '../providers/auth_providers.dart';
 import '../providers/auth_state.dart';
 
@@ -161,7 +162,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 // Login link
                 TextButton(
                   onPressed: authState.isRegisterLoading ? null : () {
-                    Navigator.of(context).pop();
+                    context.goBack();
                   },
                   child: const Text('Already have an account? Login'),
                 ),

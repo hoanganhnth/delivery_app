@@ -12,11 +12,11 @@ final dioProvider = Provider<Dio>((ref) {
 
 /// Authenticated Dio provider that includes auth token handling
 /// This will be configured later when auth providers are available
-final authenticatedDioProvider = Provider<Dio>((ref) {
-  // This will be overridden by auth module when needed
-  // For now, return the basic dio instance
-  return ref.watch(dioProvider);
-});
+// final authenticatedDioProvider = Provider<Dio>((ref) {
+//   // This will be overridden by auth module when needed
+//   // For now, return the basic dio instance
+//   return ref.watch(dioProvider);
+// });
 
 /// Provider for base URL configuration
 final baseUrlProvider = Provider<String>((ref) {

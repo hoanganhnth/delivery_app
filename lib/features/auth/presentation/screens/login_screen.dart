@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/logger/app_logger.dart';
+import '../../../../core/routing/navigation_helper.dart';
 import '../providers/auth_providers.dart';
 import '../providers/auth_state.dart';
 
@@ -117,7 +118,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               // Register link
               TextButton(
                 onPressed: authState.isLoginLoading ? null : () {
-                  Navigator.of(context).pushNamed('/register');
+                  context.goToRegister();
                 },
                 child: const Text('Don\'t have an account? Register'),
               ),

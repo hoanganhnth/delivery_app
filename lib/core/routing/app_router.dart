@@ -1,0 +1,249 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../features/auth/presentation/screens/login_screen.dart';
+import '../../features/auth/presentation/screens/register_screen.dart';
+import '../../features/auth/presentation/screens/forgot_password_screen.dart';
+import '../../features/auth/presentation/providers/auth_providers.dart';
+import '../../features/home/home.dart';
+import '../../features/profile/profile.dart';
+import '../../features/settings/settings.dart';
+import '../../features/orders/orders.dart';
+import '../../features/restaurants/restaurants.dart';
+import '../../features/cart/cart.dart';
+import '../presentation/screens/splash_screen.dart';
+import '../presentation/screens/error_screens.dart';
+import '../presentation/screens/admin_screen.dart';
+import 'app_routes.dart';
+import 'router_config.dart';
+import 'guard_manager.dart';
+
+/// Router provider for the entire app
+final routerProvider = Provider<GoRouter>((ref) {
+  final config = ref.watch(routerConfigProvider);
+  final guardManager = GuardManager(ref);
+
+  // Guard functions using GuardManager
+
+  return GoRouter(
+    initialLocation: config.initialLocation,
+    debugLogDiagnostics: config.debugLogDiagnostics,
+    redirect: config.enableRedirects ? (context, state) {
+      final authState = ref.read(authStateProvider);
+      final isAuthenticated = authState.isAuthenticated;
+
+      // List of routes that don't require authentication
+      final publicRoutes = [
+        AppRoutes.login,
+        AppRoutes.register,
+        AppRoutes.forgotPassword,
+        AppRoutes.splash,
+        AppRoutes.root,
+      ];
+
+      final currentPath = state.uri.path;
+      final isPublicRoute = publicRoutes.contains(currentPath);
+
+      // If user is not authenticated and trying to access protected route
+      if (!isAuthenticated && !isPublicRoute) {
+        return AppRoutes.login;
+      }
+
+      // If user is authenticated and trying to access auth routes, redirect to home
+      if (isAuthenticated && (currentPath == AppRoutes.login || currentPath == AppRoutes.register)) {
+        return AppRoutes.home;
+      }
+
+      // No redirect needed
+      return null;
+    } : null,
+    routes: [
+      // Root route
+      GoRoute(
+        path: AppRoutes.root,
+        name: 'root',
+        redirect: (context, state) => AppRoutes.home,
+      ),
+
+      // Splash route
+      GoRoute(
+        path: AppRoutes.splash,
+        name: 'splash',
+        builder: (context, state) => const SplashScreen(),
+      ),
+      
+      // Auth routes (with guest guard - redirect if already authenticated)
+      GoRoute(
+        path: AppRoutes.login,
+        name: 'login',
+        redirect: guardManager.applyGuestGuard,
+        builder: (context, state) => const LoginScreen(),
+      ),
+
+      GoRoute(
+        path: AppRoutes.register,
+        name: 'register',
+        redirect: guardManager.applyGuestGuard,
+        builder: (context, state) => const RegisterScreen(),
+      ),
+
+      GoRoute(
+        path: AppRoutes.forgotPassword,
+        name: 'forgot-password',
+        redirect: guardManager.applyGuestGuard,
+        builder: (context, state) => const ForgotPasswordScreen(),
+      ),
+      
+      // Main app routes (with auth guard)
+      GoRoute(
+        path: AppRoutes.home,
+        name: 'home',
+        redirect: guardManager.applyAuthGuard,
+        builder: (context, state) => const HomeScreen(),
+        routes: [
+          // Nested routes under home (inherit auth guard)
+          GoRoute(
+            path: 'profile',
+            name: 'profile',
+            redirect: guardManager.applyAuthAndOnboarding,
+            builder: (context, state) => const ProfileScreen(),
+          ),
+          GoRoute(
+            path: 'settings',
+            name: 'settings',
+            redirect: guardManager.applyAuthGuard,
+            builder: (context, state) => const SettingsScreen(),
+          ),
+        ],
+      ),
+      
+      // Orders routes (with auth guard)
+      GoRoute(
+        path: AppRoutes.orders,
+        name: 'orders',
+        redirect: guardManager.applyAuthGuard,
+        builder: (context, state) => const OrdersScreen(),
+        routes: [
+          GoRoute(
+            path: ':orderId',
+            name: 'order-details',
+            redirect: guardManager.applyAuthGuard,
+            builder: (context, state) {
+              final orderId = state.pathParameters['orderId']!;
+              return OrderDetailsScreen(orderId: orderId);
+            },
+            routes: [
+              GoRoute(
+                path: 'track',
+                name: 'track-order',
+                redirect: guardManager.applyAuthGuard,
+                builder: (context, state) {
+                  final orderId = state.pathParameters['orderId']!;
+                  return TrackOrderScreen(orderId: orderId);
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+      
+      // Restaurants routes (with auth guard)
+      GoRoute(
+        path: AppRoutes.restaurants,
+        name: 'restaurants',
+        redirect: guardManager.applyAuthGuard,
+        builder: (context, state) => const RestaurantsScreen(),
+        routes: [
+          GoRoute(
+            path: ':restaurantId',
+            name: 'restaurant-details',
+            redirect: guardManager.applyAuthGuard,
+            builder: (context, state) {
+              final restaurantId = state.pathParameters['restaurantId']!;
+              return RestaurantDetailsScreen(restaurantId: restaurantId);
+            },
+            routes: [
+              GoRoute(
+                path: 'menu',
+                name: 'menu',
+                redirect: guardManager.applyAuthGuard,
+                builder: (context, state) {
+                  final restaurantId = state.pathParameters['restaurantId']!;
+                  return MenuScreen(restaurantId: restaurantId);
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+      
+      // Cart and checkout routes (with auth guard)
+      GoRoute(
+        path: AppRoutes.cart,
+        name: 'cart',
+        redirect: guardManager.applyAuthGuard,
+        builder: (context, state) => const CartScreen(),
+      ),
+
+      GoRoute(
+        path: AppRoutes.checkout,
+        name: 'checkout',
+        redirect: guardManager.applyAuthGuard,
+        builder: (context, state) => const CheckoutScreen(),
+      ),
+
+      GoRoute(
+        path: AppRoutes.payment,
+        name: 'payment',
+        redirect: guardManager.applyAuthGuard,
+        builder: (context, state) => const PaymentScreen(),
+      ),
+
+      GoRoute(
+        path: AppRoutes.orderConfirmation,
+        name: 'order-confirmation',
+        redirect: guardManager.applyAuthGuard,
+        builder: (context, state) => const OrderConfirmationScreen(),
+      ),
+
+      // Admin routes (with admin guard)
+      GoRoute(
+        path: AppRoutes.admin,
+        name: 'admin',
+        redirect: guardManager.applyAuthAndAdmin,
+        builder: (context, state) => const AdminScreen(),
+      ),
+
+      // Error routes
+      GoRoute(
+        path: AppRoutes.notFound,
+        name: 'not-found',
+        builder: (context, state) => const NotFoundScreen(),
+      ),
+    ],
+    
+    // Error handling
+    errorBuilder: (context, state) => ErrorScreen(error: state.error),
+  );
+});
+
+/// Extension for easy navigation
+extension GoRouterExtension on GoRouter {
+  void pushLogin() => pushNamed('login');
+  void pushRegister() => pushNamed('register');
+  void pushHome() => pushNamed('home');
+  void pushProfile() => pushNamed('profile');
+  void pushSettings() => pushNamed('settings');
+  void pushOrders() => pushNamed('orders');
+  void pushRestaurants() => pushNamed('restaurants');
+  void pushCart() => pushNamed('cart');
+  
+  void pushOrderDetails(String orderId) => pushNamed(
+    'order-details',
+    pathParameters: {'orderId': orderId},
+  );
+  
+  void pushRestaurantDetails(String restaurantId) => pushNamed(
+    'restaurant-details',
+    pathParameters: {'restaurantId': restaurantId},
+  );
+}
