@@ -18,13 +18,13 @@ class _AuthApiService implements AuthApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<AuthResponseDto> login(LoginRequestDto request) async {
+  Future<BaseResponseDto<AuthDataDto>> login(LoginRequestDto request) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(request.toJson());
-    final _options = _setStreamType<AuthResponseDto>(
+    final _options = _setStreamType<BaseResponseDto<AuthDataDto>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -35,9 +35,12 @@ class _AuthApiService implements AuthApiService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late AuthResponseDto _value;
+    late BaseResponseDto<AuthDataDto> _value;
     try {
-      _value = AuthResponseDto.fromJson(_result.data!);
+      _value = BaseResponseDto<AuthDataDto>.fromJson(
+        _result.data!,
+        (json) => AuthDataDto.fromJson(json as Map<String, dynamic>),
+      );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -46,13 +49,15 @@ class _AuthApiService implements AuthApiService {
   }
 
   @override
-  Future<AuthResponseDto> register(RegisterRequestDto request) async {
+  Future<BaseResponseDto<AuthDataDto>> register(
+    RegisterRequestDto request,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(request.toJson());
-    final _options = _setStreamType<AuthResponseDto>(
+    final _options = _setStreamType<BaseResponseDto<AuthDataDto>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -63,9 +68,12 @@ class _AuthApiService implements AuthApiService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late AuthResponseDto _value;
+    late BaseResponseDto<AuthDataDto> _value;
     try {
-      _value = AuthResponseDto.fromJson(_result.data!);
+      _value = BaseResponseDto<AuthDataDto>.fromJson(
+        _result.data!,
+        (json) => AuthDataDto.fromJson(json as Map<String, dynamic>),
+      );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -74,13 +82,15 @@ class _AuthApiService implements AuthApiService {
   }
 
   @override
-  Future<RefreshTokenResponseDto> refreshToken(Map<String, String> body) async {
+  Future<BaseResponseDto<RefreshTokenDataDto>> refreshToken(
+    Map<String, String> body,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body);
-    final _options = _setStreamType<RefreshTokenResponseDto>(
+    final _options = _setStreamType<BaseResponseDto<RefreshTokenDataDto>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -91,9 +101,12 @@ class _AuthApiService implements AuthApiService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late RefreshTokenResponseDto _value;
+    late BaseResponseDto<RefreshTokenDataDto> _value;
     try {
-      _value = RefreshTokenResponseDto.fromJson(_result.data!);
+      _value = BaseResponseDto<RefreshTokenDataDto>.fromJson(
+        _result.data!,
+        (json) => RefreshTokenDataDto.fromJson(json as Map<String, dynamic>),
+      );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

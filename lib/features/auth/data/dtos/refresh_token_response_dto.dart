@@ -1,18 +1,22 @@
 import 'package:json_annotation/json_annotation.dart';
+import '../../../../core/data/dtos/base_response_dto.dart';
 
 part 'refresh_token_response_dto.g.dart';
 
 @JsonSerializable()
-class RefreshTokenResponseDto {
+class RefreshTokenDataDto {
   @JsonKey(name: 'access_token')
   final String accessToken;
 
-  RefreshTokenResponseDto({
+  RefreshTokenDataDto({
     required this.accessToken,
   });
 
-  factory RefreshTokenResponseDto.fromJson(Map<String, dynamic> json) =>
-      _$RefreshTokenResponseDtoFromJson(json);
+  factory RefreshTokenDataDto.fromJson(Map<String, dynamic> json) =>
+      _$RefreshTokenDataDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$RefreshTokenResponseDtoToJson(this);
+  Map<String, dynamic> toJson() => _$RefreshTokenDataDtoToJson(this);
 }
+
+// Wrapper for the complete response
+typedef RefreshTokenResponseDto = BaseResponseDto<RefreshTokenDataDto>;

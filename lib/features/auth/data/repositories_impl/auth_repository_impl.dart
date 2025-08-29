@@ -26,7 +26,11 @@ class AuthRepositoryImpl implements AuthRepository {
         },
         (authResponse) {
           AppLogger.i('Repository: Login successful');
-          return right(authResponse.toEntity());
+          if (authResponse.isSuccess && authResponse.data != null) {
+            return right(authResponse.data!.toEntity());
+          } else {
+            return left(ServerFailure(authResponse.message));
+          }
         },
       );
     } catch (e) {
@@ -48,7 +52,11 @@ class AuthRepositoryImpl implements AuthRepository {
         },
         (authResponse) {
           AppLogger.i('Repository: Registration successful');
-          return right(authResponse.toEntity());
+          if (authResponse.isSuccess && authResponse.data != null) {
+            return right(authResponse.data!.toEntity());
+          } else {
+            return left(ServerFailure(authResponse.message));
+          }
         },
       );
     } catch (e) {
@@ -69,7 +77,11 @@ class AuthRepositoryImpl implements AuthRepository {
         },
         (refreshResponse) {
           AppLogger.i('Repository: Token refresh successful');
-          return right(refreshResponse.accessToken);
+          if (refreshResponse.isSuccess && refreshResponse.data != null) {
+            return right(refreshResponse.data!.accessToken);
+          } else {
+            return left(ServerFailure(refreshResponse.message));
+          }
         },
       );
     } catch (e) {

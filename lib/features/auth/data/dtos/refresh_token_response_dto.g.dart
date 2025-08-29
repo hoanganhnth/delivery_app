@@ -6,10 +6,9 @@ part of 'refresh_token_response_dto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-RefreshTokenResponseDto _$RefreshTokenResponseDtoFromJson(
-  Map<String, dynamic> json,
-) => RefreshTokenResponseDto(accessToken: json['access_token'] as String);
+RefreshTokenDataDto _$RefreshTokenDataDtoFromJson(Map<String, dynamic> json) =>
+    RefreshTokenDataDto(accessToken: json['access_token'] as String);
 
-Map<String, dynamic> _$RefreshTokenResponseDtoToJson(
-  RefreshTokenResponseDto instance,
+Map<String, dynamic> _$RefreshTokenDataDtoToJson(
+  RefreshTokenDataDto instance,
 ) => <String, dynamic>{'access_token': instance.accessToken};

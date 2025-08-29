@@ -1,10 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
+import '../../../../core/data/dtos/base_response_dto.dart';
 import '../../domain/entities/user_entity.dart';
 
 part 'auth_response_dto.g.dart';
 
 @JsonSerializable()
-class AuthResponseDto {
+class AuthDataDto {
   @JsonKey(name: 'access_token')
   final String accessToken;
 
@@ -13,16 +14,16 @@ class AuthResponseDto {
 
   final UserDto user;
 
-  AuthResponseDto({
+  AuthDataDto({
     required this.accessToken,
     required this.refreshToken,
     required this.user,
   });
 
-  factory AuthResponseDto.fromJson(Map<String, dynamic> json) =>
-      _$AuthResponseDtoFromJson(json);
+  factory AuthDataDto.fromJson(Map<String, dynamic> json) =>
+      _$AuthDataDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$AuthResponseDtoToJson(this);
+  Map<String, dynamic> toJson() => _$AuthDataDtoToJson(this);
 
   UserEntity toEntity() {
     return UserEntity(
@@ -35,6 +36,9 @@ class AuthResponseDto {
     );
   }
 }
+
+// Wrapper for the complete response
+typedef AuthResponseDto = BaseResponseDto<AuthDataDto>;
 
 @JsonSerializable()
 class UserDto {

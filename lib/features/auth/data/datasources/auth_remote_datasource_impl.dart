@@ -1,4 +1,5 @@
 import 'package:delivery_app/core/constants/api_constants.dart';
+import 'package:delivery_app/core/data/dtos/base_response_dto.dart';
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:retrofit/retrofit.dart';
@@ -17,13 +18,13 @@ abstract class AuthApiService {
   factory AuthApiService(Dio dio, {String baseUrl}) = _AuthApiService;
 
   @POST(ApiConstants.login)
-  Future<AuthResponseDto> login(@Body() LoginRequestDto request);
+  Future<BaseResponseDto<AuthDataDto>> login(@Body() LoginRequestDto request);
 
   @POST(ApiConstants.register)
-  Future<AuthResponseDto> register(@Body() RegisterRequestDto request);
+  Future<BaseResponseDto<AuthDataDto>> register(@Body() RegisterRequestDto request);
 
   @POST(ApiConstants.refreshToken)
-  Future<RefreshTokenResponseDto> refreshToken(@Body() Map<String, String> body);
+  Future<BaseResponseDto<RefreshTokenDataDto>> refreshToken(@Body() Map<String, String> body);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
