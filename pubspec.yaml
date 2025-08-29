@@ -21,6 +21,7 @@ dependencies:
   firebase_auth: ^6.0.1
   firebase_crashlytics: ^5.0.0
   mapbox_maps_flutter: ^2.10.0
+  toastification: ^3.0.3
   flutter:
     sdk: flutter
   flutter_localizations:
