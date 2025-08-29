@@ -1,6 +1,6 @@
+import 'package:delivery_app/core/presentation/widgets/toast/toast_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/error/failures.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../../../core/routing/navigation_helper.dart';
 import '../providers/auth_providers.dart';
@@ -32,18 +32,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     // Listen to auth state changes
     ref.listen<AuthState>(authStateProvider, (previous, next) {
       if (next.hasError) {
-        _showErrorSnackBar(context, next.failure!);
+        context.showErrorToast(next.failure!.message);
       } else if (next.isAuthenticated) {
-        _showSuccessSnackBar(context, 'Login successful!');
-        // Navigate to main screen
-        // Navigator.of(context).pushReplacementNamed('/main');
+        context.showSuccessToast('Login successful!');
       }
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
+      appBar: AppBar(title: const Text('Login')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -52,7 +48,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Email field
-              
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(
@@ -65,16 +60,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
                   }
-                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                  if (!RegExp(
+                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                  ).hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
                   return null;
                 },
                 enabled: !authState.isLoginLoading,
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Password field
               TextFormField(
                 controller: _passwordController,
@@ -95,9 +92,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 },
                 enabled: !authState.isLoginLoading,
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Login button
               SizedBox(
                 width: double.infinity,
@@ -113,17 +110,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       : const Text('Login'),
                 ),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Register link
               TextButton(
-                onPressed: authState.isLoginLoading ? null : () {
-                  context.goToRegister();
-                },
+                onPressed: authState.isLoginLoading
+                    ? null
+                    : () {
+                        context.goToRegister();
+                      },
                 child: const Text('Don\'t have an account? Register'),
               ),
-              
+
               // Debug info (remove in production)
               if (authState.hasUser) ...[
                 const SizedBox(height: 24),
@@ -137,11 +136,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Debug Info:', style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(
+                        'Debug Info:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       Text('Email: ${authState.user!.email}'),
                       Text('ID: ${authState.user!.id}'),
                       Text('Name: ${authState.user!.name ?? 'N/A'}'),
-                      Text('Token: ${authState.user!.accessToken.substring(0, 20)}...'),
+                      Text(
+                        'Token: ${authState.user!.accessToken.substring(0, 20)}...',
+                      ),
                     ],
                   ),
                 ),
@@ -159,54 +163,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
 
     final authNotifier = ref.read(authStateProvider.notifier);
-    
+
     AppLogger.d('LoginScreen: Attempting login');
-    
+
     await authNotifier.login(
       email: _emailController.text.trim(),
       password: _passwordController.text,
-    );
-  }
+      deviceId: '1234567890',
+      deviceName: 'Test Device',
+      deviceType: 'WEB',
+      ipAddress: '127.0.0.1',
 
-  void _showErrorSnackBar(BuildContext context, Failure failure) {
-    String message;
-    Color backgroundColor;
-    
-    if (failure is ValidationFailure) {
-      message = failure.message;
-      backgroundColor = Colors.orange;
-    } else if (failure is UnauthorizedFailure) {
-      message = 'Invalid email or password';
-      backgroundColor = Colors.red;
-    } else if (failure is ServerFailure) {
-      message = 'Server error. Please try again later.';
-      backgroundColor = Colors.red;
-    } else {
-      message = 'An unexpected error occurred';
-      backgroundColor = Colors.red;
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: backgroundColor,
-        action: SnackBarAction(
-          label: 'Dismiss',
-          textColor: Colors.white,
-          onPressed: () {
-            ref.read(authStateProvider.notifier).clearError();
-          },
-        ),
-      ),
-    );
-  }
-
-  void _showSuccessSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-      ),
     );
   }
 }

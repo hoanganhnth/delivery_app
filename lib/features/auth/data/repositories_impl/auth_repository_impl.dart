@@ -1,8 +1,9 @@
+import 'package:delivery_app/features/auth/domain/entities/auth_entity.dart';
+import 'package:delivery_app/features/auth/domain/usecases/login_usecase.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/error_mapper.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/logger/app_logger.dart';
-import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_datasource.dart';
 import '../dtos/login_request_dto.dart';
@@ -14,9 +15,16 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<Failure, UserEntity>> login(String email, String password) async {
+  Future<Either<Failure, AuthEntity>> login(LoginParams params) async {
     try {
-      final request = LoginRequestDto(email: email, password: password);
+      final request = LoginRequestDto(
+        email: params.email,
+        password: params.password,
+        deviceId: params.deviceId,
+        deviceName: params.deviceName,
+        deviceType: params.deviceType,
+        ipAddress: params.ipAddress,
+      );
       final result = await remoteDataSource.login(request);
 
       return result.fold(
@@ -40,7 +48,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, UserEntity>> register(String email, String password) async {
+  Future<Either<Failure, bool>> register(
+    String email,
+    String password,
+  ) async {
     try {
       final request = RegisterRequestDto(email: email, password: password);
       final result = await remoteDataSource.register(request);
@@ -53,7 +64,7 @@ class AuthRepositoryImpl implements AuthRepository {
         (authResponse) {
           AppLogger.i('Repository: Registration successful');
           if (authResponse.isSuccess && authResponse.data != null) {
-            return right(authResponse.data!.toEntity());
+            return right(true);
           } else {
             return left(ServerFailure(authResponse.message));
           }

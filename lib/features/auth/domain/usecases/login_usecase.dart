@@ -1,7 +1,7 @@
 import 'package:delivery_app/core/utils/validators.dart';
+import 'package:delivery_app/features/auth/domain/entities/auth_entity.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
-import '../entities/user_entity.dart';
 import '../repositories/auth_repository.dart';
 
 class LoginUseCase {
@@ -9,28 +9,36 @@ class LoginUseCase {
 
   LoginUseCase(this.repository);
 
-  Future<Either<Failure, UserEntity>> call(LoginParams params) async {
+  Future<Either<Failure, AuthEntity>> call(LoginParams params) async {
     if (!Validators.isEmailValid(params.email)) {
       return left(const ValidationFailure('Invalid email format'));
     }
 
     if (!Validators.isPasswordValid(params.password)) {
-      return left(const ValidationFailure('Password must be at least 6 characters'));
+      return left(
+        const ValidationFailure('Password must be at least 6 characters'),
+      );
     }
 
-    return await repository.login(params.email, params.password);
+    return await repository.login(params);
   }
-
- 
 }
 
 class LoginParams {
   final String email;
   final String password;
+  final String? deviceId;
+  final String? deviceName;
+  final String? deviceType;
+  final String? ipAddress;
 
   LoginParams({
     required this.email,
     required this.password,
+    this.deviceId,
+    this.deviceName,
+    this.deviceType,
+    this.ipAddress,
   });
 
   @override

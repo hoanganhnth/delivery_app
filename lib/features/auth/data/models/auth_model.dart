@@ -45,7 +45,7 @@ class AuthModel extends UserEntity {
 
   factory AuthModel.fromJson(Map<String, dynamic> json) {
     return AuthModel(
-      id: json['id'] as String,
+      id: json['id'] as int,
       email: json['email'] as String,
       accessToken: json['access_token'] as String,
       refreshToken: json['refresh_token'] as String,

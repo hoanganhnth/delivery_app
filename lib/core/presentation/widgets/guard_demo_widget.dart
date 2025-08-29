@@ -11,7 +11,7 @@ class GuardDemoWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final guardManager = ref.watch(guardManagerProvider);
     final userRole = guardManager.getUserRole();
-    
+
     return Card(
       margin: const EdgeInsets.all(16),
       child: Padding(
@@ -21,36 +21,46 @@ class GuardDemoWidget extends ConsumerWidget {
           children: [
             Text(
               'GuardManager Demo',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
+
             // User Role Display
             _buildRoleInfo(context, userRole),
-            
+
             const SizedBox(height: 16),
-            
+
             // Route Access Check
             Text(
               'Route Access:',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
-            
+
             _buildRouteAccess(context, guardManager, AppRoutes.home, 'Home'),
-            _buildRouteAccess(context, guardManager, AppRoutes.admin, 'Admin Panel'),
-            _buildRouteAccess(context, guardManager, AppRoutes.profile, 'Profile'),
+            _buildRouteAccess(
+              context,
+              guardManager,
+              AppRoutes.admin,
+              'Admin Panel',
+            ),
+            _buildRouteAccess(
+              context,
+              guardManager,
+              AppRoutes.profile,
+              'Profile',
+            ),
             _buildRouteAccess(context, guardManager, AppRoutes.login, 'Login'),
-            
+
             const SizedBox(height: 16),
-            
+
             // Onboarding Status
             _buildOnboardingStatus(context, guardManager),
-            
+
             const SizedBox(height: 16),
-            
+
             // Role-based UI
             _buildRoleBasedUI(context, userRole),
           ],
@@ -63,7 +73,7 @@ class GuardDemoWidget extends ConsumerWidget {
     Color roleColor;
     IconData roleIcon;
     String roleText;
-    
+
     switch (userRole) {
       case UserRole.guest:
         roleColor = Colors.grey;
@@ -86,12 +96,12 @@ class GuardDemoWidget extends ConsumerWidget {
         roleText = 'Admin User';
         break;
     }
-    
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: roleColor.withOpacity(0.1),
-        border: Border.all(color: roleColor.withOpacity(0.3)),
+        color: roleColor.withValues(alpha: 0.1),
+        border: Border.all(color: roleColor.withValues(alpha: 0.3)),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -100,10 +110,7 @@ class GuardDemoWidget extends ConsumerWidget {
           const SizedBox(width: 8),
           Text(
             'Current Role: $roleText',
-            style: TextStyle(
-              color: roleColor,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(color: roleColor, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -117,7 +124,7 @@ class GuardDemoWidget extends ConsumerWidget {
     String routeName,
   ) {
     final canAccess = guardManager.canAccessRoute(route);
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
@@ -141,15 +148,22 @@ class GuardDemoWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildOnboardingStatus(BuildContext context, GuardManager guardManager) {
+  Widget _buildOnboardingStatus(
+    BuildContext context,
+    GuardManager guardManager,
+  ) {
     final hasCompleted = guardManager.hasCompletedOnboarding();
-    
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: hasCompleted ? Colors.green.withOpacity(0.1) : Colors.orange.withOpacity(0.1),
+        color: hasCompleted
+            ? Colors.green.withValues(alpha: 0.1)
+            : Colors.orange.withValues(alpha: 0.1),
         border: Border.all(
-          color: hasCompleted ? Colors.green.withOpacity(0.3) : Colors.orange.withOpacity(0.3),
+          color: hasCompleted
+              ? Colors.green.withValues(alpha: 0.3)
+              : Colors.orange.withValues(alpha: 0.3),
         ),
         borderRadius: BorderRadius.circular(8),
       ),
@@ -181,31 +195,39 @@ class GuardDemoWidget extends ConsumerWidget {
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 8),
-        
+
         // Features available to all authenticated users
         if (userRole.isAuthenticated) ...[
           _buildFeatureItem(Icons.shopping_cart, 'Shopping Cart', Colors.blue),
           _buildFeatureItem(Icons.receipt, 'Order History', Colors.blue),
         ],
-        
+
         // Premium features
         if (userRole.canAccessPremium) ...[
           _buildFeatureItem(Icons.star, 'Premium Features', Colors.purple),
-          _buildFeatureItem(Icons.priority_high, 'Priority Support', Colors.purple),
+          _buildFeatureItem(
+            Icons.priority_high,
+            'Priority Support',
+            Colors.purple,
+          ),
         ],
-        
+
         // Admin features
         if (userRole.canAccessAdmin) ...[
-          _buildFeatureItem(Icons.admin_panel_settings, 'Admin Panel', Colors.red),
+          _buildFeatureItem(
+            Icons.admin_panel_settings,
+            'Admin Panel',
+            Colors.red,
+          ),
           _buildFeatureItem(Icons.analytics, 'Analytics Dashboard', Colors.red),
         ],
-        
+
         // Guest message
         if (userRole.isGuest) ...[
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.1),
+              color: Colors.grey.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(4),
             ),
             child: const Text(

@@ -13,7 +13,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final shareService = ref.watch(shareServiceProvider);
     final config = ref.watch(routerConfigProvider);
-    
+
     return Card(
       margin: const EdgeInsets.all(16),
       child: Padding(
@@ -23,143 +23,130 @@ class DeepLinkDemoWidget extends ConsumerWidget {
           children: [
             Text(
               'Deep Link Demo',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
               'Base URL: ${config.baseUrl ?? "Not configured"}',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 16),
-            
+
             // Restaurant Deep Links
-            _buildSection(
-              context,
-              'Restaurant Links',
-              [
-                _buildLinkButton(
+            _buildSection(context, 'Restaurant Links', [
+              _buildLinkButton(
+                context,
+                'Restaurant #1',
+                () => _copyLink(
                   context,
-                  'Restaurant #1',
-                  () => _copyLink(
-                    context,
-                    DeepLinkService.generateRestaurantLink(
-                      config.baseUrl ?? 'https://deliveryapp.com',
-                      'rest_1',
-                    ),
+                  DeepLinkService.generateRestaurantLink(
+                    config.baseUrl ?? 'https://deliveryapp.com',
+                    'rest_1',
                   ),
                 ),
-                _buildLinkButton(
-                  context,
-                  'Share Restaurant',
-                  () => shareService.shareRestaurant('rest_1', 'Amazing Restaurant'),
+              ),
+              _buildLinkButton(
+                context,
+                'Share Restaurant',
+                () => shareService.shareRestaurant(
+                  'rest_1',
+                  'Amazing Restaurant',
                 ),
-              ],
-            ),
-            
+              ),
+            ]),
+
             const SizedBox(height: 16),
-            
+
             // Order Deep Links
-            _buildSection(
-              context,
-              'Order Links',
-              [
-                _buildLinkButton(
+            _buildSection(context, 'Order Links', [
+              _buildLinkButton(
+                context,
+                'Order #ORD1001',
+                () => _copyLink(
                   context,
-                  'Order #ORD1001',
-                  () => _copyLink(
-                    context,
-                    DeepLinkService.generateOrderLink(
-                      config.baseUrl ?? 'https://deliveryapp.com',
-                      'ORD1001',
-                    ),
+                  DeepLinkService.generateOrderLink(
+                    config.baseUrl ?? 'https://deliveryapp.com',
+                    'ORD1001',
                   ),
                 ),
-                _buildLinkButton(
+              ),
+              _buildLinkButton(
+                context,
+                'Track Order',
+                () => _copyLink(
                   context,
-                  'Track Order',
-                  () => _copyLink(
-                    context,
-                    DeepLinkService.generateTrackingLink(
-                      config.baseUrl ?? 'https://deliveryapp.com',
-                      'ORD1001',
-                    ),
+                  DeepLinkService.generateTrackingLink(
+                    config.baseUrl ?? 'https://deliveryapp.com',
+                    'ORD1001',
                   ),
                 ),
-              ],
-            ),
-            
+              ),
+            ]),
+
             const SizedBox(height: 16),
-            
+
             // Promo Deep Links
-            _buildSection(
-              context,
-              'Promo Links',
-              [
-                _buildLinkButton(
+            _buildSection(context, 'Promo Links', [
+              _buildLinkButton(
+                context,
+                'SAVE20 Promo',
+                () => _copyLink(
                   context,
-                  'SAVE20 Promo',
-                  () => _copyLink(
-                    context,
-                    DeepLinkService.generatePromoLink(
-                      config.baseUrl ?? 'https://deliveryapp.com',
-                      'SAVE20',
-                    ),
+                  DeepLinkService.generatePromoLink(
+                    config.baseUrl ?? 'https://deliveryapp.com',
+                    'SAVE20',
                   ),
                 ),
-                _buildLinkButton(
-                  context,
-                  'Share Promo',
-                  () => shareService.sharePromo('SAVE20', '20% off your order'),
-                ),
-              ],
-            ),
-            
+              ),
+              _buildLinkButton(
+                context,
+                'Share Promo',
+                () => shareService.sharePromo('SAVE20', '20% off your order'),
+              ),
+            ]),
+
             const SizedBox(height: 16),
-            
+
             // Custom Deep Links
-            _buildSection(
-              context,
-              'Custom Links',
-              [
-                _buildLinkButton(
+            _buildSection(context, 'Custom Links', [
+              _buildLinkButton(
+                context,
+                'Menu Link',
+                () => _copyLink(
                   context,
-                  'Menu Link',
-                  () => _copyLink(
-                    context,
-                    DeepLinkService.generateDeepLink(
-                      baseUrl: config.baseUrl ?? 'https://deliveryapp.com',
-                      path: '/menu',
-                      params: {'restaurant_id': 'rest_1'},
-                    ),
+                  DeepLinkService.generateDeepLink(
+                    baseUrl: config.baseUrl ?? 'https://deliveryapp.com',
+                    path: '/menu',
+                    params: {'restaurant_id': 'rest_1'},
                   ),
                 ),
-                _buildLinkButton(
+              ),
+              _buildLinkButton(
+                context,
+                'Reset Password',
+                () => _copyLink(
                   context,
-                  'Reset Password',
-                  () => _copyLink(
-                    context,
-                    DeepLinkService.generateDeepLink(
-                      baseUrl: config.baseUrl ?? 'https://deliveryapp.com',
-                      path: '/reset-password',
-                      params: {'token': 'abc123'},
-                    ),
+                  DeepLinkService.generateDeepLink(
+                    baseUrl: config.baseUrl ?? 'https://deliveryapp.com',
+                    path: '/reset-password',
+                    params: {'token': 'abc123'},
                   ),
                 ),
-              ],
-            ),
-            
+              ),
+            ]),
+
             const SizedBox(height: 16),
-            
+
             // Test Links Section
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
-                border: Border.all(color: Colors.blue.withOpacity(0.3)),
+                color: Colors.blue.withValues(alpha: 0.1),
+                border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
@@ -184,10 +171,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
                     '2. Open in browser or share via message\n'
                     '3. Click the link to open the app\n'
                     '4. App should navigate to the correct screen',
-                    style: TextStyle(
-                      color: Colors.blue[700],
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: Colors.blue[700], fontSize: 12),
                   ),
                 ],
               ),
@@ -198,27 +182,31 @@ class DeepLinkDemoWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildSection(BuildContext context, String title, List<Widget> children) {
+  Widget _buildSection(
+    BuildContext context,
+    String title,
+    List<Widget> children,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: children,
-        ),
+        Wrap(spacing: 8, runSpacing: 8, children: children),
       ],
     );
   }
 
-  Widget _buildLinkButton(BuildContext context, String label, VoidCallback onPressed) {
+  Widget _buildLinkButton(
+    BuildContext context,
+    String label,
+    VoidCallback onPressed,
+  ) {
     return ElevatedButton.icon(
       onPressed: onPressed,
       icon: const Icon(Icons.link, size: 16),

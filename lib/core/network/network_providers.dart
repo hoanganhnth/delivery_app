@@ -1,3 +1,4 @@
+import 'package:delivery_app/core/constants/api_constants.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dio_client.dart';
@@ -21,7 +22,7 @@ final dioProvider = Provider<Dio>((ref) {
 /// Provider for base URL configuration
 final baseUrlProvider = Provider<String>((ref) {
   // You can make this configurable based on environment
-  return "http://localhost:8079/api";
+  return ApiConstants.api;
 });
 
 /// Provider for network timeout configuration

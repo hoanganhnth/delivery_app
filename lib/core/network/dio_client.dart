@@ -1,3 +1,4 @@
+import 'package:delivery_app/core/constants/api_constants.dart';
 import 'package:dio/dio.dart';
 import 'interceptors/request_interceptor.dart';
 import 'interceptors/response_interceptor.dart';
@@ -10,7 +11,7 @@ class DioClient {
 
   DioClient({this.getToken, this.onRefreshToken}) {
     dio = Dio(BaseOptions(
-      baseUrl: "http://localhost:8079/api",
+      baseUrl: ApiConstants.api,
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       contentType: "application/json",

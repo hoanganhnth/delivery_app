@@ -4,7 +4,7 @@ part 'base_response_dto.g.dart';
 
 @JsonSerializable(genericArgumentFactories: true)
 class BaseResponseDto<T> {
-  final String status;
+  final int status;
   final String message;
   final T? data;
 
@@ -23,6 +23,6 @@ class BaseResponseDto<T> {
   Map<String, dynamic> toJson(Object Function(T value) toJsonT) =>
       _$BaseResponseDtoToJson(this, toJsonT);
 
-  bool get isSuccess => status.toLowerCase() == 'success';
-  bool get isError => status.toLowerCase() == 'error';
+  bool get isSuccess => status == 1;
+  bool get isError => status != 1;
 }

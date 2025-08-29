@@ -16,24 +16,32 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required LoginUseCase loginUseCase,
     required RegisterUseCase registerUseCase,
     required RefreshTokenUseCase refreshTokenUseCase,
-  })  : _loginUseCase = loginUseCase,
-        _registerUseCase = registerUseCase,
-        _refreshTokenUseCase = refreshTokenUseCase,
-        super(const AuthState());
+  }) : _loginUseCase = loginUseCase,
+       _registerUseCase = registerUseCase,
+       _refreshTokenUseCase = refreshTokenUseCase,
+       super(const AuthState());
 
   // Login method
   Future<void> login({
     required String email,
     required String password,
+    String? deviceId,
+    String? deviceName,
+    String? deviceType,
+    String? ipAddress,
   }) async {
-    state = state.copyWith(
-      isLoginLoading: true,
-      clearFailure: true,
-    );
+    state = state.copyWith(isLoginLoading: true, clearFailure: true);
 
     AppLogger.d('AuthNotifier: Starting login for $email');
 
-    final params = LoginParams(email: email, password: password);
+    final params = LoginParams(
+      email: email,
+      password: password,
+      deviceId: deviceId,
+      deviceName: deviceName,
+      deviceType: deviceType,
+      ipAddress: ipAddress,
+    );
     final result = await _loginUseCase(params);
 
     result.fold(
@@ -47,11 +55,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
         );
       },
       (user) {
-        AppLogger.i('AuthNotifier: Login successful for ${user.email}');
+        AppLogger.i('AuthNotifier: Login successful');
         state = state.copyWith(
           isLoginLoading: false,
           isAuthenticated: true,
-          user: user,
           clearFailure: true,
         );
       },
@@ -65,10 +72,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String confirmPassword,
     String? name,
   }) async {
-    state = state.copyWith(
-      isRegisterLoading: true,
-      clearFailure: true,
-    );
+    state = state.copyWith(isRegisterLoading: true, clearFailure: true);
 
     AppLogger.d('AuthNotifier: Starting registration for $email');
 
@@ -92,11 +96,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
         );
       },
       (user) {
-        AppLogger.i('AuthNotifier: Registration successful for ${user.email}');
+        AppLogger.i('AuthNotifier: Registration successful ');
         state = state.copyWith(
           isRegisterLoading: false,
           isAuthenticated: true,
-          user: user,
           clearFailure: true,
         );
       },
@@ -122,30 +125,27 @@ class AuthNotifier extends StateNotifier<AuthState> {
     return result.fold(
       (failure) {
         AppLogger.e('AuthNotifier: Token refresh failed - ${failure.message}');
-        state = state.copyWith(
-          isRefreshLoading: false,
-          failure: failure,
-        );
-        
+        state = state.copyWith(isRefreshLoading: false, failure: failure);
+
         // If refresh fails, logout user
         if (failure is UnauthorizedFailure) {
           logout();
         }
-        
+
         return null;
       },
       (newAccessToken) {
         AppLogger.i('AuthNotifier: Token refresh successful');
-        
+
         // Update user with new access token
         final updatedUser = state.user?.copyWith(accessToken: newAccessToken);
-        
+
         state = state.copyWith(
           isRefreshLoading: false,
           user: updatedUser,
           clearFailure: true,
         );
-        
+
         return newAccessToken;
       },
     );
@@ -154,7 +154,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   // Logout method
   Future<void> logout() async {
     AppLogger.i('AuthNotifier: Logging out user');
-    
+
     state = state.copyWith(
       isAuthenticated: false,
       clearUser: true,
@@ -163,7 +163,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       isRegisterLoading: false,
       isRefreshLoading: false,
     );
-    
+
     // Here you would typically:
     // - Clear stored tokens from secure storage
     // - Clear any cached data
@@ -182,9 +182,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
   UserEntity? get currentUser => state.user;
 
   // Utility methods for UI
-  bool get isLoading => state.isLoginLoading || state.isRegisterLoading || state.isRefreshLoading;
-  
+  bool get isLoading =>
+      state.isLoginLoading || state.isRegisterLoading || state.isRefreshLoading;
+
   bool get canLogin => !state.isLoginLoading && !state.isRegisterLoading;
-  
+
   bool get canRegister => !state.isLoginLoading && !state.isRegisterLoading;
 }

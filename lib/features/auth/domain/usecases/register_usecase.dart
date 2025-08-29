@@ -1,7 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:delivery_app/core/utils/validators.dart';
 import '../../../../core/error/failures.dart';
-import '../entities/user_entity.dart';
 import '../repositories/auth_repository.dart';
 
 class RegisterUseCase {
@@ -9,7 +8,7 @@ class RegisterUseCase {
 
   RegisterUseCase(this.repository);
 
-  Future<Either<Failure, UserEntity>> call(RegisterParams params) async {
+  Future<Either<Failure, bool>> call(RegisterParams params) async {
     if (!Validators.isEmailValid(params.email)) {
       return left(const ValidationFailure('Invalid email format'));
     }

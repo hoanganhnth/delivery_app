@@ -10,7 +10,7 @@ BaseResponseDto<T> _$BaseResponseDtoFromJson<T>(
   Map<String, dynamic> json,
   T Function(Object? json) fromJsonT,
 ) => BaseResponseDto<T>(
-  status: json['status'] as String,
+  status: (json['status'] as num).toInt(),
   message: json['message'] as String,
   data: _$nullableGenericFromJson(json['data'], fromJsonT),
 );

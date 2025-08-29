@@ -1,5 +1,5 @@
 class UserEntity {
-  final String id;
+  final int id;
   final String email;
   final String accessToken;
   final String refreshToken;
@@ -16,7 +16,7 @@ class UserEntity {
   });
 
   UserEntity copyWith({
-    String? id,
+    int? id,
     String? email,
     String? accessToken,
     String? refreshToken,
