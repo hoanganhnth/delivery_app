@@ -52,6 +52,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Email field
+              
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(
