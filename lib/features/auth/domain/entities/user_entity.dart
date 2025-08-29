@@ -32,31 +32,4 @@ class UserEntity {
       createdAt: createdAt ?? this.createdAt,
     );
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is UserEntity &&
-        other.id == id &&
-        other.email == email &&
-        other.accessToken == accessToken &&
-        other.refreshToken == refreshToken &&
-        other.name == name &&
-        other.createdAt == createdAt;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        email.hashCode ^
-        accessToken.hashCode ^
-        refreshToken.hashCode ^
-        name.hashCode ^
-        createdAt.hashCode;
-  }
-
-  @override
-  String toString() {
-    return 'UserEntity(id: $id, email: $email, name: $name, createdAt: $createdAt)';
-  }
 }

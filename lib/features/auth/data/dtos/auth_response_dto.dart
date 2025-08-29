@@ -1,28 +1,23 @@
 import 'package:delivery_app/features/auth/domain/entities/auth_entity.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../../../core/data/dtos/base_response_dto.dart';
 
+part 'auth_response_dto.freezed.dart';
 part 'auth_response_dto.g.dart';
 
-@JsonSerializable()
-class AuthDataDto {
-  final String accessToken;
-
-  final String refreshToken;
-
-  final UserDto? user;
-
-  AuthDataDto({
-    required this.accessToken,
-    required this.refreshToken,
-    required this.user,
-  });
+@freezed
+abstract class AuthDataDto with _$AuthDataDto {
+  const factory AuthDataDto({
+    required String accessToken,
+    required String refreshToken,
+    UserDto? user,
+  }) = _AuthDataDto;
 
   factory AuthDataDto.fromJson(Map<String, dynamic> json) =>
       _$AuthDataDtoFromJson(json);
+}
 
-  Map<String, dynamic> toJson() => _$AuthDataDtoToJson(this);
-
+extension AuthDataDtoExtension on AuthDataDto {
   AuthEntity toEntity() {
     return AuthEntity(accessToken: accessToken, refreshToken: refreshToken);
   }
@@ -31,19 +26,15 @@ class AuthDataDto {
 // Wrapper for the complete response
 typedef AuthResponseDto = BaseResponseDto<AuthDataDto>;
 
-@JsonSerializable()
-class UserDto {
-  final int id;
-  final String email;
-  final String? name;
-
-  @JsonKey(name: 'created_at')
-  final DateTime? createdAt;
-
-  UserDto({required this.id, required this.email, this.name, this.createdAt});
+@freezed
+abstract class UserDto with _$UserDto {
+  const factory UserDto({
+    required int id,
+    required String email,
+    String? name,
+    DateTime? createdAt,
+  }) = _UserDto;
 
   factory UserDto.fromJson(Map<String, dynamic> json) =>
       _$UserDtoFromJson(json);
-
-  Map<String, dynamic> toJson() => _$UserDtoToJson(this);
 }

@@ -22,8 +22,7 @@ class _AuthApiService implements AuthApiService {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(request.toJson());
+    final _data = request;
     final _options = _setStreamType<BaseResponseDto<AuthDataDto>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
@@ -55,8 +54,7 @@ class _AuthApiService implements AuthApiService {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(request.toJson());
+    final _data = request;
     final _options = _setStreamType<BaseResponseDto<AuthDataDto>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(

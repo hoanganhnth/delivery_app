@@ -1,21 +1,16 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'register_request_dto.freezed.dart';
 part 'register_request_dto.g.dart';
 
-@JsonSerializable()
-class RegisterRequestDto {
-  final String email;
-  final String password;
-  final String? name;
-
-  RegisterRequestDto({
-    required this.email,
-    required this.password,
-    this.name,
-  });
+@freezed
+abstract class RegisterRequestDto with _$RegisterRequestDto {
+  const factory RegisterRequestDto({
+    required String email,
+    required String password,
+    String? name,
+  }) = _RegisterRequestDto;
 
   factory RegisterRequestDto.fromJson(Map<String, dynamic> json) =>
       _$RegisterRequestDtoFromJson(json);
-
-  Map<String, dynamic> toJson() => _$RegisterRequestDtoToJson(this);
 }
