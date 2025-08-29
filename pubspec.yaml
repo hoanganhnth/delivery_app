@@ -36,9 +36,10 @@ dev_dependencies:
   intl_utils: ^2.8.1 # for localization
   json_serializable: ^6.10.0
   freezed: ^3.2.0
-
   flutter_test:
     sdk: flutter
+  mockito: ^5.4.4
+  build_test: ^3.3.2
   flutter_lints: ^5.0.0
 flutter_intl:
   enabled: true
