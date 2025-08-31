@@ -1,3 +1,4 @@
+import 'package:delivery_app/core/data/dtos/base_response_dto.dart';
 import 'package:delivery_app/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:delivery_app/features/auth/data/dtos/auth_response_dto.dart';
 import 'package:delivery_app/features/auth/data/dtos/login_request_dto.dart';
@@ -48,36 +49,45 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
   }
 
   @override
-  Future<Either<Exception, AuthResponseDto>> register(RegisterRequestDto request) async {
+  Future<Either<Exception, BaseResponseDto<bool>>> register(RegisterRequestDto request) async {
     if (shouldThrowException) {
       return left(Exception('Network error'));
     }
 
     if (shouldReturnSuccess) {
-      final authData = AuthDataDto(
-        accessToken: 'test_access_token',
-        refreshToken: 'test_refresh_token',
-        user: UserDto(
-          id: 1,
-          email: request.email,
-          name: request.name ?? 'Test User',
-        ),
-      );
+      // final authData = AuthDataDto(
+      //   accessToken: 'test_access_token',
+      //   refreshToken: 'test_refresh_token',
+      //   user: UserDto(
+      //     id: 1,
+      //     email: request.email,
+      //     name: request.name ?? 'Test User',
+      //   ),
+      // );
 
-      final response = AuthResponseDto(
+      // final response = AuthResponseDto(
+      //   status: 1,
+      //   message: 'Registration successful',
+      //   data: authData,
+      // );
+      final response = BaseResponseDto<bool>(
         status: 1,
         message: 'Registration successful',
-        data: authData,
+        data: true,
       );
 
       return right(response);
     } else {
-      final response = AuthResponseDto(
+      // final response = AuthResponseDto(
+      //   status: 0,
+      //   message: errorMessage ?? 'Registration failed',
+      //   data: false,
+      // );
+      final response = BaseResponseDto<bool>(
         status: 0,
         message: errorMessage ?? 'Registration failed',
-        data: null,
+        data: false,
       );
-
       return right(response);
     }
   }
@@ -212,8 +222,8 @@ void main() {
           expect(response.status, 1);
           expect(response.message, 'Registration successful');
           expect(response.data, isNotNull);
-          expect(response.data!.user!.email, 'test@example.com');
-          expect(response.data!.user!.name, 'Test User');
+          // expect(response.data!.user!.email, 'test@example.com');
+          // expect(response.data!.user!.name, 'Test User');
         },
       );
     });

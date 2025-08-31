@@ -63,22 +63,21 @@ class MockAuthRemoteDataSource extends _i1.Mock
           >);
 
   @override
-  _i3.Future<_i4.Either<Exception, _i5.BaseResponseDto<_i6.AuthDataDto>>>
-  register(_i9.RegisterRequestDto? request) =>
+  _i3.Future<_i4.Either<Exception, _i5.BaseResponseDto<bool>>> register(
+    _i9.RegisterRequestDto? request,
+  ) =>
       (super.noSuchMethod(
             Invocation.method(#register, [request]),
             returnValue:
                 _i3.Future<
-                  _i4.Either<Exception, _i5.BaseResponseDto<_i6.AuthDataDto>>
+                  _i4.Either<Exception, _i5.BaseResponseDto<bool>>
                 >.value(
                   _i8.dummyValue<
-                    _i4.Either<Exception, _i5.BaseResponseDto<_i6.AuthDataDto>>
+                    _i4.Either<Exception, _i5.BaseResponseDto<bool>>
                   >(this, Invocation.method(#register, [request])),
                 ),
           )
-          as _i3.Future<
-            _i4.Either<Exception, _i5.BaseResponseDto<_i6.AuthDataDto>>
-          >);
+          as _i3.Future<_i4.Either<Exception, _i5.BaseResponseDto<bool>>>);
 
   @override
   _i3.Future<

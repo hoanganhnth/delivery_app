@@ -48,14 +48,12 @@ class _AuthApiService implements AuthApiService {
   }
 
   @override
-  Future<BaseResponseDto<AuthDataDto>> register(
-    RegisterRequestDto request,
-  ) async {
+  Future<BaseResponseDto<bool>> register(RegisterRequestDto request) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = request;
-    final _options = _setStreamType<BaseResponseDto<AuthDataDto>>(
+    final _options = _setStreamType<BaseResponseDto<bool>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -66,11 +64,11 @@ class _AuthApiService implements AuthApiService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BaseResponseDto<AuthDataDto> _value;
+    late BaseResponseDto<bool> _value;
     try {
-      _value = BaseResponseDto<AuthDataDto>.fromJson(
+      _value = BaseResponseDto<bool>.fromJson(
         _result.data!,
-        (json) => AuthDataDto.fromJson(json as Map<String, dynamic>),
+        (json) => json as bool,
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);

@@ -175,20 +175,25 @@ void main() {
 
 
 
-      final tAuthDataDto = AuthDataDto(
-        accessToken: 'access_token',
-        refreshToken: 'refresh_token',
-        user: UserDto(
-          id: 1,
-          email: tEmail,
-          name: 'Test User',
-        ),
-      );
+      // final tAuthDataDto = AuthDataDto(
+      //   accessToken: 'access_token',
+      //   refreshToken: 'refresh_token',
+      //   user: UserDto(
+      //     id: 1,
+      //     email: tEmail,
+      //     name: 'Test User',
+      //   ),
+      // );
 
-      final tSuccessResponse = BaseResponseDto<AuthDataDto>(
+      // final tSuccessResponse = BaseResponseDto<AuthDataDto>(
+      //   status: 1,
+      //   message: 'Registration successful',
+      //   data: tAuthDataDto,
+      // );
+      final tSuccessResponse = BaseResponseDto<bool>(
         status: 1,
         message: 'Registration successful',
-        data: tAuthDataDto,
+        data: true,
       );
 
       test('should return true when registration is successful', () async {
@@ -207,10 +212,15 @@ void main() {
 
       test('should return ServerFailure when registration fails', () async {
         // arrange
-        final tFailureResponse = BaseResponseDto<AuthDataDto>(
+        // final tFailureResponse = BaseResponseDto<AuthDataDto>(
+        //   status: 0,
+        //   message: 'Email already exists',
+        //   data: null,
+        // );
+        final tFailureResponse = BaseResponseDto<bool>(
           status: 0,
           message: 'Email already exists',
-          data: null,
+          data: false,
         );
 
         when(mockRemoteDataSource.register(any))

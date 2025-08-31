@@ -65,7 +65,7 @@ class AuthRepositoryImpl implements AuthRepository {
         },
         (authResponse) {
           AppLogger.i('Repository: Registration successful');
-          if (authResponse.isSuccess && authResponse.data != null) {
+          if (authResponse.isSuccess && authResponse.data == true) {
             return right(true);
           } else {
             return left(ServerFailure(authResponse.message));

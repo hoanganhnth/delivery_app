@@ -21,7 +21,7 @@ abstract class AuthApiService {
   Future<BaseResponseDto<AuthDataDto>> login(@Body() LoginRequestDto request);
 
   @POST(ApiConstants.register)
-  Future<BaseResponseDto<AuthDataDto>> register(@Body() RegisterRequestDto request);
+  Future<BaseResponseDto<bool>> register(@Body() RegisterRequestDto request);
 
   @POST(ApiConstants.refreshToken)
   Future<BaseResponseDto<RefreshTokenDataDto>> refreshToken(@Body() Map<String, String> body);
@@ -49,7 +49,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<Either<Exception, AuthResponseDto>> register(RegisterRequestDto request) async {
+  Future<Either<Exception, BaseResponseDto<bool>>> register(RegisterRequestDto request) async {
     try {
       AppLogger.d('Attempting registration for email: ${request.email}');
       final response = await _apiService.register(request);
