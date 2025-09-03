@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import '../features/auth/presentation/providers/auth_network_providers.dart';
+import '../features/profile/data/models/user_model.dart';
 
 /// Main app setup with all necessary provider overrides
 /// This ensures that all features use the same Dio instance with proper authentication
 class AppSetup {
+  /// Initialize Hive and register adapters
+  static Future<void> initializeHive() async {
+    await Hive.initFlutter();
+
+    // Register Hive adapters
+    if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter(UserModelAdapter());
+    }
+  }
   /// Get all provider overrides needed for the app
   /// This includes:
   /// - Authenticated Dio provider override
