@@ -30,7 +30,7 @@ class RegisterUseCase {
 class RegisterParams {
   final String email;
   final String password;
-  final String confirmPassword;
+  final String? confirmPassword;
   final String? name;
 
   RegisterParams({

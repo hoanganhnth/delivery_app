@@ -40,7 +40,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       } else if (next.isAuthenticated) {
         _showSuccessSnackBar(context, 'Registration successful!');
         // Navigate to main screen or back to login
-        Navigator.of(context).pop();
+        // Navigator.of(context).pop();
       }
     });
 

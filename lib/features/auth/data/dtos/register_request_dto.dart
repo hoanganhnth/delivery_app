@@ -9,6 +9,7 @@ abstract class RegisterRequestDto with _$RegisterRequestDto {
     required String email,
     required String password,
     String? name,
+    String? role
   }) = _RegisterRequestDto;
 
   factory RegisterRequestDto.fromJson(Map<String, dynamic> json) =>

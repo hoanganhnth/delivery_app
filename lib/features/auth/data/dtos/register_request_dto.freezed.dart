@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RegisterRequestDto {
 
- String get email; String get password; String? get name;
+ String get email; String get password; String? get name; String? get role;
 /// Create a copy of RegisterRequestDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $RegisterRequestDtoCopyWith<RegisterRequestDto> get copyWith => _$RegisterReques
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegisterRequestDto&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password)&&(identical(other.name, name) || other.name == name));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegisterRequestDto&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password)&&(identical(other.name, name) || other.name == name)&&(identical(other.role, role) || other.role == role));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,email,password,name);
+int get hashCode => Object.hash(runtimeType,email,password,name,role);
 
 @override
 String toString() {
-  return 'RegisterRequestDto(email: $email, password: $password, name: $name)';
+  return 'RegisterRequestDto(email: $email, password: $password, name: $name, role: $role)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $RegisterRequestDtoCopyWith<$Res>  {
   factory $RegisterRequestDtoCopyWith(RegisterRequestDto value, $Res Function(RegisterRequestDto) _then) = _$RegisterRequestDtoCopyWithImpl;
 @useResult
 $Res call({
- String email, String password, String? name
+ String email, String password, String? name, String? role
 });
 
 
@@ -65,11 +65,12 @@ class _$RegisterRequestDtoCopyWithImpl<$Res>
 
 /// Create a copy of RegisterRequestDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? email = null,Object? password = null,Object? name = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? email = null,Object? password = null,Object? name = freezed,Object? role = freezed,}) {
   return _then(_self.copyWith(
 email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
 as String,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -155,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String email,  String password,  String? name)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String email,  String password,  String? name,  String? role)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RegisterRequestDto() when $default != null:
-return $default(_that.email,_that.password,_that.name);case _:
+return $default(_that.email,_that.password,_that.name,_that.role);case _:
   return orElse();
 
 }
@@ -176,10 +177,10 @@ return $default(_that.email,_that.password,_that.name);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String email,  String password,  String? name)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String email,  String password,  String? name,  String? role)  $default,) {final _that = this;
 switch (_that) {
 case _RegisterRequestDto():
-return $default(_that.email,_that.password,_that.name);case _:
+return $default(_that.email,_that.password,_that.name,_that.role);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +197,10 @@ return $default(_that.email,_that.password,_that.name);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String email,  String password,  String? name)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String email,  String password,  String? name,  String? role)?  $default,) {final _that = this;
 switch (_that) {
 case _RegisterRequestDto() when $default != null:
-return $default(_that.email,_that.password,_that.name);case _:
+return $default(_that.email,_that.password,_that.name,_that.role);case _:
   return null;
 
 }
@@ -211,12 +212,13 @@ return $default(_that.email,_that.password,_that.name);case _:
 @JsonSerializable()
 
 class _RegisterRequestDto implements RegisterRequestDto {
-  const _RegisterRequestDto({required this.email, required this.password, this.name});
+  const _RegisterRequestDto({required this.email, required this.password, this.name, this.role});
   factory _RegisterRequestDto.fromJson(Map<String, dynamic> json) => _$RegisterRequestDtoFromJson(json);
 
 @override final  String email;
 @override final  String password;
 @override final  String? name;
+@override final  String? role;
 
 /// Create a copy of RegisterRequestDto
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegisterRequestDto&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password)&&(identical(other.name, name) || other.name == name));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegisterRequestDto&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password)&&(identical(other.name, name) || other.name == name)&&(identical(other.role, role) || other.role == role));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,email,password,name);
+int get hashCode => Object.hash(runtimeType,email,password,name,role);
 
 @override
 String toString() {
-  return 'RegisterRequestDto(email: $email, password: $password, name: $name)';
+  return 'RegisterRequestDto(email: $email, password: $password, name: $name, role: $role)';
 }
 
 
@@ -251,7 +253,7 @@ abstract mixin class _$RegisterRequestDtoCopyWith<$Res> implements $RegisterRequ
   factory _$RegisterRequestDtoCopyWith(_RegisterRequestDto value, $Res Function(_RegisterRequestDto) _then) = __$RegisterRequestDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String email, String password, String? name
+ String email, String password, String? name, String? role
 });
 
 
@@ -268,11 +270,12 @@ class __$RegisterRequestDtoCopyWithImpl<$Res>
 
 /// Create a copy of RegisterRequestDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? email = null,Object? password = null,Object? name = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? email = null,Object? password = null,Object? name = freezed,Object? role = freezed,}) {
   return _then(_RegisterRequestDto(
 email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
 as String,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

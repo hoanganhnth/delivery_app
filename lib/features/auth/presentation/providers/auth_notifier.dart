@@ -69,7 +69,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> register({
     required String email,
     required String password,
-    required String confirmPassword,
+     String? confirmPassword,
     String? name,
   }) async {
     state = state.copyWith(isRegisterLoading: true, clearFailure: true);

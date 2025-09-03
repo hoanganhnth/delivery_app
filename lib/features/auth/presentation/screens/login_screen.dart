@@ -118,38 +118,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 onPressed: authState.isLoginLoading
                     ? null
                     : () {
-                        context.goToRegister();
+                        context.pushRegister();
                       },
                 child: const Text('Don\'t have an account? Register'),
               ),
-
-              // Debug info (remove in production)
-              if (authState.hasUser) ...[
-                const SizedBox(height: 24),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.green.shade50,
-                    border: Border.all(color: Colors.green),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Debug Info:',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text('Email: ${authState.user!.email}'),
-                      Text('ID: ${authState.user!.id}'),
-                      Text('Name: ${authState.user!.name ?? 'N/A'}'),
-                      Text(
-                        'Token: ${authState.user!.accessToken.substring(0, 20)}...',
-                      ),
-                    ],
-                  ),
-                ),
-              ],
             ],
           ),
         ),

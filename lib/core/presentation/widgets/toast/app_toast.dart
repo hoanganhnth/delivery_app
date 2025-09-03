@@ -93,7 +93,7 @@ class AppToast {
     toastification.show(
       context: context,
       type: toastType,
-      style: ToastificationStyle.fillColored,
+      // style: ToastificationStyle.fillColored,
       title: Text(
         title,
         style: const TextStyle(

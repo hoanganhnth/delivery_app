@@ -4,7 +4,7 @@ import 'package:logger/logger.dart';
 class AppLogger {
   static final Logger _logger = Logger(
     printer: PrettyPrinter(
-      methodCount: 1,       // số dòng stacktrace khi log
+      methodCount: 0,       // số dòng stacktrace khi log
       errorMethodCount: 5,  // stacktrace khi error
       lineLength: 80,
       colors: true,

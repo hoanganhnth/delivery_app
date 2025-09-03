@@ -35,12 +35,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<Either<Exception, AuthResponseDto>> login(LoginRequestDto request) async {
     try {
-      AppLogger.d('Attempting login for email: ${request.email}');
+      // AppLogger.d('Attempting login for email: ${request.email}');
       final response = await _apiService.login(request);
-      AppLogger.i('Login successful for email: ${request.email}');
+      // AppLogger.i('Login successful for email: ${request.email}');
       return right(response);
     } on DioException catch (e) {
-      AppLogger.e('Login failed for email: ${request.email}', e);
+      // AppLogger.e('Login failed for email: ${request.email}', e);
       return left(_handleDioException(e));
     } catch (e) {
       AppLogger.e('Unexpected error during login', e);
@@ -51,12 +51,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<Either<Exception, BaseResponseDto<bool>>> register(RegisterRequestDto request) async {
     try {
-      AppLogger.d('Attempting registration for email: ${request.email}');
+      // AppLogger.d('Attempting registration for email: ${request.email}');
       final response = await _apiService.register(request);
       AppLogger.i('Registration successful for email: ${request.email}');
       return right(response);
     } on DioException catch (e) {
-      AppLogger.e('Registration failed for email: ${request.email}', e);
+      // AppLogger.e('Registration failed for email: ${request.email}', e);
       return left(_handleDioException(e));
     } catch (e) {
       AppLogger.e('Unexpected error during registration', e);
@@ -67,12 +67,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<Either<Exception, RefreshTokenResponseDto>> refreshToken(String refreshToken) async {
     try {
-      AppLogger.d('Attempting token refresh');
+      // AppLogger.d('Attempting token refresh');
       final response = await _apiService.refreshToken({'refresh_token': refreshToken});
-      AppLogger.i('Token refresh successful');
+      // AppLogger.i('Token refresh successful');
       return right(response);
     } on DioException catch (e) {
-      AppLogger.e('Token refresh failed', e);
+      // AppLogger.e('Token refresh failed', e);
       return left(_handleDioException(e));
     } catch (e) {
       AppLogger.e('Unexpected error during token refresh', e);
