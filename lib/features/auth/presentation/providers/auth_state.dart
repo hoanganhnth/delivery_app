@@ -1,51 +1,53 @@
 import '../../../../core/error/failures.dart';
-import '../../domain/entities/user_entity.dart';
 
 class AuthState {
   final bool isLoading;
   final bool isAuthenticated;
-  final UserEntity? user;
   final Failure? failure;
   final bool isLoginLoading;
   final bool isRegisterLoading;
   final bool isRefreshLoading;
+  final String? refreshToken;
+  final String? accessToken;
 
   const AuthState({
     this.isLoading = false,
     this.isAuthenticated = false,
-    this.user,
     this.failure,
     this.isLoginLoading = false,
     this.isRegisterLoading = false,
     this.isRefreshLoading = false,
+    this.refreshToken = '',
+    this.accessToken = '',
   });
 
   // Computed properties
   bool get hasError => failure != null;
   String? get errorMessage => failure?.message;
-  bool get hasUser => user != null;
-  String? get accessToken => user?.accessToken;
-  String? get refreshToken => user?.refreshToken;
+  
 
   AuthState copyWith({
     bool? isLoading,
     bool? isAuthenticated,
-    UserEntity? user,
     Failure? failure,
     bool? isLoginLoading,
     bool? isRegisterLoading,
     bool? isRefreshLoading,
     bool clearFailure = false,
+    String? refreshToken,
+    String? accessToken,
     bool clearUser = false,
   }) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
-      user: clearUser ? null : (user ?? this.user),
       failure: clearFailure ? null : (failure ?? this.failure),
       isLoginLoading: isLoginLoading ?? this.isLoginLoading,
       isRegisterLoading: isRegisterLoading ?? this.isRegisterLoading,
       isRefreshLoading: isRefreshLoading ?? this.isRefreshLoading,
+      refreshToken: clearUser ? '' : (refreshToken ?? this.refreshToken),
+      accessToken: clearUser ? '' : (accessToken ?? this.accessToken)
+
     );
   }
 
@@ -55,7 +57,6 @@ class AuthState {
     return other is AuthState &&
         other.isLoading == isLoading &&
         other.isAuthenticated == isAuthenticated &&
-        other.user == user &&
         other.failure == failure &&
         other.isLoginLoading == isLoginLoading &&
         other.isRegisterLoading == isRegisterLoading &&
@@ -66,7 +67,6 @@ class AuthState {
   int get hashCode {
     return isLoading.hashCode ^
         isAuthenticated.hashCode ^
-        user.hashCode ^
         failure.hashCode ^
         isLoginLoading.hashCode ^
         isRegisterLoading.hashCode ^
@@ -75,6 +75,6 @@ class AuthState {
 
   @override
   String toString() {
-    return 'AuthState(isLoading: $isLoading, isAuthenticated: $isAuthenticated, hasUser: $hasUser, hasError: $hasError)';
+    return 'AuthState(isLoading: $isLoading, isAuthenticated: $isAuthenticated,  hasError: $hasError)';
   }
 }

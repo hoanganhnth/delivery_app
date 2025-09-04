@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/logger/app_logger.dart';
-import '../../domain/entities/user_entity.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/register_usecase.dart';
 import '../../domain/usecases/refresh_token_usecase.dart';
@@ -138,11 +137,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
         AppLogger.i('AuthNotifier: Token refresh successful');
 
         // Update user with new access token
-        final updatedUser = state.user?.copyWith(accessToken: newAccessToken);
+        // final updatedUser = state.copyWith(accessToken: newAccessToken);
 
         state = state.copyWith(
           isRefreshLoading: false,
-          user: updatedUser,
           clearFailure: true,
         );
 
@@ -176,10 +174,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   // Check if user is authenticated
-  bool get isAuthenticated => state.isAuthenticated && state.user != null;
+  bool get isAuthenticated => state.isAuthenticated;
 
   // Get current user
-  UserEntity? get currentUser => state.user;
 
   // Utility methods for UI
   bool get isLoading =>

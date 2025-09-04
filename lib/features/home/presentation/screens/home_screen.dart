@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
-import '../../../../core/presentation/widgets/guard_demo_widget.dart';
+// import '../../../../core/presentation/widgets/guard_demo_widget.dart';
 import '../../../../core/presentation/widgets/app_links_demo_widget.dart';
 
 /// Home Screen
@@ -11,7 +11,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authStateProvider);
+    // final authState = ref.watch(authStateProvider);
     
     return Scaffold(
       appBar: AppBar(
@@ -39,13 +39,13 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (authState.hasUser) ...[
-              Text(
-                'Welcome, ${authState.user!.email}!',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              const SizedBox(height: 16),
-            ],
+            // if (authState.hasUser) ...[
+            //   Text(
+            //     'Welcome, ${authState.user!.email}!',
+            //     style: Theme.of(context).textTheme.headlineSmall,
+            //   ),
+            //   const SizedBox(height: 16),
+            // ],
             
             Expanded(
               child: GridView.count(
@@ -78,20 +78,20 @@ class HomeScreen extends ConsumerWidget {
                     () => context.pushNamed('profile'),
                   ),
                   // Show admin panel for admin users
-                  if (authState.hasUser && authState.user!.email.contains('admin'))
-                    _buildFeatureCard(
-                      context,
-                      'Admin Panel',
-                      Icons.admin_panel_settings,
-                      () => context.pushNamed('admin'),
-                      color: Colors.red,
-                    ),
+                  // if (authState.hasUser && authState.user!.email.contains('admin'))
+                  //   _buildFeatureCard(
+                  //     context,
+                  //     'Admin Panel',
+                  //     Icons.admin_panel_settings,
+                  //     () => context.pushNamed('admin'),
+                  //     color: Colors.red,
+                  //   ),
                 ],
               ),
             ),
 
             // GuardManager Demo (for development/testing)
-            const GuardDemoWidget(),
+            // const GuardDemoWidget(),
 
             // App Links Demo (for development/testing)
             const AppLinksDemoWidget(),

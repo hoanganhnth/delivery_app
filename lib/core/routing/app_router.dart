@@ -13,7 +13,7 @@ import '../../features/restaurants/restaurants.dart';
 import '../../features/cart/cart.dart';
 import '../presentation/screens/splash_screen.dart';
 import '../presentation/screens/error_screens.dart';
-import '../presentation/screens/admin_screen.dart';
+// import '../presentation/screens/admin_screen.dart';
 import 'app_routes.dart';
 import 'router_config.dart';
 import 'guard_manager.dart';
@@ -113,7 +113,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'profile',
             name: 'profile',
-            redirect: guardManager.applyAuthAndOnboarding,
+            // redirect: guardManager.applyAuthAndOnboarding,
             builder: (context, state) => const ProfileScreen(),
           ),
           GoRoute(
@@ -215,12 +215,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
 
       // Admin routes (with admin guard)
-      GoRoute(
-        path: AppRoutes.admin,
-        name: 'admin',
-        redirect: guardManager.applyAuthAndAdmin,
-        builder: (context, state) => const AdminScreen(),
-      ),
+      // GoRoute(
+      //   path: AppRoutes.admin,
+      //   name: 'admin',
+      //   redirect: guardManager.applyAuthAndAdmin,
+      //   builder: (context, state) => const AdminScreen(),
+      // ),
 
       // Error routes
       GoRoute(

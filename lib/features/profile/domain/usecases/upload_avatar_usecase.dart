@@ -7,7 +7,7 @@ import '../repositories/profile_repository.dart';
 class UploadAvatarParams {
   final String imagePath;
 
-  UploadAvatarParams({required this.imagePath});
+  UploadAvatarParams({required this.imagePath,});
 }
 
 class UploadAvatarUseCase implements UseCase<String, UploadAvatarParams> {

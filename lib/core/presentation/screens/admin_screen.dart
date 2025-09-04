@@ -1,6 +1,6 @@
+import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../features/auth/presentation/providers/auth_providers.dart';
 
 /// Admin Screen - Only accessible by admin users
 class AdminScreen extends ConsumerWidget {
@@ -8,7 +8,7 @@ class AdminScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authStateProvider);
+    final authState = ref.watch(profileStateProvider);
     
     return Scaffold(
       appBar: AppBar(

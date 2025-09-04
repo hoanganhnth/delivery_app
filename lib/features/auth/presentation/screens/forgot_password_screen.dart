@@ -37,7 +37,7 @@ class ForgotPasswordScreen extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: null, // TODO: Implement
+                onPressed: null, // Todo: forgot password logic
                 child: Text('Send Reset Link'),
               ),
             ),

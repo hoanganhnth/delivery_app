@@ -51,83 +51,83 @@ class GuardManager {
   }
 
   /// Apply admin guard to a route
-  String? applyAdminGuard(BuildContext context, GoRouterState state) {
-    final authState = _ref.read(authStateProvider);
-    final user = authState.user;
+  // String? applyAdminGuard(BuildContext context, GoRouterState state) {
+  //   final authState = _ref.read(authStateProvider);
+  //   final user = authState.user;
 
-    if (user == null) {
-      return AppRoutes.login;
-    }
+  //   if (user == null) {
+  //     return AppRoutes.login;
+  //   }
 
-    final isAdmin = user.email.contains('admin');
-    if (!isAdmin) {
-      return AppRoutes.home;
-    }
+  //   final isAdmin = user.email.contains('admin');
+  //   if (!isAdmin) {
+  //     return AppRoutes.home;
+  //   }
 
-    return null;
-  }
+  //   return null;
+  // }
 
-  /// Apply premium guard to a route
-  String? applyPremiumGuard(BuildContext context, GoRouterState state) {
-    final authState = _ref.read(authStateProvider);
-    final user = authState.user;
+  // /// Apply premium guard to a route
+  // String? applyPremiumGuard(BuildContext context, GoRouterState state) {
+  //   final authState = _ref.read(authStateProvider);
+  //   final user = authState.user;
 
-    if (user == null) {
-      return AppRoutes.login;
-    }
+  //   if (user == null) {
+  //     return AppRoutes.login;
+  //   }
 
-    final hasPremium = user.email.contains('premium');
-    if (!hasPremium) {
-      return AppRoutes.home; // Or redirect to subscription page
-    }
+  //   final hasPremium = user.email.contains('premium');
+  //   if (!hasPremium) {
+  //     return AppRoutes.home; // Or redirect to subscription page
+  //   }
 
-    return null;
-  }
+  //   return null;
+  // }
 
   /// Apply onboarding guard to a route
-  String? applyOnboardingGuard(BuildContext context, GoRouterState state) {
-    final authState = _ref.read(authStateProvider);
-    final user = authState.user;
+  // String? applyOnboardingGuard(BuildContext context, GoRouterState state) {
+  //   final authState = _ref.read(authStateProvider);
+  //   final user = authState.user;
 
-    if (user == null) {
-      return AppRoutes.login;
-    }
+  //   if (user == null) {
+  //     return AppRoutes.login;
+  //   }
 
-    final hasCompletedOnboarding = user.name != null && user.name!.isNotEmpty;
-    if (!hasCompletedOnboarding) {
-      return AppRoutes.profile;
-    }
+  //   final hasCompletedOnboarding = user.name != null && user.name!.isNotEmpty;
+  //   if (!hasCompletedOnboarding) {
+  //     return AppRoutes.profile;
+  //   }
 
-    return null;
-  }
+  //   return null;
+  // }
 
   /// Common guard combinations
-  String? applyAuthAndOnboarding(BuildContext context, GoRouterState state) {
-    // First check auth
-    final authRedirect = applyAuthGuard(context, state);
-    if (authRedirect != null) return authRedirect;
+  // String? applyAuthAndOnboarding(BuildContext context, GoRouterState state) {
+  //   // First check auth
+  //   final authRedirect = applyAuthGuard(context, state);
+  //   if (authRedirect != null) return authRedirect;
 
-    // Then check onboarding
-    return applyOnboardingGuard(context, state);
-  }
+  //   // Then check onboarding
+  //   return applyOnboardingGuard(context, state);
+  // }
 
-  String? applyAuthAndAdmin(BuildContext context, GoRouterState state) {
-    // First check auth
-    final authRedirect = applyAuthGuard(context, state);
-    if (authRedirect != null) return authRedirect;
+  // String? applyAuthAndAdmin(BuildContext context, GoRouterState state) {
+  //   // First check auth
+  //   final authRedirect = applyAuthGuard(context, state);
+  //   if (authRedirect != null) return authRedirect;
 
-    // Then check admin
-    return applyAdminGuard(context, state);
-  }
+  //   // Then check admin
+  //   return applyAdminGuard(context, state);
+  // }
 
-  String? applyAuthAndPremium(BuildContext context, GoRouterState state) {
-    // First check auth
-    final authRedirect = applyAuthGuard(context, state);
-    if (authRedirect != null) return authRedirect;
+  // String? applyAuthAndPremium(BuildContext context, GoRouterState state) {
+  //   // First check auth
+  //   final authRedirect = applyAuthGuard(context, state);
+  //   if (authRedirect != null) return authRedirect;
 
-    // Then check premium
-    return applyPremiumGuard(context, state);
-  }
+  //   // Then check premium
+  //   return applyPremiumGuard(context, state);
+  // }
   
   /// Check if user can access a specific route (for UI logic)
   bool canAccessRoute(String routePath) {
@@ -152,14 +152,14 @@ class GuardManager {
     }
     
     // Check admin routes
-    if (routePath == AppRoutes.admin) {
-      return authState.user?.email.contains('admin') ?? false;
-    }
+    // if (routePath == AppRoutes.admin) {
+    //   return authState.user?.email.contains('admin') ?? false;
+    // }
     
     // Check onboarding for profile
-    if (routePath == AppRoutes.profile) {
-      return authState.user?.name?.isNotEmpty ?? false;
-    }
+    // if (routePath == AppRoutes.profile) {
+    //   return authState.user?.name?.isNotEmpty ?? false;
+    // }
     
     // All other protected routes require authentication
     return true;
@@ -173,24 +173,24 @@ class GuardManager {
       return UserRole.guest;
     }
     
-    final user = authState.user!;
+    // final user = authState.user!;
     
-    if (user.email.contains('admin')) {
-      return UserRole.admin;
-    }
+    // if (user.email.contains('admin')) {
+    //   return UserRole.admin;
+    // }
     
-    if (user.email.contains('premium')) {
-      return UserRole.premium;
-    }
+    // if (user.email.contains('premium')) {
+    //   return UserRole.premium;
+    // }
     
     return UserRole.regular;
   }
   
   /// Check if user has completed onboarding
-  bool hasCompletedOnboarding() {
-    final authState = _ref.read(authStateProvider);
-    return authState.user?.name?.isNotEmpty ?? false;
-  }
+  // bool hasCompletedOnboarding() {
+  //   final authState = _ref.read(authStateProvider);
+  //   return authState.user?.name?.isNotEmpty ?? false;
+  // }
 }
 
 /// User roles for easier role checking

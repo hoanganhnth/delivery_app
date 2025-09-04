@@ -1,3 +1,4 @@
+import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -69,7 +70,7 @@ class GuestGuard implements RouteGuard {
 class AdminGuard implements RouteGuard {
   @override
   String? checkRedirect(BuildContext context, GoRouterState state, WidgetRef ref) {
-    final authState = ref.read(authStateProvider);
+    final authState = ref.read(profileStateProvider);
     final user = authState.user;
 
     // First check if user is authenticated
@@ -94,7 +95,7 @@ class AdminGuard implements RouteGuard {
 class PremiumGuard implements RouteGuard {
   @override
   String? checkRedirect(BuildContext context, GoRouterState state, WidgetRef ref) {
-    final authState = ref.read(authStateProvider);
+    final authState = ref.read(profileStateProvider);
     final user = authState.user;
 
     // First check if user is authenticated
@@ -120,7 +121,7 @@ class PremiumGuard implements RouteGuard {
 class OnboardingGuard implements RouteGuard {
   @override
   String? checkRedirect(BuildContext context, GoRouterState state, WidgetRef ref) {
-    final authState = ref.read(authStateProvider);
+    final authState = ref.read(profileStateProvider);
     final user = authState.user;
 
     // Check if user is authenticated
@@ -130,7 +131,7 @@ class OnboardingGuard implements RouteGuard {
 
     // Check if user has completed onboarding (implement based on your user model)
     // For demo purposes, let's say users with name completed onboarding
-    final hasCompletedOnboarding = user.name != null && user.name!.isNotEmpty;
+    final hasCompletedOnboarding = user.fullName != null && user.fullName!.isNotEmpty;
 
     if (!hasCompletedOnboarding) {
       // Redirect to onboarding (you would create this route)

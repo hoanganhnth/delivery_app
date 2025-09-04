@@ -11,7 +11,7 @@ final authAwareDioProvider = Provider<Dio>((ref) {
     getToken: () async {
       // Get token from auth state
       final authState = ref.read(authStateProvider);
-      return authState.user?.accessToken;
+      return authState.accessToken;
     },
     onRefreshToken: () async {
       // Handle token refresh

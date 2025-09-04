@@ -1,6 +1,7 @@
+import 'package:delivery_app/features/auth/presentation/providers/auth_providers.dart';
+import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../auth/presentation/providers/auth_providers.dart';
 
 /// Profile Screen
 class ProfileScreen extends ConsumerWidget {
@@ -8,7 +9,7 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authStateProvider);
+    final profileState = ref.watch(profileStateProvider);
     
     return Scaffold(
       appBar: AppBar(
@@ -18,23 +19,23 @@ class ProfileScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            if (authState.hasUser) ...[
+            if (profileState.hasUser) ...[
               CircleAvatar(
                 radius: 50,
                 child: Text(
-                  authState.user!.email.substring(0, 1).toUpperCase(),
+                  profileState.user!.email.substring(0, 1).toUpperCase(),
                   style: const TextStyle(fontSize: 32),
                 ),
               ),
               const SizedBox(height: 16),
               Text(
-                authState.user!.email,
+                profileState.user!.email,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              if (authState.user!.name != null) ...[
+              if (profileState.user!.fullName != null) ...[
                 const SizedBox(height: 8),
                 Text(
-                  authState.user!.name!,
+                  profileState.user!.fullName!,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ],
