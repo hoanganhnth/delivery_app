@@ -7,9 +7,9 @@ import '../../domain/repositories/auth_repository.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/register_usecase.dart';
 import '../../domain/usecases/refresh_token_usecase.dart';
-import 'auth_notifier.dart';
-import 'auth_state.dart';
-import 'token_storage_providers.dart';
+import './auth_notifier.dart';
+import './auth_state.dart';
+import './token_storage_providers.dart';
 
 // Use the global Dio provider from core
 // Auth endpoints don't need authentication, so we use the basic dio

@@ -44,6 +44,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       final currentPath = state.uri.path;
       final isPublicRoute = publicRoutes.contains(currentPath);
 
+      // Don't redirect from splash - let splash controller handle navigation
+      if (currentPath == AppRoutes.splash) {
+        return null;
+      }
+
       // If user is not authenticated and trying to access protected route
       if (!isAuthenticated && !isPublicRoute) {
         return AppRoutes.login;
@@ -58,11 +63,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       return null;
     } : null,
     routes: [
-      // Root route
+      // Root route - redirect to splash  
       GoRoute(
         path: AppRoutes.root,
         name: 'root',
-        redirect: (context, state) => AppRoutes.main,
+        redirect: (context, state) => AppRoutes.splash,
       ),
 
       // Splash route

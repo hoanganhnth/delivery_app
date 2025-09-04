@@ -24,7 +24,7 @@ class AppRouterConfig {
 
   const AppRouterConfig({
     this.debugLogDiagnostics = true,
-    this.initialLocation = '/home',
+    this.initialLocation = '/splash',
     this.enableRedirects = true,
     this.enableDeepLinking = true,
     this.navigationTimeout = const Duration(seconds: 30),
@@ -57,7 +57,7 @@ class AppRouterConfig {
 final devRouterConfigProvider = Provider<AppRouterConfig>((ref) {
   return const AppRouterConfig(
     debugLogDiagnostics: true,
-    initialLocation: '/home',
+    initialLocation: '/splash',
     enableRedirects: true,
     enableDeepLinking: true,
     enableLogging: true,
@@ -69,7 +69,7 @@ final devRouterConfigProvider = Provider<AppRouterConfig>((ref) {
 final prodRouterConfigProvider = Provider<AppRouterConfig>((ref) {
   return const AppRouterConfig(
     debugLogDiagnostics: false,
-    initialLocation: '/home',
+    initialLocation: '/splash',
     enableRedirects: true,
     enableDeepLinking: true,
     enableLogging: false,
@@ -81,7 +81,7 @@ final prodRouterConfigProvider = Provider<AppRouterConfig>((ref) {
 final testRouterConfigProvider = Provider<AppRouterConfig>((ref) {
   return const AppRouterConfig(
     debugLogDiagnostics: false,
-    initialLocation: '/home',
+    initialLocation: '/splash',
     enableRedirects: false, // Disable redirects for testing
     enableDeepLinking: false,
     enableLogging: false,

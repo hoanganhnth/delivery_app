@@ -33,6 +33,11 @@ class NavigationHelper {
     context.go(AppRoutes.main);
   }
 
+  /// Navigate to splash screen
+  static void goToSplash(BuildContext context) {
+    context.go(AppRoutes.splash);
+  }
+
   /// Navigate to orders screen
   static void goToOrders(BuildContext context) {
     context.go(AppRoutes.orders);
@@ -200,6 +205,7 @@ extension NavigationExtension on BuildContext {
   void goToLogin() => NavigationHelper.goToLogin(this);
   void goToRegister() => NavigationHelper.goToRegister(this);
   void goToMain() => NavigationHelper.goToMain(this);
+  void goToSplash() => NavigationHelper.goToSplash(this);
   void goToHome() => NavigationHelper.goToHome(this);
   void goToProfile() => NavigationHelper.goToProfile(this);
   void goToSettings() => NavigationHelper.goToSettings(this);

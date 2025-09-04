@@ -37,7 +37,7 @@ class ProfileLocalDataSourceImpl implements ProfileLocalDataSource {
       return right(null);
     } catch (e) {
       // AppLogger.e('ProfileLocalDataSource: Error caching profile - $e');
-      return left(Exception('Failed to cache profile'));
+      return left(Exception('Failed to cache profile + $e'));
     }
   }
 

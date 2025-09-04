@@ -14,7 +14,7 @@ class ProfilePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profileProvider = ref.watch(profileStateProvider);
     final user = profileProvider.user;
-    return Scaffold(  
+    return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
         backgroundColor: Colors.orange,
@@ -25,7 +25,7 @@ class ProfilePage extends ConsumerWidget {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(24),
-            color: Colors.orange.withValues( alpha: 0.1),
+            color: Colors.orange.withValues(alpha: 0.1),
             child: Row(
               children: [
                 const CircleAvatar(
@@ -79,14 +79,15 @@ class ProfilePage extends ConsumerWidget {
               width: double.infinity,
               height: 48,
               child: ElevatedButton.icon(
-                onPressed: () {
-                  ref.read(authStateProvider.notifier).logout();
+                onPressed: () async {
+                  await ref.read(authStateProvider.notifier).logout();
+
                   context.goToLogin();
-                ref.read(appInitializerServiceProvider).clearDataAfterLogout();
+                  ref
+                      .read(appInitializerServiceProvider)
+                      .clearDataAfterLogout();
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                ),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 icon: const Icon(Icons.logout, color: Colors.white),
                 label: const Text(
                   "Đăng xuất",

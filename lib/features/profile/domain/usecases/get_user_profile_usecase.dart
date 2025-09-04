@@ -4,44 +4,47 @@ import '../../../../core/usecases/usecase.dart';
 import '../entities/user_entity.dart';
 import '../repositories/profile_repository.dart';
 
-class GetUserProfileUseCase implements UseCase<UserEntity, NoParams> {
+class GetUserProfileParams {
+  final bool forceRefresh;
+  final bool useCache;
+
+  const GetUserProfileParams({
+    this.forceRefresh = false,
+    this.useCache = true,
+  });
+}
+
+class GetUserProfileUseCase implements UseCase<UserEntity, GetUserProfileParams> {
   final ProfileRepository repository;
 
   GetUserProfileUseCase(this.repository);
 
   @override
-  Future<Either<Failure, UserEntity>> call(NoParams params) async {
+  Future<Either<Failure, UserEntity>> call(GetUserProfileParams params) async {
+    // If force refresh is requested, skip cache
+    if (params.forceRefresh || !params.useCache) {
+      return await _fetchFromRemote();
+    }
+
     // First try to get cached profile
     final cachedResult = await repository.getCachedUserProfile();
     
-    // If cached profile exists and is recent, return it
+    // If cached profile exists, return it
     if (cachedResult.isRight()) {
       final cachedUser = cachedResult.fold((l) => null, (r) => r);
-      if (cachedUser != null 
-      // && _isCacheValid(cachedUser)
-      ) {
+      if (cachedUser != null) {
         return right(cachedUser);
       }
     }
     
     // Otherwise, fetch from remote
+    return await _fetchFromRemote();
+  }
+
+  Future<Either<Failure, UserEntity>> _fetchFromRemote() async {
     final remoteResult = await repository.getUserProfile();
-    
-    return remoteResult.fold(
-      (failure) {
-        // If remote fails, return cached profile if available
-        final cachedUser = cachedResult.fold((l) => null, (r) => r);
-        if (cachedUser != null) {
-          return right(cachedUser);
-        }
-        return left(failure);
-      },
-      (user) {
-        // Cache the fresh data
-        repository.cacheUserProfile(user);
-        return right(user);
-      },
-    );
+    await Future.delayed(const Duration(milliseconds: 500)); // Simulate network delay
+    return remoteResult;
   }
 
   // bool _isCacheValid(UserEntity user) {

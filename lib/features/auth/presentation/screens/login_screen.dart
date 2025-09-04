@@ -37,7 +37,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         context.showErrorToast(next.failure!.message);
       } else if (next.isAuthenticated && !next.isLoginLoading) {
         context.showSuccessToast('Login successful!');
-        ref.read(profileStateProvider.notifier).getUserProfile();
+        // Force refresh profile after login - don't use cache
+        ref.read(profileStateProvider.notifier).getUserProfile(
+          forceRefresh: true,
+          useCache: false,
+        );
         context.goToMain();
 
       }
