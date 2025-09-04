@@ -1,13 +1,16 @@
+
+import 'package:delivery_app/core/usecases/usecase.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:delivery_app/core/utils/validators.dart';
 import '../../../../core/error/failures.dart';
 import '../repositories/auth_repository.dart';
 
-class RegisterUseCase {
+class RegisterUseCase extends UseCase<bool, RegisterParams> {
   final AuthRepository repository;
 
   RegisterUseCase(this.repository);
 
+  @override
   Future<Either<Failure, bool>> call(RegisterParams params) async {
     if (!Validators.isEmailValid(params.email)) {
       return left(const ValidationFailure('Invalid email format'));
@@ -23,8 +26,6 @@ class RegisterUseCase {
 
     return await repository.register(params.email, params.password);
   }
-
-
 }
 
 class RegisterParams {

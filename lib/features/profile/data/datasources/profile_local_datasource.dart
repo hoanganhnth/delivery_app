@@ -16,13 +16,13 @@ class ProfileLocalDataSourceImpl implements ProfileLocalDataSource {
   @override
   Future<Either<Exception, UserModel?>> getCachedUserProfile() async {
     try {
-      AppLogger.i('ProfileLocalDataSource: Getting cached user profile');
+      // AppLogger.i('ProfileLocalDataSource: Getting cached user profile');
       final box = await Hive.openBox<UserModel>(_boxName);
       final user = box.get(_userKey);
-      AppLogger.i('ProfileLocalDataSource: Cached user found: ${user != null}');
+      // AppLogger.i('ProfileLocalDataSource: Cached user found: ${user != null}');
       return right(user);
     } catch (e) {
-      AppLogger.e('ProfileLocalDataSource: Error getting cached profile - $e');
+      // AppLogger.e('ProfileLocalDataSource: Error getting cached profile - $e');
       return left(Exception('Failed to get cached profile'));
     }
   }
@@ -30,13 +30,13 @@ class ProfileLocalDataSourceImpl implements ProfileLocalDataSource {
   @override
   Future<Either<Exception, void>> cacheUserProfile(UserModel user) async {
     try {
-      AppLogger.i('ProfileLocalDataSource: Caching user profile');
+      // AppLogger.i('ProfileLocalDataSource: Caching user profile');
       final box = await Hive.openBox<UserModel>(_boxName);
       await box.put(_userKey, user);
-      AppLogger.i('ProfileLocalDataSource: User profile cached successfully');
+      // AppLogger.i('ProfileLocalDataSource: User profile cached successfully');
       return right(null);
     } catch (e) {
-      AppLogger.e('ProfileLocalDataSource: Error caching profile - $e');
+      // AppLogger.e('ProfileLocalDataSource: Error caching profile - $e');
       return left(Exception('Failed to cache profile'));
     }
   }
@@ -44,13 +44,13 @@ class ProfileLocalDataSourceImpl implements ProfileLocalDataSource {
   @override
   Future<Either<Exception, void>> clearCachedUserProfile() async {
     try {
-      AppLogger.i('ProfileLocalDataSource: Clearing cached user profile');
+      // AppLogger.i('ProfileLocalDataSource: Clearing cached user profile');
       final box = await Hive.openBox<UserModel>(_boxName);
       await box.delete(_userKey);
-      AppLogger.i('ProfileLocalDataSource: Cached profile cleared successfully');
+      // AppLogger.i('ProfileLocalDataSource: Cached profile cleared successfully');
       return right(null);
     } catch (e) {
-      AppLogger.e('ProfileLocalDataSource: Error clearing cached profile - $e');
+      // AppLogger.e('ProfileLocalDataSource: Error clearing cached profile - $e');
       return left(Exception('Failed to clear cached profile'));
     }
   }

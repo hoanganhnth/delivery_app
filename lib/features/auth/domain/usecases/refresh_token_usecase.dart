@@ -1,12 +1,15 @@
+
+import 'package:delivery_app/core/usecases/usecase.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
 import '../repositories/auth_repository.dart';
 
-class RefreshTokenUseCase {
+class RefreshTokenUseCase extends UseCase<String, RefreshTokenParams> {
   final AuthRepository repository;
 
   RefreshTokenUseCase(this.repository);
 
+  @override
   Future<Either<Failure, String>> call(RefreshTokenParams params) async {
     if (params.refreshToken.isEmpty) {
       return left(const ValidationFailure('Refresh token cannot be empty'));

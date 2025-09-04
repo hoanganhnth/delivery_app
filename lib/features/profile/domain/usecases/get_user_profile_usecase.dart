@@ -17,7 +17,9 @@ class GetUserProfileUseCase implements UseCase<UserEntity, NoParams> {
     // If cached profile exists and is recent, return it
     if (cachedResult.isRight()) {
       final cachedUser = cachedResult.fold((l) => null, (r) => r);
-      if (cachedUser != null && _isCacheValid(cachedUser)) {
+      if (cachedUser != null 
+      // && _isCacheValid(cachedUser)
+      ) {
         return right(cachedUser);
       }
     }
@@ -42,13 +44,13 @@ class GetUserProfileUseCase implements UseCase<UserEntity, NoParams> {
     );
   }
 
-  bool _isCacheValid(UserEntity user) {
-    if (user.updatedAt == null) return false;
+  // bool _isCacheValid(UserEntity user) {
+  //   if (user.updatedAt == null) return false;
     
-    final now = DateTime.now();
-    final cacheAge = now.difference(user.updatedAt!);
+  //   final now = DateTime.now();
+  //   final cacheAge = now.difference(user.updatedAt!);
     
-    // Cache is valid for 1 hour
-    return cacheAge.inHours < 1;
-  }
+  //   // Cache is valid for 1 hour
+  //   return cacheAge.inHours < 1;
+  // }
 }

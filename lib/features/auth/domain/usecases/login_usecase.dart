@@ -1,14 +1,17 @@
+
+import 'package:delivery_app/core/usecases/usecase.dart';
 import 'package:delivery_app/core/utils/validators.dart';
 import 'package:delivery_app/features/auth/domain/entities/auth_entity.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
 import '../repositories/auth_repository.dart';
 
-class LoginUseCase {
+class LoginUseCase extends UseCase<AuthEntity, LoginParams> {
   final AuthRepository repository;
 
   LoginUseCase(this.repository);
 
+  @override
   Future<Either<Failure, AuthEntity>> call(LoginParams params) async {
     if (!Validators.isEmailValid(params.email)) {
       return left(const ValidationFailure('Invalid email format'));
