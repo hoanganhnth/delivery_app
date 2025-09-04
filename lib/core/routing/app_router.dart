@@ -4,6 +4,7 @@ import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../../features/auth/presentation/providers/auth_providers.dart';
+import '../../features/main/presentation/pages/main_screen.dart';
 import '../../features/home/home.dart';
 import '../../features/profile/profile.dart';
 import '../../features/settings/settings.dart';
@@ -48,9 +49,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         return AppRoutes.login;
       }
 
-      // If user is authenticated and trying to access auth routes, redirect to home
+      // If user is authenticated and trying to access auth routes, redirect to main
       if (isAuthenticated && (currentPath == AppRoutes.login || currentPath == AppRoutes.register)) {
-        return AppRoutes.home;
+        return AppRoutes.main;
       }
 
       // No redirect needed
@@ -61,7 +62,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.root,
         name: 'root',
-        redirect: (context, state) => AppRoutes.home,
+        redirect: (context, state) => AppRoutes.main,
       ),
 
       // Splash route
@@ -91,6 +92,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'forgot-password',
         redirect: guardManager.applyGuestGuard,
         builder: (context, state) => const ForgotPasswordScreen(),
+      ),
+      
+      // Main navigation with bottom nav bar
+      GoRoute(
+        path: AppRoutes.main,
+        name: 'main',
+        redirect: guardManager.applyAuthGuard,
+        builder: (context, state) => const MainScreen(),
       ),
       
       // Main app routes (with auth guard)

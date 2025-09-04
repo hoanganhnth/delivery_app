@@ -11,6 +11,7 @@ class AppRoutes {
   static const String forgotPassword = '/forgot-password';
   
   // Main app routes
+  static const String main = '/main';
   static const String home = '/home';
   static const String profile = '/profile';
   static const String settings = '/settings';
