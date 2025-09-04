@@ -9,6 +9,7 @@ import '../../domain/usecases/register_usecase.dart';
 import '../../domain/usecases/refresh_token_usecase.dart';
 import 'auth_notifier.dart';
 import 'auth_state.dart';
+import 'token_storage_providers.dart';
 
 // Use the global Dio provider from core
 // Auth endpoints don't need authentication, so we use the basic dio
@@ -52,10 +53,16 @@ final authStateProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   final loginUseCase = ref.watch(loginUseCaseProvider);
   final registerUseCase = ref.watch(registerUseCaseProvider);
   final refreshTokenUseCase = ref.watch(refreshTokenUseCaseProvider);
+  final storeTokensUseCase = ref.watch(storeTokensUseCaseProvider);
+  final getTokensUseCase = ref.watch(getTokensUseCaseProvider);
+  final clearTokensUseCase = ref.watch(clearTokensUseCaseProvider);
 
   return AuthNotifier(
     loginUseCase: loginUseCase,
     registerUseCase: registerUseCase,
     refreshTokenUseCase: refreshTokenUseCase,
+    storeTokensUseCase: storeTokensUseCase,
+    getTokensUseCase: getTokensUseCase,
+    clearTokensUseCase: clearTokensUseCase,
   );
 });

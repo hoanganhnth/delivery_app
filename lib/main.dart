@@ -9,6 +9,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/generated/l10n.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'features/auth/presentation/providers/token_storage_providers.dart';
 
 Future<void> main() async {
   runZonedGuarded<Future<void>>(
@@ -20,13 +22,23 @@ Future<void> main() async {
         options: DefaultFirebaseOptions.currentPlatform,
       );
 
+      // ✅ Khởi tạo SharedPreferences
+      final sharedPreferences = await SharedPreferences.getInstance();
+
       // Bắt lỗi Flutter framework
       FlutterError.onError = (FlutterErrorDetails details) {
         FlutterError.presentError(details);
         FirebaseCrashlytics.instance.recordFlutterFatalError(details);
       };
 
-      runApp(AppSetup.setupApp(child: const MainApp()));
+      runApp(
+        ProviderScope(
+          overrides: [
+            sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+          ],
+          child: AppSetup.setupApp(child: const MainApp()),
+        ),
+      );
     },
     (error, stack) {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);

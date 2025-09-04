@@ -1,4 +1,5 @@
-import 'package:delivery_app/core/network/network_providers.dart';
+import 'package:delivery_app/core/network/authenticated_network_providers.dart';
+// import 'package:delivery_app/core/network/network_providers.dart';
 import 'package:delivery_app/features/profile/data/datasources/profile_local_datasource.dart';
 import 'package:delivery_app/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:delivery_app/features/profile/data/datasources/profile_remote_datasource_impl.dart';
@@ -12,7 +13,7 @@ import 'package:delivery_app/features/profile/presentation/providers/profile_sta
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final profileApiServiceProvider = Provider<ProfileApiService>((ref) {
-  final dio = ref.watch(dioProvider);
+  final dio = ref.watch(authenticatedDioProvider);
   return ProfileApiService(dio);
 });
 

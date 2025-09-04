@@ -187,7 +187,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       email: _emailController.text.trim(),
       password: _passwordController.text,
       confirmPassword: _confirmPasswordController.text,
-      name: _nameController.text.trim().isEmpty ? null : _nameController.text.trim(),
+      // name: _nameController.text.trim().isEmpty ? null : _nameController.text.trim(),
     );
   }
 
@@ -214,7 +214,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           label: 'Dismiss',
           textColor: Colors.white,
           onPressed: () {
-            ref.read(authStateProvider.notifier).clearError();
+            // ref.read(authStateProvider.notifier).clearError();
           },
         ),
       ),

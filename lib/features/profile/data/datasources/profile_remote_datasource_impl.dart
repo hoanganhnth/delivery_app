@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:delivery_app/core/constants/api_constants.dart';
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:retrofit/retrofit.dart';
@@ -15,7 +16,7 @@ part 'profile_remote_datasource_impl.g.dart';
 abstract class ProfileApiService {
   factory ProfileApiService(Dio dio, {String baseUrl}) = _ProfileApiService;
 
-  @GET('/user/profile')
+  @GET(ApiConstants.getProfile)
   Future<BaseResponseDto<UserProfileDto>> getUserProfile();
 
   @PUT('/user/profile')

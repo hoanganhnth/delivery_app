@@ -15,8 +15,9 @@ final authAwareDioProvider = Provider<Dio>((ref) {
     },
     onRefreshToken: () async {
       // Handle token refresh
-      final authNotifier = ref.read(authStateProvider.notifier);
-      return await authNotifier.refreshToken();
+      // final authNotifier = ref.read(authStateProvider.notifier);
+      // return await authNotifier.refreshToken();
+      return "";
     },
   );
   return dioClient.dio;

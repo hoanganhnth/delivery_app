@@ -28,6 +28,10 @@ class NavigationHelper {
   static void goToSettings(BuildContext context) {
     context.go(AppRoutes.settings);
   }
+  /// Navigate to main screen
+  static void goToMain(BuildContext context) {
+    context.go(AppRoutes.main);
+  }
 
   /// Navigate to orders screen
   static void goToOrders(BuildContext context) {
@@ -195,6 +199,7 @@ extension NavigationExtension on BuildContext {
   /// Quick access to navigation helper methods
   void goToLogin() => NavigationHelper.goToLogin(this);
   void goToRegister() => NavigationHelper.goToRegister(this);
+  void goToMain() => NavigationHelper.goToMain(this);
   void goToHome() => NavigationHelper.goToHome(this);
   void goToProfile() => NavigationHelper.goToProfile(this);
   void goToSettings() => NavigationHelper.goToSettings(this);

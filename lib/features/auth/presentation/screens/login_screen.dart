@@ -1,4 +1,5 @@
 import 'package:delivery_app/core/presentation/widgets/toast/toast_extensions.dart';
+import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/logger/app_logger.dart';
@@ -25,6 +26,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authStateProvider);
@@ -33,8 +35,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ref.listen<AuthState>(authStateProvider, (previous, next) {
       if (next.hasError) {
         context.showErrorToast(next.failure!.message);
-      } else if (next.isAuthenticated) {
+      } else if (next.isAuthenticated && !next.isLoginLoading) {
         context.showSuccessToast('Login successful!');
+        ref.read(profileStateProvider.notifier).getUserProfile();
+        context.goToMain();
+
       }
     });
 
