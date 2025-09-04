@@ -1,41 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import '../../../home/presentation/pages/home_page.dart';
 import '../../../restaurants/presentation/pages/restaurants_page.dart';
 import '../../../cart/presentation/pages/cart_page.dart';
 import '../../../orders/presentation/pages/orders_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
+import '../providers/navigation_provider.dart';
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends ConsumerWidget {
   const MainScreen({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentTab = ref.watch(selectedTabProvider);
 
-class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
+    const pages = <Widget>[
+      HomePage(),
+      RestaurantsPage(),
+      CartPage(),
+      OrdersPage(),
+      ProfilePage(),
+    ];
 
-  static const List<Widget> _pages = <Widget>[
-    HomePage(),
-    RestaurantsPage(),
-    CartPage(),
-    OrdersPage(),
-    ProfilePage(),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex],
+      body: pages[currentTab.tabIndex], // dùng tabIndex từ AppTab
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,
-              color: Colors.black.withOpacity(.1),
-            )
+              color: Colors.black.withValues(alpha: 0.1),
+            ),
           ],
         ),
         child: SafeArea(
@@ -52,32 +49,16 @@ class _MainScreenState extends State<MainScreen> {
               tabBackgroundColor: Colors.orange,
               color: Colors.grey[600],
               tabs: const [
-                GButton(
-                  icon: Icons.home,
-                  text: 'Home',
-                ),
-                GButton(
-                  icon: Icons.restaurant,
-                  text: 'Restaurants',
-                ),
-                GButton(
-                  icon: Icons.shopping_cart,
-                  text: 'Cart',
-                ),
-                GButton(
-                  icon: Icons.receipt_long,
-                  text: 'Orders',
-                ),
-                GButton(
-                  icon: Icons.person,
-                  text: 'Profile',
-                ),
+                GButton(icon: Icons.home, text: 'Home'),
+                GButton(icon: Icons.restaurant, text: 'Restaurants'),
+                GButton(icon: Icons.shopping_cart, text: 'Cart'),
+                GButton(icon: Icons.receipt_long, text: 'Orders'),
+                GButton(icon: Icons.person, text: 'Profile'),
               ],
-              selectedIndex: _selectedIndex,
+              selectedIndex: currentTab.tabIndex, // chọn tab bằng AppTab
               onTabChange: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
+                ref.read(selectedTabProvider.notifier).state =
+                    AppTab.values[index]; // gán lại AppTab thay vì int
               },
             ),
           ),
