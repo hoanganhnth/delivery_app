@@ -71,6 +71,15 @@ class ProfilePage extends ConsumerWidget {
             title: Text("Lịch sử đơn hàng"),
           ),
 
+          // setting 
+          ListTile(
+            leading: const Icon(Icons.settings, color: Colors.orange),
+            title: const Text("Cài đặt"),
+            onTap: () {
+              context.pushSettings();
+            },
+          ),
+
           const Spacer(), // đẩy nút logout xuống cuối
 
           Padding(

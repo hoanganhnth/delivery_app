@@ -29,42 +29,46 @@ final routerProvider = Provider<GoRouter>((ref) {
   final router = GoRouter(
     initialLocation: config.initialLocation,
     debugLogDiagnostics: config.debugLogDiagnostics,
-    redirect: config.enableRedirects ? (context, state) {
-      final authState = ref.read(authStateProvider);
-      final isAuthenticated = authState.isAuthenticated;
+    redirect: config.enableRedirects
+        ? (context, state) {
+            final authState = ref.read(authStateProvider);
+            final isAuthenticated = authState.isAuthenticated;
 
-      // List of routes that don't require authentication
-      final publicRoutes = [
-        AppRoutes.login,
-        AppRoutes.register,
-        AppRoutes.forgotPassword,
-        AppRoutes.splash,
-        AppRoutes.root,
-      ];
+            // List of routes that don't require authentication
+            final publicRoutes = [
+              AppRoutes.login,
+              AppRoutes.register,
+              AppRoutes.forgotPassword,
+              AppRoutes.splash,
+              AppRoutes.root,
+            ];
 
-      final currentPath = state.uri.path;
-      final isPublicRoute = publicRoutes.contains(currentPath);
+            final currentPath = state.uri.path;
+            final isPublicRoute = publicRoutes.contains(currentPath);
 
-      // Don't redirect from splash - let splash controller handle navigation
-      if (currentPath == AppRoutes.splash) {
-        return null;
-      }
+            // Don't redirect from splash - let splash controller handle navigation
+            if (currentPath == AppRoutes.splash) {
+              return null;
+            }
 
-      // If user is not authenticated and trying to access protected route
-      if (!isAuthenticated && !isPublicRoute) {
-        return AppRoutes.login;
-      }
+            // If user is not authenticated and trying to access protected route
+            if (!isAuthenticated && !isPublicRoute) {
+              return AppRoutes.login;
+            }
 
-      // If user is authenticated and trying to access auth routes, redirect to main
-      if (isAuthenticated && (currentPath == AppRoutes.login || currentPath == AppRoutes.register)) {
-        return AppRoutes.main;
-      }
+            // If user is authenticated and trying to access auth routes, redirect to main
+            if (isAuthenticated &&
+                (currentPath == AppRoutes.login ||
+                    currentPath == AppRoutes.register)) {
+              return AppRoutes.main;
+            }
 
-      // No redirect needed
-      return null;
-    } : null,
+            // No redirect needed
+            return null;
+          }
+        : null,
     routes: [
-      // Root route - redirect to splash  
+      // Root route - redirect to splash
       GoRoute(
         path: AppRoutes.root,
         name: 'root',
@@ -77,7 +81,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'splash',
         builder: (context, state) => const SplashScreen(),
       ),
-      
+
       // Auth routes (with guest guard - redirect if already authenticated)
       GoRoute(
         path: AppRoutes.login,
@@ -99,7 +103,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         redirect: guardManager.applyGuestGuard,
         builder: (context, state) => const ForgotPasswordScreen(),
       ),
-      
+
       // Main navigation with bottom nav bar
       GoRoute(
         path: AppRoutes.main,
@@ -107,7 +111,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const MainScreen(),
       ),
-      
+
       // Theme settings route (standalone)
       GoRoute(
         path: AppRoutes.themeSettings,
@@ -115,7 +119,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const ThemeSettingsScreen(),
       ),
-      
+
       // Main app routes (with auth guard)
       GoRoute(
         path: AppRoutes.home,
@@ -130,15 +134,15 @@ final routerProvider = Provider<GoRouter>((ref) {
             // redirect: guardManager.applyAuthAndOnboarding,
             builder: (context, state) => const ProfileScreen(),
           ),
-          GoRoute(
-            path: 'settings',
-            name: 'settings',
-            redirect: guardManager.applyAuthGuard,
-            builder: (context, state) => const SettingsScreen(),
-          ),
         ],
       ),
-      
+      GoRoute(
+        path: AppRoutes.settings,
+        name: 'settings',
+        redirect: guardManager.applyAuthGuard,
+        builder: (context, state) => const SettingsScreen(),
+      ),
+
       // Orders routes (with auth guard)
       GoRoute(
         path: AppRoutes.orders,
@@ -168,7 +172,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
         ],
       ),
-      
+
       // Restaurants routes (with auth guard)
       GoRoute(
         path: AppRoutes.restaurants,
@@ -198,7 +202,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
         ],
       ),
-      
+
       // Cart and checkout routes (with auth guard)
       GoRoute(
         path: AppRoutes.cart,
@@ -243,7 +247,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const NotFoundScreen(),
       ),
     ],
-    
+
     // Error handling
     errorBuilder: (context, state) => ErrorScreen(error: state.error),
   );
@@ -264,12 +268,10 @@ extension GoRouterExtension on GoRouter {
   void pushOrders() => pushNamed('orders');
   void pushRestaurants() => pushNamed('restaurants');
   void pushCart() => pushNamed('cart');
-  
-  void pushOrderDetails(String orderId) => pushNamed(
-    'order-details',
-    pathParameters: {'orderId': orderId},
-  );
-  
+
+  void pushOrderDetails(String orderId) =>
+      pushNamed('order-details', pathParameters: {'orderId': orderId});
+
   void pushRestaurantDetails(String restaurantId) => pushNamed(
     'restaurant-details',
     pathParameters: {'restaurantId': restaurantId},
