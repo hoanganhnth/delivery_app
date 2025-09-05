@@ -7,19 +7,13 @@ part 'menu_item_dto.g.dart';
 @freezed
 abstract class MenuItemDto with _$MenuItemDto {
   const factory MenuItemDto({
-    required String id,
-    required String restaurantId,
+   String? id,
+     String? restaurantId,
     required String name,
     required String description,
     required double price,
-    required String imageUrl,
-    required String category,
-    required bool isAvailable,
-    required List<String> allergens,
-    required int preparationTime,
-    double? discount,
-    int? calories,
-    Map<String, dynamic>? nutrition,
+     String? image,
+     required MenuItemStatus status
   }) = _MenuItemDto;
 
   factory MenuItemDto.fromJson(Map<String, dynamic> json) =>
@@ -34,14 +28,16 @@ extension MenuItemDtoX on MenuItemDto {
       name: name,
       description: description,
       price: price,
-      imageUrl: imageUrl,
-      category: category,
-      isAvailable: isAvailable,
-      allergens: allergens,
-      preparationTime: preparationTime,
-      discount: discount,
-      calories: calories,
-      nutrition: nutrition,
+      image: image,
+      status: status,
+      
+      // category: category,
+      // isAvailable: isAvailable,
+      // allergens: allergens,
+      // preparationTime: preparationTime,
+      // discount: discount,
+      // calories: calories,
+      // nutrition: nutrition,
     );
   }
 }
