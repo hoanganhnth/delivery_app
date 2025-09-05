@@ -17,10 +17,12 @@ RestaurantDto _$RestaurantDtoFromJson(Map<String, dynamic> json) =>
       deliveryFee: (json['deliveryFee'] as num).toDouble(),
       deliveryTime: (json['deliveryTime'] as num).toInt(),
       isOpen: json['isOpen'] as bool,
-      latitude: (json['latitude'] as num).toDouble(),
-      longitude: (json['longitude'] as num).toDouble(),
+      addressLat: (json['addressLat'] as num).toDouble(),
+      addressLng: (json['addressLng'] as num).toDouble(),
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
+      openingHour: DateTime.parse(json['openingHour'] as String),
+      closingHour: DateTime.parse(json['closingHour'] as String),
     );
 
 Map<String, dynamic> _$RestaurantDtoToJson(RestaurantDto instance) =>
@@ -34,8 +36,10 @@ Map<String, dynamic> _$RestaurantDtoToJson(RestaurantDto instance) =>
       'deliveryFee': instance.deliveryFee,
       'deliveryTime': instance.deliveryTime,
       'isOpen': instance.isOpen,
-      'latitude': instance.latitude,
-      'longitude': instance.longitude,
+      'addressLat': instance.addressLat,
+      'addressLng': instance.addressLng,
+      'openingHour': instance.openingHour.toIso8601String(),
+      'closingHour': instance.closingHour.toIso8601String(),
       'created_at': instance.createdAt.toIso8601String(),
       'updated_at': instance.updatedAt.toIso8601String(),
     };

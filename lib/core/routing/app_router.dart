@@ -1,3 +1,4 @@
+import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
@@ -5,7 +6,6 @@ import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../../features/auth/presentation/providers/auth_providers.dart';
 import '../../features/main/presentation/pages/main_screen.dart';
-import '../../features/home/home.dart';
 import '../../features/profile/profile.dart';
 import '../../features/settings/settings.dart';
 import '../../features/settings/presentation/screens/theme_settings_screen.dart';
@@ -125,7 +125,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.home,
         name: 'home',
         redirect: guardManager.applyAuthGuard,
-        builder: (context, state) => const HomeScreen(),
+        builder: (context, state) => const HomePage(),
         routes: [
           // Nested routes under home (inherit auth guard)
           GoRoute(

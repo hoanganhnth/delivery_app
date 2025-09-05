@@ -14,8 +14,10 @@ class RestaurantDto {
   final double deliveryFee;
   final int deliveryTime;
   final bool isOpen;
-  final double latitude;
-  final double longitude;
+  final double addressLat;
+  final double addressLng;  
+  final DateTime openingHour;
+  final DateTime closingHour;
 
   @JsonKey(name: 'created_at')
   final DateTime createdAt;
@@ -33,10 +35,12 @@ class RestaurantDto {
     required this.deliveryFee,
     required this.deliveryTime,
     required this.isOpen,
-    required this.latitude,
-    required this.longitude,
+    required this.addressLat,
+    required this.addressLng,
     required this.createdAt,
     required this.updatedAt,
+    required this.openingHour,
+    required this.closingHour,
   });
 
   factory RestaurantDto.fromJson(Map<String, dynamic> json) =>
