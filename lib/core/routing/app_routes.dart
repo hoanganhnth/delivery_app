@@ -15,6 +15,7 @@ class AppRoutes {
   static const String home = '/home';
   static const String profile = '/profile';
   static const String settings = '/settings';
+  static const String themeSettings = '/settings/theme';
   
   // Delivery routes
   static const String orders = '/orders';

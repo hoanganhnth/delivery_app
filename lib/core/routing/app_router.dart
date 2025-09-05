@@ -8,6 +8,7 @@ import '../../features/main/presentation/pages/main_screen.dart';
 import '../../features/home/home.dart';
 import '../../features/profile/profile.dart';
 import '../../features/settings/settings.dart';
+import '../../features/settings/presentation/screens/theme_settings_screen.dart';
 import '../../features/orders/orders.dart';
 import '../../features/restaurants/restaurants.dart';
 import '../../features/cart/cart.dart';
@@ -105,6 +106,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'main',
         redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const MainScreen(),
+      ),
+      
+      // Theme settings route (standalone)
+      GoRoute(
+        path: AppRoutes.themeSettings,
+        name: 'theme-settings',
+        redirect: guardManager.applyAuthGuard,
+        builder: (context, state) => const ThemeSettingsScreen(),
       ),
       
       // Main app routes (with auth guard)

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:delivery_app/core/app_setup.dart';
 import 'package:delivery_app/core/routing/app_router.dart';
+import 'package:delivery_app/core/theme/theme.dart';
 import 'package:delivery_app/features/profile/data/models/user_model.dart';
 import 'package:delivery_app/firebase_options.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -62,12 +63,16 @@ class _MainAppState extends ConsumerState<MainApp> {
   @override
   Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
+    final theme = ref.watch(themeProvider);
 
     return MaterialApp.router(
       title: 'Delivery App',
 
       // Router configuration
       routerConfig: router,
+
+      // Theme configuration
+      theme: theme.themeData,
 
       // Localization configuration
       localizationsDelegates: const [
@@ -77,9 +82,6 @@ class _MainAppState extends ConsumerState<MainApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: S.delegate.supportedLocales,
-
-      // Theme configuration
-      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
 
       // Debug banner
       debugShowCheckedModeBanner: false,

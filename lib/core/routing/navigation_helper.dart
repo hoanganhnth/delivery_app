@@ -110,6 +110,11 @@ class NavigationHelper {
     context.push(AppRoutes.settings);
   }
 
+  /// Push theme settings screen
+  static void pushThemeSettings(BuildContext context) {
+    context.push(AppRoutes.themeSettings);
+  }
+
   /// Push order details screen
   static void pushOrderDetails(BuildContext context, String orderId) {
     context.push(AppRoutes.orderDetailsPath(orderId));
