@@ -7,8 +7,14 @@ part of 'refresh_token_response_dto.dart';
 // **************************************************************************
 
 _RefreshTokenDataDto _$RefreshTokenDataDtoFromJson(Map<String, dynamic> json) =>
-    _RefreshTokenDataDto(accessToken: json['accessToken'] as String);
+    _RefreshTokenDataDto(
+      accessToken: json['accessToken'] as String,
+      refreshToken: json['refreshToken'] as String?,
+    );
 
 Map<String, dynamic> _$RefreshTokenDataDtoToJson(
   _RefreshTokenDataDto instance,
-) => <String, dynamic>{'accessToken': instance.accessToken};
+) => <String, dynamic>{
+  'accessToken': instance.accessToken,
+  'refreshToken': instance.refreshToken,
+};

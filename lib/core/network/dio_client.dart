@@ -13,19 +13,22 @@ class DioClient {
   late final Dio dio;
 
   DioClient({this.getToken, this.onRefreshToken}) {
-    dio = Dio(
-      BaseOptions(
-        baseUrl: Platform.isAndroid ? ApiConstants.api : ApiConstants.apiIos,
-        connectTimeout: const Duration(seconds: 10),
-        receiveTimeout: const Duration(seconds: 10),
-        contentType: "application/json",
-      ),
+    final baseOptions = BaseOptions(
+      baseUrl: Platform.isAndroid ? ApiConstants.api : ApiConstants.apiIos,
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+      contentType: "application/json",
     );
+
+    dio = Dio(baseOptions);
 
     dio.interceptors.addAll([
       RequestInterceptor(getToken: getToken),
       ResponseInterceptor(),
-      ErrorInterceptor(onRefreshToken: onRefreshToken),
+      ErrorInterceptor(
+        onRefreshToken: onRefreshToken,
+        baseOptions: baseOptions,
+      ),
     ]);
   }
 }

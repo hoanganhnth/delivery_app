@@ -10,6 +10,7 @@ import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_datasource.dart';
 import '../dtos/login_request_dto.dart';
 import '../dtos/register_request_dto.dart';
+import '../dtos/refresh_token_response_dto.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
@@ -77,7 +78,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, String>> refreshToken(String refreshToken) async {
+  Future<Either<Failure, AuthEntity>> refreshToken(String refreshToken) async {
     try {
       final result = await remoteDataSource.refreshToken(refreshToken);
 
@@ -88,7 +89,7 @@ class AuthRepositoryImpl implements AuthRepository {
         },
         (refreshResponse) {
           if (refreshResponse.isSuccess && refreshResponse.data != null) {
-            return right(refreshResponse.data!.accessToken);
+            return right(refreshResponse.data!.toEntity(refreshToken));
           } else {
             return left(ServerFailure(refreshResponse.message));
           }

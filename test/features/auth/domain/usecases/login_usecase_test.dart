@@ -32,9 +32,12 @@ class MockAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, String>> refreshToken(String refreshToken) async {
+  Future<Either<Failure, AuthEntity>> refreshToken(String refreshToken) async {
     if (shouldReturnSuccess) {
-      return right('new_access_token');
+      return right(AuthEntity(
+        accessToken: 'new_access_token',
+        refreshToken: 'refresh_token',
+      ));
     } else {
       return left(ServerFailure(errorMessage ?? 'Token refresh failed'));
     }

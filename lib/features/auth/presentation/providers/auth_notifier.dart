@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../../../core/usecases/usecase.dart';
-import '../../domain/entities/auth_entity.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/register_usecase.dart';
 import '../../domain/usecases/refresh_token_usecase.dart';
@@ -175,7 +174,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   // refreshToken
-  Future<void> refreshToken() async {
+  Future refreshToken() async {
     if (state.refreshToken == null || state.refreshToken!.isEmpty) {
       AppLogger.e('AuthNotifier: No refresh token available');
       state = state.copyWith(isAuthenticated: false, clearUser: true);
@@ -188,7 +187,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     final params = RefreshTokenParams(refreshToken: state.refreshToken!);
     final result = await _refreshTokenUseCase(params);
 
-    result.fold(
+    await result.fold(
       (failure) {
         AppLogger.e('AuthNotifier: Token refresh failed - ${failure.message}');
         state = state.copyWith(
@@ -203,13 +202,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
         // Store new tokens locally
         final storeResult = await _storeTokensUseCase(
-          StoreTokensParams(
-            tokens: AuthEntity(
-              accessToken: newTokens,
-              refreshToken: state.refreshToken!,
-            ),
-          ),
+          StoreTokensParams(tokens: newTokens),
         );
+
         storeResult.fold(
           (failure) => AppLogger.e(
             'AuthNotifier: Failed to store new tokens - ${failure.message}',
@@ -221,10 +216,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
           isRefreshLoading: false,
           isAuthenticated: true,
           clearFailure: true,
-          accessToken: newTokens,
+          accessToken: newTokens.accessToken,
+          refreshToken: newTokens.refreshToken,
         );
       },
     );
+    return state.accessToken;
   }
 
   // Get access token from state

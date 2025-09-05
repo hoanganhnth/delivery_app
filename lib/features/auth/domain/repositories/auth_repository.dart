@@ -6,5 +6,5 @@ import '../../../../core/error/failures.dart';
 abstract class AuthRepository {
   Future<Either<Failure, AuthEntity>> login(LoginParams params);
   Future<Either<Failure, bool>> register(String email, String password);
-  Future<Either<Failure, String>> refreshToken(String refreshToken);
+  Future<Either<Failure, AuthEntity>> refreshToken(String refreshToken);
 }

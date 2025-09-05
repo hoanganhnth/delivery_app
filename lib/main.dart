@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:delivery_app/core/app_setup.dart';
 import 'package:delivery_app/core/routing/app_router.dart';
 import 'package:delivery_app/features/profile/data/models/user_model.dart';
 import 'package:delivery_app/firebase_options.dart';
@@ -35,13 +36,12 @@ Future<void> main() async {
       };
 
       runApp(
-        ProviderScope(
-          overrides: [
+        AppSetup.setupApp(
+          child: const MainApp(),
+          additionalOverrides: [
             sharedPreferencesProvider.overrideWithValue(sharedPreferences),
             ...getAppProviderOverrides(),
           ],
-          // child: AppSetup.setupApp(child: const MainApp()),
-          child: MainApp(),
         ),
       );
     },

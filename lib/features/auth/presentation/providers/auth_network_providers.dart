@@ -15,9 +15,19 @@ final authAwareDioProvider = Provider<Dio>((ref) {
     },
     onRefreshToken: () async {
       // Handle token refresh
-      // final authNotifier = ref.read(authStateProvider.notifier);
-      // return await authNotifier.refreshToken();
-      return "";
+      try {
+        final authNotifier = ref.read(authStateProvider.notifier);
+        // final updatedAuthState = ref.read(authStateProvider);
+        // print("access1: + ${updatedAuthState.accessToken}");
+       final access =  await authNotifier.refreshToken();
+
+        // Get the new access token from updated state
+        // print("access2: + ${access}");
+
+        return access;
+      } catch (e) {
+        return null;
+      }
     },
   );
   return dioClient.dio;
@@ -28,6 +38,8 @@ final authAwareDioProvider = Provider<Dio>((ref) {
 List<Override> getAppProviderOverrides() {
   return [
     // Override the global authenticated dio with auth-aware implementation
-    authenticatedDioProvider.overrideWith((ref) => ref.watch(authAwareDioProvider)),
+    authenticatedDioProvider.overrideWith(
+      (ref) => ref.watch(authAwareDioProvider),
+    ),
   ];
 }

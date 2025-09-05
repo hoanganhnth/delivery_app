@@ -33,6 +33,7 @@ class GetUserProfileUseCase implements UseCase<UserEntity, GetUserProfileParams>
     if (cachedResult.isRight()) {
       final cachedUser = cachedResult.fold((l) => null, (r) => r);
       if (cachedUser != null) {
+        _fetchFromRemote();
         return right(cachedUser);
       }
     }

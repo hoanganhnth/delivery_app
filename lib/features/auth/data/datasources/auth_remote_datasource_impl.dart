@@ -68,7 +68,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<Either<Exception, RefreshTokenResponseDto>> refreshToken(String refreshToken) async {
     try {
       // AppLogger.d('Attempting token refresh');
-      final response = await _apiService.refreshToken({'refresh_token': refreshToken});
+      final response = await _apiService.refreshToken({'refreshToken': refreshToken});
       // AppLogger.i('Token refresh successful');
       return right(response);
     } on DioException catch (e) {
