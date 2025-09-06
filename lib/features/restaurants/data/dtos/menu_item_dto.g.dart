@@ -7,14 +7,14 @@ part of 'menu_item_dto.dart';
 // **************************************************************************
 
 _MenuItemDto _$MenuItemDtoFromJson(Map<String, dynamic> json) => _MenuItemDto(
-  id: json['id'] as String?,
-  restaurantId: json['restaurantId'] as String?,
-  name: json['name'] as String,
-  description: json['description'] as String,
-  price: (json['price'] as num).toDouble(),
-  image: json['image'] as String?,
-  status: $enumDecode(_$MenuItemStatusEnumMap, json['status']),
-);
+      id: json['id'] as String?,
+      restaurantId: json['restaurantId'] as String?,
+      name: json['name'] as String,
+      description: json['description'] as String,
+      price: (json['price'] as num).toDouble(),
+      image: json['image'] as String?,
+      status: $enumDecode(_$MenuItemStatusEnumMap, json['status']),
+    );
 
 Map<String, dynamic> _$MenuItemDtoToJson(_MenuItemDto instance) =>
     <String, dynamic>{

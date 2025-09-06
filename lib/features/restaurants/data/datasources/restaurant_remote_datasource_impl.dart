@@ -20,7 +20,7 @@ abstract class RestaurantApiService {
 
   @GET('/api/restaurants')
   Future<BaseResponseDto<List<RestaurantDto>>> getRestaurants(
-    @Queries() Map<String, dynamic> queries,
+    @Queries() GetRestaurantsRequestDto request,
   );
 
   @GET('/api/restaurants/{id}')
@@ -31,12 +31,12 @@ abstract class RestaurantApiService {
 
   @GET(ApiConstants.getRestaurantNearBy)
   Future<BaseResponseDto<List<RestaurantDto>>> getNearbyRestaurants(
-    @Queries() Map<String, dynamic> queries,
+    @Queries() NearbyRestaurantsRequestDto request,
   );
 
   @GET('/api/restaurants/search')
   Future<BaseResponseDto<List<RestaurantDto>>> searchRestaurants(
-    @Queries() Map<String, dynamic> queries,
+    @Queries() SearchRestaurantsRequestDto request,
   );
 
   @GET('/api/restaurants/categories')
@@ -55,15 +55,7 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
     try {
       AppLogger.d('Getting restaurants with params: $request');
       
-      final queries = <String, dynamic>{};
-      if (request.latitude != null) queries['lat'] = request.latitude;
-      if (request.longitude != null) queries['lng'] = request.longitude;
-      if (request.category != null) queries['category'] = request.category;
-      if (request.searchQuery != null) queries['search'] = request.searchQuery;
-      queries['page'] = request.page;
-      queries['limit'] = request.limit;
-      
-      final response = await _apiService.getRestaurants(queries);
+      final response = await _apiService.getRestaurants(request);
       AppLogger.i('Successfully retrieved ${response.data?.length ?? 0} restaurants');
       return right(response);
     } on DioException catch (e) {
@@ -118,13 +110,7 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
     try {
       AppLogger.d('Getting nearby restaurants with params: $request');
       
-      final queries = <String, dynamic>{
-        'lat': request.latitude,
-        'lng': request.longitude,
-        'radius': request.radius,
-      };
-      
-      final response = await _apiService.getNearbyRestaurants(queries);
+      final response = await _apiService.getNearbyRestaurants(request);
       AppLogger.i('Successfully retrieved ${response.data?.length ?? 0} nearby restaurants');
       return right(response);
     } on DioException catch (e) {
@@ -143,13 +129,7 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
     try {
       AppLogger.d('Searching restaurants with query: ${request.query}');
       
-      final queries = <String, dynamic>{
-        'q': request.query,
-      };
-      if (request.latitude != null) queries['lat'] = request.latitude;
-      if (request.longitude != null) queries['lng'] = request.longitude;
-      
-      final response = await _apiService.searchRestaurants(queries);
+      final response = await _apiService.searchRestaurants(request);
       AppLogger.i('Search returned ${response.data?.length ?? 0} restaurants');
       return right(response);
     } on DioException catch (e) {

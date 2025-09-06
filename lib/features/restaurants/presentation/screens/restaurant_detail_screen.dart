@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../mock/mock_restaurant_service.dart';
 import '../../domain/entities/menu_item_entity.dart';
+import '../providers/restaurant_providers.dart';
 
-class RestaurantDetailScreen extends StatelessWidget {
+class RestaurantDetailScreen extends ConsumerStatefulWidget {
   final String restaurantId;
   
   const RestaurantDetailScreen({
@@ -12,13 +13,63 @@ class RestaurantDetailScreen extends StatelessWidget {
   });
 
   @override
+  ConsumerState<RestaurantDetailScreen> createState() => _RestaurantDetailScreenState();
+}
+
+class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Load restaurant detail when screen initializes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(restaurantDetailNotifierProvider.notifier).loadRestaurantDetail(widget.restaurantId);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final restaurants = MockRestaurantService.getMockRestaurants();
-    final restaurant = restaurants.firstWhere(
-      (r) => r.id == restaurantId,
-      orElse: () => restaurants.first,
-    );
-    final menuItems = MockRestaurantService.getMockMenuItems(restaurantId);
+    final detailState = ref.watch(restaurantDetailNotifierProvider);
+    final restaurant = detailState.restaurant;
+    final menuItems = detailState.menuItems;
+    
+    if (detailState.isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    
+    if (detailState.hasError) {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.orange,
+          leading: IconButton(
+            onPressed: () => context.pop(),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+          ),
+        ),
+        body: Center(
+          child: Text(
+            'Lỗi: ${detailState.errorMessage}',
+            style: const TextStyle(color: Colors.red),
+          ),
+        ),
+      );
+    }
+    
+    if (restaurant == null) {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.orange,
+          leading: IconButton(
+            onPressed: () => context.pop(),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+          ),
+        ),
+        body: const Center(
+          child: Text('Không tìm thấy nhà hàng'),
+        ),
+      );
+    }
     
     return Scaffold(
       body: CustomScrollView(

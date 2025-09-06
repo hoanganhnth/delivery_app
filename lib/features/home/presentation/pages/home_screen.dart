@@ -1,14 +1,27 @@
 import 'package:delivery_app/core/routing/navigation_helper.dart';
 import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_home_page.dart';
 import 'package:flutter/material.dart';
-import '../../../restaurants/presentation/mock/mock_restaurant_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../restaurants/presentation/providers/restaurant_providers.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
+  ConsumerState<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends ConsumerState<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    // Load featured restaurants when page initializes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(restaurantsNotifierProvider.notifier).loadFeaturedRestaurants();
+    });
+  }
+  @override
   Widget build(BuildContext context) {
-    final featuredRestaurants = MockRestaurantService.getMockRestaurants().take(3).toList();
     
     return Scaffold(
       appBar: AppBar(
@@ -154,7 +167,7 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 12),
             
             // Featured restaurants horizontal list
-            RestaurantHomePage(featuredRestaurants: featuredRestaurants),
+            const RestaurantHomePage(),
             
             const SizedBox(height: 24),
             
@@ -196,7 +209,7 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildCategoryItem(IconData icon, String title, Color color) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

@@ -1,35 +1,45 @@
 import 'package:delivery_app/core/routing/navigation_helper.dart';
-import 'package:delivery_app/features/restaurants/domain/entities/restaurant_entity.dart';
-import 'package:delivery_app/features/restaurants/presentation/screens/home_screen.dart';
-import 'package:flutter/widgets.dart';
+import 'package:delivery_app/features/restaurants/presentation/widgets/feature_restaurant_card.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/restaurant_providers.dart';
 
-class RestaurantHomePage extends StatelessWidget {
-  const RestaurantHomePage({super.key, required this.featuredRestaurants});
-
-  final List<RestaurantEntity> featuredRestaurants;
+class RestaurantHomePage extends ConsumerWidget {
+  const RestaurantHomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final restaurantsState = ref.watch(restaurantsNotifierProvider);
+    
     return SizedBox(
       height: 200,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: featuredRestaurants.length,
-        itemBuilder: (context, index) {
-          final restaurant = featuredRestaurants[index];
-          return Container(
-            width: 160,
-            margin: EdgeInsets.only(
-              right: index < featuredRestaurants.length - 1 ? 12 : 0,
+      child: restaurantsState.isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : restaurantsState.hasError
+          ? Center(
+              child: Text(
+                'Lỗi: ${restaurantsState.errorMessage}',
+                style: const TextStyle(color: Colors.red),
+              ),
+            )
+          : ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: restaurantsState.restaurants.length,
+              itemBuilder: (context, index) {
+                final restaurant = restaurantsState.restaurants[index];
+                return Container(
+                  width: 160,
+                  margin: EdgeInsets.only(
+                    right: index < restaurantsState.restaurants.length - 1 ? 12 : 0,
+                  ),
+                  child: GestureDetector(
+                    onTap: () => context.pushToRestaurantDetails(restaurant.id),
+                    child: FeaturedRestaurantCard(restaurant: restaurant),
+                  ),
+                );
+              },
             ),
-            child: GestureDetector(
-              onTap: () => context.pushToRestaurantDetails(restaurant.id),
-              child: FeaturedRestaurantCard(restaurant: restaurant),
-            ),
-          );
-        },
-      ),
     );
   }
 }

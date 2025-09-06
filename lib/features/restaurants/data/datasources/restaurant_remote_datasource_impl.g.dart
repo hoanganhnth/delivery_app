@@ -19,11 +19,11 @@ class _RestaurantApiService implements RestaurantApiService {
 
   @override
   Future<BaseResponseDto<List<RestaurantDto>>> getRestaurants(
-    Map<String, dynamic> queries,
+    GetRestaurantsRequestDto request,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.addAll(queries);
+    queryParameters.addAll(request.toJson());
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<BaseResponseDto<List<RestaurantDto>>>(
@@ -43,10 +43,10 @@ class _RestaurantApiService implements RestaurantApiService {
         _result.data!,
         (json) => json is List<dynamic>
             ? json
-                  .map<RestaurantDto>(
-                    (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
-                  )
-                  .toList()
+                .map<RestaurantDto>(
+                  (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
+                )
+                .toList()
             : List.empty(),
       );
     } on Object catch (e, s) {
@@ -98,7 +98,7 @@ class _RestaurantApiService implements RestaurantApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/restaurants/${restaurantId}/menu',
+            '/menu-items/restaurant/${restaurantId}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -111,10 +111,10 @@ class _RestaurantApiService implements RestaurantApiService {
         _result.data!,
         (json) => json is List<dynamic>
             ? json
-                  .map<MenuItemDto>(
-                    (i) => MenuItemDto.fromJson(i as Map<String, dynamic>),
-                  )
-                  .toList()
+                .map<MenuItemDto>(
+                  (i) => MenuItemDto.fromJson(i as Map<String, dynamic>),
+                )
+                .toList()
             : List.empty(),
       );
     } on Object catch (e, s) {
@@ -126,18 +126,18 @@ class _RestaurantApiService implements RestaurantApiService {
 
   @override
   Future<BaseResponseDto<List<RestaurantDto>>> getNearbyRestaurants(
-    Map<String, dynamic> queries,
+    NearbyRestaurantsRequestDto request,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.addAll(queries);
+    queryParameters.addAll(request.toJson());
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<BaseResponseDto<List<RestaurantDto>>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/restaurants/nearby',
+            '/restaurants/nearby',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -150,10 +150,10 @@ class _RestaurantApiService implements RestaurantApiService {
         _result.data!,
         (json) => json is List<dynamic>
             ? json
-                  .map<RestaurantDto>(
-                    (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
-                  )
-                  .toList()
+                .map<RestaurantDto>(
+                  (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
+                )
+                .toList()
             : List.empty(),
       );
     } on Object catch (e, s) {
@@ -165,11 +165,11 @@ class _RestaurantApiService implements RestaurantApiService {
 
   @override
   Future<BaseResponseDto<List<RestaurantDto>>> searchRestaurants(
-    Map<String, dynamic> queries,
+    SearchRestaurantsRequestDto request,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.addAll(queries);
+    queryParameters.addAll(request.toJson());
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<BaseResponseDto<List<RestaurantDto>>>(
@@ -189,10 +189,10 @@ class _RestaurantApiService implements RestaurantApiService {
         _result.data!,
         (json) => json is List<dynamic>
             ? json
-                  .map<RestaurantDto>(
-                    (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
-                  )
-                  .toList()
+                .map<RestaurantDto>(
+                  (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
+                )
+                .toList()
             : List.empty(),
       );
     } on Object catch (e, s) {

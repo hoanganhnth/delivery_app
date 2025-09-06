@@ -1,14 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../mock/mock_restaurant_service.dart';
 import '../../domain/entities/restaurant_entity.dart';
+import '../providers/restaurant_providers.dart';
 
-class AllRestaurantsScreen extends StatelessWidget {
+class AllRestaurantsScreen extends ConsumerStatefulWidget {
   const AllRestaurantsScreen({super.key});
 
   @override
+  ConsumerState<AllRestaurantsScreen> createState() => _AllRestaurantsScreenState();
+}
+
+class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Load all restaurants when screen initializes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(restaurantsNotifierProvider.notifier).loadRestaurants();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final restaurants = MockRestaurantService.getMockRestaurants();
+    final restaurantsState = ref.watch(restaurantsNotifierProvider);
     
     return Scaffold(
       appBar: AppBar(
@@ -61,17 +76,26 @@ class AllRestaurantsScreen extends StatelessWidget {
           
           // Restaurants list
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: restaurants.length,
-              itemBuilder: (context, index) {
-                final restaurant = restaurants[index];
-                return GestureDetector(
-                  onTap: () => context.go('/restaurants/${restaurant.id}'),
-                  child: RestaurantListCard(restaurant: restaurant),
-                );
-              },
-            ),
+            child: restaurantsState.isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : restaurantsState.hasError
+                ? Center(
+                    child: Text(
+                      'Lỗi: ${restaurantsState.errorMessage}',
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: restaurantsState.restaurants.length,
+                    itemBuilder: (context, index) {
+                      final restaurant = restaurantsState.restaurants[index];
+                      return GestureDetector(
+                        onTap: () => context.go('/restaurants/${restaurant.id}'),
+                        child: RestaurantListCard(restaurant: restaurant),
+                      );
+                    },
+                  ),
           ),
         ],
       ),

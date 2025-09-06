@@ -45,63 +45,66 @@ class MockAuthRemoteDataSource extends _i1.Mock
 
   @override
   _i3.Future<_i4.Either<Exception, _i5.BaseResponseDto<_i6.AuthDataDto>>> login(
-    _i7.LoginRequestDto? request,
-  ) =>
+          _i7.LoginRequestDto? request) =>
       (super.noSuchMethod(
-            Invocation.method(#login, [request]),
-            returnValue:
-                _i3.Future<
-                  _i4.Either<Exception, _i5.BaseResponseDto<_i6.AuthDataDto>>
-                >.value(
-                  _i8.dummyValue<
-                    _i4.Either<Exception, _i5.BaseResponseDto<_i6.AuthDataDto>>
-                  >(this, Invocation.method(#login, [request])),
-                ),
-          )
-          as _i3.Future<
-            _i4.Either<Exception, _i5.BaseResponseDto<_i6.AuthDataDto>>
-          >);
+        Invocation.method(
+          #login,
+          [request],
+        ),
+        returnValue: _i3.Future<
+                _i4
+                .Either<Exception, _i5.BaseResponseDto<_i6.AuthDataDto>>>.value(
+            _i8.dummyValue<
+                _i4.Either<Exception, _i5.BaseResponseDto<_i6.AuthDataDto>>>(
+          this,
+          Invocation.method(
+            #login,
+            [request],
+          ),
+        )),
+      ) as _i3
+          .Future<_i4.Either<Exception, _i5.BaseResponseDto<_i6.AuthDataDto>>>);
 
   @override
   _i3.Future<_i4.Either<Exception, _i5.BaseResponseDto<bool>>> register(
-    _i9.RegisterRequestDto? request,
-  ) =>
+          _i9.RegisterRequestDto? request) =>
       (super.noSuchMethod(
-            Invocation.method(#register, [request]),
-            returnValue:
-                _i3.Future<
-                  _i4.Either<Exception, _i5.BaseResponseDto<bool>>
-                >.value(
-                  _i8.dummyValue<
-                    _i4.Either<Exception, _i5.BaseResponseDto<bool>>
-                  >(this, Invocation.method(#register, [request])),
-                ),
-          )
-          as _i3.Future<_i4.Either<Exception, _i5.BaseResponseDto<bool>>>);
+        Invocation.method(
+          #register,
+          [request],
+        ),
+        returnValue: _i3
+            .Future<_i4.Either<Exception, _i5.BaseResponseDto<bool>>>.value(
+            _i8.dummyValue<_i4.Either<Exception, _i5.BaseResponseDto<bool>>>(
+          this,
+          Invocation.method(
+            #register,
+            [request],
+          ),
+        )),
+      ) as _i3.Future<_i4.Either<Exception, _i5.BaseResponseDto<bool>>>);
 
   @override
   _i3.Future<
-    _i4.Either<Exception, _i5.BaseResponseDto<_i10.RefreshTokenDataDto>>
-  >
-  refreshToken(String? refreshToken) =>
-      (super.noSuchMethod(
-            Invocation.method(#refreshToken, [refreshToken]),
-            returnValue:
-                _i3.Future<
-                  _i4.Either<
-                    Exception,
-                    _i5.BaseResponseDto<_i10.RefreshTokenDataDto>
-                  >
-                >.value(
-                  _i8.dummyValue<
-                    _i4.Either<
-                      Exception,
-                      _i5.BaseResponseDto<_i10.RefreshTokenDataDto>
-                    >
-                  >(this, Invocation.method(#refreshToken, [refreshToken])),
-                ),
-          )
-          as _i3.Future<
-            _i4.Either<Exception, _i5.BaseResponseDto<_i10.RefreshTokenDataDto>>
-          >);
+          _i4.Either<Exception, _i5.BaseResponseDto<_i10.RefreshTokenDataDto>>>
+      refreshToken(String? refreshToken) => (super.noSuchMethod(
+            Invocation.method(
+              #refreshToken,
+              [refreshToken],
+            ),
+            returnValue: _i3.Future<
+                    _i4.Either<Exception,
+                        _i5.BaseResponseDto<_i10.RefreshTokenDataDto>>>.value(
+                _i8.dummyValue<
+                    _i4.Either<Exception,
+                        _i5.BaseResponseDto<_i10.RefreshTokenDataDto>>>(
+              this,
+              Invocation.method(
+                #refreshToken,
+                [refreshToken],
+              ),
+            )),
+          ) as _i3.Future<
+              _i4.Either<Exception,
+                  _i5.BaseResponseDto<_i10.RefreshTokenDataDto>>>);
 }
