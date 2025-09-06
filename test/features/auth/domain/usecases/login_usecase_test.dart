@@ -114,6 +114,7 @@ void main() {
     });
 
     test('should validate email format', () async {
+      
       // arrange
       final params = LoginParams(
         email: 'invalid-email',

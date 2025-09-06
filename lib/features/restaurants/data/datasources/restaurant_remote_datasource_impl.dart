@@ -1,3 +1,4 @@
+import 'package:delivery_app/core/constants/api_constants.dart';
 import 'package:delivery_app/core/data/dtos/base_response_dto.dart';
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
@@ -25,10 +26,10 @@ abstract class RestaurantApiService {
   @GET('/api/restaurants/{id}')
   Future<BaseResponseDto<RestaurantDto>> getRestaurantById(@Path('id') String id);
 
-  @GET('/api/restaurants/{id}/menu')
-  Future<BaseResponseDto<List<MenuItemDto>>> getMenuItems(@Path('id') String restaurantId);
+  @GET(ApiConstants.getMenuItemsByRestaurant)
+  Future<BaseResponseDto<List<MenuItemDto>>> getMenuItems(@Path('restaurantId') String restaurantId);
 
-  @GET('/api/restaurants/nearby')
+  @GET(ApiConstants.getRestaurantNearBy)
   Future<BaseResponseDto<List<RestaurantDto>>> getNearbyRestaurants(
     @Queries() Map<String, dynamic> queries,
   );

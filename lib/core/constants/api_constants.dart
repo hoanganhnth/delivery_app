@@ -7,4 +7,9 @@ class ApiConstants {
   static const register = "$auth/register";
   static const refreshToken = "$auth/refresh-token";
   static const getProfile = "/users";
+
+  static const getRestaurant = "/restaurants";
+  static const getMenuItemsByRestaurant =
+      "/menu-items/restaurant/{restaurantId}";
+  static const getRestaurantNearBy = "/restaurants/nearby";
 }
