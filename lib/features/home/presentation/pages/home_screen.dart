@@ -1,10 +1,10 @@
 import 'package:delivery_app/core/routing/navigation_helper.dart';
+import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_home_page.dart';
 import 'package:flutter/material.dart';
 import '../../../restaurants/presentation/mock/mock_restaurant_service.dart';
-import '../../../restaurants/domain/entities/restaurant_entity.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -154,25 +154,7 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 12),
             
             // Featured restaurants horizontal list
-            SizedBox(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: featuredRestaurants.length,
-                itemBuilder: (context, index) {
-                  final restaurant = featuredRestaurants[index];
-                  return Container(
-                    width: 160,
-                    margin: EdgeInsets.only(right: index < featuredRestaurants.length - 1 ? 12 : 0),
-                    child: GestureDetector(
-                      onTap: () => context.pushToRestaurantDetails(restaurant.id),
-                      child: FeaturedRestaurantCard(restaurant: restaurant),
-                    ),
-                  );
-                },
-              ),
-            ),
+            RestaurantHomePage(featuredRestaurants: featuredRestaurants),
             
             const SizedBox(height: 24),
             
@@ -239,78 +221,4 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class FeaturedRestaurantCard extends StatelessWidget {
-  final RestaurantEntity restaurant;
-  
-  const FeaturedRestaurantCard({
-    super.key,
-    required this.restaurant,
-  });
 
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Restaurant image
-          Container(
-            height: 100,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-              image: DecorationImage(
-                image: NetworkImage(restaurant.image ?? ''),
-                fit: BoxFit.cover,
-                onError: (error, stackTrace) {},
-              ),
-            ),
-            child: restaurant.image == null 
-              ? Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                  ),
-                  child: const Center(
-                    child: Icon(Icons.restaurant, size: 40, color: Colors.grey),
-                  ),
-                )
-              : null,
-          ),
-          
-          // Restaurant info
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    restaurant.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Icon(Icons.star, size: 12, color: Colors.orange[700]),
-                      const SizedBox(width: 2),
-                      const Text('4.5', style: TextStyle(fontSize: 10)),
-                      const SizedBox(width: 8),
-                      const Text('20-30 phút', style: TextStyle(fontSize: 10)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

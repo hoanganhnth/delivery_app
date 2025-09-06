@@ -28,6 +28,7 @@ class NavigationHelper {
   static void goToSettings(BuildContext context) {
     context.go(AppRoutes.settings);
   }
+
   /// Navigate to main screen
   static void goToMain(BuildContext context) {
     context.go(AppRoutes.main);
@@ -89,7 +90,7 @@ class NavigationHelper {
   }
 
   /// Push navigation methods (keeps current screen in stack)
-  
+
   /// Push login screen
   static void pushLogin(BuildContext context) {
     context.push(AppRoutes.login);
@@ -133,6 +134,11 @@ class NavigationHelper {
   /// Push cart screen
   static void pushCart(BuildContext context) {
     context.push(AppRoutes.cart);
+  }
+
+  // push restaurants screen
+  static void pushRes(BuildContext context) {
+    context.push(AppRoutes.restaurants);
   }
 
   /// Utility methods
@@ -198,10 +204,7 @@ class NavigationDialogAction {
   final String label;
   final VoidCallback? onPressed;
 
-  NavigationDialogAction({
-    required this.label,
-    this.onPressed,
-  });
+  NavigationDialogAction({required this.label, this.onPressed});
 }
 
 /// Extension methods for easier navigation
@@ -217,17 +220,22 @@ extension NavigationExtension on BuildContext {
   void goToOrders() => NavigationHelper.goToOrders(this);
   void goToRestaurants() => NavigationHelper.goToRestaurants(this);
   void goToCart() => NavigationHelper.goToCart(this);
-  
-  void goToOrderDetails(String orderId) => NavigationHelper.goToOrderDetails(this, orderId);
-  void goToRestaurantDetails(String restaurantId) => NavigationHelper.goToRestaurantDetails(this, restaurantId);
-  void goToMenu(String restaurantId) => NavigationHelper.goToMenu(this, restaurantId);
-  
+
+  void goToOrderDetails(String orderId) =>
+      NavigationHelper.goToOrderDetails(this, orderId);
+  void goToRestaurantDetails(String restaurantId) =>
+      NavigationHelper.goToRestaurantDetails(this, restaurantId);
+  void goToMenu(String restaurantId) =>
+      NavigationHelper.goToMenu(this, restaurantId);
+
   void pushLogin() => NavigationHelper.pushLogin(this);
   void pushRegister() => NavigationHelper.pushRegister(this);
   void pushProfile() => NavigationHelper.pushProfile(this);
   void pushSettings() => NavigationHelper.pushSettings(this);
   void pushCart() => NavigationHelper.pushCart(this);
-  
+  void pushToRestaurantDetails(String restaurantId) =>
+      NavigationHelper.pushRestaurantDetails(this, restaurantId);
+  void pushToRestaurants() => NavigationHelper.pushRes(this);
   void goBack() => NavigationHelper.goBack(this);
   void goToRoot() => NavigationHelper.goToRoot(this);
 }

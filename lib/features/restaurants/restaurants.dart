@@ -2,7 +2,7 @@
 library;
 
 // Screens
-export 'presentation/screens/home_screen.dart';
+export '../home/presentation/pages/home_screen.dart';
 export 'presentation/screens/all_restaurants_screen.dart';
 export 'presentation/screens/restaurant_detail_screen.dart';
 export 'presentation/screens/restaurants_screen.dart';

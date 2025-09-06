@@ -1,7 +1,7 @@
+import 'package:delivery_app/features/home/presentation/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import '../../../home/presentation/pages/home_page.dart';
 import '../../../cart/presentation/pages/cart_page.dart';
 import '../../../orders/presentation/pages/orders_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
