@@ -18,12 +18,12 @@ part 'restaurant_remote_datasource_impl.g.dart';
 abstract class RestaurantApiService {
   factory RestaurantApiService(Dio dio, {String baseUrl}) = _RestaurantApiService;
 
-  @GET('/api/restaurants')
+  @GET('/restaurants')
   Future<BaseResponseDto<List<RestaurantDto>>> getRestaurants(
     @Queries() GetRestaurantsRequestDto request,
   );
 
-  @GET('/api/restaurants/{id}')
+  @GET('/restaurants/{id}')
   Future<BaseResponseDto<RestaurantDto>> getRestaurantById(@Path('id') String id);
 
   @GET(ApiConstants.getMenuItemsByRestaurant)
@@ -34,12 +34,12 @@ abstract class RestaurantApiService {
     @Queries() NearbyRestaurantsRequestDto request,
   );
 
-  @GET('/api/restaurants/search')
+  @GET('/restaurants/search')
   Future<BaseResponseDto<List<RestaurantDto>>> searchRestaurants(
     @Queries() SearchRestaurantsRequestDto request,
   );
 
-  @GET('/api/restaurants/categories')
+  @GET('/restaurants/categories')
   Future<BaseResponseDto<List<String>>> getRestaurantCategories();
 }
 

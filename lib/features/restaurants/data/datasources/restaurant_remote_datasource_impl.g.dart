@@ -30,7 +30,7 @@ class _RestaurantApiService implements RestaurantApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/restaurants',
+            '/restaurants',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -66,7 +66,7 @@ class _RestaurantApiService implements RestaurantApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/restaurants/${id}',
+            '/restaurants/${id}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -176,7 +176,7 @@ class _RestaurantApiService implements RestaurantApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/restaurants/search',
+            '/restaurants/search',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -212,7 +212,7 @@ class _RestaurantApiService implements RestaurantApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/restaurants/categories',
+            '/restaurants/categories',
             queryParameters: queryParameters,
             data: _data,
           )

@@ -1,11 +1,12 @@
+import 'package:delivery_app/core/network/authenticated_network_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/network/network_providers.dart';
+// import '../../../../core/network/network_providers.dart';
 import '../../data/datasources/restaurant_remote_datasource.dart';
 import '../../data/datasources/restaurant_remote_datasource_impl.dart';
 
 // Restaurant API service provider
 final restaurantApiServiceProvider = Provider<RestaurantApiService>((ref) {
-  final dio = ref.watch(dioProvider); // Use basic dio for restaurant endpoints
+  final dio = ref.watch(authenticatedDioProvider); // Use basic dio for restaurant endpoints
   return RestaurantApiService(dio);
 });
 
