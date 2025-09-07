@@ -43,10 +43,10 @@ class _RestaurantApiService implements RestaurantApiService {
         _result.data!,
         (json) => json is List<dynamic>
             ? json
-                .map<RestaurantDto>(
-                  (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
-                )
-                .toList()
+                  .map<RestaurantDto>(
+                    (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
+                  )
+                  .toList()
             : List.empty(),
       );
     } on Object catch (e, s) {
@@ -111,10 +111,10 @@ class _RestaurantApiService implements RestaurantApiService {
         _result.data!,
         (json) => json is List<dynamic>
             ? json
-                .map<MenuItemDto>(
-                  (i) => MenuItemDto.fromJson(i as Map<String, dynamic>),
-                )
-                .toList()
+                  .map<MenuItemDto>(
+                    (i) => MenuItemDto.fromJson(i as Map<String, dynamic>),
+                  )
+                  .toList()
             : List.empty(),
       );
     } on Object catch (e, s) {
@@ -150,10 +150,10 @@ class _RestaurantApiService implements RestaurantApiService {
         _result.data!,
         (json) => json is List<dynamic>
             ? json
-                .map<RestaurantDto>(
-                  (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
-                )
-                .toList()
+                  .map<RestaurantDto>(
+                    (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
+                  )
+                  .toList()
             : List.empty(),
       );
     } on Object catch (e, s) {
@@ -189,10 +189,10 @@ class _RestaurantApiService implements RestaurantApiService {
         _result.data!,
         (json) => json is List<dynamic>
             ? json
-                .map<RestaurantDto>(
-                  (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
-                )
-                .toList()
+                  .map<RestaurantDto>(
+                    (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
+                  )
+                  .toList()
             : List.empty(),
       );
     } on Object catch (e, s) {

@@ -13,8 +13,8 @@ _RefreshTokenDataDto _$RefreshTokenDataDtoFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$RefreshTokenDataDtoToJson(
-        _RefreshTokenDataDto instance) =>
-    <String, dynamic>{
-      'accessToken': instance.accessToken,
-      'refreshToken': instance.refreshToken,
-    };
+  _RefreshTokenDataDto instance,
+) => <String, dynamic>{
+  'accessToken': instance.accessToken,
+  'refreshToken': instance.refreshToken,
+};

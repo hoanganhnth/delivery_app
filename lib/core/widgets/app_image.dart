@@ -21,7 +21,7 @@ class AppImage extends StatelessWidget {
     this.borderRadius = 8,
     this.placeholder,
     this.errorWidget,
-    this.useCache = true, // ✅ mặc định có cache
+    this.useCache = false, // ✅ mặc định có cache
   });
 
   bool get _isNetwork =>

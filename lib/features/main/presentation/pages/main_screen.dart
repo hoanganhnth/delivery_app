@@ -1,4 +1,4 @@
-import 'package:delivery_app/features/home/presentation/pages/home_screen.dart';
+import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';

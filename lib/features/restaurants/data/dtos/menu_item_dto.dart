@@ -6,14 +6,15 @@ part 'menu_item_dto.g.dart';
 
 @freezed
 abstract class MenuItemDto with _$MenuItemDto {
-  const factory MenuItemDto(
-      {num? id,
-      num? restaurantId,
-      required String name,
-      required String description,
-      required double price,
-      String? image,
-      required MenuItemStatus status}) = _MenuItemDto;
+  const factory MenuItemDto({
+    num? id,
+    num? restaurantId,
+    required String name,
+    required String description,
+    required double price,
+    String? image,
+    @MenuItemStatusConverter() required MenuItemStatus status,
+  }) = _MenuItemDto;
 
   factory MenuItemDto.fromJson(Map<String, dynamic> json) =>
       _$MenuItemDtoFromJson(json);

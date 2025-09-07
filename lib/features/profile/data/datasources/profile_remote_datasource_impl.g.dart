@@ -96,11 +96,11 @@ class _ProfileApiService implements ProfileApiService {
     );
     final _options = _setStreamType<BaseResponseDto<String>>(
       Options(
-        method: 'POST',
-        headers: _headers,
-        extra: _extra,
-        contentType: 'multipart/form-data',
-      )
+            method: 'POST',
+            headers: _headers,
+            extra: _extra,
+            contentType: 'multipart/form-data',
+          )
           .compose(
             _dio.options,
             '/user/avatar',
