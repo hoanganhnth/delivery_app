@@ -52,13 +52,13 @@ abstract class AppColors {
 /// Light theme colors
 class LightColors implements AppColors {
   @override
-  Color get primary => const Color(0xFF2196F3);
+  Color get primary => const Color(0xFFFF9800); // Orange color
 
   @override
-  Color get primaryLight => const Color(0xFF64B5F6);
+  Color get primaryLight => const Color(0xFFFFB74D); // Lighter orange
 
   @override
-  Color get primaryDark => const Color(0xFF1976D2);
+  Color get primaryDark => const Color(0xFFF57C00); // Darker orange
 
   @override
   Color get onPrimary => Colors.white;
