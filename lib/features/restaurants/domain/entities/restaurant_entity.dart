@@ -5,19 +5,19 @@ part 'restaurant_entity.freezed.dart';
 @freezed
 abstract class RestaurantEntity with _$RestaurantEntity {
   const factory RestaurantEntity({
-    required String id,
+    required num id,
     required String name,
-     String? description,
+    String? description,
     required String address,
-     String? phone,
-     String? image,
+    String? phone,
+    String? image,
     // required double rating,
     // required int reviewCount,
     // required double deliveryFee,
     // required int deliveryTime, // in minutes
     // required bool isOpen,
-    DateTime? closingHour,
-    DateTime? openingHour,
+    String? closingHour,
+    String? openingHour,
     // required List<String> categories,
     double? addressLat,
     double? addressLng,

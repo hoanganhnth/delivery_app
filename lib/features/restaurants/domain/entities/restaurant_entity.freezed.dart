@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$RestaurantEntity {
-  String get id;
+  num get id;
   String get name;
   String? get description;
   String get address;
@@ -24,8 +24,8 @@ mixin _$RestaurantEntity {
 // required double deliveryFee,
 // required int deliveryTime, // in minutes
 // required bool isOpen,
-  DateTime? get closingHour;
-  DateTime? get openingHour; // required List<String> categories,
+  String? get closingHour;
+  String? get openingHour; // required List<String> categories,
   double? get addressLat;
   double? get addressLng;
 
@@ -76,14 +76,14 @@ abstract mixin class $RestaurantEntityCopyWith<$Res> {
       _$RestaurantEntityCopyWithImpl;
   @useResult
   $Res call(
-      {String id,
+      {num id,
       String name,
       String? description,
       String address,
       String? phone,
       String? image,
-      DateTime? closingHour,
-      DateTime? openingHour,
+      String? closingHour,
+      String? openingHour,
       double? addressLat,
       double? addressLng});
 }
@@ -116,7 +116,7 @@ class _$RestaurantEntityCopyWithImpl<$Res>
       id: null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as num,
       name: null == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -140,11 +140,11 @@ class _$RestaurantEntityCopyWithImpl<$Res>
       closingHour: freezed == closingHour
           ? _self.closingHour
           : closingHour // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as String?,
       openingHour: freezed == openingHour
           ? _self.openingHour
           : openingHour // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as String?,
       addressLat: freezed == addressLat
           ? _self.addressLat
           : addressLat // ignore: cast_nullable_to_non_nullable
@@ -251,14 +251,14 @@ extension RestaurantEntityPatterns on RestaurantEntity {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
-            String id,
+            num id,
             String name,
             String? description,
             String address,
             String? phone,
             String? image,
-            DateTime? closingHour,
-            DateTime? openingHour,
+            String? closingHour,
+            String? openingHour,
             double? addressLat,
             double? addressLng)?
         $default, {
@@ -299,14 +299,14 @@ extension RestaurantEntityPatterns on RestaurantEntity {
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
-            String id,
+            num id,
             String name,
             String? description,
             String address,
             String? phone,
             String? image,
-            DateTime? closingHour,
-            DateTime? openingHour,
+            String? closingHour,
+            String? openingHour,
             double? addressLat,
             double? addressLng)
         $default,
@@ -345,14 +345,14 @@ extension RestaurantEntityPatterns on RestaurantEntity {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
-            String id,
+            num id,
             String name,
             String? description,
             String address,
             String? phone,
             String? image,
-            DateTime? closingHour,
-            DateTime? openingHour,
+            String? closingHour,
+            String? openingHour,
             double? addressLat,
             double? addressLng)?
         $default,
@@ -393,7 +393,7 @@ class _RestaurantEntity implements RestaurantEntity {
       this.addressLng});
 
   @override
-  final String id;
+  final num id;
   @override
   final String name;
   @override
@@ -410,9 +410,9 @@ class _RestaurantEntity implements RestaurantEntity {
 // required int deliveryTime, // in minutes
 // required bool isOpen,
   @override
-  final DateTime? closingHour;
+  final String? closingHour;
   @override
-  final DateTime? openingHour;
+  final String? openingHour;
 // required List<String> categories,
   @override
   final double? addressLat;
@@ -468,14 +468,14 @@ abstract mixin class _$RestaurantEntityCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String id,
+      {num id,
       String name,
       String? description,
       String address,
       String? phone,
       String? image,
-      DateTime? closingHour,
-      DateTime? openingHour,
+      String? closingHour,
+      String? openingHour,
       double? addressLat,
       double? addressLng});
 }
@@ -508,7 +508,7 @@ class __$RestaurantEntityCopyWithImpl<$Res>
       id: null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as num,
       name: null == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -532,11 +532,11 @@ class __$RestaurantEntityCopyWithImpl<$Res>
       closingHour: freezed == closingHour
           ? _self.closingHour
           : closingHour // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as String?,
       openingHour: freezed == openingHour
           ? _self.openingHour
           : openingHour // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as String?,
       addressLat: freezed == addressLat
           ? _self.addressLat
           : addressLat // ignore: cast_nullable_to_non_nullable

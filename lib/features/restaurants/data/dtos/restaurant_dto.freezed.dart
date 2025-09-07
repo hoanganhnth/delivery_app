@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$RestaurantDto {
-  String get id;
+  num get id;
   String get name;
   String? get description;
   String get address;
@@ -24,8 +24,8 @@ mixin _$RestaurantDto {
 // required double deliveryFee,
 // required int deliveryTime, // in minutes
 // required bool isOpen,
-  DateTime? get closingHour;
-  DateTime? get openingHour; // required List<String> categories,
+  String? get closingHour;
+  String? get openingHour; // required List<String> categories,
   double? get addressLat;
   double? get addressLng;
 
@@ -80,14 +80,14 @@ abstract mixin class $RestaurantDtoCopyWith<$Res> {
       _$RestaurantDtoCopyWithImpl;
   @useResult
   $Res call(
-      {String id,
+      {num id,
       String name,
       String? description,
       String address,
       String? phone,
       String? image,
-      DateTime? closingHour,
-      DateTime? openingHour,
+      String? closingHour,
+      String? openingHour,
       double? addressLat,
       double? addressLng});
 }
@@ -120,7 +120,7 @@ class _$RestaurantDtoCopyWithImpl<$Res>
       id: null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as num,
       name: null == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -144,11 +144,11 @@ class _$RestaurantDtoCopyWithImpl<$Res>
       closingHour: freezed == closingHour
           ? _self.closingHour
           : closingHour // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as String?,
       openingHour: freezed == openingHour
           ? _self.openingHour
           : openingHour // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as String?,
       addressLat: freezed == addressLat
           ? _self.addressLat
           : addressLat // ignore: cast_nullable_to_non_nullable
@@ -255,14 +255,14 @@ extension RestaurantDtoPatterns on RestaurantDto {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
-            String id,
+            num id,
             String name,
             String? description,
             String address,
             String? phone,
             String? image,
-            DateTime? closingHour,
-            DateTime? openingHour,
+            String? closingHour,
+            String? openingHour,
             double? addressLat,
             double? addressLng)?
         $default, {
@@ -303,14 +303,14 @@ extension RestaurantDtoPatterns on RestaurantDto {
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
-            String id,
+            num id,
             String name,
             String? description,
             String address,
             String? phone,
             String? image,
-            DateTime? closingHour,
-            DateTime? openingHour,
+            String? closingHour,
+            String? openingHour,
             double? addressLat,
             double? addressLng)
         $default,
@@ -349,14 +349,14 @@ extension RestaurantDtoPatterns on RestaurantDto {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
-            String id,
+            num id,
             String name,
             String? description,
             String address,
             String? phone,
             String? image,
-            DateTime? closingHour,
-            DateTime? openingHour,
+            String? closingHour,
+            String? openingHour,
             double? addressLat,
             double? addressLng)?
         $default,
@@ -399,7 +399,7 @@ class _RestaurantDto implements RestaurantDto {
       _$RestaurantDtoFromJson(json);
 
   @override
-  final String id;
+  final num id;
   @override
   final String name;
   @override
@@ -416,9 +416,9 @@ class _RestaurantDto implements RestaurantDto {
 // required int deliveryTime, // in minutes
 // required bool isOpen,
   @override
-  final DateTime? closingHour;
+  final String? closingHour;
   @override
-  final DateTime? openingHour;
+  final String? openingHour;
 // required List<String> categories,
   @override
   final double? addressLat;
@@ -482,14 +482,14 @@ abstract mixin class _$RestaurantDtoCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String id,
+      {num id,
       String name,
       String? description,
       String address,
       String? phone,
       String? image,
-      DateTime? closingHour,
-      DateTime? openingHour,
+      String? closingHour,
+      String? openingHour,
       double? addressLat,
       double? addressLng});
 }
@@ -522,7 +522,7 @@ class __$RestaurantDtoCopyWithImpl<$Res>
       id: null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as num,
       name: null == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -546,11 +546,11 @@ class __$RestaurantDtoCopyWithImpl<$Res>
       closingHour: freezed == closingHour
           ? _self.closingHour
           : closingHour // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as String?,
       openingHour: freezed == openingHour
           ? _self.openingHour
           : openingHour // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as String?,
       addressLat: freezed == addressLat
           ? _self.addressLat
           : addressLat // ignore: cast_nullable_to_non_nullable

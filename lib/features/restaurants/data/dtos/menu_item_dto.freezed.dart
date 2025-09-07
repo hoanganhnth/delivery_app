@@ -14,8 +14,8 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$MenuItemDto {
-  String? get id;
-  String? get restaurantId;
+  num? get id;
+  num? get restaurantId;
   String get name;
   String get description;
   double get price;
@@ -66,8 +66,8 @@ abstract mixin class $MenuItemDtoCopyWith<$Res> {
       _$MenuItemDtoCopyWithImpl;
   @useResult
   $Res call(
-      {String? id,
-      String? restaurantId,
+      {num? id,
+      num? restaurantId,
       String name,
       String description,
       double price,
@@ -99,11 +99,11 @@ class _$MenuItemDtoCopyWithImpl<$Res> implements $MenuItemDtoCopyWith<$Res> {
       id: freezed == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as num?,
       restaurantId: freezed == restaurantId
           ? _self.restaurantId
           : restaurantId // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as num?,
       name: null == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -222,8 +222,8 @@ extension MenuItemDtoPatterns on MenuItemDto {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
-            String? id,
-            String? restaurantId,
+            num? id,
+            num? restaurantId,
             String name,
             String description,
             double price,
@@ -258,8 +258,8 @@ extension MenuItemDtoPatterns on MenuItemDto {
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
-            String? id,
-            String? restaurantId,
+            num? id,
+            num? restaurantId,
             String name,
             String description,
             double price,
@@ -292,8 +292,8 @@ extension MenuItemDtoPatterns on MenuItemDto {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
-            String? id,
-            String? restaurantId,
+            num? id,
+            num? restaurantId,
             String name,
             String description,
             double price,
@@ -327,9 +327,9 @@ class _MenuItemDto implements MenuItemDto {
       _$MenuItemDtoFromJson(json);
 
   @override
-  final String? id;
+  final num? id;
   @override
-  final String? restaurantId;
+  final num? restaurantId;
   @override
   final String name;
   @override
@@ -392,8 +392,8 @@ abstract mixin class _$MenuItemDtoCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? id,
-      String? restaurantId,
+      {num? id,
+      num? restaurantId,
       String name,
       String description,
       double price,
@@ -425,11 +425,11 @@ class __$MenuItemDtoCopyWithImpl<$Res> implements _$MenuItemDtoCopyWith<$Res> {
       id: freezed == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as num?,
       restaurantId: freezed == restaurantId
           ? _self.restaurantId
           : restaurantId // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as num?,
       name: null == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable

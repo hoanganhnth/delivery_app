@@ -7,7 +7,7 @@ part 'restaurant_dto.g.dart';
 @freezed
 abstract class RestaurantDto with _$RestaurantDto {
   const factory RestaurantDto({
-    required String id,
+    required num id,
     required String name,
     String? description,
     required String address,
@@ -18,8 +18,8 @@ abstract class RestaurantDto with _$RestaurantDto {
     // required double deliveryFee,
     // required int deliveryTime, // in minutes
     // required bool isOpen,
-    DateTime? closingHour,
-    DateTime? openingHour,
+    String? closingHour,
+    String? openingHour,
     // required List<String> categories,
     double? addressLat,
     double? addressLng,

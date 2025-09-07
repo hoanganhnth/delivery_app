@@ -7,8 +7,8 @@ part of 'menu_item_dto.dart';
 // **************************************************************************
 
 _MenuItemDto _$MenuItemDtoFromJson(Map<String, dynamic> json) => _MenuItemDto(
-      id: json['id'] as String?,
-      restaurantId: json['restaurantId'] as String?,
+      id: json['id'] as num?,
+      restaurantId: json['restaurantId'] as num?,
       name: json['name'] as String,
       description: json['description'] as String,
       price: (json['price'] as num).toDouble(),

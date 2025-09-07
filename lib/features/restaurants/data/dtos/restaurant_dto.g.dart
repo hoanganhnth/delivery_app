@@ -8,18 +8,14 @@ part of 'restaurant_dto.dart';
 
 _RestaurantDto _$RestaurantDtoFromJson(Map<String, dynamic> json) =>
     _RestaurantDto(
-      id: json['id'] as String,
+      id: json['id'] as num,
       name: json['name'] as String,
       description: json['description'] as String?,
       address: json['address'] as String,
       phone: json['phone'] as String?,
       image: json['image'] as String?,
-      closingHour: json['closingHour'] == null
-          ? null
-          : DateTime.parse(json['closingHour'] as String),
-      openingHour: json['openingHour'] == null
-          ? null
-          : DateTime.parse(json['openingHour'] as String),
+      closingHour: json['closingHour'] as String?,
+      openingHour: json['openingHour'] as String?,
       addressLat: (json['addressLat'] as num?)?.toDouble(),
       addressLng: (json['addressLng'] as num?)?.toDouble(),
     );
@@ -32,8 +28,8 @@ Map<String, dynamic> _$RestaurantDtoToJson(_RestaurantDto instance) =>
       'address': instance.address,
       'phone': instance.phone,
       'image': instance.image,
-      'closingHour': instance.closingHour?.toIso8601String(),
-      'openingHour': instance.openingHour?.toIso8601String(),
+      'closingHour': instance.closingHour,
+      'openingHour': instance.openingHour,
       'addressLat': instance.addressLat,
       'addressLng': instance.addressLng,
     };

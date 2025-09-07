@@ -43,8 +43,8 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
         (exception) => left(ServerFailure(exception.toString())),
         (response) {
           if (response.isSuccess && response.data != null) {
-            final entities = (response.data as List)
-                .map((data) => RestaurantDto.fromJson(data as Map<String, dynamic>).toEntity())
+            final entities = (response.data)!
+                .map((data) => data.toEntity())
                 .toList();
             return right(entities);
           } else {
@@ -78,7 +78,9 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   }
 
   @override
-  Future<Either<Failure, List<MenuItemEntity>>> getMenuItems(String restaurantId) async {
+  Future<Either<Failure, List<MenuItemEntity>>> getMenuItems(
+    String restaurantId,
+  ) async {
     try {
       final result = await _remoteDataSource.getMenuItems(restaurantId);
 
@@ -87,7 +89,11 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
         (response) {
           if (response.isSuccess && response.data != null) {
             final entities = (response.data as List)
-                .map((data) => MenuItemDto.fromJson(data as Map<String, dynamic>).toEntity())
+                .map(
+                  (data) => MenuItemDto.fromJson(
+                    data as Map<String, dynamic>,
+                  ).toEntity(),
+                )
                 .toList();
             return right(entities);
           } else {
@@ -120,7 +126,11 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
         (response) {
           if (response.isSuccess && response.data != null) {
             final entities = (response.data as List)
-                .map((data) => RestaurantDto.fromJson(data as Map<String, dynamic>).toEntity())
+                .map(
+                  (data) => RestaurantDto.fromJson(
+                    data as Map<String, dynamic>,
+                  ).toEntity(),
+                )
                 .toList();
             return right(entities);
           } else {
@@ -159,7 +169,11 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
         (response) {
           if (response.isSuccess && response.data != null) {
             final entities = (response.data as List)
-                .map((data) => RestaurantDto.fromJson(data as Map<String, dynamic>).toEntity())
+                .map(
+                  (data) => RestaurantDto.fromJson(
+                    data as Map<String, dynamic>,
+                  ).toEntity(),
+                )
                 .toList();
             return right(entities);
           } else {

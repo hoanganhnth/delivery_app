@@ -34,7 +34,7 @@ class RestaurantHomePage extends ConsumerWidget {
                     right: index < restaurantsState.restaurants.length - 1 ? 12 : 0,
                   ),
                   child: GestureDetector(
-                    onTap: () => context.pushToRestaurantDetails(restaurant.id),
+                    onTap: () => context.pushToRestaurantDetails(restaurant.id.toString()),
                     child: FeaturedRestaurantCard(restaurant: restaurant),
                   ),
                 );
