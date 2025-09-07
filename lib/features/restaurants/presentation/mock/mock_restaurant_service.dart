@@ -73,9 +73,9 @@ class MockRestaurantService {
     ];
   }
 
-  static List<MenuItemEntity> getMockMenuItems(String restaurantId) {
+  static List<MenuItemEntity> getMockMenuItems(num restaurantId) {
     switch (restaurantId) {
-      case '1': // KFC
+      case 1: // KFC
         return [
           const MenuItemEntity(
             id: 101,
@@ -108,7 +108,7 @@ class MockRestaurantService {
             status: MenuItemStatus.available,
           ),
         ];
-      case '2': // Pizza Hut
+      case 2: // Pizza Hut
         return [
           const MenuItemEntity(
             id: 201,
@@ -141,7 +141,7 @@ class MockRestaurantService {
             status: MenuItemStatus.soldOut,
           ),
         ];
-      case '3': // Lotteria
+      case 3: // Lotteria
         return [
           const MenuItemEntity(
             id: 301,
@@ -164,7 +164,7 @@ class MockRestaurantService {
             status: MenuItemStatus.available,
           ),
         ];
-      case '4': // Phở Hòa
+      case 4: // Phở Hòa
         return [
           const MenuItemEntity(
             id: 401,
@@ -187,7 +187,7 @@ class MockRestaurantService {
             status: MenuItemStatus.available,
           ),
         ];
-      case '5': // Highlands Coffee
+      case 5: // Highlands Coffee
         return [
           const MenuItemEntity(
             id: 501,
@@ -210,7 +210,7 @@ class MockRestaurantService {
             status: MenuItemStatus.available,
           ),
         ];
-      case '6': // Bánh Mì Huỳnh Hoa
+      case 6: // Bánh Mì Huỳnh Hoa
         return [
           const MenuItemEntity(
             id: 601,

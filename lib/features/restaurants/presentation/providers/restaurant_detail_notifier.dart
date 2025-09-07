@@ -18,11 +18,11 @@ class RestaurantDetailNotifier extends StateNotifier<RestaurantDetailState> {
        super(const RestaurantDetailState());
 
   /// Load restaurant details and menu items
-  Future<void> loadRestaurantDetail(String restaurantId) async {
-    if (restaurantId.isEmpty) {
-      AppLogger.e('RestaurantDetailNotifier: Restaurant ID is empty');
-      return;
-    }
+  Future<void> loadRestaurantDetail(num restaurantId) async {
+    // if (restaurantId ) {
+    //   AppLogger.e('RestaurantDetailNotifier: Restaurant ID is empty');
+    //   return;
+    // }
 
     state = state.copyWith(isLoading: true, clearFailure: true);
 
@@ -62,11 +62,11 @@ class RestaurantDetailNotifier extends StateNotifier<RestaurantDetailState> {
   }
 
   /// Load only menu items for a restaurant
-  Future<void> loadMenuItems(String restaurantId) async {
-    if (restaurantId.isEmpty) {
-      AppLogger.e('RestaurantDetailNotifier: Restaurant ID is empty for menu items');
-      return;
-    }
+  Future<void> loadMenuItems(num restaurantId) async {
+    // if (restaurantId.isEmpty) {
+    //   AppLogger.e('RestaurantDetailNotifier: Restaurant ID is empty for menu items');
+    //   return;
+    // }
 
     state = state.copyWith(isMenuLoading: true, clearFailure: true);
 
@@ -101,14 +101,14 @@ class RestaurantDetailNotifier extends StateNotifier<RestaurantDetailState> {
   }
 
   /// Refresh restaurant detail data
-  Future<void> refreshRestaurantDetail(String restaurantId) async {
+  Future<void> refreshRestaurantDetail(num restaurantId) async {
     AppLogger.d('RestaurantDetailNotifier: Refreshing restaurant detail for: $restaurantId');
     await loadRestaurantDetail(restaurantId);
   }
 
   // Fallback methods using mock data
 
-  void _loadMockRestaurantDetail(String restaurantId) {
+  void _loadMockRestaurantDetail(num restaurantId) {
     AppLogger.w('RestaurantDetailNotifier: Using mock data as fallback');
     try {
       final allRestaurants = MockRestaurantService.getMockRestaurants();
@@ -134,7 +134,7 @@ class RestaurantDetailNotifier extends StateNotifier<RestaurantDetailState> {
     }
   }
 
-  void _loadMockMenuItems(String restaurantId, RestaurantEntity restaurant) {
+  void _loadMockMenuItems(num restaurantId, RestaurantEntity restaurant) {
     AppLogger.w('RestaurantDetailNotifier: Using mock menu items as fallback');
     try {
       final menuItems = MockRestaurantService.getMockMenuItems(restaurantId);
@@ -153,7 +153,7 @@ class RestaurantDetailNotifier extends StateNotifier<RestaurantDetailState> {
     }
   }
 
-  void _loadMockMenuItemsOnly(String restaurantId) {
+  void _loadMockMenuItemsOnly(num restaurantId) {
     AppLogger.w('RestaurantDetailNotifier: Using mock menu items only as fallback');
     try {
       final menuItems = MockRestaurantService.getMockMenuItems(restaurantId);

@@ -13,9 +13,9 @@ abstract class RestaurantRepository {
     int limit = 20,
   });
 
-  Future<Either<Failure, RestaurantEntity>> getRestaurantById(String id);
+  Future<Either<Failure, RestaurantEntity>> getRestaurantById(num id);
 
-  Future<Either<Failure, List<MenuItemEntity>>> getMenuItems(String restaurantId);
+  Future<Either<Failure, List<MenuItemEntity>>> getMenuItems(num restaurantId);
 
   Future<Either<Failure, List<RestaurantEntity>>> getNearbyRestaurants({
     required double latitude,

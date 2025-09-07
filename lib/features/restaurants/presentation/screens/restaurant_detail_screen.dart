@@ -1,3 +1,4 @@
+import 'package:delivery_app/core/widgets/app_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -5,24 +6,25 @@ import '../../domain/entities/menu_item_entity.dart';
 import '../providers/restaurant_providers.dart';
 
 class RestaurantDetailScreen extends ConsumerStatefulWidget {
-  final String restaurantId;
-  
-  const RestaurantDetailScreen({
-    super.key,
-    required this.restaurantId,
-  });
+  final num restaurantId;
+
+  const RestaurantDetailScreen({super.key, required this.restaurantId});
 
   @override
-  ConsumerState<RestaurantDetailScreen> createState() => _RestaurantDetailScreenState();
+  ConsumerState<RestaurantDetailScreen> createState() =>
+      _RestaurantDetailScreenState();
 }
 
-class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen> {
+class _RestaurantDetailScreenState
+    extends ConsumerState<RestaurantDetailScreen> {
   @override
   void initState() {
     super.initState();
     // Load restaurant detail when screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(restaurantDetailNotifierProvider.notifier).loadRestaurantDetail(widget.restaurantId);
+      ref
+          .read(restaurantDetailNotifierProvider.notifier)
+          .loadRestaurantDetail(widget.restaurantId);
     });
   }
 
@@ -31,13 +33,11 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
     final detailState = ref.watch(restaurantDetailNotifierProvider);
     final restaurant = detailState.restaurant;
     final menuItems = detailState.menuItems;
-    
+
     if (detailState.isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    
+
     if (detailState.hasError) {
       return Scaffold(
         appBar: AppBar(
@@ -55,7 +55,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
         ),
       );
     }
-    
+
     if (restaurant == null) {
       return Scaffold(
         appBar: AppBar(
@@ -65,12 +65,10 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
             icon: const Icon(Icons.arrow_back, color: Colors.white),
           ),
         ),
-        body: const Center(
-          child: Text('Không tìm thấy nhà hàng'),
-        ),
+        body: const Center(child: Text('Không tìm thấy nhà hàng')),
       );
     }
-    
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -116,29 +114,27 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
                 fit: StackFit.expand,
                 children: [
                   restaurant.image != null
-                    ? Image.network(
-                        restaurant.image!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
+                      ? AppImage(
+                          path: restaurant.image!,
+                          fit: BoxFit.cover,
+                          errorWidget: Container(
                             color: Colors.grey[300],
                             child: const Icon(
                               Icons.restaurant,
                               size: 80,
                               color: Colors.grey,
                             ),
-                          );
-                        },
-                      )
-                    : Container(
-                        color: Colors.grey[300],
-                        child: const Icon(
-                          Icons.restaurant,
-                          size: 80,
-                          color: Colors.grey,
+                          ),
+                        )
+                      : Container(
+                          color: Colors.grey[300],
+                          child: const Icon(
+                            Icons.restaurant,
+                            size: 80,
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                  
+
                   // Gradient overlay
                   Container(
                     decoration: BoxDecoration(
@@ -152,7 +148,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
                       ),
                     ),
                   ),
-                  
+
                   // Restaurant info overlay
                   Positioned(
                     bottom: 16,
@@ -182,16 +178,26 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
                         const SizedBox(height: 8),
                         Row(
                           children: [
-                            Icon(Icons.star, size: 16, color: Colors.orange[300]),
+                            Icon(
+                              Icons.star,
+                              size: 16,
+                              color: Colors.orange[300],
+                            ),
                             const SizedBox(width: 4),
                             const Text(
                               '4.5 (200+ đánh giá)',
-                              style: TextStyle(color: Colors.white, fontSize: 12),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
                             ),
                             const Spacer(),
                             const Text(
                               '20-30 phút • Miễn phí ship',
-                              style: TextStyle(color: Colors.white, fontSize: 12),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
                             ),
                           ],
                         ),
@@ -202,7 +208,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
               ),
             ),
           ),
-          
+
           // Restaurant details
           SliverToBoxAdapter(
             child: Container(
@@ -222,7 +228,11 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.location_on, color: Colors.grey[600], size: 20),
+                            Icon(
+                              Icons.location_on,
+                              color: Colors.grey[600],
+                              size: 20,
+                            ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
@@ -238,15 +248,25 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
                         const SizedBox(height: 12),
                         Row(
                           children: [
-                            Icon(Icons.access_time, color: Colors.grey[600], size: 20),
+                            Icon(
+                              Icons.access_time,
+                              color: Colors.grey[600],
+                              size: 20,
+                            ),
                             const SizedBox(width: 8),
                             const Text(
                               'Mở cửa: 8:00 - 22:00',
-                              style: TextStyle(fontSize: 14, color: Colors.grey),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
                             ),
                             const Spacer(),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.green,
                                 borderRadius: BorderRadius.circular(4),
@@ -265,7 +285,7 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
                       ],
                     ),
                   ),
-                  
+
                   // Promo banner
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -277,7 +297,11 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.local_offer, color: Colors.orange[700], size: 20),
+                        Icon(
+                          Icons.local_offer,
+                          color: Colors.orange[700],
+                          size: 20,
+                        ),
                         const SizedBox(width: 8),
                         const Expanded(
                           child: Text(
@@ -291,9 +315,9 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Menu section header
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
@@ -313,25 +337,20 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
               ),
             ),
           ),
-          
+
           // Menu items list
           SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final menuItem = menuItems[index];
-                return MenuItemCard(menuItem: menuItem);
-              },
-              childCount: menuItems.length,
-            ),
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final menuItem = menuItems[index];
+              return MenuItemCard(menuItem: menuItem);
+            }, childCount: menuItems.length),
           ),
-          
+
           // Bottom padding for cart button
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 100),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
         ],
       ),
-      
+
       // Floating cart button
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(16),
@@ -371,16 +390,13 @@ class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen>
 
 class MenuItemCard extends StatelessWidget {
   final MenuItemEntity menuItem;
-  
-  const MenuItemCard({
-    super.key,
-    required this.menuItem,
-  });
+
+  const MenuItemCard({super.key, required this.menuItem});
 
   @override
   Widget build(BuildContext context) {
     final isUnavailable = menuItem.status != MenuItemStatus.available;
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Card(
@@ -398,22 +414,22 @@ class MenuItemCard extends StatelessWidget {
                   height: 80,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    image: menuItem.image != null 
-                      ? DecorationImage(
-                          image: NetworkImage(menuItem.image!),
-                          fit: BoxFit.cover,
-                          onError: (error, stackTrace) {},
-                        )
-                      : null,
+                    image: menuItem.image != null
+                        ? DecorationImage(
+                            image: NetworkImage(menuItem.image!),
+                            fit: BoxFit.cover,
+                            onError: (error, stackTrace) {},
+                          )
+                        : null,
                     color: menuItem.image == null ? Colors.grey[300] : null,
                   ),
                   child: menuItem.image == null
-                    ? const Icon(Icons.fastfood, color: Colors.grey)
-                    : null,
+                      ? const Icon(Icons.fastfood, color: Colors.grey)
+                      : null,
                 ),
-                
+
                 const SizedBox(width: 12),
-                
+
                 // Menu item info
                 Expanded(
                   child: Column(
@@ -429,10 +445,7 @@ class MenuItemCard extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         menuItem.description,
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 14,
-                        ),
+                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -450,15 +463,18 @@ class MenuItemCard extends StatelessWidget {
                           const Spacer(),
                           if (isUnavailable)
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.grey[400],
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
-                                menuItem.status == MenuItemStatus.soldOut 
-                                  ? 'Hết hàng' 
-                                  : 'Không có sẵn',
+                                menuItem.status == MenuItemStatus.soldOut
+                                    ? 'Hết hàng'
+                                    : 'Không có sẵn',
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 12,
@@ -484,10 +500,19 @@ class MenuItemCard extends StatelessWidget {
                                     ),
                                     padding: EdgeInsets.zero,
                                   ),
-                                  const Text('0', style: TextStyle(fontWeight: FontWeight.bold)),
+                                  const Text(
+                                    '0',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                   IconButton(
                                     onPressed: () {},
-                                    icon: const Icon(Icons.add, size: 16, color: Colors.orange),
+                                    icon: const Icon(
+                                      Icons.add,
+                                      size: 16,
+                                      color: Colors.orange,
+                                    ),
                                     constraints: const BoxConstraints(
                                       minWidth: 32,
                                       minHeight: 32,

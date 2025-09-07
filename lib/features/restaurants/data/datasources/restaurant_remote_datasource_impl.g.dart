@@ -57,7 +57,7 @@ class _RestaurantApiService implements RestaurantApiService {
   }
 
   @override
-  Future<BaseResponseDto<RestaurantDto>> getRestaurantById(String id) async {
+  Future<BaseResponseDto<RestaurantDto>> getRestaurantById(num id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -88,7 +88,7 @@ class _RestaurantApiService implements RestaurantApiService {
 
   @override
   Future<BaseResponseDto<List<MenuItemDto>>> getMenuItems(
-    String restaurantId,
+    num restaurantId,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

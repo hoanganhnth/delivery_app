@@ -24,10 +24,10 @@ abstract class RestaurantApiService {
   );
 
   @GET('/restaurants/{id}')
-  Future<BaseResponseDto<RestaurantDto>> getRestaurantById(@Path('id') String id);
+  Future<BaseResponseDto<RestaurantDto>> getRestaurantById(@Path('id') num id);
 
   @GET(ApiConstants.getMenuItemsByRestaurant)
-  Future<BaseResponseDto<List<MenuItemDto>>> getMenuItems(@Path('restaurantId') String restaurantId);
+  Future<BaseResponseDto<List<MenuItemDto>>> getMenuItems(@Path('restaurantId') num restaurantId);
 
   @GET(ApiConstants.getRestaurantNearBy)
   Future<BaseResponseDto<List<RestaurantDto>>> getNearbyRestaurants(
@@ -69,7 +69,7 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
 
   @override
   Future<Either<Exception, BaseResponseDto<RestaurantDto>>> getRestaurantById(
-    String id,
+    num id,
   ) async {
     try {
       AppLogger.d('Getting restaurant with id: $id');
@@ -87,7 +87,7 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
 
   @override
   Future<Either<Exception, BaseResponseDto<List<MenuItemDto>>>> getMenuItems(
-    String restaurantId,
+    num restaurantId,
   ) async {
     try {
       AppLogger.d('Getting menu items for restaurant: $restaurantId');

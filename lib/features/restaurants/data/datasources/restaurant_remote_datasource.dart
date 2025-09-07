@@ -12,11 +12,11 @@ abstract class RestaurantRemoteDataSource {
   );
 
   Future<Either<Exception, BaseResponseDto<RestaurantDto>>> getRestaurantById(
-    String id,
+    num id,
   );
 
   Future<Either<Exception, BaseResponseDto<List<MenuItemDto>>>> getMenuItems(
-    String restaurantId,
+    num restaurantId,
   );
 
   Future<Either<Exception, BaseResponseDto<List<RestaurantDto>>>> getNearbyRestaurants(

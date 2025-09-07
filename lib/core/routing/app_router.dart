@@ -185,7 +185,8 @@ final routerProvider = Provider<GoRouter>((ref) {
             name: 'restaurant-details',
             redirect: guardManager.applyAuthGuard,
             builder: (context, state) {
-              final restaurantId = state.pathParameters['restaurantId']!;
+              final restaurantId =
+                  num.tryParse(state.pathParameters['restaurantId']!) ?? 1;
               return RestaurantDetailScreen(restaurantId: restaurantId);
             },
             routes: [

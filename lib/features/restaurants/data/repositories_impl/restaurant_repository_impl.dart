@@ -58,7 +58,7 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   }
 
   @override
-  Future<Either<Failure, RestaurantEntity>> getRestaurantById(String id) async {
+  Future<Either<Failure, RestaurantEntity>> getRestaurantById(num id) async {
     try {
       final result = await _remoteDataSource.getRestaurantById(id);
 
@@ -79,7 +79,7 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
 
   @override
   Future<Either<Failure, List<MenuItemEntity>>> getMenuItems(
-    String restaurantId,
+    num restaurantId,
   ) async {
     try {
       final result = await _remoteDataSource.getMenuItems(restaurantId);
