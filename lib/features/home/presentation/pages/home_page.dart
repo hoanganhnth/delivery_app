@@ -138,33 +138,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             const SizedBox(height: 24),
             
             // Featured restaurants section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Nhà hàng nổi bật',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => context.pushToRestaurants(),
-                    child: const Text(
-                      'Xem tất cả',
-                      style: TextStyle(
-                        color: Colors.orange,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            
-            const SizedBox(height: 12),
+          
             
             // Featured restaurants horizontal list
             const RestaurantHomePage(),

@@ -1,3 +1,4 @@
+import 'package:delivery_app/core/routing/navigation_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,7 +9,8 @@ class AllRestaurantsScreen extends ConsumerStatefulWidget {
   const AllRestaurantsScreen({super.key});
 
   @override
-  ConsumerState<AllRestaurantsScreen> createState() => _AllRestaurantsScreenState();
+  ConsumerState<AllRestaurantsScreen> createState() =>
+      _AllRestaurantsScreenState();
 }
 
 class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
@@ -24,16 +26,13 @@ class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
   @override
   Widget build(BuildContext context) {
     final restaurantsState = ref.watch(restaurantsNotifierProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange,
         title: const Text(
           'Tất cả nhà hàng',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
           onPressed: () => context.pop(),
@@ -71,14 +70,14 @@ class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
               ],
             ),
           ),
-          
+
           const Divider(height: 1),
-          
+
           // Restaurants list
           Expanded(
             child: restaurantsState.isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : restaurantsState.hasError
+                ? const Center(child: CircularProgressIndicator())
+                : restaurantsState.hasError
                 ? Center(
                     child: Text(
                       'Lỗi: ${restaurantsState.errorMessage}',
@@ -91,7 +90,9 @@ class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
                     itemBuilder: (context, index) {
                       final restaurant = restaurantsState.restaurants[index];
                       return GestureDetector(
-                        onTap: () => context.go('/restaurants/${restaurant.id}'),
+                        onTap: () => context.pushToRestaurantDetails(
+                          restaurant.id.toString(),
+                        ),
                         child: RestaurantListCard(restaurant: restaurant),
                       );
                     },
@@ -101,7 +102,7 @@ class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
       ),
     );
   }
-  
+
   Widget _buildFilterChip(String label, bool isSelected) {
     return FilterChip(
       label: Text(label),
@@ -115,9 +116,7 @@ class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
-        side: BorderSide(
-          color: isSelected ? Colors.orange : Colors.grey[300]!,
-        ),
+        side: BorderSide(color: isSelected ? Colors.orange : Colors.grey[300]!),
       ),
     );
   }
@@ -125,11 +124,8 @@ class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
 
 class RestaurantListCard extends StatelessWidget {
   final RestaurantEntity restaurant;
-  
-  const RestaurantListCard({
-    super.key,
-    required this.restaurant,
-  });
+
+  const RestaurantListCard({super.key, required this.restaurant});
 
   @override
   Widget build(BuildContext context) {
@@ -144,14 +140,16 @@ class RestaurantListCard extends StatelessWidget {
           Container(
             height: 160,
             decoration: BoxDecoration(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-              image: restaurant.image != null 
-                ? DecorationImage(
-                    image: NetworkImage(restaurant.image!),
-                    fit: BoxFit.cover,
-                    onError: (error, stackTrace) {},
-                  )
-                : null,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
+              image: restaurant.image != null
+                  ? DecorationImage(
+                      image: NetworkImage(restaurant.image!),
+                      fit: BoxFit.cover,
+                      onError: (error, stackTrace) {},
+                    )
+                  : null,
               color: restaurant.image == null ? Colors.grey[300] : null,
             ),
             child: Stack(
@@ -160,13 +158,16 @@ class RestaurantListCard extends StatelessWidget {
                   const Center(
                     child: Icon(Icons.restaurant, size: 60, color: Colors.grey),
                   ),
-                
+
                 // Discount badge
                 Positioned(
                   top: 8,
                   left: 8,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.red,
                       borderRadius: BorderRadius.circular(4),
@@ -181,7 +182,7 @@ class RestaurantListCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                
+
                 // Favorite button
                 Positioned(
                   top: 8,
@@ -201,7 +202,7 @@ class RestaurantListCard extends StatelessWidget {
               ],
             ),
           ),
-          
+
           // Restaurant info
           Padding(
             padding: const EdgeInsets.all(12),
@@ -219,10 +220,7 @@ class RestaurantListCard extends StatelessWidget {
                 if (restaurant.description != null)
                   Text(
                     restaurant.description!,
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -234,10 +232,7 @@ class RestaurantListCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         restaurant.address,
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12,
-                        ),
+                        style: TextStyle(color: Colors.grey[600], fontSize: 12),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -251,7 +246,10 @@ class RestaurantListCard extends StatelessWidget {
                     const SizedBox(width: 2),
                     const Text(
                       '4.5',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     const SizedBox(width: 4),
                     const Text(
@@ -266,7 +264,11 @@ class RestaurantListCard extends StatelessWidget {
                       style: TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                     const SizedBox(width: 12),
-                    Icon(Icons.delivery_dining, size: 14, color: Colors.grey[600]),
+                    Icon(
+                      Icons.delivery_dining,
+                      size: 14,
+                      color: Colors.grey[600],
+                    ),
                     const SizedBox(width: 2),
                     const Text(
                       'Miễn phí',

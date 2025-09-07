@@ -353,7 +353,14 @@ class _RestaurantDetailScreenState
 
       // Floating cart button
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).padding.bottom > 0
+              ? MediaQuery.of(context).padding.bottom
+              : 16,
+          left: 16,
+          right: 16,
+          top: 8,
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
