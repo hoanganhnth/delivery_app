@@ -77,7 +77,7 @@ final featuredRestaurantsProvider = Provider<List<RestaurantEntity>>((ref) {
   return state.featuredRestaurants;
 });
 
-final restaurantByIdProvider = Provider.family<RestaurantEntity?, String>((ref, restaurantId) {
+final restaurantByIdProvider = Provider.family<RestaurantEntity?, num>((ref, restaurantId) {
   final state = ref.watch(restaurantsNotifierProvider);
   try {
     return state.restaurants.firstWhere((r) => r.id == restaurantId);
@@ -86,7 +86,7 @@ final restaurantByIdProvider = Provider.family<RestaurantEntity?, String>((ref, 
   }
 });
 
-final menuItemsByRestaurantProvider = Provider.family<List<MenuItemEntity>, String>((ref, restaurantId) {
+final menuItemsByRestaurantProvider = Provider.family<List<MenuItemEntity>, num>((ref, restaurantId) {
   final state = ref.watch(restaurantDetailNotifierProvider);
   if (state.restaurant?.id == restaurantId) {
     return state.menuItems;
