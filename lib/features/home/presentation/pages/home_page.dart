@@ -1,4 +1,3 @@
-import 'package:delivery_app/core/routing/navigation_helper.dart';
 import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

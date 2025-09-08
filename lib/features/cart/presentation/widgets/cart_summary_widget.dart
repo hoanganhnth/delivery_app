@@ -29,14 +29,11 @@ class CartSummaryWidget extends ConsumerWidget {
       decoration: BoxDecoration(
         color: context.colors.surface,
         border: Border(
-          top: BorderSide(
-            color: context.colors.divider,
-            width: 1,
-          ),
+          top: BorderSide(color: context.colors.divider, width: 1),
         ),
         boxShadow: [
           BoxShadow(
-            color: context.colors.shadow.withOpacity(0.1),
+            color: context.colors.shadow.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),
@@ -76,17 +73,9 @@ class CartSummaryWidget extends ConsumerWidget {
             isSubtotal: true,
           ),
           const SizedBox(height: 8),
-          _buildPriceRow(
-            context,
-            'Delivery Fee',
-            '\$3.99',
-          ),
+          _buildPriceRow(context, 'Delivery Fee', '\$3.99'),
           const SizedBox(height: 8),
-          _buildPriceRow(
-            context,
-            'Service Fee',
-            '\$2.50',
-          ),
+          _buildPriceRow(context, 'Service Fee', '\$2.50'),
           const SizedBox(height: 8),
           _buildPriceRow(
             context,
@@ -170,8 +159,8 @@ class CartSummaryWidget extends ConsumerWidget {
           style: TextStyle(
             fontSize: isTotal ? 16 : 14,
             fontWeight: isTotal ? FontWeight.w600 : FontWeight.w400,
-            color: isTotal 
-                ? context.colors.textPrimary 
+            color: isTotal
+                ? context.colors.textPrimary
                 : context.colors.textSecondary,
           ),
         ),
@@ -180,9 +169,11 @@ class CartSummaryWidget extends ConsumerWidget {
           style: TextStyle(
             fontSize: isTotal ? 18 : 14,
             fontWeight: isTotal ? FontWeight.w700 : FontWeight.w500,
-            color: isTotal 
-                ? context.colors.primary 
-                : (isSubtotal ? context.colors.textPrimary : context.colors.textSecondary),
+            color: isTotal
+                ? context.colors.primary
+                : (isSubtotal
+                      ? context.colors.textPrimary
+                      : context.colors.textSecondary),
           ),
         ),
       ],
@@ -194,10 +185,7 @@ class CartSummaryWidget extends ConsumerWidget {
 class CompactCartSummaryWidget extends ConsumerWidget {
   final VoidCallback? onTap;
 
-  const CompactCartSummaryWidget({
-    super.key,
-    this.onTap,
-  });
+  const CompactCartSummaryWidget({super.key, this.onTap});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -218,7 +206,7 @@ class CompactCartSummaryWidget extends ConsumerWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: context.colors.primary.withOpacity(0.3),
+              color: context.colors.primary.withValues(alpha: 0.3),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -230,9 +218,12 @@ class CompactCartSummaryWidget extends ConsumerWidget {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
-                    color: context.colors.onPrimary.withOpacity(0.2),
+                    color: context.colors.onPrimary.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
