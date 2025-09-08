@@ -1,16 +1,23 @@
 /// Cart feature barrel file
 library;
 
-// Screens
+// Domain exports
+export 'domain/entities/cart_entity.dart';
+export 'domain/entities/cart_item_entity.dart';
+export 'domain/repositories/cart_repository.dart';
+export 'domain/usecases/cart_usecases.dart';
+
+// Data exports
+export 'data/datasources/cart_local_datasource.dart';
+export 'data/datasources/cart_local_datasource_impl.dart';
+export 'data/dtos/cart_dto.dart';
+export 'data/dtos/cart_item_dto.dart';
+export 'data/repositories_impl/cart_repository_impl.dart';
+
+// Presentation exports
+export 'presentation/providers/cart_providers.dart';
+export 'presentation/widgets/cart_demo_widget.dart';
 export 'presentation/screens/cart_screen.dart';
 export 'presentation/screens/checkout_screen.dart';
 export 'presentation/screens/payment_screen.dart';
 export 'presentation/screens/order_confirmation_screen.dart';
-
-// Add other exports as the feature grows:
-// export 'domain/entities/cart_entity.dart';
-// export 'domain/entities/cart_item_entity.dart';
-// export 'domain/usecases/add_to_cart_usecase.dart';
-// export 'domain/usecases/checkout_usecase.dart';
-// export 'data/repositories_impl/cart_repository_impl.dart';
-// export 'presentation/providers/cart_providers.dart';

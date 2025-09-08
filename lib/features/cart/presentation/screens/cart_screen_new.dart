@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/theme_extensions.dart';
+import '../../domain/entities/cart_item_entity.dart';
 import '../providers/cart_providers.dart';
 import '../widgets/cart_item_widget.dart';
 import '../widgets/cart_summary_widget.dart';

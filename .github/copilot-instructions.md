@@ -356,6 +356,7 @@ presentation/
 - **Full Rebuild**: `fvm dart run build_runner build --delete-conflicting-outputs`
 - **Get Dependencies**: `fvm flutter pub get`
 - **Clean & Rebuild**: `fvm flutter clean && fvm flutter pub get && fvm dart run build_runner build --delete-conflicting-outputs`
+-- **analyze**: `fvm flutter analyze `
 
 ### Feature Creation Checklist
 1. **Create Domain Layer**: entities, repositories (interfaces), usecases
