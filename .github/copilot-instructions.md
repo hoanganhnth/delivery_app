@@ -46,11 +46,12 @@ data/
 ### Presentation Layer Structure
 ```
 presentation/
-├── providers/        # Riverpod providers and state
-│   ├── auth_providers.dart (dependency injection)
-│   ├── auth_notifier.dart (StateNotifier)
-│   ├── auth_state.dart (State classes)
-│   └── auth_network_providers.dart
+├── providers/        # Riverpod providers and state (SEPARATED FILES)
+│   ├── providers.dart          # Barrel export file
+│   ├── example_state.dart      # State classes
+│   ├── example_notifier.dart   # StateNotifier classes
+│   ├── example_providers.dart  # Provider definitions
+│   └── example_network_providers.dart # Network/API providers
 ├── screens/         # UI screens
 │   ├── login_screen.dart
 │   ├── register_screen.dart
@@ -246,7 +247,73 @@ presentation/
    }
    ```
 
-3. **Create Providers**:
+3. **Create State Class**:
+   ```dart
+   // presentation/providers/example_state.dart
+   class ExampleState {
+     final bool isLoading;
+     final List<ExampleEntity> examples;
+     final ExampleEntity? selectedExample;
+     final Failure? failure;
+     
+     const ExampleState({
+       this.isLoading = false,
+       this.examples = const [],
+       this.selectedExample,
+       this.failure,
+     });
+     
+     ExampleState copyWith({
+       bool? isLoading,
+       List<ExampleEntity>? examples,
+       ExampleEntity? selectedExample,
+       Failure? failure,
+       bool clearFailure = false,
+     }) {
+       return ExampleState(
+         isLoading: isLoading ?? this.isLoading,
+         examples: examples ?? this.examples,
+         selectedExample: selectedExample ?? this.selectedExample,
+         failure: clearFailure ? null : (failure ?? this.failure),
+       );
+     }
+   }
+   ```
+
+4. **Create StateNotifier**:
+   ```dart
+   // presentation/providers/example_notifier.dart
+   class ExampleNotifier extends StateNotifier<ExampleState> {
+     final GetExampleUseCase _getExampleUseCase;
+     final GetExamplesUseCase _getExamplesUseCase;
+     
+     ExampleNotifier({
+       required GetExampleUseCase getExampleUseCase,
+       required GetExamplesUseCase getExamplesUseCase,
+     }) : _getExampleUseCase = getExampleUseCase,
+          _getExamplesUseCase = getExamplesUseCase,
+          super(const ExampleState());
+     
+     Future<void> loadExamples() async {
+       state = state.copyWith(isLoading: true, clearFailure: true);
+       
+       final result = await _getExamplesUseCase(NoParams());
+       
+       result.fold(
+         (failure) => state = state.copyWith(
+           isLoading: false,
+           failure: failure,
+         ),
+         (examples) => state = state.copyWith(
+           isLoading: false,
+           examples: examples,
+         ),
+       );
+     }
+   }
+   ```
+
+5. **Create Providers**:
    ```dart
    // presentation/providers/example_providers.dart
    // Network providers
@@ -282,6 +349,15 @@ presentation/
        getExamplesUseCase: getExamplesUseCase,
      );
    });
+   ```
+
+6. **Create Barrel Export**:
+   ```dart
+   // presentation/providers/providers.dart
+   export 'example_state.dart';
+   export 'example_notifier.dart';
+   export 'example_providers.dart';
+   export 'example_network_providers.dart';
    ```
 
 4. **Create Screen with State Management**:
@@ -342,8 +418,8 @@ presentation/
 - **Build/Codegen**: `fvm dart run build_runner build --delete-conflicting-outputs`
 - **Watch Mode**: `fvm dart run build_runner watch --delete-conflicting-outputs`
 - **Dependency Management**: `fvm flutter pub get`
-- **Testing**: `flutter test` (tests are organized by feature, focus on provider and notifier logic)
-- **Lint/Analyze**: `dart analyze` or `flutter analyze`
+- **Testing**: `fvm flutter test` (tests are organized by feature, focus on provider and notifier logic)
+- **Lint/Analyze**: `fvm dart analyze` or `fvm flutter analyze`
 - **Localization**: ARB files in `lib/l10n/`, build with `flutter pub run intl_utils:generate`
 - **Mock Data**: Always provide fallback mock data for API failures using `MockExampleService` classes
 
@@ -368,8 +444,13 @@ presentation/
 7. **Update Localization**: Add ARB entries if needed
 
 ## 6. Project-Specific Patterns & Conventions
-- **Provider Structure**:  
-  Each feature has its own providers (e.g., `lib/features/restaurants/presentation/providers/restaurant_providers.dart`). Notifiers are split for clarity (e.g., `restaurants_notifier.dart`, `restaurant_detail_notifier.dart`).
+- **Provider Structure**:
+  Each feature has its own providers split into separate files for better organization:
+  - `*_state.dart`: State classes (e.g., `cart_state.dart`)
+  - `*_notifier.dart`: StateNotifier classes (e.g., `cart_notifier.dart`)
+  - `*_providers.dart`: Provider definitions and dependency injection
+  - `providers.dart`: Barrel export file for all provider files
+  - Notifiers are split for clarity (e.g., `restaurants_notifier.dart`, `restaurant_detail_notifier.dart`)
 - **Async Navigation**:  
   Avoid using `BuildContext` across async gaps. Use `ref.listen` for state-driven navigation (see `ProfilePage`).
 - **DTOs as Query**:  
@@ -392,7 +473,8 @@ presentation/
 ## 8. Key Files & Directories
 - `lib/features/`: Feature-based organization (auth, restaurants, profile, etc.)
 - `lib/core/`: Constants, error, logger, network, utils, widgets, routing.
-- `lib/features/restaurants/presentation/providers/`: Provider and notifier split.
+- `lib/features/restaurants/presentation/providers/`: Provider and notifier split into separate files (state, notifier, providers, barrel export).
+- `lib/features/cart/presentation/providers/`: Example of clean provider separation (cart_state.dart, cart_notifier.dart, cart_providers.dart, providers.dart).
 - `lib/features/profile/presentation/pages/profile_page.dart`: Example of Riverpod listen for navigation and logout flow.
 - `lib/features/restaurants/data/datasources/restaurant_remote_datasource_impl.dart`: API integration, DTO direct passing.
 - `lib/l10n/`: Localization ARB files.
@@ -529,4 +611,4 @@ When generating commit messages, follow this pattern:
 4. Include scope if applicable (feature name)
 ---
 
-For any new feature, follow the clean architecture pattern, create domain/data/presentation layers, and always provide Riverpod providers and notifiers. Use DTOs for all API calls, and ensure fallback data is available for offline or error scenarios. Use `ref.listen` for navigation and global state changes. All integration and workflow steps should be automated and documented in this file for future agents.
+For any new feature, follow the clean architecture pattern, create domain/data/presentation layers, and always provide Riverpod providers split into separate files (state, notifier, providers, barrel export). Use DTOs for all API calls, and ensure fallback data is available for offline or error scenarios. Use `ref.listen` for navigation and global state changes. All integration and workflow steps should be automated and documented in this file for future agents.

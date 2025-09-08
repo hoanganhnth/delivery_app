@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import '../../../cart/domain/entities/cart_item_entity.dart';
 
 part 'menu_item_entity.freezed.dart';
 part 'menu_item_entity.g.dart';
@@ -23,6 +24,40 @@ enum MenuItemStatus {
   available,
   unavailable,
   soldOut,
+}
+
+/// Extension methods for MenuItemEntity to work with Cart
+extension MenuItemToCartExtension on MenuItemEntity {
+  /// Convert this menu item to a cart item
+  CartItemEntity toCartItem(
+    String restaurantName, {
+    int quantity = 1,
+    String? notes,
+  }) {
+    return CartItemEntity.fromMenuItem(
+      this,
+      restaurantName,
+      quantity: quantity,
+      notes: notes,
+    );
+  }
+
+  /// Check if this menu item can be added to cart
+  bool get canAddToCart {
+    return status == MenuItemStatus.available && id != null;
+  }
+
+  /// Get display status text
+  String get statusDisplayText {
+    switch (status) {
+      case MenuItemStatus.available:
+        return 'Available';
+      case MenuItemStatus.unavailable:
+        return 'Unavailable';
+      case MenuItemStatus.soldOut:
+        return 'Sold Out';
+    }
+  }
 }
 
 

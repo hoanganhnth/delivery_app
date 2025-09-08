@@ -15,6 +15,9 @@ export 'data/dtos/cart_item_dto.dart';
 export 'data/repositories_impl/cart_repository_impl.dart';
 
 // Presentation exports
+export 'presentation/providers/providers.dart'; // Barrel export for all providers
+export 'presentation/providers/cart_state.dart';
+export 'presentation/providers/cart_notifier.dart';
 export 'presentation/providers/cart_providers.dart';
 export 'presentation/widgets/cart_demo_widget.dart';
 export 'presentation/screens/cart_screen.dart';
