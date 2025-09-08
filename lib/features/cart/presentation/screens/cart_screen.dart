@@ -2,6 +2,7 @@ import 'package:delivery_app/features/cart/presentation/providers/cart_notifier.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/theme_extensions.dart';
+import '../../../../generated/l10n.dart';
 import '../providers/cart_providers.dart';
 import '../widgets/cart_item_widget.dart';
 import '../widgets/cart_summary_widget.dart';
@@ -25,7 +26,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Shopping Cart'),
+        title: Text(S.of(context).shoppingCart),
         backgroundColor: context.colors.primary,
         foregroundColor: context.colors.onPrimary,
         actions: [
@@ -33,7 +34,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             IconButton(
               icon: const Icon(Icons.delete_outline),
               onPressed: () => _showClearCartDialog(context, cartNotifier),
-              tooltip: 'Clear Cart',
+              tooltip: S.of(context).clearCart,
             ),
         ],
       ),
@@ -58,7 +59,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              'Items from ${cartState.cart.currentRestaurantName}',
+                              S.of(context).itemsFrom(cartState.cart.currentRestaurantName ?? ''),
                               style: TextStyle(
                                 color: context.colors.textSecondary,
                                 fontWeight: FontWeight.w500,
@@ -99,19 +100,19 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Clear Cart'),
-        content: const Text('Are you sure you want to remove all items from your cart?'),
+        title: Text(S.of(context).clearCartTitle),
+        content: Text(S.of(context).clearCartMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(S.of(context).cancel),
           ),
           TextButton(
             onPressed: () {
               cartNotifier.clearCart();
               Navigator.of(context).pop();
             },
-            child: const Text('Clear'),
+            child: Text(S.of(context).clear),
           ),
         ],
       ),

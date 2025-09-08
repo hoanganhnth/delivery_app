@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../generated/l10n.dart';
 
 class OrdersPage extends StatelessWidget {
   const OrdersPage({super.key});
@@ -7,28 +8,28 @@ class OrdersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Orders'),
+        title: Text(S.of(context).orders),
         backgroundColor: Colors.orange,
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.receipt_long,
               size: 64,
               color: Colors.orange,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
-              'My Orders',
-              style: TextStyle(
+              S.of(context).yourOrders,
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
-            Text(
+            const SizedBox(height: 8),
+            const Text(
               'Track your orders here',
               style: TextStyle(
                 fontSize: 16,

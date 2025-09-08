@@ -6,5 +6,102 @@
     "logout": "Logout",
     "test": "test",
     "test2": "test2",
-    "test3": "test3"
+    "test3": "test3",
+    
+    "deliverFood": "DeliverFood",
+    "shoppingCart": "Shopping Cart",
+    "clearCart": "Clear Cart",
+    "itemsFrom": "Items from {restaurantName}",
+    "@itemsFrom": {
+        "placeholders": {
+            "restaurantName": {
+                "type": "String"
+            }
+        }
+    },
+    "clearCartTitle": "Clear Cart",
+    "clearCartMessage": "Are you sure you want to remove all items from your cart?",
+    "cancel": "Cancel",
+    "clear": "Clear",
+    "yourCartIsEmpty": "Your cart is empty",
+    "addSomeDeliciousItems": "Add some delicious items to get started",
+    "browseRestaurants": "Browse Restaurants",
+    "hideOrderDetails": "Hide Order Details",
+    "showOrderDetails": "Show Order Details",
+    "orderSummary": "Order Summary",
+    "items": "{count} items",
+    "@items": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "subtotal": "Subtotal",
+    "deliveryFee": "Delivery Fee",
+    "serviceFee": "Service Fee",
+    "tax": "Tax",
+    "total": "Total",
+    "proceedToCheckout": "Proceed to Checkout",
+    "searchRestaurants": "Search restaurants",
+    "featuredRestaurants": "Featured Restaurants",
+    "viewAll": "View All",
+    "popularNearYou": "Popular Near You",
+    "categories": "Categories",
+    "fastFood": "Fast Food",
+    "pizza": "Pizza",
+    "chinese": "Chinese",
+    "italian": "Italian",
+    "mexican": "Mexican",
+    "japanese": "Japanese",
+    "indian": "Indian",
+    "thai": "Thai",
+    "addToCart": "Add to Cart",
+    "price": "${price}",
+    "@price": {
+        "placeholders": {
+            "price": {
+                "type": "String"
+            }
+        }
+    },
+    "min": "min",
+    "rating": "{rating}",
+    "@rating": {
+        "placeholders": {
+            "rating": {
+                "type": "double",
+                "format": "decimalPattern"
+            }
+        }
+    },
+    "freeDelivery": "Free Delivery",
+    "menu": "Menu",
+    "about": "About",
+    "reviews": "Reviews",
+    "orderHistory": "Order History",
+    "profile": "Profile",
+    "settings": "Settings",
+    "help": "Help",
+    "signOut": "Sign Out",
+    "loading": "Loading...",
+    "error": "Error",
+    "tryAgain": "Try Again",
+    "noItemsFound": "No items found",
+    "searchHint": "Search for dishes...",
+    "quantity": "Qty",
+    "remove": "Remove",
+    "update": "Update",
+    "continueShopping": "Continue Shopping",
+    "yourOrders": "Your Orders",
+    "home": "Home",
+    "restaurants": "Restaurants",
+    "orders": "Orders",
+    "account": "Account",
+    "cart": "Cart",
+    "cannotAddItem": "Cannot add item",
+    "differentRestaurantError": "You already have items from another restaurant in your cart. Please clear your current cart to add items from this restaurant.",
+    "clearCurrentCart": "Clear Current Cart",
+    "outOfStock": "Out of Stock",
+    "unavailable": "Unavailable"
 }

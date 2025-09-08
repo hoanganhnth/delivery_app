@@ -5,6 +5,7 @@ import 'package:delivery_app/features/auth/presentation/providers/auth_state.dar
 import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../generated/l10n.dart';
 
 // Ví dụ provider user giả định
 
@@ -27,7 +28,7 @@ class ProfilePage extends ConsumerWidget {
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Text(S.of(context).profile),
         backgroundColor: Colors.orange,
       ),
       body: Column(
@@ -73,19 +74,19 @@ class ProfilePage extends ConsumerWidget {
           const SizedBox(height: 24),
 
           // Các phần khác (ví dụ settings, orders…)
-          const ListTile(
-            leading: Icon(Icons.settings, color: Colors.orange),
-            title: Text("Cài đặt tài khoản"),
+          ListTile(
+            leading: const Icon(Icons.settings, color: Colors.orange),
+            title: Text(S.of(context).account),
           ),
-          const ListTile(
-            leading: Icon(Icons.history, color: Colors.orange),
-            title: Text("Lịch sử đơn hàng"),
+          ListTile(
+            leading: const Icon(Icons.history, color: Colors.orange),
+            title: Text(S.of(context).orderHistory),
           ),
 
           // setting 
           ListTile(
             leading: const Icon(Icons.settings, color: Colors.orange),
-            title: const Text("Cài đặt"),
+            title: Text(S.of(context).settings),
             onTap: () {
               context.pushSettings();
             },
@@ -105,9 +106,9 @@ class ProfilePage extends ConsumerWidget {
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 icon: const Icon(Icons.logout, color: Colors.white),
-                label: const Text(
-                  "Đăng xuất",
-                  style: TextStyle(color: Colors.white),
+                label: Text(
+                  S.of(context).signOut,
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             ),

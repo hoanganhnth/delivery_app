@@ -420,7 +420,7 @@ presentation/
 - **Dependency Management**: `fvm flutter pub get`
 - **Testing**: `fvm flutter test` (tests are organized by feature, focus on provider and notifier logic)
 - **Lint/Analyze**: `fvm dart analyze` or `fvm flutter analyze`
-- **Localization**: ARB files in `lib/l10n/`, build with `flutter pub run intl_utils:generate`
+- **Localization**: ARB files in `lib/l10n/`, build with `fvm flutter pub run intl_utils:generate`
 - **Mock Data**: Always provide fallback mock data for API failures using `MockExampleService` classes
 
 ## 5. Developer Workflows & Commands

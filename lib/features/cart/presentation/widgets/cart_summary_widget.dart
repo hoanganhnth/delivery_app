@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/theme_extensions.dart';
+import '../../../../generated/l10n.dart';
 import '../providers/cart_providers.dart';
 
 /// Widget displaying cart totals and checkout button
@@ -61,7 +62,7 @@ class CartSummaryWidget extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      showOrderSummary ? 'Hide Order Details' : 'Show Order Details',
+                      showOrderSummary ? S.of(context).hideOrderDetails : S.of(context).showOrderDetails,
                       style: TextStyle(
                         color: context.colors.primary,
                         fontSize: 14,
@@ -87,7 +88,7 @@ class CartSummaryWidget extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Order Summary',
+                  S.of(context).orderSummary,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -95,7 +96,7 @@ class CartSummaryWidget extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  '$totalItems items',
+                  S.of(context).items(totalItems),
                   style: TextStyle(
                     fontSize: 14,
                     color: context.colors.textSecondary,
@@ -108,18 +109,18 @@ class CartSummaryWidget extends ConsumerWidget {
             // Pricing Details
             _buildPriceRow(
               context,
-              'Subtotal',
+              S.of(context).subtotal,
               '\$${totalPrice.toStringAsFixed(2)}',
               isSubtotal: true,
             ),
             const SizedBox(height: 8),
-            _buildPriceRow(context, 'Delivery Fee', '\$3.99'),
+            _buildPriceRow(context, S.of(context).deliveryFee, '\$3.99'),
             const SizedBox(height: 8),
-            _buildPriceRow(context, 'Service Fee', '\$2.50'),
+            _buildPriceRow(context, S.of(context).serviceFee, '\$2.50'),
             const SizedBox(height: 8),
             _buildPriceRow(
               context,
-              'Tax',
+              S.of(context).tax,
               '\$${(totalPrice * 0.08).toStringAsFixed(2)}',
             ),
 
@@ -131,7 +132,7 @@ class CartSummaryWidget extends ConsumerWidget {
           // Total (luôn hiển thị)
           _buildPriceRow(
             context,
-            'Total',
+            S.of(context).total,
             '\$${(totalPrice + 3.99 + 2.50 + (totalPrice * 0.08)).toStringAsFixed(2)}',
             isTotal: true,
           ),
@@ -168,9 +169,9 @@ class CartSummaryWidget extends ConsumerWidget {
                         children: [
                           const Icon(Icons.shopping_bag_outlined),
                           const SizedBox(width: 8),
-                          const Text(
-                            'Proceed to Checkout',
-                            style: TextStyle(
+                          Text(
+                            S.of(context).proceedToCheckout,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),

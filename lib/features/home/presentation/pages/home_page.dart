@@ -1,6 +1,7 @@
 import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../generated/l10n.dart';
 import '../../../restaurants/presentation/providers/restaurant_providers.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -25,9 +26,9 @@ class _HomePageState extends ConsumerState<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange,
-        title: const Text(
-          'DeliverFood',
-          style: TextStyle(
+        title: Text(
+          S.of(context).deliverFood,
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),

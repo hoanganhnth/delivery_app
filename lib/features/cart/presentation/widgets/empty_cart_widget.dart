@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/theme_extensions.dart';
+import '../../../../generated/l10n.dart';
 
 /// Widget displayed when cart is empty
 class EmptyCartWidget extends StatelessWidget {
@@ -20,7 +21,7 @@ class EmptyCartWidget extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'Your cart is empty',
+              S.of(context).yourCartIsEmpty,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
@@ -29,7 +30,7 @@ class EmptyCartWidget extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'Add some delicious items to get started',
+              S.of(context).addSomeDeliciousItems,
               style: TextStyle(
                 fontSize: 16,
                 color: context.colors.textSecondary,
@@ -40,7 +41,7 @@ class EmptyCartWidget extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: () => Navigator.of(context).pushReplacementNamed('/restaurants'),
               icon: const Icon(Icons.restaurant_menu),
-              label: const Text('Browse Restaurants'),
+              label: Text(S.of(context).browseRestaurants),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),

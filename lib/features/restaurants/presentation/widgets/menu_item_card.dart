@@ -1,6 +1,7 @@
 import 'package:delivery_app/features/restaurants/domain/entities/menu_item_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../generated/l10n.dart';
 import '../../../cart/presentation/providers/cart_providers.dart';
 import '../../../cart/presentation/providers/cart_state.dart';
 
@@ -38,14 +39,12 @@ class MenuItemCard extends ConsumerWidget {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Không thể thêm món'),
-          content: const Text(
-            'Bạn đã có món từ nhà hàng khác trong giỏ hàng. Vui lòng xóa giỏ hàng hiện tại để thêm món từ nhà hàng này.',
-          ),
+          title: Text(S.of(context).cannotAddItem),
+          content: Text(S.of(context).differentRestaurantError),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Hủy'),
+              child: Text(S.of(context).cancel),
             ),
             TextButton(
               onPressed: () async {
@@ -55,7 +54,7 @@ class MenuItemCard extends ConsumerWidget {
                 final cartItem = menuItem.toCartItem(restaurantName);
                 await cartNotifier.addItem(cartItem);
               },
-              child: const Text('Xóa giỏ hàng và thêm'),
+              child: Text(S.of(context).clearCurrentCart),
             ),
           ],
         ),
@@ -138,8 +137,8 @@ class MenuItemCard extends ConsumerWidget {
                               ),
                               child: Text(
                                 menuItem.status == MenuItemStatus.soldOut
-                                    ? 'Hết hàng'
-                                    : 'Không có sẵn',
+                                    ? S.of(context).outOfStock
+                                    : S.of(context).unavailable,
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 12,

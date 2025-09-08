@@ -2,6 +2,7 @@ import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import '../../../../generated/l10n.dart';
 import '../../../cart/presentation/pages/cart_page.dart';
 import '../../../orders/presentation/pages/orders_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
@@ -50,11 +51,11 @@ class MainScreen extends ConsumerWidget {
                 duration: const Duration(milliseconds: 400),
                 tabBackgroundColor: Colors.orange,
                 color: Colors.grey[600],
-                tabs: const [
-                  GButton(icon: Icons.home, text: 'Home'),
-                  GButton(icon: Icons.shopping_cart, text: 'Cart'),
-                  GButton(icon: Icons.receipt_long, text: 'Orders'),
-                  GButton(icon: Icons.person, text: 'Profile'),
+                tabs: [
+                  GButton(icon: Icons.home, text: S.of(context).home),
+                  GButton(icon: Icons.shopping_cart, text: S.of(context).cart),
+                  GButton(icon: Icons.receipt_long, text: S.of(context).orders),
+                  GButton(icon: Icons.person, text: S.of(context).profile),
                 ],
                 selectedIndex: currentTab.tabIndex, // chọn tab bằng AppTab
                 onTabChange: (index) {
