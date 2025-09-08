@@ -102,7 +102,8 @@ final currentRestaurantIdProvider = Provider<num?>((ref) {
 
 /// Get quantity of specific menu item in cart
 final menuItemQuantityProvider = Provider.family<int, num>((ref, menuItemId) {
-  return ref.watch(cartNotifierProvider.notifier).getItemQuantity(menuItemId);
+   final state = ref.watch(cartNotifierProvider);
+  return state.cart.getItemQuantity(menuItemId);
 });
 
 /// Check if can add from restaurant

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/restaurant_providers.dart';
+import '../../../cart/presentation/providers/cart_providers.dart';
 
 class RestaurantDetailScreen extends ConsumerStatefulWidget {
   final num restaurantId;
@@ -33,6 +34,9 @@ class _RestaurantDetailScreenState
     final detailState = ref.watch(restaurantDetailNotifierProvider);
     final restaurant = detailState.restaurant;
     final menuItems = detailState.menuItems;
+    final cartItemsCount = ref.watch(cartItemsCountProvider);
+    final cartTotalAmount = ref.watch(cartTotalAmountProvider);
+    final isCartEmpty = ref.watch(isCartEmptyProvider);
 
     if (detailState.isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -342,7 +346,10 @@ class _RestaurantDetailScreenState
           SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
               final menuItem = menuItems[index];
-              return MenuItemCard(menuItem: menuItem);
+              return MenuItemCard(
+                menuItem: menuItem,
+                restaurantName: restaurant.name,
+              );
             }, childCount: menuItems.length),
           ),
 
@@ -373,22 +380,34 @@ class _RestaurantDetailScreenState
           ],
         ),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: isCartEmpty ? null : () {
+            // Navigate to cart screen
+            context.push('/cart');
+          },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.orange,
+            backgroundColor: isCartEmpty ? Colors.grey : Colors.orange,
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          child: const Text(
-            'Xem giỏ hàng (0)',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          child: isCartEmpty
+              ? const Text(
+                  'Chưa có món nào trong giỏ hàng',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              : Text(
+                  'Xem giỏ hàng ($cartItemsCount) • ${cartTotalAmount.toStringAsFixed(0)}đ',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
         ),
       ),
     );

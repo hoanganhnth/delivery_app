@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:delivery_app/core/app_setup.dart';
 import 'package:delivery_app/core/routing/app_router.dart';
 import 'package:delivery_app/core/theme/theme.dart';
-import 'package:delivery_app/features/profile/data/models/user_model.dart';
+import 'package:delivery_app/core/adapter/hive_registry.dart';
 import 'package:delivery_app/firebase_options.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +29,10 @@ Future<void> main() async {
       // ✅ Khởi tạo SharedPreferences
       final sharedPreferences = await SharedPreferences.getInstance();
       await Hive.initFlutter();
-      Hive.registerAdapter(UserModelAdapter());
+      
+      // ✅ Đăng ký Hive adapters
+      HiveAdapterRegistry.registerAllAdapters();
+      
       // Bắt lỗi Flutter framework
       FlutterError.onError = (FlutterErrorDetails details) {
         FlutterError.presentError(details);

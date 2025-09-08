@@ -1,14 +1,66 @@
 import 'package:delivery_app/features/restaurants/domain/entities/menu_item_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../cart/presentation/providers/cart_providers.dart';
+import '../../../cart/presentation/providers/cart_state.dart';
 
-class MenuItemCard extends StatelessWidget {
+class MenuItemCard extends ConsumerWidget {
   final MenuItemEntity menuItem;
+  final String restaurantName;
 
-  const MenuItemCard({super.key, required this.menuItem});
+  const MenuItemCard({
+    super.key, 
+    required this.menuItem,
+    required this.restaurantName,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isUnavailable = menuItem.status != MenuItemStatus.available;
+    final cartNotifier = ref.read(cartNotifierProvider.notifier);
+    final itemQuantity = ref.watch(menuItemQuantityProvider(menuItem.id ?? 0));
+    final canAddFromRestaurant = ref.watch(canAddFromRestaurantProvider(menuItem.restaurantId ?? 0));
+
+    // Listen for cart state changes to show error messages
+    ref.listen<CartState>(cartNotifierProvider, (previous, next) {
+      if (next.hasError && next.failure != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.failure!.message),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    });
+
+    // Show error message when trying to add from different restaurant
+    void showRestaurantConflictDialog() {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Không thể thêm món'),
+          content: const Text(
+            'Bạn đã có món từ nhà hàng khác trong giỏ hàng. Vui lòng xóa giỏ hàng hiện tại để thêm món từ nhà hàng này.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Hủy'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await cartNotifier.clearCart();
+                // Add the item after clearing
+                final cartItem = menuItem.toCartItem(restaurantName);
+                await cartNotifier.addItem(cartItem);
+              },
+              child: const Text('Xóa giỏ hàng và thêm'),
+            ),
+          ],
+        ),
+      );
+    }
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -104,27 +156,70 @@ class MenuItemCard extends StatelessWidget {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.remove, size: 16),
-                                    constraints: const BoxConstraints(
-                                      minWidth: 32,
-                                      minHeight: 32,
+                                  // Decrease/Remove button
+                                  if (itemQuantity > 0)
+                                    IconButton(
+                                      onPressed: () async {
+                                        if (itemQuantity > 1) {
+                                          await cartNotifier.updateItemQuantity(
+                                            menuItem.id ?? 0, 
+                                            itemQuantity - 1
+                                          );
+                                        } else {
+                                          await cartNotifier.removeItem(menuItem.id ?? 0);
+                                        }
+                                      },
+                                      icon: Icon(
+                                        itemQuantity > 1 ? Icons.remove : Icons.delete_outline,
+                                        size: 16,
+                                        color: itemQuantity > 1 ? Colors.orange : Colors.red,
+                                      ),
+                                      constraints: const BoxConstraints(
+                                        minWidth: 32,
+                                        minHeight: 32,
+                                      ),
+                                      padding: EdgeInsets.zero,
                                     ),
-                                    padding: EdgeInsets.zero,
-                                  ),
-                                  const Text(
-                                    '0',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                  
+                                  // Quantity display
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 8),
+                                    child: Text(
+                                      '$itemQuantity',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
+                                  
+                                  // Add button
                                   IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
+                                    onPressed: !menuItem.canAddToCart
+                                        ? null
+                                        : () async {
+                                            if (itemQuantity == 0) {
+                                              // Check if can add from this restaurant
+                                              if (!canAddFromRestaurant) {
+                                                showRestaurantConflictDialog();
+                                                return;
+                                              }
+                                              // Add new item to cart
+                                              final cartItem = menuItem.toCartItem(restaurantName);
+                                              await cartNotifier.addItem(cartItem);
+                                            } else {
+                                              // Increase quantity
+                                              await cartNotifier.updateItemQuantity(
+                                                menuItem.id ?? 0,
+                                                itemQuantity + 1
+                                              );
+                                            }
+                                          },
+                                    icon: Icon(
                                       Icons.add,
                                       size: 16,
-                                      color: Colors.orange,
+                                      color: !menuItem.canAddToCart
+                                          ? Colors.grey
+                                          : Colors.orange,
                                     ),
                                     constraints: const BoxConstraints(
                                       minWidth: 32,
