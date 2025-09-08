@@ -7,11 +7,15 @@ import '../providers/cart_providers.dart';
 class CartSummaryWidget extends ConsumerWidget {
   final VoidCallback? onCheckoutPressed;
   final bool showCheckoutButton;
+  final bool showOrderSummary;
+  final VoidCallback? onToggleOrderSummary;
 
   const CartSummaryWidget({
     super.key,
     this.onCheckoutPressed,
     this.showCheckoutButton = true,
+    this.showOrderSummary = true,
+    this.onToggleOrderSummary,
   });
 
   @override
@@ -42,52 +46,89 @@ class CartSummaryWidget extends ConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Order Summary Header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Order Summary',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: context.colors.textPrimary,
+          // Toggle Button for Order Summary
+          if (onToggleOrderSummary != null)
+            InkWell(
+              onTap: onToggleOrderSummary,
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                decoration: BoxDecoration(
+                  color: context.colors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      showOrderSummary ? 'Hide Order Details' : 'Show Order Details',
+                      style: TextStyle(
+                        color: context.colors.primary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Icon(
+                      showOrderSummary ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                      color: context.colors.primary,
+                      size: 20,
+                    ),
+                  ],
                 ),
               ),
-              Text(
-                '$totalItems items',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: context.colors.textSecondary,
+            ),
+
+          if (onToggleOrderSummary != null) const SizedBox(height: 16),
+
+          // Order Summary Header (chỉ hiện khi showOrderSummary = true)
+          if (showOrderSummary) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Order Summary',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: context.colors.textPrimary,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
+                Text(
+                  '$totalItems items',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: context.colors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
 
-          // Pricing Details
-          _buildPriceRow(
-            context,
-            'Subtotal',
-            '\$${totalPrice.toStringAsFixed(2)}',
-            isSubtotal: true,
-          ),
-          const SizedBox(height: 8),
-          _buildPriceRow(context, 'Delivery Fee', '\$3.99'),
-          const SizedBox(height: 8),
-          _buildPriceRow(context, 'Service Fee', '\$2.50'),
-          const SizedBox(height: 8),
-          _buildPriceRow(
-            context,
-            'Tax',
-            '\$${(totalPrice * 0.08).toStringAsFixed(2)}',
-          ),
+            // Pricing Details
+            _buildPriceRow(
+              context,
+              'Subtotal',
+              '\$${totalPrice.toStringAsFixed(2)}',
+              isSubtotal: true,
+            ),
+            const SizedBox(height: 8),
+            _buildPriceRow(context, 'Delivery Fee', '\$3.99'),
+            const SizedBox(height: 8),
+            _buildPriceRow(context, 'Service Fee', '\$2.50'),
+            const SizedBox(height: 8),
+            _buildPriceRow(
+              context,
+              'Tax',
+              '\$${(totalPrice * 0.08).toStringAsFixed(2)}',
+            ),
 
-          const SizedBox(height: 12),
-          Divider(color: context.colors.divider),
-          const SizedBox(height: 12),
+            const SizedBox(height: 12),
+            Divider(color: context.colors.divider),
+            const SizedBox(height: 12),
+          ],
 
-          // Total
+          // Total (luôn hiển thị)
           _buildPriceRow(
             context,
             'Total',
@@ -97,7 +138,7 @@ class CartSummaryWidget extends ConsumerWidget {
 
           if (showCheckoutButton) ...[
             const SizedBox(height: 20),
-            // Checkout Button
+            // Checkout Button (luôn hiển thị)
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(

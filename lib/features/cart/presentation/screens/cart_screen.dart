@@ -8,11 +8,18 @@ import '../widgets/cart_summary_widget.dart';
 import '../widgets/empty_cart_widget.dart';
 
 /// Main cart screen showing cart items and checkout
-class CartScreen extends ConsumerWidget {
+class CartScreen extends ConsumerStatefulWidget {
   const CartScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends ConsumerState<CartScreen> {
+  bool _showOrderSummary = true;
+
+  @override
+  Widget build(BuildContext context) {
     final cartState = ref.watch(cartNotifierProvider);
     final cartNotifier = ref.read(cartNotifierProvider.notifier);
 
@@ -80,6 +87,8 @@ class CartScreen extends ConsumerWidget {
                     // Cart summary and checkout
                     CartSummaryWidget(
                       onCheckoutPressed: () => _navigateToCheckout(context),
+                      showOrderSummary: _showOrderSummary,
+                      onToggleOrderSummary: () => setState(() => _showOrderSummary = !_showOrderSummary),
                     ),
                   ],
                 ),
