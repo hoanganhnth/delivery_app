@@ -15,7 +15,7 @@ class CreateOrderNotifier extends AsyncNotifier<OrderEntity?> {
     state = const AsyncValue.loading();
 
     try {
-      // Get usecase from provider
+      // Get usecase from provider - use read for one-time access in methods
       final createOrderUseCase = ref.read(createOrderUseCaseProvider);
       final result = await createOrderUseCase(order);
 

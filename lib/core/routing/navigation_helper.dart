@@ -141,6 +141,11 @@ class NavigationHelper {
     context.push(AppRoutes.restaurants);
   }
 
+  // push checkout screen
+  static void pushCheckout(BuildContext context) {
+    context.push(AppRoutes.checkout);
+  }
+
   /// Utility methods
 
   /// Go back to previous screen
@@ -238,4 +243,5 @@ extension NavigationExtension on BuildContext {
   void pushToRestaurants() => NavigationHelper.pushRes(this);
   void goBack() => NavigationHelper.goBack(this);
   void goToRoot() => NavigationHelper.goToRoot(this);
+  void pushCheckout() => NavigationHelper.pushCheckout(this);
 }

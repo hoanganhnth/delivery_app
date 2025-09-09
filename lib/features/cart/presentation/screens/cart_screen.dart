@@ -1,3 +1,4 @@
+import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/features/cart/presentation/providers/cart_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -121,6 +122,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
   void _navigateToCheckout(BuildContext context) {
     // Navigate to checkout screen
-    Navigator.of(context).pushNamed('/checkout');
+    context.pushCheckout();
   }
 }

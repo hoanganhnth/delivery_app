@@ -37,10 +37,11 @@ final addToCartUseCaseProvider = Provider<AddToCartUseCase>((ref) {
 });
 
 /// Update cart item quantity use case provider
-final updateCartItemQuantityUseCaseProvider = Provider<UpdateCartItemQuantityUseCase>((ref) {
-  final repository = ref.watch(cartRepositoryProvider);
-  return UpdateCartItemQuantityUseCase(repository);
-});
+final updateCartItemQuantityUseCaseProvider =
+    Provider<UpdateCartItemQuantityUseCase>((ref) {
+      final repository = ref.watch(cartRepositoryProvider);
+      return UpdateCartItemQuantityUseCase(repository);
+    });
 
 /// Remove from cart use case provider
 final removeFromCartUseCaseProvider = Provider<RemoveFromCartUseCase>((ref) {
@@ -55,17 +56,21 @@ final clearCartUseCaseProvider = Provider<ClearCartUseCase>((ref) {
 });
 
 /// Update cart item notes use case provider
-final updateCartItemNotesUseCaseProvider = Provider<UpdateCartItemNotesUseCase>((ref) {
-  final repository = ref.watch(cartRepositoryProvider);
-  return UpdateCartItemNotesUseCase(repository);
-});
+final updateCartItemNotesUseCaseProvider = Provider<UpdateCartItemNotesUseCase>(
+  (ref) {
+    final repository = ref.watch(cartRepositoryProvider);
+    return UpdateCartItemNotesUseCase(repository);
+  },
+);
 
 // ================================
 // MAIN CART PROVIDER
 // ================================
 
 /// Main cart notifier provider
-final cartNotifierProvider = StateNotifierProvider<CartNotifier, CartState>((ref) {
+final cartNotifierProvider = StateNotifierProvider<CartNotifier, CartState>((
+  ref,
+) {
   return CartNotifier(
     getCartUseCase: ref.watch(getCartUseCaseProvider),
     addToCartUseCase: ref.watch(addToCartUseCaseProvider),
@@ -102,11 +107,17 @@ final currentRestaurantIdProvider = Provider<num?>((ref) {
 
 /// Get quantity of specific menu item in cart
 final menuItemQuantityProvider = Provider.family<int, num>((ref, menuItemId) {
-   final state = ref.watch(cartNotifierProvider);
+  final state = ref.watch(cartNotifierProvider);
   return state.cart.getItemQuantity(menuItemId);
 });
 
 /// Check if can add from restaurant
-final canAddFromRestaurantProvider = Provider.family<bool, num>((ref, restaurantId) {
-  return ref.watch(cartNotifierProvider.notifier).canAddFromRestaurant(restaurantId);
+final canAddFromRestaurantProvider = Provider.family<bool, num>((
+  ref,
+  restaurantId,
+) {
+  return ref
+      .watch(cartNotifierProvider)
+      .cart
+      .canAddFromRestaurant(restaurantId);
 });

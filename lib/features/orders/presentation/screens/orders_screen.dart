@@ -141,9 +141,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
 
   Widget _buildBody(OrdersListState ordersState, ThemeData theme) {
     if (ordersState.isLoading && ordersState.orders.isEmpty) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (ordersState.errorMessage != null) {
@@ -200,11 +198,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: theme.colorScheme.error,
-            ),
+            Icon(Icons.error_outline, size: 64, color: theme.colorScheme.error),
             const SizedBox(height: 16),
             Text(
               S.of(context).error,
@@ -216,7 +210,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
             Text(
               errorMessage,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: .7),
               ),
               textAlign: TextAlign.center,
             ),
@@ -253,21 +247,21 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
             Icon(
               Icons.shopping_bag_outlined,
               size: 80,
-              color: theme.colorScheme.onSurface.withOpacity(0.3),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 24),
             Text(
               S.of(context).noOrders,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               S.of(context).noOrdersMessage,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.5),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
               textAlign: TextAlign.center,
             ),
@@ -295,10 +289,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
   }
 
   void _navigateToOrderDetail(int orderId) {
-    Navigator.of(context).pushNamed(
-      '/order-detail',
-      arguments: orderId,
-    );
+    Navigator.of(context).pushNamed('/order-detail', arguments: orderId);
   }
 
   void _showCancelOrderDialog(OrderEntity order) {
@@ -334,7 +325,9 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
                   },
                   child: Text(
                     S.of(context).confirm,
-                    style: TextStyle(color: Theme.of(context).colorScheme.error),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
                   ),
                 ),
                 loading: () => const SizedBox(

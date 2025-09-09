@@ -93,5 +93,6 @@
   "cancelOrderFailed": "Không thể hủy đơn hàng",
   
   "order": "Đơn hàng",
-  "estimatedDelivery": "Dự kiến giao"
+  "estimatedDelivery": "Dự kiến giao",
+  "top_restaurants": "Nhà hàng nổi bật"
 }

@@ -14,50 +14,50 @@ import 'orders_list_notifier.dart';
 
 // Data Source Providers
 final orderApiServiceProvider = Provider<OrderApiService>((ref) {
-  final dio = ref.read(dioProvider);
+  final dio = ref.watch(dioProvider);
   return OrderApiService(dio);
 });
 
 final orderRemoteDataSourceProvider = Provider<OrderRemoteDataSource>((ref) {
-  final apiService = ref.read(orderApiServiceProvider);
+  final apiService = ref.watch(orderApiServiceProvider);
   return OrderRemoteDataSourceImpl(apiService);
 });
 
 // Repository Provider
 final orderRepositoryProvider = Provider<OrderRepository>((ref) {
-  final remoteDataSource = ref.read(orderRemoteDataSourceProvider);
+  final remoteDataSource = ref.watch(orderRemoteDataSourceProvider);
   return OrderRepositoryImpl(remoteDataSource);
 });
 
 // UseCase Providers
 final getUserOrdersUseCaseProvider = Provider<GetUserOrdersUseCase>((ref) {
-  final repository = ref.read(orderRepositoryProvider);
+  final repository = ref.watch(orderRepositoryProvider);
   return GetUserOrdersUseCase(repository);
 });
 
 final getOrderByIdUseCaseProvider = Provider<GetOrderByIdUseCase>((ref) {
-  final repository = ref.read(orderRepositoryProvider);
+  final repository = ref.watch(orderRepositoryProvider);
   return GetOrderByIdUseCase(repository);
 });
 
 final createOrderUseCaseProvider = Provider<CreateOrderUseCase>((ref) {
-  final repository = ref.read(orderRepositoryProvider);
+  final repository = ref.watch(orderRepositoryProvider);
   return CreateOrderUseCase(repository);
 });
 
 final cancelOrderUseCaseProvider = Provider<CancelOrderUseCase>((ref) {
-  final repository = ref.read(orderRepositoryProvider);
+  final repository = ref.watch(orderRepositoryProvider);
   return CancelOrderUseCase(repository);
 });
 
 // State Providers
 final ordersListProvider = StateNotifierProvider<OrdersListNotifier, OrdersListState>((ref) {
-  final getUserOrdersUseCase = ref.read(getUserOrdersUseCaseProvider);
+  final getUserOrdersUseCase = ref.watch(getUserOrdersUseCaseProvider);
   return OrdersListNotifier(getUserOrdersUseCase);
 });
 
 final orderDetailProvider = StateNotifierProvider<OrderDetailNotifier, OrderDetailState>((ref) {
-  final getOrderByIdUseCase = ref.read(getOrderByIdUseCaseProvider);
+  final getOrderByIdUseCase = ref.watch(getOrderByIdUseCaseProvider);
   return OrderDetailNotifier(getOrderByIdUseCase);
 });
 

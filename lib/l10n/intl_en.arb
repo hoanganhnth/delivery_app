@@ -122,5 +122,6 @@
     "cancelOrderFailed": "Failed to cancel order",
     
     "order": "Order",
-    "estimatedDelivery": "Estimated delivery"
+    "estimatedDelivery": "Estimated delivery",
+    "top_restaurants": "Nhà hàng nổi bật"
 }
