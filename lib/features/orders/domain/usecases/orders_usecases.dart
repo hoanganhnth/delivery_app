@@ -57,19 +57,19 @@ class CreateOrderUseCase {
 }
 
 /// UseCase để cập nhật trạng thái đơn hàng
-class UpdateOrderStatusUseCase {
-  final OrderRepository repository;
+// class UpdateOrderStatusUseCase {
+//   final OrderRepository repository;
 
-  UpdateOrderStatusUseCase(this.repository);
+//   UpdateOrderStatusUseCase(this.repository);
 
-  Future<Either<Failure, OrderEntity>> call(UpdateOrderStatusParams params) async {
-    if (params.orderId <= 0) {
-      return left(const ValidationFailure('Order ID must be greater than 0'));
-    }
+//   Future<Either<Failure, OrderEntity>> call(UpdateOrderStatusParams params) async {
+//     if (params.orderId <= 0) {
+//       return left(const ValidationFailure('Order ID must be greater than 0'));
+//     }
     
-    return await repository.updateOrderStatus(params.orderId, params.status);
-  }
-}
+//     return await repository.updateOrderStatus(params.orderId, params.status);
+//   }
+// }
 
 class UpdateOrderStatusParams {
   final int orderId;
@@ -94,47 +94,4 @@ class CancelOrderUseCase {
     
     return await repository.cancelOrder(orderId);
   }
-}
-
-/// UseCase để lấy danh sách đơn hàng theo trạng thái
-class GetOrdersByStatusUseCase {
-  final OrderRepository repository;
-
-  GetOrdersByStatusUseCase(this.repository);
-
-  Future<Either<Failure, List<OrderEntity>>> call(OrderStatus status) async {
-    return await repository.getOrdersByStatus(status);
-  }
-}
-
-/// UseCase để lấy lịch sử đơn hàng với phân trang
-class GetOrderHistoryUseCase {
-  final OrderRepository repository;
-
-  GetOrderHistoryUseCase(this.repository);
-
-  Future<Either<Failure, List<OrderEntity>>> call(GetOrderHistoryParams params) async {
-    if (params.page <= 0) {
-      return left(const ValidationFailure('Page must be greater than 0'));
-    }
-    
-    if (params.limit <= 0) {
-      return left(const ValidationFailure('Limit must be greater than 0'));
-    }
-    
-    return await repository.getOrderHistory(
-      page: params.page,
-      limit: params.limit,
-    );
-  }
-}
-
-class GetOrderHistoryParams {
-  final int page;
-  final int limit;
-
-  GetOrderHistoryParams({
-    this.page = 1,
-    this.limit = 10,
-  });
 }

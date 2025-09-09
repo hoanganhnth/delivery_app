@@ -50,60 +50,10 @@ class OrderRepositoryImpl implements OrderRepository {
   }
 
   @override
-  Future<Either<Failure, OrderEntity>> updateOrderStatus(
-    int orderId,
-    OrderStatus status,
-  ) async {
-    try {
-      final dto = await _remoteDataSource.updateOrderStatus(
-        orderId,
-        status.value,
-      );
-      return right(dto.toEntity());
-    } on Exception catch (e) {
-      return left(mapExceptionToFailure(e));
-    } catch (e) {
-      return left(ServerFailure('Unexpected error: ${e.toString()}'));
-    }
-  }
-
-  @override
   Future<Either<Failure, bool>> cancelOrder(int orderId) async {
     try {
       final success = await _remoteDataSource.cancelOrder(orderId);
       return right(success);
-    } on Exception catch (e) {
-      return left(mapExceptionToFailure(e));
-    } catch (e) {
-      return left(ServerFailure('Unexpected error: ${e.toString()}'));
-    }
-  }
-
-  @override
-  Future<Either<Failure, List<OrderEntity>>> getOrdersByStatus(
-    OrderStatus status,
-  ) async {
-    try {
-      final dtos = await _remoteDataSource.getOrdersByStatus(status.value);
-      return right(dtos.map((dto) => dto.toEntity()).toList());
-    } on Exception catch (e) {
-      return left(mapExceptionToFailure(e));
-    } catch (e) {
-      return left(ServerFailure('Unexpected error: ${e.toString()}'));
-    }
-  }
-
-  @override
-  Future<Either<Failure, List<OrderEntity>>> getOrderHistory({
-    int page = 1,
-    int limit = 10,
-  }) async {
-    try {
-      final dtos = await _remoteDataSource.getOrderHistory(
-        page: page,
-        limit: limit,
-      );
-      return right(dtos.map((dto) => dto.toEntity()).toList());
     } on Exception catch (e) {
       return left(mapExceptionToFailure(e));
     } catch (e) {

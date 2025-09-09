@@ -114,40 +114,6 @@ class _OrderApiService implements OrderApiService {
   }
 
   @override
-  Future<BaseResponseDto<OrderDto>> updateOrderStatus(
-    int orderId,
-    Map<String, String> status,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(status);
-    final _options = _setStreamType<BaseResponseDto<OrderDto>>(
-      Options(method: 'PUT', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/orders/${orderId}/status',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BaseResponseDto<OrderDto> _value;
-    try {
-      _value = BaseResponseDto<OrderDto>.fromJson(
-        _result.data!,
-        (json) => OrderDto.fromJson(json as Map<String, dynamic>),
-      );
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
   Future<BaseResponseDto<bool>> cancelOrder(int orderId) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -169,83 +135,6 @@ class _OrderApiService implements OrderApiService {
       _value = BaseResponseDto<bool>.fromJson(
         _result.data!,
         (json) => json as bool,
-      );
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<BaseResponseDto<List<OrderDto>>> getOrdersByStatus(
-    String status,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'status': status};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<BaseResponseDto<List<OrderDto>>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/orders',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BaseResponseDto<List<OrderDto>> _value;
-    try {
-      _value = BaseResponseDto<List<OrderDto>>.fromJson(
-        _result.data!,
-        (json) => json is List<dynamic>
-            ? json
-                  .map<OrderDto>(
-                    (i) => OrderDto.fromJson(i as Map<String, dynamic>),
-                  )
-                  .toList()
-            : List.empty(),
-      );
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<BaseResponseDto<List<OrderDto>>> getOrderHistory(
-    int page,
-    int limit,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'page': page, r'limit': limit};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<BaseResponseDto<List<OrderDto>>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/orders/history',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BaseResponseDto<List<OrderDto>> _value;
-    try {
-      _value = BaseResponseDto<List<OrderDto>>.fromJson(
-        _result.data!,
-        (json) => json is List<dynamic>
-            ? json
-                  .map<OrderDto>(
-                    (i) => OrderDto.fromJson(i as Map<String, dynamic>),
-                  )
-                  .toList()
-            : List.empty(),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);

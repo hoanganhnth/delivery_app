@@ -21,27 +21,27 @@ abstract class OrderApiService {
   @POST('/orders')
   Future<BaseResponseDto<OrderDto>> createOrder(@Body() OrderDto order);
 
-  /// Cập nhật trạng thái đơn hàng
-  @PUT('/orders/{id}/status')
-  Future<BaseResponseDto<OrderDto>> updateOrderStatus(
-    @Path('id') int orderId,
-    @Body() Map<String, String> status,
-  );
+  // /// Cập nhật trạng thái đơn hàng
+  // @PUT('/orders/{id}/status')
+  // Future<BaseResponseDto<OrderDto>> updateOrderStatus(
+  //   @Path('id') int orderId,
+  //   @Body() Map<String, String> status,
+  // );
 
   /// Hủy đơn hàng
   @DELETE('/orders/{id}')
   Future<BaseResponseDto<bool>> cancelOrder(@Path('id') int orderId);
 
-  /// Lấy danh sách đơn hàng theo trạng thái
-  @GET('/orders')
-  Future<BaseResponseDto<List<OrderDto>>> getOrdersByStatus(
-    @Query('status') String status,
-  );
+  // /// Lấy danh sách đơn hàng theo trạng thái
+  // @GET('/orders')
+  // Future<BaseResponseDto<List<OrderDto>>> getOrdersByStatus(
+  //   @Query('status') String status,
+  // );
 
-  /// Lấy lịch sử đơn hàng với phân trang
-  @GET('/orders/history')
-  Future<BaseResponseDto<List<OrderDto>>> getOrderHistory(
-    @Query('page') int page,
-    @Query('limit') int limit,
-  );
+  // /// Lấy lịch sử đơn hàng với phân trang
+  // @GET('/orders/history')
+  // Future<BaseResponseDto<List<OrderDto>>> getOrderHistory(
+  //   @Query('page') int page,
+  //   @Query('limit') int limit,
+  // );
 }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/order_entity.dart';
-import '../providers/orders_providers.dart';
-import '../providers/orders_provider.dart';
+import '../providers/providers.dart';
 import '../widgets/order_card.dart';
 import '../../../../generated/l10n.dart';
 
@@ -17,30 +16,26 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _scrollController = ScrollController();
-  
+
   // Status filters
-  final List<OrderStatus?> _statusFilters = [
-    null, // Tất cả
-    OrderStatus.pending,
-    OrderStatus.confirmed,
-    OrderStatus.preparing,
-    OrderStatus.delivering,
-    OrderStatus.delivered,
-    OrderStatus.cancelled,
-  ];
+  OrderStatus? currentStatus;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: _statusFilters.length, vsync: this);
-    
-    // Load orders when screen opens
+    _tabController = TabController(length: 4, vsync: this);
+
+    // Load initial data
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(ordersProvider.notifier).getUserOrders();
+      ref.read(ordersListProvider.notifier).getUserOrders();
     });
-    
-    // Setup scroll listener for pagination
-    _scrollController.addListener(_onScroll);
+
+    // Listen for tab changes
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) {
+        _loadOrdersByStatus(_getStatusForTab(_tabController.index));
+      }
+    });
   }
 
   @override
@@ -50,232 +45,263 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
     super.dispose();
   }
 
-  void _onScroll() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      // Load more orders when reaching bottom
-      _loadMoreOrders();
+  OrderStatus? _getStatusForTab(int index) {
+    switch (index) {
+      case 0:
+        return null; // All orders
+      case 1:
+        return OrderStatus.pending;
+      case 2:
+        return OrderStatus.confirmed;
+      case 3:
+        return OrderStatus.delivered;
+      default:
+        return null;
     }
   }
 
-  void _loadMoreOrders() {
-    // TODO: Implement pagination
-  }
+  void _loadOrdersByStatus(OrderStatus? status) {
+    setState(() {
+      currentStatus = status;
+    });
 
-  void _onTabChanged(int index) {
-    final status = _statusFilters[index];
     if (status == null) {
-      // Load all orders
-      ref.read(ordersProvider.notifier).getUserOrders();
+      ref.read(ordersListProvider.notifier).getUserOrders();
     } else {
-      // Load orders by status
-      ref.read(ordersProvider.notifier).getOrdersByStatus(status);
+      // Since we removed getOrdersByStatus, we'll just load all orders
+      // and filter them in the UI
+      ref.read(ordersListProvider.notifier).getUserOrders();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final ordersState = ref.watch(ordersProvider);
+    final ordersState = ref.watch(ordersListProvider);
     final theme = Theme.of(context);
-    
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).orders),
-        backgroundColor: theme.colorScheme.surface,
-        foregroundColor: theme.colorScheme.onSurface,
-        elevation: 0,
-        bottom: TabBar(
-          controller: _tabController,
-          isScrollable: true,
-          onTap: _onTabChanged,
-          tabs: [
-            Tab(text: S.of(context).all),
-            Tab(text: S.of(context).pending),
-            Tab(text: S.of(context).confirmed),
-            Tab(text: S.of(context).preparing),
-            Tab(text: S.of(context).delivering),
-            Tab(text: S.of(context).delivered),
-            Tab(text: S.of(context).cancelled),
-          ],
-        ),
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          final currentStatus = _statusFilters[_tabController.index];
-          if (currentStatus == null) {
-            await ref.read(ordersProvider.notifier).getUserOrders();
-          } else {
-            await ref.read(ordersProvider.notifier).getOrdersByStatus(currentStatus);
-          }
-        },
-        child: _buildBody(ordersState, theme),
+      appBar: _buildAppBar(theme),
+      body: Column(
+        children: [
+          _buildTabBar(theme),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                if (currentStatus == null) {
+                  await ref.read(ordersListProvider.notifier).getUserOrders();
+                } else {
+                  await ref.read(ordersListProvider.notifier).getUserOrders();
+                }
+              },
+              child: _buildBody(ordersState, theme),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildBody(OrdersState ordersState, ThemeData theme) {
+  PreferredSizeWidget _buildAppBar(ThemeData theme) {
+    return AppBar(
+      title: Text(
+        S.of(context).orders,
+        style: theme.textTheme.headlineSmall?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: theme.primaryColor,
+      elevation: 0,
+      centerTitle: true,
+    );
+  }
+
+  Widget _buildTabBar(ThemeData theme) {
+    return Container(
+      color: theme.primaryColor,
+      child: TabBar(
+        controller: _tabController,
+        indicatorColor: Colors.white,
+        indicatorWeight: 3,
+        labelColor: Colors.white,
+        unselectedLabelColor: Colors.white70,
+        labelStyle: theme.textTheme.bodyMedium?.copyWith(
+          fontWeight: FontWeight.bold,
+        ),
+        unselectedLabelStyle: theme.textTheme.bodyMedium,
+        tabs: [
+          Tab(text: S.of(context).all),
+          Tab(text: S.of(context).pending),
+          Tab(text: S.of(context).confirmed),
+          Tab(text: S.of(context).delivered),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBody(OrdersListState ordersState, ThemeData theme) {
     if (ordersState.isLoading && ordersState.orders.isEmpty) {
       return const Center(
         child: CircularProgressIndicator(),
       );
     }
 
-    if (ordersState.errorMessage != null && ordersState.orders.isEmpty) {
-      return _buildErrorState(ordersState.errorMessage!, theme);
+    if (ordersState.errorMessage != null) {
+      return _buildErrorWidget(ordersState.errorMessage!, theme);
     }
 
     if (ordersState.orders.isEmpty) {
-      return _buildEmptyState(theme);
+      return _buildEmptyWidget(theme);
     }
 
-    return Column(
-      children: [
-        if (ordersState.errorMessage != null)
-          _buildErrorBanner(ordersState.errorMessage!, theme),
-        Expanded(
-          child: ListView.builder(
-            controller: _scrollController,
-            padding: const EdgeInsets.all(16),
-            itemCount: ordersState.orders.length + (ordersState.isLoading ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (index == ordersState.orders.length) {
-                // Loading indicator at bottom
-                return const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              }
+    // Filter orders by current status if needed
+    List<OrderEntity> filteredOrders = ordersState.orders;
+    if (currentStatus != null) {
+      filteredOrders = ordersState.orders
+          .where((order) => order.status == currentStatus)
+          .toList();
+    }
 
-              final order = ordersState.orders[index];
-              return OrderCard(
-                order: order,
-                onTap: () => _showOrderDetail(order),
-                onCancel: order.canCancel ? () => _cancelOrder(order.id!) : null,
-              );
-            },
-          ),
-        ),
-      ],
+    if (filteredOrders.isEmpty) {
+      return _buildEmptyWidget(theme);
+    }
+
+    return ListView.separated(
+      controller: _scrollController,
+      padding: const EdgeInsets.all(16),
+      itemCount: filteredOrders.length + (ordersState.isLoading ? 1 : 0),
+      separatorBuilder: (context, index) => const SizedBox(height: 12),
+      itemBuilder: (context, index) {
+        if (index == filteredOrders.length) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+
+        final order = filteredOrders[index];
+        return OrderCard(
+          order: order,
+          onTap: () => _navigateToOrderDetail(order.id!),
+          onCancel: order.status == OrderStatus.pending
+              ? () => _showCancelOrderDialog(order)
+              : null,
+        );
+      },
     );
   }
 
-  Widget _buildErrorState(String error, ThemeData theme) {
+  Widget _buildErrorWidget(String errorMessage, ThemeData theme) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline,
-            size: 64,
-            color: theme.colorScheme.error,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            S.of(context).error,
-            style: theme.textTheme.headlineSmall?.copyWith(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 64,
               color: theme.colorScheme.error,
             ),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Text(
-              error,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () {
-              final currentStatus = _statusFilters[_tabController.index];
-              if (currentStatus == null) {
-                ref.read(ordersProvider.notifier).getUserOrders();
-              } else {
-                ref.read(ordersProvider.notifier).getOrdersByStatus(currentStatus);
-              }
-            },
-            child: Text(S.of(context).retry),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEmptyState(ThemeData theme) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.receipt_long_outlined,
-            size: 64,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            S.of(context).noOrders,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            S.of(context).noOrdersMessage,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildErrorBanner(String error, ThemeData theme) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
-      color: theme.colorScheme.errorContainer,
-      child: Row(
-        children: [
-          Icon(
-            Icons.error_outline,
-            color: theme.colorScheme.onErrorContainer,
-            size: 20,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              error,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onErrorContainer,
+            const SizedBox(height: 16),
+            Text(
+              S.of(context).error,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-          IconButton(
-            onPressed: () {
-              ref.read(ordersProvider.notifier).clearError();
-            },
-            icon: Icon(
-              Icons.close,
-              color: theme.colorScheme.onErrorContainer,
-              size: 20,
+            const SizedBox(height: 8),
+            Text(
+              errorMessage,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.7),
+              ),
+              textAlign: TextAlign.center,
             ),
-          ),
-        ],
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: () {
+                ref.read(ordersListProvider.notifier).clearError();
+                if (currentStatus == null) {
+                  ref.read(ordersListProvider.notifier).getUserOrders();
+                } else {
+                  ref.read(ordersListProvider.notifier).getUserOrders();
+                }
+              },
+              icon: const Icon(Icons.refresh),
+              label: Text(S.of(context).tryAgain),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.primaryColor,
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  void _showOrderDetail(OrderEntity order) {
-    // TODO: Navigate to order detail screen
-    debugPrint('Show order detail: ${order.id}');
+  Widget _buildEmptyWidget(ThemeData theme) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.shopping_bag_outlined,
+              size: 80,
+              color: theme.colorScheme.onSurface.withOpacity(0.3),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              S.of(context).noOrders,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onSurface.withOpacity(0.7),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              S.of(context).noOrdersMessage,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.5),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton.icon(
+              onPressed: () {
+                // Navigate to restaurants or home
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.restaurant),
+              label: Text(S.of(context).restaurants),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.primaryColor,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
-  void _cancelOrder(int orderId) {
+  void _navigateToOrderDetail(int orderId) {
+    Navigator.of(context).pushNamed(
+      '/order-detail',
+      arguments: orderId,
+    );
+  }
+
+  void _showCancelOrderDialog(OrderEntity order) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -286,33 +312,42 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
             onPressed: () => Navigator.of(context).pop(),
             child: Text(S.of(context).cancel),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.of(context).pop();
-              final success = await ref
-                  .read(ordersProvider.notifier)
-                  .cancelOrder(orderId);
-              
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      success 
-                        ? S.of(context).orderCancelled
-                        : S.of(context).cancelOrderFailed,
-                    ),
-                    backgroundColor: success 
-                        ? Colors.green 
-                        : Theme.of(context).colorScheme.error,
+          Consumer(
+            builder: (context, ref, child) {
+              final cancelAsync = ref.watch(cancelOrderProvider);
+
+              return cancelAsync.when(
+                data: (success) => TextButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    final result = await ref
+                        .read(cancelOrderProvider.notifier)
+                        .cancelOrder(order.id!);
+                    if (result && mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(S.of(context).orderCancelled),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    }
+                  },
+                  child: Text(
+                    S.of(context).confirm,
+                    style: TextStyle(color: Theme.of(context).colorScheme.error),
                   ),
-                );
-              }
+                ),
+                loading: () => const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+                error: (error, _) => TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(S.of(context).error),
+                ),
+              );
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
-              foregroundColor: Theme.of(context).colorScheme.onError,
-            ),
-            child: Text(S.of(context).confirm),
           ),
         ],
       ),
