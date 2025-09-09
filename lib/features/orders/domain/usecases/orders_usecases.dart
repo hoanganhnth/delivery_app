@@ -20,7 +20,7 @@ class GetOrderByIdUseCase {
 
   GetOrderByIdUseCase(this.repository);
 
-  Future<Either<Failure, OrderEntity>> call(int orderId) async {
+  Future<Either<Failure, OrderEntity>> call(num orderId) async {
     if (orderId <= 0) {
       return left(const ValidationFailure('Order ID must be greater than 0'));
     }

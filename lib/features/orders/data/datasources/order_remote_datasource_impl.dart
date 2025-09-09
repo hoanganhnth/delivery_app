@@ -34,7 +34,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
   }
 
   @override
-  Future<OrderDto> getOrderById(int orderId) async {
+  Future<OrderDto> getOrderById(num orderId) async {
     try {
       AppLogger.d('Getting order by id: $orderId');
       final response = await _apiService.getOrderById(orderId);

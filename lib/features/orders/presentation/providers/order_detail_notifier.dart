@@ -9,7 +9,7 @@ class OrderDetailNotifier extends StateNotifier<OrderDetailState> {
   OrderDetailNotifier(this._getOrderByIdUseCase) : super(const OrderDetailState());
 
   /// Lấy chi tiết đơn hàng theo ID
-  Future<void> getOrderById(int orderId) async {
+  Future<void> getOrderById(num orderId) async {
     state = state.copyWith(isLoading: true, errorMessage: null);
 
     final result = await _getOrderByIdUseCase(orderId);

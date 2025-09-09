@@ -1,3 +1,5 @@
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:delivery_app/core/routing/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/order_entity.dart';
@@ -118,22 +120,89 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
 
   Widget _buildTabBar(ThemeData theme) {
     return Container(
-      color: theme.primaryColor,
+      decoration: BoxDecoration(
+        color: theme.primaryColor,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: TabBar(
         controller: _tabController,
         indicatorColor: Colors.white,
-        indicatorWeight: 3,
+        // indicatorWeight: 3,
+        isScrollable: true,
+        indicatorSize: TabBarIndicatorSize.tab,
+        physics: ScrollPhysics(),
+        tabAlignment: TabAlignment.center,
+        // indicatorPadding: const EdgeInsets.symmetric(horizontal: 8),
         labelColor: Colors.white,
-        unselectedLabelColor: Colors.white70,
+        unselectedLabelColor: Colors.white.withValues(alpha: 0.7),
         labelStyle: theme.textTheme.bodyMedium?.copyWith(
           fontWeight: FontWeight.bold,
+          fontSize: 14,
         ),
-        unselectedLabelStyle: theme.textTheme.bodyMedium,
+        unselectedLabelStyle: theme.textTheme.bodyMedium?.copyWith(
+          fontWeight: FontWeight.normal,
+          fontSize: 14,
+        ),
+        dividerColor: Colors.transparent,
         tabs: [
-          Tab(text: S.of(context).all),
-          Tab(text: S.of(context).pending),
-          Tab(text: S.of(context).confirmed),
-          Tab(text: S.of(context).delivered),
+          Tab(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon(
+                //   Icons.list_alt,
+                //   size: 18,
+                // ),
+                // const SizedBox(width: 4),
+                AutoSizeText(S.of(context).all),
+              ],
+            ),
+          ),
+          Tab(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon(
+                //   Icons.schedule,
+                //   size: 18,
+                // ),
+                // const SizedBox(width: 4),
+                AutoSizeText(S.of(context).pending),
+              ],
+            ),
+          ),
+          Tab(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon(
+                //   Icons.check_circle_outline,
+                //   size: 18,
+                // ),
+                // const SizedBox(width: 4),
+                AutoSizeText(S.of(context).confirmed),
+              ],
+            ),
+          ),
+          Tab(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon(
+                //   Icons.done_all,
+                //   size: 18,
+                // ),
+                // const SizedBox(width: 4),
+                AutoSizeText(S.of(context).delivered),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -289,7 +358,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
   }
 
   void _navigateToOrderDetail(int orderId) {
-    Navigator.of(context).pushNamed('/order-detail', arguments: orderId);
+    context.pushOrderDetail(orderId.toString());
   }
 
   void _showCancelOrderDialog(OrderEntity order) {

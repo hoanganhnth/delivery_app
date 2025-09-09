@@ -1,4 +1,5 @@
 import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
+import 'package:delivery_app/features/orders/presentation/screens/order_detail_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
@@ -156,7 +157,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             redirect: guardManager.applyAuthGuard,
             builder: (context, state) {
               final orderId = state.pathParameters['orderId']!;
-              return OrderDetailsScreen(orderId: orderId);
+              return OrderDetailScreen(orderId: num.tryParse(orderId) ?? 0);
             },
             routes: [
               GoRoute(

@@ -96,7 +96,7 @@ class OrderCard extends StatelessWidget {
               
               // Items summary
               Text(
-                '${order.totalItems} ${S.of(context).items}',
+                S.of(context).items(order.totalItems),
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),

@@ -54,7 +54,7 @@ class _OrderApiService implements OrderApiService {
   }
 
   @override
-  Future<BaseResponseDto<OrderDto>> getOrderById(int orderId) async {
+  Future<BaseResponseDto<OrderDto>> getOrderById(num orderId) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

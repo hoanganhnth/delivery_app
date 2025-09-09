@@ -6,7 +6,7 @@ abstract class OrderRemoteDataSource {
   Future<List<OrderDto>> getUserOrders();
 
   /// Lấy chi tiết đơn hàng theo ID
-  Future<OrderDto> getOrderById(int orderId);
+  Future<OrderDto> getOrderById(num orderId);
 
   /// Tạo đơn hàng mới
   Future<OrderDto> createOrder(OrderDto order);

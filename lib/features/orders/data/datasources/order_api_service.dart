@@ -16,7 +16,7 @@ abstract class OrderApiService {
 
   /// Lấy chi tiết đơn hàng theo ID
   @GET('${ApiConstants.order}/{id}')
-  Future<BaseResponseDto<OrderDto>> getOrderById(@Path('id') int orderId);
+  Future<BaseResponseDto<OrderDto>> getOrderById(@Path('id') num orderId);
 
   /// Tạo đơn hàng mới
   @POST(ApiConstants.order)

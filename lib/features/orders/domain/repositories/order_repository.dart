@@ -8,7 +8,7 @@ abstract class OrderRepository {
   Future<Either<Failure, List<OrderEntity>>> getUserOrders();
 
   /// Lấy chi tiết đơn hàng theo ID
-  Future<Either<Failure, OrderEntity>> getOrderById(int orderId);
+  Future<Either<Failure, OrderEntity>> getOrderById(num orderId);
 
   /// Tạo đơn hàng mới
   Future<Either<Failure, OrderEntity>> createOrder(OrderEntity order);

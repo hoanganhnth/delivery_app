@@ -1,5 +1,6 @@
 import 'package:delivery_app/core/network/authenticated_network_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../data/datasources/mock_order_service.dart';
 import '../../data/datasources/order_api_service.dart';
 import '../../data/datasources/order_remote_datasource.dart';
 import '../../data/datasources/order_remote_datasource_impl.dart';
@@ -23,10 +24,16 @@ final orderRemoteDataSourceProvider = Provider<OrderRemoteDataSource>((ref) {
   return OrderRemoteDataSourceImpl(apiService);
 });
 
+// Mock Service Provider
+final mockOrderServiceProvider = Provider<MockOrderService>((ref) {
+  return MockOrderService();
+});
+
 // Repository Provider
 final orderRepositoryProvider = Provider<OrderRepository>((ref) {
   final remoteDataSource = ref.watch(orderRemoteDataSourceProvider);
-  return OrderRepositoryImpl(remoteDataSource);
+  final mockOrderService = ref.watch(mockOrderServiceProvider);
+  return OrderRepositoryImpl(remoteDataSource, mockOrderService);
 });
 
 // UseCase Providers
