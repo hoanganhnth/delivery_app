@@ -74,5 +74,24 @@
   "differentRestaurantError": "Bạn đã có món từ nhà hàng khác trong giỏ hàng. Vui lòng xóa giỏ hàng hiện tại để thêm món từ nhà hàng này.",
   "clearCurrentCart": "Xóa giỏ hàng và thêm",
   "outOfStock": "Hết hàng",
-  "unavailable": "Không có sẵn"
+  "unavailable": "Không có sẵn",
+  
+  "all": "Tất cả",
+  "pending": "Chờ xác nhận",
+  "confirmed": "Đã xác nhận", 
+  "preparing": "Đang chuẩn bị",
+  "delivering": "Đang giao",
+  "delivered": "Đã giao",
+  "cancelled": "Đã hủy",
+  "retry": "Thử lại",
+  "noOrders": "Không có đơn hàng",
+  "noOrdersMessage": "Bạn chưa đặt đơn hàng nào. Hãy khám phá các nhà hàng và đặt đơn hàng đầu tiên!",
+  "cancelOrder": "Hủy đơn hàng",
+  "cancelOrderConfirm": "Bạn có chắc chắn muốn hủy đơn hàng này không?",
+  "confirm": "Xác nhận",
+  "orderCancelled": "Đơn hàng đã được hủy thành công",
+  "cancelOrderFailed": "Không thể hủy đơn hàng",
+  
+  "order": "Đơn hàng",
+  "estimatedDelivery": "Dự kiến giao"
 }

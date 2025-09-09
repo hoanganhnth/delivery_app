@@ -357,7 +357,7 @@ class S {
     final String ratingString = ratingNumberFormat.format(rating);
 
     return Intl.message(
-      ratingString,
+      '$ratingString',
       name: 'rating',
       desc: '',
       args: [ratingString],
@@ -547,6 +547,121 @@ class S {
   /// `Unavailable`
   String get unavailable {
     return Intl.message('Unavailable', name: 'unavailable', desc: '', args: []);
+  }
+
+  /// `All`
+  String get all {
+    return Intl.message('All', name: 'all', desc: '', args: []);
+  }
+
+  /// `Pending`
+  String get pending {
+    return Intl.message('Pending', name: 'pending', desc: '', args: []);
+  }
+
+  /// `Confirmed`
+  String get confirmed {
+    return Intl.message('Confirmed', name: 'confirmed', desc: '', args: []);
+  }
+
+  /// `Preparing`
+  String get preparing {
+    return Intl.message('Preparing', name: 'preparing', desc: '', args: []);
+  }
+
+  /// `Delivering`
+  String get delivering {
+    return Intl.message('Delivering', name: 'delivering', desc: '', args: []);
+  }
+
+  /// `Delivered`
+  String get delivered {
+    return Intl.message('Delivered', name: 'delivered', desc: '', args: []);
+  }
+
+  /// `Cancelled`
+  String get cancelled {
+    return Intl.message('Cancelled', name: 'cancelled', desc: '', args: []);
+  }
+
+  /// `Retry`
+  String get retry {
+    return Intl.message('Retry', name: 'retry', desc: '', args: []);
+  }
+
+  /// `No Orders`
+  String get noOrders {
+    return Intl.message('No Orders', name: 'noOrders', desc: '', args: []);
+  }
+
+  /// `You haven't placed any orders yet. Start exploring restaurants and place your first order!`
+  String get noOrdersMessage {
+    return Intl.message(
+      'You haven\'t placed any orders yet. Start exploring restaurants and place your first order!',
+      name: 'noOrdersMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel Order`
+  String get cancelOrder {
+    return Intl.message(
+      'Cancel Order',
+      name: 'cancelOrder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to cancel this order?`
+  String get cancelOrderConfirm {
+    return Intl.message(
+      'Are you sure you want to cancel this order?',
+      name: 'cancelOrderConfirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm`
+  String get confirm {
+    return Intl.message('Confirm', name: 'confirm', desc: '', args: []);
+  }
+
+  /// `Order cancelled successfully`
+  String get orderCancelled {
+    return Intl.message(
+      'Order cancelled successfully',
+      name: 'orderCancelled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to cancel order`
+  String get cancelOrderFailed {
+    return Intl.message(
+      'Failed to cancel order',
+      name: 'cancelOrderFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Order`
+  String get order {
+    return Intl.message('Order', name: 'order', desc: '', args: []);
+  }
+
+  /// `Estimated delivery`
+  String get estimatedDelivery {
+    return Intl.message(
+      'Estimated delivery',
+      name: 'estimatedDelivery',
+      desc: '',
+      args: [],
+    );
   }
 }
 

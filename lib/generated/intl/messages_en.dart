@@ -36,11 +36,20 @@ class MessageLookup extends MessageLookupByLibrary {
       "Add some delicious items to get started",
     ),
     "addToCart": MessageLookupByLibrary.simpleMessage("Add to Cart"),
+    "all": MessageLookupByLibrary.simpleMessage("All"),
     "appTitle": MessageLookupByLibrary.simpleMessage("Delivery App"),
     "browseRestaurants": MessageLookupByLibrary.simpleMessage(
       "Browse Restaurants",
     ),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "cancelOrder": MessageLookupByLibrary.simpleMessage("Cancel Order"),
+    "cancelOrderConfirm": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to cancel this order?",
+    ),
+    "cancelOrderFailed": MessageLookupByLibrary.simpleMessage(
+      "Failed to cancel order",
+    ),
+    "cancelled": MessageLookupByLibrary.simpleMessage("Cancelled"),
     "cannotAddItem": MessageLookupByLibrary.simpleMessage("Cannot add item"),
     "cart": MessageLookupByLibrary.simpleMessage("Cart"),
     "categories": MessageLookupByLibrary.simpleMessage("Categories"),
@@ -54,15 +63,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "clearCurrentCart": MessageLookupByLibrary.simpleMessage(
       "Clear Current Cart",
     ),
+    "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
+    "confirmed": MessageLookupByLibrary.simpleMessage("Confirmed"),
     "continueShopping": MessageLookupByLibrary.simpleMessage(
       "Continue Shopping",
     ),
     "deliverFood": MessageLookupByLibrary.simpleMessage("DeliverFood"),
+    "delivered": MessageLookupByLibrary.simpleMessage("Delivered"),
+    "delivering": MessageLookupByLibrary.simpleMessage("Delivering"),
     "deliveryFee": MessageLookupByLibrary.simpleMessage("Delivery Fee"),
     "differentRestaurantError": MessageLookupByLibrary.simpleMessage(
       "You already have items from another restaurant in your cart. Please clear your current cart to add items from this restaurant.",
     ),
     "error": MessageLookupByLibrary.simpleMessage("Error"),
+    "estimatedDelivery": MessageLookupByLibrary.simpleMessage(
+      "Estimated delivery",
+    ),
     "fastFood": MessageLookupByLibrary.simpleMessage("Fast Food"),
     "featuredRestaurants": MessageLookupByLibrary.simpleMessage(
       "Featured Restaurants",
@@ -86,12 +102,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "mexican": MessageLookupByLibrary.simpleMessage("Mexican"),
     "min": MessageLookupByLibrary.simpleMessage("min"),
     "noItemsFound": MessageLookupByLibrary.simpleMessage("No items found"),
+    "noOrders": MessageLookupByLibrary.simpleMessage("No Orders"),
+    "noOrdersMessage": MessageLookupByLibrary.simpleMessage(
+      "You haven\'t placed any orders yet. Start exploring restaurants and place your first order!",
+    ),
+    "order": MessageLookupByLibrary.simpleMessage("Order"),
+    "orderCancelled": MessageLookupByLibrary.simpleMessage(
+      "Order cancelled successfully",
+    ),
     "orderHistory": MessageLookupByLibrary.simpleMessage("Order History"),
     "orderSummary": MessageLookupByLibrary.simpleMessage("Order Summary"),
     "orders": MessageLookupByLibrary.simpleMessage("Orders"),
     "outOfStock": MessageLookupByLibrary.simpleMessage("Out of Stock"),
+    "pending": MessageLookupByLibrary.simpleMessage("Pending"),
     "pizza": MessageLookupByLibrary.simpleMessage("Pizza"),
     "popularNearYou": MessageLookupByLibrary.simpleMessage("Popular Near You"),
+    "preparing": MessageLookupByLibrary.simpleMessage("Preparing"),
     "price": m2,
     "proceedToCheckout": MessageLookupByLibrary.simpleMessage(
       "Proceed to Checkout",
@@ -101,6 +127,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "rating": m3,
     "remove": MessageLookupByLibrary.simpleMessage("Remove"),
     "restaurants": MessageLookupByLibrary.simpleMessage("Restaurants"),
+    "retry": MessageLookupByLibrary.simpleMessage("Retry"),
     "reviews": MessageLookupByLibrary.simpleMessage("Reviews"),
     "searchHint": MessageLookupByLibrary.simpleMessage("Search for dishes..."),
     "searchRestaurants": MessageLookupByLibrary.simpleMessage(

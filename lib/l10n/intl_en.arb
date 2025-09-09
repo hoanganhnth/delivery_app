@@ -103,5 +103,24 @@
     "differentRestaurantError": "You already have items from another restaurant in your cart. Please clear your current cart to add items from this restaurant.",
     "clearCurrentCart": "Clear Current Cart",
     "outOfStock": "Out of Stock",
-    "unavailable": "Unavailable"
+    "unavailable": "Unavailable",
+    
+    "all": "All",
+    "pending": "Pending",
+    "confirmed": "Confirmed", 
+    "preparing": "Preparing",
+    "delivering": "Delivering",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled",
+    "retry": "Retry",
+    "noOrders": "No Orders",
+    "noOrdersMessage": "You haven't placed any orders yet. Start exploring restaurants and place your first order!",
+    "cancelOrder": "Cancel Order",
+    "cancelOrderConfirm": "Are you sure you want to cancel this order?",
+    "confirm": "Confirm",
+    "orderCancelled": "Order cancelled successfully",
+    "cancelOrderFailed": "Failed to cancel order",
+    
+    "order": "Order",
+    "estimatedDelivery": "Estimated delivery"
 }

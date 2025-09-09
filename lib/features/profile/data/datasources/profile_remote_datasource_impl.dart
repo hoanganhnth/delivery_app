@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:delivery_app/core/constants/api_constants.dart';
+import 'package:delivery_app/core/data/dtos/response_handler.dart';
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:retrofit/retrofit.dart';
-// import '../../../../core/constants/api_constants.dart';
 import '../../../../core/data/dtos/base_response_dto.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../dtos/user_profile_dto.dart';
@@ -39,60 +39,42 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
   @override
   Future<Either<Exception, BaseResponseDto<UserProfileDto>>> getUserProfile() async {
-    try {
-      AppLogger.i('ProfileRemoteDataSource: Getting user profile');
+    AppLogger.i('ProfileRemoteDataSource: Getting user profile');
+    return ResponseHandler.safeApiCall(() async {
       final response = await apiService.getUserProfile();
       AppLogger.i('ProfileRemoteDataSource: Get profile successful');
-      return right(response);
-    } on DioException catch (e) {
-      AppLogger.e('ProfileRemoteDataSource: DioException - ${e.message}');
-      return left(e);
-    } catch (e) {
-      AppLogger.e('ProfileRemoteDataSource: Unexpected error - $e');
-      return left(Exception('Unexpected error occurred'));
-    }
+      return response;
+    });
   }
 
   @override
   Future<Either<Exception, BaseResponseDto<UserProfileDto>>> updateUserProfile(
     UpdateProfileRequestDto request,
   ) async {
-    try {
-      AppLogger.i('ProfileRemoteDataSource: Updating user profile');
+    AppLogger.i('ProfileRemoteDataSource: Updating user profile');
+    return ResponseHandler.safeApiCall(() async {
       final response = await apiService.updateUserProfile(request);
       AppLogger.i('ProfileRemoteDataSource: Update profile successful');
-      return right(response);
-    } on DioException catch (e) {
-      AppLogger.e('ProfileRemoteDataSource: DioException - ${e.message}');
-      return left(e);
-    } catch (e) {
-      AppLogger.e('ProfileRemoteDataSource: Unexpected error - $e');
-      return left(Exception('Unexpected error occurred'));
-    }
+      return response;
+    });
   }
 
   @override
   Future<Either<Exception, BaseResponseDto<String>>> uploadAvatar(
     String imagePath,
   ) async {
-    try {
-      AppLogger.i('ProfileRemoteDataSource: Uploading avatar');
+    AppLogger.i('ProfileRemoteDataSource: Uploading avatar');
+    return ResponseHandler.safeApiCall(() async {
       final file = File(imagePath);
       
       if (!await file.exists()) {
-        return left(Exception('Image file not found'));
+        throw Exception('Image file not found');
       }
 
       final response = await apiService.uploadAvatar(file);
       AppLogger.i('ProfileRemoteDataSource: Upload avatar successful');
-      return right(response);
-    } on DioException catch (e) {
-      AppLogger.e('ProfileRemoteDataSource: DioException - ${e.message}');
-      return left(e);
-    } catch (e) {
-      AppLogger.e('ProfileRemoteDataSource: Unexpected error - $e');
-      return left(Exception('Unexpected error occurred'));
-    }
+      return response;
+    });
   }
   
 
