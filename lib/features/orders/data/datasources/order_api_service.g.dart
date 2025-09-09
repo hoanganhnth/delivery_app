@@ -27,7 +27,7 @@ class _OrderApiService implements OrderApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/my-orders',
+            '/orders/my-orders',
             queryParameters: queryParameters,
             data: _data,
           )

@@ -1,10 +1,10 @@
 import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
+import 'package:delivery_app/features/orders/orders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import '../../../../generated/l10n.dart';
 import '../../../cart/presentation/pages/cart_page.dart';
-import '../../../orders/presentation/pages/orders_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../providers/navigation_provider.dart';
 
@@ -18,7 +18,7 @@ class MainScreen extends ConsumerWidget {
     const pages = <Widget>[
       HomePage(),
       CartPage(),
-      OrdersPage(),
+      OrdersScreen(),
       ProfilePage(),
     ];
 
