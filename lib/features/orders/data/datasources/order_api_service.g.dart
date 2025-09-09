@@ -27,7 +27,7 @@ class _OrderApiService implements OrderApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/orders',
+            '/my-orders',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -120,7 +120,7 @@ class _OrderApiService implements OrderApiService {
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<BaseResponseDto<bool>>(
-      Options(method: 'DELETE', headers: _headers, extra: _extra)
+      Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
             '/orders/${orderId}',

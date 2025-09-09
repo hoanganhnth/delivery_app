@@ -12,4 +12,6 @@ class ApiConstants {
   static const getMenuItemsByRestaurant =
       "/menu-items/restaurant/{restaurantId}";
   static const getRestaurantNearBy = "/restaurants/nearby";
+  static const getOrdersByUser = "/my-orders";
+  static const order = "/orders";
 }

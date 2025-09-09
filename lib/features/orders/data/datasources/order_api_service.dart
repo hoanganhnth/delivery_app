@@ -1,3 +1,4 @@
+import 'package:delivery_app/core/constants/api_constants.dart';
 import 'package:delivery_app/core/data/dtos/base_response_dto.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -10,15 +11,15 @@ abstract class OrderApiService {
   factory OrderApiService(Dio dio) = _OrderApiService;
 
   /// Lấy danh sách đơn hàng của người dùng
-  @GET('/orders')
+  @GET(ApiConstants.getOrdersByUser)
   Future<BaseResponseDto<List<OrderDto>>> getUserOrders();
 
   /// Lấy chi tiết đơn hàng theo ID
-  @GET('/orders/{id}')
+  @GET('${ApiConstants.order}/{id}')
   Future<BaseResponseDto<OrderDto>> getOrderById(@Path('id') int orderId);
 
   /// Tạo đơn hàng mới
-  @POST('/orders')
+  @POST(ApiConstants.order)
   Future<BaseResponseDto<OrderDto>> createOrder(@Body() OrderDto order);
 
   // /// Cập nhật trạng thái đơn hàng
@@ -29,7 +30,7 @@ abstract class OrderApiService {
   // );
 
   /// Hủy đơn hàng
-  @DELETE('/orders/{id}')
+  @PUT('${ApiConstants.order}/{id}')
   Future<BaseResponseDto<bool>> cancelOrder(@Path('id') int orderId);
 
   // /// Lấy danh sách đơn hàng theo trạng thái

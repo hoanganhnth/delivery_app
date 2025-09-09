@@ -8,11 +8,13 @@ class DioExceptionHandler {
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
         return const NetworkFailure('Connection timeout');
-      
+
       case DioExceptionType.badResponse:
         final statusCode = exception.response?.statusCode;
-        final message = exception.response?.data?['message'] ?? 'Server error';
-        
+        final message = exception.response?.data?['message'];
+        if (message is String) {
+          return ServerFailure(message);
+        }
         if (statusCode != null) {
           switch (statusCode) {
             case 400:
@@ -30,16 +32,16 @@ class DioExceptionHandler {
           }
         }
         return ServerFailure('Server error: $message');
-      
+
       case DioExceptionType.cancel:
         return const NetworkFailure('Request cancelled');
-      
+
       case DioExceptionType.connectionError:
         return const NetworkFailure('No internet connection');
-      
+
       case DioExceptionType.badCertificate:
         return const NetworkFailure('Certificate error');
-      
+
       case DioExceptionType.unknown:
         return const NetworkFailure('Unknown network error');
     }

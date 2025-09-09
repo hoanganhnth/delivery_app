@@ -1,5 +1,5 @@
+import 'package:delivery_app/core/network/authenticated_network_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/network/network_providers.dart';
 import '../../data/datasources/order_api_service.dart';
 import '../../data/datasources/order_remote_datasource.dart';
 import '../../data/datasources/order_remote_datasource_impl.dart';
@@ -14,7 +14,7 @@ import 'orders_list_notifier.dart';
 
 // Data Source Providers
 final orderApiServiceProvider = Provider<OrderApiService>((ref) {
-  final dio = ref.watch(dioProvider);
+  final dio = ref.watch(authenticatedDioProvider);
   return OrderApiService(dio);
 });
 
