@@ -7,7 +7,6 @@ import 'package:delivery_app/features/auth/domain/entities/auth_entity.dart';
 import 'package:delivery_app/features/auth/domain/usecases/login_usecase.dart';
 import 'package:delivery_app/core/data/dtos/base_response_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fpdart/fpdart.dart';
 
 // Mock implementation
 class MockAuthRemoteDataSource implements AuthRemoteDataSource {
@@ -16,7 +15,7 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
   String? errorMessage;
 
   @override
-  Future<Either<Exception, BaseResponseDto<AuthDataDto>>> login(request) async {
+  Future<AuthResponseDto> login(request) async {
     if (shouldThrowException) {
       throw Exception('Network error');
     }
@@ -38,65 +37,33 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
         data: authData,
       );
 
-      return right(response);
+      return response;
     } else {
-      final response = BaseResponseDto<AuthDataDto>(
-        status: 0,
-        message: errorMessage ?? 'Login failed',
-        data: null,
-      );
-
-      return right(response);
+      throw Exception(errorMessage ?? 'Login failed');
     }
   }
 
   @override
-  Future<Either<Exception, BaseResponseDto<bool>>> register(request) async {
+  Future<BaseResponseDto<bool>> register(request) async {
     if (shouldThrowException) {
       throw Exception('Network error');
     }
 
     if (shouldReturnSuccess) {
-      // final authData = AuthDataDto(
-      //   accessToken: 'test_access_token',
-      //   refreshToken: 'test_refresh_token',
-      //   user: UserDto(
-      //     id: 1,
-      //     email: 'test@example.com',
-      //     name: 'Test User',
-      //   ),
-      // );
-
-      // final response = BaseResponseDto<AuthDataDto>(
-      //   status: 1,
-      //   message: 'Registration successful',
-      //   data: authData,
-      // );
       final response = BaseResponseDto<bool>(
         status: 1,
         message: 'Registration successful',
         data: true,
       );
 
-      return right(response);
+      return response;
     } else {
-      // final response = BaseResponseDto<AuthDataDto>(
-      //   status: 0,
-      //   message: errorMessage ?? 'Registration failed',
-      //   data: null,
-      // );
-      final response = BaseResponseDto<bool>(
-        status: 0,
-        message: errorMessage ?? 'Registration failed',
-        data: false,
-      );
-
-      return right(response);
+      throw Exception(errorMessage ?? 'Registration failed');
     }
   }
 
   @override
-  Future<Either<Exception, BaseResponseDto<RefreshTokenDataDto>>> refreshToken(String refreshToken) async {
+  Future<RefreshTokenResponseDto> refreshToken(String refreshToken) async {
     if (shouldThrowException) {
       throw Exception('Network error');
     }
@@ -112,15 +79,9 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
         data: refreshData,
       );
 
-      return right(response);
+      return response;
     } else {
-      final response = BaseResponseDto<RefreshTokenDataDto>(
-        status: 0,
-        message: errorMessage ?? 'Token refresh failed',
-        data: null,
-      );
-
-      return right(response);
+      throw Exception(errorMessage ?? 'Token refresh failed');
     }
   }
 }

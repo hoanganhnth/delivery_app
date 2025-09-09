@@ -1,3 +1,4 @@
+import 'package:delivery_app/core/error/error_mapper.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
 import '../../domain/entities/order_entity.dart';
@@ -14,11 +15,10 @@ class OrderRepositoryImpl implements OrderRepository {
   @override
   Future<Either<Failure, List<OrderEntity>>> getUserOrders() async {
     try {
-      final result = await _remoteDataSource.getUserOrders();
-      return result.fold(
-        (exception) => left(_mapExceptionToFailure(exception)),
-        (dtos) => right(dtos.map((dto) => dto.toEntity()).toList()),
-      );
+      final dtos = await _remoteDataSource.getUserOrders();
+      return right(dtos.map((dto) => dto.toEntity()).toList());
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
     } catch (e) {
       return left(ServerFailure('Unexpected error: ${e.toString()}'));
     }
@@ -27,11 +27,10 @@ class OrderRepositoryImpl implements OrderRepository {
   @override
   Future<Either<Failure, OrderEntity>> getOrderById(int orderId) async {
     try {
-      final result = await _remoteDataSource.getOrderById(orderId);
-      return result.fold(
-        (exception) => left(_mapExceptionToFailure(exception)),
-        (dto) => right(dto.toEntity()),
-      );
+      final dto = await _remoteDataSource.getOrderById(orderId);
+      return right(dto.toEntity());
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
     } catch (e) {
       return left(ServerFailure('Unexpected error: ${e.toString()}'));
     }
@@ -41,11 +40,10 @@ class OrderRepositoryImpl implements OrderRepository {
   Future<Either<Failure, OrderEntity>> createOrder(OrderEntity order) async {
     try {
       final orderDto = order.toDto();
-      final result = await _remoteDataSource.createOrder(orderDto);
-      return result.fold(
-        (exception) => left(_mapExceptionToFailure(exception)),
-        (dto) => right(dto.toEntity()),
-      );
+      final dto = await _remoteDataSource.createOrder(orderDto);
+      return right(dto.toEntity());
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
     } catch (e) {
       return left(ServerFailure('Unexpected error: ${e.toString()}'));
     }
@@ -53,18 +51,17 @@ class OrderRepositoryImpl implements OrderRepository {
 
   @override
   Future<Either<Failure, OrderEntity>> updateOrderStatus(
-    int orderId, 
+    int orderId,
     OrderStatus status,
   ) async {
     try {
-      final result = await _remoteDataSource.updateOrderStatus(
-        orderId, 
+      final dto = await _remoteDataSource.updateOrderStatus(
+        orderId,
         status.value,
       );
-      return result.fold(
-        (exception) => left(_mapExceptionToFailure(exception)),
-        (dto) => right(dto.toEntity()),
-      );
+      return right(dto.toEntity());
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
     } catch (e) {
       return left(ServerFailure('Unexpected error: ${e.toString()}'));
     }
@@ -73,11 +70,10 @@ class OrderRepositoryImpl implements OrderRepository {
   @override
   Future<Either<Failure, bool>> cancelOrder(int orderId) async {
     try {
-      final result = await _remoteDataSource.cancelOrder(orderId);
-      return result.fold(
-        (exception) => left(_mapExceptionToFailure(exception)),
-        (success) => right(success),
-      );
+      final success = await _remoteDataSource.cancelOrder(orderId);
+      return right(success);
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
     } catch (e) {
       return left(ServerFailure('Unexpected error: ${e.toString()}'));
     }
@@ -88,11 +84,10 @@ class OrderRepositoryImpl implements OrderRepository {
     OrderStatus status,
   ) async {
     try {
-      final result = await _remoteDataSource.getOrdersByStatus(status.value);
-      return result.fold(
-        (exception) => left(_mapExceptionToFailure(exception)),
-        (dtos) => right(dtos.map((dto) => dto.toEntity()).toList()),
-      );
+      final dtos = await _remoteDataSource.getOrdersByStatus(status.value);
+      return right(dtos.map((dto) => dto.toEntity()).toList());
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
     } catch (e) {
       return left(ServerFailure('Unexpected error: ${e.toString()}'));
     }
@@ -104,50 +99,15 @@ class OrderRepositoryImpl implements OrderRepository {
     int limit = 10,
   }) async {
     try {
-      final result = await _remoteDataSource.getOrderHistory(
+      final dtos = await _remoteDataSource.getOrderHistory(
         page: page,
         limit: limit,
       );
-      return result.fold(
-        (exception) => left(_mapExceptionToFailure(exception)),
-        (dtos) => right(dtos.map((dto) => dto.toEntity()).toList()),
-      );
+      return right(dtos.map((dto) => dto.toEntity()).toList());
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
     } catch (e) {
       return left(ServerFailure('Unexpected error: ${e.toString()}'));
     }
-  }
-
-  /// Map Exception thành Failure
-  Failure _mapExceptionToFailure(Exception exception) {
-    final message = exception.toString().replaceFirst('Exception: ', '');
-    
-    if (message.toLowerCase().contains('connection') || 
-        message.toLowerCase().contains('timeout') ||
-        message.toLowerCase().contains('network')) {
-      return NetworkFailure(message);
-    }
-    
-    if (message.toLowerCase().contains('unauthorized') ||
-        message.toLowerCase().contains('401')) {
-      return UnauthorizedFailure(message);
-    }
-    
-    if (message.toLowerCase().contains('forbidden') ||
-        message.toLowerCase().contains('403')) {
-      return ServerFailure(message);
-    }
-    
-    if (message.toLowerCase().contains('validation') ||
-        message.toLowerCase().contains('422')) {
-      return ValidationFailure(message);
-    }
-    
-    // Kiểm tra server errors (5xx)
-    if (message.contains('500') || message.contains('502') || 
-        message.contains('503') || message.contains('504')) {
-      return ServerFailure(message);
-    }
-    
-    return ServerFailure(message);
   }
 }

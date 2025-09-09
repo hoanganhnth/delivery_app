@@ -2,7 +2,6 @@ import 'package:delivery_app/core/constants/api_constants.dart';
 import 'package:delivery_app/core/data/dtos/base_response_dto.dart';
 import 'package:delivery_app/core/data/dtos/response_handler.dart';
 import 'package:dio/dio.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:retrofit/retrofit.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../dtos/restaurant_dto.dart';
@@ -49,72 +48,109 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
   RestaurantRemoteDataSourceImpl(this._apiService);
 
   @override
-  Future<Either<Exception, BaseResponseDto<List<RestaurantDto>>>> getRestaurants(
+  Future<BaseResponseDto<List<RestaurantDto>>> getRestaurants(
     GetRestaurantsRequestDto request,
   ) async {
-    AppLogger.d('Getting restaurants with params: $request');
-    return ResponseHandler.safeApiCall(() async {
+    try {
+      AppLogger.d('Getting restaurants with params: $request');
       final response = await _apiService.getRestaurants(request);
       AppLogger.i('Successfully retrieved ${response.data?.length ?? 0} restaurants');
       return response;
-    });
+    } on DioException catch (e) {
+      AppLogger.e('Failed to get restaurants', e);
+      throw ResponseHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      AppLogger.e('Unexpected error getting restaurants', e);
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
   }
+  
 
   @override
-  Future<Either<Exception, BaseResponseDto<RestaurantDto>>> getRestaurantById(
+  Future<BaseResponseDto<RestaurantDto>> getRestaurantById(
     num id,
   ) async {
-    AppLogger.d('Getting restaurant with id: $id');
-    return ResponseHandler.safeApiCall(() async {
+    try {
+      AppLogger.d('Getting restaurant with id: $id');
       final response = await _apiService.getRestaurantById(id);
       AppLogger.i('Successfully retrieved restaurant: ${response.data?.name}');
       return response;
-    });
+    } on DioException catch (e) {
+      AppLogger.e('Failed to get restaurant with id: $id', e);
+      throw ResponseHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      AppLogger.e('Unexpected error getting restaurant', e);
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
   }
 
   @override
-  Future<Either<Exception, BaseResponseDto<List<MenuItemDto>>>> getMenuItems(
+  Future<BaseResponseDto<List<MenuItemDto>>> getMenuItems(
     num restaurantId,
   ) async {
-    AppLogger.d('Getting menu items for restaurant: $restaurantId');
-    return ResponseHandler.safeApiCall(() async {
+    try {
+      AppLogger.d('Getting menu items for restaurant: $restaurantId');
       final response = await _apiService.getMenuItems(restaurantId);
       AppLogger.i('Successfully retrieved ${response.data?.length ?? 0} menu items');
       return response;
-    });
+    } on DioException catch (e) {
+      AppLogger.e('Failed to get menu items for restaurant: $restaurantId', e);
+      throw ResponseHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      AppLogger.e('Unexpected error getting menu items', e);
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
   }
 
   @override
-  Future<Either<Exception, BaseResponseDto<List<RestaurantDto>>>> getNearbyRestaurants(
+  Future<BaseResponseDto<List<RestaurantDto>>> getNearbyRestaurants(
     NearbyRestaurantsRequestDto request,
   ) async {
-    AppLogger.d('Getting nearby restaurants with params: $request');
-    return ResponseHandler.safeApiCall(() async {
+    try {
+      AppLogger.d('Getting nearby restaurants with params: $request');
       final response = await _apiService.getNearbyRestaurants(request);
       AppLogger.i('Successfully retrieved ${response.data?.length ?? 0} nearby restaurants');
       return response;
-    });
+    } on DioException catch (e) {
+      AppLogger.e('Failed to get nearby restaurants', e);
+      throw ResponseHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      AppLogger.e('Unexpected error getting nearby restaurants', e);
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
   }
 
   @override
-  Future<Either<Exception, BaseResponseDto<List<RestaurantDto>>>> searchRestaurants(
+  Future<BaseResponseDto<List<RestaurantDto>>> searchRestaurants(
     SearchRestaurantsRequestDto request,
   ) async {
-    AppLogger.d('Searching restaurants with query: ${request.query}');
-    return ResponseHandler.safeApiCall(() async {
+    try {
+      AppLogger.d('Searching restaurants with query: ${request.query}');
       final response = await _apiService.searchRestaurants(request);
       AppLogger.i('Search returned ${response.data?.length ?? 0} restaurants');
       return response;
-    });
+    } on DioException catch (e) {
+      AppLogger.e('Failed to search restaurants', e);
+      throw ResponseHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      AppLogger.e('Unexpected error searching restaurants', e);
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
   }
 
   @override
-  Future<Either<Exception, BaseResponseDto<List<String>>>> getRestaurantCategories() async {
-    AppLogger.d('Getting restaurant categories');
-    return ResponseHandler.safeApiCall(() async {
+  Future<BaseResponseDto<List<String>>> getRestaurantCategories() async {
+    try {
+      AppLogger.d('Getting restaurant categories');
       final response = await _apiService.getRestaurantCategories();
       AppLogger.i('Successfully retrieved ${response.data?.length ?? 0} categories');
       return response;
-    });
+    } on DioException catch (e) {
+      AppLogger.e('Failed to get restaurant categories', e);
+      throw ResponseHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      AppLogger.e('Unexpected error getting categories', e);
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:delivery_app/core/error/exceptions.dart';
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../error/dio_exception_handler.dart';
@@ -39,7 +40,7 @@ class ResponseHandler {
   /// Map DioException thành Exception để phù hợp với interface
   static Exception mapDioExceptionToException(DioException e) {
     final failure = DioExceptionHandler.handleException(e);
-    return Exception(failure.message);
+    return ServerException(failure.message);
   }
 
   /// Wrapper chung cho việc gọi API với error handling

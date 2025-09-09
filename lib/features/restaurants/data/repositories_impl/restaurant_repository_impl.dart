@@ -1,3 +1,4 @@
+import 'package:delivery_app/core/error/error_mapper.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/data/dtos/base_response_dto.dart';
@@ -37,21 +38,18 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
         limit: limit,
       );
 
-      final result = await _remoteDataSource.getRestaurants(request);
+      final response = await _remoteDataSource.getRestaurants(request);
 
-      return result.fold(
-        (exception) => left(ServerFailure(exception.toString())),
-        (response) {
-          if (response.isSuccess && response.data != null) {
-            final entities = (response.data)!
-                .map((data) => data.toEntity())
-                .toList();
-            return right(entities);
-          } else {
-            return left(ServerFailure(response.message));
-          }
-        },
-      );
+      if (response.isSuccess && response.data != null) {
+        final entities = (response.data)!
+            .map((data) => data.toEntity())
+            .toList();
+        return right(entities);
+      } else {
+        return left(ServerFailure(response.message));
+      }
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
     } catch (e) {
       return left(ServerFailure(e.toString()));
     }
@@ -60,18 +58,15 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   @override
   Future<Either<Failure, RestaurantEntity>> getRestaurantById(num id) async {
     try {
-      final result = await _remoteDataSource.getRestaurantById(id);
+      final response = await _remoteDataSource.getRestaurantById(id);
 
-      return result.fold(
-        (exception) => left(ServerFailure(exception.toString())),
-        (response) {
-          if (response.isSuccess && response.data != null) {
-            return right(response.data!.toEntity());
-          } else {
-            return left(ServerFailure(response.message));
-          }
-        },
-      );
+      if (response.isSuccess && response.data != null) {
+        return right(response.data!.toEntity());
+      } else {
+        return left(ServerFailure(response.message));
+      }
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
     } catch (e) {
       return left(ServerFailure(e.toString()));
     }
@@ -82,21 +77,18 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
     num restaurantId,
   ) async {
     try {
-      final result = await _remoteDataSource.getMenuItems(restaurantId);
+      final response = await _remoteDataSource.getMenuItems(restaurantId);
 
-      return result.fold(
-        (exception) => left(ServerFailure(exception.toString())),
-        (response) {
-          if (response.isSuccess && response.data != null) {
-            final entities = (response.data)!
-                .map((data) => data.toEntity())
-                .toList();
-            return right(entities);
-          } else {
-            return left(ServerFailure(response.message));
-          }
-        },
-      );
+      if (response.isSuccess && response.data != null) {
+        final entities = (response.data)!
+            .map((data) => data.toEntity())
+            .toList();
+        return right(entities);
+      } else {
+        return left(ServerFailure(response.message));
+      }
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
     } catch (e) {
       return left(ServerFailure(e.toString()));
     }
@@ -115,25 +107,18 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
         radius: radius,
       );
 
-      final result = await _remoteDataSource.getNearbyRestaurants(request);
+      final response = await _remoteDataSource.getNearbyRestaurants(request);
 
-      return result.fold(
-        (exception) => left(ServerFailure(exception.toString())),
-        (response) {
-          if (response.isSuccess && response.data != null) {
-            final entities = (response.data as List)
-                .map(
-                  (data) => RestaurantDto.fromJson(
-                    data as Map<String, dynamic>,
-                  ).toEntity(),
-                )
-                .toList();
-            return right(entities);
-          } else {
-            return left(ServerFailure(response.message));
-          }
-        },
-      );
+      if (response.isSuccess && response.data != null) {
+        final entities = (response.data)!
+            .map((data) => data.toEntity())
+            .toList();
+        return right(entities);
+      } else {
+        return left(ServerFailure(response.message));
+      }
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
     } catch (e) {
       return left(ServerFailure(e.toString()));
     }
@@ -158,25 +143,18 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
         limit: limit,
       );
 
-      final result = await _remoteDataSource.searchRestaurants(request);
+      final response = await _remoteDataSource.searchRestaurants(request);
 
-      return result.fold(
-        (exception) => left(ServerFailure(exception.toString())),
-        (response) {
-          if (response.isSuccess && response.data != null) {
-            final entities = (response.data as List)
-                .map(
-                  (data) => RestaurantDto.fromJson(
-                    data as Map<String, dynamic>,
-                  ).toEntity(),
-                )
-                .toList();
-            return right(entities);
-          } else {
-            return left(ServerFailure(response.message));
-          }
-        },
-      );
+      if (response.isSuccess && response.data != null) {
+        final entities = (response.data)!
+            .map((data) => data.toEntity())
+            .toList();
+        return right(entities);
+      } else {
+        return left(ServerFailure(response.message));
+      }
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
     } catch (e) {
       return left(ServerFailure(e.toString()));
     }
@@ -185,21 +163,18 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   @override
   Future<Either<Failure, List<String>>> getRestaurantCategories() async {
     try {
-      final result = await _remoteDataSource.getRestaurantCategories();
+      final response = await _remoteDataSource.getRestaurantCategories();
 
-      return result.fold(
-        (exception) => left(ServerFailure(exception.toString())),
-        (response) {
-          if (response.isSuccess && response.data != null) {
-            final categories = (response.data as List)
-                .map((category) => category.toString())
-                .toList();
-            return right(categories);
-          } else {
-            return left(ServerFailure(response.message));
-          }
-        },
-      );
+      if (response.isSuccess && response.data != null) {
+        final categories = (response.data)!
+            .map((category) => category.toString())
+            .toList();
+        return right(categories);
+      } else {
+        return left(ServerFailure(response.message));
+      }
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
     } catch (e) {
       return left(ServerFailure(e.toString()));
     }

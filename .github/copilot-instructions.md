@@ -105,6 +105,79 @@ presentation/
    ```
 
 ### Step 2: Data Layer (Implementation)
+
+## 🔧 STANDARDIZED PATTERNS (MANDATORY FOR ALL MODULES)
+
+### Remote DataSource Implementation Pattern
+**ALL remote datasources MUST follow this exact pattern:**
+
+```dart
+class ExampleRemoteDataSourceImpl implements ExampleRemoteDataSource {
+  final ExampleApiService _apiService;  // ✅ Private field with underscore
+
+  ExampleRemoteDataSourceImpl(this._apiService);
+
+  @override
+  Future<BaseResponseDto<ExampleDto>> getExample(String id) async {
+    try {
+      AppLogger.d('Getting example with id: $id');  // ✅ Debug log at start
+      final response = await _apiService.getExample(id);
+      AppLogger.i('Successfully retrieved example');  // ✅ Success log
+      return response;  // ✅ Return response directly (no success check)
+    } on DioException catch (e) {
+      AppLogger.e('Failed to get example with id: $id', e);  // ✅ Error log with context
+      throw ResponseHandler.mapDioExceptionToException(e);  // ✅ Use ResponseHandler
+    } catch (e) {
+      AppLogger.e('Unexpected error getting example', e);  // ✅ Generic error log
+      throw Exception('Unexpected error: ${e.toString()}');  // ✅ Generic exception
+    }
+  }
+}
+```
+
+### Repository Implementation Pattern
+**ALL repositories MUST follow this exact pattern:**
+
+```dart
+class ExampleRepositoryImpl implements ExampleRepository {
+  final ExampleRemoteDataSource remoteDataSource;
+
+  ExampleRepositoryImpl(this.remoteDataSource);
+
+  @override
+  Future<Either<Failure, ExampleEntity>> getExample(String id) async {
+    try {
+      final response = await remoteDataSource.getExample(id);
+
+      if (response.isSuccess && response.data != null) {
+        return right(response.data!.toEntity());
+      } else {
+        return left(ServerFailure(response.message));
+      }
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
+    } catch (e) {
+      return left(const ServerFailure('Unexpected error occurred'));
+    }
+  }
+}
+```
+
+### Key Rules:
+- **🚫 NEVER** use `Either<Exception, T>` in remote datasources
+- **🚫 NEVER** manually check `response.isSuccess` in remote datasources
+- **✅ ALWAYS** use `AppLogger.d()`, `AppLogger.i()`, `AppLogger.e()` for logging
+- **✅ ALWAYS** use `ResponseHandler.mapDioExceptionToException(e)` for Dio errors
+- **✅ ALWAYS** include generic catch block for unexpected errors
+- **✅ ALWAYS** use private fields (`_apiService`) in datasources
+- **✅ ALWAYS** return `BaseResponseDto<T>` from remote datasources
+- **✅ ALWAYS** return `Either<Failure, T>` from repositories
+
+### Logging Standards:
+- `AppLogger.d()`: Debug info at method start with parameters
+- `AppLogger.i()`: Success messages with result summary
+- `AppLogger.e()`: Error messages with context and exception
+
 1. **Create DTO with Freezed**:
    ```dart
    // data/dtos/example_request_dto.dart
@@ -136,16 +209,38 @@ presentation/
    
    class ExampleRemoteDataSourceImpl implements ExampleRemoteDataSource {
      final ExampleApiService _apiService;
-     
+
      ExampleRemoteDataSourceImpl(this._apiService);
-     
+
      @override
-     Future<Either<Exception, ExampleResponseDto>> getExample(String id) async {
+     Future<BaseResponseDto<ExampleDataDto>> getExample(String id) async {
        try {
+         AppLogger.d('Getting example with id: $id');
          final response = await _apiService.getExample(id);
-         return right(response);
+         AppLogger.i('Successfully retrieved example: ${response.data?.name}');
+         return response;
        } on DioException catch (e) {
-         return left(_handleDioException(e));
+         AppLogger.e('Failed to get example with id: $id', e);
+         throw ResponseHandler.mapDioExceptionToException(e);
+       } catch (e) {
+         AppLogger.e('Unexpected error getting example', e);
+         throw Exception('Unexpected error: ${e.toString()}');
+       }
+     }
+
+     @override
+     Future<BaseResponseDto<ExampleDataDto>> createExample(ExampleRequestDto request) async {
+       try {
+         AppLogger.d('Creating example');
+         final response = await _apiService.createExample(request);
+         AppLogger.i('Successfully created example');
+         return response;
+       } on DioException catch (e) {
+         AppLogger.e('Failed to create example', e);
+         throw ResponseHandler.mapDioExceptionToException(e);
+       } catch (e) {
+         AppLogger.e('Unexpected error creating example', e);
+         throw Exception('Unexpected error: ${e.toString()}');
        }
      }
    }
@@ -156,23 +251,39 @@ presentation/
    // data/repositories_impl/example_repository_impl.dart
    class ExampleRepositoryImpl implements ExampleRepository {
      final ExampleRemoteDataSource remoteDataSource;
-     
+
      ExampleRepositoryImpl(this.remoteDataSource);
-     
+
      @override
      Future<Either<Failure, ExampleEntity>> getExample(String id) async {
        try {
-         final result = await remoteDataSource.getExample(id);
-         return result.fold(
-           (exception) => left(mapExceptionToFailure(exception)),
-           (response) {
-             if (response.isSuccess && response.data != null) {
-               return right(response.data!.toEntity());
-             } else {
-               return left(ServerFailure(response.message));
-             }
-           },
-         );
+         final response = await remoteDataSource.getExample(id);
+
+         if (response.isSuccess && response.data != null) {
+           return right(response.data!.toEntity());
+         } else {
+           return left(ServerFailure(response.message));
+         }
+       } on Exception catch (e) {
+         return left(mapExceptionToFailure(e));
+       } catch (e) {
+         return left(const ServerFailure('Unexpected error occurred'));
+       }
+     }
+
+     @override
+     Future<Either<Failure, ExampleEntity>> createExample(ExampleEntity example) async {
+       try {
+         final request = ExampleRequestDto.fromEntity(example);
+         final response = await remoteDataSource.createExample(request);
+
+         if (response.isSuccess && response.data != null) {
+           return right(response.data!.toEntity());
+         } else {
+           return left(ServerFailure(response.message));
+         }
+       } on Exception catch (e) {
+         return left(mapExceptionToFailure(e));
        } catch (e) {
          return left(const ServerFailure('Unexpected error occurred'));
        }
@@ -610,5 +721,99 @@ When generating commit messages, follow this pattern:
 3. Write clear, concise description
 4. Include scope if applicable (feature name)
 ---
+
+## 📋 STANDARDIZED IMPLEMENTATION CHECKLIST
+
+### For ALL New Features/Modules:
+
+#### ✅ **Domain Layer**:
+- [ ] Create entities in `domain/entities/`
+- [ ] Create repository interfaces in `domain/repositories/`
+- [ ] Create usecases in `domain/usecases/`
+
+#### ✅ **Data Layer**:
+- [ ] Create DTOs with Freezed in `data/dtos/`
+- [ ] Create Retrofit API service in datasource implementation
+- [ ] **MANDATORY**: Follow exact RemoteDataSource pattern:
+  ```dart
+  class FeatureRemoteDataSourceImpl implements FeatureRemoteDataSource {
+    final FeatureApiService _apiService;  // ✅ Private field
+    
+    FeatureRemoteDataSourceImpl(this._apiService);
+    
+    @override
+    Future<BaseResponseDto<FeatureDto>> method() async {
+      try {
+        AppLogger.d('Getting [resource]');  // ✅ Debug log
+        final response = await _apiService.method();
+        AppLogger.i('Successfully retrieved [resource]');  // ✅ Success log
+        return response;  // ✅ Return directly, no success check
+      } on DioException catch (e) {
+        AppLogger.e('Failed to get [resource]', e);  // ✅ Error log with context
+        throw ResponseHandler.mapDioExceptionToException(e);  // ✅ Use ResponseHandler
+      } catch (e) {
+        AppLogger.e('Unexpected error getting [resource]', e);  // ✅ Generic error log
+        throw Exception('Unexpected error: ${e.toString()}');  // ✅ Generic exception
+      }
+    }
+  }
+  ```
+- [ ] **MANDATORY**: Follow exact Repository pattern:
+  ```dart
+  class FeatureRepositoryImpl implements FeatureRepository {
+    final FeatureRemoteDataSource remoteDataSource;
+    
+    FeatureRepositoryImpl(this.remoteDataSource);
+    
+    @override
+    Future<Either<Failure, FeatureEntity>> method() async {
+      try {
+        final response = await remoteDataSource.method();
+        
+        if (response.isSuccess && response.data != null) {
+          return right(response.data!.toEntity());
+        } else {
+          return left(ServerFailure(response.message));
+        }
+      } on Exception catch (e) {
+        return left(mapExceptionToFailure(e));
+      } catch (e) {
+        return left(const ServerFailure('Unexpected error occurred'));
+      }
+    }
+  }
+  ```
+
+#### ✅ **Presentation Layer**:
+- [ ] Create state classes in `presentation/providers/feature_state.dart`
+- [ ] Create notifiers in `presentation/providers/feature_notifier.dart`
+- [ ] Create providers in `presentation/providers/feature_providers.dart`
+- [ ] Create barrel export in `presentation/providers/providers.dart`
+- [ ] Create screens and widgets following the established patterns
+
+#### ✅ **Code Generation**:
+- [ ] Run `fvm dart run build_runner build --delete-conflicting-outputs`
+- [ ] Verify all generated files are created correctly
+
+#### ✅ **Testing**:
+- [ ] Create unit tests following the established patterns
+- [ ] Update test mocks to match new datasource signatures
+- [ ] Run tests to ensure everything works
+
+### 🚫 **STRICTLY FORBIDDEN PATTERNS**:
+- **❌ NEVER** use `Either<Exception, T>` in remote datasources
+- **❌ NEVER** manually check `response.isSuccess` in remote datasources
+- **❌ NEVER** return `Either` from remote datasources
+- **❌ NEVER** use inconsistent logging patterns
+- **❌ NEVER** skip DioException handling
+- **❌ NEVER** use public fields in datasources (always `_fieldName`)
+
+### 📝 **Implementation Notes**:
+- **BaseResponseDto<T>**: Always return this from remote datasources
+- **Either<Failure, T>**: Always return this from repositories
+- **AppLogger**: Always use for consistent logging
+- **ResponseHandler**: Always use for DioException mapping
+- **Private fields**: Always use `_` prefix in datasources
+- **Clean separation**: Remote datasources throw exceptions, repositories convert to Either
 
 For any new feature, follow the clean architecture pattern, create domain/data/presentation layers, and always provide Riverpod providers split into separate files (state, notifier, providers, barrel export). Use DTOs for all API calls, and ensure fallback data is available for offline or error scenarios. Use `ref.listen` for navigation and global state changes. All integration and workflow steps should be automated and documented in this file for future agents.

@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:delivery_app/core/constants/api_constants.dart';
 import 'package:delivery_app/core/data/dtos/response_handler.dart';
 import 'package:dio/dio.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:retrofit/retrofit.dart';
 import '../../../../core/data/dtos/base_response_dto.dart';
 import '../../../../core/logger/app_logger.dart';
@@ -33,50 +32,65 @@ abstract class ProfileApiService {
 }
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
-  final ProfileApiService apiService;
+  final ProfileApiService _apiService;
 
-  ProfileRemoteDataSourceImpl(this.apiService);
+  ProfileRemoteDataSourceImpl(this._apiService);
 
   @override
-  Future<Either<Exception, BaseResponseDto<UserProfileDto>>> getUserProfile() async {
-    AppLogger.i('ProfileRemoteDataSource: Getting user profile');
-    return ResponseHandler.safeApiCall(() async {
-      final response = await apiService.getUserProfile();
-      AppLogger.i('ProfileRemoteDataSource: Get profile successful');
+  Future<BaseResponseDto<UserProfileDto>> getUserProfile() async {
+    try {
+      AppLogger.d('Getting user profile');
+      final response = await _apiService.getUserProfile();
+      AppLogger.i('Successfully retrieved user profile');
       return response;
-    });
+    } on DioException catch (e) {
+      AppLogger.e('Failed to get user profile', e);
+      throw ResponseHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      AppLogger.e('Unexpected error getting user profile', e);
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
   }
 
   @override
-  Future<Either<Exception, BaseResponseDto<UserProfileDto>>> updateUserProfile(
+  Future<BaseResponseDto<UserProfileDto>> updateUserProfile(
     UpdateProfileRequestDto request,
   ) async {
-    AppLogger.i('ProfileRemoteDataSource: Updating user profile');
-    return ResponseHandler.safeApiCall(() async {
-      final response = await apiService.updateUserProfile(request);
-      AppLogger.i('ProfileRemoteDataSource: Update profile successful');
+    try {
+      AppLogger.d('Updating user profile');
+      final response = await _apiService.updateUserProfile(request);
+      AppLogger.i('Successfully updated user profile');
       return response;
-    });
+    } on DioException catch (e) {
+      AppLogger.e('Failed to update user profile', e);
+      throw ResponseHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      AppLogger.e('Unexpected error updating user profile', e);
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
   }
 
   @override
-  Future<Either<Exception, BaseResponseDto<String>>> uploadAvatar(
+  Future<BaseResponseDto<String>> uploadAvatar(
     String imagePath,
   ) async {
-    AppLogger.i('ProfileRemoteDataSource: Uploading avatar');
-    return ResponseHandler.safeApiCall(() async {
+    try {
+      AppLogger.d('Uploading avatar from path: $imagePath');
       final file = File(imagePath);
       
       if (!await file.exists()) {
-        throw Exception('Image file not found');
+        throw Exception('Image file not found at path: $imagePath');
       }
 
-      final response = await apiService.uploadAvatar(file);
-      AppLogger.i('ProfileRemoteDataSource: Upload avatar successful');
+      final response = await _apiService.uploadAvatar(file);
+      AppLogger.i('Successfully uploaded avatar');
       return response;
-    });
+    } on DioException catch (e) {
+      AppLogger.e('Failed to upload avatar', e);
+      throw ResponseHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      AppLogger.e('Unexpected error uploading avatar', e);
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
   }
-  
-
-
 }

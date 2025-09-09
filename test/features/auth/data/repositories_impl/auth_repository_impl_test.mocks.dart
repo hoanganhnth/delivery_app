@@ -3,22 +3,20 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
+import 'dart:async' as _i4;
 
-import 'package:delivery_app/core/data/dtos/base_response_dto.dart' as _i5;
+import 'package:delivery_app/core/data/dtos/base_response_dto.dart' as _i2;
 import 'package:delivery_app/features/auth/data/datasources/auth_remote_datasource.dart'
-    as _i2;
+    as _i3;
 import 'package:delivery_app/features/auth/data/dtos/auth_response_dto.dart'
-    as _i6;
+    as _i5;
 import 'package:delivery_app/features/auth/data/dtos/login_request_dto.dart'
-    as _i7;
+    as _i6;
 import 'package:delivery_app/features/auth/data/dtos/refresh_token_response_dto.dart'
-    as _i10;
+    as _i8;
 import 'package:delivery_app/features/auth/data/dtos/register_request_dto.dart'
-    as _i9;
-import 'package:fpdart/fpdart.dart' as _i4;
+    as _i7;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i8;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -34,74 +32,64 @@ import 'package:mockito/src/dummies.dart' as _i8;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
+class _FakeBaseResponseDto_0<T> extends _i1.SmartFake
+    implements _i2.BaseResponseDto<T> {
+  _FakeBaseResponseDto_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [AuthRemoteDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAuthRemoteDataSource extends _i1.Mock
-    implements _i2.AuthRemoteDataSource {
+    implements _i3.AuthRemoteDataSource {
   MockAuthRemoteDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<_i4.Either<Exception, _i5.BaseResponseDto<_i6.AuthDataDto>>> login(
-    _i7.LoginRequestDto? request,
+  _i4.Future<_i2.BaseResponseDto<_i5.AuthDataDto>> login(
+    _i6.LoginRequestDto? request,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#login, [request]),
-            returnValue:
-                _i3.Future<
-                  _i4.Either<Exception, _i5.BaseResponseDto<_i6.AuthDataDto>>
-                >.value(
-                  _i8.dummyValue<
-                    _i4.Either<Exception, _i5.BaseResponseDto<_i6.AuthDataDto>>
-                  >(this, Invocation.method(#login, [request])),
-                ),
+            returnValue: _i4.Future<_i2.BaseResponseDto<_i5.AuthDataDto>>.value(
+              _FakeBaseResponseDto_0<_i5.AuthDataDto>(
+                this,
+                Invocation.method(#login, [request]),
+              ),
+            ),
           )
-          as _i3.Future<
-            _i4.Either<Exception, _i5.BaseResponseDto<_i6.AuthDataDto>>
-          >);
+          as _i4.Future<_i2.BaseResponseDto<_i5.AuthDataDto>>);
 
   @override
-  _i3.Future<_i4.Either<Exception, _i5.BaseResponseDto<bool>>> register(
-    _i9.RegisterRequestDto? request,
+  _i4.Future<_i2.BaseResponseDto<bool>> register(
+    _i7.RegisterRequestDto? request,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#register, [request]),
-            returnValue:
-                _i3.Future<
-                  _i4.Either<Exception, _i5.BaseResponseDto<bool>>
-                >.value(
-                  _i8.dummyValue<
-                    _i4.Either<Exception, _i5.BaseResponseDto<bool>>
-                  >(this, Invocation.method(#register, [request])),
-                ),
+            returnValue: _i4.Future<_i2.BaseResponseDto<bool>>.value(
+              _FakeBaseResponseDto_0<bool>(
+                this,
+                Invocation.method(#register, [request]),
+              ),
+            ),
           )
-          as _i3.Future<_i4.Either<Exception, _i5.BaseResponseDto<bool>>>);
+          as _i4.Future<_i2.BaseResponseDto<bool>>);
 
   @override
-  _i3.Future<
-    _i4.Either<Exception, _i5.BaseResponseDto<_i10.RefreshTokenDataDto>>
-  >
-  refreshToken(String? refreshToken) =>
+  _i4.Future<_i2.BaseResponseDto<_i8.RefreshTokenDataDto>> refreshToken(
+    String? refreshToken,
+  ) =>
       (super.noSuchMethod(
             Invocation.method(#refreshToken, [refreshToken]),
             returnValue:
-                _i3.Future<
-                  _i4.Either<
-                    Exception,
-                    _i5.BaseResponseDto<_i10.RefreshTokenDataDto>
-                  >
-                >.value(
-                  _i8.dummyValue<
-                    _i4.Either<
-                      Exception,
-                      _i5.BaseResponseDto<_i10.RefreshTokenDataDto>
-                    >
-                  >(this, Invocation.method(#refreshToken, [refreshToken])),
+                _i4.Future<_i2.BaseResponseDto<_i8.RefreshTokenDataDto>>.value(
+                  _FakeBaseResponseDto_0<_i8.RefreshTokenDataDto>(
+                    this,
+                    Invocation.method(#refreshToken, [refreshToken]),
+                  ),
                 ),
           )
-          as _i3.Future<
-            _i4.Either<Exception, _i5.BaseResponseDto<_i10.RefreshTokenDataDto>>
-          >);
+          as _i4.Future<_i2.BaseResponseDto<_i8.RefreshTokenDataDto>>);
 }

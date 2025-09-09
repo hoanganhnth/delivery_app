@@ -78,7 +78,7 @@ void main() {
       test('should return AuthEntity when login is successful', () async {
         // arrange
         when(mockRemoteDataSource.login(any))
-            .thenAnswer((_) async => right(tAuthResponseDto));
+            .thenAnswer((_) async => tAuthResponseDto);
 
         // act
         final result = await repository.login(tLoginParams);
@@ -100,7 +100,7 @@ void main() {
         );
 
         when(mockRemoteDataSource.login(any))
-            .thenAnswer((_) async => right(tFailureResponse));
+            .thenAnswer((_) async => tFailureResponse);
 
         // act
         final result = await repository.login(tLoginParams);
@@ -120,7 +120,7 @@ void main() {
         );
 
         when(mockRemoteDataSource.login(any))
-            .thenAnswer((_) async => right(tNullDataResponse));
+            .thenAnswer((_) async => tNullDataResponse);
 
         // act
         final result = await repository.login(tLoginParams);
@@ -139,7 +139,7 @@ void main() {
         );
 
         when(mockRemoteDataSource.login(any))
-            .thenAnswer((_) async => left(dioException));
+            .thenThrow(dioException);
 
         // act
         final result = await repository.login(tLoginParams);
@@ -199,7 +199,7 @@ void main() {
       test('should return true when registration is successful', () async {
         // arrange
         when(mockRemoteDataSource.register(any))
-            .thenAnswer((_) async => right(tSuccessResponse));
+            .thenAnswer((_) async => tSuccessResponse);
 
         // act
         final result = await repository.register(tEmail, tPassword);
@@ -224,7 +224,7 @@ void main() {
         );
 
         when(mockRemoteDataSource.register(any))
-            .thenAnswer((_) async => right(tFailureResponse));
+            .thenAnswer((_) async => tFailureResponse);
 
         // act
         final result = await repository.register(tEmail, tPassword);
@@ -253,7 +253,7 @@ void main() {
       test('should return new access token when refresh is successful', () async {
         // arrange
         when(mockRemoteDataSource.refreshToken(any))
-            .thenAnswer((_) async => right(tSuccessResponse));
+            .thenAnswer((_) async => tSuccessResponse);
 
         // act
         final result = await repository.refreshToken(tRefreshToken);
@@ -273,7 +273,7 @@ void main() {
         );
 
         when(mockRemoteDataSource.refreshToken(any))
-            .thenAnswer((_) async => right(tFailureResponse));
+            .thenAnswer((_) async => tFailureResponse);
 
         // act
         final result = await repository.refreshToken(tRefreshToken);

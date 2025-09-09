@@ -5,7 +5,6 @@ import 'package:delivery_app/features/auth/data/dtos/login_request_dto.dart';
 import 'package:delivery_app/features/auth/data/dtos/register_request_dto.dart';
 import 'package:delivery_app/features/auth/data/dtos/refresh_token_response_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fpdart/fpdart.dart';
 
 // Simple Mock DataSource Implementation
 class MockAuthRemoteDataSource implements AuthRemoteDataSource {
@@ -14,9 +13,9 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
   String? errorMessage;
 
   @override
-  Future<Either<Exception, AuthResponseDto>> login(LoginRequestDto request) async {
+  Future<AuthResponseDto> login(LoginRequestDto request) async {
     if (shouldThrowException) {
-      return left(Exception('Network error'));
+      throw Exception('Network error');
     }
 
     if (shouldReturnSuccess) {
@@ -36,66 +35,35 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
         data: authData,
       );
 
-      return right(response);
+      return response;
     } else {
-      final response = AuthResponseDto(
-        status: 0,
-        message: errorMessage ?? 'Login failed',
-        data: null,
-      );
-
-      return right(response);
+      throw Exception(errorMessage ?? 'Login failed');
     }
   }
 
   @override
-  Future<Either<Exception, BaseResponseDto<bool>>> register(RegisterRequestDto request) async {
+  Future<BaseResponseDto<bool>> register(RegisterRequestDto request) async {
     if (shouldThrowException) {
-      return left(Exception('Network error'));
+      throw Exception('Network error');
     }
 
     if (shouldReturnSuccess) {
-      // final authData = AuthDataDto(
-      //   accessToken: 'test_access_token',
-      //   refreshToken: 'test_refresh_token',
-      //   user: UserDto(
-      //     id: 1,
-      //     email: request.email,
-      //     name: request.name ?? 'Test User',
-      //   ),
-      // );
-
-      // final response = AuthResponseDto(
-      //   status: 1,
-      //   message: 'Registration successful',
-      //   data: authData,
-      // );
       final response = BaseResponseDto<bool>(
         status: 1,
         message: 'Registration successful',
         data: true,
       );
 
-      return right(response);
+      return response;
     } else {
-      // final response = AuthResponseDto(
-      //   status: 0,
-      //   message: errorMessage ?? 'Registration failed',
-      //   data: false,
-      // );
-      final response = BaseResponseDto<bool>(
-        status: 0,
-        message: errorMessage ?? 'Registration failed',
-        data: false,
-      );
-      return right(response);
+      throw Exception(errorMessage ?? 'Registration failed');
     }
   }
 
   @override
-  Future<Either<Exception, RefreshTokenResponseDto>> refreshToken(String refreshToken) async {
+  Future<RefreshTokenResponseDto> refreshToken(String refreshToken) async {
     if (shouldThrowException) {
-      return left(Exception('Network error'));
+      throw Exception('Network error');
     }
 
     if (shouldReturnSuccess) {
@@ -109,15 +77,9 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
         data: refreshData,
       );
 
-      return right(response);
+      return response;
     } else {
-      final response = RefreshTokenResponseDto(
-        status: 0,
-        message: errorMessage ?? 'Token refresh failed',
-        data: null,
-      );
-
-      return right(response);
+      throw Exception(errorMessage ?? 'Token refresh failed');
     }
   }
 }
@@ -147,55 +109,42 @@ void main() {
       final result = await dataSource.login(tLoginRequest);
 
       // assert
-      expect(result.isRight(), true);
-      result.fold(
-        (exception) => fail('Should return success'),
-        (response) {
-          expect(response.status, 1);
-          expect(response.message, 'Login successful');
-          expect(response.data, isNotNull);
-          expect(response.data!.accessToken, 'test_access_token');
-          expect(response.data!.refreshToken, 'test_refresh_token');
-          expect(response.data!.user!.email, 'test@example.com');
-        },
-      );
+      expect(result.status, 1);
+      expect(result.message, 'Login successful');
+      expect(result.data, isNotNull);
+      expect(result.data!.accessToken, 'test_access_token');
+      expect(result.data!.refreshToken, 'test_refresh_token');
+      expect(result.data!.user!.email, 'test@example.com');
     });
 
-    test('should return failure response when login returns error', () async {
+    test('should throw exception when login returns error', () async {
       // arrange
       dataSource.shouldReturnSuccess = false;
       dataSource.errorMessage = 'Invalid credentials';
 
-      // act
-      final result = await dataSource.login(tLoginRequest);
-
-      // assert
-      expect(result.isRight(), true);
-      result.fold(
-        (exception) => fail('Should return response'),
-        (response) {
-          expect(response.status, 0);
-          expect(response.message, 'Invalid credentials');
-          expect(response.data, isNull);
-        },
+      // act & assert
+      expect(
+        () async => await dataSource.login(tLoginRequest),
+        throwsA(isA<Exception>().having(
+          (e) => e.toString(),
+          'message',
+          contains('Invalid credentials'),
+        )),
       );
     });
 
-    test('should return Exception when network error occurs', () async {
+    test('should throw exception when network error occurs', () async {
       // arrange
       dataSource.shouldThrowException = true;
 
-      // act
-      final result = await dataSource.login(tLoginRequest);
-
-      // assert
-      expect(result.isLeft(), true);
-      result.fold(
-        (exception) {
-          expect(exception, isA<Exception>());
-          expect(exception.toString(), contains('Network error'));
-        },
-        (response) => fail('Should return exception'),
+      // act & assert
+      expect(
+        () async => await dataSource.login(tLoginRequest),
+        throwsA(isA<Exception>().having(
+          (e) => e.toString(),
+          'message',
+          contains('Network error'),
+        )),
       );
     });
   });
@@ -215,36 +164,25 @@ void main() {
       final result = await dataSource.register(tRegisterRequest);
 
       // assert
-      expect(result.isRight(), true);
-      result.fold(
-        (exception) => fail('Should return success'),
-        (response) {
-          expect(response.status, 1);
-          expect(response.message, 'Registration successful');
-          expect(response.data, isNotNull);
-          // expect(response.data!.user!.email, 'test@example.com');
-          // expect(response.data!.user!.name, 'Test User');
-        },
-      );
+      expect(result.status, 1);
+      expect(result.message, 'Registration successful');
+      expect(result.data, isNotNull);
+      expect(result.data, true);
     });
 
-    test('should return failure response when register returns error', () async {
+    test('should throw exception when register returns error', () async {
       // arrange
       dataSource.shouldReturnSuccess = false;
       dataSource.errorMessage = 'Email already exists';
 
-      // act
-      final result = await dataSource.register(tRegisterRequest);
-
-      // assert
-      expect(result.isRight(), true);
-      result.fold(
-        (exception) => fail('Should return response'),
-        (response) {
-          expect(response.status, 0);
-          expect(response.message, 'Email already exists');
-          expect(response.data, isNull);
-        },
+      // act & assert
+      expect(
+        () async => await dataSource.register(tRegisterRequest),
+        throwsA(isA<Exception>().having(
+          (e) => e.toString(),
+          'message',
+          contains('Email already exists'),
+        )),
       );
     });
   });
@@ -260,35 +198,25 @@ void main() {
       final result = await dataSource.refreshToken(tRefreshToken);
 
       // assert
-      expect(result.isRight(), true);
-      result.fold(
-        (exception) => fail('Should return success'),
-        (response) {
-          expect(response.status, 1);
-          expect(response.message, 'Token refreshed successfully');
-          expect(response.data, isNotNull);
-          expect(response.data!.accessToken, 'new_access_token');
-        },
-      );
+      expect(result.status, 1);
+      expect(result.message, 'Token refreshed successfully');
+      expect(result.data, isNotNull);
+      expect(result.data!.accessToken, 'new_access_token');
     });
 
-    test('should return failure when refresh token is invalid', () async {
+    test('should throw exception when refresh token is invalid', () async {
       // arrange
       dataSource.shouldReturnSuccess = false;
       dataSource.errorMessage = 'Invalid refresh token';
 
-      // act
-      final result = await dataSource.refreshToken(tRefreshToken);
-
-      // assert
-      expect(result.isRight(), true);
-      result.fold(
-        (exception) => fail('Should return response'),
-        (response) {
-          expect(response.status, 0);
-          expect(response.message, 'Invalid refresh token');
-          expect(response.data, isNull);
-        },
+      // act & assert
+      expect(
+        () async => await dataSource.refreshToken(tRefreshToken),
+        throwsA(isA<Exception>().having(
+          (e) => e.toString(),
+          'message',
+          contains('Invalid refresh token'),
+        )),
       );
     });
 
@@ -296,17 +224,14 @@ void main() {
       // arrange
       dataSource.shouldThrowException = true;
 
-      // act
-      final result = await dataSource.refreshToken(tRefreshToken);
-
-      // assert
-      expect(result.isLeft(), true);
-      result.fold(
-        (exception) {
-          expect(exception, isA<Exception>());
-          expect(exception.toString(), contains('Network error'));
-        },
-        (response) => fail('Should return exception'),
+      // act & assert
+      expect(
+        () async => await dataSource.refreshToken(tRefreshToken),
+        throwsA(isA<Exception>().having(
+          (e) => e.toString(),
+          'message',
+          contains('Network error'),
+        )),
       );
     });
   });

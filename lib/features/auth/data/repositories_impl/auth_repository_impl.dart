@@ -28,22 +28,17 @@ class AuthRepositoryImpl implements AuthRepository {
         deviceType: params.deviceType,
         ipAddress: params.ipAddress,
       );
-      final result = await remoteDataSource.login(request);
+      final authResponse = await remoteDataSource.login(request);
 
-      return result.fold(
-        (exception) {
-          // AppLogger.e('Repository: Login failed', exception);
-          return left(mapExceptionToFailure(exception));
-        },
-        (authResponse) {
-          // AppLogger.i('Repository: Login successful');
-          if (authResponse.isSuccess && authResponse.data != null) {
-            return right(authResponse.data!.toEntity());
-          } else {
-            return left(ServerFailure(authResponse.message));
-          }
-        },
-      );
+      // AppLogger.i('Repository: Login successful');
+      if (authResponse.isSuccess && authResponse.data != null) {
+        return right(authResponse.data!.toEntity());
+      } else {
+        return left(ServerFailure(authResponse.message));
+      }
+    } on Exception catch (e) {
+      // AppLogger.e('Repository: Login failed', e);
+      return left(mapExceptionToFailure(e));
     } catch (e) {
       // AppLogger.e('Repository: Unexpected error during login', e);
       return left(const ServerFailure('Unexpected error occurred'));
@@ -58,20 +53,15 @@ class AuthRepositoryImpl implements AuthRepository {
         password: password,
         role: 'USER',
       );
-      final result = await remoteDataSource.register(request);
+      final authResponse = await remoteDataSource.register(request);
 
-      return result.fold(
-        (exception) {
-          return left(mapExceptionToFailure(exception));
-        },
-        (authResponse) {
-          if (authResponse.isSuccess && authResponse.data == true) {
-            return right(true);
-          } else {
-            return left(ServerFailure(authResponse.message));
-          }
-        },
-      );
+      if (authResponse.isSuccess && authResponse.data == true) {
+        return right(true);
+      } else {
+        return left(ServerFailure(authResponse.message));
+      }
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
     } catch (e) {
       return left(const ServerFailure('Unexpected error occurred'));
     }
@@ -80,21 +70,16 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, AuthEntity>> refreshToken(String refreshToken) async {
     try {
-      final result = await remoteDataSource.refreshToken(refreshToken);
+      final refreshResponse = await remoteDataSource.refreshToken(refreshToken);
 
-      return result.fold(
-        (exception) {
-          // AppLogger.e('Repository: Token refresh failed', exception);
-          return left(mapExceptionToFailure(exception));
-        },
-        (refreshResponse) {
-          if (refreshResponse.isSuccess && refreshResponse.data != null) {
-            return right(refreshResponse.data!.toEntity(refreshToken));
-          } else {
-            return left(ServerFailure(refreshResponse.message));
-          }
-        },
-      );
+      if (refreshResponse.isSuccess && refreshResponse.data != null) {
+        return right(refreshResponse.data!.toEntity(refreshToken));
+      } else {
+        return left(ServerFailure(refreshResponse.message));
+      }
+    } on Exception catch (e) {
+      // AppLogger.e('Repository: Token refresh failed', e);
+      return left(mapExceptionToFailure(e));
     } catch (e) {
       // AppLogger.e('Repository: Unexpected error during token refresh', e);
       return left(const ServerFailure('Unexpected error occurred'));

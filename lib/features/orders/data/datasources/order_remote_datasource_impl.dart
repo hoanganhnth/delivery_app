@@ -1,7 +1,8 @@
-import 'package:fpdart/fpdart.dart';
+import 'package:dio/dio.dart';
 import '../dtos/order_dto.dart';
 import 'order_remote_datasource.dart';
 import 'order_api_service.dart';
+import '../../../../core/data/dtos/base_response_dto.dart';
 import '../../../../core/data/dtos/response_handler.dart';
 
 /// Implementation của OrderRemoteDataSource sử dụng Retrofit API
@@ -11,50 +12,116 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
   OrderRemoteDataSourceImpl(this._apiService);
 
   @override
-  Future<Either<Exception, List<OrderDto>>> getUserOrders() async {
-    return ResponseHandler.safeApiCallSimple(() => _apiService.getUserOrders());
+  Future<List<OrderDto>> getUserOrders() async {
+    try {
+      final response = await _apiService.getUserOrders();
+      if (response.isSuccess && response.data != null) {
+        return response.data!;
+      } else {
+        throw Exception(response.message);
+      }
+    } on DioException catch (e) {
+      throw ResponseHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
   }
 
   @override
-  Future<Either<Exception, OrderDto>> getOrderById(int orderId) async {
-    return ResponseHandler.safeApiCallSimple(() => _apiService.getOrderById(orderId));
+  Future<OrderDto> getOrderById(int orderId) async {
+    try {
+      final response = await _apiService.getOrderById(orderId);
+      if (response.isSuccess && response.data != null) {
+        return response.data!;
+      } else {
+        throw Exception(response.message);
+      }
+    } on DioException catch (e) {
+      throw ResponseHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
   }
 
   @override
-  Future<Either<Exception, OrderDto>> createOrder(OrderDto order) async {
-    return ResponseHandler.safeApiCallSimple(() => _apiService.createOrder(order));
+  Future<OrderDto> createOrder(OrderDto order) async {
+    try {
+      final response = await _apiService.createOrder(order);
+      if (response.isSuccess && response.data != null) {
+        return response.data!;
+      } else {
+        throw Exception(response.message);
+      }
+    } on DioException catch (e) {
+      throw ResponseHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
   }
 
   @override
-  Future<Either<Exception, OrderDto>> updateOrderStatus(
-    int orderId, 
-    String status,
-  ) async {
-    return ResponseHandler.safeApiCallSimple(
-      () => _apiService.updateOrderStatus(orderId, {'status': status}),
-    );
+  Future<OrderDto> updateOrderStatus(int orderId, String status) async {
+    try {
+      final response = await _apiService.updateOrderStatus(orderId, {
+        'status': status,
+      });
+      if (response.isSuccess && response.data != null) {
+        return response.data!;
+      } else {
+        throw Exception(response.message);
+      }
+    } on DioException catch (e) {
+      throw ResponseHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
   }
 
   @override
-  Future<Either<Exception, bool>> cancelOrder(int orderId) async {
-    return ResponseHandler.safeApiCallWithResponse(
-      () => _apiService.cancelOrder(orderId),
-      (data) => data == true,
-    );
+  Future<bool> cancelOrder(int orderId) async {
+    try {
+      final response = await _apiService.cancelOrder(orderId);
+      if (response.isSuccess) {
+        return response.data == true;
+      } else {
+        throw Exception(response.message);
+      }
+    } on DioException catch (e) {
+      throw ResponseHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
   }
 
   @override
-  Future<Either<Exception, List<OrderDto>>> getOrdersByStatus(
-    String status,
-  ) async {
-    return ResponseHandler.safeApiCallSimple(() => _apiService.getOrdersByStatus(status));
+  Future<List<OrderDto>> getOrdersByStatus(String status) async {
+    try {
+      final response = await _apiService.getOrdersByStatus(status);
+      if (response.isSuccess && response.data != null) {
+        return response.data!;
+      } else {
+        throw Exception(response.message);
+      }
+    } on DioException catch (e) {
+      throw ResponseHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
   }
 
   @override
-  Future<Either<Exception, List<OrderDto>>> getOrderHistory({
-    int page = 1,
-    int limit = 10,
-  }) async {
-    return ResponseHandler.safeApiCallSimple(() => _apiService.getOrderHistory(page, limit));
+  Future<List<OrderDto>> getOrderHistory({int page = 1, int limit = 10}) async {
+    try {
+      final response = await _apiService.getOrderHistory(page, limit);
+      if (response.isSuccess && response.data != null) {
+        return response.data!;
+      } else {
+        throw Exception(response.message);
+      }
+    } on DioException catch (e) {
+      throw ResponseHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
   }
 }
