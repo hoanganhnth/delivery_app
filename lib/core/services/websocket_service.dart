@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
 import '../logger/app_logger.dart';
@@ -57,7 +58,7 @@ class SocketManager {
   Stream<String>? listen(String key) => _controllers[key]?.stream;
 
   /// Gửi message
-  void send(String key, String message) {
+  void sendRaw(String key, String message) {
     final channel = _channels[key];
     if (channel != null) {
       AppLogger.d('[$key] Gửi: $message');
@@ -65,6 +66,10 @@ class SocketManager {
     } else {
       AppLogger.w('[$key] Chưa kết nối, không gửi được');
     }
+  }
+
+  void sendJson(String key, Map<String, dynamic> data) {
+    sendRaw(key, jsonEncode(data));
   }
 
   /// Ngắt kết nối 1 socket

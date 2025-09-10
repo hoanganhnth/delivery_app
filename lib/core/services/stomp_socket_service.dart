@@ -52,7 +52,7 @@ class StompManager {
       );
 
       _clients[key] = client;
-      
+
       // Tạo StreamController để publish message ra ngoài
       final controller = StreamController<Map<String, dynamic>>.broadcast();
       _controllers[key] = controller;
@@ -78,35 +78,31 @@ class StompManager {
       return;
     }
 
+    if (_subscriptions[key]?.containsKey(topic) ?? false) {
+      AppLogger.w('STOMP [$key] đã subscribe $topic trước đó');
+      return;
+    }
     AppLogger.d('STOMP [$key] Subscribe: $topic');
-    
+
     // Lưu subscription để có thể unsubscribe sau
     _subscriptions[key] ??= {};
-    
+
     final unsubscribe = client.subscribe(
       destination: topic,
       callback: (frame) {
         AppLogger.d('STOMP [$key] Nhận từ $topic: ${frame.body}');
-        
+
         // Parse JSON nếu có thể
         Map<String, dynamic>? data;
         try {
-          data = {
-            'topic': topic,
-            'body': frame.body,
-            'headers': frame.headers,
-          };
+          data = {'topic': topic, 'body': frame.body, 'headers': frame.headers};
         } catch (e) {
-          data = {
-            'topic': topic,
-            'body': frame.body,
-            'headers': frame.headers,
-          };
+          data = {'topic': topic, 'body': frame.body, 'headers': frame.headers};
         }
 
         // Gửi qua StreamController
         _controllers[key]?.add(data);
-        
+
         // Gọi callback nếu có
         onMessage?.call(frame);
       },
@@ -129,15 +125,16 @@ class StompManager {
   Stream<Map<String, dynamic>>? listen(String key) => _controllers[key]?.stream;
 
   /// Gửi message đến topic
-  void send(String key, String destination, String message, {Map<String, String>? headers}) {
+  void send(
+    String key,
+    String destination,
+    String message, {
+    Map<String, String>? headers,
+  }) {
     final client = _clients[key];
     if (client != null && client.connected) {
       AppLogger.d('STOMP [$key] Gửi đến $destination: $message');
-      client.send(
-        destination: destination,
-        body: message,
-        headers: headers,
-      );
+      client.send(destination: destination, body: message, headers: headers);
     } else {
       AppLogger.w('STOMP [$key] Chưa kết nối, không gửi được');
     }
@@ -166,7 +163,7 @@ class StompManager {
     _subscriptions.remove(key);
     _reconnectTimers[key]?.cancel();
     _reconnectTimers.remove(key);
-    
+
     AppLogger.i('STOMP [$key] Đã ngắt kết nối');
   }
 

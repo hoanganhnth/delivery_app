@@ -316,7 +316,7 @@ class _SimpleSocketExamplePageState extends State<SimpleSocketExamplePage> {
       'lng': 106.660172,
     };
 
-    socketManager.send('location-ws', locationData.toString());
+    socketManager.sendRaw('location-ws', locationData.toString());
 
     setState(() {
       _messages.add('📤 WebSocket Sent: $message');
