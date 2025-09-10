@@ -32,6 +32,7 @@ dependencies:
   cached_network_image: ^3.4.1
   flutter_screenutil: ^5.9.3
   auto_size_text: ^3.0.0
+  socket_io_client: ^3.1.2
   
   flutter:
     sdk: flutter

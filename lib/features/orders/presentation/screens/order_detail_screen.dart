@@ -7,6 +7,8 @@ import '../widgets/order_items_card.dart';
 import '../widgets/order_payment_card.dart';
 import '../widgets/order_action_buttons.dart';
 import '../widgets/order_error_widgets.dart';
+import '../widgets/order_delivery_tracking_card.dart';
+import '../../domain/entities/order_entity.dart';
 import '../../../../generated/l10n.dart';
 
 class OrderDetailScreen extends ConsumerStatefulWidget {
@@ -83,6 +85,11 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
           children: [
             OrderStatusCard(order: order),
             const SizedBox(height: 16),
+            
+            // Delivery tracking section for orders being delivered
+            if (order.status == OrderStatus.delivering)
+              OrderDeliveryTrackingCard(order: order),
+            
             OrderCustomerInfoCard(order: order),
             const SizedBox(height: 16),
             OrderItemsCard(order: order),

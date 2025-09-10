@@ -1,0 +1,121 @@
+/// Entity cho thông tin delivery tracking
+class DeliveryTrackingEntity {
+  final int id;
+  final int orderId;
+  final int shipperId;
+  final String status;
+  final String pickupAddress;
+  final double pickupLat;
+  final double pickupLng;
+  final String deliveryAddress;
+  final double deliveryLat;
+  final double deliveryLng;
+  final double? shipperCurrentLat;
+  final double? shipperCurrentLng;
+  final DateTime? assignedAt;
+  final DateTime? pickedUpAt;
+  final DateTime? deliveredAt;
+  final DateTime? estimatedDeliveryTime;
+  final String? notes;
+
+  const DeliveryTrackingEntity({
+    required this.id,
+    required this.orderId,
+    required this.shipperId,
+    required this.status,
+    required this.pickupAddress,
+    required this.pickupLat,
+    required this.pickupLng,
+    required this.deliveryAddress,
+    required this.deliveryLat,
+    required this.deliveryLng,
+    this.shipperCurrentLat,
+    this.shipperCurrentLng,
+    this.assignedAt,
+    this.pickedUpAt,
+    this.deliveredAt,
+    this.estimatedDeliveryTime,
+    this.notes,
+  });
+
+  DeliveryTrackingEntity copyWith({
+    int? id,
+    int? orderId,
+    int? shipperId,
+    String? status,
+    String? pickupAddress,
+    double? pickupLat,
+    double? pickupLng,
+    String? deliveryAddress,
+    double? deliveryLat,
+    double? deliveryLng,
+    double? shipperCurrentLat,
+    double? shipperCurrentLng,
+    DateTime? assignedAt,
+    DateTime? pickedUpAt,
+    DateTime? deliveredAt,
+    DateTime? estimatedDeliveryTime,
+    String? notes,
+  }) {
+    return DeliveryTrackingEntity(
+      id: id ?? this.id,
+      orderId: orderId ?? this.orderId,
+      shipperId: shipperId ?? this.shipperId,
+      status: status ?? this.status,
+      pickupAddress: pickupAddress ?? this.pickupAddress,
+      pickupLat: pickupLat ?? this.pickupLat,
+      pickupLng: pickupLng ?? this.pickupLng,
+      deliveryAddress: deliveryAddress ?? this.deliveryAddress,
+      deliveryLat: deliveryLat ?? this.deliveryLat,
+      deliveryLng: deliveryLng ?? this.deliveryLng,
+      shipperCurrentLat: shipperCurrentLat ?? this.shipperCurrentLat,
+      shipperCurrentLng: shipperCurrentLng ?? this.shipperCurrentLng,
+      assignedAt: assignedAt ?? this.assignedAt,
+      pickedUpAt: pickedUpAt ?? this.pickedUpAt,
+      deliveredAt: deliveredAt ?? this.deliveredAt,
+      estimatedDeliveryTime: estimatedDeliveryTime ?? this.estimatedDeliveryTime,
+      notes: notes ?? this.notes,
+    );
+  }
+}
+
+/// Entity cho thông tin shipper
+class ShipperEntity {
+  final int id;
+  final String name;
+  final String phone;
+  final String vehicleType;
+  final String vehicleNumber;
+  final double rating;
+  final String? avatar;
+
+  const ShipperEntity({
+    required this.id,
+    required this.name,
+    required this.phone,
+    required this.vehicleType,
+    required this.vehicleNumber,
+    required this.rating,
+    this.avatar,
+  });
+
+  ShipperEntity copyWith({
+    int? id,
+    String? name,
+    String? phone,
+    String? vehicleType,
+    String? vehicleNumber,
+    double? rating,
+    String? avatar,
+  }) {
+    return ShipperEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+      vehicleType: vehicleType ?? this.vehicleType,
+      vehicleNumber: vehicleNumber ?? this.vehicleNumber,
+      rating: rating ?? this.rating,
+      avatar: avatar ?? this.avatar,
+    );
+  }
+}

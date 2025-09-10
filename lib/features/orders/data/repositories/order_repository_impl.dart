@@ -19,8 +19,6 @@ class OrderRepositoryImpl implements OrderRepository {
   Future<Either<Failure, List<OrderEntity>>> getUserOrders() async {
     try {
       final dtos = await _remoteDataSource.getUserOrders();
-      final mockOrders = _mockOrderService.getMockOrders();
-      return right(mockOrders);
       return right(dtos.map((dto) => dto.toEntity()).toList());
       
     } on Exception {
