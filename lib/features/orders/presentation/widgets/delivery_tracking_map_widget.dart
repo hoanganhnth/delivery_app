@@ -1,18 +1,22 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import '../../../../core/logger/app_logger.dart';
 import '../../domain/entities/delivery_tracking_entity.dart';
+import '../../domain/entities/shipper_location_entity.dart';
 
 /// Widget để hiển thị bản đồ theo dõi delivery với MapBox
 class DeliveryTrackingMapWidget extends StatefulWidget {
   final DeliveryTrackingEntity? deliveryTracking;
   final ShipperEntity? shipper;
+  final ShipperLocationEntity? shipperLocation; // Vị trí real-time của shipper
   final Function(String)? onStatusChanged;
   
   const DeliveryTrackingMapWidget({
     super.key,
     this.deliveryTracking,
     this.shipper,
+    this.shipperLocation,
     this.onStatusChanged,
   });
 
@@ -125,9 +129,8 @@ class _DeliveryTrackingMapWidgetState extends State<DeliveryTrackingMapWidget> {
         ),
       );
 
-      // Add shipper marker if available
-      if (widget.deliveryTracking!.shipperCurrentLat != null && 
-          widget.deliveryTracking!.shipperCurrentLng != null) {
+      // Add shipper marker if available from real-time location
+      if (widget.shipperLocation != null) {
         await _updateShipperMarker();
       }
       
@@ -137,26 +140,24 @@ class _DeliveryTrackingMapWidgetState extends State<DeliveryTrackingMapWidget> {
   }
 
   Future<void> _updateShipperMarker() async {
-    if (_pointAnnotationManager == null || 
-        widget.deliveryTracking?.shipperCurrentLat == null ||
-        widget.deliveryTracking?.shipperCurrentLng == null) {
+    if (_pointAnnotationManager == null || widget.shipperLocation == null) {
       return;
     }
 
     try {
+      final newLat = widget.shipperLocation!.latitude;
+      final newLng = widget.shipperLocation!.longitude;
+      
       // Remove existing shipper marker
       if (_shipperMarker != null) {
         await _pointAnnotationManager!.delete(_shipperMarker!);
       }
 
-      // Add new shipper marker
+      // Add new shipper marker with updated position
       _shipperMarker = await _pointAnnotationManager!.create(
         PointAnnotationOptions(
           geometry: Point(
-            coordinates: Position(
-              widget.deliveryTracking!.shipperCurrentLng!,
-              widget.deliveryTracking!.shipperCurrentLat!,
-            ),
+            coordinates: Position(newLng, newLat),
           ),
           textField: "🛵 Shipper",
           textSize: 12.0,
@@ -165,8 +166,10 @@ class _DeliveryTrackingMapWidgetState extends State<DeliveryTrackingMapWidget> {
           textHaloWidth: 2.0,
         ),
       );
+      
+      AppLogger.d('Updated shipper marker to position: $newLat, $newLng');
     } catch (e) {
-      debugPrint('Error updating shipper marker: $e');
+      AppLogger.e('Error updating shipper marker', e);
     }
   }
 
@@ -179,11 +182,10 @@ class _DeliveryTrackingMapWidgetState extends State<DeliveryTrackingMapWidget> {
         Position(widget.deliveryTracking!.deliveryLng, widget.deliveryTracking!.deliveryLat),
       ];
 
-      if (widget.deliveryTracking!.shipperCurrentLat != null && 
-          widget.deliveryTracking!.shipperCurrentLng != null) {
+      if (widget.shipperLocation != null) {
         positions.add(Position(
-          widget.deliveryTracking!.shipperCurrentLng!,
-          widget.deliveryTracking!.shipperCurrentLat!,
+          widget.shipperLocation!.longitude,
+          widget.shipperLocation!.latitude,
         ));
       }
 
@@ -343,14 +345,14 @@ class _DeliveryTrackingMapWidgetState extends State<DeliveryTrackingMapWidget> {
   }
 
   Widget _getStatusIcon(String status) {
-    switch (status.toLowerCase()) {
-      case 'going_to_pickup':
-        return Icon(Icons.directions_run, color: Colors.blue[600], size: 20);
-      case 'at_pickup':
+    switch (status.toUpperCase()) {
+      case 'ASSIGNED':
+        return Icon(Icons.assignment, color: Colors.blue[600], size: 20);
+      case 'PICKING_UP':
         return Icon(Icons.store, color: Colors.orange[600], size: 20);
-      case 'delivering':
+      case 'DELIVERING':
         return Icon(Icons.delivery_dining, color: Colors.green[600], size: 20);
-      case 'near_delivery':
+      case 'NEAR_DELIVERY':
         return Icon(Icons.near_me, color: Colors.red[600], size: 20);
       default:
         return Icon(Icons.local_shipping, color: Colors.grey[600], size: 20);
@@ -358,14 +360,14 @@ class _DeliveryTrackingMapWidgetState extends State<DeliveryTrackingMapWidget> {
   }
 
   String _getStatusTitle(String status) {
-    switch (status.toLowerCase()) {
-      case 'going_to_pickup':
-        return 'Đang đến nhà hàng';
-      case 'at_pickup':
+    switch (status.toUpperCase()) {
+      case 'ASSIGNED':
+        return 'Đã nhận đơn';
+      case 'PICKING_UP':
         return 'Đang lấy đồ ăn';
-      case 'delivering':
+      case 'DELIVERING':
         return 'Đang giao hàng';
-      case 'near_delivery':
+      case 'NEAR_DELIVERY':
         return 'Sắp đến nơi';
       default:
         return 'Đang cập nhật...';
@@ -384,9 +386,17 @@ class _DeliveryTrackingMapWidgetState extends State<DeliveryTrackingMapWidget> {
   void didUpdateWidget(DeliveryTrackingMapWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     
-    // Update map when delivery tracking data changes
-    if (widget.deliveryTracking != oldWidget.deliveryTracking) {
-      _updateShipperMarker();
+    // Update map when shipper location changes (real-time updates)
+    if (widget.shipperLocation != oldWidget.shipperLocation) {
+      final oldLat = oldWidget.shipperLocation?.latitude;
+      final oldLng = oldWidget.shipperLocation?.longitude;
+      final newLat = widget.shipperLocation?.latitude;
+      final newLng = widget.shipperLocation?.longitude;
+      
+      if (oldLat != newLat || oldLng != newLng) {
+        AppLogger.d('Shipper location changed, updating marker');
+        _updateShipperMarker();
+      }
     }
   }
 

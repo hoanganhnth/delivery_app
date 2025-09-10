@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../data/services/mock_delivery_tracking_service.dart';
 import '../../domain/entities/delivery_tracking_entity.dart';
+import '../../domain/entities/shipper_location_entity.dart';
 import 'delivery_tracking_state.dart';
 
 /// Notifier để quản lý delivery tracking
@@ -10,6 +11,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
   final MockDeliveryTrackingService _mockService;
   
   StreamSubscription<DeliveryTrackingEntity>? _deliverySubscription;
+  StreamSubscription<ShipperLocationEntity>? _shipperLocationSubscription;
   StreamSubscription<bool>? _connectionSubscription;
   
   DeliveryTrackingNotifier({
@@ -35,6 +37,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
             state = state.copyWith(
               isTracking: false,
               clearTracking: true,
+              clearShipperLocation: true,
             );
           }
         },
@@ -60,6 +63,25 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
           AppLogger.e('Error in delivery stream', error);
           state = state.copyWith(
             error: 'Lỗi kết nối theo dõi delivery: ${error.toString()}',
+          );
+        },
+      );
+
+      // Listen to shipper location updates (real-time position)
+      _shipperLocationSubscription = _mockService.shipperLocationStream.listen(
+        (shipperLocation) {
+          AppLogger.d('Received shipper location: ${shipperLocation.latitude}, ${shipperLocation.longitude}');
+          
+          // Update shipper location state (riêng biệt với delivery tracking)
+          state = state.copyWith(
+            shipperLocation: shipperLocation,
+            clearError: true,
+          );
+        },
+        onError: (error) {
+          AppLogger.e('Error in shipper location stream', error);
+          state = state.copyWith(
+            error: 'Lỗi kết nối theo dõi vị trí shipper: ${error.toString()}',
           );
         },
       );
@@ -108,6 +130,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
         isTracking: true,
         clearError: true,
         clearTracking: true,
+        clearShipperLocation: true,
       );
 
       _mockService.startTrackingOrder(orderId);
@@ -133,6 +156,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
       state = state.copyWith(
         isTracking: false,
         clearTracking: true,
+        clearShipperLocation: true,
         clearError: true,
       );
       
@@ -182,6 +206,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
     
     // Cancel subscriptions
     _deliverySubscription?.cancel();
+    _shipperLocationSubscription?.cancel();
     _connectionSubscription?.cancel();
     
     // Stop tracking and disconnect

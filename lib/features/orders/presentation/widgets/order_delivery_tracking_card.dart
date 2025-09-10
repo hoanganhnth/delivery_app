@@ -100,6 +100,7 @@ class _OrderDeliveryTrackingCardState extends ConsumerState<OrderDeliveryTrackin
           DeliveryTrackingMapWidget(
             deliveryTracking: currentTracking,
             shipper: shipperInfo,
+            shipperLocation: trackingState.shipperLocation, // Truyền vị trí shipper riêng biệt
           )
         else if (trackingState.isLoading)
           _buildLoadingCard()
