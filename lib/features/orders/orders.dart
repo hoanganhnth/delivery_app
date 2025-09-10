@@ -3,7 +3,6 @@ library;
 
 // Screens
 export 'presentation/screens/orders_screen.dart';
-export 'presentation/screens/order_details_screen.dart';
 export 'presentation/screens/track_order_screen.dart';
 
 // Add other exports as the feature grows:
