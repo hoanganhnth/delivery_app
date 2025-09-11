@@ -1,22 +1,36 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/logger/app_logger.dart';
-import '../../data/services/delivery_tracking_socket_service.dart';
-import '../../domain/entities/delivery_tracking_entity.dart';
-import '../../domain/entities/shipper_location_entity.dart';
+import '../../../../core/usecases/usecase.dart';
+import '../../domain/usecases/tracking_usecases.dart';
+import '../../domain/repositories/delivery_tracking_repository.dart';
+// TODO: Add these imports back when DTOs are ready
+// import '../../domain/entities/delivery_tracking_entity.dart';
+// import '../../domain/entities/shipper_location_entity.dart';
 import 'delivery_tracking_state.dart';
 
 /// Notifier để quản lý delivery tracking
 class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
-  final DeliveryTrackingSocketService _socketService;
+  final ConnectDeliveryTrackingUseCase _connectUseCase;
+  final StartDeliveryTrackingUseCase _startTrackingUseCase;
+  final StopDeliveryTrackingUseCase _stopTrackingUseCase;
+  final RefreshDeliveryTrackingUseCase _refreshUseCase;
+  final DeliveryTrackingRepository _repository;
   
-  StreamSubscription<DeliveryTrackingEntity>? _deliverySubscription;
-  StreamSubscription<ShipperLocationEntity>? _shipperLocationSubscription;
+  StreamSubscription<Map<String, dynamic>>? _messageSubscription;
   StreamSubscription<bool>? _connectionSubscription;
   
   DeliveryTrackingNotifier({
-    required DeliveryTrackingSocketService socketService,
-  }) : _socketService = socketService,
+    required ConnectDeliveryTrackingUseCase connectUseCase,
+    required StartDeliveryTrackingUseCase startTrackingUseCase,
+    required StopDeliveryTrackingUseCase stopTrackingUseCase,
+    required RefreshDeliveryTrackingUseCase refreshUseCase,
+    required DeliveryTrackingRepository repository,
+  }) : _connectUseCase = connectUseCase,
+       _startTrackingUseCase = startTrackingUseCase,
+       _stopTrackingUseCase = stopTrackingUseCase,
+       _refreshUseCase = refreshUseCase,
+       _repository = repository,
        super(const DeliveryTrackingState()) {
     _initializeService();
   }
@@ -26,8 +40,8 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
     try {
       AppLogger.i('Initializing delivery tracking service...');
       
-      // Listen to connection changes
-      _connectionSubscription = _socketService.connectionStream.listen(
+      // Listen to connection changes từ repository
+      _connectionSubscription = _repository.connectionStream.listen(
         (isConnected) {
           AppLogger.d('Connection status changed: $isConnected');
           state = state.copyWith(isConnected: isConnected, clearError: true);
@@ -41,50 +55,34 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
             );
           }
         },
+        onError: (error) {
+          AppLogger.e('Error in connection stream', error);
+          state = state.copyWith(
+            error: 'Lỗi kết nối: ${error.toString()}',
+          );
+        },
       );
       
-      // Listen to delivery updates
-      _deliverySubscription = _socketService.deliveryStream.listen(
-        (deliveryTracking) {
-          AppLogger.d('Received delivery update: ${deliveryTracking.status}');
-          
-          state = state.copyWith(
-            currentTracking: deliveryTracking,
-            clearError: true,
-          );
-          
-          // Auto-update shipper info if not available
-          if (state.shipper == null) {
-            // Note: Shipper info should come from API or tracking data
-            AppLogger.d('Shipper info not available, need to implement API call');
-          }
-        },
-        onError: (error) {
-          AppLogger.e('Error in delivery stream', error);
-          state = state.copyWith(
-            error: 'Lỗi kết nối theo dõi delivery: ${error.toString()}',
-          );
-        },
-      );
+      // Listen to delivery updates từ repository
+      // TODO: Uncomment when DeliveryTrackingEntity is ready
+      // _messageSubscription = _repository.deliveryStream.listen(
+      //   (deliveryEntity) {
+      //     AppLogger.d('Received delivery update: ${deliveryEntity.status}');
+      //     
+      //     state = state.copyWith(
+      //       currentTracking: deliveryEntity,
+      //       clearError: true,
+      //     );
+      //   },
+      //   onError: (error) {
+      //     AppLogger.e('Error in delivery stream', error);
+      //     state = state.copyWith(
+      //       error: 'Lỗi nhận dữ liệu delivery: ${error.toString()}',
+      //     );
+      //   },
+      // );
 
-      // Listen to shipper location updates (real-time position)
-      _shipperLocationSubscription = _socketService.shipperLocationStream.listen(
-        (shipperLocation) {
-          AppLogger.d('Received shipper location: ${shipperLocation.latitude}, ${shipperLocation.longitude}');
-          
-          // Update shipper location state (riêng biệt với delivery tracking)
-          state = state.copyWith(
-            shipperLocation: shipperLocation,
-            clearError: true,
-          );
-        },
-        onError: (error) {
-          AppLogger.e('Error in shipper location stream', error);
-          state = state.copyWith(
-            error: 'Lỗi kết nối theo dõi vị trí shipper: ${error.toString()}',
-          );
-        },
-      );
+      AppLogger.i('Delivery tracking service initialized successfully');
 
     } catch (e) {
       AppLogger.e('Failed to initialize delivery tracking service', e);
@@ -94,18 +92,27 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
     }
   }
 
-  /// Kết nối đến service
+  /// Kết nối đến service thông qua UseCase
   Future<void> connect() async {
     try {
       state = state.copyWith(isLoading: true, clearError: true);
       AppLogger.i('Connecting to delivery tracking...');
       
-      // Socket service auto-connects, just wait a bit
-      await Future.delayed(const Duration(milliseconds: 1000));
+      final result = await _connectUseCase(NoParams());
       
-      state = state.copyWith(
-        isLoading: false,
-        isConnected: true,
+      result.fold(
+        (failure) {
+          state = state.copyWith(
+            isLoading: false,
+            error: failure.message,
+          );
+        },
+        (_) {
+          state = state.copyWith(
+            isLoading: false,
+            isConnected: true,
+          );
+        },
       );
       
     } catch (e) {
@@ -117,15 +124,13 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
     }
   }
 
-  /// Bắt đầu theo dõi order
+  /// Bắt đầu theo dõi order thông qua UseCase
   Future<void> startTrackingOrder(int orderId) async {
     try {
       AppLogger.i('Starting tracking for order $orderId');
       
       if (!state.isConnected) {
         await connect();
-        // Wait a bit for connection to establish
-        await Future.delayed(const Duration(milliseconds: 1000));
       }
 
       if (!state.isConnected) {
@@ -139,9 +144,21 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
         clearShipperLocation: true,
       );
 
-      _socketService.startTrackingOrder(orderId);
+      final result = await _startTrackingUseCase(
+        StartDeliveryTrackingParams(orderId: orderId),
+      );
       
-      AppLogger.i('Successfully started tracking order $orderId');
+      result.fold(
+        (failure) {
+          state = state.copyWith(
+            isTracking: false,
+            error: failure.message,
+          );
+        },
+        (_) {
+          AppLogger.i('Successfully started tracking order $orderId');
+        },
+      );
       
     } catch (e) {
       AppLogger.e('Failed to start tracking order $orderId', e);
@@ -152,18 +169,27 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
     }
   }
 
-  /// Dừng theo dõi order
-  void stopTrackingOrder() {
+  /// Dừng theo dõi order thông qua UseCase
+  Future<void> stopTrackingOrder() async {
     try {
       AppLogger.i('Stopping delivery tracking');
       
-      _socketService.stopTrackingOrder();
+      final result = await _stopTrackingUseCase(NoParams());
       
-      state = state.copyWith(
-        isTracking: false,
-        clearTracking: true,
-        clearShipperLocation: true,
-        clearError: true,
+      result.fold(
+        (failure) {
+          state = state.copyWith(
+            error: failure.message,
+          );
+        },
+        (_) {
+          state = state.copyWith(
+            isTracking: false,
+            clearTracking: true,
+            clearShipperLocation: true,
+            clearError: true,
+          );
+        },
       );
       
     } catch (e) {
@@ -174,18 +200,25 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
     }
   }
 
-  /// Làm mới kết nối
+  /// Làm mới kết nối thông qua UseCase
   Future<void> refresh() async {
     try {
       AppLogger.i('Refreshing delivery tracking connection');
       state = state.copyWith(isLoading: true, clearError: true);
       
-      // Disconnect and reconnect
-      _socketService.disconnect();
-      await Future.delayed(const Duration(milliseconds: 500));
-      // Socket service will auto-reconnect
+      final result = await _refreshUseCase(NoParams());
       
-      state = state.copyWith(isLoading: false);
+      result.fold(
+        (failure) {
+          state = state.copyWith(
+            isLoading: false,
+            error: failure.message,
+          );
+        },
+        (_) {
+          state = state.copyWith(isLoading: false);
+        },
+      );
       
     } catch (e) {
       AppLogger.e('Failed to refresh delivery tracking', e);
@@ -212,13 +245,11 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
     AppLogger.i('Disposing delivery tracking notifier');
     
     // Cancel subscriptions
-    _deliverySubscription?.cancel();
-    _shipperLocationSubscription?.cancel();
+    _messageSubscription?.cancel();
     _connectionSubscription?.cancel();
     
-    // Stop tracking and disconnect
-    _socketService.stopTrackingOrder();
-    _socketService.disconnect();
+    // Stop tracking and disconnect through repository
+    _repository.disconnect();
     
     super.dispose();
   }

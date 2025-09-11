@@ -1,20 +1,53 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/services/delivery_tracking_socket_service.dart';
-import '../../domain/entities/delivery_tracking_entity.dart';
+import '../../../../core/network/socket/providers/socket_providers.dart';
+import '../../data/repositories_impl/delivery_tracking_repository_impl.dart';
+import '../../domain/usecases/tracking_usecases.dart';
+// TODO: Add back when DTOs are ready
+// import '../../domain/entities/delivery_tracking_entity.dart';
 import 'delivery_tracking_notifier.dart';
 import 'delivery_tracking_state.dart';
 
-/// Delivery Tracking Socket Service Provider
-final deliveryTrackingSocketServiceProvider = Provider<DeliveryTrackingSocketService>((ref) {
-  return DeliveryTrackingSocketService();
+/// Delivery Tracking Repository Provider
+final deliveryTrackingRepositoryProvider = Provider((ref) {
+  final stompService = ref.watch(deliveryTrackingStompServiceProvider);
+  return DeliveryTrackingRepositoryImpl(stompService);
+});
+
+/// UseCase Providers
+final connectDeliveryTrackingUseCaseProvider = Provider((ref) {
+  final repository = ref.watch(deliveryTrackingRepositoryProvider);
+  return ConnectDeliveryTrackingUseCase(repository);
+});
+
+final startDeliveryTrackingUseCaseProvider = Provider((ref) {
+  final repository = ref.watch(deliveryTrackingRepositoryProvider);
+  return StartDeliveryTrackingUseCase(repository);
+});
+
+final stopDeliveryTrackingUseCaseProvider = Provider((ref) {
+  final repository = ref.watch(deliveryTrackingRepositoryProvider);
+  return StopDeliveryTrackingUseCase(repository);
+});
+
+final refreshDeliveryTrackingUseCaseProvider = Provider((ref) {
+  final repository = ref.watch(deliveryTrackingRepositoryProvider);
+  return RefreshDeliveryTrackingUseCase(repository);
 });
 
 /// Delivery Tracking Notifier Provider
 final deliveryTrackingNotifierProvider = StateNotifierProvider<DeliveryTrackingNotifier, DeliveryTrackingState>((ref) {
-  final socketService = ref.watch(deliveryTrackingSocketServiceProvider);
+  final connectUseCase = ref.watch(connectDeliveryTrackingUseCaseProvider);
+  final startTrackingUseCase = ref.watch(startDeliveryTrackingUseCaseProvider);
+  final stopTrackingUseCase = ref.watch(stopDeliveryTrackingUseCaseProvider);
+  final refreshUseCase = ref.watch(refreshDeliveryTrackingUseCaseProvider);
+  final repository = ref.watch(deliveryTrackingRepositoryProvider);
   
   return DeliveryTrackingNotifier(
-    socketService: socketService,
+    connectUseCase: connectUseCase,
+    startTrackingUseCase: startTrackingUseCase,
+    stopTrackingUseCase: stopTrackingUseCase,
+    refreshUseCase: refreshUseCase,
+    repository: repository,
   );
 });
 
@@ -24,17 +57,18 @@ final isTrackingProvider = Provider<bool>((ref) {
   return state.isTracking;
 });
 
-/// Provider để lấy current tracking entity
-final currentTrackingProvider = Provider<DeliveryTrackingEntity?>((ref) {
-  final state = ref.watch(deliveryTrackingNotifierProvider);
-  return state.currentTracking;
-});
+// TODO: Add these back when DTOs are ready
+// /// Provider để lấy current tracking entity
+// final currentTrackingProvider = Provider<DeliveryTrackingEntity?>((ref) {
+//   final state = ref.watch(deliveryTrackingNotifierProvider);
+//   return state.currentTracking;
+// });
 
-/// Provider để lấy shipper info
-final shipperInfoProvider = Provider<ShipperEntity?>((ref) {
-  final state = ref.watch(deliveryTrackingNotifierProvider);
-  return state.shipper;
-});
+// /// Provider để lấy shipper info
+// final shipperInfoProvider = Provider<ShipperEntity?>((ref) {
+//   final state = ref.watch(deliveryTrackingNotifierProvider);
+//   return state.shipper;
+// });
 
 /// Provider để kiểm tra connection status
 final trackingConnectionProvider = Provider<bool>((ref) {

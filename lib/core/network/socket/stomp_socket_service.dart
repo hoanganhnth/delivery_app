@@ -10,19 +10,30 @@ class StompManager {
 
   final Map<String, StompClient> _clients = {};
   final Map<String, StreamController<Map<String, dynamic>>> _controllers = {};
+  final Map<String, StreamController<bool>> _connectionControllers = {};
   final Map<String, String> _urls = {};
   final Map<String, Timer?> _reconnectTimers = {};
   final Map<String, Map<String, Function()>> _subscriptions = {};
+  final Map<String, Completer<void>?> _connectionCompleters = {};
 
-  /// Kết nối đến 1 STOMP URL
-  void connect(String key, String url, {String? username, String? password}) {
+  /// Kết nối đến 1 STOMP URL với async support
+  Future<void> connect(String key, String url, {String? username, String? password}) async {
     if (_clients.containsKey(key)) {
       AppLogger.w('STOMP [$key] đã kết nối rồi.');
       return;
     }
 
+    // Check if connection is already in progress
+    if (_connectionCompleters[key] != null && !_connectionCompleters[key]!.isCompleted) {
+      AppLogger.d('STOMP [$key] Connection already in progress, waiting...');
+      return _connectionCompleters[key]!.future;
+    }
+
     AppLogger.i('STOMP kết nối [$key] → $url');
     _urls[key] = url;
+    
+    // Create completer for this connection
+    _connectionCompleters[key] = Completer<void>();
 
     try {
       final client = StompClient(
@@ -30,18 +41,32 @@ class StompManager {
           url: url,
           onConnect: (frame) {
             AppLogger.i('STOMP [$key] Kết nối thành công');
+            _setConnectionState(key, true);
+            _connectionCompleters[key]?.complete();
             _onConnected(key);
           },
           onDisconnect: (frame) {
             AppLogger.w('STOMP [$key] Ngắt kết nối');
+            _setConnectionState(key, false);
+            if (!_connectionCompleters[key]!.isCompleted) {
+              _connectionCompleters[key]!.completeError('STOMP disconnected');
+            }
             _scheduleReconnect(key);
           },
           onStompError: (frame) {
             AppLogger.e('STOMP [$key] Lỗi: ${frame.body}');
+            _setConnectionState(key, false);
+            if (!_connectionCompleters[key]!.isCompleted) {
+              _connectionCompleters[key]!.completeError('STOMP error: ${frame.body}');
+            }
             _scheduleReconnect(key);
           },
           onWebSocketError: (error) {
             AppLogger.e('STOMP [$key] WebSocket lỗi', error);
+            _setConnectionState(key, false);
+            if (!_connectionCompleters[key]!.isCompleted) {
+              _connectionCompleters[key]!.completeError(error);
+            }
             _scheduleReconnect(key);
           },
           stompConnectHeaders: {
@@ -54,13 +79,34 @@ class StompManager {
       _clients[key] = client;
 
       // Tạo StreamController để publish message ra ngoài
-      final controller = StreamController<Map<String, dynamic>>.broadcast();
-      _controllers[key] = controller;
+      final messageController = StreamController<Map<String, dynamic>>.broadcast();
+      _controllers[key] = messageController;
+      
+      // Tạo connection status controller
+      final connectionController = StreamController<bool>.broadcast();
+      _connectionControllers[key] = connectionController;
+
+      // Set initial connection state
+      _setConnectionState(key, false);
 
       client.activate();
+      
+      // Wait for connection to be confirmed or timeout
+      await _connectionCompleters[key]!.future.timeout(
+        const Duration(seconds: 15),
+        onTimeout: () {
+          _setConnectionState(key, false);
+          throw Exception('STOMP connection timeout after 15 seconds');
+        },
+      );
+
+      AppLogger.i('STOMP [$key] Successfully connected');
     } catch (e) {
       AppLogger.e('STOMP [$key] Không thể kết nối', e);
+      _setConnectionState(key, false);
+      _connectionCompleters[key]?.completeError(e);
       _scheduleReconnect(key);
+      rethrow;
     }
   }
 
@@ -140,6 +186,9 @@ class StompManager {
     }
   }
 
+  /// Stream để lắng nghe connection status changes
+  Stream<bool>? connectionStream(String key) => _connectionControllers[key]?.stream;
+
   /// Ngắt kết nối 1 STOMP client
   void disconnect(String key) {
     // Unsubscribe tất cả topic trước
@@ -160,6 +209,9 @@ class StompManager {
     // Dọn dẹp resources
     _controllers[key]?.close();
     _controllers.remove(key);
+    _connectionControllers[key]?.close();
+    _connectionControllers.remove(key);
+    _connectionCompleters.remove(key);
     _subscriptions.remove(key);
     _reconnectTimers[key]?.cancel();
     _reconnectTimers.remove(key);
@@ -198,5 +250,11 @@ class StompManager {
   /// Lấy danh sách subscriptions của 1 connection
   List<String> getSubscriptions(String key) {
     return _subscriptions[key]?.keys.toList() ?? [];
+  }
+  
+  /// Set connection state và emit event
+  void _setConnectionState(String key, bool connected) {
+    _connectionControllers[key]?.add(connected);
+    AppLogger.d('STOMP [$key] Connection state changed: $connected');
   }
 }

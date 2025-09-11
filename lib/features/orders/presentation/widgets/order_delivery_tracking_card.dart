@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/order_entity.dart';
 import '../providers/providers.dart';
-import 'delivery_tracking_map_widget.dart';
+// TODO: Add back when DTOs are ready
+// import 'delivery_tracking_map_widget.dart';
 
 /// Widget hiển thị delivery tracking trong order detail
 class OrderDeliveryTrackingCard extends ConsumerStatefulWidget {
@@ -44,8 +45,9 @@ class _OrderDeliveryTrackingCardState extends ConsumerState<OrderDeliveryTrackin
   @override
   Widget build(BuildContext context) {
     final trackingState = ref.watch(deliveryTrackingNotifierProvider);
-    final currentTracking = ref.watch(currentTrackingProvider);
-    final shipperInfo = ref.watch(shipperInfoProvider);
+    // TODO: Add back when DTOs are ready
+    // final currentTracking = ref.watch(currentTrackingProvider);
+    // final shipperInfo = ref.watch(shipperInfoProvider);
     final isConnected = ref.watch(trackingConnectionProvider);
     
     return Column(
@@ -83,11 +85,12 @@ class _OrderDeliveryTrackingCardState extends ConsumerState<OrderDeliveryTrackin
                 if (trackingState.error != null)
                   _buildErrorMessage(trackingState.error!),
                 
+                // TODO: Add back when DTOs are ready
                 // Shipper info when available
-                if (shipperInfo != null) ...[
-                  const SizedBox(height: 16),
-                  _buildShipperInfo(shipperInfo),
-                ],
+                // if (shipperInfo != null) ...[
+                //   const SizedBox(height: 16),
+                //   _buildShipperInfo(shipperInfo),
+                // ],
               ],
             ),
           ),
@@ -95,13 +98,16 @@ class _OrderDeliveryTrackingCardState extends ConsumerState<OrderDeliveryTrackin
         
         const SizedBox(height: 16),
         
+        // TODO: Add back when DTOs are ready
         // Map widget when tracking is available
-        if (currentTracking != null)
-          DeliveryTrackingMapWidget(
-            deliveryTracking: currentTracking,
-            shipper: shipperInfo,
-            shipperLocation: trackingState.shipperLocation, // Truyền vị trí shipper riêng biệt
-          )
+        // if (currentTracking != null)
+        //   DeliveryTrackingMapWidget(
+        //     deliveryTracking: currentTracking,
+        //     shipper: shipperInfo,
+        //     shipperLocation: trackingState.shipperLocation, // Truyền vị trí shipper riêng biệt
+        //   )
+        if (trackingState.isConnected)
+          _buildLoadingCard() // Temporary placeholder
         else if (trackingState.isLoading)
           _buildLoadingCard()
         else
@@ -180,7 +186,8 @@ class _OrderDeliveryTrackingCardState extends ConsumerState<OrderDeliveryTrackin
     );
   }
 
-  Widget _buildShipperInfo(shipper) {
+  // TODO: Add back when DTOs are ready
+  /*Widget _buildShipperInfo(shipper) {
     return Row(
       children: [
         CircleAvatar(
@@ -314,6 +321,28 @@ class _OrderDeliveryTrackingCardState extends ConsumerState<OrderDeliveryTrackin
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }*/
+
+  Widget _buildLoadingCard() {
+    return const Card(
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNoDataCard() {
+    return const Card(
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Center(
+          child: Text('No tracking data available'),
         ),
       ),
     );
