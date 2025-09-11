@@ -1,6 +1,6 @@
 import 'package:delivery_app/core/error/exceptions.dart';
 import 'package:dio/dio.dart';
-import '../../logger/app_logger.dart';
+import '../../../logger/app_logger.dart';
 
 class ErrorInterceptor extends Interceptor {
   final Future<String?> Function()? onRefreshToken;

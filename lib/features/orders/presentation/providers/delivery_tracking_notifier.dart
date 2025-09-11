@@ -1,22 +1,22 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/logger/app_logger.dart';
-import '../../data/services/mock_delivery_tracking_service.dart';
+import '../../data/services/delivery_tracking_socket_service.dart';
 import '../../domain/entities/delivery_tracking_entity.dart';
 import '../../domain/entities/shipper_location_entity.dart';
 import 'delivery_tracking_state.dart';
 
 /// Notifier để quản lý delivery tracking
 class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
-  final MockDeliveryTrackingService _mockService;
+  final DeliveryTrackingSocketService _socketService;
   
   StreamSubscription<DeliveryTrackingEntity>? _deliverySubscription;
   StreamSubscription<ShipperLocationEntity>? _shipperLocationSubscription;
   StreamSubscription<bool>? _connectionSubscription;
   
   DeliveryTrackingNotifier({
-    required MockDeliveryTrackingService mockService,
-  }) : _mockService = mockService,
+    required DeliveryTrackingSocketService socketService,
+  }) : _socketService = socketService,
        super(const DeliveryTrackingState()) {
     _initializeService();
   }
@@ -27,7 +27,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
       AppLogger.i('Initializing delivery tracking service...');
       
       // Listen to connection changes
-      _connectionSubscription = _mockService.connectionStream.listen(
+      _connectionSubscription = _socketService.connectionStream.listen(
         (isConnected) {
           AppLogger.d('Connection status changed: $isConnected');
           state = state.copyWith(isConnected: isConnected, clearError: true);
@@ -44,7 +44,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
       );
       
       // Listen to delivery updates
-      _deliverySubscription = _mockService.deliveryStream.listen(
+      _deliverySubscription = _socketService.deliveryStream.listen(
         (deliveryTracking) {
           AppLogger.d('Received delivery update: ${deliveryTracking.status}');
           
@@ -55,8 +55,8 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
           
           // Auto-update shipper info if not available
           if (state.shipper == null) {
-            final shipper = _mockService.getMockShipper();
-            state = state.copyWith(shipper: shipper);
+            // Note: Shipper info should come from API or tracking data
+            AppLogger.d('Shipper info not available, need to implement API call');
           }
         },
         onError: (error) {
@@ -68,7 +68,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
       );
 
       // Listen to shipper location updates (real-time position)
-      _shipperLocationSubscription = _mockService.shipperLocationStream.listen(
+      _shipperLocationSubscription = _socketService.shipperLocationStream.listen(
         (shipperLocation) {
           AppLogger.d('Received shipper location: ${shipperLocation.latitude}, ${shipperLocation.longitude}');
           
@@ -100,7 +100,13 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
       state = state.copyWith(isLoading: true, clearError: true);
       AppLogger.i('Connecting to delivery tracking...');
       
-      await _mockService.connect();
+      // Socket service auto-connects, just wait a bit
+      await Future.delayed(const Duration(milliseconds: 1000));
+      
+      state = state.copyWith(
+        isLoading: false,
+        isConnected: true,
+      );
       
     } catch (e) {
       AppLogger.e('Failed to connect delivery tracking', e);
@@ -133,7 +139,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
         clearShipperLocation: true,
       );
 
-      _mockService.startTrackingOrder(orderId);
+      _socketService.startTrackingOrder(orderId);
       
       AppLogger.i('Successfully started tracking order $orderId');
       
@@ -151,7 +157,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
     try {
       AppLogger.i('Stopping delivery tracking');
       
-      _mockService.stopTrackingOrder();
+      _socketService.stopTrackingOrder();
       
       state = state.copyWith(
         isTracking: false,
@@ -175,9 +181,9 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
       state = state.copyWith(isLoading: true, clearError: true);
       
       // Disconnect and reconnect
-      _mockService.disconnect();
+      _socketService.disconnect();
       await Future.delayed(const Duration(milliseconds: 500));
-      await _mockService.connect();
+      // Socket service will auto-reconnect
       
       state = state.copyWith(isLoading: false);
       
@@ -196,8 +202,9 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
   }
 
   /// Get mock shipper info
-  ShipperEntity getMockShipper() {
-    return _mockService.getMockShipper();
+  dynamic getMockShipper() {
+    AppLogger.w('getMockShipper called - should implement proper API call');
+    return null; // TODO: Implement proper shipper API
   }
 
   @override
@@ -210,8 +217,8 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
     _connectionSubscription?.cancel();
     
     // Stop tracking and disconnect
-    _mockService.stopTrackingOrder();
-    _mockService.disconnect();
+    _socketService.stopTrackingOrder();
+    _socketService.disconnect();
     
     super.dispose();
   }

@@ -1,4 +1,4 @@
-import 'package:delivery_app/core/network/authenticated_network_providers.dart';
+import 'package:delivery_app/core/network/dio/authenticated_network_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/datasources/mock_order_service.dart';
 import '../../data/datasources/order_api_service.dart';

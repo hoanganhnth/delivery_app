@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../../logger/app_logger.dart';
+import '../../../logger/app_logger.dart';
 
 class ResponseInterceptor extends Interceptor {
   @override

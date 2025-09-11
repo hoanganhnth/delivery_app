@@ -1,20 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/services/mock_delivery_tracking_service.dart';
+import '../../data/services/delivery_tracking_socket_service.dart';
 import '../../domain/entities/delivery_tracking_entity.dart';
 import 'delivery_tracking_notifier.dart';
 import 'delivery_tracking_state.dart';
 
-/// Mock Delivery Tracking Service Provider
-final mockDeliveryTrackingServiceProvider = Provider<MockDeliveryTrackingService>((ref) {
-  return MockDeliveryTrackingService();
+/// Delivery Tracking Socket Service Provider
+final deliveryTrackingSocketServiceProvider = Provider<DeliveryTrackingSocketService>((ref) {
+  return DeliveryTrackingSocketService();
 });
 
 /// Delivery Tracking Notifier Provider
 final deliveryTrackingNotifierProvider = StateNotifierProvider<DeliveryTrackingNotifier, DeliveryTrackingState>((ref) {
-  final mockService = ref.watch(mockDeliveryTrackingServiceProvider);
+  final socketService = ref.watch(deliveryTrackingSocketServiceProvider);
   
   return DeliveryTrackingNotifier(
-    mockService: mockService,
+    socketService: socketService,
   );
 });
 

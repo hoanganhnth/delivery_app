@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/network/authenticated_network_providers.dart';
-import '../../../../core/network/dio_client.dart';
+import '../../../../core/network/dio/authenticated_network_providers.dart';
+import '../../../../core/network/dio/dio_client.dart';
 import 'auth_providers.dart';
 
 /// Auth-aware Dio provider that includes authentication

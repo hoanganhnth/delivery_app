@@ -1,4 +1,4 @@
-import 'package:delivery_app/core/network/authenticated_network_providers.dart';
+import 'package:delivery_app/core/network/dio/authenticated_network_providers.dart';
 // import 'package:delivery_app/core/network/network_providers.dart';
 import 'package:delivery_app/features/profile/data/datasources/profile_local_datasource.dart';
 import 'package:delivery_app/features/profile/data/datasources/profile_remote_datasource.dart';

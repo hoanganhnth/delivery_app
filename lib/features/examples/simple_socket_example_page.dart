@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../core/services/stomp_socket_service.dart';
-import '../../../core/services/websocket_service.dart';
+import '../../core/network/socket/stomp_socket_service.dart';
+import '../../core/network/socket/websocket_service.dart';
 
 /// Example page để test cả STOMP và WebSocket service mới
 class SimpleSocketExamplePage extends StatefulWidget {

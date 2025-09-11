@@ -1,4 +1,4 @@
-import 'package:delivery_app/core/network/authenticated_network_providers.dart';
+import 'package:delivery_app/core/network/dio/authenticated_network_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import '../../../../core/network/network_providers.dart';
 import '../../data/datasources/restaurant_remote_datasource.dart';
