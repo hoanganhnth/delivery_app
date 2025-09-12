@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/tracking_providers.dart';
+import '../providers/shipper_location_providers.dart';
+import '../providers/delivery_tracking_providers.dart';
 import '../providers/connection_providers.dart';
 
 /// Example widget để hiển thị shipper location tracking
@@ -14,7 +15,7 @@ class ShipperLocationTrackingWidget extends ConsumerWidget {
   
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final locationAsync = ref.watch(shipperLocationStreamProvider(shipperId));
+    final shipperState = ref.watch(shipperLocationNotifierProvider);
     final connectionAsync = ref.watch(shipperLocationConnectionProvider);
     
     return Card(
@@ -51,30 +52,34 @@ class ShipperLocationTrackingWidget extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 8),
-            locationAsync.when(
-              data: (location) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            // Show current shipper location state
+            if (shipperState.hasError) 
+              Column(
                 children: [
-                  Text('Shipper ID: ${location.shipperId}'),
-                  Text('Latitude: ${location.latitude.toStringAsFixed(6)}'),
-                  Text('Longitude: ${location.longitude.toStringAsFixed(6)}'),
-                  Text('Updated: ${location.updatedAt.toLocal()}'),
+                  const Icon(Icons.error, color: Colors.red),
+                  Text('Error: ${shipperState.error}'),
                 ],
-              ),
-              loading: () => const Row(
+              )
+            else if (shipperState.isLoading)
+              const Row(
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(width: 8),
                   Text('Connecting to shipper tracking...'),
                 ],
-              ),
-              error: (error, stack) => Column(
+              )
+            else if (shipperState.hasLocation && shipperState.currentLocation != null)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.error, color: Colors.red),
-                  Text('Error: $error'),
+                  Text('Shipper ID: ${shipperState.currentLocation!.shipperId}'),
+                  Text('Latitude: ${shipperState.currentLocation!.latitude.toStringAsFixed(6)}'),
+                  Text('Longitude: ${shipperState.currentLocation!.longitude.toStringAsFixed(6)}'),
+                  Text('Updated: ${shipperState.currentLocation!.updatedAt.toLocal()}'),
                 ],
-              ),
-            ),
+              )
+            else 
+              const Text('No location data available'),
           ],
         ),
       ),
@@ -93,7 +98,7 @@ class DeliveryTrackingWidget extends ConsumerWidget {
   
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final trackingAsync = ref.watch(deliveryTrackingStreamProvider(orderId));
+    final deliveryState = ref.watch(deliveryTrackingNotifierProvider);
     
     return Card(
       child: Padding(
@@ -106,35 +111,34 @@ class DeliveryTrackingWidget extends ConsumerWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
-            trackingAsync.when(
-              data: (tracking) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            // Show current delivery tracking state
+            if (deliveryState.error != null) 
+              Column(
                 children: [
-                  Text('Order ID: ${tracking.orderId}'),
-                  Text('Status: ${tracking.status}'),
-                  Text('Shipper: ${tracking.shipperId}'),
-                  if (tracking.estimatedDeliveryTime != null)
-                    Text('ETA: ${tracking.estimatedDeliveryTime!.toLocal()}'),
-                  if (tracking.shipperCurrentLat != null && tracking.shipperCurrentLng != null)
-                    Text(
-                      'Current Location: ${tracking.shipperCurrentLat!.toStringAsFixed(6)}, ${tracking.shipperCurrentLng!.toStringAsFixed(6)}',
-                    ),
+                  const Icon(Icons.error, color: Colors.red),
+                  Text('Error: ${deliveryState.error}'),
                 ],
-              ),
-              loading: () => const Row(
+              )
+            else if (deliveryState.isLoading)
+              const Row(
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(width: 8),
                   Text('Connecting to delivery tracking...'),
                 ],
-              ),
-              error: (error, stack) => Column(
+              )
+            else if (deliveryState.isTracking)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.error, color: Colors.red),
-                  Text('Error: $error'),
+                  Text('Order ID: $orderId'),
+                  Text('Status: ${deliveryState.isConnected ? "Connected" : "Disconnected"}'),
+                  Text('Tracking: ${deliveryState.isTracking ? "Active" : "Inactive"}'),
+                  // TODO: Add actual delivery tracking entity data when DeliveryTrackingEntity is ready
                 ],
-              ),
-            ),
+              )
+            else 
+              const Text('No tracking data available'),
           ],
         ),
       ),

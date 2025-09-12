@@ -109,7 +109,31 @@ class TrackDeliveryParams {
 // SHIPPER LOCATION USE CASES
 // ======================================================================
 
-/// UseCase để theo dõi vị trí shipper
+/// UseCase để bắt đầu theo dõi vị trí shipper
+class StartShipperTrackingUseCase extends UseCase<void, StartShipperTrackingParams> {
+  final ShipperLocationRepository repository;
+
+  StartShipperTrackingUseCase(this.repository);
+
+  @override
+  Future<Either<Failure, void>> call(StartShipperTrackingParams params) async {
+    return await repository.startTrackingShipper(params.shipperId);
+  }
+}
+
+/// UseCase để dừng theo dõi vị trí shipper
+class StopShipperTrackingUseCase extends UseCase<void, NoParams> {
+  final ShipperLocationRepository repository;
+
+  StopShipperTrackingUseCase(this.repository);
+
+  @override
+  Future<Either<Failure, void>> call(NoParams params) async {
+    return await repository.stopTrackingShipper();
+  }
+}
+
+/// UseCase để theo dõi vị trí shipper và trả về stream
 class TrackShipperLocationUseCase extends UseCase<Stream<ShipperLocationEntity>, TrackShipperParams> {
   final ShipperLocationRepository repository;
 
@@ -124,6 +148,17 @@ class TrackShipperLocationUseCase extends UseCase<Stream<ShipperLocationEntity>,
       (_) => right(repository.locationStream),
     );
   }
+}
+
+// ======================================================================
+// SHIPPER LOCATION PARAMETERS
+// ======================================================================
+
+/// Parameters cho StartShipperTrackingUseCase
+class StartShipperTrackingParams {
+  final int shipperId;
+
+  StartShipperTrackingParams({required this.shipperId});
 }
 
 /// Parameters cho TrackShipperLocationUseCase

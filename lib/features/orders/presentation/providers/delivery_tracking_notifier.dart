@@ -1,9 +1,7 @@
-import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../domain/usecases/tracking_usecases.dart';
-import '../../domain/repositories/delivery_tracking_repository.dart';
 import 'delivery_tracking_state.dart';
 
 /// Notifier để quản lý delivery tracking
@@ -12,82 +10,21 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
   final StartDeliveryTrackingUseCase _startTrackingUseCase;
   final StopDeliveryTrackingUseCase _stopTrackingUseCase;
   final RefreshDeliveryTrackingUseCase _refreshUseCase;
-  final DeliveryTrackingRepository _repository;
   
-  StreamSubscription<Map<String, dynamic>>? _messageSubscription;
-  StreamSubscription<bool>? _connectionSubscription;
+  // Removed _repository - using UseCase only for Clean Architecture
   
   DeliveryTrackingNotifier({
     required ConnectDeliveryTrackingUseCase connectUseCase,
     required StartDeliveryTrackingUseCase startTrackingUseCase,
     required StopDeliveryTrackingUseCase stopTrackingUseCase,
     required RefreshDeliveryTrackingUseCase refreshUseCase,
-    required DeliveryTrackingRepository repository,
   }) : _connectUseCase = connectUseCase,
        _startTrackingUseCase = startTrackingUseCase,
        _stopTrackingUseCase = stopTrackingUseCase,
        _refreshUseCase = refreshUseCase,
-       _repository = repository,
-       super(const DeliveryTrackingState()) {
-    _initializeService();
-  }
+       super(const DeliveryTrackingState());
 
-  /// Khởi tạo service và listeners
-  Future<void> _initializeService() async {
-    try {
-      AppLogger.i('Initializing delivery tracking service...');
-      
-      // Listen to connection changes từ repository
-      _connectionSubscription = _repository.connectionStream.listen(
-        (isConnected) {
-          AppLogger.d('Connection status changed: $isConnected');
-          state = state.copyWith(isConnected: isConnected, clearError: true);
-          
-          if (!isConnected) {
-            // Clear tracking when disconnected
-            state = state.copyWith(
-              isTracking: false,
-              clearTracking: true,
-              clearShipperLocation: true,
-            );
-          }
-        },
-        onError: (error) {
-          AppLogger.e('Error in connection stream', error);
-          state = state.copyWith(
-            error: 'Lỗi kết nối: ${error.toString()}',
-          );
-        },
-      );
-      
-      // Listen to delivery updates từ repository
-      // TODO: Uncomment when DeliveryTrackingEntity is ready
-      // _messageSubscription = _repository.deliveryStream.listen(
-      //   (deliveryEntity) {
-      //     AppLogger.d('Received delivery update: ${deliveryEntity.status}');
-      //     
-      //     state = state.copyWith(
-      //       currentTracking: deliveryEntity,
-      //       clearError: true,
-      //     );
-      //   },
-      //   onError: (error) {
-      //     AppLogger.e('Error in delivery stream', error);
-      //     state = state.copyWith(
-      //       error: 'Lỗi nhận dữ liệu delivery: ${error.toString()}',
-      //     );
-      //   },
-      // );
 
-      AppLogger.i('Delivery tracking service initialized successfully');
-
-    } catch (e) {
-      AppLogger.e('Failed to initialize delivery tracking service', e);
-      state = state.copyWith(
-        error: 'Không thể khởi tạo dịch vụ theo dõi delivery',
-      );
-    }
-  }
 
   /// Kết nối đến service thông qua UseCase
   Future<void> connect() async {
@@ -241,12 +178,8 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
   void dispose() {
     AppLogger.i('Disposing delivery tracking notifier');
     
-    // Cancel subscriptions
-    _messageSubscription?.cancel();
-    _connectionSubscription?.cancel();
-    
-    // Stop tracking and disconnect through repository
-    _repository.disconnect();
+    // Clean Architecture: Notifier only calls UseCases
+    // Connection management is handled by UseCase layer
     
     super.dispose();
   }

@@ -1,3 +1,11 @@
+// DEPRECATED: This file is redundant and replaced by:
+// - shipper_location_providers.dart (for shipper location tracking)
+// - delivery_tracking_providers.dart (for delivery tracking)
+// 
+// Keep this file for backward compatibility but don't use it in new code
+// TODO: Remove this file after migrating all usages
+
+/*
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/network/socket/providers/tracking_service_providers.dart';
 import '../../domain/usecases/tracking_usecases.dart';
@@ -37,3 +45,4 @@ final deliveryTrackingStreamProvider = StreamProvider.family<DeliveryTrackingEnt
     (stream) => stream,
   );
 });
+*/

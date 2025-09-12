@@ -40,14 +40,13 @@ final deliveryTrackingNotifierProvider = StateNotifierProvider<DeliveryTrackingN
   final startTrackingUseCase = ref.watch(startDeliveryTrackingUseCaseProvider);
   final stopTrackingUseCase = ref.watch(stopDeliveryTrackingUseCaseProvider);
   final refreshUseCase = ref.watch(refreshDeliveryTrackingUseCaseProvider);
-  final repository = ref.watch(deliveryTrackingRepositoryProvider);
   
+  // Clean Architecture: Notifier only depends on UseCases, not Repository
   return DeliveryTrackingNotifier(
     connectUseCase: connectUseCase,
     startTrackingUseCase: startTrackingUseCase,
     stopTrackingUseCase: stopTrackingUseCase,
     refreshUseCase: refreshUseCase,
-    repository: repository,
   );
 });
 
