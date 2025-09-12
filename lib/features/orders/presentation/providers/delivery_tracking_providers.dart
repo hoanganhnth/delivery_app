@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/network/socket/providers/socket_providers.dart';
-import '../../data/repositories_impl/delivery_tracking_repository_impl.dart';
+import '../../data/repositories/delivery_tracking_repository_impl.dart';
 import '../../domain/usecases/tracking_usecases.dart';
 // TODO: Add back when DTOs are ready
 // import '../../domain/entities/delivery_tracking_entity.dart';

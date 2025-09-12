@@ -33,10 +33,9 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
       // Stop previous tracking if any
       await stopTrackingShipper();
       
-      // Ensure connection
+      // Ensure connection với proper async handling
       if (!_socketService.isConnected) {
-        await _socketService.connect();
-        await Future.delayed(const Duration(milliseconds: 1000));
+        await _socketService.connect(); // Không cần Future.delayed nữa!
       }
       
       // Subscribe to raw data stream and process
@@ -48,9 +47,13 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
         },
       );
       
-      // Start tracking
-      _socketService.subscribeToShipper(shipperId);
-      _currentShipperId = shipperId;
+      // Start tracking - chỉ khi đã connected
+      if (_socketService.isConnected) {
+        _socketService.subscribeToShipper(shipperId);
+        _currentShipperId = shipperId;
+      } else {
+        throw Exception('Failed to establish WebSocket connection');
+      }
       
       AppLogger.i('Successfully started tracking shipper: $shipperId');
       return right(null);

@@ -4,9 +4,6 @@ import '../../../../core/logger/app_logger.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../domain/usecases/tracking_usecases.dart';
 import '../../domain/repositories/delivery_tracking_repository.dart';
-// TODO: Add these imports back when DTOs are ready
-// import '../../domain/entities/delivery_tracking_entity.dart';
-// import '../../domain/entities/shipper_location_entity.dart';
 import 'delivery_tracking_state.dart';
 
 /// Notifier để quản lý delivery tracking

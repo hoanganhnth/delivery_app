@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../features/orders/data/repositories/shipper_location_repository_impl.dart';
-import '../../../../features/orders/data/repositories_impl/delivery_tracking_repository_impl.dart';
+import '../../../../features/orders/data/repositories/delivery_tracking_repository_impl.dart';
 import '../../../../features/orders/domain/repositories/shipper_location_repository.dart';
 import '../../../../features/orders/domain/repositories/delivery_tracking_repository.dart';
 import 'socket_providers.dart';
