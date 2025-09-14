@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../domain/entities/delivery_tracking_entity.dart';
 import '../../domain/entities/shipper_location_entity.dart';
 import '../services/fake_shipper_movement_service.dart';
 import '../services/mapbox_map_service.dart';
+import '../providers/shipper_location_providers.dart';
 
 /// Widget tối ưu để hiển thị bản đồ theo dõi delivery với MapBox
-/// Đã tách riêng fake movement logic và map operations
-class OptimizedDeliveryTrackingMapWidget extends StatefulWidget {
+/// Sử dụng shipperLocationProvider thay vì fake movement
+class OptimizedDeliveryTrackingMapWidget extends ConsumerStatefulWidget {
   final DeliveryTrackingEntity? deliveryTracking;
   final ShipperEntity? shipper;
   final ShipperLocationEntity? shipperLocation; // Vị trí real-time của shipper
   final Function(String)? onStatusChanged;
+  final bool useFakeMovement; // Flag để quyết định có dùng fake movement không
 
   const OptimizedDeliveryTrackingMapWidget({
     super.key,
@@ -22,22 +25,24 @@ class OptimizedDeliveryTrackingMapWidget extends StatefulWidget {
     this.shipper,
     this.shipperLocation,
     this.onStatusChanged,
+    this.useFakeMovement = false, // Mặc định không dùng fake
   });
 
   @override
-  State<OptimizedDeliveryTrackingMapWidget> createState() =>
+  ConsumerState<OptimizedDeliveryTrackingMapWidget> createState() =>
       _OptimizedDeliveryTrackingMapWidgetState();
 }
 
-class _OptimizedDeliveryTrackingMapWidgetState extends State<OptimizedDeliveryTrackingMapWidget> {
+class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDeliveryTrackingMapWidget> {
   // Services để tách logic riêng biệt
   late MapboxMapService _mapService;
-  late FakeShipperMovementService _movementService;
+  FakeShipperMovementService? _movementService;
 
   // Map states
   bool _isExpanded = false;
   bool _followShipper = true;
   bool _isMapInitialized = false;
+  ShipperLocationEntity? _previousShipperLocation;
 
   @override
   void initState() {
@@ -45,9 +50,13 @@ class _OptimizedDeliveryTrackingMapWidgetState extends State<OptimizedDeliveryTr
     
     // Khởi tạo services
     _mapService = MapboxMapService();
-    _movementService = FakeShipperMovementService(
-      onPositionUpdated: _onShipperPositionUpdated,
-    );
+    
+    // Chỉ khởi tạo fake movement service nếu cần
+    if (widget.useFakeMovement) {
+      _movementService = FakeShipperMovementService(
+        onPositionUpdated: _onShipperPositionUpdated,
+      );
+    }
     
     // Delay nhỏ để đảm bảo widget được render hoàn toàn trước khi khởi tạo map
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -61,13 +70,33 @@ class _OptimizedDeliveryTrackingMapWidgetState extends State<OptimizedDeliveryTr
 
   @override
   void dispose() {
-    _movementService.dispose();
+    _movementService?.dispose();
     _mapService.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    // Watch shipper location từ provider nếu không dùng fake movement
+    ShipperLocationEntity? currentShipperLocation = widget.shipperLocation;
+    
+    if (!widget.useFakeMovement) {
+      final shipperLocationState = ref.watch(shipperLocationNotifierProvider);
+      if (shipperLocationState.currentLocation != null) {
+        currentShipperLocation = shipperLocationState.currentLocation;
+        
+        // Cập nhật shipper marker khi có vị trí mới
+        if (_previousShipperLocation != currentShipperLocation) {
+          _previousShipperLocation = currentShipperLocation;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted && currentShipperLocation != null) {
+              _onShipperPositionUpdated(currentShipperLocation);
+            }
+          });
+        }
+      }
+    }
+    
     return _isExpanded ? _buildExpandedMap() : _buildCompactMap();
   }
 
@@ -283,11 +312,11 @@ class _OptimizedDeliveryTrackingMapWidgetState extends State<OptimizedDeliveryTr
     });
   }
 
-  // Bắt đầu fake shipper movement
+  // Bắt đầu fake shipper movement (chỉ khi useFakeMovement = true)
   void _startFakeShipperMovement() {
-    if (widget.deliveryTracking == null || !_isMapInitialized) return;
+    if (widget.deliveryTracking == null || !_isMapInitialized || !widget.useFakeMovement) return;
 
-    _movementService.startFakeShipperMovement(
+    _movementService?.startFakeShipperMovement(
       pickupLat: widget.deliveryTracking!.pickupLat,
       pickupLng: widget.deliveryTracking!.pickupLng,
       deliveryLat: widget.deliveryTracking!.deliveryLat,

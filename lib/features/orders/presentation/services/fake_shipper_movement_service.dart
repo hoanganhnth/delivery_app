@@ -14,7 +14,7 @@ class FakeShipperMovementService {
   Timer? _movementTimer;
   bool _isMoving = false;
   int _currentStep = 0;
-  List<Position> _movementPath = [];
+  final List<Position> _movementPath = [];
 
   // Callback để cập nhật UI
   final void Function(ShipperLocationEntity) onPositionUpdated;

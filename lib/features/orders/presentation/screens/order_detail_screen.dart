@@ -31,7 +31,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
     // Load order detail when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(orderDetailProvider.notifier).getOrderById(widget.orderId);
-      ref.read(shipperLocationNotifierProvider.notifier).startTrackingShipper(1);
+      ref.read(shipperLocationNotifierProvider.notifier).startTrackingShipper(20);
     });
   }
 

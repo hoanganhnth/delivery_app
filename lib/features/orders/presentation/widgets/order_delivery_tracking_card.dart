@@ -1,4 +1,4 @@
-import 'package:delivery_app/features/orders/presentation/widgets/delivery_tracking_map_widget.dart';
+// import 'package:delivery_app/features/orders/presentation/widgets/delivery_tracking_map_widget.dart'; // Unused - sử dụng optimized widget
 import 'package:delivery_app/features/orders/presentation/widgets/optimized_delivery_tracking_map_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -393,6 +393,7 @@ class _OrderDeliveryTrackingCardState extends ConsumerState<OrderDeliveryTrackin
       deliveryTracking: fakeDeliveryTracking,
       shipper: fakeShipper,
       shipperLocation: fakeShipperLocation,
+      useFakeMovement: false, // Sử dụng shipperLocationNotifierProvider thay vì fake movement
     );
   }
 }

@@ -7,8 +7,8 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../domain/entities/delivery_tracking_entity.dart';
 import '../../domain/entities/shipper_location_entity.dart';
-import '../services/fake_shipper_movement_service.dart';
-import '../services/mapbox_map_service.dart';
+// import '../services/fake_shipper_movement_service.dart'; // Unused - sử dụng optimized widget thay thế
+// import '../services/mapbox_map_service.dart'; // Unused - sử dụng optimized widget thay thế
 
 /// Widget để hiển thị bản đồ theo dõi delivery với MapBox
 class DeliveryTrackingMapWidget extends StatefulWidget {
@@ -399,8 +399,9 @@ class _DeliveryTrackingMapWidgetState extends State<DeliveryTrackingMapWidget> {
   }
 
   Future<void> _addMarkers() async {
-    if (_pointAnnotationManager == null || widget.deliveryTracking == null)
+    if (_pointAnnotationManager == null || widget.deliveryTracking == null) {
       return;
+    }
 
     try {
       // Add pickup marker (restaurant)
