@@ -8,7 +8,7 @@ import 'stomp_socket_service.dart';
 class DeliveryTrackingStompService {
   final StompManager _stompManager;
   static const String _connectionKey = 'delivery_tracking';
-  static const String _baseUrl = 'ws://localhost:8080/ws';
+  static const String _baseUrl = 'ws://localhost:8085/ws/delivery-native';
   
   // ✅ Track active subscriptions để filter chính xác
   final Set<String> _activeTopics = <String>{};

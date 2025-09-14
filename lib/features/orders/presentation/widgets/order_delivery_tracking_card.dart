@@ -28,8 +28,8 @@ class _OrderDeliveryTrackingCardState extends ConsumerState<OrderDeliveryTrackin
       if (widget.order.id != null) {
         final isCurrentlyTracking = ref.read(isTrackingProvider);
         if (!isCurrentlyTracking) {
-          ref.read(deliveryTrackingNotifierProvider.notifier)
-              .startTrackingOrder(widget.order.id!);
+          // ref.read(deliveryTrackingNotifierProvider.notifier)
+          //     .startTrackingOrder(widget.order.id!);
         }
       }
     });
@@ -38,7 +38,6 @@ class _OrderDeliveryTrackingCardState extends ConsumerState<OrderDeliveryTrackin
   @override
   void dispose() {
     // Stop tracking when widget is disposed
-    ref.read(deliveryTrackingNotifierProvider.notifier).stopTrackingOrder();
     super.dispose();
   }
 
@@ -69,7 +68,7 @@ class _OrderDeliveryTrackingCardState extends ConsumerState<OrderDeliveryTrackin
                     Text(
                       'Theo dõi giao hàng',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: Colors.grey[800],
                       ),

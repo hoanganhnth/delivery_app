@@ -8,7 +8,7 @@ import 'websocket_service.dart';
 class ShipperLocationSocketService {
   final SocketManager _socketManager;
   static const String _connectionKey = 'shipper_location';
-  static const String _baseUrl = 'ws://localhost:8080/ws/shipper-location';
+  static const String _baseUrl = 'ws://localhost:8090/ws/shipper-locations';
   
   ShipperLocationSocketService(this._socketManager);
   
@@ -30,7 +30,7 @@ class ShipperLocationSocketService {
   /// SocketManager sẽ quản lý StreamController và lifecycle
   Future<void> connect() async {
     try {
-      AppLogger.d('Connecting to shipper location WebSocket via SocketManager');
+      // AppLogger.d('Connecting to shipper location WebSocket via SocketManager');
       
       // SocketManager quản lý toàn bộ connection và stream
       await _socketManager.connect(_connectionKey, _baseUrl);
@@ -64,7 +64,7 @@ class ShipperLocationSocketService {
     }
     
     final message = {
-      'action': 'subscribe',
+      'action': 'subscribe_shipper',
       'shipperId': shipperId,
       'timestamp': DateTime.now().toIso8601String(),
     };
@@ -80,19 +80,19 @@ class ShipperLocationSocketService {
     }
     
     final message = {
-      'action': 'unsubscribe',
+      'action': 'unsubscribe_shipper',
       'shipperId': shipperId,
       'timestamp': DateTime.now().toIso8601String(),
     };
     
     _socketManager.sendJson(_connectionKey, message);
-    AppLogger.d('Sent unsubscribe message for shipper: $shipperId');
+    // AppLogger.d('Sent unsubscribe message for shipper: $shipperId');
   }
   
   /// Transform raw WebSocket message to JSON data
   Map<String, dynamic> _transformMessage(String message) {
     try {
-      AppLogger.d('Transforming WebSocket message: $message');
+      // AppLogger.d('Transforming WebSocket message: $message');
       
       final data = jsonDecode(message) as Map<String, dynamic>;
       return data;

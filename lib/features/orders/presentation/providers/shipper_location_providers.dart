@@ -5,10 +5,10 @@ import 'shipper_location_notifier.dart';
 import 'shipper_location_state.dart';
 
 /// UseCase Providers for Shipper Location Tracking
-final startShipperTrackingUseCaseProvider = Provider<StartShipperTrackingUseCase>((ref) {
-  final repository = ref.watch(shipperLocationRepositoryProvider);
-  return StartShipperTrackingUseCase(repository);
-});
+// final startShipperTrackingUseCaseProvider = Provider<StartShipperTrackingUseCase>((ref) {
+//   final repository = ref.watch(shipperLocationRepositoryProvider);
+//   return StartShipperTrackingUseCase(repository);
+// });
 
 final stopShipperTrackingUseCaseProvider = Provider<StopShipperTrackingUseCase>((ref) {
   final repository = ref.watch(shipperLocationRepositoryProvider);
@@ -22,12 +22,12 @@ final trackShipperLocationUseCaseProvider = Provider<TrackShipperLocationUseCase
 
 /// Shipper Location Notifier Provider
 final shipperLocationNotifierProvider = StateNotifierProvider<ShipperLocationNotifier, ShipperLocationState>((ref) {
-  final startTrackingUseCase = ref.watch(startShipperTrackingUseCaseProvider);
+  // final startTrackingUseCase = ref.watch(startShipperTrackingUseCaseProvider);
   final stopTrackingUseCase = ref.watch(stopShipperTrackingUseCaseProvider);
   final trackShipperUseCase = ref.watch(trackShipperLocationUseCaseProvider);
   
   return ShipperLocationNotifier(
-    startTrackingUseCase: startTrackingUseCase,
+    // startTrackingUseCase: startTrackingUseCase,
     stopTrackingUseCase: stopTrackingUseCase,
     trackShipperUseCase: trackShipperUseCase,
   );

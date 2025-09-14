@@ -162,12 +162,12 @@ class SocketManager {
   Future<void> _sendPing(String key) async {
     try {
       final pingMessage = {
-        'type': 'ping',
+        'action': 'ping',
         'timestamp': DateTime.now().toIso8601String(),
       };
       
       sendJson(key, pingMessage);
-      AppLogger.d('[$key] Sent ping message');
+      // AppLogger.d('[$key] Sent ping message');
     } catch (e) {
       AppLogger.e('[$key] Failed to send ping', e);
       throw Exception('Failed to send ping: ${e.toString()}');

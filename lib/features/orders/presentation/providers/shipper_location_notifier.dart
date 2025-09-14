@@ -8,17 +8,17 @@ import 'shipper_location_state.dart';
 
 /// Notifier để quản lý shipper location tracking
 class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
-  final StartShipperTrackingUseCase _startTrackingUseCase;
+  // final StartShipperTrackingUseCase _startTrackingUseCase;
   final StopShipperTrackingUseCase _stopTrackingUseCase;
   final TrackShipperLocationUseCase _trackShipperUseCase;
   
   StreamSubscription<ShipperLocationEntity>? _locationSubscription;
   
   ShipperLocationNotifier({
-    required StartShipperTrackingUseCase startTrackingUseCase,
+    // required StartShipperTrackingUseCase startTrackingUseCase,
     required StopShipperTrackingUseCase stopTrackingUseCase,
     required TrackShipperLocationUseCase trackShipperUseCase,
-  }) : _startTrackingUseCase = startTrackingUseCase,
+  }) : 
        _stopTrackingUseCase = stopTrackingUseCase,
        _trackShipperUseCase = trackShipperUseCase,
        super(const ShipperLocationState());
@@ -26,7 +26,7 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
   /// Bắt đầu theo dõi shipper location thông qua UseCase
   Future<void> startTrackingShipper(int shipperId) async {
     try {
-      AppLogger.i('Starting shipper location tracking: $shipperId');
+      // AppLogger.i('Starting shipper location tracking: $shipperId');
       
       // Stop previous tracking if any
       await stopTracking();
@@ -39,23 +39,23 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
       );
 
       // Start tracking through UseCase
-      final startResult = await _startTrackingUseCase(
-        StartShipperTrackingParams(shipperId: shipperId),
-      );
+      // final startResult = await _startTrackingUseCase(
+      //   StartShipperTrackingParams(shipperId: shipperId),
+      // );
       
-      startResult.fold(
-        (failure) {
-          state = state.copyWith(
-            isLoading: false,
-            isTracking: false,
-            error: failure.message,
-          );
-          return;
-        },
-        (_) {
-          // Successfully started, now get the stream
-        },
-      );
+      // startResult.fold(
+      //   (failure) {
+      //     state = state.copyWith(
+      //       isLoading: false,
+      //       isTracking: false,
+      //       error: failure.message,
+      //     );
+      //     return;
+      //   },
+      //   (_) {
+      //     // Successfully started, now get the stream
+      //   },
+      // );
 
       // Get location stream through UseCase
       final streamResult = await _trackShipperUseCase(
@@ -80,7 +80,7 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
           // Listen to location updates
           _locationSubscription = locationStream.listen(
             (location) {
-              AppLogger.d('Received shipper location: ${location.shipperId}');
+              // AppLogger.d('Received shipper location: ${location.shipperId}');
               state = state.copyWith(
                 currentLocation: location,
                 clearError: true,
@@ -127,7 +127,7 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
       
       result.fold(
         (failure) {
-          AppLogger.e('Failed to stop tracking via UseCase: ${failure.message}');
+          // AppLogger.e('Failed to stop tracking via UseCase: ${failure.message}');
           state = state.copyWith(
             error: failure.message,
           );
@@ -140,7 +140,7 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
             clearLocation: true,
             clearError: true,
           );
-          AppLogger.i('Stopped shipper location tracking successfully');
+          // AppLogger.i('Stopped shipper location tracking successfully');
         },
       );
       
@@ -184,7 +184,7 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
   @override
   void dispose() {
     AppLogger.i('Disposing shipper location notifier');
-    
+    stopTracking();
     // Cancel subscriptions
     _locationSubscription?.cancel();
     

@@ -29,7 +29,7 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
   @override
   Future<Either<Failure, void>> startTrackingShipper(int shipperId) async {
     try {
-      AppLogger.d('Starting shipper location tracking: $shipperId');
+      // AppLogger.d('Starting shipper location tracking: $shipperId');
       
       // Stop previous tracking if any
       await stopTrackingShipper();
@@ -61,7 +61,7 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
   @override
   Future<Either<Failure, void>> stopTrackingShipper() async {
     try {
-      AppLogger.d('Stopping shipper location tracking');
+      // AppLogger.d('Stopping shipper location tracking');
       
       if (_currentShipperId != null) {
         _socketService.unsubscribeFromShipper(_currentShipperId!);
@@ -70,7 +70,7 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
       
       // No subscription to cancel - Service handles stream lifecycle
       
-      AppLogger.i('Stopped shipper location tracking');
+      // AppLogger.i('Stopped shipper location tracking');
       return right(null);
     } catch (e) {
       AppLogger.e('Error stopping tracking', e);

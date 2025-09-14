@@ -7,7 +7,7 @@ import 'delivery_tracking_state.dart';
 /// Notifier để quản lý delivery tracking
 class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
   final ConnectDeliveryTrackingUseCase _connectUseCase;
-  final StartDeliveryTrackingUseCase _startTrackingUseCase;
+  // final StartDeliveryTrackingUseCase _startTrackingUseCase;
   final StopDeliveryTrackingUseCase _stopTrackingUseCase;
   final RefreshDeliveryTrackingUseCase _refreshUseCase;
   
@@ -19,7 +19,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
     required StopDeliveryTrackingUseCase stopTrackingUseCase,
     required RefreshDeliveryTrackingUseCase refreshUseCase,
   }) : _connectUseCase = connectUseCase,
-       _startTrackingUseCase = startTrackingUseCase,
+      //  _startTrackingUseCase = startTrackingUseCase,
        _stopTrackingUseCase = stopTrackingUseCase,
        _refreshUseCase = refreshUseCase,
        super(const DeliveryTrackingState());
@@ -59,49 +59,49 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
   }
 
   /// Bắt đầu theo dõi order thông qua UseCase
-  Future<void> startTrackingOrder(int orderId) async {
-    try {
-      AppLogger.i('Starting tracking for order $orderId');
+  // Future<void> startTrackingOrder(int orderId) async {
+  //   try {
+  //     AppLogger.i('Starting tracking for order $orderId');
       
-      if (!state.isConnected) {
-        await connect();
-      }
+  //     if (!state.isConnected) {
+  //       await connect();
+  //     }
 
-      if (!state.isConnected) {
-        throw Exception('Chưa kết nối được dịch vụ theo dõi');
-      }
+  //     if (!state.isConnected) {
+  //       throw Exception('Chưa kết nối được dịch vụ theo dõi');
+  //     }
 
-      state = state.copyWith(
-        isTracking: true,
-        clearError: true,
-        clearTracking: true,
-        clearShipperLocation: true,
-      );
+  //     state = state.copyWith(
+  //       isTracking: true,
+  //       clearError: true,
+  //       clearTracking: true,
+  //       clearShipperLocation: true,
+  //     );
 
-      final result = await _startTrackingUseCase(
-        StartDeliveryTrackingParams(orderId: orderId),
-      );
+  //     final result = await _startTrackingUseCase(
+  //       StartDeliveryTrackingParams(orderId: orderId),
+  //     );
       
-      result.fold(
-        (failure) {
-          state = state.copyWith(
-            isTracking: false,
-            error: failure.message,
-          );
-        },
-        (_) {
-          AppLogger.i('Successfully started tracking order $orderId');
-        },
-      );
+  //     result.fold(
+  //       (failure) {
+  //         state = state.copyWith(
+  //           isTracking: false,
+  //           error: failure.message,
+  //         );
+  //       },
+  //       (_) {
+  //         AppLogger.i('Successfully started tracking order $orderId');
+  //       },
+  //     );
       
-    } catch (e) {
-      AppLogger.e('Failed to start tracking order $orderId', e);
-      state = state.copyWith(
-        isTracking: false,
-        error: 'Không thể bắt đầu theo dõi order: ${e.toString()}',
-      );
-    }
-  }
+  //   } catch (e) {
+  //     AppLogger.e('Failed to start tracking order $orderId', e);
+  //     state = state.copyWith(
+  //       isTracking: false,
+  //       error: 'Không thể bắt đầu theo dõi order: ${e.toString()}',
+  //     );
+  //   }
+  // }
 
   /// Dừng theo dõi order thông qua UseCase
   Future<void> stopTrackingOrder() async {
@@ -177,7 +177,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
   @override
   void dispose() {
     AppLogger.i('Disposing delivery tracking notifier');
-    
+    stopTrackingOrder();
     // Clean Architecture: Notifier only calls UseCases
     // Connection management is handled by UseCase layer
     

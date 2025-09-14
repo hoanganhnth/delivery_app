@@ -1,3 +1,4 @@
+import 'package:delivery_app/features/orders/presentation/providers/shipper_location_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/providers.dart';
@@ -30,7 +31,14 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
     // Load order detail when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(orderDetailProvider.notifier).getOrderById(widget.orderId);
+      ref.read(shipperLocationNotifierProvider.notifier).startTrackingShipper(1);
     });
+  }
+
+  @override
+  void dispose() {
+    ref.read(shipperLocationNotifierProvider.notifier).stopTracking();
+    super.dispose();
   }
 
   @override

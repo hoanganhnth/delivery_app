@@ -110,16 +110,16 @@ class TrackDeliveryParams {
 // ======================================================================
 
 /// UseCase để bắt đầu theo dõi vị trí shipper
-class StartShipperTrackingUseCase extends UseCase<void, StartShipperTrackingParams> {
-  final ShipperLocationRepository repository;
+// class StartShipperTrackingUseCase extends UseCase<void, StartShipperTrackingParams> {
+//   final ShipperLocationRepository repository;
 
-  StartShipperTrackingUseCase(this.repository);
+//   StartShipperTrackingUseCase(this.repository);
 
-  @override
-  Future<Either<Failure, void>> call(StartShipperTrackingParams params) async {
-    return await repository.startTrackingShipper(params.shipperId);
-  }
-}
+//   @override
+//   Future<Either<Failure, void>> call(StartShipperTrackingParams params) async {
+//     return await repository.startTrackingShipper(params.shipperId);
+//   }
+// }
 
 /// UseCase để dừng theo dõi vị trí shipper
 class StopShipperTrackingUseCase extends UseCase<void, NoParams> {
