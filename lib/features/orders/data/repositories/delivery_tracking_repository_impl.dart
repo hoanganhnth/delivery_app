@@ -6,21 +6,22 @@ import '../../../../core/network/socket/delivery_tracking_stomp_service.dart';
 import '../../domain/entities/delivery_tracking_entity.dart';
 import '../../domain/repositories/delivery_tracking_repository.dart';
 
-/// Simple repository implementation trực tiếp sử dụng STOMP Service
-/// Loại bỏ Datasource và Service layer để đơn giản hóa
+/// Repository implementation chỉ transform data từ Service
+/// Service đã quản lý StreamController, Repository chỉ transform raw → Entity
 class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
   final DeliveryTrackingStompService _stompService;
-  
-  final StreamController<DeliveryTrackingEntity> _deliveryController =
-      StreamController<DeliveryTrackingEntity>.broadcast();
-  
-  StreamSubscription<Map<String, dynamic>>? _dataSubscription;
   int? _currentOrderId;
   
   DeliveryTrackingRepositoryImpl(this._stompService);
   
   @override
-  Stream<DeliveryTrackingEntity> get deliveryStream => _deliveryController.stream;
+  Stream<DeliveryTrackingEntity> get deliveryStream {
+    // Transform stream từ Service thành Entity stream
+    return _stompService.messageStream
+        .where((rawData) => _isRelevantData(rawData))
+        .map((rawData) => _parseDeliveryEntity(rawData));
+        // .where((entity) => _isValidDeliveryEntity(entity));
+  }
   
   @override
   Stream<bool> get connectionStream => _stompService.connectionStream ?? const Stream.empty();
@@ -83,14 +84,7 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
         await _stompService.connect(); // Không cần Future.delayed nữa!
       }
       
-      // Subscribe to raw data stream and process
-      _dataSubscription = _stompService.messageStream.listen(
-        (rawData) => _processDeliveryData(rawData),
-        onError: (error) {
-          AppLogger.e('Error in delivery stream', error);
-          _deliveryController.addError(error);
-        },
-      );
+      // Service đã quản lý stream, Repository chỉ cần transform
       
       // Start tracking - chỉ khi đã connected
       if (_stompService.isConnected) {
@@ -119,8 +113,7 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
         _currentOrderId = null;
       }
       
-      await _dataSubscription?.cancel();
-      _dataSubscription = null;
+      // No subscription to cancel - Service handles stream lifecycle
       
       AppLogger.i('Stopped delivery tracking');
       return right(null);
@@ -130,33 +123,18 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
     }
   }
   
-  /// Xử lý raw data từ STOMP và transform thành entity
-  void _processDeliveryData(Map<String, dynamic> rawData) {
-    try {
-      final topic = rawData['_topic'] as String?;
-      AppLogger.d('Processing delivery data from topic: $topic');
-      
-      // Remove internal topic field
-      final data = Map<String, dynamic>.from(rawData);
-      data.remove('_topic');
-      
-      final entity = _parseDeliveryEntity(data);
-      
-      // Validate entity trước khi emit
-      if (_isValidDeliveryEntity(entity)) {
-        _deliveryController.add(entity);
-        AppLogger.d('Successfully processed delivery update: ${entity.status}');
-      } else {
-        AppLogger.w('Invalid delivery data received');
-      }
-    } catch (e) {
-      AppLogger.e('Error processing delivery data', e);
-      // Don't stop stream, just log error
-    }
+  /// Check if raw data is relevant to current tracking
+  bool _isRelevantData(Map<String, dynamic> rawData) {
+    final orderId = rawData['orderId'];
+    return orderId != null && orderId == _currentOrderId;
   }
   
   /// Parse raw data thành DeliveryTrackingEntity
-  DeliveryTrackingEntity _parseDeliveryEntity(Map<String, dynamic> data) {
+  DeliveryTrackingEntity _parseDeliveryEntity(Map<String, dynamic> rawData) {
+    // Remove internal topic field if exists
+    final data = Map<String, dynamic>.from(rawData);
+    data.remove('_topic');
+    
     return DeliveryTrackingEntity(
       id: data['id'] ?? 0,
       orderId: data['orderId'] ?? _currentOrderId ?? 0,
@@ -187,18 +165,18 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
   }
   
   /// Validate entity data
-  bool _isValidDeliveryEntity(DeliveryTrackingEntity entity) {
-    return entity.orderId > 0 &&
-           entity.status.isNotEmpty &&
-           entity.pickupLat.abs() <= 90 &&
-           entity.pickupLng.abs() <= 180 &&
-           entity.deliveryLat.abs() <= 90 &&
-           entity.deliveryLng.abs() <= 180;
-  }
+  // bool _isValidDeliveryEntity(DeliveryTrackingEntity entity) {
+  //   return entity.orderId > 0 &&
+  //          entity.status.isNotEmpty &&
+  //          entity.pickupLat.abs() <= 90 &&
+  //          entity.pickupLng.abs() <= 180 &&
+  //          entity.deliveryLat.abs() <= 90 &&
+  //          entity.deliveryLng.abs() <= 180;
+  // }
   
-  /// Dispose resources
+  /// No dispose needed - Service handles stream cleanup
   void dispose() {
     stopTracking();
-    _deliveryController.close();
+    // Service tự quản lý StreamController cleanup
   }
 }

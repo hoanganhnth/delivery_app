@@ -6,21 +6,22 @@ import '../../../../core/network/socket/shipper_location_socket_service.dart';
 import '../../domain/entities/shipper_location_entity.dart';
 import '../../domain/repositories/shipper_location_repository.dart';
 
-/// Simple repository implementation trực tiếp sử dụng Socket Service
-/// Loại bỏ Datasource và Service layer để đơn giản hóa
+/// Repository implementation chỉ transform data từ Service
+/// Service đã quản lý StreamController, Repository chỉ transform raw → Entity
 class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
   final ShipperLocationSocketService _socketService;
-  
-  final StreamController<ShipperLocationEntity> _locationController =
-      StreamController<ShipperLocationEntity>.broadcast();
-  
-  StreamSubscription<Map<String, dynamic>>? _dataSubscription;
   int? _currentShipperId;
   
   ShipperLocationRepositoryImpl(this._socketService);
   
   @override
-  Stream<ShipperLocationEntity> get locationStream => _locationController.stream;
+  Stream<ShipperLocationEntity> get locationStream {
+    // Transform stream từ Service thành Entity stream
+    return _socketService.messageStream
+        .where((rawData) => _isRelevantLocation(rawData))
+        .map((rawData) => _parseLocationEntity(rawData))
+        .where((entity) => _isValidLocationEntity(entity));
+  }
   
   @override
   bool get isTracking => _currentShipperId != null && _socketService.isConnected;
@@ -38,14 +39,7 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
         await _socketService.connect(); // Không cần Future.delayed nữa!
       }
       
-      // Subscribe to raw data stream and process
-      _dataSubscription = _socketService.messageStream.listen(
-        (rawData) => _processLocationData(rawData),
-        onError: (error) {
-          AppLogger.e('Error in location stream', error);
-          _locationController.addError(error);
-        },
-      );
+      // Service đã quản lý stream, Repository chỉ cần transform
       
       // Start tracking - chỉ khi đã connected
       if (_socketService.isConnected) {
@@ -74,8 +68,7 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
         _currentShipperId = null;
       }
       
-      await _dataSubscription?.cancel();
-      _dataSubscription = null;
+      // No subscription to cancel - Service handles stream lifecycle
       
       AppLogger.i('Stopped shipper location tracking');
       return right(null);
@@ -85,45 +78,28 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
     }
   }
   
-  /// Xử lý raw data từ WebSocket và transform thành entity
-  void _processLocationData(Map<String, dynamic> rawData) {
-    try {
-      AppLogger.d('Processing shipper location data');
-      
-      final messageType = rawData['type'] as String?;
-      
-      if (messageType == 'location_update') {
-        final locationData = rawData['data'] as Map<String, dynamic>?;
-        if (locationData != null) {
-          final entity = _parseLocationEntity(locationData);
-          
-          // Validate entity trước khi emit
-          if (_isValidLocationEntity(entity)) {
-            _locationController.add(entity);
-            AppLogger.d('Successfully processed location update for shipper: ${entity.shipperId}');
-          } else {
-            AppLogger.w('Invalid location data received');
-          }
-        }
-      } else if (messageType == 'error') {
-        final errorMessage = rawData['message'] as String? ?? 'Unknown WebSocket error';
-        AppLogger.e('WebSocket location error: $errorMessage');
-        _locationController.addError(Exception(errorMessage));
-      }
-    } catch (e) {
-      AppLogger.e('Error processing location data', e);
-      // Don't stop stream, just log error
+  /// Check if location data is relevant to current tracking
+  bool _isRelevantLocation(Map<String, dynamic> rawData) {
+    final messageType = rawData['type'] as String?;
+    if (messageType == 'location_update') {
+      final locationData = rawData['data'] as Map<String, dynamic>?;
+      final shipperId = locationData?['shipperId'];
+      return shipperId != null && shipperId == _currentShipperId;
     }
+    return false;
   }
   
   /// Parse raw data thành ShipperLocationEntity
-  ShipperLocationEntity _parseLocationEntity(Map<String, dynamic> data) {
+  ShipperLocationEntity _parseLocationEntity(Map<String, dynamic> rawData) {
+    // Extract location data from WebSocket message
+    final locationData = rawData['data'] as Map<String, dynamic>? ?? rawData;
+    
     return ShipperLocationEntity(
-      shipperId: data['shipperId'] ?? _currentShipperId ?? 0,
-      latitude: (data['latitude'] ?? 0.0).toDouble(),
-      longitude: (data['longitude'] ?? 0.0).toDouble(),
-      updatedAt: data['updatedAt'] != null
-          ? DateTime.parse(data['updatedAt'])
+      shipperId: locationData['shipperId'] ?? _currentShipperId ?? 0,
+      latitude: (locationData['latitude'] ?? 0.0).toDouble(),
+      longitude: (locationData['longitude'] ?? 0.0).toDouble(),
+      updatedAt: locationData['updatedAt'] != null
+          ? DateTime.parse(locationData['updatedAt'])
           : DateTime.now(),
     );
   }
@@ -135,9 +111,9 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
            entity.longitude.abs() <= 180;
   }
   
-  /// Dispose resources
+  /// No dispose needed - Service handles stream cleanup
   void dispose() {
     stopTrackingShipper();
-    _locationController.close();
+    // Service tự quản lý StreamController cleanup
   }
 }

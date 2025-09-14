@@ -170,6 +170,19 @@ class StompManager {
   /// Stream để lắng nghe message từ 1 STOMP connection
   Stream<Map<String, dynamic>>? listen(String key) => _controllers[key]?.stream;
 
+  /// Stream để lắng nghe message từ topic cụ thể - filter ngay từ source
+  Stream<Map<String, dynamic>>? listenToTopic(String key, String topic) {
+    return _controllers[key]?.stream
+        .where((message) => message['topic'] == topic);
+  }
+
+  /// Stream để lắng nghe nhiều topics cùng lúc
+  Stream<Map<String, dynamic>>? listenToTopics(String key, List<String> topics) {
+    final topicSet = topics.toSet();
+    return _controllers[key]?.stream
+        .where((message) => topicSet.contains(message['topic']));
+  }
+
   /// Gửi message đến topic
   void send(
     String key,

@@ -4,20 +4,21 @@ import '../../logger/app_logger.dart';
 import 'websocket_service.dart';
 
 /// Service chuyên xử lý WebSocket cho shipper location tracking
+/// Không quản lý StreamController - chỉ transform/filter stream từ SocketManager
 class ShipperLocationSocketService {
   final SocketManager _socketManager;
   static const String _connectionKey = 'shipper_location';
   static const String _baseUrl = 'ws://localhost:8080/ws/shipper-location';
   
-  final StreamController<Map<String, dynamic>> _messageController =
-      StreamController<Map<String, dynamic>>.broadcast();
-  
-  StreamSubscription<String>? _websocketSubscription;
-  
   ShipperLocationSocketService(this._socketManager);
   
-  /// Stream để lắng nghe raw messages từ WebSocket
-  Stream<Map<String, dynamic>> get messageStream => _messageController.stream;
+  /// Stream để lắng nghe raw messages từ WebSocket - transform từ SocketManager
+  Stream<Map<String, dynamic>> get messageStream {
+    return _socketManager.listen(_connectionKey)
+        ?.map((message) => _transformMessage(message))
+        .where((data) => data.isNotEmpty) ??
+        const Stream.empty();
+  }
   
   /// Stream để lắng nghe connection status changes từ SocketManager
   Stream<bool>? get connectionStream => _socketManager.connectionStream(_connectionKey);
@@ -26,18 +27,13 @@ class ShipperLocationSocketService {
   bool get isConnected => _socketManager.isConnected(_connectionKey);
   
   /// Kết nối đến WebSocket server sử dụng SocketManager
+  /// SocketManager sẽ quản lý StreamController và lifecycle
   Future<void> connect() async {
     try {
       AppLogger.d('Connecting to shipper location WebSocket via SocketManager');
       
-      // Use SocketManager's connect method - nó đã có async support rồi!
+      // SocketManager quản lý toàn bộ connection và stream
       await _socketManager.connect(_connectionKey, _baseUrl);
-      
-      // Subscribe to messages từ SocketManager
-      _websocketSubscription = _socketManager.listen(_connectionKey)?.listen(
-        (message) => _handleRawMessage(message),
-        onError: (error) => AppLogger.e('WebSocket message error', error),
-      );
       
       AppLogger.i('Successfully connected to shipper location WebSocket');
     } catch (e) {
@@ -46,14 +42,12 @@ class ShipperLocationSocketService {
     }
   }
   
-  /// Ngắt kết nối
+  /// Ngắt kết nối - SocketManager sẽ quản lý cleanup
   Future<void> disconnect() async {
     try {
       AppLogger.d('Disconnecting shipper location WebSocket');
       
-      await _websocketSubscription?.cancel();
-      _websocketSubscription = null;
-      
+      // SocketManager tự cleanup StreamController và connections
       _socketManager.disconnect(_connectionKey);
       
       AppLogger.i('Disconnected from shipper location WebSocket');
@@ -95,23 +89,22 @@ class ShipperLocationSocketService {
     AppLogger.d('Sent unsubscribe message for shipper: $shipperId');
   }
   
-  /// Xử lý raw WebSocket messages
-  void _handleRawMessage(String message) {
+  /// Transform raw WebSocket message to JSON data
+  Map<String, dynamic> _transformMessage(String message) {
     try {
-      AppLogger.d('Received WebSocket message: $message');
+      AppLogger.d('Transforming WebSocket message: $message');
       
       final data = jsonDecode(message) as Map<String, dynamic>;
-      
-      // Chỉ emit raw data, không parse thành entity
-      _messageController.add(data);
+      return data;
     } catch (e) {
       AppLogger.e('Error parsing WebSocket message', e);
+      return <String, dynamic>{}; // Return empty map on error
     }
   }
   
-  /// Dispose resources
+  /// No dispose needed - SocketManager handles cleanup
   void dispose() {
-    _websocketSubscription?.cancel();
-    _messageController.close();
+    // SocketManager tự quản lý cleanup
+    AppLogger.d('ShipperLocationSocketService dispose - cleanup handled by SocketManager');
   }
 }
