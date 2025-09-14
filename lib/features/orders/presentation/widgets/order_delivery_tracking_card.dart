@@ -1,9 +1,10 @@
+import 'package:delivery_app/features/orders/presentation/widgets/delivery_tracking_map_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/order_entity.dart';
+import '../../domain/entities/delivery_tracking_entity.dart';
+import '../../domain/entities/shipper_location_entity.dart';
 import '../providers/providers.dart';
-// TODO: Add back when DTOs are ready
-// import 'delivery_tracking_map_widget.dart';
 
 /// Widget hiển thị delivery tracking trong order detail
 class OrderDeliveryTrackingCard extends ConsumerStatefulWidget {
@@ -97,20 +98,14 @@ class _OrderDeliveryTrackingCardState extends ConsumerState<OrderDeliveryTrackin
         
         const SizedBox(height: 16),
         
-        // TODO: Add back when DTOs are ready
-        // Map widget when tracking is available
-        // if (currentTracking != null)
-        //   DeliveryTrackingMapWidget(
-        //     deliveryTracking: currentTracking,
-        //     shipper: shipperInfo,
-        //     shipperLocation: trackingState.shipperLocation, // Truyền vị trí shipper riêng biệt
-        //   )
-        if (trackingState.isConnected)
-          _buildLoadingCard() // Temporary placeholder
-        else if (trackingState.isLoading)
+        // Map widget with fake data for testing
+        _buildFakeMapWidget(),
+        
+        if (trackingState.isLoading)
           _buildLoadingCard()
-        else
+        else if (!trackingState.isConnected)
           _buildNoDataCard(),
+          
         
         const SizedBox(height: 16),
       ],
@@ -344,6 +339,59 @@ class _OrderDeliveryTrackingCardState extends ConsumerState<OrderDeliveryTrackin
           child: Text('No tracking data available'),
         ),
       ),
+    );
+  }
+
+  /// Tạm thời fake map widget để test UI
+  Widget _buildFakeMapWidget() {
+    // Fake delivery tracking data
+    final fakeDeliveryTracking = DeliveryTrackingEntity(
+      id: 1,
+      orderId: widget.order.id ?? 123,
+      shipperId: 456,
+      status: 'on_the_way',
+      pickupAddress: 'Nhà hàng ABC, 123 Nguyễn Văn Cừ, Quận 5',
+      pickupLat: 10.7626,
+      pickupLng: 106.6818,
+      deliveryAddress: 'Tòa nhà XYZ, 456 Lê Văn Sỹ, Quận 3',
+      deliveryLat: 10.7869,
+      deliveryLng: 106.6964,
+      shipperCurrentLat: 10.7750,
+      shipperCurrentLng: 106.6890,
+      assignedAt: DateTime.now().subtract(const Duration(minutes: 15)),
+      pickedUpAt: DateTime.now().subtract(const Duration(minutes: 10)),
+      estimatedDeliveryTime: DateTime.now().add(const Duration(minutes: 8)),
+      notes: 'Shipper đang trên đường giao hàng',
+    );
+
+    // Fake shipper info
+    final fakeShipper = ShipperEntity(
+      id: 456,
+      name: 'Nguyễn Văn A',
+      phone: '0901234567',
+      vehicleType: 'motorbike',
+      vehicleNumber: '29A-12345',
+      rating: 4.8,
+      avatar: null,
+    );
+
+    // Fake shipper location
+    final fakeShipperLocation = ShipperLocationEntity(
+      shipperId: 456,
+      latitude: 10.7750,
+      longitude: 106.6890,
+      accuracy: 5.0,
+      speed: 25.0,
+      heading: 45.0,
+      isOnline: true,
+      lastPing: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+
+    return DeliveryTrackingMapWidget(
+      deliveryTracking: fakeDeliveryTracking,
+      shipper: fakeShipper,
+      shipperLocation: fakeShipperLocation,
     );
   }
 }

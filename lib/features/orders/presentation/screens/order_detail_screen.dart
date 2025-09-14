@@ -45,7 +45,6 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
   Widget build(BuildContext context) {
     final orderDetailState = ref.watch(orderDetailProvider);
     final theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(

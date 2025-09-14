@@ -32,6 +32,7 @@ Future<void> main() async {
       
       // ✅ Đăng ký Hive adapters
       HiveAdapterRegistry.registerAllAdapters();
+      AppSetup.initializeMapbox();
       
       // Bắt lỗi Flutter framework
       FlutterError.onError = (FlutterErrorDetails details) {

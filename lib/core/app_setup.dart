@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import '../features/auth/presentation/providers/auth_network_providers.dart';
 import '../features/profile/data/models/user_model.dart';
 
@@ -16,6 +17,7 @@ class AppSetup {
       Hive.registerAdapter(UserModelAdapter());
     }
   }
+
   /// Get all provider overrides needed for the app
   /// This includes:
   /// - Authenticated Dio provider override
@@ -27,20 +29,21 @@ class AppSetup {
     ];
   }
 
+  // init mapbox
+  static Future<void> initializeMapbox() async {
+    MapboxOptions.setAccessToken(
+      "pk.eyJ1IjoiaG9hbmdhbmhudGgyazMiLCJhIjoiY21kZTdwYWhzMDZseDJvcHZtZXd0NTVmciJ9.y0pYbmhi7oS7_eZ57_uEgA",
+    );
+  }
+
   /// Setup the main app with ProviderScope and overrides
   static Widget setupApp({
     required Widget child,
     List<Override>? additionalOverrides,
   }) {
-    final overrides = [
-      ...getProviderOverrides(),
-      ...?additionalOverrides,
-    ];
+    final overrides = [...getProviderOverrides(), ...?additionalOverrides];
 
-    return ProviderScope(
-      overrides: overrides,
-      child: child,
-    );
+    return ProviderScope(overrides: overrides, child: child);
   }
 }
 
