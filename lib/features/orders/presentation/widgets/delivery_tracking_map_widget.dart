@@ -461,15 +461,15 @@ class _DeliveryTrackingMapWidgetState extends State<DeliveryTrackingMapWidget> {
         await _pointAnnotationManager!.delete(_shipperMarker!);
       }
 
-      // Add new shipper marker with updated position
+      // Add new shipper marker with updated position (container đỏ to hơn)
       _shipperMarker = await _pointAnnotationManager!.create(
         PointAnnotationOptions(
           geometry: Point(coordinates: Position(newLng, newLat)),
-          textField: "🛵 Shipper",
-          textSize: 12.0,
-          textColor: Colors.orange.toARGB32(),
+          textField: "�", // Container đỏ lớn
+          textSize: 24.0, // Tăng kích thước gấp đôi
+          textColor: Colors.red.toARGB32(), // Màu đỏ
           textHaloColor: Colors.white.toARGB32(),
-          textHaloWidth: 2.0,
+          textHaloWidth: 3.0, // Tăng viền để nổi bật hơn
         ),
       );
 

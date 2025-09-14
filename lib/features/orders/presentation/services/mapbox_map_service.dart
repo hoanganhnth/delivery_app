@@ -87,17 +87,17 @@ class MapboxMapService {
         _shipperMarker = null;
       }
 
-      // Tạo shipper marker mới với vị trí cập nhật
+      // Tạo shipper marker mới với container đỏ to hơn
       _shipperMarker = await _pointAnnotationManager!.create(
         PointAnnotationOptions(
           geometry: Point(
             coordinates: Position(location.longitude, location.latitude),
           ),
-          textField: "🚴‍♂️",
-          textSize: 12.0,
-          textColor: Colors.orange.toARGB32(),
+          textField: "�", // Container đỏ lớn
+          textSize: 24.0, // Tăng kích thước gấp đôi
+          textColor: Colors.red.toARGB32(), // Màu đỏ
           textHaloColor: Colors.white.toARGB32(),
-          textHaloWidth: 2.0,
+          textHaloWidth: 3.0, // Tăng viền để nổi bật hơn
         ),
       );
     } catch (e) {

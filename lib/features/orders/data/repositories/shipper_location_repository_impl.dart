@@ -82,8 +82,8 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
   bool _isRelevantLocation(Map<String, dynamic> rawData) {
     final messageType = rawData['type'] as String?;
     if (messageType == 'location_update') {
-      final locationData = rawData['data'] as Map<String, dynamic>?;
-      final shipperId = locationData?['shipperId'];
+      // final locationData = rawData['data'] as Map<String, dynamic>?;
+      final shipperId = rawData['shipperId'];
       return shipperId != null && shipperId == _currentShipperId;
     }
     return false;
