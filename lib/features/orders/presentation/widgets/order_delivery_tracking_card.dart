@@ -1,8 +1,9 @@
 import 'package:delivery_app/features/orders/presentation/widgets/delivery_tracking_map_widget.dart';
+import 'package:delivery_app/features/orders/presentation/widgets/optimized_delivery_tracking_map_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/order_entity.dart';
-import '../../domain/entities/delivery_tracking_entity.dart';
+import '../../domain/entities/delivery_tracking_entity.dart' hide ShipperEntity;
 import '../../domain/entities/shipper_location_entity.dart';
 import '../providers/providers.dart';
 
@@ -371,8 +372,8 @@ class _OrderDeliveryTrackingCardState extends ConsumerState<OrderDeliveryTrackin
       phone: '0901234567',
       vehicleType: 'motorbike',
       vehicleNumber: '29A-12345',
-      rating: 4.8,
-      avatar: null,
+      // rating: 4.8,
+      // avatar: null,
     );
 
     // Fake shipper location
@@ -388,7 +389,7 @@ class _OrderDeliveryTrackingCardState extends ConsumerState<OrderDeliveryTrackin
       updatedAt: DateTime.now(),
     );
 
-    return DeliveryTrackingMapWidget(
+    return OptimizedDeliveryTrackingMapWidget(
       deliveryTracking: fakeDeliveryTracking,
       shipper: fakeShipper,
       shipperLocation: fakeShipperLocation,
