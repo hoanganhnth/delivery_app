@@ -1,16 +1,10 @@
 // import 'package:delivery_app/features/orders/presentation/widgets/delivery_tracking_map_widget.dart'; // Unused - sử dụng optimized widget
 import 'package:delivery_app/features/orders/presentation/providers/shipper_location_providers.dart';
-import 'package:delivery_app/features/orders/presentation/widgets/optimized_delivery_tracking_map_widget.dart'
-    show OptimizedDeliveryTrackingMapWidget, ShipperEntity;
+import 'package:delivery_app/features/orders/presentation/widgets/optimized_delivery_tracking_map_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/order_entity.dart';
-// Cần import lại khi sử dụng thực tế
-// import '../../domain/entities/delivery_tracking_entity.dart' hide ShipperEntity;
-// import '../../domain/entities/shipper_location_entity.dart';
-import '../providers/providers.dart';
-
-/// Widget hiển thị delivery tracking trong order detail
+import '../providers/providers.dart';/// Widget hiển thị delivery tracking trong order detail
 class OrderDeliveryTrackingCard extends ConsumerStatefulWidget {
   final OrderEntity order;
 
@@ -195,7 +189,7 @@ class _OrderDeliveryTrackingCardState
 
   /// Build map widget với dữ liệu thật từ deliveryTrackingNotifierProvider
   Widget _buildRealMapWidget() {
-    final trackingState = ref.watch(deliveryTrackingNotifierProvider);
+    final trackingState = ref.read(deliveryTrackingNotifierProvider);
 
     // Kiểm tra có dữ liệu tracking không
     if (trackingState.currentTracking == null) {
@@ -204,26 +198,9 @@ class _OrderDeliveryTrackingCardState
 
     final currentTracking = trackingState.currentTracking!;
 
-    // Lấy shipper location từ shipperLocationNotifierProvider nếu có
-    final shipperLocationState = ref.watch(shipperLocationNotifierProvider);
-
-    // Convert shipper từ state sang OptimizedWidget ShipperEntity nếu có
-    ShipperEntity? shipperForWidget;
-    if (trackingState.shipper != null) {
-      final stateShipper = trackingState.shipper!;
-      shipperForWidget = ShipperEntity(
-        id: stateShipper.id,
-        name: stateShipper.name,
-        phone: stateShipper.phone,
-        vehicleType: stateShipper.vehicleType,
-        vehicleNumber: stateShipper.vehicleNumber,
-      );
-    }
-
     return OptimizedDeliveryTrackingMapWidget(
       deliveryTracking: currentTracking,
-      shipper: shipperForWidget,
-      shipperLocation: shipperLocationState.currentLocation,
+      shipper: trackingState.shipper, // Sử dụng trực tiếp shipper từ state (cùng entity type)
       useFakeMovement: false, // Sử dụng real data từ providers
     );
   }

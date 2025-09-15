@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShipperDto {
 
- int get id; String get name; String get phone;@JsonKey(name: 'vehicle_type') String get vehicleType;@JsonKey(name: 'vehicle_number') String get vehicleNumber; String? get avatar; double? get rating;@JsonKey(name: 'total_trips') int? get totalTrips;@JsonKey(name: 'is_online') bool? get isOnline;@JsonKey(name: 'last_seen_at') String? get lastSeenAt;@JsonKey(name: 'created_at') String? get createdAt;@JsonKey(name: 'updated_at') String? get updatedAt;
+ int get id; String get name; String get phone; String get vehicleType; String get vehicleNumber; String? get avatar; double? get rating; int? get totalTrips; bool? get isOnline; String? get lastSeenAt; String? get createdAt; String? get updatedAt;
 /// Create a copy of ShipperDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ShipperDtoCopyWith<$Res>  {
   factory $ShipperDtoCopyWith(ShipperDto value, $Res Function(ShipperDto) _then) = _$ShipperDtoCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, String phone,@JsonKey(name: 'vehicle_type') String vehicleType,@JsonKey(name: 'vehicle_number') String vehicleNumber, String? avatar, double? rating,@JsonKey(name: 'total_trips') int? totalTrips,@JsonKey(name: 'is_online') bool? isOnline,@JsonKey(name: 'last_seen_at') String? lastSeenAt,@JsonKey(name: 'created_at') String? createdAt,@JsonKey(name: 'updated_at') String? updatedAt
+ int id, String name, String phone, String vehicleType, String vehicleNumber, String? avatar, double? rating, int? totalTrips, bool? isOnline, String? lastSeenAt, String? createdAt, String? updatedAt
 });
 
 
@@ -164,7 +164,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String phone, @JsonKey(name: 'vehicle_type')  String vehicleType, @JsonKey(name: 'vehicle_number')  String vehicleNumber,  String? avatar,  double? rating, @JsonKey(name: 'total_trips')  int? totalTrips, @JsonKey(name: 'is_online')  bool? isOnline, @JsonKey(name: 'last_seen_at')  String? lastSeenAt, @JsonKey(name: 'created_at')  String? createdAt, @JsonKey(name: 'updated_at')  String? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String phone,  String vehicleType,  String vehicleNumber,  String? avatar,  double? rating,  int? totalTrips,  bool? isOnline,  String? lastSeenAt,  String? createdAt,  String? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShipperDto() when $default != null:
 return $default(_that.id,_that.name,_that.phone,_that.vehicleType,_that.vehicleNumber,_that.avatar,_that.rating,_that.totalTrips,_that.isOnline,_that.lastSeenAt,_that.createdAt,_that.updatedAt);case _:
@@ -185,7 +185,7 @@ return $default(_that.id,_that.name,_that.phone,_that.vehicleType,_that.vehicleN
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String phone, @JsonKey(name: 'vehicle_type')  String vehicleType, @JsonKey(name: 'vehicle_number')  String vehicleNumber,  String? avatar,  double? rating, @JsonKey(name: 'total_trips')  int? totalTrips, @JsonKey(name: 'is_online')  bool? isOnline, @JsonKey(name: 'last_seen_at')  String? lastSeenAt, @JsonKey(name: 'created_at')  String? createdAt, @JsonKey(name: 'updated_at')  String? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String phone,  String vehicleType,  String vehicleNumber,  String? avatar,  double? rating,  int? totalTrips,  bool? isOnline,  String? lastSeenAt,  String? createdAt,  String? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _ShipperDto():
 return $default(_that.id,_that.name,_that.phone,_that.vehicleType,_that.vehicleNumber,_that.avatar,_that.rating,_that.totalTrips,_that.isOnline,_that.lastSeenAt,_that.createdAt,_that.updatedAt);case _:
@@ -205,7 +205,7 @@ return $default(_that.id,_that.name,_that.phone,_that.vehicleType,_that.vehicleN
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String phone, @JsonKey(name: 'vehicle_type')  String vehicleType, @JsonKey(name: 'vehicle_number')  String vehicleNumber,  String? avatar,  double? rating, @JsonKey(name: 'total_trips')  int? totalTrips, @JsonKey(name: 'is_online')  bool? isOnline, @JsonKey(name: 'last_seen_at')  String? lastSeenAt, @JsonKey(name: 'created_at')  String? createdAt, @JsonKey(name: 'updated_at')  String? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String phone,  String vehicleType,  String vehicleNumber,  String? avatar,  double? rating,  int? totalTrips,  bool? isOnline,  String? lastSeenAt,  String? createdAt,  String? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ShipperDto() when $default != null:
 return $default(_that.id,_that.name,_that.phone,_that.vehicleType,_that.vehicleNumber,_that.avatar,_that.rating,_that.totalTrips,_that.isOnline,_that.lastSeenAt,_that.createdAt,_that.updatedAt);case _:
@@ -220,21 +220,21 @@ return $default(_that.id,_that.name,_that.phone,_that.vehicleType,_that.vehicleN
 @JsonSerializable()
 
 class _ShipperDto implements ShipperDto {
-  const _ShipperDto({required this.id, required this.name, required this.phone, @JsonKey(name: 'vehicle_type') required this.vehicleType, @JsonKey(name: 'vehicle_number') required this.vehicleNumber, this.avatar, this.rating, @JsonKey(name: 'total_trips') this.totalTrips, @JsonKey(name: 'is_online') this.isOnline, @JsonKey(name: 'last_seen_at') this.lastSeenAt, @JsonKey(name: 'created_at') this.createdAt, @JsonKey(name: 'updated_at') this.updatedAt});
+  const _ShipperDto({required this.id, required this.name, required this.phone, required this.vehicleType, required this.vehicleNumber, this.avatar, this.rating, this.totalTrips, this.isOnline, this.lastSeenAt, this.createdAt, this.updatedAt});
   factory _ShipperDto.fromJson(Map<String, dynamic> json) => _$ShipperDtoFromJson(json);
 
 @override final  int id;
 @override final  String name;
 @override final  String phone;
-@override@JsonKey(name: 'vehicle_type') final  String vehicleType;
-@override@JsonKey(name: 'vehicle_number') final  String vehicleNumber;
+@override final  String vehicleType;
+@override final  String vehicleNumber;
 @override final  String? avatar;
 @override final  double? rating;
-@override@JsonKey(name: 'total_trips') final  int? totalTrips;
-@override@JsonKey(name: 'is_online') final  bool? isOnline;
-@override@JsonKey(name: 'last_seen_at') final  String? lastSeenAt;
-@override@JsonKey(name: 'created_at') final  String? createdAt;
-@override@JsonKey(name: 'updated_at') final  String? updatedAt;
+@override final  int? totalTrips;
+@override final  bool? isOnline;
+@override final  String? lastSeenAt;
+@override final  String? createdAt;
+@override final  String? updatedAt;
 
 /// Create a copy of ShipperDto
 /// with the given fields replaced by the non-null parameter values.
@@ -269,7 +269,7 @@ abstract mixin class _$ShipperDtoCopyWith<$Res> implements $ShipperDtoCopyWith<$
   factory _$ShipperDtoCopyWith(_ShipperDto value, $Res Function(_ShipperDto) _then) = __$ShipperDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, String phone,@JsonKey(name: 'vehicle_type') String vehicleType,@JsonKey(name: 'vehicle_number') String vehicleNumber, String? avatar, double? rating,@JsonKey(name: 'total_trips') int? totalTrips,@JsonKey(name: 'is_online') bool? isOnline,@JsonKey(name: 'last_seen_at') String? lastSeenAt,@JsonKey(name: 'created_at') String? createdAt,@JsonKey(name: 'updated_at') String? updatedAt
+ int id, String name, String phone, String vehicleType, String vehicleNumber, String? avatar, double? rating, int? totalTrips, bool? isOnline, String? lastSeenAt, String? createdAt, String? updatedAt
 });
 
 

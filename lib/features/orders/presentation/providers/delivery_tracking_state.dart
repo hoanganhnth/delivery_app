@@ -1,4 +1,4 @@
-import '../../domain/entities/delivery_tracking_entity.dart' hide ShipperEntity;
+import '../../domain/entities/delivery_tracking_entity.dart';
 import '../../domain/entities/shipper_entity.dart';
 
 /// State cho delivery tracking

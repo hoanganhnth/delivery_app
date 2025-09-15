@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../domain/entities/delivery_tracking_entity.dart';
+import '../../domain/entities/shipper_entity.dart';
 import '../../domain/entities/shipper_location_entity.dart';
 import '../services/fake_shipper_movement_service.dart';
 import '../services/mapbox_map_service.dart';
@@ -15,7 +16,6 @@ import '../providers/shipper_location_providers.dart';
 class OptimizedDeliveryTrackingMapWidget extends ConsumerStatefulWidget {
   final DeliveryTrackingEntity? deliveryTracking;
   final ShipperEntity? shipper;
-  final ShipperLocationEntity? shipperLocation; // Vị trí real-time của shipper
   final Function(String)? onStatusChanged;
   final bool useFakeMovement; // Flag để quyết định có dùng fake movement không
 
@@ -23,7 +23,6 @@ class OptimizedDeliveryTrackingMapWidget extends ConsumerStatefulWidget {
     super.key,
     this.deliveryTracking,
     this.shipper,
-    this.shipperLocation,
     this.onStatusChanged,
     this.useFakeMovement = false, // Mặc định không dùng fake
   });
@@ -78,7 +77,7 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
   @override
   Widget build(BuildContext context) {
     // Watch shipper location từ provider nếu không dùng fake movement
-    ShipperLocationEntity? currentShipperLocation = widget.shipperLocation;
+    ShipperLocationEntity? currentShipperLocation;
     
     if (!widget.useFakeMovement) {
       final shipperLocationState = ref.watch(shipperLocationNotifierProvider);
@@ -643,21 +642,4 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
       // Implement actual call functionality here
     }
   }
-}
-
-/// Entity đại diện cho shipper
-class ShipperEntity {
-  final int id;
-  final String name;
-  final String phone;
-  final String vehicleType;
-  final String vehicleNumber;
-
-  const ShipperEntity({
-    required this.id,
-    required this.name,
-    required this.phone,
-    required this.vehicleType,
-    required this.vehicleNumber,
-  });
 }

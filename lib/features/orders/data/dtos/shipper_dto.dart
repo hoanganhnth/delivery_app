@@ -11,19 +11,37 @@ abstract class ShipperDto with _$ShipperDto {
     required int id,
     required String name,
     required String phone,
-    @JsonKey(name: 'vehicle_type') required String vehicleType,
-    @JsonKey(name: 'vehicle_number') required String vehicleNumber,
+    required String vehicleType,
+    required String vehicleNumber,
     String? avatar,
     double? rating,
-    @JsonKey(name: 'total_trips') int? totalTrips,
-    @JsonKey(name: 'is_online') bool? isOnline,
-    @JsonKey(name: 'last_seen_at') String? lastSeenAt,
-    @JsonKey(name: 'created_at') String? createdAt,
-    @JsonKey(name: 'updated_at') String? updatedAt,
+    int? totalTrips,
+    bool? isOnline,
+    String? lastSeenAt,
+    String? createdAt,
+    String? updatedAt,
   }) = _ShipperDto;
 
   factory ShipperDto.fromJson(Map<String, dynamic> json) => 
       _$ShipperDtoFromJson(json);
+
+  /// Factory để convert từ snake_case API response
+  factory ShipperDto.fromApiJson(Map<String, dynamic> json) {
+    return ShipperDto(
+      id: json['id'] as int,
+      name: json['name'] as String,
+      phone: json['phone'] as String,
+      vehicleType: json['vehicle_type'] as String,
+      vehicleNumber: json['vehicle_number'] as String,
+      avatar: json['avatar'] as String?,
+      rating: (json['rating'] as num?)?.toDouble(),
+      totalTrips: json['total_trips'] as int?,
+      isOnline: json['is_online'] as bool?,
+      lastSeenAt: json['last_seen_at'] as String?,
+      createdAt: json['created_at'] as String?,
+      updatedAt: json['updated_at'] as String?,
+    );
+  }
 }
 
 /// Extension để convert DTO sang Entity
