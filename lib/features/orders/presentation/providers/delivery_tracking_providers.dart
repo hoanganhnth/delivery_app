@@ -2,8 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/network/socket/providers/socket_providers.dart';
 import '../../data/repositories/delivery_tracking_repository_impl.dart';
 import '../../domain/usecases/tracking_usecases.dart';
-// TODO: Add back when DTOs are ready
-// import '../../domain/entities/delivery_tracking_entity.dart';
+import 'shipper_providers.dart';
 import 'delivery_tracking_notifier.dart';
 import 'delivery_tracking_state.dart';
 
@@ -40,6 +39,7 @@ final deliveryTrackingNotifierProvider = StateNotifierProvider<DeliveryTrackingN
   final startTrackingUseCase = ref.watch(startDeliveryTrackingUseCaseProvider);
   final stopTrackingUseCase = ref.watch(stopDeliveryTrackingUseCaseProvider);
   final refreshUseCase = ref.watch(refreshDeliveryTrackingUseCaseProvider);
+  final getShipperUseCase = ref.watch(getShipperByIdUseCaseProvider);
   
   // Clean Architecture: Notifier only depends on UseCases, not Repository
   return DeliveryTrackingNotifier(
@@ -47,6 +47,7 @@ final deliveryTrackingNotifierProvider = StateNotifierProvider<DeliveryTrackingN
     startTrackingUseCase: startTrackingUseCase,
     stopTrackingUseCase: stopTrackingUseCase,
     refreshUseCase: refreshUseCase,
+    getShipperUseCase: getShipperUseCase,
   );
 });
 

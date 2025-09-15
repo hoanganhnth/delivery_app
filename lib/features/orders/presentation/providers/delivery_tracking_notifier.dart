@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../domain/usecases/tracking_usecases.dart';
+import '../../domain/usecases/get_shipper_usecase.dart';
+
 import 'delivery_tracking_state.dart';
 
 /// Notifier để quản lý delivery tracking
@@ -10,18 +12,19 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
   final TrackDeliveryUseCase _startTrackingUseCase;
   final StopDeliveryTrackingUseCase _stopTrackingUseCase;
   final RefreshDeliveryTrackingUseCase _refreshUseCase;
-
-  // Removed _repository - using UseCase only for Clean Architecture
+  final GetShipperByIdUseCase _getShipperUseCase;
 
   DeliveryTrackingNotifier({
     required ConnectDeliveryTrackingUseCase connectUseCase,
     required TrackDeliveryUseCase startTrackingUseCase,
     required StopDeliveryTrackingUseCase stopTrackingUseCase,
     required RefreshDeliveryTrackingUseCase refreshUseCase,
+    required GetShipperByIdUseCase getShipperUseCase,
   }) : _connectUseCase = connectUseCase,
        _startTrackingUseCase = startTrackingUseCase,
        _stopTrackingUseCase = stopTrackingUseCase,
        _refreshUseCase = refreshUseCase,
+       _getShipperUseCase = getShipperUseCase,
        super(const DeliveryTrackingState());
 
   /// Kết nối đến service thông qua UseCase
@@ -84,11 +87,16 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
           );
           deliveryStream.listen(
             (delivery) {
-              // AppLogger.d('Received shipper location: ${location.shipperId}');
+              AppLogger.d('Received delivery tracking: Order ${delivery.orderId}, Shipper ${delivery.shipperId}');
+              
+              // Cập nhật delivery tracking
               state = state.copyWith(
                 currentTracking: delivery,
                 clearError: true,
               );
+              
+              // Lấy thông tin shipper nếu là shipper ID mới
+              _fetchShipperInfoIfNeeded(delivery.shipperId);
             },
             onError: (error) {
               state = state.copyWith(
@@ -161,15 +169,60 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
     }
   }
 
+  /// Lấy thông tin shipper nếu cần (shipper ID khác với hiện tại)
+  Future<void> _fetchShipperInfoIfNeeded(int shipperId) async {
+    // Kiểm tra xem có cần lấy thông tin shipper không
+    if (state.currentShipperId == shipperId) {
+      AppLogger.d('Shipper $shipperId already loaded, skipping API call');
+      return;
+    }
+
+    try {
+      AppLogger.i('Fetching shipper info for ID: $shipperId');
+      
+      // Bắt đầu loading shipper
+      state = state.copyWith(
+        isLoadingShipper: true,
+        currentShipperId: shipperId,
+      );
+
+      final result = await _getShipperUseCase.call(shipperId);
+
+      result.fold(
+        (failure) {
+          AppLogger.e('Failed to fetch shipper info: ${failure.message}');
+          state = state.copyWith(
+            isLoadingShipper: false,
+            error: 'Không thể lấy thông tin shipper: ${failure.message}',
+          );
+        },
+        (shipper) {
+          state = state.copyWith(
+            shipper: shipper,
+            isLoadingShipper: false,
+            clearError: true,
+          );
+        },
+      );
+    } catch (e) {
+      AppLogger.e('Unexpected error fetching shipper info', e);
+      state = state.copyWith(
+        isLoadingShipper: false,
+        error: 'Lỗi không mong muốn khi lấy thông tin shipper',
+      );
+    }
+  }
+
   /// Clear error
   void clearError() {
     state = state.copyWith(clearError: true);
   }
 
-  /// Get mock shipper info
+  /// Get mock shipper info (deprecated - use real API)
+  @Deprecated('Use _fetchShipperInfoIfNeeded instead')
   dynamic getMockShipper() {
-    AppLogger.w('getMockShipper called - should implement proper API call');
-    return null; // TODO: Implement proper shipper API
+    AppLogger.w('getMockShipper called - should use _fetchShipperInfoIfNeeded');
+    return null;
   }
 
   @override
