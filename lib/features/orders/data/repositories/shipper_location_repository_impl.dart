@@ -32,7 +32,7 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
       // AppLogger.d('Starting shipper location tracking: $shipperId');
       
       // Stop previous tracking if any
-      await stopTrackingShipper();
+      // await stopTrackingShipper();
       
       // Ensure connection với proper async handling
       if (!_socketService.isConnected) {

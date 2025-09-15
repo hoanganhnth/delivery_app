@@ -35,16 +35,16 @@ class DisconnectDeliveryTrackingUseCase extends UseCase<void, NoParams> {
 }
 
 /// UseCase để bắt đầu theo dõi delivery cho order
-class StartDeliveryTrackingUseCase extends UseCase<void, StartDeliveryTrackingParams> {
-  final DeliveryTrackingRepository repository;
+// class StartDeliveryTrackingUseCase extends UseCase<void, StartDeliveryTrackingParams> {
+//   final DeliveryTrackingRepository repository;
 
-  StartDeliveryTrackingUseCase(this.repository);
+//   StartDeliveryTrackingUseCase(this.repository);
 
-  @override
-  Future<Either<Failure, void>> call(StartDeliveryTrackingParams params) async {
-    return await repository.startTracking(params.orderId);
-  }
-}
+//   @override
+//   Future<Either<Failure, void>> call(StartDeliveryTrackingParams params) async {
+//     return await repository.startTracking(params.orderId);
+//   }
+// }
 
 /// UseCase để dừng theo dõi delivery
 class StopDeliveryTrackingUseCase extends UseCase<void, NoParams> {

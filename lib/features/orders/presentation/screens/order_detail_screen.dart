@@ -15,10 +15,7 @@ import '../../../../generated/l10n.dart';
 class OrderDetailScreen extends ConsumerStatefulWidget {
   final num orderId;
 
-  const OrderDetailScreen({
-    super.key,
-    required this.orderId,
-  });
+  const OrderDetailScreen({super.key, required this.orderId});
 
   @override
   ConsumerState<OrderDetailScreen> createState() => _OrderDetailScreenState();
@@ -31,7 +28,6 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
     // Load order detail when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(orderDetailProvider.notifier).getOrderById(widget.orderId);
-      ref.read(shipperLocationNotifierProvider.notifier).startTrackingShipper(14);
     });
   }
 
@@ -70,7 +66,8 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
     if (orderDetailState.errorMessage != null) {
       return OrderErrorWidget(
         message: orderDetailState.errorMessage!,
-        onRetry: () => ref.read(orderDetailProvider.notifier).getOrderById(widget.orderId),
+        onRetry: () =>
+            ref.read(orderDetailProvider.notifier).getOrderById(widget.orderId),
       );
     }
 
@@ -92,11 +89,11 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
           children: [
             OrderStatusCard(order: order),
             const SizedBox(height: 16),
-            
+
             // Delivery tracking section for orders being delivered
             if (order.status == OrderStatus.delivering)
               OrderDeliveryTrackingCard(order: order),
-            
+
             OrderCustomerInfoCard(order: order),
             const SizedBox(height: 16),
             OrderItemsCard(order: order),
@@ -107,7 +104,9 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
               order: order,
               onOrderCanceled: () {
                 // Refresh the order after cancellation
-                ref.read(orderDetailProvider.notifier).getOrderById(widget.orderId);
+                ref
+                    .read(orderDetailProvider.notifier)
+                    .getOrderById(widget.orderId);
               },
             ),
           ],

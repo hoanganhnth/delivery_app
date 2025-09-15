@@ -7,48 +7,39 @@ import 'delivery_tracking_state.dart';
 /// Notifier để quản lý delivery tracking
 class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
   final ConnectDeliveryTrackingUseCase _connectUseCase;
-  // final StartDeliveryTrackingUseCase _startTrackingUseCase;
+  final TrackDeliveryUseCase _startTrackingUseCase;
   final StopDeliveryTrackingUseCase _stopTrackingUseCase;
   final RefreshDeliveryTrackingUseCase _refreshUseCase;
-  
+
   // Removed _repository - using UseCase only for Clean Architecture
-  
+
   DeliveryTrackingNotifier({
     required ConnectDeliveryTrackingUseCase connectUseCase,
-    required StartDeliveryTrackingUseCase startTrackingUseCase,
+    required TrackDeliveryUseCase startTrackingUseCase,
     required StopDeliveryTrackingUseCase stopTrackingUseCase,
     required RefreshDeliveryTrackingUseCase refreshUseCase,
   }) : _connectUseCase = connectUseCase,
-      //  _startTrackingUseCase = startTrackingUseCase,
+       _startTrackingUseCase = startTrackingUseCase,
        _stopTrackingUseCase = stopTrackingUseCase,
        _refreshUseCase = refreshUseCase,
        super(const DeliveryTrackingState());
-
-
 
   /// Kết nối đến service thông qua UseCase
   Future<void> connect() async {
     try {
       state = state.copyWith(isLoading: true, clearError: true);
       AppLogger.i('Connecting to delivery tracking...');
-      
+
       final result = await _connectUseCase(NoParams());
-      
+
       result.fold(
         (failure) {
-          state = state.copyWith(
-            isLoading: false,
-            error: failure.message,
-          );
+          state = state.copyWith(isLoading: false, error: failure.message);
         },
         (_) {
-          state = state.copyWith(
-            isLoading: false,
-            isConnected: true,
-          );
+          state = state.copyWith(isLoading: false, isConnected: true);
         },
       );
-      
     } catch (e) {
       AppLogger.e('Failed to connect delivery tracking', e);
       state = state.copyWith(
@@ -59,78 +50,89 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
   }
 
   /// Bắt đầu theo dõi order thông qua UseCase
-  // Future<void> startTrackingOrder(int orderId) async {
-  //   try {
-  //     AppLogger.i('Starting tracking for order $orderId');
-      
-  //     if (!state.isConnected) {
-  //       await connect();
-  //     }
+  Future<void> startTrackingOrder(int orderId) async {
+    try {
+      AppLogger.i('Starting tracking for order $orderId');
 
-  //     if (!state.isConnected) {
-  //       throw Exception('Chưa kết nối được dịch vụ theo dõi');
-  //     }
+      if (!state.isConnected) {
+        await connect();
+      }
 
-  //     state = state.copyWith(
-  //       isTracking: true,
-  //       clearError: true,
-  //       clearTracking: true,
-  //       clearShipperLocation: true,
-  //     );
+      if (!state.isConnected) {
+        throw Exception('Chưa kết nối được dịch vụ theo dõi');
+      }
 
-  //     final result = await _startTrackingUseCase(
-  //       StartDeliveryTrackingParams(orderId: orderId),
-  //     );
-      
-  //     result.fold(
-  //       (failure) {
-  //         state = state.copyWith(
-  //           isTracking: false,
-  //           error: failure.message,
-  //         );
-  //       },
-  //       (_) {
-  //         AppLogger.i('Successfully started tracking order $orderId');
-  //       },
-  //     );
-      
-  //   } catch (e) {
-  //     AppLogger.e('Failed to start tracking order $orderId', e);
-  //     state = state.copyWith(
-  //       isTracking: false,
-  //       error: 'Không thể bắt đầu theo dõi order: ${e.toString()}',
-  //     );
-  //   }
-  // }
+      state = state.copyWith(
+        isTracking: true,
+        clearError: true,
+        clearTracking: true,
+      );
+
+      final result = await _startTrackingUseCase(
+        TrackDeliveryParams(orderId: orderId),
+      );
+
+      result.fold(
+        (failure) {
+          state = state.copyWith(isTracking: false, error: failure.message);
+        },
+        (deliveryStream) {
+          state = state.copyWith(
+            isLoading: false,
+            isTracking: true,
+            isConnected: true,
+          );
+          deliveryStream.listen(
+            (delivery) {
+              // AppLogger.d('Received shipper location: ${location.shipperId}');
+              state = state.copyWith(
+                currentTracking: delivery,
+                clearError: true,
+              );
+            },
+            onError: (error) {
+              state = state.copyWith(
+                error: 'Lỗi nhận dữ liệu delivery: ${error.toString()}',
+              );
+            },
+            onDone: () {
+              AppLogger.i('Delivery stream closed');
+              state = state.copyWith(isTracking: false, isConnected: false);
+            },
+          );
+        },
+      );
+    } catch (e) {
+      AppLogger.e('Failed to start tracking order $orderId', e);
+      state = state.copyWith(
+        isTracking: false,
+        error: 'Không thể bắt đầu theo dõi order: ${e.toString()}',
+      );
+    }
+  }
 
   /// Dừng theo dõi order thông qua UseCase
   Future<void> stopTrackingOrder() async {
     try {
       AppLogger.i('Stopping delivery tracking');
-      
+
       final result = await _stopTrackingUseCase(NoParams());
-      
+
       result.fold(
         (failure) {
-          state = state.copyWith(
-            error: failure.message,
-          );
+          state = state.copyWith(error: failure.message);
         },
         (_) {
           state = state.copyWith(
             isTracking: false,
             clearTracking: true,
-            clearShipperLocation: true,
             clearError: true,
           );
         },
       );
-      
     } catch (e) {
       AppLogger.e('Error stopping delivery tracking', e);
-      state = state.copyWith(
-        error: 'Lỗi khi dừng theo dõi delivery',
-      );
+      state = state.copyWith(error: 'Lỗi khi dừng theo dõi delivery');
     }
   }
 
@@ -139,21 +141,17 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
     try {
       AppLogger.i('Refreshing delivery tracking connection');
       state = state.copyWith(isLoading: true, clearError: true);
-      
+
       final result = await _refreshUseCase(NoParams());
-      
+
       result.fold(
         (failure) {
-          state = state.copyWith(
-            isLoading: false,
-            error: failure.message,
-          );
+          state = state.copyWith(isLoading: false, error: failure.message);
         },
         (_) {
           state = state.copyWith(isLoading: false);
         },
       );
-      
     } catch (e) {
       AppLogger.e('Failed to refresh delivery tracking', e);
       state = state.copyWith(
@@ -180,7 +178,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
     stopTrackingOrder();
     // Clean Architecture: Notifier only calls UseCases
     // Connection management is handled by UseCase layer
-    
+
     super.dispose();
   }
 }

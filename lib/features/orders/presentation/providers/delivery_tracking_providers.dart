@@ -21,7 +21,7 @@ final connectDeliveryTrackingUseCaseProvider = Provider((ref) {
 
 final startDeliveryTrackingUseCaseProvider = Provider((ref) {
   final repository = ref.watch(deliveryTrackingRepositoryProvider);
-  return StartDeliveryTrackingUseCase(repository);
+  return TrackDeliveryUseCase(repository);
 });
 
 final stopDeliveryTrackingUseCaseProvider = Provider((ref) {
