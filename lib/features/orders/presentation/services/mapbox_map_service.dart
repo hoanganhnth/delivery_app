@@ -1,5 +1,8 @@
 import 'dart:math' as math;
+import 'dart:typed_data';
+import 'package:delivery_app/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../domain/entities/shipper_location_entity.dart';
@@ -8,17 +11,19 @@ import '../../domain/entities/shipper_location_entity.dart';
 class MapboxMapService {
   MapboxMap? _mapboxMap;
   PointAnnotationManager? _pointAnnotationManager;
-  
+
   // Markers
   PointAnnotation? _shipperMarker;
 
-  bool get isInitialized => _mapboxMap != null && _pointAnnotationManager != null;
+  bool get isInitialized =>
+      _mapboxMap != null && _pointAnnotationManager != null;
 
   /// Khởi tạo map và annotation manager
   Future<void> initializeMap(MapboxMap mapboxMap) async {
     try {
       _mapboxMap = mapboxMap;
-      _pointAnnotationManager = await _mapboxMap!.annotations.createPointAnnotationManager();
+      _pointAnnotationManager = await _mapboxMap!.annotations
+          .createPointAnnotationManager();
       AppLogger.d('MapBox map initialized successfully');
     } catch (e) {
       AppLogger.e('Error initializing MapBox map', e);
@@ -42,9 +47,7 @@ class MapboxMapService {
       // Thêm pickup marker (nhà hàng)
       await _pointAnnotationManager!.create(
         PointAnnotationOptions(
-          geometry: Point(
-            coordinates: Position(pickupLng, pickupLat),
-          ),
+          geometry: Point(coordinates: Position(pickupLng, pickupLat)),
           textField: "🏪 Nhà hàng",
           textSize: 12.0,
           textColor: Colors.blue.toARGB32(),
@@ -56,9 +59,7 @@ class MapboxMapService {
       // Thêm delivery marker (khách hàng)
       await _pointAnnotationManager!.create(
         PointAnnotationOptions(
-          geometry: Point(
-            coordinates: Position(deliveryLng, deliveryLat),
-          ),
+          geometry: Point(coordinates: Position(deliveryLng, deliveryLat)),
           textField: "🏠 Khách hàng",
           textSize: 12.0,
           textColor: Colors.red.toARGB32(),
@@ -86,18 +87,20 @@ class MapboxMapService {
         await _pointAnnotationManager!.delete(_shipperMarker!);
         _shipperMarker = null;
       }
-
+      final ByteData bytes = await rootBundle.load(AppAssets.icShipperMap);
+      final Uint8List list = bytes.buffer.asUint8List();
       // Tạo shipper marker mới với container đỏ to hơn
       _shipperMarker = await _pointAnnotationManager!.create(
         PointAnnotationOptions(
+          image: list,
           geometry: Point(
             coordinates: Position(location.longitude, location.latitude),
           ),
-          textField: "�", // Container đỏ lớn
-          textSize: 24.0, // Tăng kích thước gấp đôi
-          textColor: Colors.red.toARGB32(), // Màu đỏ
-          textHaloColor: Colors.white.toARGB32(),
-          textHaloWidth: 3.0, // Tăng viền để nổi bật hơn
+          // textField: "�", // Container đỏ lớn
+          // textSize: 24.0, // Tăng kích thước gấp đôi
+          // textColor: Colors.red.toARGB32(), // Màu đỏ
+          // textHaloColor: Colors.white.toARGB32(),
+          // textHaloWidth: 3.0, // Tăng viền để nổi bật hơn
         ),
       );
     } catch (e) {
@@ -199,19 +202,19 @@ class MapboxMapService {
   ) {
     const double zoomLevelMax = 18.0;
     const double zoomLevelMin = 1.0;
-    
+
     final latDiff = maxLat - minLat;
     final lngDiff = maxLng - minLng;
     final maxDiff = math.max(latDiff, lngDiff);
-    
+
     // Convert difference to zoom level (công thức thực nghiệm)
     double zoomLevel = 14.0; // Mặc định
-    
+
     if (maxDiff > 0) {
       zoomLevel = 15.0 - (maxDiff * 100);
       zoomLevel = zoomLevel.clamp(zoomLevelMin, zoomLevelMax);
     }
-    
+
     return zoomLevel;
   }
 
@@ -222,8 +225,10 @@ class MapboxMapService {
     double? deliveryLat,
     double? deliveryLng,
   }) {
-    if (pickupLat != null && pickupLng != null && 
-        deliveryLat != null && deliveryLng != null) {
+    if (pickupLat != null &&
+        pickupLng != null &&
+        deliveryLat != null &&
+        deliveryLng != null) {
       // Center giữa pickup và delivery
       final centerLat = (pickupLat + deliveryLat) / 2;
       final centerLng = (pickupLng + deliveryLng) / 2;

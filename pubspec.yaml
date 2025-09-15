@@ -38,6 +38,11 @@ dependencies:
   
   flutter:
     sdk: flutter
+
+    assets:
+      - assets/images/
+      - assets/icons/
+      - assets/lottie/
   flutter_localizations:
     sdk: flutter
 
