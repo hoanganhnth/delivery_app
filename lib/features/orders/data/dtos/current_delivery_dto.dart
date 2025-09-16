@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/delivery_tracking_entity.dart';
+import '../../domain/entities/delivery_status.dart';
 
 part 'current_delivery_dto.freezed.dart';
 part 'current_delivery_dto.g.dart';
@@ -34,7 +35,7 @@ extension CurrentDeliveryDtoX on CurrentDeliveryDto {
       id: orderId * 1000, // Mock ID
       orderId: orderId,
       shipperId: shipperId,
-      status: status,
+      status: DeliveryStatus.fromValueOrDefault(status, DeliveryStatus.pending),
       pickupAddress: pickupAddress ?? 'Địa chỉ lấy hàng',
       pickupLat: pickupLat,
       pickupLng: pickupLng,

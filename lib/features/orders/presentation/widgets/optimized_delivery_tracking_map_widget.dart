@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../domain/entities/delivery_tracking_entity.dart';
+import '../../domain/entities/delivery_status.dart';
 import '../../domain/entities/shipper_entity.dart';
 import '../../domain/entities/shipper_location_entity.dart';
 import '../services/fake_shipper_movement_service.dart';
@@ -609,34 +610,25 @@ class _OptimizedDeliveryTrackingMapWidgetState
 
   // ==================== HELPER METHODS ====================
 
-  Icon _getStatusIcon(String status) {
-    switch (status.toLowerCase()) {
-      case 'confirmed':
-        return const Icon(Icons.check_circle, color: Colors.green);
-      case 'picked_up':
-        return const Icon(Icons.directions_bike, color: Colors.blue);
-      case 'DELIVERING':
-        return const Icon(Icons.local_shipping, color: Colors.orange);
-      case 'delivered':
-        return const Icon(Icons.done_all, color: Colors.green);
-      default:
+  Icon _getStatusIcon(DeliveryStatus status) {
+    switch (status) {
+      case DeliveryStatus.pending:
         return const Icon(Icons.access_time, color: Colors.grey);
+      case DeliveryStatus.assigned:
+        return const Icon(Icons.check_circle, color: Colors.green);
+      case DeliveryStatus.pickedUp:
+        return const Icon(Icons.directions_bike, color: Colors.blue);
+      case DeliveryStatus.delivering:
+        return const Icon(Icons.local_shipping, color: Colors.orange);
+      case DeliveryStatus.delivered:
+        return const Icon(Icons.done_all, color: Colors.green);
+      case DeliveryStatus.cancelled:
+        return const Icon(Icons.cancel, color: Colors.red);
     }
   }
 
-  String _getStatusTitle(String status) {
-    switch (status.toLowerCase()) {
-      case 'confirmed':
-        return 'Đơn hàng đã xác nhận';
-      case 'picked_up':
-        return 'Đã lấy hàng';
-      case 'DELIVERING':
-        return 'Đang giao hàng';
-      case 'delivered':
-        return 'Đã giao hàng';
-      default:
-        return 'Đang xử lý';
-    }
+  String _getStatusTitle(DeliveryStatus status) {
+    return status.displayName;
   }
 
   void _callShipper() {

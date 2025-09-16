@@ -4,6 +4,7 @@ import '../../../../core/error/failures.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../../../core/network/socket/delivery_tracking_stomp_service.dart';
 import '../../domain/entities/delivery_tracking_entity.dart';
+import '../../domain/entities/delivery_status.dart';
 import '../../domain/repositories/delivery_tracking_repository.dart';
 
 /// Repository implementation chỉ transform data từ Service
@@ -188,7 +189,7 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
         id: orderId * 1000, // Mock ID
         orderId: orderId,
         shipperId: 14, // Fixed shipper ID for testing
-        status: 'on_the_way',
+        status: DeliveryStatus.delivering,
         pickupAddress: 'Nhà hàng ABC, Q1, HCM',
         pickupLat: 10.762622,
         pickupLng: 106.660172,

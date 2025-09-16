@@ -1,9 +1,11 @@
+import 'delivery_status.dart';
+
 /// Entity cho thông tin delivery tracking
 class DeliveryTrackingEntity {
   final int id;
   final int orderId;
   final int shipperId;
-  final String status;
+  final DeliveryStatus status;
   final String pickupAddress;
   final double pickupLat;
   final double pickupLng;
@@ -42,7 +44,7 @@ class DeliveryTrackingEntity {
     int? id,
     int? orderId,
     int? shipperId,
-    String? status,
+    DeliveryStatus? status,
     String? pickupAddress,
     double? pickupLat,
     double? pickupLng,
