@@ -56,7 +56,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
     switch (index) {
       case 0: return null; // All orders
       case 1: return OrderStatus.pending;
-      case 2: return OrderStatus.confirmed;
+      case 2: return OrderStatus.delivering;
       case 3: return OrderStatus.delivered;
       default: return null;
     }

@@ -78,9 +78,8 @@ class _OptimizedDeliveryTrackingMapWidgetState
   Widget build(BuildContext context) {
     // Watch shipper location từ provider nếu không dùng fake movement
     ShipperLocationEntity? currentShipperLocation;
-
+    final shipperLocationState = ref.watch(shipperLocationNotifierProvider);
     if (!widget.useFakeMovement) {
-      final shipperLocationState = ref.watch(shipperLocationNotifierProvider);
       if (shipperLocationState.currentLocation != null) {
         currentShipperLocation = shipperLocationState.currentLocation;
 
@@ -96,48 +95,81 @@ class _OptimizedDeliveryTrackingMapWidgetState
       }
     }
 
-    return _isExpanded ? _buildExpandedMap() : _buildCompactMap();
+    return _buildAnimatedMapWidget();
   }
 
-  // ==================== UI BUILDING METHODS ====================
+  Widget _buildAnimatedMapWidget() {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
 
-  Widget _buildCompactMap() {
+    // Tính toán kích thước dựa trên trạng thái expanded - đảm bảo tối thiểu 64px cho MapBox
+    final mapHeight = _isExpanded
+        ? (screenHeight * 0.7).clamp(300.0, double.infinity)
+        : 300.0.clamp(64.0, double.infinity);
+
+    final mapWidth = screenWidth.clamp(64.0, double.infinity);
+
     return Column(
       children: [
-        // Thông tin đơn hàng và shipper ở ngoài map khi compact
-        if (widget.deliveryTracking != null || widget.shipper != null)
-          _buildExternalInfoCard(),
-        const SizedBox(height: 8),
+        // Thông tin bên ngoài khi compact mode (ẩn khi expanded)
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child:
+              !_isExpanded &&
+                  (widget.deliveryTracking != null || widget.shipper != null)
+              ? Column(
+                  key: const ValueKey('external_info'),
+                  children: [
+                    _buildExternalInfoCard(),
+                    const SizedBox(height: 8),
+                  ],
+                )
+              : const SizedBox.shrink(key: ValueKey('no_external_info')),
+        ),
 
-        // Map widget với nút expand - đảm bảo kích thước tối thiểu
-        ConstrainedBox(
-          constraints: const BoxConstraints(
-            minHeight: 300,
-            minWidth: 200, // Kích thước tối thiểu để tránh lỗi MapBox
+        // Map widget với animation kích thước
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOutCubic,
+          height: mapHeight,
+          width: mapWidth,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade300),
+            boxShadow: _isExpanded
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : [],
           ),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final width =
-                  (constraints.maxWidth > 200 ? constraints.maxWidth : 200)
-                      .toDouble();
-              return Container(
-                height: 300,
-                width: width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Stack(
-                    children: [
-                      // MapWidget với kích thước cụ thể
-                      SizedBox(
-                        height: 300,
-                        width: width,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // Đảm bảo MapWidget có size hợp lệ, tối thiểu 64x64
+                final validWidth = constraints.maxWidth.clamp(
+                  64.0,
+                  double.infinity,
+                );
+                final validHeight = constraints.maxHeight.clamp(
+                  64.0,
+                  double.infinity,
+                );
+
+                return Stack(
+                  children: [
+                    // Single MapWidget instance với constraints chính xác
+                    Positioned.fill(
+                      child: SizedBox(
+                        width: validWidth,
+                        height: validHeight,
                         child: _isMapInitialized
                             ? MapWidget(
-                                key: const ValueKey("compactMapWidget"),
+                                key: const ValueKey("animated_map_widget"),
                                 onMapCreated: _onMapCreated,
                                 cameraOptions: _mapService
                                     .getInitialCameraPosition(
@@ -157,107 +189,94 @@ class _OptimizedDeliveryTrackingMapWidgetState
                                   ),
                                 },
                               )
-                            : Container(
-                                color: Colors.grey[200],
-                                child: const Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      CircularProgressIndicator(),
-                                      SizedBox(height: 8),
-                                      Text(
-                                        'Đang tải bản đồ...',
-                                        style: TextStyle(color: Colors.grey),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                            : _buildLoadingState(),
                       ),
-                      if (_isMapInitialized) _buildMapButtons(),
-                    ],
-                  ),
-                ),
-              );
-            },
+                    ),
+
+                    // Map controls - trực tiếp trong Stack
+                    if (_isMapInitialized)
+                      Positioned(
+                        top: 12,
+                        right: 12,
+                        child: _buildMapControls(),
+                      ),
+
+                    // Status overlay - trực tiếp trong Stack với opacity animation
+                    if (_isMapInitialized && _isExpanded)
+                      Positioned(
+                        top: 12,
+                        left: 12,
+                        child: AnimatedOpacity(
+                          duration: const Duration(milliseconds: 300),
+                          opacity: _isExpanded ? 1.0 : 0.0,
+                          child: _buildStatusOverlay(),
+                        ),
+                      ),
+
+                    // Shipper info overlay - trực tiếp trong Stack với opacity animation
+                    if (_isMapInitialized && _isExpanded)
+                      Positioned(
+                        bottom: 12,
+                        left: 12,
+                        right: 12,
+                        child: AnimatedOpacity(
+                          duration: const Duration(milliseconds: 300),
+                          opacity: _isExpanded ? 1.0 : 0.0,
+                          child: _buildShipperInfoOverlay(),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildExpandedMap() {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final mapHeight = (screenHeight * 0.7).clamp(300.0, double.infinity);
-
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        minHeight: 300,
-        minWidth: 200,
-        maxHeight: mapHeight,
-        maxWidth: screenWidth,
-      ),
-      child: Container(
-        height: mapHeight,
-        width: screenWidth,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade300),
+  Widget _buildLoadingState() {
+    return Container(
+      color: Colors.grey[200],
+      child: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 8),
+            Text('Đang tải bản đồ...', style: TextStyle(color: Colors.grey)),
+          ],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Stack(
-            children: [
-              // MapWidget cho expanded mode
-              SizedBox(
-                height: mapHeight,
-                width: screenWidth,
-                child: _isMapInitialized
-                    ? MapWidget(
-                        key: const ValueKey("expandedMapWidget"),
-                        onMapCreated: _onMapCreated,
-                        cameraOptions: _mapService.getInitialCameraPosition(
-                          pickupLat: widget.deliveryTracking?.pickupLat,
-                          pickupLng: widget.deliveryTracking?.pickupLng,
-                          deliveryLat: widget.deliveryTracking?.deliveryLat,
-                          deliveryLng: widget.deliveryTracking?.deliveryLng,
-                        ),
-                        textureView: true,
-                        gestureRecognizers: {
-                          Factory<OneSequenceGestureRecognizer>(
-                            () => EagerGestureRecognizer(),
-                          ),
-                        },
-                      )
-                    : Container(
-                        color: Colors.grey[200],
-                        child: const Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CircularProgressIndicator(),
-                              SizedBox(height: 8),
-                              Text(
-                                'Đang tải bản đồ...',
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-              ),
-              // Overlay info khi expanded
-              if (_isMapInitialized) ...[
-                _buildStatusOverlay(),
-                _buildShipperInfoOverlay(),
-                _buildCollapseButton(),
-                _buildFollowShipperButton(),
-              ],
-            ],
+      ),
+    );
+  }
+
+  Widget _buildMapControls() {
+    return Column(
+      children: [
+        // Toggle expand/collapse button với animation
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          child: Container(
+            key: ValueKey(_isExpanded ? 'collapse' : 'expand'),
+            child: _buildMapButton(
+              icon: _isExpanded ? Icons.fullscreen_exit : Icons.fullscreen,
+              onPressed: () => setState(() => _isExpanded = !_isExpanded),
+              tooltip: _isExpanded ? 'Thu nhỏ bản đồ' : 'Mở rộng bản đồ',
+            ),
           ),
         ),
-      ),
+        const SizedBox(height: 8),
+        // Follow shipper toggle
+        _buildMapButton(
+          icon: _followShipper ? Icons.gps_fixed : Icons.gps_not_fixed,
+          onPressed: () => setState(() => _followShipper = !_followShipper),
+          tooltip: _followShipper
+              ? 'Dừng theo dõi shipper'
+              : 'Theo dõi shipper',
+          isActive: _followShipper,
+        ),
+      ],
     );
   }
 
@@ -320,8 +339,9 @@ class _OptimizedDeliveryTrackingMapWidgetState
   void _startFakeShipperMovement() {
     if (widget.deliveryTracking == null ||
         !_isMapInitialized ||
-        !widget.useFakeMovement)
+        !widget.useFakeMovement) {
       return;
+    }
 
     _movementService?.startFakeShipperMovement(
       pickupLat: widget.deliveryTracking!.pickupLat,
@@ -333,41 +353,6 @@ class _OptimizedDeliveryTrackingMapWidgetState
   }
 
   // ==================== UI COMPONENTS ====================
-
-  Widget _buildMapButtons() {
-    return Positioned(
-      top: 12,
-      right: 12,
-      child: Column(
-        children: [
-          // Fullscreen button
-          _buildMapButton(
-            icon: Icons.fullscreen,
-            onPressed: () {
-              setState(() {
-                _isExpanded = true;
-              });
-            },
-            tooltip: 'Mở rộng bản đồ',
-          ),
-          const SizedBox(height: 8),
-          // Follow shipper toggle button
-          _buildMapButton(
-            icon: _followShipper ? Icons.gps_fixed : Icons.gps_not_fixed,
-            onPressed: () {
-              setState(() {
-                _followShipper = !_followShipper;
-              });
-            },
-            tooltip: _followShipper
-                ? 'Dừng theo dõi shipper'
-                : 'Theo dõi shipper',
-            isActive: _followShipper,
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildMapButton({
     required IconData icon,
@@ -393,39 +378,6 @@ class _OptimizedDeliveryTrackingMapWidgetState
         iconSize: 20,
         color: isActive ? Colors.blue : Colors.grey[700],
         tooltip: tooltip,
-      ),
-    );
-  }
-
-  Widget _buildCollapseButton() {
-    return Positioned(
-      top: 12,
-      right: 12,
-      child: _buildMapButton(
-        icon: Icons.fullscreen_exit,
-        onPressed: () {
-          setState(() {
-            _isExpanded = false;
-          });
-        },
-        tooltip: 'Thu nhỏ bản đồ',
-      ),
-    );
-  }
-
-  Widget _buildFollowShipperButton() {
-    return Positioned(
-      top: 12,
-      right: 60,
-      child: _buildMapButton(
-        icon: _followShipper ? Icons.gps_fixed : Icons.gps_not_fixed,
-        onPressed: () {
-          setState(() {
-            _followShipper = !_followShipper;
-          });
-        },
-        tooltip: _followShipper ? 'Dừng theo dõi shipper' : 'Theo dõi shipper',
-        isActive: _followShipper,
       ),
     );
   }
@@ -513,32 +465,28 @@ class _OptimizedDeliveryTrackingMapWidgetState
   Widget _buildStatusOverlay() {
     if (widget.deliveryTracking == null) return const SizedBox.shrink();
 
-    return Positioned(
-      top: 12,
-      left: 12,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            _getStatusIcon(widget.deliveryTracking!.status),
-            const SizedBox(width: 8),
-            Text(
-              _getStatusTitle(widget.deliveryTracking!.status),
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-            ),
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          _getStatusIcon(widget.deliveryTracking!.status),
+          const SizedBox(width: 8),
+          Text(
+            _getStatusTitle(widget.deliveryTracking!.status),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+          ),
+        ],
       ),
     );
   }
@@ -546,64 +494,56 @@ class _OptimizedDeliveryTrackingMapWidgetState
   Widget _buildShipperInfoOverlay() {
     if (widget.shipper == null) return const SizedBox.shrink();
 
-    return Positioned(
-      bottom: 12,
-      left: 12,
-      right: 12,
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.grey[200],
-              child: const Icon(Icons.person, size: 20),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.shipper!.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 20,
+            backgroundColor: Colors.grey[200],
+            child: const Icon(Icons.person, size: 20),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.shipper!.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
                   ),
-                  Text(
-                    '${widget.shipper!.vehicleType.toUpperCase()} • ${widget.shipper!.vehicleNumber}',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-            ElevatedButton.icon(
-              onPressed: _callShipper,
-              icon: const Icon(Icons.phone, size: 16),
-              label: const Text('Gọi', style: TextStyle(fontSize: 12)),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
                 ),
-              ),
+                Text(
+                  '${widget.shipper!.vehicleType.toUpperCase()} • ${widget.shipper!.vehicleNumber}',
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          ElevatedButton.icon(
+            onPressed: _callShipper,
+            icon: const Icon(Icons.phone, size: 16),
+            label: const Text('Gọi', style: TextStyle(fontSize: 12)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            ),
+          ),
+        ],
       ),
     );
   }

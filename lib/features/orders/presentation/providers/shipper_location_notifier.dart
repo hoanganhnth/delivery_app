@@ -11,15 +11,14 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
   // final StartShipperTrackingUseCase _startTrackingUseCase;
   final StopShipperTrackingUseCase _stopTrackingUseCase;
   final TrackShipperLocationUseCase _trackShipperUseCase;
-  
+
   StreamSubscription<ShipperLocationEntity>? _locationSubscription;
-  
+
   ShipperLocationNotifier({
     // required StartShipperTrackingUseCase startTrackingUseCase,
     required StopShipperTrackingUseCase stopTrackingUseCase,
     required TrackShipperLocationUseCase trackShipperUseCase,
-  }) : 
-       _stopTrackingUseCase = stopTrackingUseCase,
+  }) : _stopTrackingUseCase = stopTrackingUseCase,
        _trackShipperUseCase = trackShipperUseCase,
        super(const ShipperLocationState());
 
@@ -27,10 +26,10 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
   Future<void> startTrackingShipper(int shipperId) async {
     try {
       // AppLogger.i('Starting shipper location tracking: $shipperId');
-      
+
       // Stop previous tracking if any
       await stopTracking();
-      
+
       state = state.copyWith(
         isLoading: true,
         trackingShipperId: shipperId,
@@ -42,7 +41,7 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
       // final startResult = await _startTrackingUseCase(
       //   StartShipperTrackingParams(shipperId: shipperId),
       // );
-      
+
       // startResult.fold(
       //   (failure) {
       //     state = state.copyWith(
@@ -61,7 +60,7 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
       final streamResult = await _trackShipperUseCase(
         TrackShipperParams(shipperId: shipperId),
       );
-      
+
       streamResult.fold(
         (failure) {
           state = state.copyWith(
@@ -76,7 +75,7 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
             isTracking: true,
             isConnected: true,
           );
-          
+
           // Listen to location updates
           _locationSubscription = locationStream.listen(
             (location) {
@@ -94,15 +93,11 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
             },
             onDone: () {
               AppLogger.i('Shipper location stream closed');
-              state = state.copyWith(
-                isTracking: false,
-                isConnected: false,
-              );
+              state = state.copyWith(isTracking: false, isConnected: false);
             },
           );
         },
       );
-      
     } catch (e) {
       AppLogger.e('Failed to start shipper tracking: $shipperId', e);
       state = state.copyWith(
@@ -117,20 +112,18 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
   Future<void> stopTracking() async {
     try {
       AppLogger.i('Stopping shipper location tracking');
-      
+
       // Cancel local subscription
       await _locationSubscription?.cancel();
       _locationSubscription = null;
-      
+
       // Stop tracking through UseCase
       final result = await _stopTrackingUseCase(NoParams());
-      
+
       result.fold(
         (failure) {
           // AppLogger.e('Failed to stop tracking via UseCase: ${failure.message}');
-          state = state.copyWith(
-            error: failure.message,
-          );
+          state = state.copyWith(error: failure.message);
         },
         (_) {
           state = state.copyWith(
@@ -143,12 +136,9 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
           // AppLogger.i('Stopped shipper location tracking successfully');
         },
       );
-      
     } catch (e) {
       AppLogger.e('Error stopping shipper tracking', e);
-      state = state.copyWith(
-        error: 'Lỗi khi dừng theo dõi shipper',
-      );
+      state = state.copyWith(error: 'Lỗi khi dừng theo dõi shipper');
     }
   }
 
@@ -161,7 +151,7 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
   Future<void> refresh() async {
     try {
       AppLogger.i('Refreshing shipper location tracking');
-      
+
       final currentShipperId = state.trackingShipperId;
       if (currentShipperId != null) {
         state = state.copyWith(isLoading: true, clearError: true);
@@ -184,10 +174,10 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
   @override
   void dispose() {
     AppLogger.i('Disposing shipper location notifier');
-    stopTracking();
+    _stopTrackingUseCase(NoParams());
     // Cancel subscriptions
     _locationSubscription?.cancel();
-    
+
     super.dispose();
   }
 }

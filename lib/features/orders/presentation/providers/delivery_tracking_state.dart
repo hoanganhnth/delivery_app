@@ -1,8 +1,10 @@
+import 'package:equatable/equatable.dart';
+
 import '../../domain/entities/delivery_tracking_entity.dart';
 import '../../domain/entities/shipper_entity.dart';
 
 /// State cho delivery tracking
-class DeliveryTrackingState {
+class DeliveryTrackingState extends Equatable{
   final bool isConnected;
   final bool isTracking;
   final DeliveryTrackingEntity? currentTracking;
@@ -52,4 +54,7 @@ class DeliveryTrackingState {
   String toString() {
     return 'DeliveryTrackingState(isConnected: $isConnected, isTracking: $isTracking, hasTracking: ${currentTracking != null}, hasShipper: ${shipper != null}, currentShipperId: $currentShipperId, isLoadingShipper: $isLoadingShipper, error: $error)';
   }
+  
+  @override
+  List<Object?> get props => [isConnected, isTracking, currentTracking, shipper, currentShipperId, isLoadingShipper, error, isLoading];
 }

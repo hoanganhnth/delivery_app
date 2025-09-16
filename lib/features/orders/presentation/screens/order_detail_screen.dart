@@ -1,3 +1,4 @@
+import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/providers.dart';
@@ -90,8 +91,8 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
             const SizedBox(height: 16),
 
             // Delivery tracking section for orders being delivered
-            // if (order.status == OrderStatus.delivering)
-            OrderDeliveryTrackingCard(order: order),
+            if (order.status == OrderStatus.delivering)
+              OrderDeliveryTrackingCard(order: order),
 
             OrderCustomerInfoCard(order: order),
             const SizedBox(height: 16),

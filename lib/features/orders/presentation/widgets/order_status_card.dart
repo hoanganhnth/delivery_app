@@ -102,14 +102,6 @@ class OrderStatusCard extends StatelessWidget {
     switch (status) {
       case OrderStatus.pending:
         return Icons.schedule;
-      case OrderStatus.confirmed:
-        return Icons.check_circle_outline;
-      case OrderStatus.preparing:
-        return Icons.restaurant;
-      case OrderStatus.ready:
-        return Icons.shopping_bag;
-      case OrderStatus.pickedUp:
-        return Icons.local_shipping;
       case OrderStatus.delivering:
         return Icons.delivery_dining;
       case OrderStatus.delivered:
@@ -130,16 +122,8 @@ extension OrderStatusExtension on OrderStatus {
     switch (this) {
       case OrderStatus.pending:
         return Colors.orange;
-      case OrderStatus.confirmed:
-        return Colors.blue;
-      case OrderStatus.preparing:
-        return Colors.amber;
-      case OrderStatus.ready:
-        return Colors.purple;
-      case OrderStatus.pickedUp:
-        return Colors.indigo;
       case OrderStatus.delivering:
-        return Colors.cyan;
+        return Colors.blue;
       case OrderStatus.delivered:
         return Colors.green;
       case OrderStatus.cancelled:

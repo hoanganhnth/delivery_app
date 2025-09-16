@@ -23,8 +23,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
     required RefreshDeliveryTrackingUseCase refreshUseCase,
     required GetShipperByIdUseCase getShipperUseCase,
     required GetCurrentDeliveryUseCase getCurrentDeliveryUseCase,
-  }) :
-  //  _connectUseCase = connectUseCase,
+  }) : //  _connectUseCase = connectUseCase,
        _startTrackingUseCase = startTrackingUseCase,
        _stopTrackingUseCase = stopTrackingUseCase,
        _refreshUseCase = refreshUseCase,
@@ -64,10 +63,10 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
       AppLogger.d('Already tracking order $orderId, skipping duplicate call');
       return;
     }
-    
+
     // Bước 1: Lấy delivery hiện tại qua REST API trước
     await getCurrentDelivery(orderId);
-    
+
     // Bước 2: Nếu cần real-time updates, start WebSocket tracking
     if (state.currentTracking != null) {
       AppLogger.i('Starting real-time tracking for order: $orderId');
@@ -88,11 +87,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
       //   throw Exception('Chưa kết nối được dịch vụ theo dõi');
       // }
 
-      state = state.copyWith(
-        isTracking: true,
-        clearError: true,
-        clearTracking: true,
-      );
+      state = state.copyWith(isTracking: true, clearError: true);
 
       final result = await _startTrackingUseCase(
         TrackDeliveryParams(orderId: orderId),
@@ -110,14 +105,16 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
           );
           deliveryStream.listen(
             (delivery) {
-              AppLogger.d('Received delivery tracking: Order ${delivery.orderId}, Shipper ${delivery.shipperId}');
-              
+              AppLogger.d(
+                'Received delivery tracking: Order ${delivery.orderId}, Shipper ${delivery.shipperId}',
+              );
+
               // Cập nhật delivery tracking
               state = state.copyWith(
                 currentTracking: delivery,
                 clearError: true,
               );
-              
+
               // Lấy thông tin shipper nếu là shipper ID mới
               _fetchShipperInfoIfNeeded(delivery.shipperId);
             },
@@ -202,7 +199,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
 
     try {
       AppLogger.i('Fetching shipper info for ID: $shipperId');
-      
+
       // Bắt đầu loading shipper
       state = state.copyWith(
         isLoadingShipper: true,
@@ -245,7 +242,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
   Future<void> getCurrentDelivery(int orderId) async {
     try {
       AppLogger.i('Getting current delivery for order: $orderId');
-      
+
       state = state.copyWith(isLoading: true, clearError: true);
 
       final result = await _getCurrentDeliveryUseCase.call(
@@ -255,10 +252,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
       result.fold(
         (failure) {
           AppLogger.e('Failed to get current delivery: ${failure.message}');
-          state = state.copyWith(
-            isLoading: false,
-            error: failure.message,
-          );
+          state = state.copyWith(isLoading: false, error: failure.message);
         },
         (delivery) {
           AppLogger.i('Successfully got current delivery for order: $orderId');
@@ -267,7 +261,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
             currentTracking: delivery,
             clearError: true,
           );
-          
+
           // Tự động lấy thông tin shipper nếu cần
           _fetchShipperInfoIfNeeded(delivery.shipperId);
         },
@@ -276,7 +270,8 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
       AppLogger.e('Unexpected error getting current delivery', e);
       state = state.copyWith(
         isLoading: false,
-        error: 'Lỗi không mong muốn khi lấy thông tin delivery: ${e.toString()}',
+        error:
+            'Lỗi không mong muốn khi lấy thông tin delivery: ${e.toString()}',
       );
     }
   }

@@ -46,10 +46,10 @@ class MockOrderService {
         notes: 'Giao hàng trước 6h chiều',
       ),
 
-      // Order 2: Confirmed
+      // Order 2: Delivering
       const OrderEntity(
         id: 2,
-        status: OrderStatus.confirmed,
+        status: OrderStatus.delivering,
         customerName: 'Trần Thị B',
         customerPhone: '0912345678',
         deliveryAddress: '789 Pasteur, Quận 3, TP.HCM',
@@ -81,10 +81,10 @@ class MockOrderService {
         notes: '',
       ),
 
-      // Order 3: Preparing
+      // Order 3: Delivered
       const OrderEntity(
         id: 3,
-        status: OrderStatus.preparing,
+        status: OrderStatus.delivered,
         customerName: 'Phạm Minh D',
         customerPhone: '0934567890',
         deliveryAddress: '147 Nguyễn Thị Minh Khai, Quận 1, TP.HCM',

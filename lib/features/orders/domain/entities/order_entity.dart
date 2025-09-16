@@ -5,13 +5,9 @@ import 'order_item_entity.dart';
 /// Order status enum
 enum OrderStatus {
   pending('PENDING'),
-  confirmed('CONFIRMED'),
-  preparing('PREPARING'),
-  ready('READY'),
-  pickedUp('PICKED_UP'),
   delivering('DELIVERING'),
-  delivered('DELIVERED'),
-  cancelled('CANCELLED');
+  cancelled('CANCELLED'),
+  delivered('DELIVERED');
 
   const OrderStatus(this.value);
   final String value;
@@ -21,14 +17,6 @@ enum OrderStatus {
     switch (value.toUpperCase()) {
       case 'PENDING':
         return OrderStatus.pending;
-      case 'CONFIRMED':
-        return OrderStatus.confirmed;
-      case 'PREPARING':
-        return OrderStatus.preparing;
-      case 'READY':
-        return OrderStatus.ready;
-      case 'PICKED_UP':
-        return OrderStatus.pickedUp;
       case 'DELIVERING':
         return OrderStatus.delivering;
       case 'DELIVERED':
@@ -44,21 +32,13 @@ enum OrderStatus {
   String get vietnameseText {
     switch (this) {
       case OrderStatus.pending:
-        return 'Chờ xác nhận';
-      case OrderStatus.confirmed:
-        return 'Đã xác nhận';
-      case OrderStatus.preparing:
-        return 'Đang chuẩn bị';
-      case OrderStatus.ready:
-        return 'Sẵn sàng';
-      case OrderStatus.pickedUp:
-        return 'Đã lấy hàng';
+        return 'Chờ giao hàng';
       case OrderStatus.delivering:
-        return 'Đang giao';
+        return 'Đang giao hàng';
       case OrderStatus.delivered:
-        return 'Đã giao';
+        return 'Thành công';
       case OrderStatus.cancelled:
-        return 'Đã hủy';
+        return 'Đã huỷ';
     }
   }
 
@@ -67,18 +47,10 @@ enum OrderStatus {
     switch (this) {
       case OrderStatus.pending:
         return Colors.orange;
-      case OrderStatus.confirmed:
-        return Colors.blue;
-      case OrderStatus.preparing:
-        return Colors.purple;
-      case OrderStatus.ready:
-        return Colors.green;
-      case OrderStatus.pickedUp:
-        return Colors.teal;
       case OrderStatus.delivering:
-        return Colors.indigo;
+        return Colors.blue;
       case OrderStatus.delivered:
-        return Colors.green.shade700;
+        return Colors.green;
       case OrderStatus.cancelled:
         return Colors.red;
     }
@@ -155,21 +127,13 @@ class OrderEntity extends Equatable {
   String get statusText {
     switch (status) {
       case OrderStatus.pending:
-        return 'Đang chờ xác nhận';
-      case OrderStatus.confirmed:
-        return 'Đã xác nhận';
-      case OrderStatus.preparing:
-        return 'Đang chuẩn bị';
-      case OrderStatus.ready:
-        return 'Sẵn sàng lấy hàng';
-      case OrderStatus.pickedUp:
-        return 'Đã lấy hàng';
+        return 'Chờ giao hàng';
       case OrderStatus.delivering:
         return 'Đang giao hàng';
       case OrderStatus.delivered:
-        return 'Đã giao hàng';
+        return 'Thành công';
       case OrderStatus.cancelled:
-        return 'Đã hủy';
+        return 'Đã huỷ';
     }
   }
 
@@ -178,16 +142,8 @@ class OrderEntity extends Equatable {
     switch (status) {
       case OrderStatus.pending:
         return '#FF9800'; // Orange
-      case OrderStatus.confirmed:
-        return '#2196F3'; // Blue
-      case OrderStatus.preparing:
-        return '#FF5722'; // Deep Orange
-      case OrderStatus.ready:
-        return '#9C27B0'; // Purple
-      case OrderStatus.pickedUp:
-        return '#607D8B'; // Blue Grey
       case OrderStatus.delivering:
-        return '#3F51B5'; // Indigo
+        return '#2196F3'; // Blue
       case OrderStatus.delivered:
         return '#4CAF50'; // Green
       case OrderStatus.cancelled:
@@ -196,7 +152,7 @@ class OrderEntity extends Equatable {
   }
 
   /// Check if order can be cancelled
-  bool get canCancel => status == OrderStatus.pending || status == OrderStatus.confirmed;
+  bool get canCancel => status == OrderStatus.pending;
 
   /// Get total items count
   int get totalItems => items.fold(0, (sum, item) => sum + item.quantity);
