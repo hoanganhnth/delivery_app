@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/network/socket/providers/socket_providers.dart';
 import '../../data/repositories/delivery_tracking_repository_impl.dart';
 import '../../domain/usecases/tracking_usecases.dart';
+import '../../domain/usecases/get_current_delivery_usecase.dart';
 import 'shipper_providers.dart';
 import 'delivery_tracking_notifier.dart';
 import 'delivery_tracking_state.dart';
@@ -33,6 +34,11 @@ final refreshDeliveryTrackingUseCaseProvider = Provider((ref) {
   return RefreshDeliveryTrackingUseCase(repository);
 });
 
+final getCurrentDeliveryUseCaseProvider = Provider((ref) {
+  final repository = ref.watch(deliveryTrackingRepositoryProvider);
+  return GetCurrentDeliveryUseCase(repository);
+});
+
 /// Delivery Tracking Notifier Provider
 final deliveryTrackingNotifierProvider = StateNotifierProvider.autoDispose<DeliveryTrackingNotifier, DeliveryTrackingState>((ref) {
   final connectUseCase = ref.watch(connectDeliveryTrackingUseCaseProvider);
@@ -40,6 +46,7 @@ final deliveryTrackingNotifierProvider = StateNotifierProvider.autoDispose<Deliv
   final stopTrackingUseCase = ref.watch(stopDeliveryTrackingUseCaseProvider);
   final refreshUseCase = ref.watch(refreshDeliveryTrackingUseCaseProvider);
   final getShipperUseCase = ref.watch(getShipperByIdUseCaseProvider);
+  final getCurrentDeliveryUseCase = ref.watch(getCurrentDeliveryUseCaseProvider);
   
   // Clean Architecture: Notifier only depends on UseCases, not Repository
   return DeliveryTrackingNotifier(
@@ -48,6 +55,7 @@ final deliveryTrackingNotifierProvider = StateNotifierProvider.autoDispose<Deliv
     stopTrackingUseCase: stopTrackingUseCase,
     refreshUseCase: refreshUseCase,
     getShipperUseCase: getShipperUseCase,
+    getCurrentDeliveryUseCase: getCurrentDeliveryUseCase,
   );
 });
 

@@ -174,6 +174,39 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
   //          entity.deliveryLng.abs() <= 180;
   // }
   
+  @override
+  Future<Either<Failure, DeliveryTrackingEntity>> getCurrentDelivery(int orderId) async {
+    try {
+      AppLogger.i('Getting current delivery for order: $orderId via REST API');
+      
+      // Sử dụng REST API để lấy delivery hiện tại
+      // Tạm thời trả về mock data, implement API call sau khi có datasource
+      await Future.delayed(const Duration(milliseconds: 500)); // Simulate API call
+      
+      // Mock delivery data for testing
+      final mockDelivery = DeliveryTrackingEntity(
+        id: orderId * 1000, // Mock ID
+        orderId: orderId,
+        shipperId: 14, // Fixed shipper ID for testing
+        status: 'on_the_way',
+        pickupAddress: 'Nhà hàng ABC, Q1, HCM',
+        pickupLat: 10.762622,
+        pickupLng: 106.660172,
+        deliveryAddress: 'Tòa nhà XYZ, Q3, HCM',
+        deliveryLat: 10.795588,
+        deliveryLng: 106.717055,
+        estimatedDeliveryTime: DateTime.now().add(const Duration(minutes: 30)),
+        notes: 'Giao hàng cẩn thận',
+      );
+      
+      AppLogger.i('Successfully retrieved current delivery for order: $orderId');
+      return right(mockDelivery);
+    } catch (e) {
+      AppLogger.e('Failed to get current delivery for order: $orderId', e);
+      return left(ServerFailure('Không thể lấy thông tin delivery: ${e.toString()}'));
+    }
+  }
+
   /// No dispose needed - Service handles stream cleanup
   void dispose() {
     stopTracking();

@@ -30,17 +30,17 @@ class _OrderDeliveryTrackingCardState
         // await ref.read(deliveryTrackingNotifierProvider.notifier).connect();
         await ref
             .read(deliveryTrackingNotifierProvider.notifier)
-            .startTrackingOrder(widget.order.id!);
+            .startTrackingOrderSafe(widget.order.id!);
         final shipperId = ref
             .read(deliveryTrackingNotifierProvider)
             .currentTracking
             ?.shipperId;
-        // if (shipperId != null) {
+        if (shipperId != null) {
           ref
               .read(shipperLocationNotifierProvider.notifier)
               .startTrackingShipper(14);
         }
-      // }
+      }
       // }
     });
   }
@@ -245,7 +245,7 @@ class _OrderDeliveryTrackingCardState
                   // Refresh để thử lấy lại dữ liệu tracking
                   ref
                       .read(deliveryTrackingNotifierProvider.notifier)
-                      .startTrackingOrder(widget.order.id!);
+                      .startTrackingOrderSafe(widget.order.id!);
                 },
                 icon: const Icon(Icons.refresh),
                 label: const Text('Thử lại'),

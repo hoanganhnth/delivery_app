@@ -30,4 +30,7 @@ abstract class DeliveryTrackingRepository {
   
   /// Kiểm tra trạng thái kết nối
   bool get isConnected;
+  
+  /// Lấy delivery tracking hiện tại theo orderId
+  Future<Either<Failure, DeliveryTrackingEntity>> getCurrentDelivery(int orderId);
 }

@@ -1,4 +1,3 @@
-import 'package:delivery_app/features/orders/presentation/providers/shipper_location_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/providers.dart';
@@ -9,7 +8,6 @@ import '../widgets/order_payment_card.dart';
 import '../widgets/order_action_buttons.dart';
 import '../widgets/order_error_widgets.dart';
 import '../widgets/order_delivery_tracking_card.dart';
-import '../../domain/entities/order_entity.dart';
 import '../../../../generated/l10n.dart';
 
 class OrderDetailScreen extends ConsumerStatefulWidget {
