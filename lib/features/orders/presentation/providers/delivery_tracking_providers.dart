@@ -34,7 +34,7 @@ final refreshDeliveryTrackingUseCaseProvider = Provider((ref) {
 });
 
 /// Delivery Tracking Notifier Provider
-final deliveryTrackingNotifierProvider = StateNotifierProvider<DeliveryTrackingNotifier, DeliveryTrackingState>((ref) {
+final deliveryTrackingNotifierProvider = StateNotifierProvider.autoDispose<DeliveryTrackingNotifier, DeliveryTrackingState>((ref) {
   final connectUseCase = ref.watch(connectDeliveryTrackingUseCaseProvider);
   final startTrackingUseCase = ref.watch(startDeliveryTrackingUseCaseProvider);
   final stopTrackingUseCase = ref.watch(stopDeliveryTrackingUseCaseProvider);
@@ -52,10 +52,10 @@ final deliveryTrackingNotifierProvider = StateNotifierProvider<DeliveryTrackingN
 });
 
 /// Provider để kiểm tra xem có đang tracking hay không
-final isTrackingProvider = Provider<bool>((ref) {
-  final state = ref.watch(deliveryTrackingNotifierProvider);
-  return state.isTracking;
-});
+// final isTrackingProvider = Provider<bool>((ref) {
+//   final state = ref.watch(deliveryTrackingNotifierProvider);
+//   return state.isTracking;
+// });
 
 // TODO: Add these back when DTOs are ready
 // /// Provider để lấy current tracking entity

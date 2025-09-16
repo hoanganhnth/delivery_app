@@ -16,14 +16,12 @@ import '../providers/shipper_location_providers.dart';
 class OptimizedDeliveryTrackingMapWidget extends ConsumerStatefulWidget {
   final DeliveryTrackingEntity? deliveryTracking;
   final ShipperEntity? shipper;
-  final Function(String)? onStatusChanged;
   final bool useFakeMovement; // Flag để quyết định có dùng fake movement không
 
   const OptimizedDeliveryTrackingMapWidget({
     super.key,
     this.deliveryTracking,
     this.shipper,
-    this.onStatusChanged,
     this.useFakeMovement = false, // Mặc định không dùng fake
   });
 
@@ -32,7 +30,8 @@ class OptimizedDeliveryTrackingMapWidget extends ConsumerStatefulWidget {
       _OptimizedDeliveryTrackingMapWidgetState();
 }
 
-class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDeliveryTrackingMapWidget> {
+class _OptimizedDeliveryTrackingMapWidgetState
+    extends ConsumerState<OptimizedDeliveryTrackingMapWidget> {
   // Services để tách logic riêng biệt
   late MapboxMapService _mapService;
   FakeShipperMovementService? _movementService;
@@ -46,17 +45,17 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
   @override
   void initState() {
     super.initState();
-    
+
     // Khởi tạo services
     _mapService = MapboxMapService();
-    
+
     // Chỉ khởi tạo fake movement service nếu cần
     if (widget.useFakeMovement) {
       _movementService = FakeShipperMovementService(
         onPositionUpdated: _onShipperPositionUpdated,
       );
     }
-    
+
     // Delay nhỏ để đảm bảo widget được render hoàn toàn trước khi khởi tạo map
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
@@ -78,12 +77,12 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
   Widget build(BuildContext context) {
     // Watch shipper location từ provider nếu không dùng fake movement
     ShipperLocationEntity? currentShipperLocation;
-    
+
     if (!widget.useFakeMovement) {
       final shipperLocationState = ref.watch(shipperLocationNotifierProvider);
       if (shipperLocationState.currentLocation != null) {
         currentShipperLocation = shipperLocationState.currentLocation;
-        
+
         // Cập nhật shipper marker khi có vị trí mới
         if (_previousShipperLocation != currentShipperLocation) {
           _previousShipperLocation = currentShipperLocation;
@@ -95,7 +94,7 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
         }
       }
     }
-    
+
     return _isExpanded ? _buildExpandedMap() : _buildCompactMap();
   }
 
@@ -117,7 +116,7 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
           ),
           child: LayoutBuilder(
             builder: (context, constraints) {
-              final width = 
+              final width =
                   (constraints.maxWidth > 200 ? constraints.maxWidth : 200)
                       .toDouble();
               return Container(
@@ -139,12 +138,17 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
                             ? MapWidget(
                                 key: const ValueKey("compactMapWidget"),
                                 onMapCreated: _onMapCreated,
-                                cameraOptions: _mapService.getInitialCameraPosition(
-                                  pickupLat: widget.deliveryTracking?.pickupLat,
-                                  pickupLng: widget.deliveryTracking?.pickupLng,
-                                  deliveryLat: widget.deliveryTracking?.deliveryLat,
-                                  deliveryLng: widget.deliveryTracking?.deliveryLng,
-                                ),
+                                cameraOptions: _mapService
+                                    .getInitialCameraPosition(
+                                      pickupLat:
+                                          widget.deliveryTracking?.pickupLat,
+                                      pickupLng:
+                                          widget.deliveryTracking?.pickupLng,
+                                      deliveryLat:
+                                          widget.deliveryTracking?.deliveryLat,
+                                      deliveryLng:
+                                          widget.deliveryTracking?.deliveryLng,
+                                    ),
                                 textureView: true,
                                 gestureRecognizers: {
                                   Factory<OneSequenceGestureRecognizer>(
@@ -257,7 +261,7 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
   }
 
   // ==================== MAP EVENT HANDLERS ====================
-  
+
   Future<void> _onMapCreated(MapboxMap mapboxMap) async {
     if (!mounted) return;
 
@@ -273,7 +277,7 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
           deliveryLat: widget.deliveryTracking!.deliveryLat,
           deliveryLng: widget.deliveryTracking!.deliveryLng,
         );
-        
+
         // Fit camera để hiển thị tất cả markers
         await _mapService.fitBoundsToMarkers(
           pickupLat: widget.deliveryTracking!.pickupLat,
@@ -281,7 +285,7 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
           deliveryLat: widget.deliveryTracking!.deliveryLat,
           deliveryLng: widget.deliveryTracking!.deliveryLng,
         );
-        
+
         // Bắt đầu fake shipper movement
         _startFakeShipperMovement();
       }
@@ -291,7 +295,7 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
       AppLogger.e('Error initializing map', e);
     }
   }
-  
+
   // Callback từ FakeShipperMovementService
   void _onShipperPositionUpdated(ShipperLocationEntity location) {
     if (!mounted) return;
@@ -299,7 +303,7 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
     setState(() {
       // Cập nhật shipper marker thông qua service
       _mapService.updateShipperMarker(location);
-      
+
       // Di chuyển camera theo shipper nếu được bật
       if (_followShipper || _isExpanded) {
         _mapService.moveCamera(
@@ -313,7 +317,10 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
 
   // Bắt đầu fake shipper movement (chỉ khi useFakeMovement = true)
   void _startFakeShipperMovement() {
-    if (widget.deliveryTracking == null || !_isMapInitialized || !widget.useFakeMovement) return;
+    if (widget.deliveryTracking == null ||
+        !_isMapInitialized ||
+        !widget.useFakeMovement)
+      return;
 
     _movementService?.startFakeShipperMovement(
       pickupLat: widget.deliveryTracking!.pickupLat,
@@ -351,7 +358,9 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
                 _followShipper = !_followShipper;
               });
             },
-            tooltip: _followShipper ? 'Dừng theo dõi shipper' : 'Theo dõi shipper',
+            tooltip: _followShipper
+                ? 'Dừng theo dõi shipper'
+                : 'Theo dõi shipper',
             isActive: _followShipper,
           ),
         ],
@@ -402,7 +411,7 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
       ),
     );
   }
-  
+
   Widget _buildFollowShipperButton() {
     return Positioned(
       top: 12,
@@ -499,10 +508,10 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
       ),
     );
   }
-  
+
   Widget _buildStatusOverlay() {
     if (widget.deliveryTracking == null) return const SizedBox.shrink();
-    
+
     return Positioned(
       top: 12,
       left: 12,
@@ -525,10 +534,7 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
             const SizedBox(width: 8),
             Text(
               _getStatusTitle(widget.deliveryTracking!.status),
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
             ),
           ],
         ),
@@ -538,7 +544,7 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
 
   Widget _buildShipperInfoOverlay() {
     if (widget.shipper == null) return const SizedBox.shrink();
-    
+
     return Positioned(
       bottom: 12,
       left: 12,
@@ -577,10 +583,7 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
                   ),
                   Text(
                     '${widget.shipper!.vehicleType.toUpperCase()} • ${widget.shipper!.vehicleNumber}',
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
                   ),
                 ],
               ),
@@ -612,7 +615,7 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
         return const Icon(Icons.check_circle, color: Colors.green);
       case 'picked_up':
         return const Icon(Icons.directions_bike, color: Colors.blue);
-      case 'on_the_way':
+      case 'DELIVERING':
         return const Icon(Icons.local_shipping, color: Colors.orange);
       case 'delivered':
         return const Icon(Icons.done_all, color: Colors.green);
@@ -627,7 +630,7 @@ class _OptimizedDeliveryTrackingMapWidgetState extends ConsumerState<OptimizedDe
         return 'Đơn hàng đã xác nhận';
       case 'picked_up':
         return 'Đã lấy hàng';
-      case 'on_the_way':
+      case 'DELIVERING':
         return 'Đang giao hàng';
       case 'delivered':
         return 'Đã giao hàng';

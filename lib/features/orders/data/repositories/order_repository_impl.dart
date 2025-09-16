@@ -1,4 +1,5 @@
 import 'package:delivery_app/core/error/error_mapper.dart';
+import 'package:delivery_app/core/error/exceptions.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/logger/app_logger.dart';
@@ -20,7 +21,6 @@ class OrderRepositoryImpl implements OrderRepository {
     try {
       final dtos = await _remoteDataSource.getUserOrders();
       return right(dtos.map((dto) => dto.toEntity()).toList());
-      
     } on Exception {
       AppLogger.w('API failed, using mock data');
       // Fallback to mock data when API fails
@@ -38,14 +38,18 @@ class OrderRepositoryImpl implements OrderRepository {
     try {
       final dto = await _remoteDataSource.getOrderById(orderId);
       return right(dto.toEntity());
-    } on Exception {
-      AppLogger.w('API failed for order $orderId, using mock data');
+    } on Exception catch (e1) {
+      AppLogger.w('API failed for order $orderId by $e1, using mock data');
       // Fallback to mock data when API fails
       final mockOrder = _mockOrderService.getMockOrderById(orderId);
       if (mockOrder != null) {
         return right(mockOrder);
       }
-      return left(const ServerFailure('Order not found'));
+      return left(
+        ServerFailure(
+          e1 is ServerException ? e1.message : 'Failed to fetch order',
+        ),
+      );
     } catch (e) {
       AppLogger.w('Unexpected error for order $orderId, using mock data');
       final mockOrder = _mockOrderService.getMockOrderById(orderId);

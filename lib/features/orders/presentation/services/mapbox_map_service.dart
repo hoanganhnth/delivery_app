@@ -86,20 +86,22 @@ class MapboxMapService {
         await _pointAnnotationManager!.delete(_shipperMarker!);
         _shipperMarker = null;
       }
-      final ByteData bytes = await rootBundle.load(AppAssets.icShipperMap);
+      final ByteData bytes = await rootBundle.load(AppAssets.icShipperMap,);
       final Uint8List list = bytes.buffer.asUint8List();
       // Tạo shipper marker mới với container đỏ to hơn
       _shipperMarker = await _pointAnnotationManager!.create(
         PointAnnotationOptions(
-          image: list,
+          // image: list,
           geometry: Point(
             coordinates: Position(location.longitude, location.latitude),
           ),
-          // textField: "�", // Container đỏ lớn
-          // textSize: 24.0, // Tăng kích thước gấp đôi
-          // textColor: Colors.red.toARGB32(), // Màu đỏ
-          // textHaloColor: Colors.white.toARGB32(),
-          // textHaloWidth: 3.0, // Tăng viền để nổi bật hơn
+          // iconSize: 0.1,
+          
+          textField: "Shipper", // Container đỏ lớn
+          textSize: 12.0, // Tăng kích thước gấp đôi
+          textColor: Colors.red.toARGB32(), // Màu đỏ
+          textHaloColor: Colors.white.toARGB32(),
+          textHaloWidth: 3.0, // Tăng viền để nổi bật hơn
         ),
       );
     } catch (e) {

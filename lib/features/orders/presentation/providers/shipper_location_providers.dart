@@ -21,7 +21,7 @@ final trackShipperLocationUseCaseProvider = Provider<TrackShipperLocationUseCase
 });
 
 /// Shipper Location Notifier Provider
-final shipperLocationNotifierProvider = StateNotifierProvider<ShipperLocationNotifier, ShipperLocationState>((ref) {
+final shipperLocationNotifierProvider = StateNotifierProvider.autoDispose<ShipperLocationNotifier, ShipperLocationState>((ref) {
   // final startTrackingUseCase = ref.watch(startShipperTrackingUseCaseProvider);
   final stopTrackingUseCase = ref.watch(stopShipperTrackingUseCaseProvider);
   final trackShipperUseCase = ref.watch(trackShipperLocationUseCaseProvider);

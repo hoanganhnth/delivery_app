@@ -63,17 +63,17 @@ final ordersListProvider = StateNotifierProvider<OrdersListNotifier, OrdersListS
   return OrdersListNotifier(getUserOrdersUseCase);
 });
 
-final orderDetailProvider = StateNotifierProvider<OrderDetailNotifier, OrderDetailState>((ref) {
+final orderDetailProvider = StateNotifierProvider.autoDispose<OrderDetailNotifier, OrderDetailState>((ref) {
   final getOrderByIdUseCase = ref.watch(getOrderByIdUseCaseProvider);
   return OrderDetailNotifier(getOrderByIdUseCase);
 });
 
 // Async Providers for Actions
-final createOrderProvider = AsyncNotifierProvider<CreateOrderNotifier, OrderEntity?>(
+final createOrderProvider = AsyncNotifierProvider.autoDispose<CreateOrderNotifier, OrderEntity?>(
   () => CreateOrderNotifier(),
 );
 
-final cancelOrderProvider = AsyncNotifierProvider<CancelOrderNotifier, bool?>(
+final cancelOrderProvider = AsyncNotifierProvider.autoDispose<CancelOrderNotifier, bool?>(
   () => CancelOrderNotifier(),
 );
 

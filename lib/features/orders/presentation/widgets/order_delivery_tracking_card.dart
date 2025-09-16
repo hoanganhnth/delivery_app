@@ -4,7 +4,9 @@ import 'package:delivery_app/features/orders/presentation/widgets/optimized_deli
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/order_entity.dart';
-import '../providers/providers.dart';/// Widget hiển thị delivery tracking trong order detail
+import '../providers/providers.dart';
+
+/// Widget hiển thị delivery tracking trong order detail
 class OrderDeliveryTrackingCard extends ConsumerStatefulWidget {
   final OrderEntity order;
 
@@ -23,23 +25,23 @@ class _OrderDeliveryTrackingCardState
     // Start tracking when widget is created
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (widget.order.id != null) {
-        final isCurrentlyTracking = ref.read(isTrackingProvider);
-        if (!isCurrentlyTracking) {
-          // await ref.read(deliveryTrackingNotifierProvider.notifier).connect();
-          await ref
-              .read(deliveryTrackingNotifierProvider.notifier)
-              .startTrackingOrder(widget.order.id!);
-          final shipperId = ref
-              .read(deliveryTrackingNotifierProvider)
-              .currentTracking
-              ?.shipperId;
-          if (shipperId != null) {
-            ref
-                .read(shipperLocationNotifierProvider.notifier)
-                .startTrackingShipper(shipperId);
-          }
+        // final isCurrentlyTracking = ref.read(isTrackingProvider);
+        // if (!isCurrentlyTracking) {
+        // await ref.read(deliveryTrackingNotifierProvider.notifier).connect();
+        await ref
+            .read(deliveryTrackingNotifierProvider.notifier)
+            .startTrackingOrder(widget.order.id!);
+        final shipperId = ref
+            .read(deliveryTrackingNotifierProvider)
+            .currentTracking
+            ?.shipperId;
+        // if (shipperId != null) {
+          ref
+              .read(shipperLocationNotifierProvider.notifier)
+              .startTrackingShipper(14);
         }
-      }
+      // }
+      // }
     });
   }
 
@@ -200,7 +202,8 @@ class _OrderDeliveryTrackingCardState
 
     return OptimizedDeliveryTrackingMapWidget(
       deliveryTracking: currentTracking,
-      shipper: trackingState.shipper, // Sử dụng trực tiếp shipper từ state (cùng entity type)
+      shipper: trackingState
+          .shipper, // Sử dụng trực tiếp shipper từ state (cùng entity type)
       useFakeMovement: false, // Sử dụng real data từ providers
     );
   }

@@ -3,7 +3,7 @@ import '../../domain/entities/order_entity.dart';
 import 'order_providers.dart';
 
 /// AsyncNotifier cho việc tạo đơn hàng
-class CreateOrderNotifier extends AsyncNotifier<OrderEntity?> {
+class CreateOrderNotifier extends AutoDisposeAsyncNotifier<OrderEntity?> {
   @override
   Future<OrderEntity?> build() async {
     // Initial state - không có order nào được tạo
@@ -44,7 +44,7 @@ class CreateOrderNotifier extends AsyncNotifier<OrderEntity?> {
 }
 
 /// AsyncNotifier cho việc hủy đơn hàng
-class CancelOrderNotifier extends AsyncNotifier<bool?> {
+class CancelOrderNotifier extends AutoDisposeAsyncNotifier<bool?> {
   @override
   Future<bool?> build() async {
     // Initial state

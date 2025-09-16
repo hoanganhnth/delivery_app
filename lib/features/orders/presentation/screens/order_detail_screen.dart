@@ -33,7 +33,8 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
 
   @override
   void dispose() {
-    ref.read(shipperLocationNotifierProvider.notifier).stopTracking();
+    // ref.invalidate(orderDetailProvider);
+    // ref.read(shipperLocationNotifierProvider.notifier).stopTracking();
     super.dispose();
   }
 
@@ -91,8 +92,8 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
             const SizedBox(height: 16),
 
             // Delivery tracking section for orders being delivered
-            if (order.status == OrderStatus.delivering)
-              OrderDeliveryTrackingCard(order: order),
+            // if (order.status == OrderStatus.delivering)
+            OrderDeliveryTrackingCard(order: order),
 
             OrderCustomerInfoCard(order: order),
             const SizedBox(height: 16),

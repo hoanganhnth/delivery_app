@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'order_item_entity.dart';
 
@@ -121,7 +122,7 @@ enum PaymentMethod {
 }
 
 /// Order entity representing a complete order
-class OrderEntity {
+class OrderEntity extends Equatable {
   final int? id;
   final OrderStatus status;
   final String customerName;
@@ -256,4 +257,20 @@ class OrderEntity {
   String toString() {
     return 'OrderEntity(id: $id, customerName: $customerName, status: $status, totalAmount: $totalAmount)';
   }
+  
+  @override
+  List<Object?> get props => [
+    id,
+    status,
+    customerName,
+    customerPhone,
+    deliveryAddress,
+    paymentMethod,
+    totalAmount,
+    notes,
+    items,
+    createdAt,
+    updatedAt,
+    estimatedDeliveryTime,
+  ];
 }
