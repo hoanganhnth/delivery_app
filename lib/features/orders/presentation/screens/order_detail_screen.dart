@@ -91,7 +91,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
             const SizedBox(height: 16),
 
             // Delivery tracking section for orders being delivered
-            if (order.status == OrderStatus.delivering)
+            // if (order.status == OrderStatus.delivering)
               OrderDeliveryTrackingCard(order: order),
 
             OrderCustomerInfoCard(order: order),

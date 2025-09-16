@@ -286,7 +286,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
   @override
   void dispose() {
     AppLogger.i('Disposing delivery tracking notifier');
-    stopTrackingOrder();
+    _stopTrackingUseCase(NoParams());
     // Clean Architecture: Notifier only calls UseCases
     // Connection management is handled by UseCase layer
 

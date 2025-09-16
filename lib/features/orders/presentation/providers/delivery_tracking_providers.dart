@@ -79,13 +79,14 @@ final deliveryTrackingNotifierProvider = StateNotifierProvider.autoDispose<Deliv
 // });
 
 /// Provider để kiểm tra connection status
-final trackingConnectionProvider = Provider<bool>((ref) {
+final trackingConnectionProvider = Provider.autoDispose<bool>((ref) {
   final state = ref.watch(deliveryTrackingNotifierProvider);
   return state.isConnected;
+  // return true;
 });
 
 /// Provider để lấy tracking error
-final trackingErrorProvider = Provider<String?>((ref) {
-  final state = ref.watch(deliveryTrackingNotifierProvider);
-  return state.error;
-});
+// final trackingErrorProvider = Provider<String?>((ref) {
+//   final state = ref.watch(deliveryTrackingNotifierProvider);
+//   return state.error;
+// });
