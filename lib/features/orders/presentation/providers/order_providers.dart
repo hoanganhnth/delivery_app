@@ -8,7 +8,7 @@ import '../../data/repositories/order_repository_impl.dart';
 import '../../domain/entities/order_entity.dart';
 import '../../domain/repositories/order_repository.dart';
 import '../../domain/usecases/orders_usecases.dart';
-import 'order_async_notifiers.dart';
+import 'create_order_async_notifiers.dart';
 import 'order_detail_notifier.dart';
 import 'order_states.dart';
 import 'orders_list_notifier.dart';

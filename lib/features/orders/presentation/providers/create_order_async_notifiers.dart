@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/order_entity.dart';
+import '../../data/dtos/create_order_request_dto.dart';
 import 'order_providers.dart';
 
 /// AsyncNotifier cho việc tạo đơn hàng
@@ -10,14 +11,14 @@ class CreateOrderNotifier extends AutoDisposeAsyncNotifier<OrderEntity?> {
     return null;
   }
 
-  /// Tạo đơn hàng mới
-  Future<OrderEntity?> createOrder(OrderEntity order) async {
+  /// Tạo đơn hàng mới với CreateOrderRequestDto
+  Future<OrderEntity?> createOrder(CreateOrderRequestDto request) async {
     state = const AsyncValue.loading();
 
     try {
       // Get usecase from provider - use read for one-time access in methods
       final createOrderUseCase = ref.read(createOrderUseCaseProvider);
-      final result = await createOrderUseCase(order);
+      final result = await createOrderUseCase(request);
 
       return result.fold(
         (failure) {

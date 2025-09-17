@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
 import '../entities/order_entity.dart';
 import '../repositories/order_repository.dart';
+import '../../data/dtos/create_order_request_dto.dart';
 
 /// UseCase để lấy danh sách đơn hàng của người dùng
 class GetUserOrdersUseCase {
@@ -34,25 +35,25 @@ class CreateOrderUseCase {
 
   CreateOrderUseCase(this.repository);
 
-  Future<Either<Failure, OrderEntity>> call(OrderEntity order) async {
-    // Validate order
-    if (order.items.isEmpty) {
+  Future<Either<Failure, OrderEntity>> call(CreateOrderRequestDto request) async {
+    // Validate request
+    if (request.items.isEmpty) {
       return left(const ValidationFailure('Order must have at least one item'));
     }
     
-    if (order.customerName.trim().isEmpty) {
+    if (request.customerName.trim().isEmpty) {
       return left(const ValidationFailure('Customer name is required'));
     }
     
-    if (order.customerPhone.trim().isEmpty) {
+    if (request.customerPhone.trim().isEmpty) {
       return left(const ValidationFailure('Customer phone is required'));
     }
     
-    if (order.deliveryAddress.trim().isEmpty) {
+    if (request.deliveryAddress.trim().isEmpty) {
       return left(const ValidationFailure('Delivery address is required'));
     }
 
-    return await repository.createOrder(order);
+    return await repository.createOrder(request);
   }
 }
 

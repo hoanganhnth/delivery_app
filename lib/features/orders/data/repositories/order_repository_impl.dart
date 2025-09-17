@@ -8,6 +8,7 @@ import '../../domain/repositories/order_repository.dart';
 import '../datasources/order_remote_datasource.dart';
 import '../datasources/mock_order_service.dart';
 import '../dtos/order_dto.dart';
+import '../dtos/create_order_request_dto.dart';
 
 /// Implementation của OrderRepository
 class OrderRepositoryImpl implements OrderRepository {
@@ -61,9 +62,11 @@ class OrderRepositoryImpl implements OrderRepository {
   }
 
   @override
-  Future<Either<Failure, OrderEntity>> createOrder(OrderEntity order) async {
+  Future<Either<Failure, OrderEntity>> createOrder(CreateOrderRequestDto request) async {
     try {
-      final orderDto = order.toDto();
+      // Chuyển CreateOrderRequestDto thành OrderEntity để gọi API
+      final orderEntity = request.toEntity();
+      final orderDto = orderEntity.toDto();
       final dto = await _remoteDataSource.createOrder(orderDto);
       return right(dto.toEntity());
     } on Exception catch (e) {
