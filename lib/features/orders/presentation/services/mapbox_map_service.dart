@@ -1,7 +1,5 @@
 import 'dart:math' as math;
-import 'package:delivery_app/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../domain/entities/shipper_location_entity.dart';
@@ -86,8 +84,8 @@ class MapboxMapService {
         await _pointAnnotationManager!.delete(_shipperMarker!);
         _shipperMarker = null;
       }
-      final ByteData bytes = await rootBundle.load(AppAssets.icShipperMap,);
-      final Uint8List list = bytes.buffer.asUint8List();
+      // final ByteData bytes = await rootBundle.load(AppAssets.icShipperMap,);
+      // final Uint8List list = bytes.buffer.asUint8List();
       // Tạo shipper marker mới với container đỏ to hơn
       _shipperMarker = await _pointAnnotationManager!.create(
         PointAnnotationOptions(
