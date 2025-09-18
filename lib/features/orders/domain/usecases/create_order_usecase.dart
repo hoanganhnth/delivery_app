@@ -28,9 +28,9 @@ class CreateOrderUseCase {
       return left(const ValidationFailure('Đơn hàng phải có ít nhất 1 món'));
     }
     
-    if (request.totalAmount <= 0) {
-      return left(const ValidationFailure('Tổng tiền phải lớn hơn 0'));
-    }
+    // if (request.totalAmount <= 0) {
+    //   return left(const ValidationFailure('Tổng tiền phải lớn hơn 0'));
+    // }
 
     // Gọi repository với CreateOrderRequestDto
     return await repository.createOrder(request);

@@ -1,9 +1,10 @@
+import 'package:delivery_app/core/presentation/widgets/toast/toast_utils.dart';
+import 'package:delivery_app/features/cart/presentation/providers/cart_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../orders/domain/entities/order_entity.dart';
 import '../../../orders/data/dtos/create_order_request_dto.dart';
-import '../../../orders/data/dtos/order_item_dto.dart';
 import '../../../orders/presentation/providers/order_providers.dart';
 import '../providers/cart_providers.dart';
 
@@ -21,8 +22,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
   final _notesController = TextEditingController();
-  
-  PaymentMethod _selectedPaymentMethod = PaymentMethod.cash;
+
+  PaymentMethod _selectedPaymentMethod = PaymentMethod.cod;
   bool _isLoading = false;
 
   @override
@@ -37,6 +38,26 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   @override
   Widget build(BuildContext context) {
     final cartState = ref.watch(cartNotifierProvider);
+
+    // Listen cho state changes của createOrder để xử lý navigation và thông báo
+    ref.listen<AsyncValue<OrderEntity?>>(createOrderProvider, (prev, next) {
+      next.whenOrNull(
+        data: (order) {
+          if (order != null) {
+            // Thành công - hiển thị thông báo và navigate
+            ToastUtils.showOrderPlacedSuccess(context);
+
+            // Clear cart và navigate về home
+            ref.read(cartNotifierProvider.notifier).clearCart();
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          }
+        },
+        error: (error, stackTrace) {
+          // Lỗi - hiển thị thông báo lỗi
+          ToastUtils.showOrderPlacedError(context, message: error.toString());
+        },
+      );
+    });
 
     return Scaffold(
       backgroundColor: context.colors.background,
@@ -67,40 +88,60 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                           // Restaurant Info Card
                           _buildRestaurantCard(context, cartState),
                           const SizedBox(height: 16),
-                          
+
                           // Customer Info Section
-                          _buildSectionHeader(context, 'Thông tin khách hàng', Icons.person),
+                          _buildSectionHeader(
+                            context,
+                            'Thông tin khách hàng',
+                            Icons.person,
+                          ),
                           const SizedBox(height: 8),
                           _buildCustomerInfoCard(context),
                           const SizedBox(height: 16),
-                          
+
                           // Delivery Address Section
-                          _buildSectionHeader(context, 'Địa chỉ giao hàng', Icons.location_on),
+                          _buildSectionHeader(
+                            context,
+                            'Địa chỉ giao hàng',
+                            Icons.location_on,
+                          ),
                           const SizedBox(height: 8),
                           _buildDeliveryAddressCard(context),
                           const SizedBox(height: 16),
-                          
+
                           // Payment Method Section
-                          _buildSectionHeader(context, 'Phương thức thanh toán', Icons.payment),
+                          _buildSectionHeader(
+                            context,
+                            'Phương thức thanh toán',
+                            Icons.payment,
+                          ),
                           const SizedBox(height: 8),
                           _buildPaymentMethodCard(context),
                           const SizedBox(height: 16),
-                          
+
                           // Order Items Summary
-                          _buildSectionHeader(context, 'Chi tiết đơn hàng', Icons.receipt_long),
+                          _buildSectionHeader(
+                            context,
+                            'Chi tiết đơn hàng',
+                            Icons.receipt_long,
+                          ),
                           const SizedBox(height: 8),
                           _buildOrderSummaryCard(context, cartState),
                           const SizedBox(height: 16),
-                          
+
                           // Notes Section
-                          _buildSectionHeader(context, 'Ghi chú (không bắt buộc)', Icons.note),
+                          _buildSectionHeader(
+                            context,
+                            'Ghi chú (không bắt buộc)',
+                            Icons.note,
+                          ),
                           const SizedBox(height: 8),
                           _buildNotesCard(context),
                         ],
                       ),
                     ),
                   ),
-                  
+
                   // Bottom Checkout Section
                   _buildCheckoutBottom(context, cartState),
                 ],
@@ -109,7 +150,11 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     );
   }
 
-  Widget _buildSectionHeader(BuildContext context, String title, IconData icon) {
+  Widget _buildSectionHeader(
+    BuildContext context,
+    String title,
+    IconData icon,
+  ) {
     return Row(
       children: [
         Icon(icon, size: 20, color: context.colors.primary),
@@ -243,7 +288,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               maxLines: 3,
               decoration: InputDecoration(
                 labelText: 'Địa chỉ giao hàng',
-                hintText: 'Nhập địa chỉ chi tiết: số nhà, đường, phường, quận...',
+                hintText:
+                    'Nhập địa chỉ chi tiết: số nhà, đường, phường, quận...',
                 prefixIcon: const Padding(
                   padding: EdgeInsets.only(bottom: 40),
                   child: Icon(Icons.location_on_outlined),
@@ -264,7 +310,11 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               onTap: () {
                 // TODO: Open map to select location
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Tính năng chọn vị trí trên bản đồ sẽ được cập nhật sớm')),
+                  const SnackBar(
+                    content: Text(
+                      'Tính năng chọn vị trí trên bản đồ sẽ được cập nhật sớm',
+                    ),
+                  ),
                 );
               },
               child: Container(
@@ -305,7 +355,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           children: [
             _buildPaymentOption(
               context,
-              PaymentMethod.cash,
+              PaymentMethod.cod,
               'Tiền mặt (COD)',
               'Thanh toán khi nhận hàng',
               Icons.payments,
@@ -324,7 +374,13 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     );
   }
 
-  Widget _buildPaymentOption(BuildContext context, PaymentMethod method, String title, String subtitle, IconData icon) {
+  Widget _buildPaymentOption(
+    BuildContext context,
+    PaymentMethod method,
+    String title,
+    String subtitle,
+    IconData icon,
+  ) {
     return RadioListTile<PaymentMethod>(
       value: method,
       groupValue: _selectedPaymentMethod,
@@ -345,7 +401,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     );
   }
 
-  Widget _buildOrderSummaryCard(BuildContext context, dynamic cartState) {
+  Widget _buildOrderSummaryCard(BuildContext context, CartState cartState) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -353,35 +409,37 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            ...cartState.cart.items.map((item) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                children: [
-                  Container(
-                    width: 4,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: context.colors.textSecondary,
-                      shape: BoxShape.circle,
+            ...cartState.cart.items.map(
+              (item) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 4,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: context.colors.textSecondary,
+                        shape: BoxShape.circle,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      '${item.quantity}x ${item.menuItemName}',
-                      style: TextStyle(color: context.colors.textPrimary),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        '${item.quantity}x ${item.menuItemName}',
+                        style: TextStyle(color: context.colors.textPrimary),
+                      ),
                     ),
-                  ),
-                  Text(
-                    '${(item.price * item.quantity).toStringAsFixed(0)}₫',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: context.colors.textPrimary,
+                    Text(
+                      '${(item.price * item.quantity).toStringAsFixed(0)}₫',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: context.colors.textPrimary,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            )),
+            ),
             const Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -391,7 +449,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   style: TextStyle(color: context.colors.textSecondary),
                 ),
                 Text(
-                  '${cartState.cart.subtotal.toStringAsFixed(0)}₫',
+                  '${cartState.cart.totalAmount.toStringAsFixed(0)}₫',
                   style: TextStyle(color: context.colors.textPrimary),
                 ),
               ],
@@ -405,7 +463,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   style: TextStyle(color: context.colors.textSecondary),
                 ),
                 Text(
-                  '${cartState.cart.deliveryFee.toStringAsFixed(0)}₫',
+                  '${0}₫',
                   style: TextStyle(color: context.colors.textPrimary),
                 ),
               ],
@@ -448,7 +506,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           controller: _notesController,
           maxLines: 3,
           decoration: const InputDecoration(
-            hintText: 'Ghi chú đặc biệt cho đơn hàng (ví dụ: không cay, giao tận tay...)',
+            hintText:
+                'Ghi chú đặc biệt cho đơn hàng (ví dụ: không cay, giao tận tay...)',
             border: InputBorder.none,
           ),
         ),
@@ -538,79 +597,46 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       _isLoading = true;
     });
 
-    // Store context before any async gaps
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-    final navigator = Navigator.of(context);
-
     try {
       final cartState = ref.read(cartNotifierProvider);
       final createOrderNotifier = ref.read(createOrderProvider.notifier);
-      
-      // Convert cart items to order item DTOs
+
+      // Convert cart items to order item requests
       final orderItems = cartState.cart.items
-          .map((item) => OrderItemDto(
-                id: null, // ID sẽ được tạo bởi server
-                menuItemId: item.menuItemId.toInt(),
-                menuItemName: item.menuItemName,
-                price: item.price,
-                quantity: item.quantity,
-              ))
+          .map(
+            (item) => OrderItemRequest(
+              menuItemId: item.menuItemId.toInt(),
+              menuItemName: item.menuItemName,
+              price: item.price,
+              quantity: item.quantity,
+            ),
+          )
           .toList();
 
-      // Calculate total amount
-      final totalAmount = cartState.cart.items.fold(0.0, (sum, item) => sum + (item.price * item.quantity));
-
-      // Create order request DTO
+      // Create order request DTO với đầy đủ thông tin restaurant
       final createOrderRequest = CreateOrderRequestDto(
+        restaurantId:
+            cartState.cart.currentRestaurantId?.toInt() ??
+            1, // Default restaurant ID
+        restaurantName: cartState.cart.currentRestaurantName ?? 'Nhà hàng',
+        restaurantAddress: 'Địa chỉ nhà hàng', // TODO: Lấy từ restaurant data
+        restaurantPhone: '0901234567', // TODO: Lấy từ restaurant data
+        deliveryAddress: _addressController.text.trim(),
+        deliveryLat: 21.0135, // TODO: Implement location picker
+        deliveryLng: 105.8155, // TODO: Implement location picker
         customerName: _nameController.text.trim(),
         customerPhone: _phoneController.text.trim(),
-        deliveryAddress: _addressController.text.trim(),
         paymentMethod: _selectedPaymentMethod.value,
-        totalAmount: totalAmount,
+        notes: _notesController.text.trim().isEmpty
+            ? null
+            : _notesController.text.trim(),
+        pickupLat: 21.0270, // TODO: Get from restaurant
+        pickupLng: 105.8085, // TODO: Get from restaurant
         items: orderItems,
-        notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
       );
-      
-      // Create order
-      final createdOrder = await createOrderNotifier.createOrder(createOrderRequest);
 
-      if (mounted) {
-        if (createdOrder != null) {
-          scaffoldMessenger.showSnackBar(
-            const SnackBar(
-              content: Text('Đặt hàng thành công!'),
-              backgroundColor: Colors.green,
-            ),
-          );
-
-          // Clear cart and navigate
-          ref.read(cartNotifierProvider.notifier).clearCart();
-          navigator.popUntil((route) => route.isFirst);
-        } else {
-          // Check for error in AsyncValue
-          final asyncState = ref.read(createOrderProvider);
-          asyncState.whenOrNull(
-            error: (error, stackTrace) {
-              scaffoldMessenger.showSnackBar(
-                SnackBar(
-                  content: Text('Lỗi: ${error.toString()}'),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            },
-          );
-        }
-      }
-    } catch (e) {
-      // Use the scaffoldMessenger that was stored before async gap
-      if (mounted) {
-        scaffoldMessenger.showSnackBar(
-          SnackBar(
-            content: Text('Lỗi không mong muốn: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      // Create order - state changes sẽ được xử lý bởi listener ở build method
+      await createOrderNotifier.createOrder(createOrderRequest);
     } finally {
       if (mounted) {
         setState(() {

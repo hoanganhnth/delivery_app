@@ -3,6 +3,7 @@ import 'package:delivery_app/core/data/dtos/base_response_dto.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import '../dtos/order_dto.dart';
+import '../dtos/create_order_request_dto.dart';
 
 part 'order_api_service.g.dart';
 
@@ -18,7 +19,11 @@ abstract class OrderApiService {
   @GET('${ApiConstants.order}/{id}')
   Future<BaseResponseDto<OrderDto>> getOrderById(@Path('id') num orderId);
 
-  /// Tạo đơn hàng mới
+  /// Tạo đơn hàng mới với CreateOrderRequestDto
+  @POST(ApiConstants.order)
+  Future<BaseResponseDto<OrderDto>> createOrderWithDto(@Body() CreateOrderRequestDto request);
+
+  /// Tạo đơn hàng mới (legacy method)
   @POST(ApiConstants.order)
   Future<BaseResponseDto<OrderDto>> createOrder(@Body() OrderDto order);
 

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../dtos/order_dto.dart';
+import '../dtos/create_order_request_dto.dart';
 import 'order_api_service.dart';
 import 'order_remote_datasource.dart';
 import '../../../../core/data/dtos/response_handler.dart';
@@ -50,6 +51,27 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       throw ResponseHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error getting order', e);
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<OrderDto> createOrderWithDto(CreateOrderRequestDto request) async {
+    try {
+      AppLogger.d('Creating new order with DTO');
+      final response = await _apiService.createOrderWithDto(request);
+      AppLogger.i('Successfully created order with DTO');
+      
+      if (response.isSuccess && response.data != null) {
+        return response.data!;
+      } else {
+        throw Exception(response.message);
+      }
+    } on DioException catch (e) {
+      AppLogger.e('Failed to create order with DTO', e);
+      throw ResponseHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      AppLogger.e('Unexpected error creating order with DTO', e);
       throw Exception('Unexpected error: ${e.toString()}');
     }
   }

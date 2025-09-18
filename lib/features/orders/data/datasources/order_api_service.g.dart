@@ -84,6 +84,38 @@ class _OrderApiService implements OrderApiService {
   }
 
   @override
+  Future<BaseResponseDto<OrderDto>> createOrderWithDto(
+    CreateOrderRequestDto request,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = request;
+    final _options = _setStreamType<BaseResponseDto<OrderDto>>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/orders',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late BaseResponseDto<OrderDto> _value;
+    try {
+      _value = BaseResponseDto<OrderDto>.fromJson(
+        _result.data!,
+        (json) => OrderDto.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<BaseResponseDto<OrderDto>> createOrder(OrderDto order) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

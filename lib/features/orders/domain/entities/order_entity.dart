@@ -59,7 +59,7 @@ enum OrderStatus {
 
 /// Payment method enum
 enum PaymentMethod {
-  cash('CASH'),
+  cod('COD'),
   card('CARD'),
   wallet('WALLET');
 
@@ -69,21 +69,21 @@ enum PaymentMethod {
   /// Chuyển đổi từ string thành enum
   static PaymentMethod fromString(String value) {
     switch (value.toUpperCase()) {
-      case 'CASH':
-        return PaymentMethod.cash;
+      case 'COD':
+        return PaymentMethod.cod;
       case 'CARD':
         return PaymentMethod.card;
       case 'WALLET':
         return PaymentMethod.wallet;
       default:
-        return PaymentMethod.cash; // Default fallback
+        return PaymentMethod.cod; // Default fallback
     }
   }
 
   /// Lấy tên tiếng Việt của phương thức thanh toán
   String get vietnameseText {
     switch (this) {
-      case PaymentMethod.cash:
+      case PaymentMethod.cod:
         return 'Tiền mặt';
       case PaymentMethod.card:
         return 'Thẻ ngân hàng';
@@ -160,7 +160,7 @@ class OrderEntity extends Equatable {
   /// Get payment method display text
   String get paymentMethodText {
     switch (paymentMethod) {
-      case PaymentMethod.cash:
+      case PaymentMethod.cod:
         return 'Tiền mặt';
       case PaymentMethod.card:
         return 'Thẻ tín dụng';

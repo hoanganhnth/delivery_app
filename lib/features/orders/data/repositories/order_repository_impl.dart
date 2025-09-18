@@ -64,10 +64,8 @@ class OrderRepositoryImpl implements OrderRepository {
   @override
   Future<Either<Failure, OrderEntity>> createOrder(CreateOrderRequestDto request) async {
     try {
-      // Chuyển CreateOrderRequestDto thành OrderEntity để gọi API
-      final orderEntity = request.toEntity();
-      final orderDto = orderEntity.toDto();
-      final dto = await _remoteDataSource.createOrder(orderDto);
+      // Truyền trực tiếp CreateOrderRequestDto lên server
+      final dto = await _remoteDataSource.createOrderWithDto(request);
       return right(dto.toEntity());
     } on Exception catch (e) {
       return left(mapExceptionToFailure(e));

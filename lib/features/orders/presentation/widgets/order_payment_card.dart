@@ -136,7 +136,7 @@ class OrderPaymentCard extends StatelessWidget {
 
   IconData _getPaymentIcon(PaymentMethod method) {
     switch (method) {
-      case PaymentMethod.cash:
+      case PaymentMethod.cod:
         return Icons.money;
       case PaymentMethod.card:
         return Icons.credit_card;

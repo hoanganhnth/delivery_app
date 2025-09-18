@@ -18,7 +18,7 @@ class MockOrderService {
         customerName: 'Nguyễn Văn A',
         customerPhone: '0901234567',
         deliveryAddress: '123 Nguyễn Huệ, Quận 1, TP.HCM',
-        paymentMethod: PaymentMethod.cash,
+        paymentMethod: PaymentMethod.cod,
         totalAmount: 125000.0,
         items: [
           OrderItemEntity(
@@ -151,7 +151,7 @@ class MockOrderService {
         customerName: 'Đặng Quang H',
         customerPhone: '0978901234',
         deliveryAddress: '753 Cộng Hòa, Quận Tân Bình, TP.HCM',
-        paymentMethod: PaymentMethod.cash,
+        paymentMethod: PaymentMethod.cod,
         totalAmount: 98000.0,
         items: [
           OrderItemEntity(
@@ -179,7 +179,7 @@ class MockOrderService {
         customerName: 'Lý Minh J',
         customerPhone: '0990123456',
         deliveryAddress: '951 Lê Văn Việt, Quận 9, TP.HCM',
-        paymentMethod: PaymentMethod.cash,
+        paymentMethod: PaymentMethod.cod,
         totalAmount: 67000.0,
         items: [
           OrderItemEntity(
