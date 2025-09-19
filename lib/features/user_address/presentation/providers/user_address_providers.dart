@@ -71,7 +71,7 @@ final userAddressListProvider = StateNotifierProvider<UserAddressListNotifier, U
   );
 });
 
-final addressFormProvider = StateNotifierProvider<AddressFormNotifier, AsyncValue<UserAddressEntity?>>((ref) {
+final addressFormProvider = StateNotifierProvider.autoDispose<AddressFormNotifier, AsyncValue<UserAddressEntity?>>((ref) {
   final createAddressUseCase = ref.watch(createAddressUseCaseProvider);
   final updateAddressUseCase = ref.watch(updateAddressUseCaseProvider);
   final getAddressByIdUseCase = ref.watch(getAddressByIdUseCaseProvider);

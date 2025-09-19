@@ -13,6 +13,7 @@ import 'package:delivery_app/generated/l10n.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'features/auth/presentation/providers/token_storage_providers.dart';
 import 'features/auth/presentation/providers/auth_network_providers.dart';
 
@@ -69,26 +70,36 @@ class _MainAppState extends ConsumerState<MainApp> {
     final router = ref.watch(routerProvider);
     final theme = ref.watch(themeProvider);
 
-    return MaterialApp.router(
-      title: 'Delivery App',
+    return ScreenUtilInit(
+      // Thiết kế kích thước chuẩn iPhone X/11/12/13 mini
+      designSize: const Size(375, 812),
+      // Đảm bảo text scale theo kích thước màn hình
+      minTextAdapt: true,
+      // Split screen support cho tablet
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp.router(
+          title: 'Delivery App',
 
-      // Router configuration
-      routerConfig: router,
+          // Router configuration
+          routerConfig: router,
 
-      // Theme configuration
-      theme: theme.themeData,
+          // Theme configuration
+          theme: theme.themeData,
 
-      // Localization configuration
-      localizationsDelegates: const [
-        S.delegate, // Delegate sinh ra từ intl_utils
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: S.delegate.supportedLocales,
+          // Localization configuration
+          localizationsDelegates: const [
+            S.delegate, // Delegate sinh ra từ intl_utils
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
 
-      // Debug banner
-      debugShowCheckedModeBanner: false,
+          // Debug banner
+          debugShowCheckedModeBanner: false,
+        );
+      },
     );
   }
 }
