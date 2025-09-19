@@ -1,151 +1,152 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Text styles for the app
 class AppTextStyles {
   // Headings
-  static const TextStyle h1 = TextStyle(
-    fontSize: 32,
+  static TextStyle get h1  => TextStyle(
+    fontSize: 32.sp,
     fontWeight: FontWeight.bold,
-    height: 1.25,
+    height: 1.25.w,
   );
 
-  static const TextStyle h2 = TextStyle(
-    fontSize: 28,
+  static TextStyle get h2  => TextStyle(
+    fontSize: 28.sp,
     fontWeight: FontWeight.bold,
-    height: 1.29,
+    height: 1.29.w,
   );
 
-  static const TextStyle h3 = TextStyle(
-    fontSize: 24,
+  static TextStyle get h3  => TextStyle(
+    fontSize: 24.sp,
     fontWeight: FontWeight.w600,
-    height: 1.33,
+    height: 1.33.w,
   );
 
-  static const TextStyle h4 = TextStyle(
-    fontSize: 20,
+  static TextStyle get h4  => TextStyle(
+    fontSize: 20.sp,
     fontWeight: FontWeight.w600,
-    height: 1.4,
+    height: 1.4.w,
   );
 
-  static const TextStyle h5 = TextStyle(
-    fontSize: 18,
+  static TextStyle get h5  => TextStyle(
+    fontSize: 18.sp,
     fontWeight: FontWeight.w600,
-    height: 1.44,
+    height: 1.44.w,
   );
 
-  static const TextStyle h6 = TextStyle(
-    fontSize: 16,
+  static TextStyle get h6  => TextStyle(
+    fontSize: 16.sp,
     fontWeight: FontWeight.w600,
-    height: 1.5,
+    height: 1.5.w,
   );
 
   // Body text
-  static const TextStyle bodyLarge = TextStyle(
-    fontSize: 16,
+  static TextStyle get bodyLarge  => TextStyle(
+    fontSize: 16.sp,
     fontWeight: FontWeight.normal,
-    height: 1.5,
+    height: 1.5.w,
   );
 
-  static const TextStyle bodyMedium = TextStyle(
-    fontSize: 14,
+  static TextStyle get bodyMedium  => TextStyle(
+    fontSize: 14.sp,
     fontWeight: FontWeight.normal,
-    height: 1.43,
+    height: 1.43.w,
   );
 
-  static const TextStyle bodySmall = TextStyle(
-    fontSize: 12,
+  static TextStyle get bodySmall  => TextStyle(
+    fontSize: 12.sp,
     fontWeight: FontWeight.normal,
-    height: 1.33,
+    height: 1.33.w,
   );
 
   // Labels
-  static const TextStyle labelLarge = TextStyle(
-    fontSize: 14,
+  static TextStyle get labelLarge  => TextStyle(
+    fontSize: 14.sp,
     fontWeight: FontWeight.w500,
-    height: 1.43,
+    height: 1.43.w,
   );
 
-  static const TextStyle labelMedium = TextStyle(
-    fontSize: 12,
+  static TextStyle get labelMedium  => TextStyle(
+    fontSize: 12.sp,
     fontWeight: FontWeight.w500,
-    height: 1.33,
+    height: 1.33.w,
   );
 
-  static const TextStyle labelSmall = TextStyle(
-    fontSize: 11,
+  static TextStyle get labelSmall  => TextStyle(
+    fontSize: 11.sp,
     fontWeight: FontWeight.w500,
-    height: 1.45,
+    height: 1.45.w,
   );
 
   // Captions
-  static const TextStyle caption = TextStyle(
-    fontSize: 12,
+  static TextStyle get caption  => TextStyle(
+    fontSize: 12.sp,
     fontWeight: FontWeight.normal,
-    height: 1.33,
+    height: 1.33.w,
   );
 
-  static const TextStyle overline = TextStyle(
-    fontSize: 10,
+  static TextStyle get overline  => TextStyle(
+    fontSize: 10.sp,
     fontWeight: FontWeight.w500,
-    height: 1.6,
+    height: 1.6.w,
     letterSpacing: 1.5,
   );
 
   // Button text styles
-  static const TextStyle buttonLarge = TextStyle(
-    fontSize: 16,
+  static TextStyle get buttonLarge  => TextStyle(
+    fontSize: 16.sp,
     fontWeight: FontWeight.w600,
-    height: 1.25,
+    height: 1.25.w,
   );
 
-  static const TextStyle buttonMedium = TextStyle(
-    fontSize: 14,
+  static TextStyle get buttonMedium  => TextStyle(
+    fontSize: 14.sp,
     fontWeight: FontWeight.w600,
-    height: 1.43,
+    height: 1.43.w,
   );
 
-  static const TextStyle buttonSmall = TextStyle(
-    fontSize: 12,
+  static TextStyle get buttonSmall  => TextStyle(
+    fontSize: 12.sp,
     fontWeight: FontWeight.w600,
-    height: 1.33,
+    height: 1.33.w,
   );
 
   // Input text styles
-  static const TextStyle input = TextStyle(
-    fontSize: 16,
+  static TextStyle get input  => TextStyle(
+    fontSize: 16.sp,
     fontWeight: FontWeight.normal,
-    height: 1.5,
+    height: 1.5.w,
   );
 
-  static const TextStyle inputLabel = TextStyle(
-    fontSize: 14,
+  static TextStyle get inputLabel  => TextStyle(
+    fontSize: 14.sp,
     fontWeight: FontWeight.w500,
-    height: 1.43,
+    height: 1.43.w,
   );
 
-  static const TextStyle inputHint = TextStyle(
-    fontSize: 16,
+  static TextStyle get inputHint  => TextStyle(
+    fontSize: 16.sp,
     fontWeight: FontWeight.normal,
-    height: 1.5,
+    height: 1.5.w,
   );
 
-  static const TextStyle inputError = TextStyle(
-    fontSize: 12,
+  static TextStyle get inputError  => TextStyle(
+    fontSize: 12.sp,
     fontWeight: FontWeight.normal,
-    height: 1.33,
+    height: 1.33.w,
   );
 
   // Navigation styles
-  static const TextStyle navigationLabel = TextStyle(
-    fontSize: 12,
+  static TextStyle get navigationLabel  => TextStyle(
+    fontSize: 12.sp,
     fontWeight: FontWeight.w500,
-    height: 1.33,
+    height: 1.33.w,
   );
 
-  static const TextStyle tabLabel = TextStyle(
-    fontSize: 14,
+  static TextStyle get tabLabel  => TextStyle(
+    fontSize: 14.sp,
     fontWeight: FontWeight.w500,
-    height: 1.43,
+    height: 1.43.w,
   );
 
   // Create colored text styles

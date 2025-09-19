@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../domain/entities/order_entity.dart';
 import '../../../../generated/l10n.dart';
 
@@ -18,11 +19,11 @@ class OrderStatusFilter extends StatelessWidget {
     final theme = Theme.of(context);
     
     return Container(
-      height: 50,
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      height: 50.w,
+      padding: EdgeInsets.symmetric(vertical: 8.w),
       child: ListView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
         children: [
           _buildFilterChip(
             context: context,
@@ -31,7 +32,7 @@ class OrderStatusFilter extends StatelessWidget {
             isSelected: selectedStatus == null,
             onTap: () => onStatusChanged(null),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8.w),
           _buildFilterChip(
             context: context,
             theme: theme,
@@ -40,7 +41,7 @@ class OrderStatusFilter extends StatelessWidget {
             onTap: () => onStatusChanged(OrderStatus.pending),
             color: OrderStatus.pending.color,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8.w),
           _buildFilterChip(
             context: context,
             theme: theme,
@@ -49,7 +50,7 @@ class OrderStatusFilter extends StatelessWidget {
             onTap: () => onStatusChanged(OrderStatus.delivering),
             color: OrderStatus.delivering.color,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8.w),
           _buildFilterChip(
             context: context,
             theme: theme,
@@ -58,7 +59,7 @@ class OrderStatusFilter extends StatelessWidget {
             onTap: () => onStatusChanged(OrderStatus.delivered),
             color: OrderStatus.delivered.color,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8.w),
           _buildFilterChip(
             context: context,
             theme: theme,
@@ -75,7 +76,7 @@ class OrderStatusFilter extends StatelessWidget {
             onTap: () => onStatusChanged(OrderStatus.delivered),
             color: OrderStatus.delivered.color,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8.w),
           _buildFilterChip(
             context: context,
             theme: theme,
@@ -102,12 +103,12 @@ class OrderStatusFilter extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
         decoration: BoxDecoration(
           color: isSelected ? chipColor.withValues(alpha: 0.1) : null,
           border: Border.all(
             color: isSelected ? chipColor : theme.colorScheme.outline,
-            width: 1,
+            width: 1.w,
           ),
           borderRadius: BorderRadius.circular(20),
         ),

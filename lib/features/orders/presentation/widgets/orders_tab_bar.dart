@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import '../../../../generated/l10n.dart';
 
@@ -37,11 +38,11 @@ class OrdersTabBar extends StatelessWidget {
         unselectedLabelColor: Colors.white.withValues(alpha: 0.7),
         labelStyle: theme.textTheme.bodyMedium?.copyWith(
           fontWeight: FontWeight.bold,
-          fontSize: 14,
+          fontSize: 14.sp,
         ),
         unselectedLabelStyle: theme.textTheme.bodyMedium?.copyWith(
           fontWeight: FontWeight.normal,
-          fontSize: 14,
+          fontSize: 14.sp,
         ),
         dividerColor: Colors.transparent,
         tabs: [
@@ -60,7 +61,7 @@ class OrdersTabBar extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 18),
-          const SizedBox(width: 6),
+          SizedBox(width: 6.w),
           AutoSizeText(text),
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/order_entity.dart';
 import '../providers/providers.dart';
@@ -51,9 +52,9 @@ class CancelOrderDialog extends ConsumerWidget {
               ),
             ),
           ),
-          loading: () => const SizedBox(
-            width: 20,
-            height: 20,
+          loading: () => SizedBox(
+            width: 20.w,
+            height: 20.w,
             child: CircularProgressIndicator(strokeWidth: 2),
           ),
           error: (error, _) => TextButton(

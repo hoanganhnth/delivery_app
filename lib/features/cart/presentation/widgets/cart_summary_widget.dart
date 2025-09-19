@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../../generated/l10n.dart';
@@ -30,11 +31,11 @@ class CartSummaryWidget extends ConsumerWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: context.colors.surface,
         border: Border(
-          top: BorderSide(color: context.colors.divider, width: 1),
+          top: BorderSide(color: context.colors.divider, width: 1.w),
         ),
         boxShadow: [
           BoxShadow(
@@ -53,7 +54,7 @@ class CartSummaryWidget extends ConsumerWidget {
               onTap: onToggleOrderSummary,
               borderRadius: BorderRadius.circular(8),
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 12.w),
                 decoration: BoxDecoration(
                   color: context.colors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
@@ -65,11 +66,11 @@ class CartSummaryWidget extends ConsumerWidget {
                       showOrderSummary ? S.of(context).hideOrderDetails : S.of(context).showOrderDetails,
                       style: TextStyle(
                         color: context.colors.primary,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8.w),
                     Icon(
                       showOrderSummary ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
                       color: context.colors.primary,
@@ -80,7 +81,7 @@ class CartSummaryWidget extends ConsumerWidget {
               ),
             ),
 
-          if (onToggleOrderSummary != null) const SizedBox(height: 16),
+          if (onToggleOrderSummary != null) SizedBox(height: 16.w),
 
           // Order Summary Header (chỉ hiện khi showOrderSummary = true)
           if (showOrderSummary) ...[
@@ -90,7 +91,7 @@ class CartSummaryWidget extends ConsumerWidget {
                 Text(
                   S.of(context).orderSummary,
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 18.sp,
                     fontWeight: FontWeight.w600,
                     color: context.colors.textPrimary,
                   ),
@@ -98,13 +99,13 @@ class CartSummaryWidget extends ConsumerWidget {
                 Text(
                   S.of(context).items(totalItems),
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     color: context.colors.textSecondary,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
 
             // Pricing Details
             _buildPriceRow(
@@ -113,20 +114,20 @@ class CartSummaryWidget extends ConsumerWidget {
               '\$${totalPrice.toStringAsFixed(2)}',
               isSubtotal: true,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             _buildPriceRow(context, S.of(context).deliveryFee, '\$3.99'),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             _buildPriceRow(context, S.of(context).serviceFee, '\$2.50'),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             _buildPriceRow(
               context,
               S.of(context).tax,
               '\$${(totalPrice * 0.08).toStringAsFixed(2)}',
             ),
 
-            const SizedBox(height: 12),
+            SizedBox(height: 12.w),
             Divider(color: context.colors.divider),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.w),
           ],
 
           // Total (luôn hiển thị)
@@ -138,7 +139,7 @@ class CartSummaryWidget extends ConsumerWidget {
           ),
 
           if (showCheckoutButton) ...[
-            const SizedBox(height: 20),
+            SizedBox(height: 20.w),
             // Checkout Button (luôn hiển thị)
             SizedBox(
               width: double.infinity,
@@ -147,7 +148,7 @@ class CartSummaryWidget extends ConsumerWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.colors.primary,
                   foregroundColor: context.colors.onPrimary,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: EdgeInsets.symmetric(vertical: 16.w),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -155,8 +156,8 @@ class CartSummaryWidget extends ConsumerWidget {
                 ),
                 child: cartState.isLoading
                     ? SizedBox(
-                        height: 20,
-                        width: 20,
+                        height: 20.w,
+                        width: 20.w,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
                           valueColor: AlwaysStoppedAnimation<Color>(
@@ -168,11 +169,11 @@ class CartSummaryWidget extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Icon(Icons.shopping_bag_outlined),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8.w),
                           Text(
                             S.of(context).proceedToCheckout,
-                            style: const TextStyle(
-                              fontSize: 16,
+                            style: TextStyle(
+                              fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -199,7 +200,7 @@ class CartSummaryWidget extends ConsumerWidget {
         Text(
           label,
           style: TextStyle(
-            fontSize: isTotal ? 16 : 14,
+            fontSize: isTotal ? 16.sp : 14.sp,
             fontWeight: isTotal ? FontWeight.w600 : FontWeight.w400,
             color: isTotal
                 ? context.colors.textPrimary
@@ -209,7 +210,7 @@ class CartSummaryWidget extends ConsumerWidget {
         Text(
           price,
           style: TextStyle(
-            fontSize: isTotal ? 18 : 14,
+            fontSize: isTotal ? 18.sp : 14.sp,
             fontWeight: isTotal ? FontWeight.w700 : FontWeight.w500,
             color: isTotal
                 ? context.colors.primary
@@ -241,8 +242,8 @@ class CompactCartSummaryWidget extends ConsumerWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.all(16),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        margin: EdgeInsets.all(16.w),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.w),
         decoration: BoxDecoration(
           color: context.colors.primary,
           borderRadius: BorderRadius.circular(12),
@@ -260,9 +261,9 @@ class CompactCartSummaryWidget extends ConsumerWidget {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.w,
+                    vertical: 4.w,
                   ),
                   decoration: BoxDecoration(
                     color: context.colors.onPrimary.withValues(alpha: 0.2),
@@ -276,12 +277,12 @@ class CompactCartSummaryWidget extends ConsumerWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12.w),
                 Text(
                   'View Cart',
                   style: TextStyle(
                     color: context.colors.onPrimary,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -293,11 +294,11 @@ class CompactCartSummaryWidget extends ConsumerWidget {
                   '\$${totalPrice.toStringAsFixed(2)}',
                   style: TextStyle(
                     color: context.colors.onPrimary,
-                    fontSize: 18,
+                    fontSize: 18.sp,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8.w),
                 Icon(
                   Icons.arrow_forward_ios,
                   color: context.colors.onPrimary,

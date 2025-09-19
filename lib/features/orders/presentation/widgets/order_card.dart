@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../domain/entities/order_entity.dart';
 import '../../../../generated/l10n.dart';
 
@@ -20,12 +21,12 @@ class OrderCard extends StatelessWidget {
     final theme = Theme.of(context);
     
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: EdgeInsets.only(bottom: 12.w),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -49,7 +50,7 @@ class OrderCard extends StatelessWidget {
                 ],
               ),
               
-              const SizedBox(height: 8),
+              SizedBox(height: 8.w),
               
               // Customer info
               Row(
@@ -59,7 +60,7 @@ class OrderCard extends StatelessWidget {
                     size: 16,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: 4.w),
                   Text(
                     order.customerName,
                     style: theme.textTheme.bodyMedium,
@@ -67,7 +68,7 @@ class OrderCard extends StatelessWidget {
                 ],
               ),
               
-              const SizedBox(height: 4),
+              SizedBox(height: 4.w),
               
               // Delivery address
               Row(
@@ -78,7 +79,7 @@ class OrderCard extends StatelessWidget {
                     size: 16,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: 4.w),
                   Expanded(
                     child: Text(
                       order.deliveryAddress,
@@ -92,7 +93,7 @@ class OrderCard extends StatelessWidget {
                 ],
               ),
               
-              const SizedBox(height: 12),
+              SizedBox(height: 12.w),
               
               // Items summary
               Text(
@@ -102,23 +103,23 @@ class OrderCard extends StatelessWidget {
                 ),
               ),
               
-              const SizedBox(height: 12),
+              SizedBox(height: 12.w),
               
               // Status, Price, và Actions
               Row(
                 children: [
                   // Status chip
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 4.w,
                     ),
                     decoration: BoxDecoration(
                       color: order.status.color.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: order.status.color.withValues(alpha: 0.3),
-                        width: 1,
+                        width: 1.w,
                       ),
                     ),
                     child: Text(
@@ -145,7 +146,7 @@ class OrderCard extends StatelessWidget {
               
               // Cancel button if applicable
               if (onCancel != null) ...[
-                const SizedBox(height: 12),
+                SizedBox(height: 12.w),
                 Row(
                   children: [
                     const Spacer(),
@@ -165,7 +166,7 @@ class OrderCard extends StatelessWidget {
               if (order.estimatedDeliveryTime != null &&
                   order.status != OrderStatus.delivered &&
                   order.status != OrderStatus.cancelled) ...[
-                const SizedBox(height: 8),
+                SizedBox(height: 8.w),
                 Row(
                   children: [
                     Icon(
@@ -173,7 +174,7 @@ class OrderCard extends StatelessWidget {
                       size: 16,
                       color: theme.colorScheme.primary,
                     ),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4.w),
                     Text(
                       '${S.of(context).estimatedDelivery}: ${_formatDateTime(order.estimatedDeliveryTime!)}',
                       style: theme.textTheme.bodySmall?.copyWith(

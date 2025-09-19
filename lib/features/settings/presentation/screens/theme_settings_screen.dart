@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/theme.dart';
 
@@ -46,13 +47,13 @@ class ThemeSettingsScreen extends ConsumerWidget {
                       children: [
                         // Theme preview
                         Container(
-                          width: 48,
-                          height: 48,
+                          width: 48.w,
+                          height: 48.w,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(AppRadius.sm),
                             border: Border.all(
                               color: themeData.colors.outline,
-                              width: 2,
+                              width: 2.w,
                             ),
                           ),
                           child: Row(
@@ -254,14 +255,14 @@ class _ColorSwatch extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 40,
-          height: 40,
+          width: 40.w,
+          height: 40.w,
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(AppRadius.sm),
             border: Border.all(
               color: context.colors.outline,
-              width: 1,
+              width: 1.w,
             ),
           ),
         ),

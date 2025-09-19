@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_providers.dart';
 
@@ -16,24 +17,24 @@ class TokenStorageExample extends ConsumerWidget {
         title: const Text('Token Storage Example'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Card(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Authentication Status',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8.w),
                     Text('Authenticated: ${authState.isAuthenticated}'),
                     if (authState.accessToken != null)
                       Text(
@@ -47,7 +48,7 @@ class TokenStorageExample extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             ElevatedButton(
               onPressed: authState.isLoginLoading
                   ? null
@@ -59,14 +60,14 @@ class TokenStorageExample extends ConsumerWidget {
                       );
                     },
               child: authState.isLoginLoading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
+                  ? SizedBox(
+                      height: 20.w,
+                      width: 20.w,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Text('Login (Demo)'),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             ElevatedButton(
               onPressed: () async {
                 // Check stored tokens
@@ -74,7 +75,7 @@ class TokenStorageExample extends ConsumerWidget {
               },
               child: const Text('Check Stored Tokens'),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             ElevatedButton(
               onPressed: authState.isAuthenticated
                   ? () async {
@@ -84,12 +85,12 @@ class TokenStorageExample extends ConsumerWidget {
                   : null,
               child: const Text('Logout & Clear Tokens'),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             if (authState.failure != null)
               Card(
                 color: Colors.red.shade50,
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(16.0.w),
                   child: Text(
                     'Error: ${authState.failure!.message}',
                     style: TextStyle(color: Colors.red.shade700),

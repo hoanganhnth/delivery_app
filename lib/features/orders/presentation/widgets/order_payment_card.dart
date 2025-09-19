@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../domain/entities/order_entity.dart';
 
 /// Widget hiển thị thông tin thanh toán
@@ -16,7 +17,7 @@ class OrderPaymentCard extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -27,7 +28,7 @@ class OrderPaymentCard extends StatelessWidget {
                   color: theme.primaryColor,
                   size: 24,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8.w),
                 Text(
                   'Thông tin thanh toán',
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -36,27 +37,27 @@ class OrderPaymentCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.w),
             _buildPaymentRow(
               context,
               'Phương thức thanh toán',
               order.paymentMethod.vietnameseText,
             ),
-            const Divider(height: 20),
+            Divider(height: 20.w),
             _buildPriceRow(
               context,
               'Tổng tiền món ăn',
               _calculateSubtotal(),
               false,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             _buildPriceRow(
               context,
               'Phí giao hàng',
               _getDeliveryFee(),
               false,
             ),
-            const Divider(height: 20),
+            Divider(height: 20.w),
             _buildPriceRow(
               context,
               'Tổng cộng',
@@ -86,7 +87,7 @@ class OrderPaymentCard extends StatelessWidget {
           ),
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.w),
           decoration: BoxDecoration(
             color: theme.primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),

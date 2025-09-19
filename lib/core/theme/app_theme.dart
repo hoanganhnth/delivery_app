@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'app_colors.dart';
 import 'app_text_styles.dart';
 import 'app_dimensions.dart';
@@ -80,7 +81,7 @@ class AppTheme {
           disabledBackgroundColor: colors.buttonDisabled,
           disabledForegroundColor: colors.textDisabled,
           elevation: 2,
-          padding: const EdgeInsets.symmetric(
+          padding: EdgeInsets.symmetric(
             horizontal: AppSpacing.md,
             vertical: AppSpacing.sm,
           ),
@@ -97,7 +98,7 @@ class AppTheme {
           foregroundColor: colors.primary,
           disabledForegroundColor: colors.textDisabled,
           side: BorderSide(color: colors.primary),
-          padding: const EdgeInsets.symmetric(
+          padding: EdgeInsets.symmetric(
             horizontal: AppSpacing.md,
             vertical: AppSpacing.sm,
           ),
@@ -113,7 +114,7 @@ class AppTheme {
         style: TextButton.styleFrom(
           foregroundColor: colors.primary,
           disabledForegroundColor: colors.textDisabled,
-          padding: const EdgeInsets.symmetric(
+          padding: EdgeInsets.symmetric(
             horizontal: AppSpacing.md,
             vertical: AppSpacing.sm,
           ),
@@ -139,7 +140,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppRadius.inputRadius,
-          borderSide: BorderSide(color: colors.primary, width: 2),
+          borderSide: BorderSide(color: colors.primary, width: 2.w),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: AppRadius.inputRadius,
@@ -147,9 +148,9 @@ class AppTheme {
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: AppRadius.inputRadius,
-          borderSide: BorderSide(color: colors.error, width: 2),
+          borderSide: BorderSide(color: colors.error, width: 2.w),
         ),
-        contentPadding: const EdgeInsets.symmetric(
+        contentPadding: EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
           vertical: AppSpacing.sm,
         ),
@@ -249,7 +250,7 @@ class AppTheme {
         labelStyle: AppTextStyles.tabLabel,
         unselectedLabelStyle: AppTextStyles.tabLabel,
         indicator: UnderlineTabIndicator(
-          borderSide: BorderSide(color: colors.primary, width: 2),
+          borderSide: BorderSide(color: colors.primary, width: 2.w),
         ),
       ),
 

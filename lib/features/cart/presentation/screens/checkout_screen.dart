@@ -1,4 +1,5 @@
 import 'package:delivery_app/core/presentation/widgets/toast/toast_utils.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/features/cart/presentation/providers/cart_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -81,13 +82,13 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 children: [
                   Expanded(
                     child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(16),
+                      padding: EdgeInsets.all(16.w),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Restaurant Info Card
                           _buildRestaurantCard(context, cartState),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16.w),
 
                           // Customer Info Section
                           _buildSectionHeader(
@@ -95,9 +96,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                             'Thông tin khách hàng',
                             Icons.person,
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8.w),
                           _buildCustomerInfoCard(context),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16.w),
 
                           // Delivery Address Section
                           _buildSectionHeader(
@@ -105,9 +106,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                             'Địa chỉ giao hàng',
                             Icons.location_on,
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8.w),
                           _buildDeliveryAddressCard(context),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16.w),
 
                           // Payment Method Section
                           _buildSectionHeader(
@@ -115,9 +116,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                             'Phương thức thanh toán',
                             Icons.payment,
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8.w),
                           _buildPaymentMethodCard(context),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16.w),
 
                           // Order Items Summary
                           _buildSectionHeader(
@@ -125,9 +126,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                             'Chi tiết đơn hàng',
                             Icons.receipt_long,
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8.w),
                           _buildOrderSummaryCard(context, cartState),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16.w),
 
                           // Notes Section
                           _buildSectionHeader(
@@ -135,7 +136,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                             'Ghi chú (không bắt buộc)',
                             Icons.note,
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8.w),
                           _buildNotesCard(context),
                         ],
                       ),
@@ -158,11 +159,11 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     return Row(
       children: [
         Icon(icon, size: 20, color: context.colors.primary),
-        const SizedBox(width: 8),
+        SizedBox(width: 8.w),
         Text(
           title,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 16.sp,
             fontWeight: FontWeight.w600,
             color: context.colors.textPrimary,
           ),
@@ -176,12 +177,12 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: Row(
           children: [
             Container(
-              width: 50,
-              height: 50,
+              width: 50.w,
+              height: 50.w,
               decoration: BoxDecoration(
                 color: context.colors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
@@ -192,7 +193,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 size: 24,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,16 +201,16 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   Text(
                     cartState.cart.currentRestaurantName ?? 'Nhà hàng',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
                       color: context.colors.textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4.w),
                   Text(
                     '${cartState.cart.items.length} món • ${cartState.cart.totalItems} sản phẩm',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       color: context.colors.textSecondary,
                     ),
                   ),
@@ -227,7 +228,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           children: [
             TextFormField(
@@ -235,7 +236,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               decoration: InputDecoration(
                 labelText: 'Họ và tên',
                 hintText: 'Nhập họ và tên của bạn',
-                prefixIcon: const Icon(Icons.person_outline),
+                prefixIcon: Icon(Icons.person_outline),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -247,14 +248,14 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 return null;
               },
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             TextFormField(
               controller: _phoneController,
               keyboardType: TextInputType.phone,
               decoration: InputDecoration(
                 labelText: 'Số điện thoại',
                 hintText: 'Nhập số điện thoại của bạn',
-                prefixIcon: const Icon(Icons.phone_outlined),
+                prefixIcon: Icon(Icons.phone_outlined),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -280,7 +281,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           children: [
             TextFormField(
@@ -290,8 +291,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 labelText: 'Địa chỉ giao hàng',
                 hintText:
                     'Nhập địa chỉ chi tiết: số nhà, đường, phường, quận...',
-                prefixIcon: const Padding(
-                  padding: EdgeInsets.only(bottom: 40),
+                prefixIcon: Padding(
+                  padding: EdgeInsets.only(bottom: 40.w),
                   child: Icon(Icons.location_on_outlined),
                 ),
                 border: OutlineInputBorder(
@@ -305,7 +306,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 return null;
               },
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.w),
             InkWell(
               onTap: () {
                 // TODO: Open map to select location
@@ -318,7 +319,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 );
               },
               child: Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
                   border: Border.all(color: context.colors.primary),
                   borderRadius: BorderRadius.circular(8),
@@ -327,7 +328,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.map, color: context.colors.primary),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8.w),
                     Text(
                       'Chọn vị trí trên bản đồ',
                       style: TextStyle(
@@ -350,7 +351,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           children: [
             _buildPaymentOption(
@@ -392,8 +393,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       title: Row(
         children: [
           Icon(icon, color: context.colors.primary),
-          const SizedBox(width: 8),
-          Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+          SizedBox(width: 8.w),
+          Text(title, style: TextStyle(fontWeight: FontWeight.w500)),
         ],
       ),
       subtitle: Text(subtitle),
@@ -406,23 +407,23 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           children: [
             ...cartState.cart.items.map(
               (item) => Padding(
-                padding: const EdgeInsets.only(bottom: 8),
+                padding: EdgeInsets.only(bottom: 8.w),
                 child: Row(
                   children: [
                     Container(
-                      width: 4,
-                      height: 4,
+                      width: 4.w,
+                      height: 4.w,
                       decoration: BoxDecoration(
                         color: context.colors.textSecondary,
                         shape: BoxShape.circle,
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8.w),
                     Expanded(
                       child: Text(
                         '${item.quantity}x ${item.menuItemName}',
@@ -454,7 +455,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -475,7 +476,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 Text(
                   'Tổng cộng',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
                     color: context.colors.textPrimary,
                   ),
@@ -483,7 +484,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 Text(
                   '${cartState.cart.totalAmount.toStringAsFixed(0)}₫',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
                     color: context.colors.primary,
                   ),
@@ -501,7 +502,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: TextFormField(
           controller: _notesController,
           maxLines: 3,
@@ -517,7 +518,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
   Widget _buildCheckoutBottom(BuildContext context, dynamic cartState) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: context.colors.surface,
         boxShadow: [
@@ -537,7 +538,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               Text(
                 'Tổng thanh toán',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
                   color: context.colors.textPrimary,
                 ),
@@ -545,14 +546,14 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               Text(
                 '${cartState.cart.totalAmount.toStringAsFixed(0)}₫',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.w700,
                   color: context.colors.primary,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16.w),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -560,24 +561,24 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: context.colors.primary,
                 foregroundColor: context.colors.onPrimary,
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: EdgeInsets.symmetric(vertical: 16.w),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
               child: _isLoading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
+                  ? SizedBox(
+                      height: 20.w,
+                      width: 20.w,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
                     )
-                  : const Text(
+                  : Text(
                       'Đặt hàng',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

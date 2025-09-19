@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Payment Screen
 class PaymentScreen extends StatelessWidget {
@@ -10,12 +11,12 @@ class PaymentScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Payment'),
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
-            SizedBox(height: 16),
+            SizedBox(height: 16.w),
             Text('Processing payment...'),
           ],
         ),

@@ -1,4 +1,5 @@
 import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,19 +18,19 @@ class AdminScreen extends ConsumerWidget {
         foregroundColor: Colors.white,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Card(
               color: Colors.red.shade50,
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0.w),
                 child: Row(
                   children: [
                     Icon(Icons.admin_panel_settings, 
                          color: Colors.red.shade700, size: 32),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16.w),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,7 +42,7 @@ class AdminScreen extends ConsumerWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4.w),
                           Text(
                             'Welcome, ${authState.user?.email ?? 'Admin'}',
                             style: Theme.of(context).textTheme.bodyMedium,
@@ -54,14 +55,14 @@ class AdminScreen extends ConsumerWidget {
               ),
             ),
             
-            const SizedBox(height: 24),
+            SizedBox(height: 24.w),
             
             Text(
               'Admin Functions',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             
             Expanded(
               child: GridView.count(
@@ -117,10 +118,10 @@ class AdminScreen extends ConsumerWidget {
               ),
             ),
             
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
                 color: Colors.orange.shade50,
                 border: Border.all(color: Colors.orange.shade200),
@@ -129,7 +130,7 @@ class AdminScreen extends ConsumerWidget {
               child: Row(
                 children: [
                   Icon(Icons.info, color: Colors.orange.shade700),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8.w),
                   Expanded(
                     child: Text(
                       'This page is only accessible to admin users. '
@@ -159,12 +160,12 @@ class AdminScreen extends ConsumerWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(icon, size: 40, color: Colors.red.shade700),
-              const SizedBox(height: 8),
+              SizedBox(height: 8.w),
               Text(
                 title,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -172,7 +173,7 @@ class AdminScreen extends ConsumerWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4.w),
               Text(
                 description,
                 style: Theme.of(context).textTheme.bodySmall,

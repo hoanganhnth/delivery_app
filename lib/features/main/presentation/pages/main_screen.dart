@@ -1,4 +1,5 @@
 import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/features/orders/orders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,7 +39,7 @@ class MainScreen extends ConsumerWidget {
           // scrollDirection: Axis.horizontal,
           child: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 12.0.w, vertical: 8.w),
               child: GNav(
                 
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -47,7 +48,7 @@ class MainScreen extends ConsumerWidget {
                 gap: 8,
                 activeColor: Colors.white,
                 iconSize: 24,
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.w),
                 duration: const Duration(milliseconds: 400),
                 tabBackgroundColor: Colors.orange,
                 color: Colors.grey[600],

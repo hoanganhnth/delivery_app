@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Widget hiển thị khi có lỗi
 class OrderErrorWidget extends StatelessWidget {
@@ -17,7 +18,7 @@ class OrderErrorWidget extends StatelessWidget {
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(24.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -26,7 +27,7 @@ class OrderErrorWidget extends StatelessWidget {
               size: 64,
               color: theme.colorScheme.error,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             Text(
               'Đã xảy ra lỗi',
               style: theme.textTheme.headlineSmall?.copyWith(
@@ -34,7 +35,7 @@ class OrderErrorWidget extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             Text(
               message,
               style: theme.textTheme.bodyMedium?.copyWith(
@@ -43,7 +44,7 @@ class OrderErrorWidget extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             if (onRetry != null) ...[
-              const SizedBox(height: 24),
+              SizedBox(height: 24.w),
               ElevatedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
@@ -67,7 +68,7 @@ class OrderNotFoundWidget extends StatelessWidget {
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(24.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -76,7 +77,7 @@ class OrderNotFoundWidget extends StatelessWidget {
               size: 64,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             Text(
               'Không tìm thấy đơn hàng',
               style: theme.textTheme.headlineSmall?.copyWith(
@@ -84,7 +85,7 @@ class OrderNotFoundWidget extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             Text(
               'Đơn hàng này có thể đã bị xóa hoặc không tồn tại.',
               style: theme.textTheme.bodyMedium?.copyWith(
@@ -92,7 +93,7 @@ class OrderNotFoundWidget extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24.w),
             ElevatedButton.icon(
               onPressed: () => Navigator.of(context).pop(),
               icon: const Icon(Icons.arrow_back),

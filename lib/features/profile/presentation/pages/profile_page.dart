@@ -1,4 +1,5 @@
 import 'package:delivery_app/core/routing/navigation_helper.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/services/app_initializer_service.dart';
 import 'package:delivery_app/features/auth/presentation/providers/auth_providers.dart';
 import 'package:delivery_app/features/auth/presentation/providers/auth_state.dart';
@@ -36,7 +37,7 @@ class ProfilePage extends ConsumerWidget {
           // Thông tin người dùng ở trên cùng
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(24.w),
             color: Colors.orange.withValues(alpha: 0.1),
             child: Row(
               children: [
@@ -45,23 +46,23 @@ class ProfilePage extends ConsumerWidget {
                   backgroundColor: Colors.orange,
                   child: Icon(Icons.person, size: 40, color: Colors.white),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16.w),
                 if (user != null)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         user.fullName ?? "Người dùng",
-                        style: const TextStyle(
-                          fontSize: 20,
+                        style: TextStyle(
+                          fontSize: 20.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4.w),
                       Text(
                         user.email,
-                        style: const TextStyle(
-                          fontSize: 16,
+                        style: TextStyle(
+                          fontSize: 16.sp,
                           color: Colors.grey,
                         ),
                       ),
@@ -71,7 +72,7 @@ class ProfilePage extends ConsumerWidget {
             ),
           ),
 
-          const SizedBox(height: 24),
+          SizedBox(height: 24.w),
 
           // Các phần khác (ví dụ settings, orders…)
           ListTile(
@@ -95,10 +96,10 @@ class ProfilePage extends ConsumerWidget {
           const Spacer(), // đẩy nút logout xuống cuối
 
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0.w),
             child: SizedBox(
               width: double.infinity,
-              height: 48,
+              height: 48.w,
               child: ElevatedButton.icon(
                 onPressed: () async {
                   // Just call logout, navigation will be handled by the listener
@@ -108,7 +109,7 @@ class ProfilePage extends ConsumerWidget {
                 icon: const Icon(Icons.logout, color: Colors.white),
                 label: Text(
                   S.of(context).signOut,
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),

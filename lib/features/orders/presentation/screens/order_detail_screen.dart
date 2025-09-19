@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/providers.dart';
 import '../widgets/order_status_card.dart';
@@ -44,7 +45,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
       appBar: AppBar(
         title: Text(
           '${S.of(context).order} #${widget.orderId}',
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -82,23 +83,23 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             OrderStatusCard(order: order),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
 
             // Delivery tracking section for orders being delivered
             // if (order.status == OrderStatus.delivering)
               OrderDeliveryTrackingCard(order: order),
 
             OrderCustomerInfoCard(order: order),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             OrderItemsCard(order: order),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             OrderPaymentCard(order: order),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             OrderActionButtons(
               order: order,
               onOrderCanceled: () {

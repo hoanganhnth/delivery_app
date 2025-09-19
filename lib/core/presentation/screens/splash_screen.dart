@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../controllers/splash_controller.dart';
@@ -71,7 +72,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   child: ScaleTransition(
                     scale: _scaleAnimation,
                     child: Container(
-                      padding: const EdgeInsets.all(24),
+                      padding: EdgeInsets.all(24.w),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
@@ -94,7 +95,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               },
             ),
 
-            const SizedBox(height: 32),
+            SizedBox(height: 32.w),
 
             // App name
             FadeTransition(
@@ -108,7 +109,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               ),
             ),
 
-            const SizedBox(height: 48),
+            SizedBox(height: 48.w),
 
             // Loading indicator with status
             Column(
@@ -122,7 +123,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     ),
                   ),
 
-                const SizedBox(height: 16),
+                SizedBox(height: 16.w),
 
                 // Status text
                 Text(
@@ -136,7 +137,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
                 // Retry button for error state
                 if (splashController.hasError) ...[
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.w),
                   ElevatedButton(
                     onPressed: () {
                       final router = GoRouter.of(context);
@@ -150,7 +151,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               ],
             ),
 
-            const SizedBox(height: 64),
+            SizedBox(height: 64.w),
 
             // App version or tagline
             FadeTransition(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/cart_item_entity.dart';
 import '../providers/cart_providers.dart';
@@ -26,7 +27,7 @@ class CartDemoWidget extends ConsumerWidget {
         children: [
           // Cart summary
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16.w),
             color: Colors.grey[100],
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -39,7 +40,7 @@ class CartDemoWidget extends ConsumerWidget {
 
           // Add sample items buttons
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16.w),
             child: Column(
               children: [
                 ElevatedButton(
@@ -56,7 +57,7 @@ class CartDemoWidget extends ConsumerWidget {
                   },
                   child: const Text('Add Pizza'),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8.w),
                 ElevatedButton(
                   onPressed: () {
                     final sampleItem = CartItemEntity(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../domain/entities/order_entity.dart';
 
 /// Widget hiển thị thông tin khách hàng
@@ -16,7 +17,7 @@ class OrderCustomerInfoCard extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -27,7 +28,7 @@ class OrderCustomerInfoCard extends StatelessWidget {
                   color: theme.primaryColor,
                   size: 24,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8.w),
                 Text(
                   'Thông tin khách hàng',
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -36,21 +37,21 @@ class OrderCustomerInfoCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.w),
             _buildInfoRow(
               context,
               Icons.person_outline,
               'Tên khách hàng',
               order.customerName,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             _buildInfoRow(
               context,
               Icons.phone,
               'Số điện thoại',
               order.customerPhone,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             _buildInfoRow(
               context,
               Icons.location_on,
@@ -58,7 +59,7 @@ class OrderCustomerInfoCard extends StatelessWidget {
               order.deliveryAddress,
             ),
             if (order.notes != null && order.notes!.isNotEmpty) ...[
-              const SizedBox(height: 8),
+              SizedBox(height: 8.w),
               _buildInfoRow(
                 context,
                 Icons.note,
@@ -88,7 +89,7 @@ class OrderCustomerInfoCard extends StatelessWidget {
           size: 16,
           color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8.w),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +101,7 @@ class OrderCustomerInfoCard extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              const SizedBox(height: 2),
+              SizedBox(height: 2.w),
               Text(
                 value,
                 style: theme.textTheme.bodyMedium,

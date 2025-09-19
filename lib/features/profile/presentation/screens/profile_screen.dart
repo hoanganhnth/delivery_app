@@ -1,4 +1,5 @@
 import 'package:delivery_app/features/auth/presentation/providers/auth_providers.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +17,7 @@ class ProfileScreen extends ConsumerWidget {
         title: const Text('Profile'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0.w),
         child: Column(
           children: [
             if (profileState.hasUser) ...[
@@ -24,22 +25,22 @@ class ProfileScreen extends ConsumerWidget {
                 radius: 50,
                 child: Text(
                   profileState.user!.email.substring(0, 1).toUpperCase(),
-                  style: const TextStyle(fontSize: 32),
+                  style: TextStyle(fontSize: 32.sp),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.w),
               Text(
                 profileState.user!.email,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               if (profileState.user!.fullName != null) ...[
-                const SizedBox(height: 8),
+                SizedBox(height: 8.w),
                 Text(
                   profileState.user!.fullName!,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ],
-              const SizedBox(height: 32),
+              SizedBox(height: 32.w),
               ListTile(
                 leading: const Icon(Icons.edit),
                 title: const Text('Edit Profile'),

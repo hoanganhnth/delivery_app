@@ -1,4 +1,5 @@
 import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_home_page.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../generated/l10n.dart';
@@ -28,7 +29,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         backgroundColor: Colors.orange,
         title: Text(
           S.of(context).deliverFood,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
@@ -36,11 +37,11 @@ class _HomePageState extends ConsumerState<HomePage> {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.notifications_outlined, color: Colors.white),
+            icon: Icon(Icons.notifications_outlined, color: Colors.white),
           ),
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.shopping_cart_outlined, color: Colors.white),
+            icon: Icon(Icons.shopping_cart_outlined, color: Colors.white),
           ),
         ],
       ),
@@ -50,8 +51,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           children: [
             // Search bar
             Container(
-              margin: const EdgeInsets.all(16),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              margin: EdgeInsets.all(16.w),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
               decoration: BoxDecoration(
                 color: Colors.grey[100],
                 borderRadius: BorderRadius.circular(8),
@@ -59,12 +60,12 @@ class _HomePageState extends ConsumerState<HomePage> {
               child: Row(
                 children: [
                   Icon(Icons.search, color: Colors.grey[600]),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12.w),
                   Text(
                     'Tìm món ăn, quán ăn...',
                     style: TextStyle(
                       color: Colors.grey[600],
-                      fontSize: 16,
+                      fontSize: 16.sp,
                     ),
                   ),
                 ],
@@ -73,8 +74,8 @@ class _HomePageState extends ConsumerState<HomePage> {
             
             // Banner
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              height: 160,
+              margin: EdgeInsets.symmetric(horizontal: 16.w),
+              height: 160.w,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 gradient: LinearGradient(
@@ -85,9 +86,9 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               child: Stack(
                 children: [
-                  const Positioned(
-                    left: 20,
-                    top: 20,
+                  Positioned(
+                    left: 20.w,
+                    top: 20.w,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -95,24 +96,24 @@ class _HomePageState extends ConsumerState<HomePage> {
                           'Giao hàng miễn phí',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 24,
+                            fontSize: 24.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        SizedBox(height: 4.w),
                         Text(
                           'Cho đơn hàng đầu tiên',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16,
+                            fontSize: 16.sp,
                           ),
                         ),
-                        SizedBox(height: 12),
+                        SizedBox(height: 12.w),
                         Text(
                           'Sử dụng mã: FREESHIP',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -123,8 +124,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                     right: -20,
                     bottom: -20,
                     child: Container(
-                      width: 120,
-                      height: 120,
+                      width: 120.w,
+                      height: 120.w,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.white.withValues(alpha: 0.1),
@@ -135,7 +136,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
             ),
             
-            const SizedBox(height: 24),
+            SizedBox(height: 24.w),
             
             // Featured restaurants section
           
@@ -143,28 +144,28 @@ class _HomePageState extends ConsumerState<HomePage> {
             // Featured restaurants horizontal list
             const RestaurantHomePage(),
             
-            const SizedBox(height: 24),
+            SizedBox(height: 24.w),
             
             // Categories section
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Text(
                 'Danh mục',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
             
-            const SizedBox(height: 12),
+            SizedBox(height: 12.w),
             
             // Categories grid
             GridView.count(
               crossAxisCount: 4,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
               children: [
                 _buildCategoryItem(Icons.local_pizza, 'Pizza', Colors.red),
                 _buildCategoryItem(Icons.rice_bowl, 'Cơm', Colors.brown),
@@ -177,7 +178,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               ],
             ),
             
-            const SizedBox(height: 20),
+            SizedBox(height: 20.w),
           ],
         ),
       ),
@@ -189,18 +190,18 @@ class _HomePageState extends ConsumerState<HomePage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: 50,
-          height: 50,
+          width: 50.w,
+          height: 50.w,
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: color, size: 28),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.w),
         Text(
           title,
-          style: const TextStyle(fontSize: 12),
+          style: TextStyle(fontSize: 12.sp),
           textAlign: TextAlign.center,
         ),
       ],

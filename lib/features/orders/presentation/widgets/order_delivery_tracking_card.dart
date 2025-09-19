@@ -1,5 +1,6 @@
 // import 'package:delivery_app/features/orders/presentation/widgets/delivery_tracking_map_widget.dart'; // Unused - sử dụng optimized widget
 import 'package:delivery_app/features/orders/presentation/providers/shipper_location_providers.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/features/orders/presentation/widgets/optimized_delivery_tracking_map_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -65,7 +66,7 @@ class _OrderDeliveryTrackingCardState
             borderRadius: BorderRadius.circular(12),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -76,11 +77,11 @@ class _OrderDeliveryTrackingCardState
                       color: Colors.green[600],
                       size: 24,
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12.w),
                     Text(
                       'Theo dõi giao hàng',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
                         color: Colors.grey[800],
                       ),
@@ -93,7 +94,7 @@ class _OrderDeliveryTrackingCardState
                   ],
                 ),
 
-                const SizedBox(height: 16),
+                SizedBox(height: 16.w),
 
                 // Error message
                 if (trackingState.error != null)
@@ -102,7 +103,7 @@ class _OrderDeliveryTrackingCardState
                 // TODO: Add back when DTOs are ready
                 // Shipper info when available
                 // if (shipperInfo != null) ...[
-                //   const SizedBox(height: 16),
+                //   SizedBox(height: 16.w),
                 //   _buildShipperInfo(shipperInfo),
                 // ],
               ],
@@ -110,12 +111,12 @@ class _OrderDeliveryTrackingCardState
           ),
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(height: 16.w),
 
         // Map widget với dữ liệu thật từ deliveryTrackingNotifierProvider
         _buildRealMapWidget(),
 
-        const SizedBox(height: 16),
+        SizedBox(height: 16.w),
       ],
     );
   }
@@ -132,7 +133,7 @@ class _OrderDeliveryTrackingCardState
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.w),
       decoration: BoxDecoration(
         color: statusColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(6),
@@ -142,13 +143,13 @@ class _OrderDeliveryTrackingCardState
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(statusIcon, color: statusColor, size: 14),
-          const SizedBox(width: 4),
+          SizedBox(width: 4.w),
           Text(
             statusText,
             style: TextStyle(
               color: statusColor,
               fontWeight: FontWeight.w600,
-              fontSize: 12,
+              fontSize: 12.sp,
             ),
           ),
         ],
@@ -158,7 +159,7 @@ class _OrderDeliveryTrackingCardState
 
   Widget _buildErrorMessage(String error) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: Colors.red.shade50,
         borderRadius: BorderRadius.circular(8),
@@ -167,11 +168,11 @@ class _OrderDeliveryTrackingCardState
       child: Row(
         children: [
           Icon(Icons.error_outline, color: Colors.red.shade600, size: 20),
-          const SizedBox(width: 8),
+          SizedBox(width: 8.w),
           Expanded(
             child: Text(
               error,
-              style: TextStyle(color: Colors.red.shade800, fontSize: 14),
+              style: TextStyle(color: Colors.red.shade800, fontSize: 14.sp),
             ),
           ),
           IconButton(
@@ -210,7 +211,7 @@ class _OrderDeliveryTrackingCardState
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
-        height: 300,
+        height: 300.w,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: Colors.grey[50],
@@ -220,22 +221,22 @@ class _OrderDeliveryTrackingCardState
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.location_searching, size: 64, color: Colors.grey[400]),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.w),
               Text(
                 'Chưa có thông tin theo dõi',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
                   color: Colors.grey[600],
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8.w),
               Text(
                 'Shipper chưa bắt đầu giao hàng cho đơn này',
-                style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+                style: TextStyle(fontSize: 14.sp, color: Colors.grey[500]),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.w),
               ElevatedButton.icon(
                 onPressed: () {
                   // Refresh để thử lấy lại dữ liệu tracking

@@ -13,9 +13,9 @@
 //     final userRole = guardManager.getUserRole();
 
 //     return Card(
-//       margin: const EdgeInsets.all(16),
+//       margin: EdgeInsets.all(16.w),
 //       child: Padding(
-//         padding: const EdgeInsets.all(16),
+//         padding: EdgeInsets.all(16.w),
 //         child: Column(
 //           crossAxisAlignment: CrossAxisAlignment.start,
 //           children: [
@@ -25,19 +25,19 @@
 //                 context,
 //               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
 //             ),
-//             const SizedBox(height: 16),
+//             SizedBox(height: 16.w),
 
 //             // User Role Display
 //             _buildRoleInfo(context, userRole),
 
-//             const SizedBox(height: 16),
+//             SizedBox(height: 16.w),
 
 //             // Route Access Check
 //             Text(
 //               'Route Access:',
 //               style: Theme.of(context).textTheme.titleMedium,
 //             ),
-//             const SizedBox(height: 8),
+//             SizedBox(height: 8.w),
 
 //             _buildRouteAccess(context, guardManager, AppRoutes.home, 'Home'),
 //             _buildRouteAccess(
@@ -54,12 +54,12 @@
 //             ),
 //             _buildRouteAccess(context, guardManager, AppRoutes.login, 'Login'),
 
-//             const SizedBox(height: 16),
+//             SizedBox(height: 16.w),
 
 //             // Onboarding Status
 //             _buildOnboardingStatus(context, guardManager),
 
-//             const SizedBox(height: 16),
+//             SizedBox(height: 16.w),
 
 //             // Role-based UI
 //             _buildRoleBasedUI(context, userRole),
@@ -98,7 +98,7 @@
 //     }
 
 //     return Container(
-//       padding: const EdgeInsets.all(12),
+//       padding: EdgeInsets.all(12.w),
 //       decoration: BoxDecoration(
 //         color: roleColor.withValues(alpha: 0.1),
 //         border: Border.all(color: roleColor.withValues(alpha: 0.3)),
@@ -107,7 +107,7 @@
 //       child: Row(
 //         children: [
 //           Icon(roleIcon, color: roleColor),
-//           const SizedBox(width: 8),
+//           SizedBox(width: 8.w),
 //           Text(
 //             'Current Role: $roleText',
 //             style: TextStyle(color: roleColor, fontWeight: FontWeight.bold),
@@ -126,7 +126,7 @@
 //     final canAccess = guardManager.canAccessRoute(route);
 
 //     return Padding(
-//       padding: const EdgeInsets.symmetric(vertical: 2),
+//       padding: EdgeInsets.symmetric(vertical: 2.w),
 //       child: Row(
 //         children: [
 //           Icon(
@@ -134,7 +134,7 @@
 //             color: canAccess ? Colors.green : Colors.red,
 //             size: 16,
 //           ),
-//           const SizedBox(width: 8),
+//           SizedBox(width: 8.w),
 //           Text('$routeName: '),
 //           Text(
 //             canAccess ? 'Accessible' : 'Restricted',
@@ -156,7 +156,7 @@
 //     final hasCompleted = true; // Placeholder until onboarding logic is implemented
 
 //     return Container(
-//       padding: const EdgeInsets.all(12),
+//       padding: EdgeInsets.all(12.w),
 //       decoration: BoxDecoration(
 //         color: hasCompleted
 //             ? Colors.green.withValues(alpha: 0.1)
@@ -174,7 +174,7 @@
 //             hasCompleted ? Icons.check_circle : Icons.warning,
 //             color: hasCompleted ? Colors.green : Colors.orange,
 //           ),
-//           const SizedBox(width: 8),
+//           SizedBox(width: 8.w),
 //           Text(
 //             hasCompleted ? 'Onboarding Completed' : 'Onboarding Pending',
 //             style: TextStyle(
@@ -195,7 +195,7 @@
 //           'Role-based Features:',
 //           style: Theme.of(context).textTheme.titleMedium,
 //         ),
-//         const SizedBox(height: 8),
+//         SizedBox(height: 8.w),
 
 //         // Features available to all authenticated users
 //         if (userRole.isAuthenticated) ...[
@@ -226,7 +226,7 @@
 //         // Guest message
 //         if (userRole.isGuest) ...[
 //           Container(
-//             padding: const EdgeInsets.all(8),
+//             padding: EdgeInsets.all(8.w),
 //             decoration: BoxDecoration(
 //               color: Colors.grey.withValues(alpha: 0.1),
 //               borderRadius: BorderRadius.circular(4),
@@ -243,11 +243,11 @@
 
 //   Widget _buildFeatureItem(IconData icon, String title, Color color) {
 //     return Padding(
-//       padding: const EdgeInsets.symmetric(vertical: 2),
+//       padding: EdgeInsets.symmetric(vertical: 2.w),
 //       child: Row(
 //         children: [
 //           Icon(icon, color: color, size: 16),
-//           const SizedBox(width: 8),
+//           SizedBox(width: 8.w),
 //           Text(title, style: TextStyle(color: color)),
 //         ],
 //       ),

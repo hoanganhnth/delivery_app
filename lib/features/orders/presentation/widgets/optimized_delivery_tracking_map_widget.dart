@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -121,7 +122,7 @@ class _OptimizedDeliveryTrackingMapWidgetState
                   key: const ValueKey('external_info'),
                   children: [
                     _buildExternalInfoCard(),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8.w),
                   ],
                 )
               : const SizedBox.shrink(key: ValueKey('no_external_info')),
@@ -196,16 +197,16 @@ class _OptimizedDeliveryTrackingMapWidgetState
                     // Map controls - trực tiếp trong Stack
                     if (_isMapInitialized)
                       Positioned(
-                        top: 12,
-                        right: 12,
+                        top: 12.w,
+                        right: 12.w,
                         child: _buildMapControls(),
                       ),
 
                     // Status overlay - trực tiếp trong Stack với opacity animation
                     if (_isMapInitialized && _isExpanded)
                       Positioned(
-                        top: 12,
-                        left: 12,
+                        top: 12.w,
+                        left: 12.w,
                         child: AnimatedOpacity(
                           duration: const Duration(milliseconds: 300),
                           opacity: _isExpanded ? 1.0 : 0.0,
@@ -216,9 +217,9 @@ class _OptimizedDeliveryTrackingMapWidgetState
                     // Shipper info overlay - trực tiếp trong Stack với opacity animation
                     if (_isMapInitialized && _isExpanded)
                       Positioned(
-                        bottom: 12,
-                        left: 12,
-                        right: 12,
+                        bottom: 12.w,
+                        left: 12.w,
+                        right: 12.w,
                         child: AnimatedOpacity(
                           duration: const Duration(milliseconds: 300),
                           opacity: _isExpanded ? 1.0 : 0.0,
@@ -238,12 +239,12 @@ class _OptimizedDeliveryTrackingMapWidgetState
   Widget _buildLoadingState() {
     return Container(
       color: Colors.grey[200],
-      child: const Center(
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
-            SizedBox(height: 8),
+            SizedBox(height: 8.w),
             Text('Đang tải bản đồ...', style: TextStyle(color: Colors.grey)),
           ],
         ),
@@ -266,7 +267,7 @@ class _OptimizedDeliveryTrackingMapWidgetState
             ),
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.w),
         // Follow shipper toggle
         _buildMapButton(
           icon: _followShipper ? Icons.gps_fixed : Icons.gps_not_fixed,
@@ -387,7 +388,7 @@ class _OptimizedDeliveryTrackingMapWidgetState
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -396,17 +397,17 @@ class _OptimizedDeliveryTrackingMapWidgetState
               Row(
                 children: [
                   _getStatusIcon(widget.deliveryTracking!.status),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8.w),
                   Text(
                     _getStatusTitle(widget.deliveryTracking!.status),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 16.sp,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12.w),
             ],
 
             // Shipper Info
@@ -416,25 +417,25 @@ class _OptimizedDeliveryTrackingMapWidgetState
                   CircleAvatar(
                     radius: 20,
                     backgroundColor: Colors.grey[200],
-                    child: const Icon(Icons.person, size: 20),
+                    child: Icon(Icons.person, size: 20),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12.w),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           widget.shipper!.name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 14,
+                            fontSize: 14.sp,
                           ),
                         ),
                         Text(
                           '${widget.shipper!.vehicleType.toUpperCase()} • ${widget.shipper!.vehicleNumber}',
                           style: TextStyle(
                             color: Colors.grey[600],
-                            fontSize: 12,
+                            fontSize: 12.sp,
                           ),
                         ),
                       ],
@@ -442,14 +443,14 @@ class _OptimizedDeliveryTrackingMapWidgetState
                   ),
                   ElevatedButton.icon(
                     onPressed: _callShipper,
-                    icon: const Icon(Icons.phone, size: 16),
-                    label: const Text('Gọi', style: TextStyle(fontSize: 12)),
+                    icon: Icon(Icons.phone, size: 16),
+                    label: Text('Gọi', style: TextStyle(fontSize: 12.sp)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 8.w,
                       ),
                     ),
                   ),
@@ -466,7 +467,7 @@ class _OptimizedDeliveryTrackingMapWidgetState
     if (widget.deliveryTracking == null) return const SizedBox.shrink();
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 12.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -481,10 +482,10 @@ class _OptimizedDeliveryTrackingMapWidgetState
       child: Row(
         children: [
           _getStatusIcon(widget.deliveryTracking!.status),
-          const SizedBox(width: 8),
+          SizedBox(width: 8.w),
           Text(
             _getStatusTitle(widget.deliveryTracking!.status),
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
           ),
         ],
       ),
@@ -495,7 +496,7 @@ class _OptimizedDeliveryTrackingMapWidgetState
     if (widget.shipper == null) return const SizedBox.shrink();
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -512,35 +513,35 @@ class _OptimizedDeliveryTrackingMapWidgetState
           CircleAvatar(
             radius: 20,
             backgroundColor: Colors.grey[200],
-            child: const Icon(Icons.person, size: 20),
+            child: Icon(Icons.person, size: 20),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   widget.shipper!.name,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                   ),
                 ),
                 Text(
                   '${widget.shipper!.vehicleType.toUpperCase()} • ${widget.shipper!.vehicleNumber}',
-                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12.sp),
                 ),
               ],
             ),
           ),
           ElevatedButton.icon(
             onPressed: _callShipper,
-            icon: const Icon(Icons.phone, size: 16),
-            label: const Text('Gọi', style: TextStyle(fontSize: 12)),
+            icon: Icon(Icons.phone, size: 16),
+            label: Text('Gọi', style: TextStyle(fontSize: 12.sp)),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.w),
             ),
           ),
         ],
@@ -553,17 +554,17 @@ class _OptimizedDeliveryTrackingMapWidgetState
   Icon _getStatusIcon(DeliveryStatus status) {
     switch (status) {
       case DeliveryStatus.pending:
-        return const Icon(Icons.access_time, color: Colors.grey);
+        return Icon(Icons.access_time, color: Colors.grey);
       case DeliveryStatus.assigned:
-        return const Icon(Icons.check_circle, color: Colors.green);
+        return Icon(Icons.check_circle, color: Colors.green);
       case DeliveryStatus.pickedUp:
-        return const Icon(Icons.directions_bike, color: Colors.blue);
+        return Icon(Icons.directions_bike, color: Colors.blue);
       case DeliveryStatus.delivering:
-        return const Icon(Icons.local_shipping, color: Colors.orange);
+        return Icon(Icons.local_shipping, color: Colors.orange);
       case DeliveryStatus.delivered:
-        return const Icon(Icons.done_all, color: Colors.green);
+        return Icon(Icons.done_all, color: Colors.green);
       case DeliveryStatus.cancelled:
-        return const Icon(Icons.cancel, color: Colors.red);
+        return Icon(Icons.cancel, color: Colors.red);
     }
   }
 

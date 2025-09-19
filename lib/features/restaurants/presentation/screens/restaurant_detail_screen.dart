@@ -1,4 +1,5 @@
 import 'package:delivery_app/core/widgets/app_image.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/features/restaurants/presentation/widgets/menu_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,13 +49,13 @@ class _RestaurantDetailScreenState
           backgroundColor: Colors.orange,
           leading: IconButton(
             onPressed: () => context.pop(),
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            icon: Icon(Icons.arrow_back, color: Colors.white),
           ),
         ),
         body: Center(
           child: Text(
             'Lỗi: ${detailState.errorMessage}',
-            style: const TextStyle(color: Colors.red),
+            style: TextStyle(color: Colors.red),
           ),
         ),
       );
@@ -66,7 +67,7 @@ class _RestaurantDetailScreenState
           backgroundColor: Colors.orange,
           leading: IconButton(
             onPressed: () => context.pop(),
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            icon: Icon(Icons.arrow_back, color: Colors.white),
           ),
         ),
         body: const Center(child: Text('Không tìm thấy nhà hàng')),
@@ -88,7 +89,7 @@ class _RestaurantDetailScreenState
                   color: Colors.black26,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.arrow_back, color: Colors.white),
+                child: Icon(Icons.arrow_back, color: Colors.white),
               ),
             ),
             actions: [
@@ -99,7 +100,7 @@ class _RestaurantDetailScreenState
                     color: Colors.black26,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.favorite_border, color: Colors.white),
+                  child: Icon(Icons.favorite_border, color: Colors.white),
                 ),
               ),
               IconButton(
@@ -109,7 +110,7 @@ class _RestaurantDetailScreenState
                     color: Colors.black26,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.share, color: Colors.white),
+                  child: Icon(Icons.share, color: Colors.white),
                 ),
               ),
             ],
@@ -123,7 +124,7 @@ class _RestaurantDetailScreenState
                           fit: BoxFit.cover,
                           errorWidget: Container(
                             color: Colors.grey[300],
-                            child: const Icon(
+                            child: Icon(
                               Icons.restaurant,
                               size: 80,
                               color: Colors.grey,
@@ -132,7 +133,7 @@ class _RestaurantDetailScreenState
                         )
                       : Container(
                           color: Colors.grey[300],
-                          child: const Icon(
+                          child: Icon(
                             Icons.restaurant,
                             size: 80,
                             color: Colors.grey,
@@ -155,31 +156,31 @@ class _RestaurantDetailScreenState
 
                   // Restaurant info overlay
                   Positioned(
-                    bottom: 16,
-                    left: 16,
-                    right: 16,
+                    bottom: 16.w,
+                    left: 16.w,
+                    right: 16.w,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           restaurant.name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
-                            fontSize: 24,
+                            fontSize: 24.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         if (restaurant.description != null) ...[
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4.w),
                           Text(
                             restaurant.description!,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
-                              fontSize: 14,
+                              fontSize: 14.sp,
                             ),
                           ),
                         ],
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8.w),
                         Row(
                           children: [
                             Icon(
@@ -187,20 +188,20 @@ class _RestaurantDetailScreenState
                               size: 16,
                               color: Colors.orange[300],
                             ),
-                            const SizedBox(width: 4),
-                            const Text(
+                            SizedBox(width: 4.w),
+                            Text(
                               '4.5 (200+ đánh giá)',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 12,
+                                fontSize: 12.sp,
                               ),
                             ),
                             const Spacer(),
-                            const Text(
+                            Text(
                               '20-30 phút • Miễn phí ship',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 12,
+                                fontSize: 12.sp,
                               ),
                             ),
                           ],
@@ -221,8 +222,8 @@ class _RestaurantDetailScreenState
                 children: [
                   // Restaurant info card
                   Container(
-                    margin: const EdgeInsets.all(16),
-                    padding: const EdgeInsets.all(16),
+                    margin: EdgeInsets.all(16.w),
+                    padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
                       color: Colors.grey[50],
                       borderRadius: BorderRadius.circular(12),
@@ -237,19 +238,19 @@ class _RestaurantDetailScreenState
                               color: Colors.grey[600],
                               size: 20,
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8.w),
                             Expanded(
                               child: Text(
                                 restaurant.address,
                                 style: TextStyle(
                                   color: Colors.grey[700],
-                                  fontSize: 14,
+                                  fontSize: 14.sp,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12.w),
                         Row(
                           children: [
                             Icon(
@@ -257,29 +258,29 @@ class _RestaurantDetailScreenState
                               color: Colors.grey[600],
                               size: 20,
                             ),
-                            const SizedBox(width: 8),
-                            const Text(
+                            SizedBox(width: 8.w),
+                            Text(
                               'Mở cửa: 8:00 - 22:00',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 14.sp,
                                 color: Colors.grey,
                               ),
                             ),
                             const Spacer(),
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8.w,
+                                vertical: 4.w,
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.green,
                                 borderRadius: BorderRadius.circular(4),
                               ),
-                              child: const Text(
+                              child: Text(
                                 'Đang mở cửa',
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 12,
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -292,8 +293,8 @@ class _RestaurantDetailScreenState
 
                   // Promo banner
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    padding: const EdgeInsets.all(12),
+                    margin: EdgeInsets.symmetric(horizontal: 16.w),
+                    padding: EdgeInsets.all(12.w),
                     decoration: BoxDecoration(
                       color: Colors.orange[50],
                       borderRadius: BorderRadius.circular(8),
@@ -306,12 +307,12 @@ class _RestaurantDetailScreenState
                           color: Colors.orange[700],
                           size: 20,
                         ),
-                        const SizedBox(width: 8),
-                        const Expanded(
+                        SizedBox(width: 8.w),
+                        Expanded(
                           child: Text(
                             'Giảm 30% cho đơn hàng đầu tiên - Tối đa 50K',
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -320,17 +321,17 @@ class _RestaurantDetailScreenState
                     ),
                   ),
 
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.w),
 
                   // Menu section header
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Row(
                       children: [
                         Text(
                           'Thực đơn',
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 20.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -354,7 +355,7 @@ class _RestaurantDetailScreenState
           ),
 
           // Bottom padding for cart button
-          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+          SliverToBoxAdapter(child: SizedBox(height: 100.w)),
         ],
       ),
 
@@ -364,9 +365,9 @@ class _RestaurantDetailScreenState
           bottom: MediaQuery.of(context).padding.bottom > 0
               ? MediaQuery.of(context).padding.bottom
               : 16,
-          left: 16,
-          right: 16,
-          top: 8,
+          left: 16.w,
+          right: 16.w,
+          top: 8.w,
         ),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -386,25 +387,25 @@ class _RestaurantDetailScreenState
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: isCartEmpty ? Colors.grey : Colors.orange,
-            padding: const EdgeInsets.symmetric(vertical: 16),
+            padding: EdgeInsets.symmetric(vertical: 16.w),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
           ),
           child: isCartEmpty
-              ? const Text(
+              ? Text(
                   'Chưa có món nào trong giỏ hàng',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 )
               : Text(
                   'Xem giỏ hàng ($cartItemsCount) • ${cartTotalAmount.toStringAsFixed(0)}đ',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

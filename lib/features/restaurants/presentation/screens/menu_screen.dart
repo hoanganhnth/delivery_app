@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 /// Menu Screen
@@ -23,7 +24,7 @@ class MenuScreen extends StatelessWidget {
         itemCount: 15,
         itemBuilder: (context, index) {
           return Card(
-            margin: const EdgeInsets.all(8.0),
+            margin: EdgeInsets.all(8.0.w),
             child: ListTile(
               leading: const Icon(Icons.fastfood, size: 40),
               title: Text('Menu Item ${index + 1}'),

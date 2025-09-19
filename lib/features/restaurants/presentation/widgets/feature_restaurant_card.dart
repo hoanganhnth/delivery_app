@@ -1,4 +1,5 @@
 import 'package:delivery_app/features/restaurants/domain/entities/restaurant_entity.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 
 class FeaturedRestaurantCard extends StatelessWidget {
@@ -19,7 +20,7 @@ class FeaturedRestaurantCard extends StatelessWidget {
         children: [
           // Restaurant image
           Container(
-            height: 100,
+            height: 100.w,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
               image: DecorationImage(
@@ -44,27 +45,27 @@ class FeaturedRestaurantCard extends StatelessWidget {
           // Restaurant info
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(8.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     restaurant.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4.w),
                   Row(
                     children: [
                       Icon(Icons.star, size: 12, color: Colors.orange[700]),
-                      const SizedBox(width: 2),
-                      const Text('4.5', style: TextStyle(fontSize: 10)),
-                      const SizedBox(width: 8),
-                      const Text('20-30 phút', style: TextStyle(fontSize: 10)),
+                      SizedBox(width: 2.w),
+                      Text('4.5', style: TextStyle(fontSize: 10.sp)),
+                      SizedBox(width: 8.w),
+                      Text('20-30 phút', style: TextStyle(fontSize: 10.sp)),
                     ],
                   ),
                 ],

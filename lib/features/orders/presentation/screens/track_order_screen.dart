@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Track Order Screen
 class TrackOrderScreen extends StatelessWidget {
@@ -13,27 +14,27 @@ class TrackOrderScreen extends StatelessWidget {
         title: Text('Track Order #$orderId'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0.w),
         child: Column(
           children: [
             Card(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0.w),
                 child: Column(
                   children: [
                     const Icon(Icons.delivery_dining, size: 64),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.w),
                     Text(
                       'Your order is on the way!',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8.w),
                     const Text('Estimated delivery: 15-20 minutes'),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24.w),
             Expanded(
               child: ListView(
                 children: [

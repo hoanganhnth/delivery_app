@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:toastification/toastification.dart';
 
 /// Enum cho các loại toast
@@ -96,15 +97,15 @@ class AppToast {
       // style: ToastificationStyle.fillColored,
       title: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 16,
+          fontSize: 16.sp,
         ),
       ),
       description: Text(
         message,
-        style: const TextStyle(
-          fontSize: 14,
+        style: TextStyle(
+          fontSize: 14.sp,
         ),
       ),
       icon: Icon(
@@ -114,13 +115,13 @@ class AppToast {
       primaryColor: primaryColor,
       backgroundColor: backgroundColor,
       foregroundColor: Colors.white,
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 12,
+      padding: EdgeInsets.symmetric(
+        horizontal: 16.w,
+        vertical: 12.w,
       ),
-      margin: const EdgeInsets.symmetric(
-        horizontal: 12,
-        vertical: 8,
+      margin: EdgeInsets.symmetric(
+        horizontal: 12.w,
+        vertical: 8.w,
       ),
       borderRadius: BorderRadius.circular(12),
       boxShadow: const [

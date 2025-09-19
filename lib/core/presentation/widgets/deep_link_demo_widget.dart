@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../services/share_service.dart';
@@ -15,9 +16,9 @@ class DeepLinkDemoWidget extends ConsumerWidget {
     final config = ref.watch(routerConfigProvider);
 
     return Card(
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16.w),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -27,14 +28,14 @@ class DeepLinkDemoWidget extends ConsumerWidget {
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             Text(
               'Base URL: ${config.baseUrl ?? "Not configured"}',
               style: Theme.of(
                 context,
               ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
 
             // Restaurant Deep Links
             _buildSection(context, 'Restaurant Links', [
@@ -59,7 +60,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
               ),
             ]),
 
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
 
             // Order Deep Links
             _buildSection(context, 'Order Links', [
@@ -87,7 +88,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
               ),
             ]),
 
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
 
             // Promo Deep Links
             _buildSection(context, 'Promo Links', [
@@ -109,7 +110,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
               ),
             ]),
 
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
 
             // Custom Deep Links
             _buildSection(context, 'Custom Links', [
@@ -139,11 +140,11 @@ class DeepLinkDemoWidget extends ConsumerWidget {
               ),
             ]),
 
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
 
             // Test Links Section
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
                 color: Colors.blue.withValues(alpha: 0.1),
                 border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
@@ -155,7 +156,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
                   Row(
                     children: [
                       Icon(Icons.info, color: Colors.blue, size: 16),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8.w),
                       Text(
                         'How to Test Deep Links',
                         style: TextStyle(
@@ -165,13 +166,13 @@ class DeepLinkDemoWidget extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.w),
                   Text(
                     '1. Copy a link above\n'
                     '2. Open in browser or share via message\n'
                     '3. Click the link to open the app\n'
                     '4. App should navigate to the correct screen',
-                    style: TextStyle(color: Colors.blue[700], fontSize: 12),
+                    style: TextStyle(color: Colors.blue[700], fontSize: 12.sp),
                   ),
                 ],
               ),
@@ -196,7 +197,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
             context,
           ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.w),
         Wrap(spacing: 8, runSpacing: 8, children: children),
       ],
     );
@@ -212,8 +213,8 @@ class DeepLinkDemoWidget extends ConsumerWidget {
       icon: const Icon(Icons.link, size: 16),
       label: Text(label),
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        textStyle: const TextStyle(fontSize: 12),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.w),
+        textStyle: TextStyle(fontSize: 12.sp),
       ),
     );
   }

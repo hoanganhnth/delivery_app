@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 /// Not Found Screen (404)
@@ -20,7 +21,7 @@ class NotFoundScreen extends StatelessWidget {
               size: 100,
               color: Colors.grey,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             Text(
               '404',
               style: Theme.of(context).textTheme.displayLarge?.copyWith(
@@ -28,17 +29,17 @@ class NotFoundScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             Text(
               'Page Not Found',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             const Text(
               'The page you are looking for does not exist.',
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32.w),
             ElevatedButton(
               onPressed: () => context.go('/'),
               child: const Text('Go Home'),
@@ -64,7 +65,7 @@ class ErrorScreen extends StatelessWidget {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -73,16 +74,16 @@ class ErrorScreen extends StatelessWidget {
                 size: 100,
                 color: Colors.red,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.w),
               Text(
                 'Oops! Something went wrong',
                 style: Theme.of(context).textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.w),
               if (error != null) ...[
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
                     color: Colors.red.shade50,
                     border: Border.all(color: Colors.red.shade200),
@@ -96,13 +97,13 @@ class ErrorScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.w),
               ],
               const Text(
                 'Please try again or contact support if the problem persists.',
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: 32.w),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -110,7 +111,7 @@ class ErrorScreen extends StatelessWidget {
                     onPressed: () => context.go('/'),
                     child: const Text('Go Home'),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: 16.w),
                   OutlinedButton(
                     onPressed: () {
                       // Refresh the current page

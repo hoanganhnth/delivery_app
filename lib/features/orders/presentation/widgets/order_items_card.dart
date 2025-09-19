@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../domain/entities/order_entity.dart';
 import '../../domain/entities/order_item_entity.dart';
 
@@ -17,7 +18,7 @@ class OrderItemsCard extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -28,7 +29,7 @@ class OrderItemsCard extends StatelessWidget {
                   color: theme.primaryColor,
                   size: 24,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8.w),
                 Text(
                   'Chi tiết đơn hàng',
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -37,7 +38,7 @@ class OrderItemsCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.w),
             ...order.items.asMap().entries.map((entry) {
               final index = entry.key;
               final item = entry.value;
@@ -45,7 +46,7 @@ class OrderItemsCard extends StatelessWidget {
                 children: [
                   _buildOrderItem(context, item),
                   if (index < order.items.length - 1)
-                    const Divider(height: 20),
+                    Divider(height: 20.w),
                 ],
               );
             }),
@@ -62,8 +63,8 @@ class OrderItemsCard extends StatelessWidget {
       children: [
         // Placeholder icon for item image
         Container(
-          width: 50,
-          height: 50,
+          width: 50.w,
+          height: 50.w,
           decoration: BoxDecoration(
             color: theme.colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(8),
@@ -73,7 +74,7 @@ class OrderItemsCard extends StatelessWidget {
             color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12.w),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +85,7 @@ class OrderItemsCard extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4.w),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -102,7 +103,7 @@ class OrderItemsCard extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4.w),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -117,11 +118,11 @@ class OrderItemsCard extends StatelessWidget {
                 ],
               ),
               if (item.notes != null && item.notes!.isNotEmpty) ...[
-                const SizedBox(height: 4),
+                SizedBox(height: 4.w),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.w,
+                    vertical: 4.w,
                   ),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surfaceContainerHighest,

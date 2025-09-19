@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../generated/l10n.dart';
 
 /// Widget hiển thị khi có lỗi
@@ -18,7 +19,7 @@ class OrdersErrorState extends StatelessWidget {
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(24.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -27,14 +28,14 @@ class OrdersErrorState extends StatelessWidget {
               size: 64,
               color: theme.colorScheme.error,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             Text(
               S.of(context).error,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             Text(
               errorMessage,
               style: theme.textTheme.bodyMedium?.copyWith(
@@ -42,7 +43,7 @@ class OrdersErrorState extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24.w),
             if (onRetry != null)
               ElevatedButton.icon(
                 onPressed: onRetry,

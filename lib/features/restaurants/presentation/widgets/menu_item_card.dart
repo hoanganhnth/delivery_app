@@ -1,4 +1,5 @@
 import 'package:delivery_app/features/restaurants/domain/entities/menu_item_entity.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../generated/l10n.dart';
@@ -62,20 +63,20 @@ class MenuItemCard extends ConsumerWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
       child: Card(
         elevation: 1,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Opacity(
           opacity: isUnavailable ? 0.6 : 1.0,
           child: Padding(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(12.w),
             child: Row(
               children: [
                 // Menu item image
                 Container(
-                  width: 80,
-                  height: 80,
+                  width: 80.w,
+                  height: 80.w,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     image: menuItem.image != null
@@ -92,7 +93,7 @@ class MenuItemCard extends ConsumerWidget {
                       : null,
                 ),
 
-                const SizedBox(width: 12),
+                SizedBox(width: 12.w),
 
                 // Menu item info
                 Expanded(
@@ -101,35 +102,35 @@ class MenuItemCard extends ConsumerWidget {
                     children: [
                       Text(
                         menuItem.name,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 16.sp,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4.w),
                       Text(
                         menuItem.description,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                        style: TextStyle(color: Colors.grey[600], fontSize: 14.sp),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8.w),
                       Row(
                         children: [
                           Text(
                             '${menuItem.price.toStringAsFixed(0)}đ',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              fontSize: 16.sp,
                               color: Colors.orange,
                             ),
                           ),
                           const Spacer(),
                           if (isUnavailable)
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8.w,
+                                vertical: 4.w,
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.grey[400],
@@ -139,9 +140,9 @@ class MenuItemCard extends ConsumerWidget {
                                 menuItem.status == MenuItemStatus.soldOut
                                     ? S.of(context).outOfStock
                                     : S.of(context).unavailable,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 12,
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -182,10 +183,10 @@ class MenuItemCard extends ConsumerWidget {
                                   
                                   // Quantity display
                                   Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8),
+                                    padding: EdgeInsets.symmetric(horizontal: 8.w),
                                     child: Text(
                                       '$itemQuantity',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),

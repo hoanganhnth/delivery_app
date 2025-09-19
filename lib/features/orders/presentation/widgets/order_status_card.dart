@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../domain/entities/order_entity.dart';
 
 /// Widget hiển thị trạng thái đơn hàng
@@ -16,7 +17,7 @@ class OrderStatusCard extends StatelessWidget {
     
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -27,7 +28,7 @@ class OrderStatusCard extends StatelessWidget {
                   color: order.status.color,
                   size: 24,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8.w),
                 Text(
                   'Trạng thái đơn hàng',
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -36,9 +37,9 @@ class OrderStatusCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.w),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
               decoration: BoxDecoration(
                 color: order.status.color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
@@ -55,7 +56,7 @@ class OrderStatusCard extends StatelessWidget {
               ),
             ),
             if (order.estimatedDeliveryTime != null) ...[
-              const SizedBox(height: 12),
+              SizedBox(height: 12.w),
               Row(
                 children: [
                   Icon(
@@ -63,7 +64,7 @@ class OrderStatusCard extends StatelessWidget {
                     size: 16,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: 4.w),
                   Text(
                     'Thời gian dự kiến: ${_formatDateTime(order.estimatedDeliveryTime!)}',
                     style: theme.textTheme.bodySmall?.copyWith(
@@ -74,7 +75,7 @@ class OrderStatusCard extends StatelessWidget {
               ),
             ],
             if (order.createdAt != null) ...[
-              const SizedBox(height: 8),
+              SizedBox(height: 8.w),
               Row(
                 children: [
                   Icon(
@@ -82,7 +83,7 @@ class OrderStatusCard extends StatelessWidget {
                     size: 16,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: 4.w),
                   Text(
                     'Đặt lúc: ${_formatDateTime(order.createdAt!)}',
                     style: theme.textTheme.bodySmall?.copyWith(

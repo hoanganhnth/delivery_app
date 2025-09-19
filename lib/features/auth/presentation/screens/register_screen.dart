@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/logger/app_logger.dart';
@@ -49,14 +50,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         title: const Text('Register'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0.w),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 32),
+                SizedBox(height: 32.w),
                 
                 // Name field
                 TextFormField(
@@ -70,7 +71,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   enabled: !authState.isRegisterLoading,
                 ),
                 
-                const SizedBox(height: 16),
+                SizedBox(height: 16.w),
                 
                 // Email field
                 TextFormField(
@@ -93,7 +94,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   enabled: !authState.isRegisterLoading,
                 ),
                 
-                const SizedBox(height: 16),
+                SizedBox(height: 16.w),
                 
                 // Password field
                 TextFormField(
@@ -116,7 +117,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   enabled: !authState.isRegisterLoading,
                 ),
                 
-                const SizedBox(height: 16),
+                SizedBox(height: 16.w),
                 
                 // Confirm Password field
                 TextFormField(
@@ -139,25 +140,25 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   enabled: !authState.isRegisterLoading,
                 ),
                 
-                const SizedBox(height: 24),
+                SizedBox(height: 24.w),
                 
                 // Register button
                 SizedBox(
                   width: double.infinity,
-                  height: 48,
+                  height: 48.w,
                   child: ElevatedButton(
                     onPressed: authState.isRegisterLoading ? null : _handleRegister,
                     child: authState.isRegisterLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
+                        ? SizedBox(
+                            height: 20.w,
+                            width: 20.w,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Text('Register'),
                   ),
                 ),
                 
-                const SizedBox(height: 16),
+                SizedBox(height: 16.w),
                 
                 // Login link
                 TextButton(

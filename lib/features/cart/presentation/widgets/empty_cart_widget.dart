@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../../generated/l10n.dart';
 
@@ -10,7 +11,7 @@ class EmptyCartWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: EdgeInsets.all(32.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -19,31 +20,31 @@ class EmptyCartWidget extends StatelessWidget {
               size: 120,
               color: context.colors.textDisabled,
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24.w),
             Text(
               S.of(context).yourCartIsEmpty,
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 24.sp,
                 fontWeight: FontWeight.w600,
                 color: context.colors.textPrimary,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.w),
             Text(
               S.of(context).addSomeDeliciousItems,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 16.sp,
                 color: context.colors.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32.w),
             ElevatedButton.icon(
               onPressed: () => Navigator.of(context).pushReplacementNamed('/restaurants'),
               icon: const Icon(Icons.restaurant_menu),
               label: Text(S.of(context).browseRestaurants),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.w),
               ),
             ),
           ],

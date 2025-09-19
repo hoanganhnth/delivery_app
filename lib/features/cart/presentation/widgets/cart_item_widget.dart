@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../domain/entities/cart_item_entity.dart';
@@ -18,10 +19,10 @@ class CartItemWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
       elevation: 2,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -32,8 +33,8 @@ class CartItemWidget extends ConsumerWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Container(
-                    width: 80,
-                    height: 80,
+                    width: 80.w,
+                    height: 80.w,
                     color: context.colors.surface,
                     child: cartItem.imageUrl != null
                         ? Image.network(
@@ -54,7 +55,7 @@ class CartItemWidget extends ConsumerWidget {
                           ),
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16.w),
                 // Item Details
                 Expanded(
                   child: Column(
@@ -63,27 +64,27 @@ class CartItemWidget extends ConsumerWidget {
                       Text(
                         cartItem.menuItemName,
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
                           color: context.colors.textPrimary,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4.w),
                       Text(
                         '\$${cartItem.price.toStringAsFixed(2)}',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w700,
                           color: context.colors.primary,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8.w),
                       Text(
                         'Total: \$${(cartItem.price * cartItem.quantity).toStringAsFixed(2)}',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           color: context.colors.textSecondary,
                         ),
                       ),
@@ -92,7 +93,7 @@ class CartItemWidget extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             // Quantity Controls
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -101,7 +102,7 @@ class CartItemWidget extends ConsumerWidget {
                 if (cartItem.notes != null && cartItem.notes!.isNotEmpty)
                   Expanded(
                     child: Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
                         color: context.colors.surface,
                         borderRadius: BorderRadius.circular(4),
@@ -109,7 +110,7 @@ class CartItemWidget extends ConsumerWidget {
                       child: Text(
                         'Note: ${cartItem.notes}',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 12.sp,
                           color: context.colors.textSecondary,
                           fontStyle: FontStyle.italic,
                         ),
@@ -119,7 +120,7 @@ class CartItemWidget extends ConsumerWidget {
                 else
                   const Spacer(),
                 
-                const SizedBox(width: 16),
+                SizedBox(width: 16.w),
                 
                 // Quantity Controls
                 Container(
@@ -145,7 +146,7 @@ class CartItemWidget extends ConsumerWidget {
                               },
                         borderRadius: const BorderRadius.horizontal(left: Radius.circular(24)),
                         child: Container(
-                          padding: const EdgeInsets.all(8),
+                          padding: EdgeInsets.all(8.w),
                           child: Icon(
                             cartItem.quantity > 1 ? Icons.remove : Icons.delete_outline,
                             size: 20,
@@ -158,11 +159,11 @@ class CartItemWidget extends ConsumerWidget {
                       
                       // Quantity display
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
                         child: Text(
                           cartItem.quantity.toString(),
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
                             color: context.colors.textPrimary,
                           ),
@@ -178,7 +179,7 @@ class CartItemWidget extends ConsumerWidget {
                         },
                         borderRadius: const BorderRadius.horizontal(right: Radius.circular(24)),
                         child: Container(
-                          padding: const EdgeInsets.all(8),
+                          padding: EdgeInsets.all(8.w),
                           child: Icon(
                             Icons.add,
                             size: 20,

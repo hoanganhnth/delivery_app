@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../generated/l10n.dart';
 
 /// Widget hiển thị khi không có orders
@@ -16,7 +17,7 @@ class OrdersEmptyState extends StatelessWidget {
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(24.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -25,7 +26,7 @@ class OrdersEmptyState extends StatelessWidget {
               size: 80,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24.w),
             Text(
               S.of(context).noOrders,
               style: theme.textTheme.headlineSmall?.copyWith(
@@ -33,7 +34,7 @@ class OrdersEmptyState extends StatelessWidget {
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             Text(
               S.of(context).noOrdersMessage,
               style: theme.textTheme.bodyMedium?.copyWith(
@@ -41,7 +42,7 @@ class OrdersEmptyState extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32.w),
             ElevatedButton.icon(
               onPressed: onGoToRestaurants,
               icon: const Icon(Icons.restaurant),
@@ -49,9 +50,9 @@ class OrdersEmptyState extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.primaryColor,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 24.w,
+                  vertical: 12.w,
                 ),
               ),
             ),

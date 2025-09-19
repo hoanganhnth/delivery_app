@@ -1,4 +1,5 @@
 import 'package:delivery_app/core/routing/routing.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/features/cart/presentation/providers/cart_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,7 +50,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     if (cartState.cart.currentRestaurantName != null)
                       Container(
                         width: double.infinity,
-                        padding: const EdgeInsets.all(16),
+                        padding: EdgeInsets.all(16.w),
                         color: context.colors.surface,
                         child: Row(
                           children: [
@@ -58,7 +59,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                               color: context.colors.primary,
                               size: 20,
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8.w),
                             Text(
                               S.of(context).itemsFrom(cartState.cart.currentRestaurantName ?? ''),
                               style: TextStyle(
@@ -73,7 +74,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     // Cart items list
                     Expanded(
                       child: ListView.separated(
-                        padding: const EdgeInsets.all(16),
+                        padding: EdgeInsets.all(16.w),
                         itemCount: cartState.cart.items.length,
                         separatorBuilder: (context, index) => const Divider(),
                         itemBuilder: (context, index) {

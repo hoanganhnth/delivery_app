@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/connection_providers.dart';
 
@@ -13,7 +14,7 @@ class ConnectionStatusWidget extends ConsumerWidget {
     
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: EdgeInsets.all(12.0.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -22,7 +23,7 @@ class ConnectionStatusWidget extends ConsumerWidget {
               'Connection Status',
               style: Theme.of(context).textTheme.titleSmall,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             
             // Shipper Location Connection
             shipperConnectionAsync.when(
@@ -43,7 +44,7 @@ class ConnectionStatusWidget extends ConsumerWidget {
               ),
             ),
             
-            const SizedBox(height: 4),
+            SizedBox(height: 4.w),
             
             // Delivery Tracking Connection
             deliveryConnectionAsync.when(
@@ -91,19 +92,19 @@ class ConnectionStatusWidget extends ConsumerWidget {
     return Row(
       children: [
         Icon(icon, size: 16, color: Colors.grey[600]),
-        const SizedBox(width: 8),
+        SizedBox(width: 8.w),
         Expanded(
           child: Text(
             name,
-            style: const TextStyle(fontSize: 12),
+            style: TextStyle(fontSize: 12.sp),
           ),
         ),
         Icon(statusIcon, size: 16, color: color),
-        const SizedBox(width: 4),
+        SizedBox(width: 4.w),
         Text(
           status,
           style: TextStyle(
-            fontSize: 12,
+            fontSize: 12.sp,
             color: color,
             fontWeight: FontWeight.w500,
           ),
@@ -122,7 +123,7 @@ class ConnectionIndicator extends ConsumerWidget {
     final allReady = ref.watch(allConnectionsReadyProvider);
     
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.w),
       decoration: BoxDecoration(
         color: allReady ? Colors.green : Colors.orange,
         borderRadius: BorderRadius.circular(12),
@@ -135,12 +136,12 @@ class ConnectionIndicator extends ConsumerWidget {
             size: 16,
             color: Colors.white,
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: 4.w),
           Text(
             allReady ? 'Online' : 'Connecting...',
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w500,
             ),
           ),

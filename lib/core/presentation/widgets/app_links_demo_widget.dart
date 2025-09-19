@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app_links/app_links.dart';
@@ -58,9 +59,9 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
     final config = ref.watch(routerConfigProvider);
     
     return Card(
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16.w),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -70,19 +71,19 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             Text(
               'Using app_links package for deep linking',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Colors.grey[600],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             
             // Link Status
             _buildLinkStatus(),
             
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             
             // Test Links Section
             Text(
@@ -91,7 +92,7 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             
             // Custom Scheme Links
             _buildSection(
@@ -117,7 +118,7 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
               ],
             ),
             
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             
             // Universal Links
             _buildSection(
@@ -139,7 +140,7 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
               ],
             ),
             
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             
             // Share Service Integration
             _buildSection(
@@ -151,8 +152,8 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
                   icon: const Icon(Icons.share, size: 16),
                   label: const Text('Share Restaurant'),
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    textStyle: const TextStyle(fontSize: 12),
+                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.w),
+                    textStyle: TextStyle(fontSize: 12.sp),
                   ),
                 ),
                 ElevatedButton.icon(
@@ -160,18 +161,18 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
                   icon: const Icon(Icons.share, size: 16),
                   label: const Text('Share Order'),
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    textStyle: const TextStyle(fontSize: 12),
+                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.w),
+                    textStyle: TextStyle(fontSize: 12.sp),
                   ),
                 ),
               ],
             ),
             
-            const SizedBox(height: 16),
+            SizedBox(height: 16.w),
             
             // Instructions
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
                 color: Colors.green.withValues(alpha: 0.1),
                 border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
@@ -183,7 +184,7 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
                   Row(
                     children: [
                       Icon(Icons.info, color: Colors.green, size: 16),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8.w),
                       Text(
                         'How to Test',
                         style: TextStyle(
@@ -193,7 +194,7 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.w),
                   Text(
                     '1. Copy a link above\n'
                     '2. Open in browser or share via message\n'
@@ -202,7 +203,7 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
                     '5. Check link status above for received links',
                     style: TextStyle(
                       color: Colors.green[700],
-                      fontSize: 12,
+                      fontSize: 12.sp,
                     ),
                   ),
                 ],
@@ -216,7 +217,7 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
 
   Widget _buildLinkStatus() {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: Colors.blue.withValues(alpha: 0.1),
         border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
@@ -232,24 +233,24 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.w),
           if (_initialLink != null) ...[
             Text(
               'Initial Link: $_initialLink',
               style: TextStyle(
                 color: Colors.blue[700],
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontFamily: 'monospace',
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4.w),
           ],
           if (_latestLink != null) ...[
             Text(
               'Latest Link: $_latestLink',
               style: TextStyle(
                 color: Colors.blue[700],
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontFamily: 'monospace',
               ),
             ),
@@ -258,7 +259,7 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
               'No links received yet',
               style: TextStyle(
                 color: Colors.blue[700],
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontStyle: FontStyle.italic,
               ),
             ),
@@ -278,7 +279,7 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.w),
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -294,8 +295,8 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
       icon: const Icon(Icons.link, size: 16),
       label: Text(label),
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        textStyle: const TextStyle(fontSize: 12),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.w),
+        textStyle: TextStyle(fontSize: 12.sp),
       ),
     );
   }

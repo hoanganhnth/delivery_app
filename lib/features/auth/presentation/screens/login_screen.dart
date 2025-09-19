@@ -1,4 +1,5 @@
 import 'package:delivery_app/core/presentation/widgets/toast/toast_extensions.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,7 +51,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0.w),
         child: Form(
           key: _formKey,
           child: Column(
@@ -79,7 +80,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 enabled: !authState.isLoginLoading,
               ),
 
-              const SizedBox(height: 16),
+              SizedBox(height: 16.w),
 
               // Password field
               TextFormField(
@@ -102,25 +103,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 enabled: !authState.isLoginLoading,
               ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: 24.w),
 
               // Login button
               SizedBox(
                 width: double.infinity,
-                height: 48,
+                height: 48.w,
                 child: ElevatedButton(
                   onPressed: authState.isLoginLoading ? null : _handleLogin,
                   child: authState.isLoginLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
+                      ? SizedBox(
+                          height: 20.w,
+                          width: 20.w,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Text('Login'),
                 ),
               ),
 
-              const SizedBox(height: 16),
+              SizedBox(height: 16.w),
 
               // Register link
               TextButton(
