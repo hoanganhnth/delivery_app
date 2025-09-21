@@ -151,6 +151,27 @@ class NavigationHelper {
     context.push(AppRoutes.orderDetailsPath(orderId));
   }
 
+  // Address management navigation methods
+  /// Navigate to address list screen
+  static void goToAddressList(BuildContext context) {
+    context.go(AppRoutes.addressList);
+  }
+
+  /// Push address list screen
+  static void pushAddressList(BuildContext context) {
+    context.push(AppRoutes.addressList);
+  }
+
+  /// Push add address screen
+  static void pushAddAddress(BuildContext context) {
+    context.push(AppRoutes.addAddress);
+  }
+
+  /// Push edit address screen with address data
+  static void pushEditAddress(BuildContext context, dynamic address) {
+    context.push(AppRoutes.editAddress, extra: address);
+  }
+
   /// Utility methods
 
   /// Go back to previous screen
@@ -250,4 +271,10 @@ extension NavigationExtension on BuildContext {
   void goToRoot() => NavigationHelper.goToRoot(this);
   void pushCheckout() => NavigationHelper.pushCheckout(this);
   void pushOrderDetail(String orderId) => NavigationHelper.pushOrderDetail(this, orderId);
+
+  // Address management extension methods
+  void goToAddressList() => NavigationHelper.goToAddressList(this);
+  void pushAddressList() => NavigationHelper.pushAddressList(this);
+  void pushAddAddress() => NavigationHelper.pushAddAddress(this);
+  void pushEditAddress(dynamic address) => NavigationHelper.pushEditAddress(this, address);
 }

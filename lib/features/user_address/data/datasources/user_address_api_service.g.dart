@@ -30,7 +30,7 @@ class _UserAddressApiService implements UserAddressApiService {
           Options(method: 'GET', headers: _headers, extra: _extra)
               .compose(
                 _dio.options,
-                '/api/users/${userId}/addresses',
+                '/addresses/users/${userId}/addresses',
                 queryParameters: queryParameters,
                 data: _data,
               )
@@ -72,7 +72,7 @@ class _UserAddressApiService implements UserAddressApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/addresses/${addressId}',
+            '/addresses/${addressId}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -105,7 +105,7 @@ class _UserAddressApiService implements UserAddressApiService {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/users/${userId}/addresses',
+            '/addresses/users/${userId}/addresses',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -138,7 +138,7 @@ class _UserAddressApiService implements UserAddressApiService {
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/addresses/${addressId}',
+            '/addresses/${addressId}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -168,7 +168,7 @@ class _UserAddressApiService implements UserAddressApiService {
       Options(method: 'DELETE', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/addresses/${addressId}',
+            '/addresses/${addressId}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -197,7 +197,7 @@ class _UserAddressApiService implements UserAddressApiService {
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/addresses/${addressId}/default',
+            '/addresses/${addressId}/default',
             queryParameters: queryParameters,
             data: _data,
           )

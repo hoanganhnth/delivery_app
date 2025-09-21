@@ -33,6 +33,11 @@ class AppRoutes {
   static const String payment = '/payment';
   static const String orderConfirmation = '/order-confirmation';
   
+  // Address management
+  static const String addressList = '/address-list';
+  static const String addAddress = '/add-address';
+  static const String editAddress = '/edit-address';
+  
   // Admin routes
   static const String admin = '/admin';
   static const String adminUsers = '/admin/users';

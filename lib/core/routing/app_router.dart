@@ -13,6 +13,9 @@ import '../../features/settings/presentation/screens/theme_settings_screen.dart'
 import '../../features/orders/orders.dart';
 import '../../features/restaurants/restaurants.dart';
 import '../../features/cart/cart.dart';
+import '../../features/user_address/presentation/screens/address_list_screen.dart';
+import '../../features/user_address/presentation/screens/add_edit_address_screen.dart';
+import '../../features/user_address/domain/entities/user_address_entity.dart';
 import '../presentation/screens/splash_screen.dart';
 import '../presentation/screens/error_screens.dart';
 // import '../presentation/screens/admin_screen.dart';
@@ -234,6 +237,31 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const OrderConfirmationScreen(),
       ),
 
+      // Address management routes (with auth guard)
+      GoRoute(
+        path: AppRoutes.addressList,
+        name: 'address-list',
+        redirect: guardManager.applyAuthGuard,
+        builder: (context, state) => const AddressListScreen(),
+      ),
+      
+      GoRoute(
+        path: AppRoutes.addAddress,
+        name: 'add-address',
+        redirect: guardManager.applyAuthGuard,
+        builder: (context, state) => const AddEditAddressScreen(),
+      ),
+      
+      GoRoute(
+        path: AppRoutes.editAddress,
+        name: 'edit-address',
+        redirect: guardManager.applyAuthGuard,
+        builder: (context, state) {
+          final address = state.extra as UserAddressEntity?;
+          return AddEditAddressScreen(address: address);
+        },
+      ),
+
       // Admin routes (with admin guard)
       // GoRoute(
       //   path: AppRoutes.admin,
@@ -278,4 +306,10 @@ extension GoRouterExtension on GoRouter {
     'restaurant-details',
     pathParameters: {'restaurantId': restaurantId},
   );
+
+  // Address management navigation
+  void pushAddressList() => pushNamed('address-list');
+  void pushAddAddress() => pushNamed('add-address');
+  void pushEditAddress(UserAddressEntity address) => 
+      pushNamed('edit-address', extra: address);
 }

@@ -209,4 +209,112 @@ class ToastUtils {
             : 'Đặt hàng thất bại. Vui lòng thử lại!');
     AppToast.showError(context: context, title: 'Đặt hàng', message: mess);
   }
+
+  // Address management toasts
+  /// Toast cho thêm địa chỉ thành công
+  static void showAddressAddSuccess(BuildContext context, {String? addressLabel}) {
+    final message = addressLabel != null
+        ? 'Đã thêm địa chỉ "$addressLabel" thành công!'
+        : 'Đã thêm địa chỉ mới thành công!';
+
+    AppToast.showSuccess(
+      context: context,
+      title: 'Thêm địa chỉ',
+      message: message,
+    );
+  }
+
+  /// Toast cho cập nhật địa chỉ thành công
+  static void showAddressUpdateSuccess(BuildContext context, {String? addressLabel}) {
+    final message = addressLabel != null
+        ? 'Đã cập nhật địa chỉ "$addressLabel" thành công!'
+        : 'Đã cập nhật địa chỉ thành công!';
+
+    AppToast.showSuccess(
+      context: context,
+      title: 'Cập nhật địa chỉ',
+      message: message,
+    );
+  }
+
+  /// Toast cho xóa địa chỉ thành công
+  static void showAddressDeleteSuccess(BuildContext context, {String? addressLabel}) {
+    final message = addressLabel != null
+        ? 'Đã xóa địa chỉ "$addressLabel" thành công!'
+        : 'Đã xóa địa chỉ thành công!';
+
+    AppToast.showSuccess(
+      context: context,
+      title: 'Xóa địa chỉ',
+      message: message,
+    );
+  }
+
+  /// Toast cho đặt địa chỉ mặc định thành công
+  static void showAddressSetDefaultSuccess(BuildContext context, {String? addressLabel}) {
+    final message = addressLabel != null
+        ? 'Đã đặt "$addressLabel" làm địa chỉ mặc định!'
+        : 'Đã đặt làm địa chỉ mặc định!';
+
+    AppToast.showSuccess(
+      context: context,
+      title: 'Địa chỉ mặc định',
+      message: message,
+    );
+  }
+
+  /// Toast cho lỗi thêm địa chỉ
+  static void showAddressAddError(BuildContext context, {String? message}) {
+    final errorMessage = message ?? 'Thêm địa chỉ thất bại. Vui lòng thử lại!';
+
+    AppToast.showError(
+      context: context,
+      title: 'Thêm địa chỉ',
+      message: errorMessage,
+    );
+  }
+
+  /// Toast cho lỗi cập nhật địa chỉ
+  static void showAddressUpdateError(BuildContext context, {String? message}) {
+    final errorMessage = message ?? 'Cập nhật địa chỉ thất bại. Vui lòng thử lại!';
+
+    AppToast.showError(
+      context: context,
+      title: 'Cập nhật địa chỉ',
+      message: errorMessage,
+    );
+  }
+
+  /// Toast cho lỗi xóa địa chỉ
+  static void showAddressDeleteError(BuildContext context, {String? message}) {
+    final errorMessage = message ?? 'Xóa địa chỉ thất bại. Vui lòng thử lại!';
+
+    AppToast.showError(
+      context: context,
+      title: 'Xóa địa chỉ',
+      message: errorMessage,
+    );
+  }
+
+  /// Toast cho lỗi đặt địa chỉ mặc định
+  static void showAddressSetDefaultError(BuildContext context, {String? message}) {
+    final errorMessage = message ?? 'Đặt địa chỉ mặc định thất bại. Vui lòng thử lại!';
+
+    AppToast.showError(
+      context: context,
+      title: 'Địa chỉ mặc định',
+      message: errorMessage,
+    );
+  }
+
+  /// Toast cho lỗi tải danh sách địa chỉ
+  static void showAddressLoadError(BuildContext context, {String? message}) {
+    final errorMessage = message ?? 'Tải danh sách địa chỉ thất bại. Vui lòng thử lại!';
+
+    AppToast.showError(
+      context: context,
+      title: 'Tải địa chỉ',
+      message: errorMessage,
+    );
+  }
 }

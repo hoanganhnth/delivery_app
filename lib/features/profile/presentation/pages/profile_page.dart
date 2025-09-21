@@ -84,6 +84,17 @@ class ProfilePage extends ConsumerWidget {
             title: Text(S.of(context).orderHistory),
           ),
 
+          // Address management
+          ListTile(
+            leading: const Icon(Icons.location_on, color: Colors.orange),
+            title: const Text("Địa chỉ của tôi"),
+            subtitle: const Text("Quản lý địa chỉ giao hàng"),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+            onTap: () {
+              context.pushAddressList();
+            },
+          ),
+
           // setting 
           ListTile(
             leading: const Icon(Icons.settings, color: Colors.orange),
