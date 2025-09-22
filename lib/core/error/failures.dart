@@ -34,3 +34,7 @@ class NetworkFailure extends Failure {
 class CacheFailure extends Failure {
   const CacheFailure([super.message = "Cache Error"]);
 }
+
+class LocationFailure extends Failure {
+  const LocationFailure([super.message = "Location Error"]);
+}

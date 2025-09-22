@@ -5,6 +5,8 @@ import 'package:delivery_app/core/utils/screen_util_extensions.dart';
 import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
 import 'package:delivery_app/core/presentation/widgets/toast/toast_utils.dart';
 import 'package:delivery_app/core/routing/navigation_helper.dart';
+import '../../../location/presentation/providers/location_providers.dart';
+import '../../../location/domain/entities/location_entity.dart';
 import '../../domain/entities/user_address_entity.dart';
 import '../../data/dtos/user_address_request_dto.dart';
 import '../providers/user_address_providers.dart';
@@ -282,6 +284,11 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
 
         SizedBox(height: ResponsiveSize.l),
 
+        // Get current location button
+        _buildGetLocationButton(),
+
+        SizedBox(height: ResponsiveSize.l),
+
         // Set as default checkbox
         CheckboxListTile(
           title: const Text('Đặt làm địa chỉ mặc định'),
@@ -392,6 +399,131 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildGetLocationButton() {
+    final locationState = ref.watch(currentLocationProvider);
+
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(ResponsiveSize.m),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Lấy vị trí hiện tại',
+              style: TextStyle(
+                fontSize: ResponsiveSize.fontM,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+            SizedBox(height: ResponsiveSize.s),
+            Text(
+              'Tự động điền địa chỉ từ vị trí GPS hiện tại của bạn',
+              style: TextStyle(
+                fontSize: ResponsiveSize.fontS,
+                color: Colors.grey[600],
+              ),
+            ),
+            SizedBox(height: ResponsiveSize.m),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: locationState.isLoading ? null : _getCurrentLocation,
+                icon: locationState.isLoading
+                    ? SizedBox(
+                        width: 16.w,
+                        height: 16.w,
+                        child: const CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      )
+                    : const Icon(Icons.my_location),
+                label: Text(
+                  locationState.isLoading ? 'Đang lấy vị trí...' : 'Lấy vị trí hiện tại',
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  padding: EdgeInsets.symmetric(vertical: ResponsiveSize.s),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      // Lấy vị trí hiện tại
+      await ref.read(currentLocationProvider.notifier).getCurrentLocation();
+      
+      final locationState = ref.read(currentLocationProvider);
+      
+      locationState.when(
+        data: (location) async {
+          if (location != null) {
+            // Lấy địa chỉ từ tọa độ
+            final address = await ref
+                .read(currentLocationProvider.notifier)
+                .getAddressFromLocation(location);
+                
+            if (address != null && mounted) {
+              // Tự động fill vào form
+              if (address.street?.isNotEmpty == true) {
+                _addressLineController.text = address.street!;
+              }
+              if (address.subLocality?.isNotEmpty == true) {
+                _wardController.text = address.subLocality!;
+              }
+              if (address.locality?.isNotEmpty == true) {
+                _districtController.text = address.locality!;
+              }
+              if (address.administrativeArea?.isNotEmpty == true) {
+                _cityController.text = address.administrativeArea!;
+              }
+              if (address.postalCode?.isNotEmpty == true) {
+                _postalCodeController.text = address.postalCode!;
+              }
+              
+              // Hiển thị thông báo thành công
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Đã lấy địa chỉ từ vị trí hiện tại'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              }
+            }
+          }
+        },
+        loading: () {},
+        error: (error, stackTrace) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Không thể lấy vị trí: $error'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Lỗi: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   void _saveAddress() async {
