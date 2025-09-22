@@ -98,6 +98,16 @@ class UserAddressListNotifier extends StateNotifier<UserAddressListState> {
   void selectAddress(UserAddressEntity? address) {
     state = state.copyWith(selectedAddress: address);
   }
+
+  /// Auto select default address if no address is selected
+  void autoSelectDefaultAddress() {
+    if (state.selectedAddress == null) {
+      final defaultAddress = state.addresses.where((addr) => addr.isDefault).firstOrNull;
+      if (defaultAddress != null) {
+        state = state.copyWith(selectedAddress: defaultAddress);
+      }
+    }
+  }
 }
 
 /// StateNotifier cho tạo/cập nhật địa chỉ

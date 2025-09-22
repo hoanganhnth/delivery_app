@@ -37,7 +37,7 @@ class AddressItemWidget extends StatelessWidget {
           decoration: isSelected 
               ? BoxDecoration(
                   borderRadius: BorderRadius.circular(12.r),
-                  color: Colors.orange.withValues(alpha: 0.05),
+                  color: Colors.orange.withOpacity(0.05),
                 )
               : null,
           child: Padding(
@@ -59,28 +59,12 @@ class AddressItemWidget extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      address.label,
-                                      style: TextStyle(
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black87,
-                                      ),
-                                    ),
-                                    SizedBox(height: 2.h),
-                                    Text(
-                                      '${address.recipientName} | ${address.phoneNumber}',
-                                      style: TextStyle(
-                                        fontSize: 14.sp,
-                                        color: Colors.grey[600],
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
+                              Text(
+                                address.label,
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
                                 ),
                               ),
                               if (address.isDefault) ...[

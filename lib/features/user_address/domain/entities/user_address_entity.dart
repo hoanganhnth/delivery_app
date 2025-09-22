@@ -3,6 +3,8 @@ class UserAddressEntity {
   final int? id;
   final int userId;
   final String label;
+  final String recipientName;
+  final String phoneNumber;
   final String addressLine;
   final String ward;
   final String district;
@@ -18,6 +20,8 @@ class UserAddressEntity {
     this.id,
     required this.userId,
     required this.label,
+    required this.recipientName,
+    required this.phoneNumber,
     required this.addressLine,
     required this.ward,
     required this.district,
@@ -35,6 +39,8 @@ class UserAddressEntity {
     int? id,
     int? userId,
     String? label,
+    String? recipientName,
+    String? phoneNumber,
     String? addressLine,
     String? ward,
     String? district,
@@ -50,6 +56,8 @@ class UserAddressEntity {
       id: id ?? this.id,
       userId: userId ?? this.userId,
       label: label ?? this.label,
+      recipientName: recipientName ?? this.recipientName,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
       addressLine: addressLine ?? this.addressLine,
       ward: ward ?? this.ward,
       district: district ?? this.district,
@@ -81,6 +89,8 @@ class UserAddressEntity {
         other.id == id &&
         other.userId == userId &&
         other.label == label &&
+        other.recipientName == recipientName &&
+        other.phoneNumber == phoneNumber &&
         other.addressLine == addressLine &&
         other.ward == ward &&
         other.district == district &&
@@ -97,6 +107,8 @@ class UserAddressEntity {
       id,
       userId,
       label,
+      recipientName,
+      phoneNumber,
       addressLine,
       ward,
       district,
@@ -110,6 +122,6 @@ class UserAddressEntity {
 
   @override
   String toString() {
-    return 'UserAddressEntity(id: $id, label: $label, fullAddress: $fullAddress, isDefault: $isDefault)';
+    return 'UserAddressEntity(id: $id, label: $label, recipientName: $recipientName, phoneNumber: $phoneNumber, fullAddress: $fullAddress, isDefault: $isDefault)';
   }
 }

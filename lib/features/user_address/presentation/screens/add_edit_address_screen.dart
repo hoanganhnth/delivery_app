@@ -24,6 +24,8 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
 
   // Form controllers
   late final TextEditingController _labelController;
+  late final TextEditingController _recipientNameController;
+  late final TextEditingController _phoneController;
   late final TextEditingController _addressLineController;
   late final TextEditingController _wardController;
   late final TextEditingController _districtController;
@@ -39,6 +41,8 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
     // Initialize controllers with existing data if editing
     final address = widget.address;
     _labelController = TextEditingController(text: address?.label ?? '');
+    _recipientNameController = TextEditingController(text: address?.recipientName ?? '');
+    _phoneController = TextEditingController(text: address?.phoneNumber ?? '');
     _addressLineController = TextEditingController(
       text: address?.addressLine ?? '',
     );
@@ -54,6 +58,8 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
   @override
   void dispose() {
     _labelController.dispose();
+    _recipientNameController.dispose();
+    _phoneController.dispose();
     _addressLineController.dispose();
     _wardController.dispose();
     _districtController.dispose();
@@ -157,6 +163,42 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return 'Vui lòng nhập nhãn địa chỉ';
+            }
+            return null;
+          },
+        ),
+
+        SizedBox(height: ResponsiveSize.m),
+
+        // Recipient name field
+        _buildTextFormField(
+          controller: _recipientNameController,
+          label: 'Tên người nhận',
+          hintText: 'Nhập tên người nhận hàng',
+          icon: Icons.person,
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return 'Vui lòng nhập tên người nhận';
+            }
+            return null;
+          },
+        ),
+
+        SizedBox(height: ResponsiveSize.m),
+
+        // Phone number field
+        _buildTextFormField(
+          controller: _phoneController,
+          label: 'Số điện thoại',
+          hintText: 'Nhập số điện thoại người nhận',
+          icon: Icons.phone,
+          keyboardType: TextInputType.phone,
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return 'Vui lòng nhập số điện thoại';
+            }
+            if (value.trim().length < 10) {
+              return 'Số điện thoại không hợp lệ';
             }
             return null;
           },
@@ -368,6 +410,8 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
 
     final requestDto = UserAddressRequestDto(
       label: _labelController.text.trim(),
+      recipientName: _recipientNameController.text.trim(),
+      phoneNumber: _phoneController.text.trim(),
       addressLine: _addressLineController.text.trim(),
       ward: _wardController.text.trim(),
       district: _districtController.text.trim(),

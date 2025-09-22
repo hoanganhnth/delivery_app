@@ -7,6 +7,8 @@ part 'user_address_request_dto.g.dart';
 abstract class UserAddressRequestDto with _$UserAddressRequestDto {
   const factory UserAddressRequestDto({
     required String label,
+    required String recipientName,
+    required String phoneNumber,
     required String addressLine,
     required String ward,
     required String district,

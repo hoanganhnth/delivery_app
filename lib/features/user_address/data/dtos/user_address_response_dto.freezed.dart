@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserAddressResponseDto {
 
- int? get id; int get userId; String get label; String get addressLine; String get ward; String get district; String get city; String? get postalCode; double? get latitude; double? get longitude; bool? get isDefault; DateTime? get createdAt; DateTime? get updatedAt;
+ int? get id; int get userId; String get label; String get recipientName; String get phoneNumber; String get addressLine; String get ward; String get district; String get city; String? get postalCode; double? get latitude; double? get longitude; bool? get isDefault; DateTime? get createdAt; DateTime? get updatedAt;
 /// Create a copy of UserAddressResponseDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UserAddressResponseDtoCopyWith<UserAddressResponseDto> get copyWith => _$UserAd
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserAddressResponseDto&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.label, label) || other.label == label)&&(identical(other.addressLine, addressLine) || other.addressLine == addressLine)&&(identical(other.ward, ward) || other.ward == ward)&&(identical(other.district, district) || other.district == district)&&(identical(other.city, city) || other.city == city)&&(identical(other.postalCode, postalCode) || other.postalCode == postalCode)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserAddressResponseDto&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.label, label) || other.label == label)&&(identical(other.recipientName, recipientName) || other.recipientName == recipientName)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.addressLine, addressLine) || other.addressLine == addressLine)&&(identical(other.ward, ward) || other.ward == ward)&&(identical(other.district, district) || other.district == district)&&(identical(other.city, city) || other.city == city)&&(identical(other.postalCode, postalCode) || other.postalCode == postalCode)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,label,addressLine,ward,district,city,postalCode,latitude,longitude,isDefault,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,userId,label,recipientName,phoneNumber,addressLine,ward,district,city,postalCode,latitude,longitude,isDefault,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'UserAddressResponseDto(id: $id, userId: $userId, label: $label, addressLine: $addressLine, ward: $ward, district: $district, city: $city, postalCode: $postalCode, latitude: $latitude, longitude: $longitude, isDefault: $isDefault, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'UserAddressResponseDto(id: $id, userId: $userId, label: $label, recipientName: $recipientName, phoneNumber: $phoneNumber, addressLine: $addressLine, ward: $ward, district: $district, city: $city, postalCode: $postalCode, latitude: $latitude, longitude: $longitude, isDefault: $isDefault, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UserAddressResponseDtoCopyWith<$Res>  {
   factory $UserAddressResponseDtoCopyWith(UserAddressResponseDto value, $Res Function(UserAddressResponseDto) _then) = _$UserAddressResponseDtoCopyWithImpl;
 @useResult
 $Res call({
- int? id, int userId, String label, String addressLine, String ward, String district, String city, String? postalCode, double? latitude, double? longitude, bool? isDefault, DateTime? createdAt, DateTime? updatedAt
+ int? id, int userId, String label, String recipientName, String phoneNumber, String addressLine, String ward, String district, String city, String? postalCode, double? latitude, double? longitude, bool? isDefault, DateTime? createdAt, DateTime? updatedAt
 });
 
 
@@ -65,11 +65,13 @@ class _$UserAddressResponseDtoCopyWithImpl<$Res>
 
 /// Create a copy of UserAddressResponseDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? userId = null,Object? label = null,Object? addressLine = null,Object? ward = null,Object? district = null,Object? city = null,Object? postalCode = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? isDefault = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? userId = null,Object? label = null,Object? recipientName = null,Object? phoneNumber = null,Object? addressLine = null,Object? ward = null,Object? district = null,Object? city = null,Object? postalCode = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? isDefault = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as int,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
+as String,recipientName: null == recipientName ? _self.recipientName : recipientName // ignore: cast_nullable_to_non_nullable
+as String,phoneNumber: null == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
 as String,addressLine: null == addressLine ? _self.addressLine : addressLine // ignore: cast_nullable_to_non_nullable
 as String,ward: null == ward ? _self.ward : ward // ignore: cast_nullable_to_non_nullable
 as String,district: null == district ? _self.district : district // ignore: cast_nullable_to_non_nullable
@@ -165,10 +167,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int userId,  String label,  String addressLine,  String ward,  String district,  String city,  String? postalCode,  double? latitude,  double? longitude,  bool? isDefault,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int userId,  String label,  String recipientName,  String phoneNumber,  String addressLine,  String ward,  String district,  String city,  String? postalCode,  double? latitude,  double? longitude,  bool? isDefault,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserAddressResponseDto() when $default != null:
-return $default(_that.id,_that.userId,_that.label,_that.addressLine,_that.ward,_that.district,_that.city,_that.postalCode,_that.latitude,_that.longitude,_that.isDefault,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.userId,_that.label,_that.recipientName,_that.phoneNumber,_that.addressLine,_that.ward,_that.district,_that.city,_that.postalCode,_that.latitude,_that.longitude,_that.isDefault,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -186,10 +188,10 @@ return $default(_that.id,_that.userId,_that.label,_that.addressLine,_that.ward,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int userId,  String label,  String addressLine,  String ward,  String district,  String city,  String? postalCode,  double? latitude,  double? longitude,  bool? isDefault,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int userId,  String label,  String recipientName,  String phoneNumber,  String addressLine,  String ward,  String district,  String city,  String? postalCode,  double? latitude,  double? longitude,  bool? isDefault,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _UserAddressResponseDto():
-return $default(_that.id,_that.userId,_that.label,_that.addressLine,_that.ward,_that.district,_that.city,_that.postalCode,_that.latitude,_that.longitude,_that.isDefault,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.userId,_that.label,_that.recipientName,_that.phoneNumber,_that.addressLine,_that.ward,_that.district,_that.city,_that.postalCode,_that.latitude,_that.longitude,_that.isDefault,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -206,10 +208,10 @@ return $default(_that.id,_that.userId,_that.label,_that.addressLine,_that.ward,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int userId,  String label,  String addressLine,  String ward,  String district,  String city,  String? postalCode,  double? latitude,  double? longitude,  bool? isDefault,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int userId,  String label,  String recipientName,  String phoneNumber,  String addressLine,  String ward,  String district,  String city,  String? postalCode,  double? latitude,  double? longitude,  bool? isDefault,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _UserAddressResponseDto() when $default != null:
-return $default(_that.id,_that.userId,_that.label,_that.addressLine,_that.ward,_that.district,_that.city,_that.postalCode,_that.latitude,_that.longitude,_that.isDefault,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.userId,_that.label,_that.recipientName,_that.phoneNumber,_that.addressLine,_that.ward,_that.district,_that.city,_that.postalCode,_that.latitude,_that.longitude,_that.isDefault,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -221,12 +223,14 @@ return $default(_that.id,_that.userId,_that.label,_that.addressLine,_that.ward,_
 @JsonSerializable()
 
 class _UserAddressResponseDto implements UserAddressResponseDto {
-  const _UserAddressResponseDto({this.id, required this.userId, required this.label, required this.addressLine, required this.ward, required this.district, required this.city, this.postalCode, this.latitude, this.longitude, this.isDefault, this.createdAt, this.updatedAt});
+  const _UserAddressResponseDto({this.id, required this.userId, required this.label, required this.recipientName, required this.phoneNumber, required this.addressLine, required this.ward, required this.district, required this.city, this.postalCode, this.latitude, this.longitude, this.isDefault, this.createdAt, this.updatedAt});
   factory _UserAddressResponseDto.fromJson(Map<String, dynamic> json) => _$UserAddressResponseDtoFromJson(json);
 
 @override final  int? id;
 @override final  int userId;
 @override final  String label;
+@override final  String recipientName;
+@override final  String phoneNumber;
 @override final  String addressLine;
 @override final  String ward;
 @override final  String district;
@@ -251,16 +255,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserAddressResponseDto&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.label, label) || other.label == label)&&(identical(other.addressLine, addressLine) || other.addressLine == addressLine)&&(identical(other.ward, ward) || other.ward == ward)&&(identical(other.district, district) || other.district == district)&&(identical(other.city, city) || other.city == city)&&(identical(other.postalCode, postalCode) || other.postalCode == postalCode)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserAddressResponseDto&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.label, label) || other.label == label)&&(identical(other.recipientName, recipientName) || other.recipientName == recipientName)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.addressLine, addressLine) || other.addressLine == addressLine)&&(identical(other.ward, ward) || other.ward == ward)&&(identical(other.district, district) || other.district == district)&&(identical(other.city, city) || other.city == city)&&(identical(other.postalCode, postalCode) || other.postalCode == postalCode)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,label,addressLine,ward,district,city,postalCode,latitude,longitude,isDefault,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,userId,label,recipientName,phoneNumber,addressLine,ward,district,city,postalCode,latitude,longitude,isDefault,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'UserAddressResponseDto(id: $id, userId: $userId, label: $label, addressLine: $addressLine, ward: $ward, district: $district, city: $city, postalCode: $postalCode, latitude: $latitude, longitude: $longitude, isDefault: $isDefault, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'UserAddressResponseDto(id: $id, userId: $userId, label: $label, recipientName: $recipientName, phoneNumber: $phoneNumber, addressLine: $addressLine, ward: $ward, district: $district, city: $city, postalCode: $postalCode, latitude: $latitude, longitude: $longitude, isDefault: $isDefault, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -271,7 +275,7 @@ abstract mixin class _$UserAddressResponseDtoCopyWith<$Res> implements $UserAddr
   factory _$UserAddressResponseDtoCopyWith(_UserAddressResponseDto value, $Res Function(_UserAddressResponseDto) _then) = __$UserAddressResponseDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, int userId, String label, String addressLine, String ward, String district, String city, String? postalCode, double? latitude, double? longitude, bool? isDefault, DateTime? createdAt, DateTime? updatedAt
+ int? id, int userId, String label, String recipientName, String phoneNumber, String addressLine, String ward, String district, String city, String? postalCode, double? latitude, double? longitude, bool? isDefault, DateTime? createdAt, DateTime? updatedAt
 });
 
 
@@ -288,11 +292,13 @@ class __$UserAddressResponseDtoCopyWithImpl<$Res>
 
 /// Create a copy of UserAddressResponseDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? userId = null,Object? label = null,Object? addressLine = null,Object? ward = null,Object? district = null,Object? city = null,Object? postalCode = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? isDefault = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? userId = null,Object? label = null,Object? recipientName = null,Object? phoneNumber = null,Object? addressLine = null,Object? ward = null,Object? district = null,Object? city = null,Object? postalCode = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? isDefault = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_UserAddressResponseDto(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as int,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
+as String,recipientName: null == recipientName ? _self.recipientName : recipientName // ignore: cast_nullable_to_non_nullable
+as String,phoneNumber: null == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
 as String,addressLine: null == addressLine ? _self.addressLine : addressLine // ignore: cast_nullable_to_non_nullable
 as String,ward: null == ward ? _self.ward : ward // ignore: cast_nullable_to_non_nullable
 as String,district: null == district ? _self.district : district // ignore: cast_nullable_to_non_nullable

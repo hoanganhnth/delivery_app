@@ -10,6 +10,8 @@ _UserAddressRequestDto _$UserAddressRequestDtoFromJson(
   Map<String, dynamic> json,
 ) => _UserAddressRequestDto(
   label: json['label'] as String,
+  recipientName: json['recipientName'] as String,
+  phoneNumber: json['phoneNumber'] as String,
   addressLine: json['addressLine'] as String,
   ward: json['ward'] as String,
   district: json['district'] as String,
@@ -24,6 +26,8 @@ Map<String, dynamic> _$UserAddressRequestDtoToJson(
   _UserAddressRequestDto instance,
 ) => <String, dynamic>{
   'label': instance.label,
+  'recipientName': instance.recipientName,
+  'phoneNumber': instance.phoneNumber,
   'addressLine': instance.addressLine,
   'ward': instance.ward,
   'district': instance.district,

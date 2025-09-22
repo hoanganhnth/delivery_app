@@ -140,7 +140,7 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
         final address = addresses[index];
         return AddressItemWidget(
           address: address,
-          onTap: () => _navigateToEditAddress(address),
+          onTap: () => _selectAddress(address),
           onEdit: () => _navigateToEditAddress(address),
           onDelete: () => _showDeleteConfirmation(context, address),
           onSetDefault: () => _setDefaultAddress(address),
@@ -157,7 +157,11 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
     context.pushEditAddress(address);
   }
 
-
+  void _selectAddress(UserAddressEntity address) {
+    // Set selected address và quay về màn hình trước
+    ref.read(userAddressListProvider.notifier).selectAddress(address);
+    Navigator.pop(context);
+  }
 
   void _setDefaultAddress(UserAddressEntity address) async {
     final success = await ref.read(userAddressListProvider.notifier).setDefaultAddress(address.id!);
