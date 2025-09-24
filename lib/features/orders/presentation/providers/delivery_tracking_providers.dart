@@ -55,7 +55,7 @@ final getCurrentDeliveryUseCaseProvider = Provider((ref) {
 
 /// Delivery Tracking Notifier Provider
 /// Không sử dụng autoDispose để tránh bị dispose khi navigation
-final deliveryTrackingNotifierProvider = StateNotifierProvider<DeliveryTrackingNotifier, DeliveryTrackingState>((ref) {
+final deliveryTrackingNotifierProvider = StateNotifierProvider.autoDispose<DeliveryTrackingNotifier, DeliveryTrackingState>((ref) {
   final connectUseCase = ref.watch(connectDeliveryTrackingUseCaseProvider);
   final startTrackingUseCase = ref.watch(startDeliveryTrackingUseCaseProvider);
   final stopTrackingUseCase = ref.watch(stopDeliveryTrackingUseCaseProvider);
