@@ -110,13 +110,15 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
               );
 
               // Cập nhật delivery tracking
+              // Lấy thông tin shipper nếu là shipper ID mới
+              if (delivery.shipperId != null &&
+                  delivery.shipperId != state.currentShipperId) {
+                _fetchShipperInfoIfNeeded(delivery.shipperId!);
+              }
               state = state.copyWith(
                 currentTracking: delivery,
                 clearError: true,
               );
-
-              // Lấy thông tin shipper nếu là shipper ID mới
-              _fetchShipperInfoIfNeeded(delivery.shipperId);
             },
             onError: (error) {
               state = state.copyWith(
@@ -263,7 +265,9 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
           );
 
           // Tự động lấy thông tin shipper nếu cần
-          _fetchShipperInfoIfNeeded(delivery.shipperId);
+          if (delivery.shipperId != null) {
+            _fetchShipperInfoIfNeeded(delivery.shipperId!);
+          }
         },
       );
     } catch (e) {

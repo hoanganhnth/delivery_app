@@ -6,7 +6,6 @@ import 'package:delivery_app/features/profile/presentation/providers/profile_pro
 import 'package:delivery_app/core/presentation/widgets/toast/toast_utils.dart';
 import 'package:delivery_app/core/routing/navigation_helper.dart';
 import '../../../location/presentation/providers/location_providers.dart';
-import '../../../location/domain/entities/location_entity.dart';
 import '../../domain/entities/user_address_entity.dart';
 import '../../data/dtos/user_address_request_dto.dart';
 import '../providers/user_address_providers.dart';
@@ -35,6 +34,10 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
   late final TextEditingController _postalCodeController;
 
   bool _isDefault = false;
+  
+  // Coordinates from GPS location
+  double? _latitude;
+  double? _longitude;
 
   @override
   void initState() {
@@ -55,6 +58,10 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
       text: address?.postalCode ?? '',
     );
     _isDefault = address?.isDefault ?? false;
+    
+    // Initialize coordinates if editing existing address
+    _latitude = address?.latitude;
+    _longitude = address?.longitude;
   }
 
   @override
@@ -451,6 +458,34 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
                 ),
               ),
             ),
+            
+            // Hiển thị tọa độ hiện tại (nếu có)
+            if (_latitude != null && _longitude != null) ...[
+              SizedBox(height: ResponsiveSize.s),
+              Container(
+                padding: EdgeInsets.all(ResponsiveSize.s),
+                decoration: BoxDecoration(
+                  color: Colors.green.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(ResponsiveSize.radiusS),
+                  border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.location_on, color: Colors.green, size: 16.w),
+                    SizedBox(width: ResponsiveSize.s),
+                    Expanded(
+                      child: Text(
+                        'Tọa độ: ${_latitude!.toStringAsFixed(6)}, ${_longitude!.toStringAsFixed(6)}',
+                        style: TextStyle(
+                          fontSize: ResponsiveSize.fontS,
+                          color: Colors.green[700],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -467,6 +502,12 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
       locationState.when(
         data: (location) async {
           if (location != null) {
+            // Lưu tọa độ GPS
+            setState(() {
+              _latitude = location.latitude;
+              _longitude = location.longitude;
+            });
+            
             // Lấy địa chỉ từ tọa độ
             final address = await ref
                 .read(currentLocationProvider.notifier)
@@ -493,8 +534,8 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
               // Hiển thị thông báo thành công
               if (mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Đã lấy địa chỉ từ vị trí hiện tại'),
+                  SnackBar(
+                    content: Text('Đã lấy địa chỉ từ vị trí hiện tại\nTọa độ: ${_latitude?.toStringAsFixed(6)}, ${_longitude?.toStringAsFixed(6)}'),
                     backgroundColor: Colors.green,
                   ),
                 );
@@ -551,6 +592,8 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
       postalCode: _postalCodeController.text.trim().isEmpty
           ? null
           : _postalCodeController.text.trim(),
+      latitude: _latitude,
+      longitude: _longitude,
       isDefault: _isDefault,
     );
 

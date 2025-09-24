@@ -9,10 +9,10 @@ part 'shipper_dto.g.dart';
 abstract class ShipperDto with _$ShipperDto {
   const factory ShipperDto({
     required int id,
-    required String name,
+    String? name,
     required String phone,
     required String vehicleType,
-    required String vehicleNumber,
+    required String licenseNumber,
     String? avatar,
     double? rating,
     int? totalTrips,
@@ -22,26 +22,8 @@ abstract class ShipperDto with _$ShipperDto {
     String? updatedAt,
   }) = _ShipperDto;
 
-  factory ShipperDto.fromJson(Map<String, dynamic> json) => 
+  factory ShipperDto.fromJson(Map<String, dynamic> json) =>
       _$ShipperDtoFromJson(json);
-
-  /// Factory để convert từ snake_case API response
-  factory ShipperDto.fromApiJson(Map<String, dynamic> json) {
-    return ShipperDto(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      phone: json['phone'] as String,
-      vehicleType: json['vehicle_type'] as String,
-      vehicleNumber: json['vehicle_number'] as String,
-      avatar: json['avatar'] as String?,
-      rating: (json['rating'] as num?)?.toDouble(),
-      totalTrips: json['total_trips'] as int?,
-      isOnline: json['is_online'] as bool?,
-      lastSeenAt: json['last_seen_at'] as String?,
-      createdAt: json['created_at'] as String?,
-      updatedAt: json['updated_at'] as String?,
-    );
-  }
 }
 
 /// Extension để convert DTO sang Entity
@@ -49,10 +31,10 @@ extension ShipperDtoX on ShipperDto {
   ShipperEntity toEntity() {
     return ShipperEntity(
       id: id,
-      name: name,
+      name: name ??'',
       phone: phone,
       vehicleType: vehicleType,
-      vehicleNumber: vehicleNumber,
+      vehicleNumber: licenseNumber,
       avatar: avatar,
       rating: rating,
       totalTrips: totalTrips,
@@ -73,6 +55,6 @@ abstract class GetShippersInAreaRequestDto with _$GetShippersInAreaRequestDto {
     @Default(10.0) double radius,
   }) = _GetShippersInAreaRequestDto;
 
-  factory GetShippersInAreaRequestDto.fromJson(Map<String, dynamic> json) => 
+  factory GetShippersInAreaRequestDto.fromJson(Map<String, dynamic> json) =>
       _$GetShippersInAreaRequestDtoFromJson(json);
 }

@@ -1,38 +1,43 @@
 import 'dart:async';
+import 'package:delivery_app/features/orders/data/datasources/delivery_tracking_remote_datasource.dart';
 import 'package:fpdart/fpdart.dart';
+import '../../../../core/data/dtos/base_response_dto.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/error/error_mapper.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../../../core/network/socket/delivery_tracking_stomp_service.dart';
+import '../dtos/current_delivery_dto.dart';
 import '../../domain/entities/delivery_tracking_entity.dart';
-import '../../domain/entities/delivery_status.dart';
 import '../../domain/repositories/delivery_tracking_repository.dart';
 
 /// Repository implementation chỉ transform data từ Service
 /// Service đã quản lý StreamController, Repository chỉ transform raw → Entity
 class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
   final DeliveryTrackingStompService _stompService;
+  final DeliveryTrackingRemoteDataSource _remoteDataSource;
   int? _currentOrderId;
-  
-  DeliveryTrackingRepositoryImpl(this._stompService);
-  
+
+  DeliveryTrackingRepositoryImpl(this._stompService, this._remoteDataSource);
+
   @override
   Stream<DeliveryTrackingEntity> get deliveryStream {
     // Transform stream từ Service thành Entity stream
     return _stompService.messageStream
         .where((rawData) => _isRelevantData(rawData))
         .map((rawData) => _parseDeliveryEntity(rawData));
-        // .where((entity) => _isValidDeliveryEntity(entity));
+    // .where((entity) => _isValidDeliveryEntity(entity));
   }
-  
+
   @override
-  Stream<bool> get connectionStream => _stompService.connectionStream ?? const Stream.empty();
-  
+  Stream<bool> get connectionStream =>
+      _stompService.connectionStream ?? const Stream.empty();
+
   @override
   bool get isTracking => _currentOrderId != null && _stompService.isConnected;
-  
+
   @override
   bool get isConnected => _stompService.isConnected;
-  
+
   @override
   Future<Either<Failure, void>> connect() async {
     try {
@@ -76,17 +81,17 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
   Future<Either<Failure, void>> startTracking(int orderId) async {
     try {
       AppLogger.d('Starting delivery tracking for order: $orderId');
-      
+
       // Stop previous tracking if any
       await stopTracking();
-      
+
       // Ensure connection với proper async handling
       if (!_stompService.isConnected) {
         await _stompService.connect(); // Không cần Future.delayed nữa!
       }
-      
+
       // Service đã quản lý stream, Repository chỉ cần transform
-      
+
       // Start tracking - chỉ khi đã connected
       if (_stompService.isConnected) {
         _stompService.subscribeToOrder(orderId);
@@ -94,7 +99,7 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
       } else {
         throw Exception('Failed to establish STOMP connection');
       }
-      
+
       AppLogger.i('Successfully started tracking order: $orderId');
       return right(null);
     } catch (e) {
@@ -103,19 +108,19 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
       return left(const ServerFailure('Failed to start tracking'));
     }
   }
-  
+
   @override
   Future<Either<Failure, void>> stopTracking() async {
     try {
       AppLogger.d('Stopping delivery tracking');
-      
+
       if (_currentOrderId != null) {
         _stompService.unsubscribeFromOrder(_currentOrderId!);
         _currentOrderId = null;
       }
-      
+
       // No subscription to cancel - Service handles stream lifecycle
-      
+
       AppLogger.i('Stopped delivery tracking');
       return right(null);
     } catch (e) {
@@ -123,48 +128,22 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
       return left(const ServerFailure('Failed to stop tracking'));
     }
   }
-  
+
   /// Check if raw data is relevant to current tracking
   bool _isRelevantData(Map<String, dynamic> rawData) {
     final orderId = rawData['orderId'];
     return orderId != null && orderId == _currentOrderId;
   }
-  
+
   /// Parse raw data thành DeliveryTrackingEntity
   DeliveryTrackingEntity _parseDeliveryEntity(Map<String, dynamic> rawData) {
     // Remove internal topic field if exists
     final data = Map<String, dynamic>.from(rawData);
     data.remove('_topic');
-    
-    return DeliveryTrackingEntity(
-      id: data['id'] ?? 0,
-      orderId: data['orderId'] ?? _currentOrderId ?? 0,
-      shipperId: data['shipperId'] ?? 0,
-      status: data['status'] ?? 'unknown',
-      pickupAddress: data['pickupAddress'] ?? '',
-      pickupLat: (data['pickupLat'] ?? 0.0).toDouble(),
-      pickupLng: (data['pickupLng'] ?? 0.0).toDouble(),
-      deliveryAddress: data['deliveryAddress'] ?? '',
-      deliveryLat: (data['deliveryLat'] ?? 0.0).toDouble(),
-      deliveryLng: (data['deliveryLng'] ?? 0.0).toDouble(),
-      shipperCurrentLat: data['shipperCurrentLat']?.toDouble(),
-      shipperCurrentLng: data['shipperCurrentLng']?.toDouble(),
-      assignedAt: data['assignedAt'] != null
-          ? DateTime.parse(data['assignedAt'])
-          : null,
-      pickedUpAt: data['pickedUpAt'] != null
-          ? DateTime.parse(data['pickedUpAt'])
-          : null,
-      deliveredAt: data['deliveredAt'] != null
-          ? DateTime.parse(data['deliveredAt'])
-          : null,
-      estimatedDeliveryTime: data['estimatedDeliveryTime'] != null
-          ? DateTime.parse(data['estimatedDeliveryTime'])
-          : null,
-      notes: data['notes']?.toString(),
-    );
+
+    return CurrentDeliveryDto.fromJson(data).toEntity();
   }
-  
+
   /// Validate entity data
   // bool _isValidDeliveryEntity(DeliveryTrackingEntity entity) {
   //   return entity.orderId > 0 &&
@@ -174,37 +153,34 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
   //          entity.deliveryLat.abs() <= 90 &&
   //          entity.deliveryLng.abs() <= 180;
   // }
-  
+
   @override
-  Future<Either<Failure, DeliveryTrackingEntity>> getCurrentDelivery(int orderId) async {
+  Future<Either<Failure, DeliveryTrackingEntity>> getCurrentDelivery(
+    int orderId,
+  ) async {
     try {
-      AppLogger.i('Getting current delivery for order: $orderId via REST API');
+      AppLogger.d('Getting current delivery for order: $orderId via REST API');
       
-      // Sử dụng REST API để lấy delivery hiện tại
-      // Tạm thời trả về mock data, implement API call sau khi có datasource
-      await Future.delayed(const Duration(milliseconds: 500)); // Simulate API call
+      final response = await _remoteDataSource.getCurrentDelivery(orderId);
       
-      // Mock delivery data for testing
-      final mockDelivery = DeliveryTrackingEntity(
-        id: orderId * 1000, // Mock ID
-        orderId: orderId,
-        shipperId: 14, // Fixed shipper ID for testing
-        status: DeliveryStatus.delivering,
-        pickupAddress: 'Nhà hàng ABC, Q1, HCM',
-        pickupLat: 10.762622,
-        pickupLng: 106.660172,
-        deliveryAddress: 'Tòa nhà XYZ, Q3, HCM',
-        deliveryLat: 10.795588,
-        deliveryLng: 106.717055,
-        estimatedDeliveryTime: DateTime.now().add(const Duration(minutes: 30)),
-        notes: 'Giao hàng cẩn thận',
-      );
-      
-      AppLogger.i('Successfully retrieved current delivery for order: $orderId');
-      return right(mockDelivery);
-    } catch (e) {
+      if (response.isSuccess && response.data != null) {
+        final entity = response.data!.toEntity();
+        AppLogger.i(
+          'Successfully retrieved current delivery for order: $orderId',
+        );
+        return right(entity);
+      } else {
+        AppLogger.w('Current delivery API returned error: ${response.message}');
+        return left(ServerFailure(response.message));
+      }
+    } on Exception catch (e) {
       AppLogger.e('Failed to get current delivery for order: $orderId', e);
-      return left(ServerFailure('Không thể lấy thông tin delivery: ${e.toString()}'));
+      return left(mapExceptionToFailure(e));
+    } catch (e) {
+      AppLogger.e('Unexpected error getting current delivery', e);
+      return left(
+        const ServerFailure('Không thể lấy thông tin delivery'),
+      );
     }
   }
 

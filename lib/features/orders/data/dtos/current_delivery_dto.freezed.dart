@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CurrentDeliveryDto {
 
- int get orderId; int get shipperId; String get status; double get pickupLat; double get pickupLng; double get deliveryLat; double get deliveryLng; String? get pickupAddress; String? get deliveryAddress; String? get estimatedTime; String? get notes; String? get createdAt; String? get updatedAt;
+ int get orderId; int? get shipperId; String get status; double get pickupLat; double get pickupLng; double get deliveryLat; double get deliveryLng; String? get pickupAddress; String? get deliveryAddress; String? get estimatedTime; String? get notes; String? get createdAt; String? get updatedAt;
 /// Create a copy of CurrentDeliveryDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $CurrentDeliveryDtoCopyWith<$Res>  {
   factory $CurrentDeliveryDtoCopyWith(CurrentDeliveryDto value, $Res Function(CurrentDeliveryDto) _then) = _$CurrentDeliveryDtoCopyWithImpl;
 @useResult
 $Res call({
- int orderId, int shipperId, String status, double pickupLat, double pickupLng, double deliveryLat, double deliveryLng, String? pickupAddress, String? deliveryAddress, String? estimatedTime, String? notes, String? createdAt, String? updatedAt
+ int orderId, int? shipperId, String status, double pickupLat, double pickupLng, double deliveryLat, double deliveryLng, String? pickupAddress, String? deliveryAddress, String? estimatedTime, String? notes, String? createdAt, String? updatedAt
 });
 
 
@@ -65,11 +65,11 @@ class _$CurrentDeliveryDtoCopyWithImpl<$Res>
 
 /// Create a copy of CurrentDeliveryDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? orderId = null,Object? shipperId = null,Object? status = null,Object? pickupLat = null,Object? pickupLng = null,Object? deliveryLat = null,Object? deliveryLng = null,Object? pickupAddress = freezed,Object? deliveryAddress = freezed,Object? estimatedTime = freezed,Object? notes = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? orderId = null,Object? shipperId = freezed,Object? status = null,Object? pickupLat = null,Object? pickupLng = null,Object? deliveryLat = null,Object? deliveryLng = null,Object? pickupAddress = freezed,Object? deliveryAddress = freezed,Object? estimatedTime = freezed,Object? notes = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 orderId: null == orderId ? _self.orderId : orderId // ignore: cast_nullable_to_non_nullable
-as int,shipperId: null == shipperId ? _self.shipperId : shipperId // ignore: cast_nullable_to_non_nullable
-as int,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as int,shipperId: freezed == shipperId ? _self.shipperId : shipperId // ignore: cast_nullable_to_non_nullable
+as int?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,pickupLat: null == pickupLat ? _self.pickupLat : pickupLat // ignore: cast_nullable_to_non_nullable
 as double,pickupLng: null == pickupLng ? _self.pickupLng : pickupLng // ignore: cast_nullable_to_non_nullable
 as double,deliveryLat: null == deliveryLat ? _self.deliveryLat : deliveryLat // ignore: cast_nullable_to_non_nullable
@@ -165,7 +165,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int orderId,  int shipperId,  String status,  double pickupLat,  double pickupLng,  double deliveryLat,  double deliveryLng,  String? pickupAddress,  String? deliveryAddress,  String? estimatedTime,  String? notes,  String? createdAt,  String? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int orderId,  int? shipperId,  String status,  double pickupLat,  double pickupLng,  double deliveryLat,  double deliveryLng,  String? pickupAddress,  String? deliveryAddress,  String? estimatedTime,  String? notes,  String? createdAt,  String? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CurrentDeliveryDto() when $default != null:
 return $default(_that.orderId,_that.shipperId,_that.status,_that.pickupLat,_that.pickupLng,_that.deliveryLat,_that.deliveryLng,_that.pickupAddress,_that.deliveryAddress,_that.estimatedTime,_that.notes,_that.createdAt,_that.updatedAt);case _:
@@ -186,7 +186,7 @@ return $default(_that.orderId,_that.shipperId,_that.status,_that.pickupLat,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int orderId,  int shipperId,  String status,  double pickupLat,  double pickupLng,  double deliveryLat,  double deliveryLng,  String? pickupAddress,  String? deliveryAddress,  String? estimatedTime,  String? notes,  String? createdAt,  String? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int orderId,  int? shipperId,  String status,  double pickupLat,  double pickupLng,  double deliveryLat,  double deliveryLng,  String? pickupAddress,  String? deliveryAddress,  String? estimatedTime,  String? notes,  String? createdAt,  String? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _CurrentDeliveryDto():
 return $default(_that.orderId,_that.shipperId,_that.status,_that.pickupLat,_that.pickupLng,_that.deliveryLat,_that.deliveryLng,_that.pickupAddress,_that.deliveryAddress,_that.estimatedTime,_that.notes,_that.createdAt,_that.updatedAt);case _:
@@ -206,7 +206,7 @@ return $default(_that.orderId,_that.shipperId,_that.status,_that.pickupLat,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int orderId,  int shipperId,  String status,  double pickupLat,  double pickupLng,  double deliveryLat,  double deliveryLng,  String? pickupAddress,  String? deliveryAddress,  String? estimatedTime,  String? notes,  String? createdAt,  String? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int orderId,  int? shipperId,  String status,  double pickupLat,  double pickupLng,  double deliveryLat,  double deliveryLng,  String? pickupAddress,  String? deliveryAddress,  String? estimatedTime,  String? notes,  String? createdAt,  String? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _CurrentDeliveryDto() when $default != null:
 return $default(_that.orderId,_that.shipperId,_that.status,_that.pickupLat,_that.pickupLng,_that.deliveryLat,_that.deliveryLng,_that.pickupAddress,_that.deliveryAddress,_that.estimatedTime,_that.notes,_that.createdAt,_that.updatedAt);case _:
@@ -221,11 +221,11 @@ return $default(_that.orderId,_that.shipperId,_that.status,_that.pickupLat,_that
 @JsonSerializable()
 
 class _CurrentDeliveryDto implements CurrentDeliveryDto {
-  const _CurrentDeliveryDto({required this.orderId, required this.shipperId, required this.status, required this.pickupLat, required this.pickupLng, required this.deliveryLat, required this.deliveryLng, this.pickupAddress, this.deliveryAddress, this.estimatedTime, this.notes, this.createdAt, this.updatedAt});
+  const _CurrentDeliveryDto({required this.orderId, this.shipperId, required this.status, required this.pickupLat, required this.pickupLng, required this.deliveryLat, required this.deliveryLng, this.pickupAddress, this.deliveryAddress, this.estimatedTime, this.notes, this.createdAt, this.updatedAt});
   factory _CurrentDeliveryDto.fromJson(Map<String, dynamic> json) => _$CurrentDeliveryDtoFromJson(json);
 
 @override final  int orderId;
-@override final  int shipperId;
+@override final  int? shipperId;
 @override final  String status;
 @override final  double pickupLat;
 @override final  double pickupLng;
@@ -271,7 +271,7 @@ abstract mixin class _$CurrentDeliveryDtoCopyWith<$Res> implements $CurrentDeliv
   factory _$CurrentDeliveryDtoCopyWith(_CurrentDeliveryDto value, $Res Function(_CurrentDeliveryDto) _then) = __$CurrentDeliveryDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int orderId, int shipperId, String status, double pickupLat, double pickupLng, double deliveryLat, double deliveryLng, String? pickupAddress, String? deliveryAddress, String? estimatedTime, String? notes, String? createdAt, String? updatedAt
+ int orderId, int? shipperId, String status, double pickupLat, double pickupLng, double deliveryLat, double deliveryLng, String? pickupAddress, String? deliveryAddress, String? estimatedTime, String? notes, String? createdAt, String? updatedAt
 });
 
 
@@ -288,11 +288,11 @@ class __$CurrentDeliveryDtoCopyWithImpl<$Res>
 
 /// Create a copy of CurrentDeliveryDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? orderId = null,Object? shipperId = null,Object? status = null,Object? pickupLat = null,Object? pickupLng = null,Object? deliveryLat = null,Object? deliveryLng = null,Object? pickupAddress = freezed,Object? deliveryAddress = freezed,Object? estimatedTime = freezed,Object? notes = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? orderId = null,Object? shipperId = freezed,Object? status = null,Object? pickupLat = null,Object? pickupLng = null,Object? deliveryLat = null,Object? deliveryLng = null,Object? pickupAddress = freezed,Object? deliveryAddress = freezed,Object? estimatedTime = freezed,Object? notes = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_CurrentDeliveryDto(
 orderId: null == orderId ? _self.orderId : orderId // ignore: cast_nullable_to_non_nullable
-as int,shipperId: null == shipperId ? _self.shipperId : shipperId // ignore: cast_nullable_to_non_nullable
-as int,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as int,shipperId: freezed == shipperId ? _self.shipperId : shipperId // ignore: cast_nullable_to_non_nullable
+as int?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,pickupLat: null == pickupLat ? _self.pickupLat : pickupLat // ignore: cast_nullable_to_non_nullable
 as double,pickupLng: null == pickupLng ? _self.pickupLng : pickupLng // ignore: cast_nullable_to_non_nullable
 as double,deliveryLat: null == deliveryLat ? _self.deliveryLat : deliveryLat // ignore: cast_nullable_to_non_nullable

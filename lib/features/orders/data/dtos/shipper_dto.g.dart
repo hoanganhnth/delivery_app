@@ -8,10 +8,10 @@ part of 'shipper_dto.dart';
 
 _ShipperDto _$ShipperDtoFromJson(Map<String, dynamic> json) => _ShipperDto(
   id: (json['id'] as num).toInt(),
-  name: json['name'] as String,
+  name: json['name'] as String?,
   phone: json['phone'] as String,
   vehicleType: json['vehicleType'] as String,
-  vehicleNumber: json['vehicleNumber'] as String,
+  licenseNumber: json['licenseNumber'] as String,
   avatar: json['avatar'] as String?,
   rating: (json['rating'] as num?)?.toDouble(),
   totalTrips: (json['totalTrips'] as num?)?.toInt(),
@@ -27,7 +27,7 @@ Map<String, dynamic> _$ShipperDtoToJson(_ShipperDto instance) =>
       'name': instance.name,
       'phone': instance.phone,
       'vehicleType': instance.vehicleType,
-      'vehicleNumber': instance.vehicleNumber,
+      'licenseNumber': instance.licenseNumber,
       'avatar': instance.avatar,
       'rating': instance.rating,
       'totalTrips': instance.totalTrips,

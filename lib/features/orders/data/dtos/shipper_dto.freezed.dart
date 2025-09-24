@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShipperDto {
 
- int get id; String get name; String get phone; String get vehicleType; String get vehicleNumber; String? get avatar; double? get rating; int? get totalTrips; bool? get isOnline; String? get lastSeenAt; String? get createdAt; String? get updatedAt;
+ int get id; String? get name; String get phone; String get vehicleType; String get licenseNumber; String? get avatar; double? get rating; int? get totalTrips; bool? get isOnline; String? get lastSeenAt; String? get createdAt; String? get updatedAt;
 /// Create a copy of ShipperDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ShipperDtoCopyWith<ShipperDto> get copyWith => _$ShipperDtoCopyWithImpl<Shipper
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShipperDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.vehicleType, vehicleType) || other.vehicleType == vehicleType)&&(identical(other.vehicleNumber, vehicleNumber) || other.vehicleNumber == vehicleNumber)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.totalTrips, totalTrips) || other.totalTrips == totalTrips)&&(identical(other.isOnline, isOnline) || other.isOnline == isOnline)&&(identical(other.lastSeenAt, lastSeenAt) || other.lastSeenAt == lastSeenAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShipperDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.vehicleType, vehicleType) || other.vehicleType == vehicleType)&&(identical(other.licenseNumber, licenseNumber) || other.licenseNumber == licenseNumber)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.totalTrips, totalTrips) || other.totalTrips == totalTrips)&&(identical(other.isOnline, isOnline) || other.isOnline == isOnline)&&(identical(other.lastSeenAt, lastSeenAt) || other.lastSeenAt == lastSeenAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phone,vehicleType,vehicleNumber,avatar,rating,totalTrips,isOnline,lastSeenAt,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,name,phone,vehicleType,licenseNumber,avatar,rating,totalTrips,isOnline,lastSeenAt,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'ShipperDto(id: $id, name: $name, phone: $phone, vehicleType: $vehicleType, vehicleNumber: $vehicleNumber, avatar: $avatar, rating: $rating, totalTrips: $totalTrips, isOnline: $isOnline, lastSeenAt: $lastSeenAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ShipperDto(id: $id, name: $name, phone: $phone, vehicleType: $vehicleType, licenseNumber: $licenseNumber, avatar: $avatar, rating: $rating, totalTrips: $totalTrips, isOnline: $isOnline, lastSeenAt: $lastSeenAt, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ShipperDtoCopyWith<$Res>  {
   factory $ShipperDtoCopyWith(ShipperDto value, $Res Function(ShipperDto) _then) = _$ShipperDtoCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, String phone, String vehicleType, String vehicleNumber, String? avatar, double? rating, int? totalTrips, bool? isOnline, String? lastSeenAt, String? createdAt, String? updatedAt
+ int id, String? name, String phone, String vehicleType, String licenseNumber, String? avatar, double? rating, int? totalTrips, bool? isOnline, String? lastSeenAt, String? createdAt, String? updatedAt
 });
 
 
@@ -65,13 +65,13 @@ class _$ShipperDtoCopyWithImpl<$Res>
 
 /// Create a copy of ShipperDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? phone = null,Object? vehicleType = null,Object? vehicleNumber = null,Object? avatar = freezed,Object? rating = freezed,Object? totalTrips = freezed,Object? isOnline = freezed,Object? lastSeenAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = freezed,Object? phone = null,Object? vehicleType = null,Object? licenseNumber = null,Object? avatar = freezed,Object? rating = freezed,Object? totalTrips = freezed,Object? isOnline = freezed,Object? lastSeenAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
+as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
 as String,vehicleType: null == vehicleType ? _self.vehicleType : vehicleType // ignore: cast_nullable_to_non_nullable
-as String,vehicleNumber: null == vehicleNumber ? _self.vehicleNumber : vehicleNumber // ignore: cast_nullable_to_non_nullable
+as String,licenseNumber: null == licenseNumber ? _self.licenseNumber : licenseNumber // ignore: cast_nullable_to_non_nullable
 as String,avatar: freezed == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
 as String?,rating: freezed == rating ? _self.rating : rating // ignore: cast_nullable_to_non_nullable
 as double?,totalTrips: freezed == totalTrips ? _self.totalTrips : totalTrips // ignore: cast_nullable_to_non_nullable
@@ -164,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String phone,  String vehicleType,  String vehicleNumber,  String? avatar,  double? rating,  int? totalTrips,  bool? isOnline,  String? lastSeenAt,  String? createdAt,  String? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String? name,  String phone,  String vehicleType,  String licenseNumber,  String? avatar,  double? rating,  int? totalTrips,  bool? isOnline,  String? lastSeenAt,  String? createdAt,  String? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShipperDto() when $default != null:
-return $default(_that.id,_that.name,_that.phone,_that.vehicleType,_that.vehicleNumber,_that.avatar,_that.rating,_that.totalTrips,_that.isOnline,_that.lastSeenAt,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.name,_that.phone,_that.vehicleType,_that.licenseNumber,_that.avatar,_that.rating,_that.totalTrips,_that.isOnline,_that.lastSeenAt,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -185,10 +185,10 @@ return $default(_that.id,_that.name,_that.phone,_that.vehicleType,_that.vehicleN
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String phone,  String vehicleType,  String vehicleNumber,  String? avatar,  double? rating,  int? totalTrips,  bool? isOnline,  String? lastSeenAt,  String? createdAt,  String? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String? name,  String phone,  String vehicleType,  String licenseNumber,  String? avatar,  double? rating,  int? totalTrips,  bool? isOnline,  String? lastSeenAt,  String? createdAt,  String? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _ShipperDto():
-return $default(_that.id,_that.name,_that.phone,_that.vehicleType,_that.vehicleNumber,_that.avatar,_that.rating,_that.totalTrips,_that.isOnline,_that.lastSeenAt,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.name,_that.phone,_that.vehicleType,_that.licenseNumber,_that.avatar,_that.rating,_that.totalTrips,_that.isOnline,_that.lastSeenAt,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -205,10 +205,10 @@ return $default(_that.id,_that.name,_that.phone,_that.vehicleType,_that.vehicleN
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String phone,  String vehicleType,  String vehicleNumber,  String? avatar,  double? rating,  int? totalTrips,  bool? isOnline,  String? lastSeenAt,  String? createdAt,  String? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String? name,  String phone,  String vehicleType,  String licenseNumber,  String? avatar,  double? rating,  int? totalTrips,  bool? isOnline,  String? lastSeenAt,  String? createdAt,  String? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ShipperDto() when $default != null:
-return $default(_that.id,_that.name,_that.phone,_that.vehicleType,_that.vehicleNumber,_that.avatar,_that.rating,_that.totalTrips,_that.isOnline,_that.lastSeenAt,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.name,_that.phone,_that.vehicleType,_that.licenseNumber,_that.avatar,_that.rating,_that.totalTrips,_that.isOnline,_that.lastSeenAt,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -220,14 +220,14 @@ return $default(_that.id,_that.name,_that.phone,_that.vehicleType,_that.vehicleN
 @JsonSerializable()
 
 class _ShipperDto implements ShipperDto {
-  const _ShipperDto({required this.id, required this.name, required this.phone, required this.vehicleType, required this.vehicleNumber, this.avatar, this.rating, this.totalTrips, this.isOnline, this.lastSeenAt, this.createdAt, this.updatedAt});
+  const _ShipperDto({required this.id, this.name, required this.phone, required this.vehicleType, required this.licenseNumber, this.avatar, this.rating, this.totalTrips, this.isOnline, this.lastSeenAt, this.createdAt, this.updatedAt});
   factory _ShipperDto.fromJson(Map<String, dynamic> json) => _$ShipperDtoFromJson(json);
 
 @override final  int id;
-@override final  String name;
+@override final  String? name;
 @override final  String phone;
 @override final  String vehicleType;
-@override final  String vehicleNumber;
+@override final  String licenseNumber;
 @override final  String? avatar;
 @override final  double? rating;
 @override final  int? totalTrips;
@@ -249,16 +249,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShipperDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.vehicleType, vehicleType) || other.vehicleType == vehicleType)&&(identical(other.vehicleNumber, vehicleNumber) || other.vehicleNumber == vehicleNumber)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.totalTrips, totalTrips) || other.totalTrips == totalTrips)&&(identical(other.isOnline, isOnline) || other.isOnline == isOnline)&&(identical(other.lastSeenAt, lastSeenAt) || other.lastSeenAt == lastSeenAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShipperDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.vehicleType, vehicleType) || other.vehicleType == vehicleType)&&(identical(other.licenseNumber, licenseNumber) || other.licenseNumber == licenseNumber)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.totalTrips, totalTrips) || other.totalTrips == totalTrips)&&(identical(other.isOnline, isOnline) || other.isOnline == isOnline)&&(identical(other.lastSeenAt, lastSeenAt) || other.lastSeenAt == lastSeenAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phone,vehicleType,vehicleNumber,avatar,rating,totalTrips,isOnline,lastSeenAt,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,name,phone,vehicleType,licenseNumber,avatar,rating,totalTrips,isOnline,lastSeenAt,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'ShipperDto(id: $id, name: $name, phone: $phone, vehicleType: $vehicleType, vehicleNumber: $vehicleNumber, avatar: $avatar, rating: $rating, totalTrips: $totalTrips, isOnline: $isOnline, lastSeenAt: $lastSeenAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ShipperDto(id: $id, name: $name, phone: $phone, vehicleType: $vehicleType, licenseNumber: $licenseNumber, avatar: $avatar, rating: $rating, totalTrips: $totalTrips, isOnline: $isOnline, lastSeenAt: $lastSeenAt, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -269,7 +269,7 @@ abstract mixin class _$ShipperDtoCopyWith<$Res> implements $ShipperDtoCopyWith<$
   factory _$ShipperDtoCopyWith(_ShipperDto value, $Res Function(_ShipperDto) _then) = __$ShipperDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, String phone, String vehicleType, String vehicleNumber, String? avatar, double? rating, int? totalTrips, bool? isOnline, String? lastSeenAt, String? createdAt, String? updatedAt
+ int id, String? name, String phone, String vehicleType, String licenseNumber, String? avatar, double? rating, int? totalTrips, bool? isOnline, String? lastSeenAt, String? createdAt, String? updatedAt
 });
 
 
@@ -286,13 +286,13 @@ class __$ShipperDtoCopyWithImpl<$Res>
 
 /// Create a copy of ShipperDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? phone = null,Object? vehicleType = null,Object? vehicleNumber = null,Object? avatar = freezed,Object? rating = freezed,Object? totalTrips = freezed,Object? isOnline = freezed,Object? lastSeenAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = freezed,Object? phone = null,Object? vehicleType = null,Object? licenseNumber = null,Object? avatar = freezed,Object? rating = freezed,Object? totalTrips = freezed,Object? isOnline = freezed,Object? lastSeenAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_ShipperDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
+as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
 as String,vehicleType: null == vehicleType ? _self.vehicleType : vehicleType // ignore: cast_nullable_to_non_nullable
-as String,vehicleNumber: null == vehicleNumber ? _self.vehicleNumber : vehicleNumber // ignore: cast_nullable_to_non_nullable
+as String,licenseNumber: null == licenseNumber ? _self.licenseNumber : licenseNumber // ignore: cast_nullable_to_non_nullable
 as String,avatar: freezed == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
 as String?,rating: freezed == rating ? _self.rating : rating // ignore: cast_nullable_to_non_nullable
 as double?,totalTrips: freezed == totalTrips ? _self.totalTrips : totalTrips // ignore: cast_nullable_to_non_nullable

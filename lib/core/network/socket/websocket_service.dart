@@ -20,7 +20,7 @@ class SocketManager {
 
   /// Kết nối đến 1 WebSocket URL với async support
   Future<void> connect(String key, String url) async {
-    if (_channels.containsKey(key)) {
+    if (_channels.containsKey(key) & isConnected(key)) {
       AppLogger.w('Socket [$key] đã kết nối rồi.');
       return;
     }

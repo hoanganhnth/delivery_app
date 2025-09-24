@@ -1,7 +1,6 @@
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
 import '../models/location_model.dart';
 import '../models/address_model.dart';
+import '../../../../core/services/location_service.dart';
 
 /// Interface cho location data source
 abstract class LocationDataSource {
@@ -25,42 +24,19 @@ abstract class LocationDataSource {
 
 /// Implementation của LocationDataSource sử dụng geolocator và geocoding
 class LocationDataSourceImpl implements LocationDataSource {
+  final LocationService _locationService = LocationService.instance;
+
   @override
   Future<bool> requestLocationPermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Kiểm tra location service có được bật không
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      throw Exception('Location service is disabled');
-    }
-
-    // Kiểm tra quyền
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        throw Exception('Location permission denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      throw Exception('Location permission denied forever');
-    }
-
-    return true;
+    return await _locationService.requestLocationPermission();
   }
 
   @override
   Future<LocationModel> getCurrentPosition() async {
-    final position = await Geolocator.getCurrentPosition(
-      locationSettings: LocationSettings(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 10,
-      ),
-    );
-
+    final position = await _locationService.getCurrentPosition();
+    if (position == null) {
+      throw Exception('Could not get current position');
+    }
     return LocationModel.fromPosition(position);
   }
 
@@ -69,31 +45,26 @@ class LocationDataSourceImpl implements LocationDataSource {
     double latitude,
     double longitude,
   ) async {
-    final placemarks = await placemarkFromCoordinates(latitude, longitude);
-
-    if (placemarks.isEmpty) {
-      throw Exception('No address found for coordinates');
-    }
-
-    final placemark = placemarks.first;
-    return AddressModel.fromPlacemark(placemark);
+    final addressString = await _locationService.getAddressFromCoordinates(latitude, longitude);
+    
+    // Parse địa chỉ string thành AddressModel
+    return AddressModel(
+      street: addressString,
+      locality: null,
+      subLocality: null,
+      administrativeArea: null,
+      country: null,
+      postalCode: null,
+    );
   }
 
   @override
   Future<LocationModel> getCoordinatesFromAddress(String address) async {
-    final locations = await locationFromAddress(address);
-
-    if (locations.isEmpty) {
+    final position = await _locationService.getCoordinatesFromAddress(address);
+    if (position == null) {
       throw Exception('No coordinates found for address');
     }
-
-    final location = locations.first;
-    return LocationModel(
-      latitude: location.latitude,
-      longitude: location.longitude,
-      accuracy: null,
-      timestamp: DateTime.now(),
-    );
+    return LocationModel.fromPosition(position);
   }
 
   @override
@@ -103,21 +74,21 @@ class LocationDataSourceImpl implements LocationDataSource {
     double endLat,
     double endLng,
   ) {
-    return Geolocator.distanceBetween(startLat, startLng, endLat, endLng);
+    return _locationService.calculateDistance(startLat, startLng, endLat, endLng);
   }
 
   @override
   Future<bool> isLocationServiceEnabled() async {
-    return await Geolocator.isLocationServiceEnabled();
+    return await _locationService.isLocationServiceEnabled();
   }
 
   @override
   Future<void> openLocationSettings() async {
-    await Geolocator.openLocationSettings();
+    await _locationService.openLocationSettings();
   }
 
   @override
   Future<void> openAppSettings() async {
-    await Geolocator.openAppSettings();
+    await _locationService.openAppSettings();
   }
 }

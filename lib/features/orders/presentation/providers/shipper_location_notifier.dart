@@ -20,7 +20,9 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
     required TrackShipperLocationUseCase trackShipperUseCase,
   }) : _stopTrackingUseCase = stopTrackingUseCase,
        _trackShipperUseCase = trackShipperUseCase,
-       super(const ShipperLocationState());
+       super(const ShipperLocationState()) {
+    AppLogger.i('ShipperLocationNotifier created');
+  }
 
   /// Bắt đầu theo dõi shipper location thông qua UseCase
   Future<void> startTrackingShipper(int shipperId) async {
@@ -28,7 +30,7 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
       // AppLogger.i('Starting shipper location tracking: $shipperId');
 
       // Stop previous tracking if any
-      await stopTracking();
+      // await stopTracking();
 
       state = state.copyWith(
         isLoading: true,
@@ -174,9 +176,15 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
   @override
   void dispose() {
     AppLogger.i('Disposing shipper location notifier');
-    _stopTrackingUseCase(NoParams());
+    
+    // Stop tracking gracefully
+    if (state.isTracking) {
+      stopTracking();
+    }
+    
     // Cancel subscriptions
     _locationSubscription?.cancel();
+    _locationSubscription = null;
 
     super.dispose();
   }

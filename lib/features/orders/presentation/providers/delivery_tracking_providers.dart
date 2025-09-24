@@ -1,5 +1,7 @@
+import 'package:delivery_app/core/network/dio/authenticated_network_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/network/socket/providers/socket_providers.dart';
+import '../../data/datasources/delivery_tracking_remote_datasource_impl.dart';
 import '../../data/repositories/delivery_tracking_repository_impl.dart';
 import '../../domain/usecases/tracking_usecases.dart';
 import '../../domain/usecases/get_current_delivery_usecase.dart';
@@ -7,10 +9,22 @@ import 'shipper_providers.dart';
 import 'delivery_tracking_notifier.dart';
 import 'delivery_tracking_state.dart';
 
+/// Network providers
+final deliveryTrackingApiServiceProvider = Provider((ref) {
+  final dio = ref.watch(authenticatedDioProvider);
+  return DeliveryTrackingApiService(dio);
+});
+
+final deliveryTrackingRemoteDataSourceProvider = Provider((ref) {
+  final apiService = ref.watch(deliveryTrackingApiServiceProvider);
+  return DeliveryTrackingRemoteDataSourceImpl(apiService);
+});
+
 /// Delivery Tracking Repository Provider
 final deliveryTrackingRepositoryProvider = Provider((ref) {
   final stompService = ref.watch(deliveryTrackingStompServiceProvider);
-  return DeliveryTrackingRepositoryImpl(stompService);
+  final remoteDataSource = ref.watch(deliveryTrackingRemoteDataSourceProvider);
+  return DeliveryTrackingRepositoryImpl(stompService, remoteDataSource);
 });
 
 /// UseCase Providers
@@ -40,7 +54,8 @@ final getCurrentDeliveryUseCaseProvider = Provider((ref) {
 });
 
 /// Delivery Tracking Notifier Provider
-final deliveryTrackingNotifierProvider = StateNotifierProvider.autoDispose<DeliveryTrackingNotifier, DeliveryTrackingState>((ref) {
+/// Không sử dụng autoDispose để tránh bị dispose khi navigation
+final deliveryTrackingNotifierProvider = StateNotifierProvider<DeliveryTrackingNotifier, DeliveryTrackingState>((ref) {
   final connectUseCase = ref.watch(connectDeliveryTrackingUseCaseProvider);
   final startTrackingUseCase = ref.watch(startDeliveryTrackingUseCaseProvider);
   final stopTrackingUseCase = ref.watch(stopDeliveryTrackingUseCaseProvider);
@@ -49,7 +64,7 @@ final deliveryTrackingNotifierProvider = StateNotifierProvider.autoDispose<Deliv
   final getCurrentDeliveryUseCase = ref.watch(getCurrentDeliveryUseCaseProvider);
   
   // Clean Architecture: Notifier only depends on UseCases, not Repository
-  return DeliveryTrackingNotifier(
+  final notifier = DeliveryTrackingNotifier(
     connectUseCase: connectUseCase,
     startTrackingUseCase: startTrackingUseCase,
     stopTrackingUseCase: stopTrackingUseCase,
@@ -57,6 +72,13 @@ final deliveryTrackingNotifierProvider = StateNotifierProvider.autoDispose<Deliv
     getShipperUseCase: getShipperUseCase,
     getCurrentDeliveryUseCase: getCurrentDeliveryUseCase,
   );
+  
+  // Cleanup when provider is disposed
+  ref.onDispose(() {
+    notifier.dispose();
+  });
+  
+  return notifier;
 });
 
 /// Provider để kiểm tra xem có đang tracking hay không

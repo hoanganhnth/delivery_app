@@ -73,5 +73,10 @@
 		<string>applinks:deliveryapp.com</string>
 		<string>applinks:deliveryapp.dev</string>
 	</array>
+	<!-- Location permissions for geolocator -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Ứng dụng cần truy cập vị trí để tự động điền địa chỉ giao hàng</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Ứng dụng cần truy cập vị trí để tự động điền địa chỉ giao hàng</string>
 </dict>
 </plist>

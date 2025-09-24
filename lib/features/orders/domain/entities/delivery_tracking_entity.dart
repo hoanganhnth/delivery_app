@@ -4,7 +4,7 @@ import 'delivery_status.dart';
 class DeliveryTrackingEntity {
   final int id;
   final int orderId;
-  final int shipperId;
+  final int? shipperId;
   final DeliveryStatus status;
   final String pickupAddress;
   final double pickupLat;

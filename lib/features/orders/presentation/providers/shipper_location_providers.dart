@@ -21,23 +21,31 @@ final trackShipperLocationUseCaseProvider = Provider<TrackShipperLocationUseCase
 });
 
 /// Shipper Location Notifier Provider
-final shipperLocationNotifierProvider = StateNotifierProvider.autoDispose<ShipperLocationNotifier, ShipperLocationState>((ref) {
+/// Không sử dụng autoDispose để tránh bị dispose khi navigation
+final shipperLocationNotifierProvider = StateNotifierProvider<ShipperLocationNotifier, ShipperLocationState>((ref) {
   // final startTrackingUseCase = ref.watch(startShipperTrackingUseCaseProvider);
   final stopTrackingUseCase = ref.watch(stopShipperTrackingUseCaseProvider);
   final trackShipperUseCase = ref.watch(trackShipperLocationUseCaseProvider);
   
-  return ShipperLocationNotifier(
+  final notifier = ShipperLocationNotifier(
     // startTrackingUseCase: startTrackingUseCase,
     stopTrackingUseCase: stopTrackingUseCase,
     trackShipperUseCase: trackShipperUseCase,
   );
+  
+  // Cleanup when provider is disposed
+  ref.onDispose(() {
+    notifier.dispose();
+  });
+  
+  return notifier;
 });
 
 /// Convenience providers for easy access in UI
-final currentShipperLocationProvider = Provider<ShipperLocationState>((ref) {
-  return ref.watch(shipperLocationNotifierProvider);
-});
+// final currentShipperLocationProvider = Provider<ShipperLocationState>((ref) {
+//   return ref.watch(shipperLocationNotifierProvider);
+// });
 
-final isTrackingShipperProvider = Provider<bool>((ref) {
-  return ref.watch(shipperLocationNotifierProvider.select((state) => state.isTracking));
-});
+// final isTrackingShipperProvider = Provider<bool>((ref) {
+//   return ref.watch(shipperLocationNotifierProvider.select((state) => state.isTracking));
+// });

@@ -72,6 +72,7 @@ class _OptimizedDeliveryTrackingMapWidgetState
   void dispose() {
     _movementService?.dispose();
     _mapService.dispose();
+    // ref.read(shipperLocationNotifierProvider.notifier).dispose();
     super.dispose();
   }
 

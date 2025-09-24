@@ -10,7 +10,7 @@ part 'current_delivery_dto.g.dart';
 abstract class CurrentDeliveryDto with _$CurrentDeliveryDto {
   const factory CurrentDeliveryDto({
     required int orderId,
-    required int shipperId,
+     int? shipperId,
     required String status,
     required double pickupLat,
     required double pickupLng,

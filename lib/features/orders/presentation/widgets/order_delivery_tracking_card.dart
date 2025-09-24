@@ -39,22 +39,27 @@ class _OrderDeliveryTrackingCardState
     super.dispose();
   }
 
-    @override
-    Widget build(BuildContext context) {
-      final trackingState = ref.watch(deliveryTrackingNotifierProvider);
-      final isConnected = ref.watch(trackingConnectionProvider);
+  @override
+  Widget build(BuildContext context) {
+    final trackingState = ref.watch(deliveryTrackingNotifierProvider);
+    final isConnected = ref.watch(trackingConnectionProvider);
 
-      // ✅ Listen to delivery tracking changes to auto-start shipper tracking
-      ref.listen<DeliveryTrackingState>(deliveryTrackingNotifierProvider, (prev, next) {
-        // Tự động start shipper tracking khi có delivery data mới
-        if (next.currentTracking != null && 
-            prev?.currentTracking?.shipperId != next.currentTracking?.shipperId) {
-          final shipperId = next.currentTracking!.shipperId;
+    // ✅ Listen to delivery tracking changes to auto-start shipper tracking
+    ref.listen<DeliveryTrackingState>(deliveryTrackingNotifierProvider, (
+      prev,
+      next,
+    ) {
+      // Tự động start shipper tracking khi có delivery data mới
+      if (next.currentTracking != null &&
+          prev?.currentTracking?.shipperId != next.currentTracking?.shipperId) {
+        final shipperId = next.currentTracking!.shipperId;
+        if (shipperId != null) {
           ref
               .read(shipperLocationNotifierProvider.notifier)
               .startTrackingShipper(shipperId);
         }
-      });
+      }
+    });
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

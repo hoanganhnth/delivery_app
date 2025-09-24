@@ -9,7 +9,7 @@ part of 'current_delivery_dto.dart';
 _CurrentDeliveryDto _$CurrentDeliveryDtoFromJson(Map<String, dynamic> json) =>
     _CurrentDeliveryDto(
       orderId: (json['orderId'] as num).toInt(),
-      shipperId: (json['shipperId'] as num).toInt(),
+      shipperId: (json['shipperId'] as num?)?.toInt(),
       status: json['status'] as String,
       pickupLat: (json['pickupLat'] as num).toDouble(),
       pickupLng: (json['pickupLng'] as num).toDouble(),
