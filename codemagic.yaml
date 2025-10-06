@@ -19,4 +19,4 @@ workflows:
       events:
         - push
       branch_patterns:
-        - pattern: 'test_Code_magic'
+        - pattern: 'test_code_magic'
