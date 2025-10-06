@@ -6,19 +6,36 @@ workflows:
       flutter: stable
       xcode: latest
       # android: latest
+      groups:
+        - internal-testers
     scripts:
+      - name: Set up google-services.json
+        script: |
+          echo "$FIREBASE_ANDROID_JSON" | base64 --decode > "$FCI_BUILD_DIR/android/app/google-services.json"
+
       # 1️⃣ Cài dependency
       - flutter pub get
       # 2️⃣ Chạy test
       # - flutter test
       # 3️⃣ Build APK release
       - flutter build apk --release
+      - name: Upload to Firebase App Distribution
+        script: |
+          firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
+            --app 1:958810765713:android:f17777b19a93edc4540230 \
+            --token $FIREBASE_TOKEN \
+            --groups "internal-testers,qa-team" \
+            --release-notes "Build tự động từ Codemagic"
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
     triggering:
       events:
         - push
       branch_patterns:
-        - pattern: '*' # Trigger on all branches
+        - pattern: 'test_code_magic'
           include: true
           source: true
+    cache:
+      cache_paths:
+        - ~/.pub-cache
+        - $FCI_BUILD_DIR/build
