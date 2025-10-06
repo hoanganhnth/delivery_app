@@ -5,7 +5,7 @@ workflows:
     environment:
       flutter: stable
       xcode: latest
-      android: latest
+      # android: latest
     scripts:
       # 1️⃣ Cài dependency
       - flutter pub get
