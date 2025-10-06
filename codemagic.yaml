@@ -19,6 +19,6 @@ workflows:
       events:
         - push
       branch_patterns:
-        - pattern: 'test_code_magic'
+        - pattern: '*'
           include: true
           source: true
