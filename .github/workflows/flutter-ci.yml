@@ -1,0 +1,46 @@
+name: Flutter CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Clone source code
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      # 2️⃣ Cài đặt Flutter SDK
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.32.8" # hoặc phiên bản bạn đang dùng
+
+      # 3️⃣ Lấy dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 4️⃣ Phân tích code
+      - name: Analyze
+        run: flutter analyze
+
+      # 5️⃣ Chạy test
+      - name: Run tests
+        run: flutter test
+
+      # 6️⃣ Build APK
+      - name: Build release APK
+        run: flutter build apk --release
+
+      # 7️⃣ Upload artifact để tải về
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: build/app/outputs/flutter-apk/app-release.apk
