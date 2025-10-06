@@ -19,6 +19,6 @@ workflows:
       events:
         - push
       branch_patterns:
-        - pattern: '*'
+        - pattern: '*' # Trigger on all branches
           include: true
           source: true
