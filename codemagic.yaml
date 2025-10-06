@@ -20,3 +20,5 @@ workflows:
         - push
       branch_patterns:
         - pattern: 'test_code_magic'
+          include: true
+          source: true
