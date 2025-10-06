@@ -1,0 +1,17 @@
+workflows:
+  flutter-ci:
+    name: Flutter CI Workflow
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+      android: latest
+    scripts:
+      # 1️⃣ Cài dependency
+      - flutter pub get
+      # 2️⃣ Chạy test
+      # - flutter test
+      # 3️⃣ Build APK release
+      - flutter build apk --release
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
