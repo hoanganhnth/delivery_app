@@ -15,3 +15,8 @@ workflows:
       - flutter build apk --release
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'test_Code_magic'
