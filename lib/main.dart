@@ -19,7 +19,7 @@ import 'features/auth/presentation/providers/auth_network_providers.dart';
 
 Future<void> main() async {
   runZonedGuarded<Future<void>>(
-    () async {  
+    () async {
       WidgetsFlutterBinding.ensureInitialized();
 
       // ✅ Khởi tạo Firebase
