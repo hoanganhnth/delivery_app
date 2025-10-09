@@ -2,29 +2,26 @@ import 'dart:async';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/logger/app_logger.dart';
-import '../../../../core/network/socket/shipper_location_socket_service.dart';
+import '../datasources/shipper_location_socket_datasource.dart';
 import '../../domain/entities/shipper_location_entity.dart';
 import '../../domain/repositories/shipper_location_repository.dart';
 
-/// Repository implementation chỉ transform data từ Service
-/// Service đã quản lý StreamController, Repository chỉ transform raw → Entity
+/// Repository implementation sử dụng trực tiếp DataSource
 class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
-  final ShipperLocationSocketService _socketService;
+  final ShipperLocationSocketDataSource _dataSource;
   int? _currentShipperId;
   
-  ShipperLocationRepositoryImpl(this._socketService);
+  ShipperLocationRepositoryImpl(this._dataSource);
   
   @override
   Stream<ShipperLocationEntity> get locationStream {
-    // Transform stream từ Service thành Entity stream
-    return _socketService.messageStream
-        .where((rawData) => _isRelevantLocation(rawData))
-        .map((rawData) => _parseLocationEntity(rawData))
+    // Sử dụng trực tiếp stream từ DataSource
+    return _dataSource.locationStream
         .where((entity) => _isValidLocationEntity(entity));
   }
   
   @override
-  bool get isTracking => _currentShipperId != null && _socketService.isConnected;
+  bool get isTracking => _currentShipperId != null && _dataSource.isConnected;
   
   @override
   Future<Either<Failure, void>> startTrackingShipper(int shipperId) async {
@@ -35,15 +32,15 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
       // await stopTrackingShipper();
       
       // Ensure connection với proper async handling
-      if (!_socketService.isConnected) {
-        await _socketService.connect(); // Không cần Future.delayed nữa!
+      if (!_dataSource.isConnected) {
+        await _dataSource.connect(); // Không cần Future.delayed nữa!
       }
       
-      // Service đã quản lý stream, Repository chỉ cần transform
+      // DataSource đã quản lý stream, Repository chỉ cần transform
       
       // Start tracking - chỉ khi đã connected
-      if (_socketService.isConnected) {
-        _socketService.subscribeToShipper(shipperId);
+      if (_dataSource.isConnected) {
+        _dataSource.subscribeToShipper(shipperId);
         _currentShipperId = shipperId;
       } else {
         throw Exception('Failed to establish WebSocket connection');
@@ -64,11 +61,11 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
       // AppLogger.d('Stopping shipper location tracking');
       
       if (_currentShipperId != null) {
-        _socketService.unsubscribeFromShipper(_currentShipperId!);
+        _dataSource.unsubscribeFromShipper(_currentShipperId!);
         _currentShipperId = null;
       }
       
-      // No subscription to cancel - Service handles stream lifecycle
+      // No subscription to cancel - DataSource handles stream lifecycle
       
       // AppLogger.i('Stopped shipper location tracking');
       return right(null);
@@ -78,32 +75,6 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
     }
   }
   
-  /// Check if location data is relevant to current tracking
-  bool _isRelevantLocation(Map<String, dynamic> rawData) {
-    final messageType = rawData['type'] as String?;
-    if (messageType == 'location_update') {
-      // final locationData = rawData['data'] as Map<String, dynamic>?;
-      final shipperId = rawData['shipperId'];
-      return shipperId != null && shipperId == _currentShipperId;
-    }
-    return false;
-  }
-  
-  /// Parse raw data thành ShipperLocationEntity
-  ShipperLocationEntity _parseLocationEntity(Map<String, dynamic> rawData) {
-    // Extract location data from WebSocket message
-    final locationData = rawData['data'] as Map<String, dynamic>? ?? rawData;
-    
-    return ShipperLocationEntity(
-      shipperId: locationData['shipperId'] ?? _currentShipperId ?? 0,
-      latitude: (locationData['latitude'] ?? 0.0).toDouble(),
-      longitude: (locationData['longitude'] ?? 0.0).toDouble(),
-      updatedAt: locationData['updatedAt'] != null
-          ? DateTime.parse(locationData['updatedAt'])
-          : DateTime.now(),
-    );
-  }
-  
   /// Validate entity data
   bool _isValidLocationEntity(ShipperLocationEntity entity) {
     return entity.shipperId > 0 &&
@@ -111,9 +82,9 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
            entity.longitude.abs() <= 180;
   }
   
-  /// No dispose needed - Service handles stream cleanup
+  /// No dispose needed - DataSource handles stream cleanup
   void dispose() {
     stopTrackingShipper();
-    // Service tự quản lý StreamController cleanup
+    // DataSource tự quản lý StreamController cleanup
   }
 }

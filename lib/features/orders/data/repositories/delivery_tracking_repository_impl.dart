@@ -1,51 +1,48 @@
 import 'dart:async';
 import 'package:delivery_app/features/orders/data/datasources/delivery_tracking_remote_datasource.dart';
+import 'package:delivery_app/features/orders/data/datasources/delivery_tracking_socket_datasource.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/data/dtos/base_response_dto.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/error/error_mapper.dart';
 import '../../../../core/logger/app_logger.dart';
-import '../../../../core/network/socket/delivery_tracking_stomp_service.dart';
 import '../dtos/current_delivery_dto.dart';
 import '../../domain/entities/delivery_tracking_entity.dart';
 import '../../domain/repositories/delivery_tracking_repository.dart';
 
-/// Repository implementation chỉ transform data từ Service
-/// Service đã quản lý StreamController, Repository chỉ transform raw → Entity
+/// Repository implementation sử dụng trực tiếp DataSource
+/// DataSource đã quản lý stream và entity parsing
 class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
-  final DeliveryTrackingStompService _stompService;
+  final DeliveryTrackingSocketDataSource _socketDataSource;
   final DeliveryTrackingRemoteDataSource _remoteDataSource;
   int? _currentOrderId;
 
-  DeliveryTrackingRepositoryImpl(this._stompService, this._remoteDataSource);
+  DeliveryTrackingRepositoryImpl(this._socketDataSource, this._remoteDataSource);
 
   @override
   Stream<DeliveryTrackingEntity> get deliveryStream {
-    // Transform stream từ Service thành Entity stream
-    return _stompService.messageStream
-        .where((rawData) => _isRelevantData(rawData))
-        .map((rawData) => _parseDeliveryEntity(rawData));
-    // .where((entity) => _isValidDeliveryEntity(entity));
+    // Sử dụng trực tiếp stream từ DataSource
+    return _socketDataSource.deliveryStream;
   }
 
   @override
   Stream<bool> get connectionStream =>
-      _stompService.connectionStream ?? const Stream.empty();
+      _socketDataSource.connectionStream;
 
   @override
-  bool get isTracking => _currentOrderId != null && _stompService.isConnected;
+  bool get isTracking => _currentOrderId != null && _socketDataSource.isConnected;
 
   @override
-  bool get isConnected => _stompService.isConnected;
+  bool get isConnected => _socketDataSource.isConnected;
 
   @override
   Future<Either<Failure, void>> connect() async {
     try {
-      AppLogger.i('Connecting to STOMP service...');
-      await _stompService.connect();
+      AppLogger.i('Connecting to STOMP DataSource...');
+      await _socketDataSource.connect();
       return right(null);
     } catch (e) {
-      AppLogger.e('Failed to connect to STOMP service', e);
+      AppLogger.e('Failed to connect to STOMP DataSource', e);
       return left(ServerFailure('Không thể kết nối: ${e.toString()}'));
     }
   }
@@ -53,12 +50,12 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
   @override
   Future<Either<Failure, void>> disconnect() async {
     try {
-      AppLogger.i('Disconnecting from STOMP service...');
-      await _stompService.disconnect();
+      AppLogger.i('Disconnecting from STOMP DataSource...');
+      await _socketDataSource.disconnect();
       _currentOrderId = null;
       return right(null);
     } catch (e) {
-      AppLogger.e('Failed to disconnect from STOMP service', e);
+      AppLogger.e('Failed to disconnect from STOMP DataSource', e);
       return left(ServerFailure('Không thể ngắt kết nối: ${e.toString()}'));
     }
   }
@@ -67,9 +64,9 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
   Future<Either<Failure, void>> refresh() async {
     try {
       AppLogger.i('Refreshing STOMP connection...');
-      await _stompService.disconnect();
+      await _socketDataSource.disconnect();
       await Future.delayed(const Duration(milliseconds: 500));
-      await _stompService.connect();
+      await _socketDataSource.connect();
       return right(null);
     } catch (e) {
       AppLogger.e('Failed to refresh STOMP connection', e);
@@ -86,15 +83,15 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
       await stopTracking();
 
       // Ensure connection với proper async handling
-      if (!_stompService.isConnected) {
-        await _stompService.connect(); // Không cần Future.delayed nữa!
+      if (!_socketDataSource.isConnected) {
+        await _socketDataSource.connect(); // Không cần Future.delayed nữa!
       }
 
-      // Service đã quản lý stream, Repository chỉ cần transform
+      // DataSource đã quản lý stream, Repository chỉ cần sử dụng
 
       // Start tracking - chỉ khi đã connected
-      if (_stompService.isConnected) {
-        _stompService.subscribeToOrder(orderId);
+      if (_socketDataSource.isConnected) {
+        _socketDataSource.subscribeToOrder(orderId);
         _currentOrderId = orderId;
       } else {
         throw Exception('Failed to establish STOMP connection');
@@ -115,11 +112,11 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
       AppLogger.d('Stopping delivery tracking');
 
       if (_currentOrderId != null) {
-        _stompService.unsubscribeFromOrder(_currentOrderId!);
+        _socketDataSource.unsubscribeFromOrder(_currentOrderId!);
         _currentOrderId = null;
       }
 
-      // No subscription to cancel - Service handles stream lifecycle
+      // No subscription to cancel - DataSource handles stream lifecycle
 
       AppLogger.i('Stopped delivery tracking');
       return right(null);
@@ -128,31 +125,6 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
       return left(const ServerFailure('Failed to stop tracking'));
     }
   }
-
-  /// Check if raw data is relevant to current tracking
-  bool _isRelevantData(Map<String, dynamic> rawData) {
-    final orderId = rawData['orderId'];
-    return orderId != null && orderId == _currentOrderId;
-  }
-
-  /// Parse raw data thành DeliveryTrackingEntity
-  DeliveryTrackingEntity _parseDeliveryEntity(Map<String, dynamic> rawData) {
-    // Remove internal topic field if exists
-    final data = Map<String, dynamic>.from(rawData);
-    data.remove('_topic');
-
-    return CurrentDeliveryDto.fromJson(data).toEntity();
-  }
-
-  /// Validate entity data
-  // bool _isValidDeliveryEntity(DeliveryTrackingEntity entity) {
-  //   return entity.orderId > 0 &&
-  //          entity.status.isNotEmpty &&
-  //          entity.pickupLat.abs() <= 90 &&
-  //          entity.pickupLng.abs() <= 180 &&
-  //          entity.deliveryLat.abs() <= 90 &&
-  //          entity.deliveryLng.abs() <= 180;
-  // }
 
   @override
   Future<Either<Failure, DeliveryTrackingEntity>> getCurrentDelivery(
@@ -184,9 +156,9 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
     }
   }
 
-  /// No dispose needed - Service handles stream cleanup
+  /// No dispose needed - DataSource handles stream cleanup
   void dispose() {
     stopTracking();
-    // Service tự quản lý StreamController cleanup
+    // DataSource tự quản lý StreamController cleanup
   }
 }

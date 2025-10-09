@@ -1,13 +1,40 @@
 import 'package:delivery_app/core/network/dio/authenticated_network_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/network/socket/providers/socket_providers.dart';
+import '../../../../core/network/socket/stomp_client.dart';
 import '../../data/datasources/delivery_tracking_remote_datasource_impl.dart';
+import '../../data/datasources/delivery_tracking_socket_datasource.dart';
 import '../../data/repositories/delivery_tracking_repository_impl.dart';
+import '../../domain/repositories/delivery_tracking_repository.dart';
+import '../../domain/entities/delivery_tracking_entity.dart';
 import '../../domain/usecases/tracking_usecases.dart';
 import '../../domain/usecases/get_current_delivery_usecase.dart';
 import 'shipper_providers.dart';
 import 'delivery_tracking_notifier.dart';
 import 'delivery_tracking_state.dart';
+
+/// Socket Client Provider - Di chuyển từ core về feature
+final deliveryTrackingStompClientProvider = Provider<StompSocketClient>((ref) {
+  const url = 'ws://localhost:8085/ws/delivery-native';
+  return StompSocketClient(url, name: 'DeliveryTracking');
+});
+
+/// DataSource Provider - Di chuyển từ core về feature
+final deliveryTrackingSocketDataSourceProvider = Provider<DeliveryTrackingSocketDataSource>((ref) {
+  final stompClient = ref.watch(deliveryTrackingStompClientProvider);
+  return DeliveryTrackingSocketDataSource(stompClient);
+});
+
+/// Stream provider cho entities
+final deliveryTrackingStreamProvider = StreamProvider<DeliveryTrackingEntity>((ref) {
+  final dataSource = ref.watch(deliveryTrackingSocketDataSourceProvider);
+  return dataSource.deliveryStream;
+});
+
+/// Connection status provider
+final deliveryConnectionProvider = StreamProvider<bool>((ref) {
+  final dataSource = ref.watch(deliveryTrackingSocketDataSourceProvider);
+  return dataSource.connectionStream;
+});
 
 /// Network providers
 final deliveryTrackingApiServiceProvider = Provider((ref) {
@@ -20,11 +47,11 @@ final deliveryTrackingRemoteDataSourceProvider = Provider((ref) {
   return DeliveryTrackingRemoteDataSourceImpl(apiService);
 });
 
-/// Delivery Tracking Repository Provider
-final deliveryTrackingRepositoryProvider = Provider((ref) {
-  final stompService = ref.watch(deliveryTrackingStompServiceProvider);
+/// Repository Provider - Di chuyển từ core về feature
+final deliveryTrackingRepositoryProvider = Provider<DeliveryTrackingRepository>((ref) {
+  final socketDataSource = ref.watch(deliveryTrackingSocketDataSourceProvider);
   final remoteDataSource = ref.watch(deliveryTrackingRemoteDataSourceProvider);
-  return DeliveryTrackingRepositoryImpl(stompService, remoteDataSource);
+  return DeliveryTrackingRepositoryImpl(socketDataSource, remoteDataSource);
 });
 
 /// UseCase Providers

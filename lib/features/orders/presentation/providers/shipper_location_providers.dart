@@ -1,8 +1,42 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/network/socket/providers/tracking_service_providers.dart';
+import '../../../../core/network/socket/socket_client.dart';
+import '../../data/datasources/shipper_location_socket_datasource.dart';
+import '../../data/repositories/shipper_location_repository_impl.dart';
+import '../../domain/repositories/shipper_location_repository.dart';
+import '../../domain/entities/shipper_location_entity.dart';
 import '../../domain/usecases/tracking_usecases.dart';
 import 'shipper_location_notifier.dart';
 import 'shipper_location_state.dart';
+
+/// Socket Client Provider - Di chuyển từ core về feature
+final shipperLocationSocketClientProvider = Provider<SocketClient>((ref) {
+  const url = 'ws://localhost:8090/ws/shipper-locations';
+  return SocketClient(url, name: 'ShipperLocation');
+});
+
+/// DataSource Provider - Di chuyển từ core về feature
+final shipperLocationSocketDataSourceProvider = Provider<ShipperLocationSocketDataSource>((ref) {
+  final socketClient = ref.watch(shipperLocationSocketClientProvider);
+  return ShipperLocationSocketDataSource(socketClient);
+});
+
+/// Stream provider cho entities
+final shipperLocationStreamProvider = StreamProvider<ShipperLocationEntity>((ref) {
+  final dataSource = ref.watch(shipperLocationSocketDataSourceProvider);
+  return dataSource.locationStream;
+});
+
+/// Connection status provider
+final shipperLocationConnectionProvider = StreamProvider<bool>((ref) {
+  final dataSource = ref.watch(shipperLocationSocketDataSourceProvider);
+  return dataSource.connectionStream;
+});
+
+/// Repository Provider - Di chuyển từ core về feature
+final shipperLocationRepositoryProvider = Provider<ShipperLocationRepository>((ref) {
+  final socketDataSource = ref.watch(shipperLocationSocketDataSourceProvider);
+  return ShipperLocationRepositoryImpl(socketDataSource);
+});
 
 /// UseCase Providers for Shipper Location Tracking
 // final startShipperTrackingUseCaseProvider = Provider<StartShipperTrackingUseCase>((ref) {
