@@ -1,10 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/network/socket/socket_client.dart';
-import '../../data/datasources/shipper_location_socket_datasource.dart';
-import '../../data/repositories/shipper_location_repository_impl.dart';
-import '../../domain/repositories/shipper_location_repository.dart';
-import '../../domain/entities/shipper_location_entity.dart';
-import '../../domain/usecases/tracking_usecases.dart';
+import 'package:delivery_app/core/network/socket/socket_client.dart';
+import 'package:delivery_app/features/orders/data/datasources/shipper_location_socket_datasource.dart' 
+    as shipper_socket_ds;
+import 'package:delivery_app/features/orders/data/datasources/shipper_location_datasource.dart';
+import 'package:delivery_app/features/orders/data/repositories/shipper_location_repository_impl.dart';
+import 'package:delivery_app/features/orders/domain/repositories/shipper_location_repository.dart';
+import 'package:delivery_app/features/orders/domain/entities/shipper_location_entity.dart';
+import 'package:delivery_app/features/orders/domain/usecases/tracking_usecases.dart';
 import 'shipper_location_notifier.dart';
 import 'shipper_location_state.dart';
 
@@ -14,16 +16,18 @@ final shipperLocationSocketClientProvider = Provider<SocketClient>((ref) {
   return SocketClient(url, name: 'ShipperLocation');
 });
 
-/// DataSource Provider - Di chuyển từ core về feature
-final shipperLocationSocketDataSourceProvider = Provider<ShipperLocationSocketDataSource>((ref) {
+/// DataSource Provider - Di chuyển từ core về feature  
+final shipperLocationSocketDataSourceProvider = Provider<ShipperLocationDataSource>((ref) {
   final socketClient = ref.watch(shipperLocationSocketClientProvider);
-  return ShipperLocationSocketDataSource(socketClient);
+  return shipper_socket_ds.ShipperLocationSocketDataSource(socket: socketClient);
 });
 
 /// Stream provider cho entities
 final shipperLocationStreamProvider = StreamProvider<ShipperLocationEntity>((ref) {
   final dataSource = ref.watch(shipperLocationSocketDataSourceProvider);
-  return dataSource.locationStream;
+  // Convert từ List stream sang individual entity stream
+  return dataSource.locationStream
+      .expand((locations) => locations);
 });
 
 /// Connection status provider

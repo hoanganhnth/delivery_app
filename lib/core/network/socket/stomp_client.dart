@@ -15,8 +15,10 @@ class StompSocketClient {
   final _rawStream = PublishSubject<Map<String, dynamic>>();
   final _connectionStream = BehaviorSubject<bool>.seeded(false);
   Timer? _reconnectTimer;
+  Timer? _heartbeatTimer;
   bool _isDisposed = false;
   Completer<void>? _connectionCompleter;
+  int _reconnectAttempts = 0;
   final Map<String, Function()> _subscriptions = {};
 
   StompSocketClient(
@@ -63,6 +65,8 @@ class StompSocketClient {
             AppLogger.i('$_name [$url] Kết nối thành công');
             _setConnectionState(true);
             _connectionCompleter?.complete();
+            _reconnectAttempts = 0; // Reset khi thành công
+            _startHeartbeat();
             _onConnected();
           },
           onDisconnect: (frame) {
@@ -107,6 +111,9 @@ class StompSocketClient {
           throw Exception('$_name connection timeout after 15 seconds');
         },
       );
+
+      // Reset connection completer khi thành công
+      _connectionCompleter = null;
 
       AppLogger.i('$_name [$url] Successfully connected');
     } catch (e) {
@@ -185,6 +192,7 @@ class StompSocketClient {
 
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
+    _stopHeartbeat();
 
     // Unsubscribe all topics
     _subscriptions.keys.toList().forEach(unsubscribe);
@@ -204,6 +212,7 @@ class StompSocketClient {
     _isDisposed = true;
 
     _reconnectTimer?.cancel();
+    _stopHeartbeat();
     _subscriptions.keys.toList().forEach(unsubscribe);
     _client?.deactivate();
 
@@ -229,18 +238,48 @@ class StompSocketClient {
     }
   }
 
-  /// Schedule reconnection
+  /// Schedule reconnection với exponential backoff
   void _scheduleReconnect() {
     if (_isDisposed || _reconnectTimer != null) return;
 
-    AppLogger.i('$_name [$url] Thử reconnect sau 5s...');
-    _reconnectTimer = Timer(const Duration(seconds: 5), () {
+    _reconnectAttempts++;
+    final delay = Duration(seconds: (5 * _reconnectAttempts).clamp(5, 60)); // tăng dần tối đa 1 phút
+
+    AppLogger.i('$_name [$url] Reconnect attempt $_reconnectAttempts in ${delay.inSeconds}s...');
+    _reconnectTimer = Timer(delay, () async {
       _reconnectTimer = null;
       if (!_isDisposed) {
-        connect().catchError((e) {
+        try {
+          await connect();
+          // _reconnectAttempts được reset trong connect() khi thành công
+        } catch (e) {
           AppLogger.e('$_name [$url] Reconnect failed', e);
-        });
+          _scheduleReconnect();
+        }
       }
     });
+  }
+
+  /// Bắt đầu heartbeat cho STOMP
+  void _startHeartbeat() {
+    _stopHeartbeat(); // Clear existing timer
+    _heartbeatTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+      if (isConnected && !_isDisposed && _client != null) {
+        // Send STOMP heartbeat frame
+        try {
+          _client!.send(destination: '/app/heartbeat', body: '{"ping": "heartbeat"}');
+          AppLogger.d('$_name [$url] Heartbeat sent');
+        } catch (e) {
+          AppLogger.w('$_name [$url] Failed to send heartbeat: $e');
+        }
+      }
+    });
+    AppLogger.d('$_name [$url] Heartbeat started (30s interval)');
+  }
+
+  /// Dừng heartbeat
+  void _stopHeartbeat() {
+    _heartbeatTimer?.cancel();
+    _heartbeatTimer = null;
   }
 }

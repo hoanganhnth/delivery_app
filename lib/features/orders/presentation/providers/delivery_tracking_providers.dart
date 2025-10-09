@@ -1,13 +1,15 @@
 import 'package:delivery_app/core/network/dio/authenticated_network_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/network/socket/stomp_client.dart';
-import '../../data/datasources/delivery_tracking_remote_datasource_impl.dart';
-import '../../data/datasources/delivery_tracking_socket_datasource.dart';
-import '../../data/repositories/delivery_tracking_repository_impl.dart';
-import '../../domain/repositories/delivery_tracking_repository.dart';
-import '../../domain/entities/delivery_tracking_entity.dart';
-import '../../domain/usecases/tracking_usecases.dart';
-import '../../domain/usecases/get_current_delivery_usecase.dart';
+import 'package:delivery_app/core/network/socket/stomp_client.dart';
+import 'package:delivery_app/features/orders/data/datasources/delivery_tracking_remote_datasource_impl.dart';
+import 'package:delivery_app/features/orders/data/datasources/delivery_tracking_socket_datasource.dart' 
+    as delivery_socket_ds;
+import 'package:delivery_app/features/orders/data/datasources/delivery_tracking_datasource.dart';
+import 'package:delivery_app/features/orders/data/repositories/delivery_tracking_repository_impl.dart';
+import 'package:delivery_app/features/orders/domain/repositories/delivery_tracking_repository.dart';
+import 'package:delivery_app/features/orders/domain/entities/delivery_tracking_entity.dart';
+import 'package:delivery_app/features/orders/domain/usecases/tracking_usecases.dart';
+import 'package:delivery_app/features/orders/domain/usecases/get_current_delivery_usecase.dart';
 import 'shipper_providers.dart';
 import 'delivery_tracking_notifier.dart';
 import 'delivery_tracking_state.dart';
@@ -19,9 +21,9 @@ final deliveryTrackingStompClientProvider = Provider<StompSocketClient>((ref) {
 });
 
 /// DataSource Provider - Di chuyển từ core về feature
-final deliveryTrackingSocketDataSourceProvider = Provider<DeliveryTrackingSocketDataSource>((ref) {
+final deliveryTrackingSocketDataSourceProvider = Provider<DeliveryTrackingDataSource>((ref) {
   final stompClient = ref.watch(deliveryTrackingStompClientProvider);
-  return DeliveryTrackingSocketDataSource(stompClient);
+  return delivery_socket_ds.DeliveryTrackingSocketDataSource(stompClient);
 });
 
 /// Stream provider cho entities

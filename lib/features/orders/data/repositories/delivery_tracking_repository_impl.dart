@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:delivery_app/features/orders/data/datasources/delivery_tracking_remote_datasource.dart';
-import 'package:delivery_app/features/orders/data/datasources/delivery_tracking_socket_datasource.dart';
+import 'package:delivery_app/features/orders/data/datasources/delivery_tracking_datasource.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/data/dtos/base_response_dto.dart';
 import '../../../../core/error/failures.dart';
@@ -13,7 +13,7 @@ import '../../domain/repositories/delivery_tracking_repository.dart';
 /// Repository implementation sử dụng trực tiếp DataSource
 /// DataSource đã quản lý stream và entity parsing
 class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
-  final DeliveryTrackingSocketDataSource _socketDataSource;
+  final DeliveryTrackingDataSource _socketDataSource;
   final DeliveryTrackingRemoteDataSource _remoteDataSource;
   int? _currentOrderId;
 
