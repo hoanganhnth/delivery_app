@@ -15,15 +15,14 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
   
   @override
   Stream<ShipperLocationEntity> get locationStream {
-    // Convert từ Stream<List> sang Stream<single> và filter theo current shipper
+    // Sử dụng trực tiếp single entity stream và filter theo current shipper
     return _dataSource.locationStream
-        .expand((locations) => locations)
         .where((entity) => _currentShipperId != null && entity.shipperId.toString() == _currentShipperId)
         .where((entity) => _isValidLocationEntity(entity));
   }
   
   @override
-  bool get isTracking => _currentShipperId != null && _dataSource.connectionStream.value;
+  bool get isTracking => _currentShipperId != null;
   
   @override
   Future<Either<Failure, void>> startTrackingShipper(int shipperId) async {

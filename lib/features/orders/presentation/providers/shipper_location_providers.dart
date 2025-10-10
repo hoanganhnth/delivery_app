@@ -25,9 +25,8 @@ final shipperLocationSocketDataSourceProvider = Provider<ShipperLocationDataSour
 /// Stream provider cho entities
 final shipperLocationStreamProvider = StreamProvider<ShipperLocationEntity>((ref) {
   final dataSource = ref.watch(shipperLocationSocketDataSourceProvider);
-  // Convert từ List stream sang individual entity stream
-  return dataSource.locationStream
-      .expand((locations) => locations);
+  // Direct stream - no need to expand
+  return dataSource.locationStream;
 });
 
 /// Connection status provider

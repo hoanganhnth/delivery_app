@@ -1,15 +1,14 @@
 import 'dart:async';
-import 'package:rxdart/rxdart.dart';
 import '../../domain/entities/shipper_location_entity.dart';
 
 /// Abstract interface cho ShipperLocationDataSource
 /// Quản lý tracking vị trí shipper real-time qua socket
 abstract class ShipperLocationDataSource {
-  /// Stream chứa các ShipperLocationEntity được update real-time
-  BehaviorSubject<List<ShipperLocationEntity>> get locationStream;
+  /// Stream chứa ShipperLocationEntity được update real-time (single entity per update)
+  Stream<ShipperLocationEntity> get locationStream;
   
   /// Stream trạng thái kết nối socket (true = connected, false = disconnected)
-  BehaviorSubject<bool> get connectionStream;
+  Stream<bool> get connectionStream;
   
   /// Danh sách shipper IDs hiện tại đang được theo dõi
   List<String> get trackedShipperIds;

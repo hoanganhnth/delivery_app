@@ -10,8 +10,8 @@ import 'shipper_location_datasource.dart';
 class ShipperLocationSocketDataSource implements ShipperLocationDataSource {
   final SocketClient socket;
   
-  // Subjects cho abstract interface
-  final _locationSubject = BehaviorSubject<List<ShipperLocationEntity>>.seeded([]);
+  // Subjects cho abstract interface - Single entity stream
+  final _locationSubject = PublishSubject<ShipperLocationEntity>();
   final _connectionSubject = BehaviorSubject<bool>.seeded(false);
   
   // State management
@@ -22,10 +22,10 @@ class ShipperLocationSocketDataSource implements ShipperLocationDataSource {
   ShipperLocationSocketDataSource({required this.socket});
 
   @override
-  BehaviorSubject<List<ShipperLocationEntity>> get locationStream => _locationSubject;
+  Stream<ShipperLocationEntity> get locationStream => _locationSubject.stream;
 
   @override
-  BehaviorSubject<bool> get connectionStream => _connectionSubject;
+  Stream<bool> get connectionStream => _connectionSubject.stream;
 
   @override
   List<String> get trackedShipperIds => _trackedShipperIds.toList();
@@ -105,9 +105,6 @@ class ShipperLocationSocketDataSource implements ShipperLocationDataSource {
       
       socket.sendRaw(message);
       
-      // Update stream
-      _updateLocationStream();
-      
       AppLogger.d('ShipperLocationSocketDataSource: Unsubscribed from shipper $shipperId');
     } catch (e) {
       AppLogger.e('ShipperLocationSocketDataSource: Unsubscribe from shipper $shipperId failed: $e');
@@ -153,20 +150,17 @@ class ShipperLocationSocketDataSource implements ShipperLocationDataSource {
         // Chỉ xử lý location của shippers đang track
         if (_trackedShipperIds.contains(location.shipperId.toString())) {
           _locationCache[location.shipperId.toString()] = location;
-          _updateLocationStream();
+          
+          // Emit single entity thay vì list
+          if (!_locationSubject.isClosed) {
+            _locationSubject.add(location);
+          }
           
           AppLogger.d('ShipperLocationSocketDataSource: Updated location for shipper ${location.shipperId}');
         }
       }
     } catch (e) {
       AppLogger.e('ShipperLocationSocketDataSource: Failed to parse location message: $e');
-    }
-  }
-
-  void _updateLocationStream() {
-    final locations = _locationCache.values.toList();
-    if (!_locationSubject.isClosed) {
-      _locationSubject.add(locations);
     }
   }
 

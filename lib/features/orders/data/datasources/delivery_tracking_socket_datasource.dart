@@ -194,6 +194,7 @@ class DeliveryTrackingSocketDataSource implements DeliveryTrackingDataSource {
     return null;
   }
 
+  @override
   Future<void> close() async {
     await dispose();
   }
