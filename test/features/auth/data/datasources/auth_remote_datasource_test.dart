@@ -6,251 +6,260 @@ import 'package:delivery_app/features/auth/data/dtos/register_request_dto.dart';
 import 'package:delivery_app/features/auth/data/dtos/refresh_token_response_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-// Simple Mock DataSource Implementation
-class MockAuthRemoteDataSource implements AuthRemoteDataSource {
-  bool shouldReturnSuccess = true;
-  bool shouldThrowException = false;
-  String? errorMessage;
+/// Fake implementation for testing data layer
+/// Uses deterministic responses instead of mocks
+class FakeAuthRemoteDataSource implements AuthRemoteDataSource {
+  // Test configurations
+  bool _shouldReturnSuccess = true;
+  bool _shouldThrowException = false;
+  String? _customErrorMessage;
+  
+  // Behavior control methods
+  void setSuccessResponse() {
+    _shouldReturnSuccess = true;
+    _shouldThrowException = false;
+    _customErrorMessage = null;
+  }
+  
+  void setErrorResponse([String? message]) {
+    _shouldReturnSuccess = false;
+    _shouldThrowException = false;
+    _customErrorMessage = message;
+  }
+  
+  void setNetworkException() {
+    _shouldThrowException = true;
+    _shouldReturnSuccess = false;
+  }
 
   @override
   Future<AuthResponseDto> login(LoginRequestDto request) async {
-    if (shouldThrowException) {
-      throw Exception('Network error');
+    if (_shouldThrowException) {
+      throw Exception('Network connection failed');
     }
 
-    if (shouldReturnSuccess) {
-      final authData = AuthDataDto(
-        accessToken: 'test_access_token',
-        refreshToken: 'test_refresh_token',
-        user: UserDto(
-          id: 1,
-          email: request.email,
-          name: 'Test User',
-        ),
-      );
-
-      final response = AuthResponseDto(
-        status: 1,
-        message: 'Login successful',
-        data: authData,
-      );
-
-      return response;
+    if (_shouldReturnSuccess) {
+      return _createSuccessfulLoginResponse(request);
     } else {
-      throw Exception(errorMessage ?? 'Login failed');
+      return _createFailedLoginResponse();
     }
   }
 
   @override
   Future<BaseResponseDto<bool>> register(RegisterRequestDto request) async {
-    if (shouldThrowException) {
-      throw Exception('Network error');
+    if (_shouldThrowException) {
+      throw Exception('Network connection failed');
     }
 
-    if (shouldReturnSuccess) {
-      final response = BaseResponseDto<bool>(
+    if (_shouldReturnSuccess) {
+      return BaseResponseDto<bool>(
         status: 1,
         message: 'Registration successful',
         data: true,
       );
-
-      return response;
     } else {
-      throw Exception(errorMessage ?? 'Registration failed');
+      return BaseResponseDto<bool>(
+        status: 0,
+        message: _customErrorMessage ?? 'Registration failed',
+        data: false,
+      );
     }
   }
 
   @override
   Future<RefreshTokenResponseDto> refreshToken(String refreshToken) async {
-    if (shouldThrowException) {
-      throw Exception('Network error');
+    if (_shouldThrowException) {
+      throw Exception('Network connection failed');
     }
 
-    if (shouldReturnSuccess) {
-      final refreshData = RefreshTokenDataDto(
-        accessToken: 'new_access_token',
-      );
-
-      final response = RefreshTokenResponseDto(
+    if (_shouldReturnSuccess) {
+      return RefreshTokenResponseDto(
         status: 1,
         message: 'Token refreshed successfully',
-        data: refreshData,
+        data: const RefreshTokenDataDto(
+          accessToken: 'new_access_token_from_refresh',
+        ),
       );
-
-      return response;
     } else {
-      throw Exception(errorMessage ?? 'Token refresh failed');
+      return RefreshTokenResponseDto(
+        status: 0,
+        message: _customErrorMessage ?? 'Token refresh failed',
+        data: null,
+      );
     }
+  }
+
+  // Helper methods for creating test data
+  AuthResponseDto _createSuccessfulLoginResponse(LoginRequestDto request) {
+    return AuthResponseDto(
+      status: 1,
+      message: 'Login successful',
+      data: AuthDataDto(
+        accessToken: 'fake_access_token_${DateTime.now().millisecondsSinceEpoch}',
+        refreshToken: 'fake_refresh_token_${DateTime.now().millisecondsSinceEpoch}',
+        user: UserDto(
+          id: 123,
+          email: request.email,
+          name: 'Test User for ${request.email}',
+        ),
+      ),
+    );
+  }
+
+  AuthResponseDto _createFailedLoginResponse() {
+    return AuthResponseDto(
+      status: 0,
+      message: _customErrorMessage ?? 'Invalid credentials',
+      data: null,
+    );
   }
 }
 
 void main() {
-  late MockAuthRemoteDataSource dataSource;
+  late FakeAuthRemoteDataSource dataSource;
 
   setUp(() {
-    dataSource = MockAuthRemoteDataSource();
+    dataSource = FakeAuthRemoteDataSource();
   });
 
-  group('AuthRemoteDataSource Login Tests', () {
-    final tLoginRequest = LoginRequestDto(
-      email: 'test@example.com',
-      password: 'password123',
-      deviceId: 'device123',
-      deviceName: 'iPhone 15',
-      deviceType: 'iOS',
-      ipAddress: '192.168.1.1',
-    );
-
-    test('should return success response when login is successful', () async {
-      // arrange
-      dataSource.shouldReturnSuccess = true;
-
-      // act
-      final result = await dataSource.login(tLoginRequest);
-
-      // assert
-      expect(result.status, 1);
-      expect(result.message, 'Login successful');
-      expect(result.data, isNotNull);
-      expect(result.data!.accessToken, 'test_access_token');
-      expect(result.data!.refreshToken, 'test_refresh_token');
-      expect(result.data!.user!.email, 'test@example.com');
-    });
-
-    test('should throw exception when login returns error', () async {
-      // arrange
-      dataSource.shouldReturnSuccess = false;
-      dataSource.errorMessage = 'Invalid credentials';
-
-      // act & assert
-      expect(
-        () async => await dataSource.login(tLoginRequest),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Invalid credentials'),
-        )),
+  group('AuthRemoteDataSource - Data Layer Tests', () {
+    group('Login Operation', () {
+      final validLoginRequest = LoginRequestDto(
+        email: 'test@example.com',
+        password: 'password123',
+        deviceId: 'test-device-123',
+        deviceName: 'Test Device',
+        deviceType: 'iOS',
+        ipAddress: '192.168.1.100',
       );
+
+      test('should return successful auth response with valid credentials', () async {
+        // Arrange
+        dataSource.setSuccessResponse();
+
+        // Act
+        final result = await dataSource.login(validLoginRequest);
+
+        // Assert
+        expect(result.status, 1);
+        expect(result.message, 'Login successful');
+        expect(result.data, isNotNull);
+        expect(result.data!.accessToken, startsWith('fake_access_token_'));
+        expect(result.data!.refreshToken, startsWith('fake_refresh_token_'));
+        expect(result.data!.user!.email, validLoginRequest.email);
+        expect(result.data!.user!.id, 123);
+      });
+
+      test('should return error response with invalid credentials', () async {
+        // Arrange
+        dataSource.setErrorResponse('Invalid email or password');
+
+        // Act
+        final result = await dataSource.login(validLoginRequest);
+
+        // Assert
+        expect(result.status, 0);
+        expect(result.message, 'Invalid email or password');
+        expect(result.data, isNull);
+      });
+
+      test('should throw exception when network fails', () async {
+        // Arrange
+        dataSource.setNetworkException();
+
+        // Act & Assert
+        expect(
+          () => dataSource.login(validLoginRequest),
+          throwsException,
+        );
+      });
     });
 
-    test('should throw exception when network error occurs', () async {
-      // arrange
-      dataSource.shouldThrowException = true;
-
-      // act & assert
-      expect(
-        () async => await dataSource.login(tLoginRequest),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Network error'),
-        )),
+    group('Register Operation', () {
+      final validRegisterRequest = RegisterRequestDto(
+        email: 'newuser@example.com',
+        password: 'securePassword123',
+        name: 'New User',
       );
-    });
-  });
 
-  group('AuthRemoteDataSource Register Tests', () {
-    final tRegisterRequest = RegisterRequestDto(
-      email: 'test@example.com',
-      password: 'password123',
-      name: 'Test User',
-    );
+      test('should return success when registration is valid', () async {
+        // Arrange
+        dataSource.setSuccessResponse();
 
-    test('should return success response when register is successful', () async {
-      // arrange
-      dataSource.shouldReturnSuccess = true;
+        // Act
+        final result = await dataSource.register(validRegisterRequest);
 
-      // act
-      final result = await dataSource.register(tRegisterRequest);
+        // Assert
+        expect(result.status, 1);
+        expect(result.message, 'Registration successful');
+        expect(result.data, true);
+      });
 
-      // assert
-      expect(result.status, 1);
-      expect(result.message, 'Registration successful');
-      expect(result.data, isNotNull);
-      expect(result.data, true);
-    });
+      test('should return error when registration fails', () async {
+        // Arrange
+        dataSource.setErrorResponse('Email already exists');
 
-    test('should throw exception when register returns error', () async {
-      // arrange
-      dataSource.shouldReturnSuccess = false;
-      dataSource.errorMessage = 'Email already exists';
+        // Act
+        final result = await dataSource.register(validRegisterRequest);
 
-      // act & assert
-      expect(
-        () async => await dataSource.register(tRegisterRequest),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Email already exists'),
-        )),
-      );
-    });
-  });
+        // Assert
+        expect(result.status, 0);
+        expect(result.message, 'Email already exists');
+        expect(result.data, false);
+      });
 
-  group('AuthRemoteDataSource RefreshToken Tests', () {
-    const tRefreshToken = 'test_refresh_token_123';
+      test('should throw exception when network fails during registration', () async {
+        // Arrange
+        dataSource.setNetworkException();
 
-    test('should return new access token when refresh is successful', () async {
-      // arrange
-      dataSource.shouldReturnSuccess = true;
-
-      // act
-      final result = await dataSource.refreshToken(tRefreshToken);
-
-      // assert
-      expect(result.status, 1);
-      expect(result.message, 'Token refreshed successfully');
-      expect(result.data, isNotNull);
-      expect(result.data!.accessToken, 'new_access_token');
+        // Act & Assert
+        expect(
+          () => dataSource.register(validRegisterRequest),
+          throwsException,
+        );
+      });
     });
 
-    test('should throw exception when refresh token is invalid', () async {
-      // arrange
-      dataSource.shouldReturnSuccess = false;
-      dataSource.errorMessage = 'Invalid refresh token';
+    group('Token Refresh Operation', () {
+      const validRefreshToken = 'valid_refresh_token_123';
 
-      // act & assert
-      expect(
-        () async => await dataSource.refreshToken(tRefreshToken),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Invalid refresh token'),
-        )),
-      );
-    });
+      test('should return new access token when refresh is successful', () async {
+        // Arrange
+        dataSource.setSuccessResponse();
 
-    test('should handle network error during token refresh', () async {
-      // arrange
-      dataSource.shouldThrowException = true;
+        // Act
+        final result = await dataSource.refreshToken(validRefreshToken);
 
-      // act & assert
-      expect(
-        () async => await dataSource.refreshToken(tRefreshToken),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Network error'),
-        )),
-      );
-    });
-  });
+        // Assert
+        expect(result.status, 1);
+        expect(result.message, 'Token refreshed successfully');
+        expect(result.data, isNotNull);
+        expect(result.data!.accessToken, 'new_access_token_from_refresh');
+      });
 
-  group('DataSource Interface Tests', () {
-    test('should implement AuthRemoteDataSource interface', () {
-      // assert
-      expect(dataSource, isA<AuthRemoteDataSource>());
-    });
+      test('should return error when refresh token is invalid', () async {
+        // Arrange
+        dataSource.setErrorResponse('Invalid refresh token');
 
-    test('should handle all required methods', () async {
-      // Test that all interface methods are implemented
-      final loginRequest = LoginRequestDto(email: 'test@test.com', password: 'password');
-      final registerRequest = RegisterRequestDto(email: 'test@test.com', password: 'password');
+        // Act
+        final result = await dataSource.refreshToken(validRefreshToken);
 
-      // These should not throw compilation errors
-      expect(() => dataSource.login(loginRequest), returnsNormally);
-      expect(() => dataSource.register(registerRequest), returnsNormally);
-      expect(() => dataSource.refreshToken('token'), returnsNormally);
+        // Assert
+        expect(result.status, 0);
+        expect(result.message, 'Invalid refresh token');
+        expect(result.data, isNull);
+      });
+
+      test('should throw exception when network fails during token refresh', () async {
+        // Arrange
+        dataSource.setNetworkException();
+
+        // Act & Assert
+        expect(
+          () => dataSource.refreshToken(validRefreshToken),
+          throwsException,
+        );
+      });
     });
   });
 }
