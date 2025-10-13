@@ -26,7 +26,7 @@ class AddressItemWidget extends StatelessWidget {
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.r),
-        side: isSelected 
+        side: isSelected
             ? const BorderSide(color: Colors.orange, width: 2)
             : BorderSide.none,
       ),
@@ -34,10 +34,10 @@ class AddressItemWidget extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(12.r),
         child: Container(
-          decoration: isSelected 
+          decoration: isSelected
               ? BoxDecoration(
                   borderRadius: BorderRadius.circular(12.r),
-                  color: Colors.orange.withOpacity(0.05),
+                  color: Colors.orange.withValues(alpha: 0.05),
                 )
               : null,
           child: Padding(
@@ -49,7 +49,9 @@ class AddressItemWidget extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.location_on,
-                      color: address.isDefault ? Colors.orange : Colors.grey[600],
+                      color: address.isDefault
+                          ? Colors.orange
+                          : Colors.grey[600],
                       size: 20.sp,
                     ),
                     SizedBox(width: 8.w),
@@ -171,11 +173,7 @@ class AddressItemWidget extends StatelessWidget {
                   SizedBox(height: 8.h),
                   Row(
                     children: [
-                      Icon(
-                        Icons.gps_fixed,
-                        size: 14.sp,
-                        color: Colors.green,
-                      ),
+                      Icon(Icons.gps_fixed, size: 14.sp, color: Colors.green),
                       SizedBox(width: 4.w),
                       Text(
                         'Đã định vị',
@@ -203,7 +201,7 @@ class AddressItemWidget extends StatelessWidget {
       address.district,
       address.city,
     ];
-    
+
     return parts.where((part) => part.isNotEmpty).join(', ');
   }
 }

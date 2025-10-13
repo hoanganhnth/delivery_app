@@ -627,21 +627,20 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
             onPressed: () async {
               Navigator.pop(context);
 
-              final success = await ref
+            try {
+              ref
                   .read(userAddressListProvider.notifier)
                   .deleteAddress(widget.address!.id!);
-
+              
+              // Navigate back immediately - toast will be handled by listener
               if (mounted) {
-                if (success) {
-                  ToastUtils.showAddressDeleteSuccess(
-                    context,
-                    addressLabel: widget.address?.label,
-                  );
-                  context.goBack();
-                } else {
-                  ToastUtils.showAddressDeleteError(context);
-                }
+                context.goBack();
               }
+            } catch (e) {
+              if (mounted) {
+                ToastUtils.showAddressDeleteError(context);
+              }
+            }
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
             child: const Text('Xóa'),

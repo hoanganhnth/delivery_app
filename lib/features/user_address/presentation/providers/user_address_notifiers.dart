@@ -38,13 +38,22 @@ class UserAddressListNotifier extends StateNotifier<UserAddressListState> {
   }
 
   /// Xóa địa chỉ
-  Future<bool> deleteAddress(int addressId) async {
+  Future<void> deleteAddress(int addressId) async {
+    // Find address label for toast message
+    final address = state.addresses.firstWhere((addr) => addr.id == addressId);
+    final addressLabel = address.label;
+    
     final result = await _deleteAddressUseCase(addressId);
 
-    return result.fold(
+    result.fold(
       (failure) {
-        state = state.copyWith(errorMessage: failure.message);
-        return false;
+        state = state.copyWith(
+          lastOperation: OperationResult(
+            type: 'delete',
+            isSuccess: false,
+            timestamp: DateTime.now(),
+          ),
+        );
       },
       (success) {
         if (success) {
@@ -52,21 +61,45 @@ class UserAddressListNotifier extends StateNotifier<UserAddressListState> {
           final updatedAddresses = state.addresses
               .where((address) => address.id != addressId)
               .toList();
-          state = state.copyWith(addresses: updatedAddresses);
+          state = state.copyWith(
+            addresses: updatedAddresses,
+            lastOperation: OperationResult(
+              type: 'delete',
+              isSuccess: true,
+              addressLabel: addressLabel,
+              timestamp: DateTime.now(),
+            ),
+          );
+        } else {
+          state = state.copyWith(
+            lastOperation: OperationResult(
+              type: 'delete',
+              isSuccess: false,
+              timestamp: DateTime.now(),
+            ),
+          );
         }
-        return success;
       },
     );
   }
 
   /// Đặt địa chỉ mặc định
-  Future<bool> setDefaultAddress(int addressId) async {
+  Future<void> setDefaultAddress(int addressId) async {
+    // Find address label for toast message
+    final address = state.addresses.firstWhere((addr) => addr.id == addressId);
+    final addressLabel = address.label;
+    
     final result = await _setDefaultAddressUseCase(addressId);
 
-    return result.fold(
+    result.fold(
       (failure) {
-        state = state.copyWith(errorMessage: failure.message);
-        return false;
+        state = state.copyWith(
+          lastOperation: OperationResult(
+            type: 'setDefault',
+            isSuccess: false,
+            timestamp: DateTime.now(),
+          ),
+        );
       },
       (updatedAddress) {
         // Cập nhật state: bỏ default của các địa chỉ khác và set cho địa chỉ mới
@@ -78,8 +111,15 @@ class UserAddressListNotifier extends StateNotifier<UserAddressListState> {
           }
         }).toList();
 
-        state = state.copyWith(addresses: updatedAddresses);
-        return true;
+        state = state.copyWith(
+          addresses: updatedAddresses,
+          lastOperation: OperationResult(
+            type: 'setDefault',
+            isSuccess: true,
+            addressLabel: addressLabel,
+            timestamp: DateTime.now(),
+          ),
+        );
       },
     );
   }
@@ -92,6 +132,11 @@ class UserAddressListNotifier extends StateNotifier<UserAddressListState> {
   /// Clear error
   void clearError() {
     state = state.copyWith(clearError: true);
+  }
+
+  /// Clear operation result
+  void clearOperation() {
+    state = state.copyWith(clearOperation: true);
   }
 
   /// Select address

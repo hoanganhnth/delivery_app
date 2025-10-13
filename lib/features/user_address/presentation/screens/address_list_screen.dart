@@ -57,6 +57,34 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
       if (next.errorMessage != null && previous?.errorMessage != next.errorMessage) {
         ToastUtils.showAddressLoadError(context, message: next.errorMessage);
       }
+      
+      // Listen for operation results
+      if (next.lastOperation != null && previous?.lastOperation != next.lastOperation) {
+        final operation = next.lastOperation!;
+        
+        if (operation.isSuccess) {
+          switch (operation.type) {
+            case 'delete':
+              ToastUtils.showAddressDeleteSuccess(context, addressLabel: operation.addressLabel!);
+              break;
+            case 'setDefault':
+              ToastUtils.showAddressSetDefaultSuccess(context, addressLabel: operation.addressLabel!);
+              break;
+          }
+        } else {
+          switch (operation.type) {
+            case 'delete':
+              ToastUtils.showAddressDeleteError(context);
+              break;
+            case 'setDefault':
+              ToastUtils.showAddressSetDefaultError(context);
+              break;
+          }
+        }
+        
+        // Clear operation after showing toast
+        ref.read(userAddressListProvider.notifier).clearOperation();
+      }
     });
 
     return Scaffold(
@@ -163,16 +191,9 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
     Navigator.pop(context);
   }
 
-  void _setDefaultAddress(UserAddressEntity address) async {
-    final success = await ref.read(userAddressListProvider.notifier).setDefaultAddress(address.id!);
-    
-    if (mounted) {
-      if (success) {
-        ToastUtils.showAddressSetDefaultSuccess(context, addressLabel: address.label);
-      } else {
-        ToastUtils.showAddressSetDefaultError(context);
-      }
-    }
+  void _setDefaultAddress(UserAddressEntity address) {
+    // Trigger the operation and let the notifier handle success/error state
+    ref.read(userAddressListProvider.notifier).setDefaultAddress(address.id!);
   }
 
   void _showDeleteConfirmation(BuildContext context, UserAddressEntity address) {
@@ -187,17 +208,10 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
             child: const Text('Hủy'),
           ),
           TextButton(
-            onPressed: () async {
+            onPressed: () {
               Navigator.pop(context);
-              final success = await ref.read(userAddressListProvider.notifier).deleteAddress(address.id!);
-              
-              if (mounted) {
-                if (success) {
-                  ToastUtils.showAddressDeleteSuccess(context, addressLabel: address.label);
-                } else {
-                  ToastUtils.showAddressDeleteError(context);
-                }
-              }
+              // Trigger the operation and let the notifier handle success/error state
+              ref.read(userAddressListProvider.notifier).deleteAddress(address.id!);
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
             child: const Text('Xóa'),
