@@ -10,7 +10,7 @@ import 'package:delivery_app/features/orders/domain/repositories/delivery_tracki
 import 'package:delivery_app/features/orders/domain/entities/delivery_tracking_entity.dart';
 import 'package:delivery_app/features/orders/domain/usecases/tracking_usecases.dart';
 import 'package:delivery_app/features/orders/domain/usecases/get_current_delivery_usecase.dart';
-import 'shipper_providers.dart';
+import '../shipper_providers.dart';
 import 'delivery_tracking_notifier.dart';
 import 'delivery_tracking_state.dart';
 

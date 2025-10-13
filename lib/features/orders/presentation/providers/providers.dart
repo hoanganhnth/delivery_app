@@ -1,15 +1,15 @@
-// Export all providers
+// Orders Feature Providers - Barrel File
+// Export all feature providers from organized subfolders
 
-// State classes
-export 'order_states.dart';
-export 'delivery_tracking_state.dart';
+// Shipper Location Providers
+export 'shipper_location/providers.dart';
 
-// Notifier classes  
-export 'orders_list_notifier.dart';
-export 'order_detail_notifier.dart';
-export 'delivery_tracking_notifier.dart';
-export 'create_order_async_notifiers.dart';
+// Delivery Tracking Providers  
+export 'delivery_tracking/providers.dart';
 
-// Provider definitions
-export 'order_providers.dart';
-export 'delivery_tracking_providers.dart';
+// Orders Management Providers
+export 'orders/providers.dart';
+
+// Shared Providers
+export 'connection_providers.dart';
+export 'shipper_providers.dart';

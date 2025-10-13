@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/logger/app_logger.dart';
-import '../../../../core/usecases/usecase.dart';
-import '../../domain/usecases/tracking_usecases.dart';
-import '../../domain/entities/shipper_location_entity.dart';
+import 'package:delivery_app/core/logger/app_logger.dart';
+import 'package:delivery_app/core/usecases/usecase.dart';
+import '../../../domain/usecases/tracking_usecases.dart';
+import '../../../domain/entities/shipper_location_entity.dart';
 import 'shipper_location_state.dart';
 
 /// Notifier để quản lý shipper location tracking

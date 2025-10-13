@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../orders/domain/entities/order_entity.dart';
 import '../../../orders/data/dtos/create_order_request_dto.dart';
-import '../../../orders/presentation/providers/order_providers.dart';
+import '../../../orders/presentation/providers/orders/order_providers.dart';
 import '../../../user_address/domain/entities/user_address_entity.dart';
 import '../providers/cart_providers.dart';
 import '../widgets/widgets.dart';

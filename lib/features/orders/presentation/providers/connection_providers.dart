@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'shipper_location_providers.dart';
-import 'delivery_tracking_providers.dart';
+import 'shipper_location/shipper_location_providers.dart';
+import 'delivery_tracking/delivery_tracking_providers.dart';
 
 /// Provider để kiểm tra tất cả connections đã sẵn sàng chưa
 final allConnectionsReadyProvider = Provider<bool>((ref) {

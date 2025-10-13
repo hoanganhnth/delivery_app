@@ -11,7 +11,7 @@ import '../../domain/entities/shipper_entity.dart';
 import '../../domain/entities/shipper_location_entity.dart';
 import '../services/fake_shipper_movement_service.dart';
 import '../services/mapbox_map_service.dart';
-import '../providers/shipper_location_providers.dart';
+import '../providers/shipper_location/shipper_location_providers.dart';
 
 /// Widget tối ưu để hiển thị bản đồ theo dõi delivery với MapBox
 /// Sử dụng shipperLocationProvider thay vì fake movement

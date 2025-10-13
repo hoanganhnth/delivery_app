@@ -1,4 +1,4 @@
-import '../../domain/entities/order_entity.dart';
+import '../../../domain/entities/order_entity.dart';
 
 /// State cho danh sách orders
 class OrdersListState {

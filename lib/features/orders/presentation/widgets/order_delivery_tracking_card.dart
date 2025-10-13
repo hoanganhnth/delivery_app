@@ -1,5 +1,4 @@
 // import 'package:delivery_app/features/orders/presentation/widgets/delivery_tracking_map_widget.dart'; // Unused - sử dụng optimized widget
-import 'package:delivery_app/features/orders/presentation/providers/shipper_location_providers.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/features/orders/presentation/widgets/optimized_delivery_tracking_map_widget.dart';
 import 'package:flutter/material.dart';

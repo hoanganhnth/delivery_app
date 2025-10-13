@@ -1,4 +1,4 @@
-import '../../domain/entities/shipper_location_entity.dart';
+import '../../../domain/entities/shipper_location_entity.dart';
 
 class ShipperLocationState {
   final bool isLoading;

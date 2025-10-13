@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/logger/app_logger.dart';
-import '../../../../core/usecases/usecase.dart';
-import '../../domain/usecases/tracking_usecases.dart';
-import '../../domain/usecases/get_shipper_usecase.dart';
-import '../../domain/usecases/get_current_delivery_usecase.dart';
+import 'package:delivery_app/core/logger/app_logger.dart';
+import 'package:delivery_app/core/usecases/usecase.dart';
+import '../../../domain/usecases/tracking_usecases.dart';
+import '../../../domain/usecases/get_shipper_usecase.dart';
+import '../../../domain/usecases/get_current_delivery_usecase.dart';
 
 import 'delivery_tracking_state.dart';
 
