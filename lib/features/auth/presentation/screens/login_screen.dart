@@ -59,6 +59,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             children: [
               // Email field
               TextFormField(
+                key: const Key('email_field'),
                 controller: _emailController,
                 decoration: const InputDecoration(
                   labelText: 'Email',
@@ -84,6 +85,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
               // Password field
               TextFormField(
+                key: const Key('password_field'),
                 controller: _passwordController,
                 decoration: const InputDecoration(
                   labelText: 'Password',
@@ -110,6 +112,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 width: double.infinity,
                 height: 48.w,
                 child: ElevatedButton(
+                  key: const Key('login_button'),
                   onPressed: authState.isLoginLoading ? null : _handleLogin,
                   child: authState.isLoginLoading
                       ? SizedBox(

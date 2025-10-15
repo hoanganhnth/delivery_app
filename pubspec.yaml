@@ -53,6 +53,8 @@ dev_dependencies:
   freezed: ^3.2.0
   flutter_test:
     sdk: flutter
+  integration_test:
+    sdk: flutter
   mockito: ^5.4.4
   build_test: ^3.3.2
   flutter_lints: ^5.0.0

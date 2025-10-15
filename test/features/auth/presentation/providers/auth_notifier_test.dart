@@ -7,7 +7,6 @@ import 'package:delivery_app/features/auth/domain/usecases/refresh_token_usecase
 import 'package:delivery_app/features/auth/domain/usecases/register_usecase.dart';
 import 'package:delivery_app/features/auth/domain/usecases/store_tokens_usecase.dart';
 import 'package:delivery_app/features/auth/presentation/providers/auth_notifier.dart';
-import 'package:delivery_app/features/auth/presentation/providers/auth_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mockito/annotations.dart';
@@ -45,7 +44,7 @@ void main() {
       right(AuthEntity(accessToken: 'dummy', refreshToken: 'dummy')),
     );
     provideDummy<Either<Failure, bool>>(right(true));
-    provideDummy<Either<Failure, void>>(right(unit));
+    provideDummy<Either<Failure, void>>(Right<Failure, Unit>(unit));
     provideDummy<Either<Failure, AuthEntity?>>(right(null));
 
     authNotifier = AuthNotifier(
@@ -79,7 +78,7 @@ void main() {
         (_) async => right(testUser),
       );
       when(mockStoreTokensUseCase(any)).thenAnswer(
-        (_) async => right(unit),
+        (_) async => Right<Failure, Unit>(unit),
       );
 
       // Act
@@ -164,7 +163,7 @@ void main() {
         (_) async => right(testUser),
       );
       when(mockStoreTokensUseCase(any)).thenAnswer(
-        (_) async => right(unit),
+        (_) async => Right<Failure, Unit>(unit),
       );
 
       // Act
@@ -205,7 +204,7 @@ void main() {
         )),
       );
       when(mockStoreTokensUseCase(any)).thenAnswer(
-        (_) async => right(unit),
+        (_) async => Right<Failure, Unit>(unit),
       );
 
       // Act
@@ -254,7 +253,7 @@ void main() {
     test('should clear tokens and reset state on logout', () async {
       // Arrange
       when(mockClearTokensUseCase(any)).thenAnswer(
-        (_) async => right(unit),
+        (_) async => Right<Failure, Unit>(unit),
       );
 
       // Set initial authenticated state
@@ -369,7 +368,7 @@ void main() {
         (_) async => right(newTokens),
       );
       when(mockStoreTokensUseCase(any)).thenAnswer(
-        (_) async => right(unit),
+        (_) async => Right<Failure, Unit>(unit),
       );
 
       // Act
@@ -440,7 +439,7 @@ void main() {
         (_) async => right(newTokens),
       );
       when(mockStoreTokensUseCase(any)).thenAnswer(
-        (_) async => left(const CacheFailure('Store failed')),
+        (_) async => const Left(CacheFailure('Store failed')),
       );
 
       // Act
