@@ -1,3 +1,4 @@
+import 'package:delivery_app/core/error/exceptions.dart';
 import 'package:dio/dio.dart';
 import 'failures.dart';
 
@@ -45,5 +46,10 @@ class DioExceptionHandler {
       case DioExceptionType.unknown:
         return const NetworkFailure('Unknown network error');
     }
+  }
+
+  static Exception mapDioExceptionToException(DioException e) {
+    final failure = handleException(e);
+    return ServerException(failure.message);
   }
 }

@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import '../../../../core/data/dtos/base_response_dto.dart';
 import '../../../../core/logger/app_logger.dart';
-import '../../../../core/data/dtos/response_handler.dart';
+import '../../../../core/error/dio_exception_handler.dart';
 import '../dtos/current_delivery_dto.dart';
 import 'delivery_tracking_remote_datasource.dart';
 
@@ -41,7 +41,7 @@ class DeliveryTrackingRemoteDataSourceImpl
       return response;
     } on DioException catch (e) {
       AppLogger.e('Failed to get current delivery for order: $orderId', e);
-      throw ResponseHandler.mapDioExceptionToException(e);
+      throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error getting current delivery', e);
       throw Exception('Unexpected error: ${e.toString()}');

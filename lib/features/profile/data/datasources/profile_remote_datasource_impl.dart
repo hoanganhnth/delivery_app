@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:delivery_app/core/constants/api_constants.dart';
-import 'package:delivery_app/core/data/dtos/response_handler.dart';
+import 'package:delivery_app/core/error/dio_exception_handler.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import '../../../../core/data/dtos/base_response_dto.dart';
@@ -28,7 +28,6 @@ abstract class ProfileApiService {
   Future<BaseResponseDto<String>> uploadAvatar(
     @Part(name: 'avatar') File avatar,
   );
-
 }
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
@@ -45,7 +44,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       return response;
     } on DioException catch (e) {
       AppLogger.e('Failed to get user profile', e);
-      throw ResponseHandler.mapDioExceptionToException(e);
+      throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error getting user profile', e);
       throw Exception('Unexpected error: ${e.toString()}');
@@ -63,7 +62,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       return response;
     } on DioException catch (e) {
       AppLogger.e('Failed to update user profile', e);
-      throw ResponseHandler.mapDioExceptionToException(e);
+      throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error updating user profile', e);
       throw Exception('Unexpected error: ${e.toString()}');
@@ -71,13 +70,11 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   }
 
   @override
-  Future<BaseResponseDto<String>> uploadAvatar(
-    String imagePath,
-  ) async {
+  Future<BaseResponseDto<String>> uploadAvatar(String imagePath) async {
     try {
       AppLogger.d('Uploading avatar from path: $imagePath');
       final file = File(imagePath);
-      
+
       if (!await file.exists()) {
         throw Exception('Image file not found at path: $imagePath');
       }
@@ -87,7 +84,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       return response;
     } on DioException catch (e) {
       AppLogger.e('Failed to upload avatar', e);
-      throw ResponseHandler.mapDioExceptionToException(e);
+      throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error uploading avatar', e);
       throw Exception('Unexpected error: ${e.toString()}');

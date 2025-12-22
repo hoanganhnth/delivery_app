@@ -4,7 +4,7 @@ import '../dtos/order_dto.dart';
 import '../dtos/create_order_request_dto.dart';
 import 'order_api_service.dart';
 import 'order_remote_datasource.dart';
-import '../../../../core/data/dtos/response_handler.dart';
+import '../../../../core/error/dio_exception_handler.dart';
 import '../../../../core/data/dtos/base_response_dto.dart';
 import '../../../../core/logger/app_logger.dart';
 
@@ -18,8 +18,10 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
     try {
       AppLogger.d('Getting user orders');
       final response = await _apiService.getUserOrders();
-      AppLogger.i('Successfully retrieved ${response.data?.length ?? 0} orders');
-      
+      AppLogger.i(
+        'Successfully retrieved ${response.data?.length ?? 0} orders',
+      );
+
       if (response.isSuccess && response.data != null) {
         return response.data!;
       } else {
@@ -27,7 +29,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       }
     } on DioException catch (e) {
       AppLogger.e('Failed to get user orders', e);
-      throw ResponseHandler.mapDioExceptionToException(e);
+      throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error getting user orders', e);
       throw Exception('Unexpected error: ${e.toString()}');
@@ -40,7 +42,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       AppLogger.d('Getting order by id: $orderId');
       final response = await _apiService.getOrderById(orderId);
       AppLogger.i('Successfully retrieved order: $orderId');
-      
+
       if (response.isSuccess && response.data != null) {
         return response.data!;
       } else {
@@ -48,7 +50,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       }
     } on DioException catch (e) {
       AppLogger.e('Failed to get order with id: $orderId', e);
-      throw ResponseHandler.mapDioExceptionToException(e);
+      throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error getting order', e);
       throw Exception('Unexpected error: ${e.toString()}');
@@ -61,7 +63,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       AppLogger.d('Creating new order with DTO');
       final response = await _apiService.createOrderWithDto(request);
       AppLogger.i('Successfully created order with DTO');
-      
+
       if (response.isSuccess && response.data != null) {
         return response.data!;
       } else {
@@ -69,7 +71,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       }
     } on DioException catch (e) {
       AppLogger.e('Failed to create order with DTO', e);
-      throw ResponseHandler.mapDioExceptionToException(e);
+      throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error creating order with DTO', e);
       throw Exception('Unexpected error: ${e.toString()}');
@@ -82,7 +84,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       AppLogger.d('Creating new order');
       final response = await _apiService.createOrder(order);
       AppLogger.i('Successfully created order');
-      
+
       if (response.isSuccess && response.data != null) {
         return response.data!;
       } else {
@@ -90,7 +92,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       }
     } on DioException catch (e) {
       AppLogger.e('Failed to create order', e);
-      throw ResponseHandler.mapDioExceptionToException(e);
+      throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error creating order', e);
       throw Exception('Unexpected error: ${e.toString()}');
@@ -103,7 +105,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       AppLogger.d('Cancelling order: $orderId');
       final response = await _apiService.cancelOrder(orderId);
       AppLogger.i('Successfully cancelled order: $orderId');
-      
+
       if (response.isSuccess) {
         return response.data == true;
       } else {
@@ -111,7 +113,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       }
     } on DioException catch (e) {
       AppLogger.e('Failed to cancel order: $orderId', e);
-      throw ResponseHandler.mapDioExceptionToException(e);
+      throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error cancelling order', e);
       throw Exception('Unexpected error: ${e.toString()}');
