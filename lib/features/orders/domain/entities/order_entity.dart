@@ -151,6 +151,11 @@ class OrderEntity extends Equatable {
     }
   }
 
+  bool get canTrackingRealtime =>
+      id != null &&
+      status != OrderStatus.cancelled &&
+      status != OrderStatus.delivered;
+
   /// Check if order can be cancelled
   bool get canCancel => status == OrderStatus.pending;
 
@@ -196,7 +201,8 @@ class OrderEntity extends Equatable {
       items: items ?? this.items,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      estimatedDeliveryTime: estimatedDeliveryTime ?? this.estimatedDeliveryTime,
+      estimatedDeliveryTime:
+          estimatedDeliveryTime ?? this.estimatedDeliveryTime,
     );
   }
 
@@ -213,7 +219,7 @@ class OrderEntity extends Equatable {
   String toString() {
     return 'OrderEntity(id: $id, customerName: $customerName, status: $status, totalAmount: $totalAmount)';
   }
-  
+
   @override
   List<Object?> get props => [
     id,

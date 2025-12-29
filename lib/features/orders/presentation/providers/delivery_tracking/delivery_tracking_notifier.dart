@@ -57,7 +57,10 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
   // }
 
   /// Bắt đầu theo dõi order - ưu tiên sử dụng getCurrentDelivery trước
-  Future<void> startTrackingOrderSafe(int orderId) async {
+  Future<void> startTrackingOrderSafe(
+    int orderId, {
+    bool trackingRealtime = false,
+  }) async {
     // Kiểm tra nếu đã đang track order này
     if (state.currentTracking?.orderId == orderId && state.isTracking) {
       AppLogger.d('Already tracking order $orderId, skipping duplicate call');
@@ -68,7 +71,7 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
     await getCurrentDelivery(orderId);
 
     // Bước 2: Nếu cần real-time updates, start WebSocket tracking
-    if (state.currentTracking != null) {
+    if (state.currentTracking != null && trackingRealtime) {
       AppLogger.i('Starting real-time tracking for order: $orderId');
       await startTrackingOrder(orderId);
     }

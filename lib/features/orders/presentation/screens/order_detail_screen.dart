@@ -1,3 +1,4 @@
+import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,10 +46,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
       appBar: AppBar(
         title: Text(
           '${S.of(context).order} #${widget.orderId}',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         backgroundColor: theme.primaryColor,
         elevation: 0,
@@ -91,7 +89,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
             SizedBox(height: 16.w),
 
             // Delivery tracking section for orders being delivered
-            // if (order.status == OrderStatus.delivering)
+            if (order.status == OrderStatus.delivering)
               OrderDeliveryTrackingCard(order: order),
 
             OrderCustomerInfoCard(order: order),

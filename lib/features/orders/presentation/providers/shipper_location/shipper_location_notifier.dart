@@ -30,7 +30,7 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
       // AppLogger.i('Starting shipper location tracking: $shipperId');
 
       // Stop previous tracking if any
-      // await stopTracking();
+      await stopTracking();
 
       state = state.copyWith(
         isLoading: true,

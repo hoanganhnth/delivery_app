@@ -1,4 +1,4 @@
-import 'package:delivery_app/core/constants/api_constants.dart';
+// import 'package:delivery_app/core/constants/api_constants.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dio_client.dart';
@@ -20,12 +20,12 @@ final dioProvider = Provider<Dio>((ref) {
 // });
 
 /// Provider for base URL configuration
-final baseUrlProvider = Provider<String>((ref) {
-  // You can make this configurable based on environment
-  return ApiConstants.api;
-});
+// final baseUrlProvider = Provider<String>((ref) {
+//   // You can make this configurable based on environment
+//   return ApiConstants.api;
+// });
 
-/// Provider for network timeout configuration
-final networkTimeoutProvider = Provider<Duration>((ref) {
-  return const Duration(seconds: 10);
-});
+// /// Provider for network timeout configuration
+// final networkTimeoutProvider = Provider<Duration>((ref) {
+//   return const Duration(seconds: 10);
+// });
