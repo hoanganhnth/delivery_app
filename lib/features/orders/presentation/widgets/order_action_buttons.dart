@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/order_entity.dart';
+import '../providers/orders/order_providers.dart';
 
 /// Widget hiển thị các nút hành động cho đơn hàng
 class OrderActionButtons extends ConsumerWidget {
@@ -74,9 +75,7 @@ class OrderActionButtons extends ConsumerWidget {
               Navigator.of(dialogContext).pop();
               await _cancelOrder(context, ref);
             },
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.red,
-            ),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
             child: const Text('Hủy đơn'),
           ),
         ],
@@ -90,33 +89,46 @@ class OrderActionButtons extends ConsumerWidget {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        builder: (context) => const Center(child: CircularProgressIndicator()),
       );
 
-      // TODO: Implement cancel order API call
-      // Tạm thời simulate cancel order thành công
-      await Future.delayed(const Duration(seconds: 1));
+      final orderId = order.id;
+      if (orderId == null) {
+        throw Exception('Order id is null');
+      }
+
+      final result = await ref
+          .read(cancelOrderProvider.notifier)
+          .cancelOrder(orderId);
 
       if (context.mounted) {
         Navigator.of(context).pop(); // Đóng loading dialog
-        
-        // Hiển thị thông báo thành công
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Đã hủy đơn hàng thành công'),
-            backgroundColor: Colors.green,
-          ),
-        );
 
-        // Callback khi hủy thành công
-        onOrderCanceled?.call();
+        if (result) {
+          // Hiển thị thông báo thành công
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Đã hủy đơn hàng thành công'),
+              backgroundColor: Colors.green,
+            ),
+          );
+
+          // Callback khi hủy thành công
+          onOrderCanceled?.call();
+        } else {
+          // Hiển thị thông báo lỗi
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Hủy đơn hàng thất bại'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
     } catch (e) {
       if (context.mounted) {
         Navigator.of(context).pop(); // Đóng loading dialog
-        
+
         // Hiển thị thông báo lỗi
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
