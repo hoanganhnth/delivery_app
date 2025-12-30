@@ -38,9 +38,10 @@ _CreateOrderRequestDto _$CreateOrderRequestDtoFromJson(
   notes: json['notes'] as String?,
   pickupLat: (json['pickupLat'] as num?)?.toDouble(),
   pickupLng: (json['pickupLng'] as num?)?.toDouble(),
-  items: (json['items'] as List<dynamic>)
-      .map((e) => OrderItemRequest.fromJson(e as Map<String, dynamic>))
-      .toList(),
+  items:
+      (json['items'] as List<dynamic>)
+          .map((e) => OrderItemRequest.fromJson(e as Map<String, dynamic>))
+          .toList(),
 );
 
 Map<String, dynamic> _$CreateOrderRequestDtoToJson(

@@ -38,13 +38,14 @@ class _OrderApiService implements OrderApiService {
     try {
       _value = BaseResponseDto<List<OrderDto>>.fromJson(
         _result.data!,
-        (json) => json is List<dynamic>
-            ? json
-                  .map<OrderDto>(
-                    (i) => OrderDto.fromJson(i as Map<String, dynamic>),
-                  )
-                  .toList()
-            : List.empty(),
+        (json) =>
+            json is List<dynamic>
+                ? json
+                    .map<OrderDto>(
+                      (i) => OrderDto.fromJson(i as Map<String, dynamic>),
+                    )
+                    .toList()
+                : List.empty(),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);

@@ -1,5 +1,6 @@
 import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
 import 'package:delivery_app/features/orders/presentation/screens/order_detail_screen.dart';
+import 'package:delivery_app/features/support/presentation/screens/support_chat_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
@@ -260,6 +261,14 @@ final routerProvider = Provider<GoRouter>((ref) {
           final address = state.extra as UserAddressEntity?;
           return AddEditAddressScreen(address: address);
         },
+      ),
+
+      // Support Chat routes (with auth guard)
+      GoRoute(
+        path: AppRoutes.supportChat,
+        name: 'support-chat',
+        redirect: guardManager.applyAuthGuard,
+        builder: (context, state) => const SupportChatScreen(),
       ),
 
       // Admin routes (with admin guard)

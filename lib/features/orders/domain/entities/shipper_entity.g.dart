@@ -17,15 +17,18 @@ _ShipperEntity _$ShipperEntityFromJson(Map<String, dynamic> json) =>
       rating: (json['rating'] as num?)?.toDouble(),
       totalTrips: (json['totalTrips'] as num?)?.toInt(),
       isOnline: json['isOnline'] as bool?,
-      lastSeenAt: json['lastSeenAt'] == null
-          ? null
-          : DateTime.parse(json['lastSeenAt'] as String),
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTime.parse(json['updatedAt'] as String),
+      lastSeenAt:
+          json['lastSeenAt'] == null
+              ? null
+              : DateTime.parse(json['lastSeenAt'] as String),
+      createdAt:
+          json['createdAt'] == null
+              ? null
+              : DateTime.parse(json['createdAt'] as String),
+      updatedAt:
+          json['updatedAt'] == null
+              ? null
+              : DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$ShipperEntityToJson(_ShipperEntity instance) =>

@@ -38,6 +38,9 @@ class AppRoutes {
   static const String addAddress = '/add-address';
   static const String editAddress = '/edit-address';
   
+  // Support routes
+  static const String supportChat = '/support-chat';
+  
   // Admin routes
   static const String admin = '/admin';
   static const String adminUsers = '/admin/users';

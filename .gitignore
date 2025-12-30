@@ -59,8 +59,6 @@ android/app/build/
 .idea/
 
 # FVM
-.fvm/flutter_sdk
-.fvm/versions/
 
 **/GeneratedPluginRegistrant.*
 **/generated_plugin_registrant.*
@@ -73,3 +71,6 @@ ios/Runner/GoogleService-Info.plist
 **/GeneratedPluginRegistrant.*
 **/generated_plugin_registrant.*
 **/generated_plugins.cmake
+
+# FVM Version Cache
+.fvm/

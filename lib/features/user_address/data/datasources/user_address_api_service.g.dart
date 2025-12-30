@@ -43,15 +43,16 @@ class _UserAddressApiService implements UserAddressApiService {
     try {
       _value = BaseResponseDto<List<UserAddressResponseDto>>.fromJson(
         _result.data!,
-        (json) => json is List<dynamic>
-            ? json
-                  .map<UserAddressResponseDto>(
-                    (i) => UserAddressResponseDto.fromJson(
-                      i as Map<String, dynamic>,
-                    ),
-                  )
-                  .toList()
-            : List.empty(),
+        (json) =>
+            json is List<dynamic>
+                ? json
+                    .map<UserAddressResponseDto>(
+                      (i) => UserAddressResponseDto.fromJson(
+                        i as Map<String, dynamic>,
+                      ),
+                    )
+                    .toList()
+                : List.empty(),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);

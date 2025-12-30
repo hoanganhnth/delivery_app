@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 /// Profile Screen
 class ProfileScreen extends ConsumerWidget {
@@ -41,6 +42,16 @@ class ProfileScreen extends ConsumerWidget {
                 ),
               ],
               SizedBox(height: 32.w),
+              ListTile(
+                leading: const Icon(Icons.support_agent),
+                title: const Text('Hỗ trợ khách hàng'),
+                subtitle: const Text('Chat với CSKH'),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () {
+                  // Navigate to support chat
+                  context.go('/support-chat');
+                },
+              ),
               ListTile(
                 leading: const Icon(Icons.edit),
                 title: const Text('Edit Profile'),

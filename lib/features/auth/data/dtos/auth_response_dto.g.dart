@@ -9,9 +9,10 @@ part of 'auth_response_dto.dart';
 _AuthDataDto _$AuthDataDtoFromJson(Map<String, dynamic> json) => _AuthDataDto(
   accessToken: json['accessToken'] as String,
   refreshToken: json['refreshToken'] as String,
-  user: json['user'] == null
-      ? null
-      : UserDto.fromJson(json['user'] as Map<String, dynamic>),
+  user:
+      json['user'] == null
+          ? null
+          : UserDto.fromJson(json['user'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$AuthDataDtoToJson(_AuthDataDto instance) =>
@@ -25,9 +26,10 @@ _UserDto _$UserDtoFromJson(Map<String, dynamic> json) => _UserDto(
   id: (json['id'] as num).toInt(),
   email: json['email'] as String,
   name: json['name'] as String?,
-  createdAt: json['createdAt'] == null
-      ? null
-      : DateTime.parse(json['createdAt'] as String),
+  createdAt:
+      json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
 );
 
 Map<String, dynamic> _$UserDtoToJson(_UserDto instance) => <String, dynamic>{

@@ -7,9 +7,10 @@ part of 'cart_dto.dart';
 // **************************************************************************
 
 _CartDto _$CartDtoFromJson(Map<String, dynamic> json) => _CartDto(
-  items: (json['items'] as List<dynamic>)
-      .map((e) => CartItemDto.fromJson(e as Map<String, dynamic>))
-      .toList(),
+  items:
+      (json['items'] as List<dynamic>)
+          .map((e) => CartItemDto.fromJson(e as Map<String, dynamic>))
+          .toList(),
   currentRestaurantId: json['currentRestaurantId'] as num?,
   currentRestaurantName: json['currentRestaurantName'] as String?,
 );

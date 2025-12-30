@@ -41,13 +41,14 @@ class _RestaurantApiService implements RestaurantApiService {
     try {
       _value = BaseResponseDto<List<RestaurantDto>>.fromJson(
         _result.data!,
-        (json) => json is List<dynamic>
-            ? json
-                  .map<RestaurantDto>(
-                    (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
-                  )
-                  .toList()
-            : List.empty(),
+        (json) =>
+            json is List<dynamic>
+                ? json
+                    .map<RestaurantDto>(
+                      (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
+                    )
+                    .toList()
+                : List.empty(),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
@@ -109,13 +110,14 @@ class _RestaurantApiService implements RestaurantApiService {
     try {
       _value = BaseResponseDto<List<MenuItemDto>>.fromJson(
         _result.data!,
-        (json) => json is List<dynamic>
-            ? json
-                  .map<MenuItemDto>(
-                    (i) => MenuItemDto.fromJson(i as Map<String, dynamic>),
-                  )
-                  .toList()
-            : List.empty(),
+        (json) =>
+            json is List<dynamic>
+                ? json
+                    .map<MenuItemDto>(
+                      (i) => MenuItemDto.fromJson(i as Map<String, dynamic>),
+                    )
+                    .toList()
+                : List.empty(),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
@@ -148,13 +150,14 @@ class _RestaurantApiService implements RestaurantApiService {
     try {
       _value = BaseResponseDto<List<RestaurantDto>>.fromJson(
         _result.data!,
-        (json) => json is List<dynamic>
-            ? json
-                  .map<RestaurantDto>(
-                    (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
-                  )
-                  .toList()
-            : List.empty(),
+        (json) =>
+            json is List<dynamic>
+                ? json
+                    .map<RestaurantDto>(
+                      (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
+                    )
+                    .toList()
+                : List.empty(),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
@@ -187,13 +190,14 @@ class _RestaurantApiService implements RestaurantApiService {
     try {
       _value = BaseResponseDto<List<RestaurantDto>>.fromJson(
         _result.data!,
-        (json) => json is List<dynamic>
-            ? json
-                  .map<RestaurantDto>(
-                    (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
-                  )
-                  .toList()
-            : List.empty(),
+        (json) =>
+            json is List<dynamic>
+                ? json
+                    .map<RestaurantDto>(
+                      (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
+                    )
+                    .toList()
+                : List.empty(),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
@@ -223,9 +227,10 @@ class _RestaurantApiService implements RestaurantApiService {
     try {
       _value = BaseResponseDto<List<String>>.fromJson(
         _result.data!,
-        (json) => json is List<dynamic>
-            ? json.map<String>((i) => i as String).toList()
-            : List.empty(),
+        (json) =>
+            json is List<dynamic>
+                ? json.map<String>((i) => i as String).toList()
+                : List.empty(),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);

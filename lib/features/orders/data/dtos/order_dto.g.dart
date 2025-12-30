@@ -15,18 +15,22 @@ _OrderDto _$OrderDtoFromJson(Map<String, dynamic> json) => _OrderDto(
   paymentMethod: json['paymentMethod'] as String,
   totalAmount: (json['totalAmount'] as num?)?.toDouble(),
   notes: json['notes'] as String?,
-  items: (json['items'] as List<dynamic>?)
-      ?.map((e) => OrderItemDto.fromJson(e as Map<String, dynamic>))
-      .toList(),
-  createdAt: json['createdAt'] == null
-      ? null
-      : DateTime.parse(json['createdAt'] as String),
-  updatedAt: json['updatedAt'] == null
-      ? null
-      : DateTime.parse(json['updatedAt'] as String),
-  estimatedDeliveryTime: json['estimatedDeliveryTime'] == null
-      ? null
-      : DateTime.parse(json['estimatedDeliveryTime'] as String),
+  items:
+      (json['items'] as List<dynamic>?)
+          ?.map((e) => OrderItemDto.fromJson(e as Map<String, dynamic>))
+          .toList(),
+  createdAt:
+      json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+  updatedAt:
+      json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
+  estimatedDeliveryTime:
+      json['estimatedDeliveryTime'] == null
+          ? null
+          : DateTime.parse(json['estimatedDeliveryTime'] as String),
 );
 
 Map<String, dynamic> _$OrderDtoToJson(_OrderDto instance) => <String, dynamic>{

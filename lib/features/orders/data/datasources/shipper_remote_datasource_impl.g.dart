@@ -70,13 +70,14 @@ class _ShipperApiService implements ShipperApiService {
     try {
       _value = BaseResponseDto<List<ShipperDto>>.fromJson(
         _result.data!,
-        (json) => json is List<dynamic>
-            ? json
-                  .map<ShipperDto>(
-                    (i) => ShipperDto.fromJson(i as Map<String, dynamic>),
-                  )
-                  .toList()
-            : List.empty(),
+        (json) =>
+            json is List<dynamic>
+                ? json
+                    .map<ShipperDto>(
+                      (i) => ShipperDto.fromJson(i as Map<String, dynamic>),
+                    )
+                    .toList()
+                : List.empty(),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
