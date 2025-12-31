@@ -16,6 +16,11 @@ class ChatState extends Equatable {
   final List<ChatMessageEntity> messages;
   final String? errorMessage;
   final bool isSendingMessage;
+  
+  // ✅ Pagination fields
+  final bool isLoadingMore;
+  final bool hasMoreMessages;
+  final int pageSize;
 
   const ChatState({
     this.status = ChatStatus.initial,
@@ -23,6 +28,9 @@ class ChatState extends Equatable {
     this.messages = const [],
     this.errorMessage,
     this.isSendingMessage = false,
+    this.isLoadingMore = false,
+    this.hasMoreMessages = true,
+    this.pageSize = 10,
   });
 
   ChatState copyWith({
@@ -31,6 +39,8 @@ class ChatState extends Equatable {
     List<ChatMessageEntity>? messages,
     String? errorMessage,
     bool? isSendingMessage,
+    bool? isLoadingMore,
+    bool? hasMoreMessages,
   }) {
     return ChatState(
       status: status ?? this.status,
@@ -38,13 +48,25 @@ class ChatState extends Equatable {
       messages: messages ?? this.messages,
       errorMessage: errorMessage,
       isSendingMessage: isSendingMessage ?? this.isSendingMessage,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      hasMoreMessages: hasMoreMessages ?? this.hasMoreMessages,
     );
   }
 
   bool get isLoading => status == ChatStatus.loading;
   bool get hasError => status == ChatStatus.error;
   bool get hasConversation => conversation != null;
+  ChatMessageEntity? get oldestMessage => messages.isNotEmpty ? messages.first : null;
+  ChatMessageEntity? get latestMessage => messages.isNotEmpty ? messages.last : null;
 
   @override
-  List<Object?> get props => [status, conversation, messages, errorMessage, isSendingMessage];
+  List<Object?> get props => [
+        status,
+        conversation,
+        messages,
+        errorMessage,
+        isSendingMessage,
+        isLoadingMore,
+        hasMoreMessages,
+      ];
 }

@@ -89,6 +89,11 @@ class NavigationHelper {
     context.go(AppRoutes.orderConfirmation);
   }
 
+  // navigate to support screen
+  static void pushSupport(BuildContext context) {
+    context.push(AppRoutes.supportChat);
+  }
+
   /// Push navigation methods (keeps current screen in stack)
 
   /// Push login screen
@@ -213,19 +218,21 @@ class NavigationHelper {
   }) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(content),
-        actions: actions.map((action) {
-          return TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              action.onPressed?.call();
-            },
-            child: Text(action.label),
-          );
-        }).toList(),
-      ),
+      builder:
+          (context) => AlertDialog(
+            title: Text(title),
+            content: Text(content),
+            actions:
+                actions.map((action) {
+                  return TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      action.onPressed?.call();
+                    },
+                    child: Text(action.label),
+                  );
+                }).toList(),
+          ),
     );
   }
 }
@@ -270,11 +277,14 @@ extension NavigationExtension on BuildContext {
   void goBack() => NavigationHelper.goBack(this);
   void goToRoot() => NavigationHelper.goToRoot(this);
   void pushCheckout() => NavigationHelper.pushCheckout(this);
-  void pushOrderDetail(String orderId) => NavigationHelper.pushOrderDetail(this, orderId);
-
+  void pushOrderDetail(String orderId) =>
+      NavigationHelper.pushOrderDetail(this, orderId);
+  void pushSupport() => NavigationHelper.pushSupport(this);
+  
   // Address management extension methods
   void goToAddressList() => NavigationHelper.goToAddressList(this);
   void pushAddressList() => NavigationHelper.pushAddressList(this);
   void pushAddAddress() => NavigationHelper.pushAddAddress(this);
-  void pushEditAddress(dynamic address) => NavigationHelper.pushEditAddress(this, address);
+  void pushEditAddress(dynamic address) =>
+      NavigationHelper.pushEditAddress(this, address);
 }

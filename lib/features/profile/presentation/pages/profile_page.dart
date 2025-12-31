@@ -1,4 +1,5 @@
 import 'package:delivery_app/core/routing/navigation_helper.dart';
+import 'package:delivery_app/core/routing/routing.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/services/app_initializer_service.dart';
 import 'package:delivery_app/features/auth/presentation/providers/auth_providers.dart';
@@ -17,7 +18,7 @@ class ProfilePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profileProvider = ref.watch(profileStateProvider);
     final user = profileProvider.user;
-    
+
     // Listen to auth state changes and navigate when logged out
     ref.listen<AuthState>(authStateProvider, (previous, next) {
       if (previous?.isAuthenticated == true && !next.isAuthenticated) {
@@ -26,7 +27,7 @@ class ProfilePage extends ConsumerWidget {
         ref.read(appInitializerServiceProvider).clearDataAfterLogout();
       }
     });
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).profile),
@@ -61,10 +62,7 @@ class ProfilePage extends ConsumerWidget {
                       SizedBox(height: 4.w),
                       Text(
                         user.email,
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: Colors.grey,
-                        ),
+                        style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -73,7 +71,16 @@ class ProfilePage extends ConsumerWidget {
           ),
 
           SizedBox(height: 24.w),
-
+          ListTile(
+            leading: const Icon(Icons.support_agent),
+            title: const Text('Hỗ trợ khách hàng'),
+            subtitle: const Text('Chat với CSKH'),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () {
+              // Navigate to support chat
+              context.pushSupport();
+            },
+          ),
           // Các phần khác (ví dụ settings, orders…)
           ListTile(
             leading: const Icon(Icons.settings, color: Colors.orange),
@@ -95,7 +102,7 @@ class ProfilePage extends ConsumerWidget {
             },
           ),
 
-          // setting 
+          // setting
           ListTile(
             leading: const Icon(Icons.settings, color: Colors.orange),
             title: Text(S.of(context).settings),

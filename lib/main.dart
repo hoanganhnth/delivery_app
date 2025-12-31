@@ -14,6 +14,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'features/auth/presentation/providers/token_storage_providers.dart';
 import 'features/auth/presentation/providers/auth_network_providers.dart';
 
@@ -26,6 +27,10 @@ Future<void> main() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
+
+      // ✅ Cấu hình timeago locale cho tiếng Việt
+      timeago.setLocaleMessages('vi', timeago.ViMessages());
+      timeago.setLocaleMessages('vi_short', timeago.ViShortMessages());
 
       // ✅ Khởi tạo SharedPreferences
       final sharedPreferences = await SharedPreferences.getInstance();

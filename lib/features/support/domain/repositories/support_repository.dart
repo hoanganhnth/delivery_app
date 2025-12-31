@@ -13,6 +13,25 @@ abstract class SupportRepository {
   /// Stream messages for a conversation
   Stream<Either<Failure, List<ChatMessageEntity>>> streamMessages(String conversationId);
 
+  /// Load initial messages with pagination
+  Future<Either<Failure, List<ChatMessageEntity>>> loadInitialMessages(
+    String conversationId, {
+    int limit = 50,
+  });
+
+  /// Load more messages (older messages)
+  Future<Either<Failure, List<ChatMessageEntity>>> loadMoreMessages(
+    String conversationId,
+    DateTime beforeTimestamp, {
+    int limit = 50,
+  });
+
+  /// Stream only new messages after a timestamp
+  Stream<Either<Failure, List<ChatMessageEntity>>> streamNewMessages(
+    String conversationId,
+    DateTime afterTimestamp,
+  );
+
   /// Send text message
   Future<Either<Failure, ChatMessageEntity>> sendTextMessage(
     String conversationId,

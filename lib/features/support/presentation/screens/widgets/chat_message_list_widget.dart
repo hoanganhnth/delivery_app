@@ -18,26 +18,36 @@ class _ChatMessageListWidgetState extends ConsumerState<ChatMessageListWidget> {
   final ScrollController _scrollController = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
   void dispose() {
+    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  // ✅ Với reverse: true, scroll đến cuối = pixels gần maxScrollExtent
+  void _onScroll() {
+    final chatState = ref.read(chatNotifierProvider);
+    
+    // Detect scroll near END (which is TOP of chat in reverse mode) to load more
+    if (_scrollController.position.pixels >= 
+        _scrollController.position.maxScrollExtent - 200) {
+      
+      if (chatState.hasMoreMessages && !chatState.isLoadingMore) {
+        ref.read(chatNotifierProvider.notifier).loadMoreMessages();
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final chatState = ref.watch(chatNotifierProvider);
     final messages = chatState.messages;
-
-    // Auto scroll to bottom when new message arrives
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients && messages.isNotEmpty) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
-    });
 
     if (messages.isEmpty) {
       return Center(
@@ -68,15 +78,28 @@ class _ChatMessageListWidgetState extends ConsumerState<ChatMessageListWidget> {
       );
     }
 
+    // ✅ Reverse list: Newest at bottom (index 0 in UI), oldest at top
     return ListView.builder(
       controller: _scrollController,
+      reverse: true, // ✅ Key feature: Newest messages at bottom
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-      itemCount: messages.length,
+      itemCount:
+          chatState.isLoadingMore ? messages.length + 1 : messages.length,
       itemBuilder: (context, index) {
-        final message = messages[index];
+        // ✅ Show loading indicator at BOTTOM (which is TOP in reverse mode)
+        if (index == messages.length && chatState.isLoadingMore) {
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.h),
+            child: const Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        // ✅ Reverse index: messages[0] is newest, display at bottom
+        final messageIndex = messages.length - 1 - index;
+        final message = messages[messageIndex];
         final showTimestamp =
-            index == 0 ||
-            messages[index - 1].timestamp
+            messageIndex == messages.length - 1 ||
+            messages[messageIndex + 1].timestamp
                     .difference(message.timestamp)
                     .inMinutes
                     .abs() >
@@ -84,8 +107,8 @@ class _ChatMessageListWidgetState extends ConsumerState<ChatMessageListWidget> {
 
         return Column(
           children: [
-            if (showTimestamp) _buildTimestamp(message.timestamp),
             _buildMessageBubble(context, message),
+            if (showTimestamp) _buildTimestamp(message.timestamp),
             SizedBox(height: 8.h),
           ],
         );
@@ -108,9 +131,8 @@ class _ChatMessageListWidgetState extends ConsumerState<ChatMessageListWidget> {
     final theme = Theme.of(context);
 
     return Row(
-      mainAxisAlignment: isUser
-          ? MainAxisAlignment.end
-          : MainAxisAlignment.start,
+      mainAxisAlignment:
+          isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         if (!isUser) ...[
@@ -177,9 +199,10 @@ class _ChatMessageListWidgetState extends ConsumerState<ChatMessageListWidget> {
                       Icon(
                         message.isRead ? Icons.done_all : Icons.done,
                         size: 14.w,
-                        color: message.isRead
-                            ? Colors.blue.shade300
-                            : Colors.white70,
+                        color:
+                            message.isRead
+                                ? Colors.blue.shade300
+                                : Colors.white70,
                       ),
                     ],
                   ],
@@ -204,18 +227,20 @@ class _ChatMessageListWidgetState extends ConsumerState<ChatMessageListWidget> {
           imageUrl: message.mediaUrl!,
           width: 200.w,
           fit: BoxFit.cover,
-          placeholder: (context, url) => Container(
-            width: 200.w,
-            height: 150.h,
-            color: Colors.grey.shade200,
-            child: const Center(child: CircularProgressIndicator()),
-          ),
-          errorWidget: (context, url, error) => Container(
-            width: 200.w,
-            height: 150.h,
-            color: Colors.grey.shade200,
-            child: const Icon(Icons.error),
-          ),
+          placeholder:
+              (context, url) => Container(
+                width: 200.w,
+                height: 150.h,
+                color: Colors.grey.shade200,
+                child: const Center(child: CircularProgressIndicator()),
+              ),
+          errorWidget:
+              (context, url, error) => Container(
+                width: 200.w,
+                height: 150.h,
+                color: Colors.grey.shade200,
+                child: const Icon(Icons.error),
+              ),
         ),
       ),
     );
@@ -235,12 +260,17 @@ class _ChatMessageListWidgetState extends ConsumerState<ChatMessageListWidget> {
               width: 200.w,
               height: 150.h,
               color: Colors.black,
-              child: message.thumbnailUrl != null
-                  ? CachedNetworkImage(
-                      imageUrl: message.thumbnailUrl!,
-                      fit: BoxFit.cover,
-                    )
-                  : const Icon(Icons.videocam, color: Colors.white, size: 48),
+              child:
+                  message.thumbnailUrl != null
+                      ? CachedNetworkImage(
+                        imageUrl: message.thumbnailUrl!,
+                        fit: BoxFit.cover,
+                      )
+                      : const Icon(
+                        Icons.videocam,
+                        color: Colors.white,
+                        size: 48,
+                      ),
             ),
           ),
           Container(

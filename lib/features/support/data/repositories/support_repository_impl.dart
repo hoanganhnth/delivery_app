@@ -55,6 +55,59 @@ class SupportRepositoryImpl implements SupportRepository {
   }
 
   @override
+  Future<Either<Failure, List<ChatMessageEntity>>> loadInitialMessages(
+    String conversationId, {
+    int limit = 25,
+  }) async {
+    try {
+      final models = await remoteDataSource.loadInitialMessages(conversationId, limit: limit);
+      return Right(models.map((m) => m.toEntity()).toList());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure('Failed to load initial messages: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ChatMessageEntity>>> loadMoreMessages(
+    String conversationId,
+    DateTime beforeTimestamp, {
+    int limit = 50,
+  }) async {
+    try {
+      final models = await remoteDataSource.loadMoreMessages(
+        conversationId,
+        beforeTimestamp,
+        limit: limit,
+      );
+      return Right(models.map((m) => m.toEntity()).toList());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure('Failed to load more messages: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Stream<Either<Failure, List<ChatMessageEntity>>> streamNewMessages(
+    String conversationId,
+    DateTime afterTimestamp,
+  ) {
+    try {
+      return remoteDataSource.streamNewMessages(conversationId, afterTimestamp).map(
+            (messages) => Right<Failure, List<ChatMessageEntity>>(
+              messages.map((m) => m.toEntity()).toList(),
+            ),
+          );
+    } catch (e) {
+      return Stream.value(
+        Left(ServerFailure('Failed to stream new messages: ${e.toString()}')),
+      );
+    }
+  }
+
+  @override
   Future<Either<Failure, ChatMessageEntity>> sendTextMessage(
     String conversationId,
     int userId,

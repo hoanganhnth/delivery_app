@@ -10,6 +10,12 @@ abstract class SupportRemoteDataSource {
   Future<ConversationModel> getOrCreateConversation(int userId, String userEmail, String? userName);
   Future<ConversationModel> getConversation(String conversationId);
   Stream<List<ChatMessageModel>> streamMessages(String conversationId);
+  
+  // ✅ Pagination methods
+  Future<List<ChatMessageModel>> loadInitialMessages(String conversationId, {int limit});
+  Future<List<ChatMessageModel>> loadMoreMessages(String conversationId, DateTime beforeTimestamp, {int limit});
+  Stream<List<ChatMessageModel>> streamNewMessages(String conversationId, DateTime afterTimestamp);
+  
   Future<ChatMessageModel> sendTextMessage(String conversationId, int userId, String content);
   Future<ChatMessageModel> sendMediaMessage(String conversationId, int userId, String filePath, String type);
   Future<void> markMessagesAsRead(String conversationId);
@@ -101,6 +107,102 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
       });
     } catch (e, stackTrace) {
       AppLogger.e('Failed to stream messages', e, stackTrace);
+      rethrow;
+    }
+  }
+
+  // ✅ Load initial messages (latest N messages)
+  @override
+  Future<List<ChatMessageModel>> loadInitialMessages(
+    String conversationId, {
+    int limit = 50,
+  }) async {
+    try {
+      AppLogger.d('Loading initial $limit messages for conversation $conversationId');
+
+      final querySnapshot = await _firestore
+          .collection('messages')
+          .where('conversationId', isEqualTo: conversationId)
+          .orderBy('timestamp', descending: true) // Mới nhất trước
+          .limit(limit)
+          .get();
+
+      final messages = querySnapshot.docs
+          .map((doc) => ChatMessageModel.fromFirestore(doc))
+          .toList()
+          .reversed // Đảo ngược: tin cũ ở trên, mới ở dưới
+          .toList();
+
+      AppLogger.i('Loaded ${messages.length} initial messages');
+      return messages;
+    } on FirebaseException catch (e) {
+      AppLogger.e('Firebase error loading initial messages: ${e.code}', e);
+      throw Exception('Failed to load messages: ${e.message}');
+    } catch (e, stackTrace) {
+      AppLogger.e('Error loading initial messages', e, stackTrace);
+      rethrow;
+    }
+  }
+
+  // ✅ Load more old messages (pagination)
+  @override
+  Future<List<ChatMessageModel>> loadMoreMessages(
+    String conversationId,
+    DateTime beforeTimestamp, {
+    int limit = 50,
+  }) async {
+    try {
+      AppLogger.d('Loading more messages before ${beforeTimestamp.toIso8601String()}');
+
+      final querySnapshot = await _firestore
+          .collection('messages')
+          .where('conversationId', isEqualTo: conversationId)
+          .where('timestamp', isLessThan: Timestamp.fromDate(beforeTimestamp))
+          .orderBy('timestamp', descending: true)
+          .limit(limit)
+          .get();
+
+      final messages = querySnapshot.docs
+          .map((doc) => ChatMessageModel.fromFirestore(doc))
+          .toList()
+          .reversed
+          .toList();
+
+      AppLogger.i('Loaded ${messages.length} more messages');
+      return messages;
+    } on FirebaseException catch (e) {
+      AppLogger.e('Firebase error loading more messages: ${e.code}', e);
+      throw Exception('Failed to load more messages: ${e.message}');
+    } catch (e, stackTrace) {
+      AppLogger.e('Error loading more messages', e, stackTrace);
+      rethrow;
+    }
+  }
+
+  // ✅ Stream ONLY new messages (real-time)
+  @override
+  Stream<List<ChatMessageModel>> streamNewMessages(
+    String conversationId,
+    DateTime afterTimestamp,
+  ) {
+    try {
+      AppLogger.d('Streaming new messages after ${afterTimestamp.toIso8601String()}');
+
+      return _firestore
+          .collection('messages')
+          .where('conversationId', isEqualTo: conversationId)
+          .where('timestamp', isGreaterThan: Timestamp.fromDate(afterTimestamp))
+          .orderBy('timestamp', descending: true)
+          .snapshots()
+          .map((snapshot) {
+        // Chỉ emit messages MỚI (added), không emit modified/removed
+        return snapshot.docChanges
+            .where((change) => change.type == DocumentChangeType.added)
+            .map((change) => ChatMessageModel.fromFirestore(change.doc))
+            .toList();
+      });
+    } catch (e, stackTrace) {
+      AppLogger.e('Error streaming new messages', e, stackTrace);
       rethrow;
     }
   }
