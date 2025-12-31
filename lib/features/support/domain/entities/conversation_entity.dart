@@ -16,6 +16,9 @@ class ConversationEntity extends Equatable {
   final DateTime updatedAt;
   final ChatMessageEntity? lastMessage;
   final int unreadCount;
+  final DateTime? closedAt; // ✅ Thêm
+  final String? closedBy; // ✅ Thêm: 'user' hoặc 'support'
+  final String? closeReason; // ✅ Thêm
 
   const ConversationEntity({
     required this.id,
@@ -27,7 +30,14 @@ class ConversationEntity extends Equatable {
     required this.updatedAt,
     this.lastMessage,
     this.unreadCount = 0,
+    this.closedAt, // ✅ Thêm
+    this.closedBy, // ✅ Thêm
+    this.closeReason, // ✅ Thêm
   });
+
+  // ✅ Thêm helper methods
+  bool get isActive => status == ConversationStatus.active;
+  bool get isClosed => status == ConversationStatus.closed;
 
   ConversationEntity copyWith({
     String? id,
@@ -39,6 +49,9 @@ class ConversationEntity extends Equatable {
     DateTime? updatedAt,
     ChatMessageEntity? lastMessage,
     int? unreadCount,
+    DateTime? closedAt, // ✅ Thêm
+    String? closedBy, // ✅ Thêm
+    String? closeReason, // ✅ Thêm
   }) {
     return ConversationEntity(
       id: id ?? this.id,
@@ -50,10 +63,12 @@ class ConversationEntity extends Equatable {
       updatedAt: updatedAt ?? this.updatedAt,
       lastMessage: lastMessage ?? this.lastMessage,
       unreadCount: unreadCount ?? this.unreadCount,
+      closedAt: closedAt ?? this.closedAt, // ✅ Thêm
+      closedBy: closedBy ?? this.closedBy, // ✅ Thêm
+      closeReason: closeReason ?? this.closeReason, // ✅ Thêm
     );
   }
 
-  bool get isActive => status == ConversationStatus.active;
   bool get hasUnread => unreadCount > 0;
 
   @override
@@ -67,5 +82,8 @@ class ConversationEntity extends Equatable {
         updatedAt,
         lastMessage,
         unreadCount,
+        closedAt, // ✅ Thêm
+        closedBy, // ✅ Thêm
+        closeReason, // ✅ Thêm
       ];
 }

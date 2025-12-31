@@ -19,7 +19,7 @@ abstract class SupportRemoteDataSource {
   Future<ChatMessageModel> sendTextMessage(String conversationId, int userId, String content);
   Future<ChatMessageModel> sendMediaMessage(String conversationId, int userId, String filePath, String type);
   Future<void> markMessagesAsRead(String conversationId);
-  Future<void> closeConversation(String conversationId);
+  Future<void> closeConversation(String conversationId, {String closedBy, String? closeReason}); // ✅ Updated
 }
 
 class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
@@ -40,21 +40,24 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
     String? userName,
   ) async {
     try {
-      // Check if conversation already exists for this user
+      AppLogger.d('Getting or creating conversation for user: $userId');
+
+      // ✅ Tìm conversation ACTIVE của user
       final querySnapshot = await _firestore
           .collection('conversations')
           .where('userId', isEqualTo: userId)
           .where('status', isEqualTo: 'active')
+          .orderBy('updatedAt', descending: true) // ✅ Mới nhất trước
           .limit(1)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        AppLogger.i('Found existing conversation for user: $userId');
+        AppLogger.i('Found existing ACTIVE conversation for user: $userId');
         return ConversationModel.fromFirestore(querySnapshot.docs.first);
       }
 
-      // Create new conversation
-      AppLogger.i('Creating new conversation for user: $userId');
+      // ✅ Không có conversation active → Tạo mới
+      AppLogger.i('No active conversation found, creating new one for user: $userId');
       final conversationRef = _firestore.collection('conversations').doc();
       final now = Timestamp.now();
 
@@ -66,11 +69,15 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
         'createdAt': now,
         'updatedAt': now,
         'unreadCount': 0,
+        'closedAt': null, // ✅ Thêm
+        'closedBy': null, // ✅ Thêm
+        'closeReason': null, // ✅ Thêm
       };
 
       await conversationRef.set(conversationData);
 
       final doc = await conversationRef.get();
+      AppLogger.i('Created new conversation: ${doc.id}');
       return ConversationModel.fromFirestore(doc);
     } catch (e, stackTrace) {
       AppLogger.e('Failed to get or create conversation', e, stackTrace);
@@ -369,14 +376,23 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
   }
 
   @override
-  Future<void> closeConversation(String conversationId) async {
+  Future<void> closeConversation(
+    String conversationId, {
+    String closedBy = 'user',
+    String? closeReason,
+  }) async {
     try {
+      AppLogger.d('Closing conversation: $conversationId by $closedBy');
+
       await _firestore.collection('conversations').doc(conversationId).update({
         'status': 'closed',
         'updatedAt': Timestamp.now(),
+        'closedAt': Timestamp.now(), // ✅ Thêm
+        'closedBy': closedBy, // ✅ Thêm
+        'closeReason': closeReason, // ✅ Thêm
       });
 
-      AppLogger.i('Closed conversation: $conversationId');
+      AppLogger.i('Successfully closed conversation: $conversationId');
     } catch (e, stackTrace) {
       AppLogger.e('Failed to close conversation', e, stackTrace);
       rethrow;

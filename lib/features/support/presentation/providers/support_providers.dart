@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/datasources/support_remote_datasource.dart';
 import '../../data/repositories/support_repository_impl.dart';
 import '../../domain/repositories/support_repository.dart';
+import '../../domain/usecases/close_conversation_usecase.dart'; // ✅ Thêm
 import '../../domain/usecases/get_or_create_conversation_usecase.dart';
 import '../../domain/usecases/load_initial_messages_usecase.dart';
 import '../../domain/usecases/load_more_messages_usecase.dart';
@@ -55,4 +56,10 @@ final sendTextMessageUseCaseProvider = Provider<SendTextMessageUseCase>((ref) {
 final sendMediaMessageUseCaseProvider = Provider<SendMediaMessageUseCase>((ref) {
   final repository = ref.watch(supportRepositoryProvider);
   return SendMediaMessageUseCase(repository);
+});
+
+// ✅ Thêm CloseConversationUseCase provider
+final closeConversationUseCaseProvider = Provider<CloseConversationUseCase>((ref) {
+  final repository = ref.watch(supportRepositoryProvider);
+  return CloseConversationUseCase(repository);
 });

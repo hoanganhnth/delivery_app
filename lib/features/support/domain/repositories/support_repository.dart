@@ -51,5 +51,9 @@ abstract class SupportRepository {
   Future<Either<Failure, void>> markMessagesAsRead(String conversationId);
 
   /// Close conversation
-  Future<Either<Failure, void>> closeConversation(String conversationId);
+  Future<Either<Failure, void>> closeConversation(
+    String conversationId, {
+    String closedBy,
+    String? closeReason,
+  }); // ✅ Updated
 }

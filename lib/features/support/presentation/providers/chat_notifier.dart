@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../domain/entities/chat_message_entity.dart';
+import '../../domain/entities/conversation_entity.dart'; // ✅ Thêm
+import '../../domain/usecases/close_conversation_usecase.dart'; // ✅ Thêm
 import '../../domain/usecases/get_or_create_conversation_usecase.dart';
 import '../../domain/usecases/load_initial_messages_usecase.dart';
 import '../../domain/usecases/load_more_messages_usecase.dart';
@@ -18,6 +20,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
   final StreamNewMessagesUseCase _streamNewMessagesUseCase;
   final SendTextMessageUseCase _sendTextMessageUseCase;
   final SendMediaMessageUseCase _sendMediaMessageUseCase;
+  final CloseConversationUseCase _closeConversationUseCase; // ✅ Thêm
 
   StreamSubscription<dynamic>? _messagesSubscription;
 
@@ -28,6 +31,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     this._streamNewMessagesUseCase,
     this._sendTextMessageUseCase,
     this._sendMediaMessageUseCase,
+    this._closeConversationUseCase, // ✅ Thêm
   ) : super(const ChatState());
 
   @override
@@ -243,7 +247,61 @@ class ChatNotifier extends StateNotifier<ChatState> {
       );
     }
   }
+
+  // ✅ Thêm method đóng conversation
+  Future<void> closeConversation({String? reason}) async {
+    if (state.conversation == null) return;
+
+    try {
+      AppLogger.d('Closing conversation: ${state.conversation!.id}');
+      
+      final result = await _closeConversationUseCase(
+        state.conversation!.id,
+        closeReason: reason ?? 'Đã giải quyết xong',
+      );
+
+      result.fold(
+        (failure) {
+          AppLogger.e('Failed to close conversation: ${failure.message}');
+          state = state.copyWith(errorMessage: failure.message);
+        },
+        (_) {
+          AppLogger.i('Successfully closed conversation');
+          
+          // Update conversation status locally
+          final updatedConversation = state.conversation!.copyWith(
+            status: ConversationStatus.closed,
+            updatedAt: DateTime.now(),
+            closedAt: DateTime.now(),
+            closedBy: 'user',
+            closeReason: reason ?? 'Đã giải quyết xong',
+          );
+          
+          state = state.copyWith(conversation: updatedConversation);
+          
+          // Cancel message subscription
+          _messagesSubscription?.cancel();
+        },
+      );
+    } catch (e) {
+      AppLogger.e('Error closing conversation', e);
+      state = state.copyWith(errorMessage: 'Không thể đóng cuộc hội thoại');
+    }
+  }
+
+  // ✅ Thêm method tạo conversation mới (reopen)
+  Future<void> startNewConversation(int userId, String userEmail, String? userName) async {
+    // Reset state
+    state = const ChatState();
+    
+    // Cancel old subscription
+    _messagesSubscription?.cancel();
+    
+    // Initialize new chat
+    await initializeChat(userId, userEmail, userName);
+  }
 }
+
 
 // Provider
 final chatNotifierProvider = StateNotifierProvider<ChatNotifier, ChatState>((ref) {
@@ -254,5 +312,6 @@ final chatNotifierProvider = StateNotifierProvider<ChatNotifier, ChatState>((ref
     ref.watch(streamNewMessagesUseCaseProvider),
     ref.watch(sendTextMessageUseCaseProvider),
     ref.watch(sendMediaMessageUseCaseProvider),
+    ref.watch(closeConversationUseCaseProvider), // ✅ Thêm
   );
 });

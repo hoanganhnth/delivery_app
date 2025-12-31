@@ -12,6 +12,9 @@ class ConversationModel {
   final Timestamp updatedAt;
   final Map<String, dynamic>? lastMessage;
   final int unreadCount;
+  final Timestamp? closedAt; // ✅ Thêm
+  final String? closedBy; // ✅ Thêm: 'user' hoặc 'support'
+  final String? closeReason; // ✅ Thêm
 
   ConversationModel({
     required this.id,
@@ -23,6 +26,9 @@ class ConversationModel {
     required this.updatedAt,
     this.lastMessage,
     this.unreadCount = 0,
+    this.closedAt, // ✅ Thêm
+    this.closedBy, // ✅ Thêm
+    this.closeReason, // ✅ Thêm
   });
 
   factory ConversationModel.fromFirestore(DocumentSnapshot doc) {
@@ -37,6 +43,9 @@ class ConversationModel {
       updatedAt: data['updatedAt'] ?? Timestamp.now(),
       lastMessage: data['lastMessage'],
       unreadCount: data['unreadCount'] ?? 0,
+      closedAt: data['closedAt'], // ✅ Thêm
+      closedBy: data['closedBy'], // ✅ Thêm
+      closeReason: data['closeReason'], // ✅ Thêm
     );
   }
 
@@ -50,6 +59,9 @@ class ConversationModel {
       'updatedAt': updatedAt,
       'lastMessage': lastMessage,
       'unreadCount': unreadCount,
+      'closedAt': closedAt, // ✅ Thêm
+      'closedBy': closedBy, // ✅ Thêm
+      'closeReason': closeReason, // ✅ Thêm
     };
   }
 
@@ -76,6 +88,9 @@ class ConversationModel {
             ).toEntity()
           : null,
       unreadCount: unreadCount,
+      closedAt: closedAt?.toDate(), // ✅ Thêm
+      closedBy: closedBy, // ✅ Thêm
+      closeReason: closeReason, // ✅ Thêm
     );
   }
 }

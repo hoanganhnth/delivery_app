@@ -154,9 +154,17 @@ class SupportRepositoryImpl implements SupportRepository {
   }
 
   @override
-  Future<Either<Failure, void>> closeConversation(String conversationId) async {
+  Future<Either<Failure, void>> closeConversation(
+    String conversationId, {
+    String closedBy = 'user',
+    String? closeReason,
+  }) async {
     try {
-      await remoteDataSource.closeConversation(conversationId);
+      await remoteDataSource.closeConversation(
+        conversationId,
+        closedBy: closedBy,
+        closeReason: closeReason,
+      );
       return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));
