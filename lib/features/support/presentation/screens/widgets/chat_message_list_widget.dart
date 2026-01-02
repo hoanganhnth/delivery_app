@@ -5,6 +5,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../domain/entities/chat_message_entity.dart';
 import '../../providers/chat_notifier.dart';
+import 'video_player_widget.dart';
 
 class ChatMessageListWidget extends ConsumerStatefulWidget {
   const ChatMessageListWidget({super.key});
@@ -251,38 +252,9 @@ class _ChatMessageListWidgetState extends ConsumerState<ChatMessageListWidget> {
 
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12.r),
-            child: Container(
-              width: 200.w,
-              height: 150.h,
-              color: Colors.black,
-              child:
-                  message.thumbnailUrl != null
-                      ? CachedNetworkImage(
-                        imageUrl: message.thumbnailUrl!,
-                        fit: BoxFit.cover,
-                      )
-                      : const Icon(
-                        Icons.videocam,
-                        color: Colors.white,
-                        size: 48,
-                      ),
-            ),
-          ),
-          Container(
-            width: 48.w,
-            height: 48.w,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.8),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(Icons.play_arrow, color: Colors.black87),
-          ),
-        ],
+      child: VideoPlayerWidget(
+        videoUrl: message.mediaUrl!,
+        thumbnailUrl: message.thumbnailUrl,
       ),
     );
   }

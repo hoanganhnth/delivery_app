@@ -8,8 +8,8 @@ class CloudinaryService {
   late final CloudinaryPublic _cloudinary;
   
   // TODO: Replace with your Cloudinary credentials
-  static const String _cloudName = 'YOUR_CLOUD_NAME';
-  static const String _uploadPreset = 'YOUR_UPLOAD_PRESET';
+  static const String _cloudName = 'djnfk8j8v';
+  static const String _uploadPreset = 'delivery';
   
   CloudinaryService() {
     _cloudinary = CloudinaryPublic(_cloudName, _uploadPreset);
