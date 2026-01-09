@@ -16,6 +16,9 @@ class AppSetup {
     if (!Hive.isAdapterRegistered(1)) {
       Hive.registerAdapter(UserModelAdapter());
     }
+
+    // Open boxes
+    await Hive.openBox('biometric_credentials');
   }
 
   /// Get all provider overrides needed for the app

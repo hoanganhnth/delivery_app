@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../../../core/usecases/usecase.dart';
+import '../../domain/entities/auth_entity.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/register_usecase.dart';
 import '../../domain/usecases/refresh_token_usecase.dart';
@@ -85,6 +86,48 @@ class AuthNotifier extends StateNotifier<AuthState> {
           clearFailure: true,
           refreshToken: user.refreshToken,
           accessToken: user.accessToken,
+        );
+      },
+    );
+  }
+
+  /// Login with saved tokens (for biometric authentication)
+  Future<void> loginWithTokens({
+    required String accessToken,
+    required String refreshToken,
+  }) async {
+    AppLogger.d('AuthNotifier: Logging in with saved tokens');
+    state = state.copyWith(isLoginLoading: true, clearFailure: true);
+
+    // Store tokens locally
+    final storeResult = await _storeTokensUseCase(
+      StoreTokensParams(
+        tokens: AuthEntity(
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        ),
+      ),
+    );
+
+    await storeResult.fold(
+      (failure) {
+        AppLogger.e(
+          'AuthNotifier: Failed to store tokens - ${failure.message}',
+        );
+        state = state.copyWith(
+          isLoginLoading: false,
+          isAuthenticated: false,
+          failure: failure,
+        );
+      },
+      (_) {
+        AppLogger.i('AuthNotifier: Logged in with tokens successfully');
+        state = state.copyWith(
+          isLoginLoading: false,
+          isAuthenticated: true,
+          clearFailure: true,
+          refreshToken: refreshToken,
+          accessToken: accessToken,
         );
       },
     );

@@ -38,3 +38,7 @@ class CacheFailure extends Failure {
 class LocationFailure extends Failure {
   const LocationFailure([super.message = "Location Error"]);
 }
+
+class BiometricFailure extends Failure {
+  const BiometricFailure([super.message = "Biometric Authentication Error"]);
+}

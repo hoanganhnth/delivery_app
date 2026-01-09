@@ -815,5 +815,6 @@ When generating commit messages, follow this pattern:
 - **ResponseHandler**: Always use for DioException mapping
 - **Private fields**: Always use `_` prefix in datasources
 - **Clean separation**: Remote datasources throw exceptions, repositories convert to Either
+- **Documentation:** DO NOT create `.md` files (README, SUMMARY, ARCHITECTURE, etc.) unless explicitly requested
 
 For any new feature, follow the clean architecture pattern, create domain/data/presentation layers, and always provide Riverpod providers split into separate files (state, notifier, providers, barrel export). Use DTOs for all API calls, and ensure fallback data is available for offline or error scenarios. Use `ref.listen` for navigation and global state changes. All integration and workflow steps should be automated and documented in this file for future agents.
