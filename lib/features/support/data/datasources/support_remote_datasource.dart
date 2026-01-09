@@ -7,19 +7,46 @@ import '../models/chat_message_model.dart';
 import '../models/conversation_model.dart';
 
 abstract class SupportRemoteDataSource {
-  Future<ConversationModel> getOrCreateConversation(int userId, String userEmail, String? userName);
+  Future<ConversationModel> getOrCreateConversation(
+    int userId,
+    String userEmail,
+    String? userName,
+  );
   Future<ConversationModel> getConversation(String conversationId);
   Stream<List<ChatMessageModel>> streamMessages(String conversationId);
-  
+
   // ✅ Pagination methods
-  Future<List<ChatMessageModel>> loadInitialMessages(String conversationId, {int limit});
-  Future<List<ChatMessageModel>> loadMoreMessages(String conversationId, DateTime beforeTimestamp, {int limit});
-  Stream<List<ChatMessageModel>> streamNewMessages(String conversationId, DateTime afterTimestamp);
-  
-  Future<ChatMessageModel> sendTextMessage(String conversationId, int userId, String content);
-  Future<ChatMessageModel> sendMediaMessage(String conversationId, int userId, String filePath, String type);
+  Future<List<ChatMessageModel>> loadInitialMessages(
+    String conversationId, {
+    int limit,
+  });
+  Future<List<ChatMessageModel>> loadMoreMessages(
+    String conversationId,
+    DateTime beforeTimestamp, {
+    int limit,
+  });
+  Stream<List<ChatMessageModel>> streamNewMessages(
+    String conversationId,
+    DateTime afterTimestamp,
+  );
+
+  Future<ChatMessageModel> sendTextMessage(
+    String conversationId,
+    int userId,
+    String content,
+  );
+  Future<ChatMessageModel> sendMediaMessage(
+    String conversationId,
+    int userId,
+    String filePath,
+    String type,
+  );
   Future<void> markMessagesAsRead(String conversationId);
-  Future<void> closeConversation(String conversationId, {String closedBy, String? closeReason}); // ✅ Updated
+  Future<void> closeConversation(
+    String conversationId, {
+    String closedBy,
+    String? closeReason,
+  }); // ✅ Updated
 }
 
 class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
@@ -30,8 +57,8 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
   SupportRemoteDataSourceImpl({
     FirebaseFirestore? firestore,
     CloudinaryService? cloudinaryService,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _cloudinaryService = cloudinaryService ?? CloudinaryService();
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _cloudinaryService = cloudinaryService ?? CloudinaryService();
 
   @override
   Future<ConversationModel> getOrCreateConversation(
@@ -43,13 +70,14 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
       AppLogger.d('Getting or creating conversation for user: $userId');
 
       // ✅ Tìm conversation ACTIVE của user
-      final querySnapshot = await _firestore
-          .collection('conversations')
-          .where('userId', isEqualTo: userId)
-          .where('status', isEqualTo: 'active')
-          .orderBy('updatedAt', descending: true) // ✅ Mới nhất trước
-          .limit(1)
-          .get();
+      final querySnapshot =
+          await _firestore
+              .collection('conversations')
+              .where('userId', isEqualTo: userId)
+              .where('status', isEqualTo: 'active')
+              .orderBy('updatedAt', descending: true) // ✅ Mới nhất trước
+              .limit(1)
+              .get();
 
       if (querySnapshot.docs.isNotEmpty) {
         AppLogger.i('Found existing ACTIVE conversation for user: $userId');
@@ -57,7 +85,9 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
       }
 
       // ✅ Không có conversation active → Tạo mới
-      AppLogger.i('No active conversation found, creating new one for user: $userId');
+      AppLogger.i(
+        'No active conversation found, creating new one for user: $userId',
+      );
       final conversationRef = _firestore.collection('conversations').doc();
       final now = Timestamp.now();
 
@@ -72,6 +102,7 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
         'closedAt': null, // ✅ Thêm
         'closedBy': null, // ✅ Thêm
         'closeReason': null, // ✅ Thêm
+        'isSupportChat': true,
       };
 
       await conversationRef.set(conversationData);
@@ -88,7 +119,11 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
   @override
   Future<ConversationModel> getConversation(String conversationId) async {
     try {
-      final doc = await _firestore.collection('conversations').doc(conversationId).get();
+      final doc =
+          await _firestore
+              .collection('conversations')
+              .doc(conversationId)
+              .get();
 
       if (!doc.exists) {
         throw Exception('Conversation not found');
@@ -110,8 +145,10 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
           .orderBy('timestamp', descending: false)
           .snapshots()
           .map((snapshot) {
-        return snapshot.docs.map((doc) => ChatMessageModel.fromFirestore(doc)).toList();
-      });
+            return snapshot.docs
+                .map((doc) => ChatMessageModel.fromFirestore(doc))
+                .toList();
+          });
     } catch (e, stackTrace) {
       AppLogger.e('Failed to stream messages', e, stackTrace);
       rethrow;
@@ -125,20 +162,24 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
     int limit = 50,
   }) async {
     try {
-      AppLogger.d('Loading initial $limit messages for conversation $conversationId');
+      AppLogger.d(
+        'Loading initial $limit messages for conversation $conversationId',
+      );
 
-      final querySnapshot = await _firestore
-          .collection('messages')
-          .where('conversationId', isEqualTo: conversationId)
-          .orderBy('timestamp', descending: true) // Mới nhất trước
-          .limit(limit)
-          .get();
+      final querySnapshot =
+          await _firestore
+              .collection('messages')
+              .where('conversationId', isEqualTo: conversationId)
+              .orderBy('timestamp', descending: true) // Mới nhất trước
+              .limit(limit)
+              .get();
 
-      final messages = querySnapshot.docs
-          .map((doc) => ChatMessageModel.fromFirestore(doc))
-          .toList()
-          .reversed // Đảo ngược: tin cũ ở trên, mới ở dưới
-          .toList();
+      final messages =
+          querySnapshot.docs
+              .map((doc) => ChatMessageModel.fromFirestore(doc))
+              .toList()
+              .reversed // Đảo ngược: tin cũ ở trên, mới ở dưới
+              .toList();
 
       AppLogger.i('Loaded ${messages.length} initial messages');
       return messages;
@@ -159,21 +200,28 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
     int limit = 50,
   }) async {
     try {
-      AppLogger.d('Loading more messages before ${beforeTimestamp.toIso8601String()}');
+      AppLogger.d(
+        'Loading more messages before ${beforeTimestamp.toIso8601String()}',
+      );
 
-      final querySnapshot = await _firestore
-          .collection('messages')
-          .where('conversationId', isEqualTo: conversationId)
-          .where('timestamp', isLessThan: Timestamp.fromDate(beforeTimestamp))
-          .orderBy('timestamp', descending: true)
-          .limit(limit)
-          .get();
+      final querySnapshot =
+          await _firestore
+              .collection('messages')
+              .where('conversationId', isEqualTo: conversationId)
+              .where(
+                'timestamp',
+                isLessThan: Timestamp.fromDate(beforeTimestamp),
+              )
+              .orderBy('timestamp', descending: true)
+              .limit(limit)
+              .get();
 
-      final messages = querySnapshot.docs
-          .map((doc) => ChatMessageModel.fromFirestore(doc))
-          .toList()
-          .reversed
-          .toList();
+      final messages =
+          querySnapshot.docs
+              .map((doc) => ChatMessageModel.fromFirestore(doc))
+              .toList()
+              .reversed
+              .toList();
 
       AppLogger.i('Loaded ${messages.length} more messages');
       return messages;
@@ -193,7 +241,9 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
     DateTime afterTimestamp,
   ) {
     try {
-      AppLogger.d('Streaming new messages after ${afterTimestamp.toIso8601String()}');
+      AppLogger.d(
+        'Streaming new messages after ${afterTimestamp.toIso8601String()}',
+      );
 
       return _firestore
           .collection('messages')
@@ -202,12 +252,12 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
           .orderBy('timestamp', descending: true)
           .snapshots()
           .map((snapshot) {
-        // Chỉ emit messages MỚI (added), không emit modified/removed
-        return snapshot.docChanges
-            .where((change) => change.type == DocumentChangeType.added)
-            .map((change) => ChatMessageModel.fromFirestore(change.doc))
-            .toList();
-      });
+            // Chỉ emit messages MỚI (added), không emit modified/removed
+            return snapshot.docChanges
+                .where((change) => change.type == DocumentChangeType.added)
+                .map((change) => ChatMessageModel.fromFirestore(change.doc))
+                .toList();
+          });
     } catch (e, stackTrace) {
       AppLogger.e('Error streaming new messages', e, stackTrace);
       rethrow;
@@ -269,10 +319,10 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
       // Upload file to Cloudinary
       final file = File(filePath);
       final publicId = '${conversationId}_${_uuid.v4()}';
-      
+
       String mediaUrl;
       String? thumbnailUrl;
-      
+
       if (type == 'image') {
         final response = await _cloudinaryService.uploadImage(
           file,
@@ -350,22 +400,22 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
       final batch = _firestore.batch();
 
       // Get all unread messages from support
-      final unreadMessages = await _firestore
-          .collection('messages')
-          .where('conversationId', isEqualTo: conversationId)
-          .where('sender', isEqualTo: 'support')
-          .where('isRead', isEqualTo: false)
-          .get();
+      final unreadMessages =
+          await _firestore
+              .collection('messages')
+              .where('conversationId', isEqualTo: conversationId)
+              .where('sender', isEqualTo: 'support')
+              .where('isRead', isEqualTo: false)
+              .get();
 
       for (final doc in unreadMessages.docs) {
         batch.update(doc.reference, {'isRead': true});
       }
 
       // Reset unread count
-      batch.update(
-        _firestore.collection('conversations').doc(conversationId),
-        {'unreadCount': 0},
-      );
+      batch.update(_firestore.collection('conversations').doc(conversationId), {
+        'unreadCount': 0,
+      });
 
       await batch.commit();
       AppLogger.i('Marked messages as read for conversation: $conversationId');
