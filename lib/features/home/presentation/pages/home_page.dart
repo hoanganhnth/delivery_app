@@ -1,4 +1,5 @@
 import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_home_page.dart';
+import 'package:delivery_app/features/livestream/presentation/widgets/livestream_home_section.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -137,6 +138,9 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
             
             SizedBox(height: 24.w),
+            
+            // Featured livestreams section
+            const LivestreamHomeSection(),
             
             // Featured restaurants section
           

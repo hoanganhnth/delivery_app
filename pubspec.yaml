@@ -53,6 +53,8 @@ dependencies:
     sdk: flutter
   video_player: ^2.10.1
   chewie: ^1.13.0
+  agora_rtc_engine: ^6.5.3
+  permission_handler: ^11.3.1
 
 
 dev_dependencies:

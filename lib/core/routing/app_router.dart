@@ -14,6 +14,8 @@ import '../../features/settings/presentation/screens/theme_settings_screen.dart'
 import '../../features/orders/orders.dart';
 import '../../features/restaurants/restaurants.dart';
 import '../../features/cart/cart.dart';
+import '../../features/livestream/presentation/screens/all_livestreams_screen.dart';
+import '../../features/livestream/presentation/screens/livestream_detail_screen.dart';
 import '../../features/user_address/presentation/screens/address_list_screen.dart';
 import '../../features/user_address/presentation/screens/add_edit_address_screen.dart';
 import '../../features/user_address/domain/entities/user_address_entity.dart';
@@ -236,6 +238,22 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'order-confirmation',
         redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const OrderConfirmationScreen(),
+      ),
+
+      // Livestream routes
+      GoRoute(
+        path: '/livestreams',
+        name: 'livestreams',
+        builder: (context, state) => const AllLivestreamsScreen(),
+      ),
+
+      GoRoute(
+        path: '/livestream-detail/:id',
+        name: 'livestream-detail',
+        builder: (context, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return LivestreamDetailScreen(livestreamId: id);
+        },
       ),
 
       // Address management routes (with auth guard)
