@@ -25,22 +25,20 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
   @override
   void initState() {
     super.initState();
-    // Load order detail when screen loads
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(orderDetailProvider.notifier).getOrderById(widget.orderId);
-    });
+    // AsyncNotifier will auto-load when called with orderId parameter
+    // No need to manually call getOrderById
   }
 
   @override
   void dispose() {
-    // ref.invalidate(orderDetailProvider);
-    // ref.read(shipperLocationNotifierProvider.notifier).stopTracking();
+    // ref.invalidate(orderDetailProvider(widget.orderId));
+    // ref.read(shipperLocationProvider.notifier).stopTracking();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final orderDetailState = ref.watch(orderDetailProvider);
+    final orderDetailState = ref.watch(orderDetailProvider(widget.orderId));
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -56,59 +54,34 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
     );
   }
 
-  Widget _buildBody(OrderDetailState orderDetailState, ThemeData theme) {
-    if (orderDetailState.isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (orderDetailState.errorMessage != null) {
-      return OrderErrorWidget(
-        message: orderDetailState.errorMessage!,
-        onRetry: () =>
-            ref.read(orderDetailProvider.notifier).getOrderById(widget.orderId),
-      );
-    }
-
-    if (orderDetailState.order == null) {
-      return const OrderNotFoundWidget();
-    }
-
-    final order = orderDetailState.order!;
-
-    return RefreshIndicator(
-      onRefresh: () async {
-        ref.read(orderDetailProvider.notifier).getOrderById(widget.orderId);
-      },
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.all(16.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            OrderStatusCard(order: order),
-            SizedBox(height: 16.w),
-
-            // Delivery tracking section for orders being delivered
-            if (order.status == OrderStatus.delivering)
-              OrderDeliveryTrackingCard(order: order),
-
-            OrderCustomerInfoCard(order: order),
-            SizedBox(height: 16.w),
-            OrderItemsCard(order: order),
-            SizedBox(height: 16.w),
-            OrderPaymentCard(order: order),
-            SizedBox(height: 16.w),
-            OrderActionButtons(
-              order: order,
-              onOrderCanceled: () {
-                // Refresh the order after cancellation
-                ref
-                    .read(orderDetailProvider.notifier)
-                    .getOrderById(widget.orderId);
-              },
-            ),
-          ],
+  Widget _buildBody(AsyncValue<OrderEntity?> orderDetailState, ThemeData theme) {
+    return orderDetailState.when(
+      data: (order) => order == null ? const OrderNotFoundWidget() : RefreshIndicator(
+        onRefresh: () async { ref.invalidate(orderDetailProvider(widget.orderId)); },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.all(16.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              OrderStatusCard(order: order),
+              SizedBox(height: 16.w),
+              if (order.status == OrderStatus.delivering) OrderDeliveryTrackingCard(order: order),
+              OrderCustomerInfoCard(order: order),
+              SizedBox(height: 16.w),
+              OrderItemsCard(order: order),
+              SizedBox(height: 16.w),
+              OrderPaymentCard(order: order),
+              SizedBox(height: 16.w),
+              OrderActionButtons(order: order, onOrderCanceled: () => ref.invalidate(orderDetailProvider(widget.orderId))),
+            ],
+          ),
         ),
+      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => OrderErrorWidget(
+        message: error.toString(),
+        onRetry: () => ref.invalidate(orderDetailProvider(widget.orderId)),
       ),
     );
   }

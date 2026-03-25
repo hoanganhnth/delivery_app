@@ -11,7 +11,7 @@ import '../../domain/entities/shipper_entity.dart';
 import '../../domain/entities/shipper_location_entity.dart';
 import '../services/fake_shipper_movement_service.dart';
 import '../services/mapbox_map_service.dart';
-import '../providers/shipper_location/shipper_location_providers.dart';
+import '../providers/providers.dart';
 
 /// Widget tối ưu để hiển thị bản đồ theo dõi delivery với MapBox
 /// Sử dụng shipperLocationProvider thay vì fake movement
@@ -72,7 +72,7 @@ class _OptimizedDeliveryTrackingMapWidgetState
   void dispose() {
     _movementService?.dispose();
     _mapService.dispose();
-    // ref.read(shipperLocationNotifierProvider.notifier).dispose();
+    // ref.read(shipperLocationProvider.notifier).dispose();
     super.dispose();
   }
 
@@ -80,7 +80,7 @@ class _OptimizedDeliveryTrackingMapWidgetState
   Widget build(BuildContext context) {
     // Watch shipper location từ provider nếu không dùng fake movement
     ShipperLocationEntity? currentShipperLocation;
-    final shipperLocationState = ref.watch(shipperLocationNotifierProvider);
+    final shipperLocationState = ref.watch(shipperLocationProvider);
     if (!widget.useFakeMovement) {
       if (shipperLocationState.currentLocation != null) {
         currentShipperLocation = shipperLocationState.currentLocation;

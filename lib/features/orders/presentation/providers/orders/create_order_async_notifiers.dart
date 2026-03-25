@@ -1,60 +1,64 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../domain/entities/order_entity.dart';
 import '../../../data/dtos/create_order_request_dto.dart';
 import 'order_providers.dart';
+import 'orders_list_notifier.dart';
+
+part 'create_order_async_notifiers.g.dart';
 
 /// AsyncNotifier cho việc tạo đơn hàng
-class CreateOrderNotifier extends AutoDisposeAsyncNotifier<OrderEntity?> {
+@riverpod
+class CreateOrder extends _$CreateOrder {
   @override
-  Future<OrderEntity?> build() async {
+  FutureOr<OrderEntity?> build() async {
     // Initial state - không có order nào được tạo
     return null;
   }
 
   /// Tạo đơn hàng mới với CreateOrderRequestDto
   Future<OrderEntity?> createOrder(CreateOrderRequestDto request) async {
-    state = const AsyncValue.loading();
+    state = const AsyncLoading();
 
     try {
-      // Get usecase from provider - use read for one-time access in methods
       final createOrderUseCase = ref.read(createOrderUseCaseProvider);
       final result = await createOrderUseCase(request);
 
       return result.fold(
         (failure) {
-          state = AsyncValue.error(failure.message, StackTrace.current);
+          state = AsyncError(Exception(failure.message), StackTrace.current);
           return null;
         },
         (createdOrder) {
-          state = AsyncValue.data(createdOrder);
+          state = AsyncData(createdOrder);
           // Refresh orders list after successful creation
           ref.invalidate(ordersListProvider);
           return createdOrder;
         },
       );
     } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
+      state = AsyncError(error, stackTrace);
       return null;
     }
   }
 
   /// Reset state
   void reset() {
-    state = const AsyncValue.data(null);
+    state = const AsyncData(null);
   }
 }
 
 /// AsyncNotifier cho việc hủy đơn hàng
-class CancelOrderNotifier extends AutoDisposeAsyncNotifier<bool?> {
+@riverpod
+class CancelOrder extends _$CancelOrder {
   @override
-  Future<bool?> build() async {
+  FutureOr<bool?> build() async {
     // Initial state
     return null;
   }
 
   /// Hủy đơn hàng
   Future<bool> cancelOrder(int orderId) async {
-    state = const AsyncValue.loading();
+    state = const AsyncLoading();
 
     try {
       final cancelOrderUseCase = ref.read(cancelOrderUseCaseProvider);
@@ -62,11 +66,11 @@ class CancelOrderNotifier extends AutoDisposeAsyncNotifier<bool?> {
 
       return result.fold(
         (failure) {
-          state = AsyncValue.error(failure.message, StackTrace.current);
+          state = AsyncError(Exception(failure.message), StackTrace.current);
           return false;
         },
         (success) {
-          state = AsyncValue.data(success);
+          state = AsyncData(success);
           if (success) {
             // Refresh orders list after successful cancellation
             ref.invalidate(ordersListProvider);
@@ -75,13 +79,13 @@ class CancelOrderNotifier extends AutoDisposeAsyncNotifier<bool?> {
         },
       );
     } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
+      state = AsyncError(error, stackTrace);
       return false;
     }
   }
 
   /// Reset state
   void reset() {
-    state = const AsyncValue.data(null);
+    state = const AsyncData(null);
   }
 }

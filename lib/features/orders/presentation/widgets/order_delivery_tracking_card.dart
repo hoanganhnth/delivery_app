@@ -26,7 +26,7 @@ class _OrderDeliveryTrackingCardState
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (widget.order.id != null) {
         await ref
-            .read(deliveryTrackingNotifierProvider.notifier)
+            .read(deliveryTrackingProvider.notifier)
             .startTrackingOrderSafe(
               widget.order.id!,
               trackingRealtime: widget.order.canTrackingRealtime,
@@ -43,11 +43,11 @@ class _OrderDeliveryTrackingCardState
 
   @override
   Widget build(BuildContext context) {
-    final trackingState = ref.watch(deliveryTrackingNotifierProvider);
-    final isConnected = ref.watch(trackingConnectionProvider);
+    final trackingState = ref.watch(deliveryTrackingProvider);
+    final connectionAsync = ref.watch(trackingConnectionProvider);
 
     // ✅ Listen to delivery tracking changes to auto-start shipper tracking
-    ref.listen<DeliveryTrackingState>(deliveryTrackingNotifierProvider, (
+    ref.listen<DeliveryTrackingState>(deliveryTrackingProvider, (
       prev,
       next,
     ) {
@@ -57,7 +57,7 @@ class _OrderDeliveryTrackingCardState
         final shipperId = next.currentTracking!.shipperId;
         if (shipperId != null) {
           ref
-              .read(shipperLocationNotifierProvider.notifier)
+              .read(shipperLocationProvider.notifier)
               .startTrackingShipper(shipperId);
         }
       }
@@ -95,7 +95,11 @@ class _OrderDeliveryTrackingCardState
                     ),
                     const Spacer(),
                     _buildConnectionStatus(
-                      isConnected,
+                      connectionAsync.when(
+                        data: (connected) => connected,
+                        loading: () => false,
+                        error: (_, __) => false,
+                      ),
                       trackingState.isLoading,
                     ),
                   ],
@@ -120,7 +124,7 @@ class _OrderDeliveryTrackingCardState
 
         SizedBox(height: 16.w),
 
-        // Map widget với dữ liệu thật từ deliveryTrackingNotifierProvider
+        // Map widget với dữ liệu thật từ deliveryTrackingProvider
         _buildRealMapWidget(),
 
         SizedBox(height: 16.w),
@@ -184,7 +188,7 @@ class _OrderDeliveryTrackingCardState
           ),
           IconButton(
             onPressed: () {
-              ref.read(deliveryTrackingNotifierProvider.notifier).clearError();
+              ref.read(deliveryTrackingProvider.notifier).clearError();
             },
             icon: Icon(Icons.close, color: Colors.red.shade600, size: 20),
           ),
@@ -193,9 +197,9 @@ class _OrderDeliveryTrackingCardState
     );
   }
 
-  /// Build map widget với dữ liệu thật từ deliveryTrackingNotifierProvider
+  /// Build map widget với dữ liệu thật từ deliveryTrackingProvider
   Widget _buildRealMapWidget() {
-    final trackingState = ref.read(deliveryTrackingNotifierProvider);
+    final trackingState = ref.read(deliveryTrackingProvider);
 
     // Kiểm tra có dữ liệu tracking không
     if (trackingState.currentTracking == null) {
@@ -248,7 +252,7 @@ class _OrderDeliveryTrackingCardState
                 onPressed: () {
                   // Refresh để thử lấy lại dữ liệu tracking
                   ref
-                      .read(deliveryTrackingNotifierProvider.notifier)
+                      .read(deliveryTrackingProvider.notifier)
                       .startTrackingOrderSafe(
                         widget.order.id!,
                         trackingRealtime: widget.order.canTrackingRealtime,

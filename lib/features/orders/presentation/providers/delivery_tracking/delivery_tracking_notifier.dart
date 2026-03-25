@@ -1,35 +1,22 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:delivery_app/core/logger/app_logger.dart';
 import 'package:delivery_app/core/usecases/usecase.dart';
 import '../../../domain/usecases/tracking_usecases.dart';
-import '../../../domain/usecases/get_shipper_usecase.dart';
 import '../../../domain/usecases/get_current_delivery_usecase.dart';
+import 'delivery_tracking_providers.dart';
+import '../shipper_providers.dart';
 
 import 'delivery_tracking_state.dart';
 
-/// Notifier để quản lý delivery tracking
-class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
-  // final ConnectDeliveryTrackingUseCase _connectUseCase;
-  final TrackDeliveryUseCase _startTrackingUseCase;
-  final StopDeliveryTrackingUseCase _stopTrackingUseCase;
-  final RefreshDeliveryTrackingUseCase _refreshUseCase;
-  final GetShipperByIdUseCase _getShipperUseCase;
-  final GetCurrentDeliveryUseCase _getCurrentDeliveryUseCase;
+part 'delivery_tracking_notifier.g.dart';
 
-  DeliveryTrackingNotifier({
-    required ConnectDeliveryTrackingUseCase connectUseCase,
-    required TrackDeliveryUseCase startTrackingUseCase,
-    required StopDeliveryTrackingUseCase stopTrackingUseCase,
-    required RefreshDeliveryTrackingUseCase refreshUseCase,
-    required GetShipperByIdUseCase getShipperUseCase,
-    required GetCurrentDeliveryUseCase getCurrentDeliveryUseCase,
-  }) : //  _connectUseCase = connectUseCase,
-       _startTrackingUseCase = startTrackingUseCase,
-       _stopTrackingUseCase = stopTrackingUseCase,
-       _refreshUseCase = refreshUseCase,
-       _getShipperUseCase = getShipperUseCase,
-       _getCurrentDeliveryUseCase = getCurrentDeliveryUseCase,
-       super(const DeliveryTrackingState());
+/// Notifier để quản lý delivery tracking
+@riverpod
+class DeliveryTracking extends _$DeliveryTracking {
+  @override
+  DeliveryTrackingState build() {
+    return const DeliveryTrackingState();
+  }
 
   // /// Kết nối đến service thông qua UseCase
   // Future<void> connect() async {
@@ -82,17 +69,10 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
     try {
       AppLogger.i('Starting tracking for order $orderId');
 
-      // if (!state.isConnected) {
-      //   await connect();
-      // }
-
-      // if (!state.isConnected) {
-      //   throw Exception('Chưa kết nối được dịch vụ theo dõi');
-      // }
-
       state = state.copyWith(isTracking: true, clearError: true);
 
-      final result = await _startTrackingUseCase(
+      final startTrackingUseCase = ref.read(trackDeliveryUseCaseProvider);
+      final result = await startTrackingUseCase(
         TrackDeliveryParams(orderId: orderId),
       );
 
@@ -149,7 +129,8 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
     try {
       AppLogger.i('Stopping delivery tracking');
 
-      final result = await _stopTrackingUseCase(NoParams());
+      final stopTrackingUseCase = ref.read(stopDeliveryTrackingUseCaseProvider);
+      final result = await stopTrackingUseCase(NoParams());
 
       result.fold(
         (failure) {
@@ -175,7 +156,8 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
       AppLogger.i('Refreshing delivery tracking connection');
       state = state.copyWith(isLoading: true, clearError: true);
 
-      final result = await _refreshUseCase(NoParams());
+      final refreshUseCase = ref.read(refreshDeliveryTrackingUseCaseProvider);
+      final result = await refreshUseCase(NoParams());
 
       result.fold(
         (failure) {
@@ -211,7 +193,8 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
         currentShipperId: shipperId,
       );
 
-      final result = await _getShipperUseCase.call(shipperId);
+      final getShipperUseCase = ref.read(getShipperByIdUseCaseProvider);
+      final result = await getShipperUseCase(shipperId);
 
       result.fold(
         (failure) {
@@ -250,7 +233,8 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
 
       state = state.copyWith(isLoading: true, clearError: true);
 
-      final result = await _getCurrentDeliveryUseCase.call(
+      final getCurrentDeliveryUseCase = ref.read(getCurrentDeliveryUseCaseProvider);
+      final result = await getCurrentDeliveryUseCase.call(
         GetCurrentDeliveryParams(orderId: orderId),
       );
 
@@ -288,15 +272,5 @@ class DeliveryTrackingNotifier extends StateNotifier<DeliveryTrackingState> {
   dynamic getMockShipper() {
     AppLogger.w('getMockShipper called - should use _fetchShipperInfoIfNeeded');
     return null;
-  }
-
-  @override
-  void dispose() {
-    AppLogger.i('Disposing delivery tracking notifier');
-    _stopTrackingUseCase(NoParams());
-    // Clean Architecture: Notifier only calls UseCases
-    // Connection management is handled by UseCase layer
-
-    super.dispose();
   }
 }

@@ -5,13 +5,8 @@ import '../../../data/datasources/order_api_service.dart';
 import '../../../data/datasources/order_remote_datasource.dart';
 import '../../../data/datasources/order_remote_datasource_impl.dart';
 import '../../../data/repositories/order_repository_impl.dart';
-import '../../../domain/entities/order_entity.dart';
 import '../../../domain/repositories/order_repository.dart';
 import '../../../domain/usecases/orders_usecases.dart';
-import 'create_order_async_notifiers.dart';
-import 'order_detail_notifier.dart';
-import 'order_states.dart';
-import 'orders_list_notifier.dart';
 
 // Data Source Providers
 final orderApiServiceProvider = Provider<OrderApiService>((ref) {
@@ -57,41 +52,4 @@ final cancelOrderUseCaseProvider = Provider<CancelOrderUseCase>((ref) {
   return CancelOrderUseCase(repository);
 });
 
-// State Providers
-final ordersListProvider = StateNotifierProvider<OrdersListNotifier, OrdersListState>((ref) {
-  final getUserOrdersUseCase = ref.watch(getUserOrdersUseCaseProvider);
-  return OrdersListNotifier(getUserOrdersUseCase);
-});
-
-final orderDetailProvider = StateNotifierProvider.autoDispose<OrderDetailNotifier, OrderDetailState>((ref) {
-  final getOrderByIdUseCase = ref.watch(getOrderByIdUseCaseProvider);
-  return OrderDetailNotifier(getOrderByIdUseCase);
-});
-
-// Async Providers for Actions
-final createOrderProvider = AsyncNotifierProvider.autoDispose<CreateOrderNotifier, OrderEntity?>(
-  () => CreateOrderNotifier(),
-);
-
-final cancelOrderProvider = AsyncNotifierProvider.autoDispose<CancelOrderNotifier, bool?>(
-  () => CancelOrderNotifier(),
-);
-
-// Convenience providers for specific order details
-final orderByIdProvider = Provider.family<AsyncValue<OrderEntity>, int>((ref, orderId) {
-  // This will trigger the orderDetailProvider to fetch the order
-  final detailNotifier = ref.read(orderDetailProvider.notifier);
-  detailNotifier.getOrderById(orderId);
-  
-  final detailState = ref.watch(orderDetailProvider);
-  
-  if (detailState.isLoading) {
-    return const AsyncValue.loading();
-  } else if (detailState.errorMessage != null) {
-    return AsyncValue.error(detailState.errorMessage!, StackTrace.current);
-  } else if (detailState.order != null) {
-    return AsyncValue.data(detailState.order!);
-  } else {
-    return const AsyncValue.loading();
-  }
-});
+// Since CreateOrder and CancelOrder are now generated, we can remove the explicit ones

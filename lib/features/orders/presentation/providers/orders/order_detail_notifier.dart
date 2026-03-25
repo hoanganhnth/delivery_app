@@ -1,47 +1,41 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../domain/usecases/orders_usecases.dart';
-import 'order_states.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../../domain/entities/order_entity.dart';
+import 'order_providers.dart';
+
+part 'order_detail_notifier.g.dart';
 
 /// Notifier cho chi tiết order
-class OrderDetailNotifier extends StateNotifier<OrderDetailState> {
-  final GetOrderByIdUseCase _getOrderByIdUseCase;
+@riverpod
+class OrderDetail extends _$OrderDetail {
+  @override
+  FutureOr<OrderEntity?> build(num orderId) async {
+    final getOrderByIdUseCase = ref.watch(getOrderByIdUseCaseProvider);
+    final result = await getOrderByIdUseCase(orderId);
+    
+    return result.fold(
+      (failure) => throw Exception(failure.message),
+      (order) => order,
+    );
+  }
 
-  OrderDetailNotifier(this._getOrderByIdUseCase)
-    : super(const OrderDetailState());
-
-  /// Lấy chi tiết đơn hàng theo ID
-  Future<void> getOrderById(num orderId) async {
-    state = state.copyWith(isLoading: true, errorMessage: null);
-
+  /// Làm mới đơn hàng
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+    final getOrderByIdUseCase = ref.read(getOrderByIdUseCaseProvider);
+    
     try {
-      final result = await _getOrderByIdUseCase(orderId);
-
+      final result = await getOrderByIdUseCase(orderId);
       result.fold(
-        (failure) => state = state.copyWith(
-          isLoading: false,
-          errorMessage: failure.message,
-        ),
-        (order) => state = state.copyWith(
-          isLoading: false,
-          order: order,
-          errorMessage: null,
-        ),
+        (failure) => state = AsyncError(Exception(failure.message), StackTrace.current),
+        (order) => state = AsyncData(order),
       );
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: 'An unexpected error occurred: $e',
-      );
+    } catch (e, st) {
+      state = AsyncError(e, st);
     }
   }
 
   /// Clear order detail
   void clearOrder() {
-    state = const OrderDetailState();
-  }
-
-  /// Clear error message
-  void clearError() {
-    state = state.copyWith(errorMessage: null);
+    state = const AsyncData(null);
   }
 }

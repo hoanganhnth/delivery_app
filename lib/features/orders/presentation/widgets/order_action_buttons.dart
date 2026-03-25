@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/order_entity.dart';
-import '../providers/orders/order_providers.dart';
+import '../providers/providers.dart';
 
 /// Widget hiển thị các nút hành động cho đơn hàng
 class OrderActionButtons extends ConsumerWidget {

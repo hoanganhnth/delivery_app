@@ -7,8 +7,6 @@ import 'package:delivery_app/features/orders/data/repositories/shipper_location_
 import 'package:delivery_app/features/orders/domain/repositories/shipper_location_repository.dart';
 import 'package:delivery_app/features/orders/domain/entities/shipper_location_entity.dart';
 import 'package:delivery_app/features/orders/domain/usecases/tracking_usecases.dart';
-import 'shipper_location_notifier.dart';
-import 'shipper_location_state.dart';
 
 /// Socket Client Provider - Di chuyển từ core về feature
 final shipperLocationSocketClientProvider = Provider<SocketClient>((ref) {
@@ -57,32 +55,9 @@ final trackShipperLocationUseCaseProvider = Provider<TrackShipperLocationUseCase
   return TrackShipperLocationUseCase(repository);
 });
 
-/// Shipper Location Notifier Provider
-/// Không sử dụng autoDispose để tránh bị dispose khi navigation
-final shipperLocationNotifierProvider = StateNotifierProvider.autoDispose<ShipperLocationNotifier, ShipperLocationState>((ref) {
-  // final startTrackingUseCase = ref.watch(startShipperTrackingUseCaseProvider);
-  final stopTrackingUseCase = ref.watch(stopShipperTrackingUseCaseProvider);
-  final trackShipperUseCase = ref.watch(trackShipperLocationUseCaseProvider);
-  
-  final notifier = ShipperLocationNotifier(
-    // startTrackingUseCase: startTrackingUseCase,
-    stopTrackingUseCase: stopTrackingUseCase,
-    trackShipperUseCase: trackShipperUseCase,
-  );
-  
-  // Cleanup when provider is disposed
-  ref.onDispose(() {
-    notifier.dispose();
-  });
-  
-  return notifier;
+// Since ShipperLocation is generated, replace StateNotifierProvider pattern
+
+// We can just keep a dummy one so we don't break UI components while migrating
+final isShipperLocationConnectedProvider = Provider<bool>((ref) {
+  return false; 
 });
-
-/// Convenience providers for easy access in UI
-// final currentShipperLocationProvider = Provider<ShipperLocationState>((ref) {
-//   return ref.watch(shipperLocationNotifierProvider);
-// });
-
-// final isTrackingShipperProvider = Provider<bool>((ref) {
-//   return ref.watch(shipperLocationNotifierProvider.select((state) => state.isTracking));
-// });

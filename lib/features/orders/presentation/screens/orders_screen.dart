@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/order_entity.dart';
 import '../providers/providers.dart';
 import '../widgets/orders_tab_bar.dart';
-import '../widgets/orders_list.dart';
+import '../widgets/orders_list.dart' as orders_widget;
 import '../widgets/orders_empty_state.dart';
 import '../widgets/orders_error_state.dart';
 import '../widgets/cancel_order_dialog.dart';
@@ -70,12 +70,11 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
   }
 
   Future<void> _refreshOrders() async {
-    await ref.read(ordersListProvider.notifier).getUserOrders();
+    ref.invalidate(ordersListProvider);
   }
 
   void _retryLoadOrders() {
-    ref.read(ordersListProvider.notifier).clearError();
-    ref.read(ordersListProvider.notifier).getUserOrders();
+    ref.invalidate(ordersListProvider);
   }
 
   void _navigateToOrderDetail(int orderId) {
@@ -135,37 +134,33 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
     );
   }
 
-  Widget _buildBody(OrdersListState ordersState) {
-    // Loading state when no orders yet
-    if (ordersState.isLoading && ordersState.orders.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    // Error state
-    if (ordersState.errorMessage != null) {
-      return OrdersErrorState(
-        errorMessage: ordersState.errorMessage!,
+  Widget _buildBody(AsyncValue<List<OrderEntity>> ordersState) {
+    return ordersState.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => OrdersErrorState(
+        errorMessage: error.toString(),
         onRetry: _retryLoadOrders,
-      );
-    }
+      ),
+      data: (orders) {
+        // Get filtered orders
+        final filteredOrders = _getFilteredOrders(orders);
 
-    // Get filtered orders
-    final filteredOrders = _getFilteredOrders(ordersState.orders);
+        // Empty state
+        if (filteredOrders.isEmpty) {
+          return OrdersEmptyState(
+            onGoToRestaurants: _navigateToRestaurants,
+          );
+        }
 
-    // Empty state
-    if (filteredOrders.isEmpty) {
-      return OrdersEmptyState(
-        onGoToRestaurants: _navigateToRestaurants,
-      );
-    }
-
-    // Orders list
-    return OrdersList(
-      orders: filteredOrders,
-      isLoading: ordersState.isLoading,
-      scrollController: _scrollController,
-      onOrderTap: _navigateToOrderDetail,
-      onOrderCancel: _showCancelOrderDialog,
+        // Orders list
+        return orders_widget.OrdersList(
+          orders: filteredOrders,
+          isLoading: false,
+          scrollController: _scrollController,
+          onOrderTap: _navigateToOrderDetail,
+          onOrderCancel: _showCancelOrderDialog,
+        );
+      },
     );
   }
 }

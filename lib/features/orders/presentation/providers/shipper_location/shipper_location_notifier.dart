@@ -1,34 +1,38 @@
 import 'dart:async';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:delivery_app/core/logger/app_logger.dart';
 import 'package:delivery_app/core/usecases/usecase.dart';
 import '../../../domain/usecases/tracking_usecases.dart';
 import '../../../domain/entities/shipper_location_entity.dart';
+import 'shipper_location_providers.dart';
 import 'shipper_location_state.dart';
 
-/// Notifier để quản lý shipper location tracking
-class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
-  // final StartShipperTrackingUseCase _startTrackingUseCase;
-  final StopShipperTrackingUseCase _stopTrackingUseCase;
-  final TrackShipperLocationUseCase _trackShipperUseCase;
+part 'shipper_location_notifier.g.dart';
 
+/// Notifier để quản lý shipper location tracking
+@riverpod
+class ShipperLocation extends _$ShipperLocation {
   StreamSubscription<ShipperLocationEntity>? _locationSubscription;
 
-  ShipperLocationNotifier({
-    // required StartShipperTrackingUseCase startTrackingUseCase,
-    required StopShipperTrackingUseCase stopTrackingUseCase,
-    required TrackShipperLocationUseCase trackShipperUseCase,
-  }) : _stopTrackingUseCase = stopTrackingUseCase,
-       _trackShipperUseCase = trackShipperUseCase,
-       super(const ShipperLocationState()) {
+  @override
+  ShipperLocationState build() {
     AppLogger.i('ShipperLocationNotifier created');
+    
+    ref.onDispose(() {
+      AppLogger.i('Disposing shipper location notifier');
+      if (state.isTracking) {
+        stopTracking();
+      }
+      _locationSubscription?.cancel();
+      _locationSubscription = null;
+    });
+    
+    return const ShipperLocationState();
   }
 
   /// Bắt đầu theo dõi shipper location thông qua UseCase
   Future<void> startTrackingShipper(int shipperId) async {
     try {
-      // AppLogger.i('Starting shipper location tracking: $shipperId');
-
       // Stop previous tracking if any
       await stopTracking();
 
@@ -39,27 +43,8 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
         clearLocation: true,
       );
 
-      // Start tracking through UseCase
-      // final startResult = await _startTrackingUseCase(
-      //   StartShipperTrackingParams(shipperId: shipperId),
-      // );
-
-      // startResult.fold(
-      //   (failure) {
-      //     state = state.copyWith(
-      //       isLoading: false,
-      //       isTracking: false,
-      //       error: failure.message,
-      //     );
-      //     return;
-      //   },
-      //   (_) {
-      //     // Successfully started, now get the stream
-      //   },
-      // );
-
-      // Get location stream through UseCase
-      final streamResult = await _trackShipperUseCase(
+      final trackShipperUseCase = ref.read(trackShipperLocationUseCaseProvider);
+      final streamResult = await trackShipperUseCase(
         TrackShipperParams(shipperId: shipperId),
       );
 
@@ -81,7 +66,6 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
           // Listen to location updates
           _locationSubscription = locationStream.listen(
             (location) {
-              // AppLogger.d('Received shipper location: ${location.shipperId}');
               state = state.copyWith(
                 currentLocation: location,
                 clearError: true,
@@ -119,12 +103,11 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
       await _locationSubscription?.cancel();
       _locationSubscription = null;
 
-      // Stop tracking through UseCase
-      final result = await _stopTrackingUseCase(NoParams());
+      final stopTrackingUseCase = ref.read(stopShipperTrackingUseCaseProvider);
+      final result = await stopTrackingUseCase(NoParams());
 
       result.fold(
         (failure) {
-          // AppLogger.e('Failed to stop tracking via UseCase: ${failure.message}');
           state = state.copyWith(error: failure.message);
         },
         (_) {
@@ -135,7 +118,6 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
             clearLocation: true,
             clearError: true,
           );
-          // AppLogger.i('Stopped shipper location tracking successfully');
         },
       );
     } catch (e) {
@@ -171,21 +153,5 @@ class ShipperLocationNotifier extends StateNotifier<ShipperLocationState> {
         error: 'Không thể làm mới tracking shipper',
       );
     }
-  }
-
-  @override
-  void dispose() {
-    AppLogger.i('Disposing shipper location notifier');
-    
-    // Stop tracking gracefully
-    if (state.isTracking) {
-      stopTracking();
-    }
-    
-    // Cancel subscriptions
-    _locationSubscription?.cancel();
-    _locationSubscription = null;
-
-    super.dispose();
   }
 }

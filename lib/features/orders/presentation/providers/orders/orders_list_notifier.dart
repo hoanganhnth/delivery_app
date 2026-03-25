@@ -1,30 +1,33 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../domain/entities/order_entity.dart';
-import '../../../domain/usecases/orders_usecases.dart';
-import 'order_states.dart';
+import 'order_providers.dart'; // To get usecases if needed, or get through ref.read
+
+part 'orders_list_notifier.g.dart';
 
 /// Notifier cho danh sách orders
-class OrdersListNotifier extends StateNotifier<OrdersListState> {
-  final GetUserOrdersUseCase _getUserOrdersUseCase;
-
-  OrdersListNotifier(this._getUserOrdersUseCase) : super(const OrdersListState());
+@riverpod
+class OrdersList extends _$OrdersList {
+  @override
+  FutureOr<List<OrderEntity>> build() async {
+    // Return the initial list of orders
+    final getUserOrdersUseCase = ref.watch(getUserOrdersUseCaseProvider);
+    final result = await getUserOrdersUseCase();
+    return result.fold(
+      (failure) => throw Exception(failure.message),
+      (orders) => orders,
+    );
+  }
 
   /// Lấy danh sách đơn hàng của người dùng
   Future<void> getUserOrders() async {
-    state = state.copyWith(isLoading: true, errorMessage: null);
-
-    final result = await _getUserOrdersUseCase();
+    state = const AsyncLoading();
+    
+    final getUserOrdersUseCase = ref.read(getUserOrdersUseCaseProvider);
+    final result = await getUserOrdersUseCase();
 
     result.fold(
-      (failure) => state = state.copyWith(
-        isLoading: false,
-        errorMessage: failure.message,
-      ),
-      (orders) => state = state.copyWith(
-        isLoading: false,
-        orders: orders,
-        errorMessage: null,
-      ),
+      (failure) => state = AsyncError(Exception(failure.message), StackTrace.current),
+      (orders) => state = AsyncData(orders),
     );
   }
 
@@ -33,20 +36,18 @@ class OrdersListNotifier extends StateNotifier<OrdersListState> {
     await getUserOrders();
   }
 
-  /// Clear error message
-  void clearError() {
-    state = state.copyWith(errorMessage: null);
-  }
-
-  /// Thêm order mới vào đầu danh sách
+  /// Thêm order mới vào đầu danh sách (Optimistic)
   void addOrder(OrderEntity order) {
-    final updatedOrders = [order, ...state.orders];
-    state = state.copyWith(orders: updatedOrders);
+    if (state.value != null) {
+      state = AsyncData([order, ...state.value!]);
+    }
   }
 
-  /// Xóa order khỏi danh sách
+  /// Xóa order khỏi danh sách (Optimistic)
   void removeOrder(int orderId) {
-    final updatedOrders = state.orders.where((order) => order.id != orderId).toList();
-    state = state.copyWith(orders: updatedOrders);
+    if (state.value != null) {
+      final updatedOrders = state.value!.where((order) => order.id != orderId).toList();
+      state = AsyncData(updatedOrders);
+    }
   }
 }
