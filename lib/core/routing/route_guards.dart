@@ -1,8 +1,8 @@
-import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
+import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../features/auth/presentation/providers/auth_providers.dart';
+import '../../features/auth/presentation/providers/auth_notifier.dart';
 import 'app_routes.dart';
 
 /// Base class for route guards
@@ -17,7 +17,7 @@ abstract class RouteGuard {
 class AuthGuard implements RouteGuard {
   @override
   String? checkRedirect(BuildContext context, GoRouterState state, WidgetRef ref) {
-    final authState = ref.read(authStateProvider);
+    final authState = ref.read(authProvider);
     final isAuthenticated = authState.isAuthenticated;
 
     // List of routes that don't require authentication
@@ -52,7 +52,7 @@ class AuthGuard implements RouteGuard {
 class GuestGuard implements RouteGuard {
   @override
   String? checkRedirect(BuildContext context, GoRouterState state, WidgetRef ref) {
-    final authState = ref.read(authStateProvider);
+    final authState = ref.read(authProvider);
     final isAuthenticated = authState.isAuthenticated;
 
     // If user is authenticated, redirect to home
@@ -70,7 +70,7 @@ class GuestGuard implements RouteGuard {
 class AdminGuard implements RouteGuard {
   @override
   String? checkRedirect(BuildContext context, GoRouterState state, WidgetRef ref) {
-    final authState = ref.read(profileStateProvider);
+    final authState = ref.read(profileProvider);
     final user = authState.user;
 
     // First check if user is authenticated
@@ -95,7 +95,7 @@ class AdminGuard implements RouteGuard {
 class PremiumGuard implements RouteGuard {
   @override
   String? checkRedirect(BuildContext context, GoRouterState state, WidgetRef ref) {
-    final authState = ref.read(profileStateProvider);
+    final authState = ref.read(profileProvider);
     final user = authState.user;
 
     // First check if user is authenticated
@@ -121,7 +121,7 @@ class PremiumGuard implements RouteGuard {
 class OnboardingGuard implements RouteGuard {
   @override
   String? checkRedirect(BuildContext context, GoRouterState state, WidgetRef ref) {
-    final authState = ref.read(profileStateProvider);
+    final authState = ref.read(profileProvider);
     final user = authState.user;
 
     // Check if user is authenticated

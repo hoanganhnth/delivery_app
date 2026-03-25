@@ -1,7 +1,9 @@
-import 'package:delivery_app/features/auth/presentation/providers/auth_providers.dart';
-import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:delivery_app/features/auth/presentation/providers/auth_notifier.dart';
+import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../logger/app_logger.dart';
+
+part 'app_initializer_service.g.dart';
 
 class AppInitializerService {
   final Ref ref;
@@ -13,10 +15,10 @@ class AppInitializerService {
       AppLogger.i('AppInitializerService: Starting initialization');
 
       // Check authentication status first
-      final authNotifier = ref.read(authStateProvider.notifier);
+      final authNotifier = ref.read(authProvider.notifier);
       await authNotifier.checkAuthStatus();
 
-      final authState = ref.read(authStateProvider);
+      final authState = ref.read(authProvider);
 
       if (authState.isAuthenticated) {
         AppLogger.i(
@@ -24,8 +26,8 @@ class AppInitializerService {
         );
 
         // Load user profile if authenticated - use cache first on app startup
-        final profileProvider = ref.read(profileStateProvider.notifier);
-        await profileProvider.getUserProfile(
+        final profileNotifier = ref.read(profileProvider.notifier);
+        await profileNotifier.getUserProfile(
           useCache: true,
           forceRefresh: false,
         );
@@ -51,13 +53,14 @@ class AppInitializerService {
 
     // final tabProvider = ref.read(navigationControllerProvider);
     // tabProvider.goToHome();
-    final profileProvider = ref.read(profileStateProvider.notifier);
-    await profileProvider.clearProfileCache();
+    final profileNotifier = ref.read(profileProvider.notifier);
+    await profileNotifier.clearProfileCache();
 
     AppLogger.i('AppInitializerService: Data cleared successfully');
   }
 }
 
-final appInitializerServiceProvider = Provider<AppInitializerService>((ref) {
+@riverpod
+AppInitializerService appInitializerService(Ref ref) {
   return AppInitializerService(ref);
-});
+}

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
-import '../features/auth/presentation/providers/auth_network_providers.dart';
 import '../features/profile/data/models/user_model.dart';
 
 /// Main app setup with all necessary provider overrides
@@ -27,7 +27,6 @@ class AppSetup {
   /// - Any other global overrides
   static List<Override> getProviderOverrides() {
     return [
-      ...getAppProviderOverrides(),
       // Add other feature overrides here as needed
     ];
   }
@@ -35,7 +34,7 @@ class AppSetup {
   // init mapbox
   static Future<void> initializeMapbox() async {
     MapboxOptions.setAccessToken(
-      "pk.eyJ1IjoiaG9hbmdhbmhudGgyazMiLCJhIjoiY21kZTdwYWhzMDZseDJvcHZtZXd0NTVmciJ9.y0pYbmhi7oS7_eZ57_uEgA",
+      "MAPBOX_TOKEN_REMOVED",
     );
   }
 

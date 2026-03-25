@@ -1,15 +1,18 @@
 // import 'package:delivery_app/core/constants/api_constants.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'dio_client.dart';
+
+part 'network_providers.g.dart';
 
 /// Global Dio provider for the entire app
 /// This should be used by all features that need HTTP client
-final dioProvider = Provider<Dio>((ref) {
+@riverpod
+Dio dio(Ref ref) {
   // Create DioClient without auth dependencies to avoid circular reference
   final dioClient = DioClient();
   return dioClient.dio;
-});
+}
 
 /// Authenticated Dio provider that includes auth token handling
 /// This will be configured later when auth providers are available

@@ -1,14 +1,19 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app_theme.dart';
 import 'app_colors.dart';
 
+part 'theme_provider.g.dart';
+
 /// Theme provider to manage app theme state
-class ThemeNotifier extends StateNotifier<AppTheme> {
+@riverpod
+class Theme extends _$Theme {
   static const String _themeKey = 'app_theme';
-  
-  ThemeNotifier() : super(AppTheme.light) {
+
+  @override
+  AppTheme build() {
     _loadTheme();
+    return AppTheme.light;
   }
 
   /// Load theme from storage
@@ -59,24 +64,23 @@ class ThemeNotifier extends StateNotifier<AppTheme> {
   bool get isLightTheme => state.type == AppThemeType.light;
 }
 
-/// Theme provider
-final themeProvider = StateNotifierProvider<ThemeNotifier, AppTheme>((ref) {
-  return ThemeNotifier();
-});
-
 /// Convenience providers for accessing theme data
-final themeColorsProvider = Provider<AppColors>((ref) {
+@riverpod
+AppColors themeColors(Ref ref) {
   return ref.watch(themeProvider).colors;
-});
+}
 
-final themeTypeProvider = Provider<AppThemeType>((ref) {
+@riverpod
+AppThemeType themeType(Ref ref) {
   return ref.watch(themeProvider).type;
-});
+}
 
-final isDarkThemeProvider = Provider<bool>((ref) {
+@riverpod
+bool isDarkTheme(Ref ref) {
   return ref.watch(themeProvider).type == AppThemeType.dark;
-});
+}
 
-final isLightThemeProvider = Provider<bool>((ref) {
+@riverpod
+bool isLightTheme(Ref ref) {
   return ref.watch(themeProvider).type == AppThemeType.light;
-});
+}

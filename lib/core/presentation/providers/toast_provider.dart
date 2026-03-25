@@ -1,4 +1,6 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'toast_provider.g.dart';
 
 /// Toast message types
 enum ToastType {
@@ -21,8 +23,10 @@ class ToastMessage {
 }
 
 /// Toast notifier
-class ToastNotifier extends StateNotifier<ToastMessage?> {
-  ToastNotifier() : super(null);
+@riverpod
+class Toast extends _$Toast {
+  @override
+  ToastMessage? build() => null;
 
   void showSuccess(String message) {
     state = ToastMessage(
@@ -52,8 +56,3 @@ class ToastNotifier extends StateNotifier<ToastMessage?> {
     state = null;
   }
 }
-
-/// Global toast provider
-final toastProvider = StateNotifierProvider<ToastNotifier, ToastMessage?>((ref) {
-  return ToastNotifier();
-});

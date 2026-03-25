@@ -1,7 +1,9 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'deep_link_service.dart';
 import '../routing/router_config.dart';
+
+part 'share_service.g.dart';
 
 /// Service for sharing content with deep links
 class ShareService {
@@ -101,7 +103,8 @@ class ShareException implements Exception {
 }
 
 /// Provider for share service
-final shareServiceProvider = Provider<ShareService>((ref) {
+@riverpod
+ShareService shareService(Ref ref) {
   final config = ref.watch(routerConfigProvider);
   return ShareService(config.baseUrl ?? 'https://deliveryapp.com');
-});
+}

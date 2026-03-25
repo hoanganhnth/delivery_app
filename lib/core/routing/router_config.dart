@@ -1,16 +1,19 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'router_config.g.dart';
 
 /// Router configuration provider
 /// This allows for easy customization of router behavior based on environment
-final routerConfigProvider = Provider<AppRouterConfig>((ref) {
+@riverpod
+AppRouterConfig routerConfig(Ref ref) {
   // Switch between different configs based on environment
   if (kDebugMode) {
     return ref.watch(devRouterConfigProvider);
   } else {
     return ref.watch(prodRouterConfigProvider);
   }
-});
+}
 
 /// Router configuration class
 class AppRouterConfig {
@@ -54,7 +57,8 @@ class AppRouterConfig {
 }
 
 /// Development router config
-final devRouterConfigProvider = Provider<AppRouterConfig>((ref) {
+@riverpod
+AppRouterConfig devRouterConfig(Ref ref) {
   return const AppRouterConfig(
     debugLogDiagnostics: true,
     initialLocation: '/splash',
@@ -63,10 +67,11 @@ final devRouterConfigProvider = Provider<AppRouterConfig>((ref) {
     enableLogging: true,
     baseUrl: 'https://deliveryapp.dev', // Development deep link base
   );
-});
+}
 
 /// Production router config
-final prodRouterConfigProvider = Provider<AppRouterConfig>((ref) {
+@riverpod
+AppRouterConfig prodRouterConfig(Ref ref) {
   return const AppRouterConfig(
     debugLogDiagnostics: false,
     initialLocation: '/splash',
@@ -75,10 +80,11 @@ final prodRouterConfigProvider = Provider<AppRouterConfig>((ref) {
     enableLogging: false,
     baseUrl: 'https://deliveryapp.com', // Production deep link base
   );
-});
+}
 
 /// Test router config
-final testRouterConfigProvider = Provider<AppRouterConfig>((ref) {
+@riverpod
+AppRouterConfig testRouterConfig(Ref ref) {
   return const AppRouterConfig(
     debugLogDiagnostics: false,
     initialLocation: '/splash',
@@ -86,4 +92,4 @@ final testRouterConfigProvider = Provider<AppRouterConfig>((ref) {
     enableDeepLinking: false,
     enableLogging: false,
   );
-});
+}

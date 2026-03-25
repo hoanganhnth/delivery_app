@@ -16,7 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'features/auth/presentation/providers/token_storage_providers.dart';
-import 'features/auth/presentation/providers/auth_network_providers.dart';
 
 Future<void> main() async {
   runZonedGuarded<Future<void>>(
@@ -51,7 +50,6 @@ Future<void> main() async {
           child: const MainApp(),
           additionalOverrides: [
             sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-            ...getAppProviderOverrides(),
           ],
         ),
       );

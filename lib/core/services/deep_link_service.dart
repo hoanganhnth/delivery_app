@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app_links/app_links.dart';
 import 'package:go_router/go_router.dart';
 import '../routing/app_routes.dart';
+
+part 'deep_link_service.g.dart';
 
 /// Deep link service for handling incoming deep links
 class DeepLinkService {
@@ -269,6 +271,7 @@ class DeepLinkService {
 }
 
 /// Provider for deep link service
-final deepLinkServiceProvider = Provider<DeepLinkService>((ref) {
+@riverpod
+DeepLinkService deepLinkService(Ref ref) {
   return DeepLinkService();
-});
+}

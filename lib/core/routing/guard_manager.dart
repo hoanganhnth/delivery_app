@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:go_router/go_router.dart';
-import '../../features/auth/presentation/providers/auth_providers.dart';
+import '../../features/auth/presentation/providers/auth_notifier.dart';
 import 'app_routes.dart';
+
+part 'guard_manager.g.dart';
 
 /// Centralized guard manager for easy guard application
 /// This provides a clean API for applying guards to routes
@@ -13,7 +15,7 @@ class GuardManager {
 
   /// Apply auth guard to a route
   String? applyAuthGuard(BuildContext context, GoRouterState state) {
-    final authState = _ref.read(authStateProvider);
+    final authState = _ref.read(authProvider);
     final isAuthenticated = authState.isAuthenticated;
 
     final publicRoutes = [
@@ -40,7 +42,7 @@ class GuardManager {
 
   /// Apply guest guard to a route
   String? applyGuestGuard(BuildContext context, GoRouterState state) {
-    final authState = _ref.read(authStateProvider);
+    final authState = _ref.read(authProvider);
     final isAuthenticated = authState.isAuthenticated;
 
     if (isAuthenticated) {
@@ -131,7 +133,7 @@ class GuardManager {
   
   /// Check if user can access a specific route (for UI logic)
   bool canAccessRoute(String routePath) {
-    final authState = _ref.read(authStateProvider);
+    final authState = _ref.read(authProvider);
     
     // Public routes
     final publicRoutes = [
@@ -167,7 +169,7 @@ class GuardManager {
   
   /// Get user role for UI logic
   UserRole getUserRole() {
-    final authState = _ref.read(authStateProvider);
+    final authState = _ref.read(authProvider);
     
     if (!authState.isAuthenticated) {
       return UserRole.guest;
@@ -214,6 +216,8 @@ extension UserRoleExtension on UserRole {
 }
 
 /// Provider for GuardManager
-final guardManagerProvider = Provider<GuardManager>((ref) {
+@riverpod
+GuardManager guardManager(Ref ref) {
   return GuardManager(ref);
-});
+}
+

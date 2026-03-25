@@ -31,9 +31,6 @@ extension ThemeRefExtension on WidgetRef {
   /// Get current app colors
   AppColors get colors => watch(themeColorsProvider);
   
-  /// Get theme notifier
-  ThemeNotifier get themeNotifier => read(themeProvider.notifier);
-  
   /// Check if current theme is dark
   bool get isDarkTheme => watch(isDarkThemeProvider);
   

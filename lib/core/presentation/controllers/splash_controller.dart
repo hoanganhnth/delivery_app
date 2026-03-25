@@ -1,9 +1,11 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:go_router/go_router.dart';
-import '../../../features/auth/presentation/providers/auth_providers.dart';
+import '../../../features/auth/presentation/providers/auth_notifier.dart';
 import '../../logger/app_logger.dart';
 import '../../routing/app_routes.dart';
 import '../../services/app_initializer_service.dart';
+
+part 'splash_controller.g.dart';
 
 /// Splash state
 enum SplashState {
@@ -14,10 +16,10 @@ enum SplashState {
 }
 
 /// Splash controller to handle app initialization
-class SplashController extends StateNotifier<SplashState> {
-  final Ref _ref;
-
-  SplashController(this._ref) : super(SplashState.initializing);
+@riverpod
+class SplashController extends _$SplashController {
+  @override
+  SplashState build() => SplashState.initializing;
 
   /// Initialize the app and navigate to appropriate screen
   Future<void> initializeApp(GoRouter router) async {
@@ -35,10 +37,10 @@ class SplashController extends StateNotifier<SplashState> {
       AppLogger.i('SplashController: Checking authentication status');
       
       // Use app initializer service for proper initialization
-      final appInitializer = _ref.read(appInitializerServiceProvider);
+      final appInitializer = ref.read(appInitializerServiceProvider);
       await appInitializer.initialize();
       
-      final authState = _ref.read(authStateProvider);
+      final authState = ref.read(authProvider);
       final isAuthenticated = authState.isAuthenticated;
       
       AppLogger.i('SplashController: Authentication status - $isAuthenticated');
@@ -84,8 +86,3 @@ class SplashController extends StateNotifier<SplashState> {
   /// Check if currently in error state
   bool get hasError => state == SplashState.error;
 }
-
-/// Provider for splash controller
-final splashControllerProvider = StateNotifierProvider<SplashController, SplashState>((ref) {
-  return SplashController(ref);
-});

@@ -1,12 +1,12 @@
 import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
 import 'package:delivery_app/features/orders/presentation/screens/order_detail_screen.dart';
 import 'package:delivery_app/features/support/presentation/screens/support_chat_screen.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/auth/presentation/screens/forgot_password_screen.dart';
-import '../../features/auth/presentation/providers/auth_providers.dart';
+import '../../features/auth/presentation/providers/auth_notifier.dart';
 import '../../features/main/presentation/pages/main_screen.dart';
 import '../../features/profile/profile.dart';
 import '../../features/settings/settings.dart';
@@ -27,8 +27,11 @@ import 'router_config.dart';
 import 'guard_manager.dart';
 import '../services/deep_link_service.dart';
 
+part 'app_router.g.dart';
+
 /// Router provider for the entire app
-final routerProvider = Provider<GoRouter>((ref) {
+@riverpod
+GoRouter router(Ref ref) {
   final config = ref.watch(routerConfigProvider);
   final guardManager = GuardManager(ref);
 
@@ -38,7 +41,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: config.debugLogDiagnostics,
     redirect: config.enableRedirects
         ? (context, state) {
-            final authState = ref.read(authStateProvider);
+            final authState = ref.read(authProvider);
             final isAuthenticated = authState.isAuthenticated;
 
             // List of routes that don't require authentication
@@ -313,7 +316,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   DeepLinkService.initialize(router);
 
   return router;
-});
+}
 
 /// Extension for easy navigation
 extension GoRouterExtension on GoRouter {
@@ -340,3 +343,4 @@ extension GoRouterExtension on GoRouter {
   void pushEditAddress(UserAddressEntity address) => 
       pushNamed('edit-address', extra: address);
 }
+
