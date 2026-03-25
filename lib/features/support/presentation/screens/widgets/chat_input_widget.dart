@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../domain/entities/chat_message_entity.dart';
-import '../../providers/chat_notifier.dart';
+import '../../providers/providers.dart';
 
 class ChatInputWidget extends ConsumerStatefulWidget {
   const ChatInputWidget({super.key});
@@ -36,7 +36,7 @@ class _ChatInputWidgetState extends ConsumerState<ChatInputWidget> {
 
       if (image != null) {
         await ref
-            .read(chatNotifierProvider.notifier)
+            .read(chatProvider.notifier)
             .sendMediaMessage(image.path, MessageType.image);
       }
     } catch (e) {
@@ -61,7 +61,7 @@ class _ChatInputWidgetState extends ConsumerState<ChatInputWidget> {
         }
 
         await ref
-            .read(chatNotifierProvider.notifier)
+            .read(chatProvider.notifier)
             .sendMediaMessage(video.path, MessageType.video);
       }
     } catch (e) {
@@ -163,7 +163,7 @@ class _ChatInputWidgetState extends ConsumerState<ChatInputWidget> {
     final text = _textController.text.trim();
     if (text.isEmpty) return;
 
-    ref.read(chatNotifierProvider.notifier).sendTextMessage(text);
+    ref.read(chatProvider.notifier).sendTextMessage(text);
     _textController.clear();
     _focusNode.requestFocus();
   }
@@ -178,7 +178,7 @@ class _ChatInputWidgetState extends ConsumerState<ChatInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final chatState = ref.watch(chatNotifierProvider);
+    final chatState = ref.watch(chatProvider);
     final theme = Theme.of(context);
 
     return Container(

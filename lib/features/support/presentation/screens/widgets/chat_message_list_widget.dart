@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../domain/entities/chat_message_entity.dart';
-import '../../providers/chat_notifier.dart';
+import '../../providers/providers.dart';
 import 'video_player_widget.dart';
 
 class ChatMessageListWidget extends ConsumerStatefulWidget {
@@ -33,21 +33,21 @@ class _ChatMessageListWidgetState extends ConsumerState<ChatMessageListWidget> {
 
   // ✅ Với reverse: true, scroll đến cuối = pixels gần maxScrollExtent
   void _onScroll() {
-    final chatState = ref.read(chatNotifierProvider);
+    final chatState = ref.read(chatProvider);
     
     // Detect scroll near END (which is TOP of chat in reverse mode) to load more
     if (_scrollController.position.pixels >= 
         _scrollController.position.maxScrollExtent - 200) {
       
       if (chatState.hasMoreMessages && !chatState.isLoadingMore) {
-        ref.read(chatNotifierProvider.notifier).loadMoreMessages();
+        ref.read(chatProvider.notifier).loadMoreMessages();
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final chatState = ref.watch(chatNotifierProvider);
+    final chatState = ref.watch(chatProvider);
     final messages = chatState.messages;
 
     if (messages.isEmpty) {

@@ -1,51 +1,31 @@
 import 'dart:async';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../domain/entities/chat_message_entity.dart';
-import '../../domain/entities/conversation_entity.dart'; // ✅ Thêm
-import '../../domain/usecases/close_conversation_usecase.dart'; // ✅ Thêm
-import '../../domain/usecases/get_or_create_conversation_usecase.dart';
-import '../../domain/usecases/load_initial_messages_usecase.dart';
-import '../../domain/usecases/load_more_messages_usecase.dart';
-import '../../domain/usecases/send_text_message_usecase.dart';
-import '../../domain/usecases/send_media_message_usecase.dart';
-import '../../domain/usecases/stream_new_messages_usecase.dart';
+import '../../domain/entities/conversation_entity.dart';
 import 'chat_state.dart';
 import 'support_providers.dart';
 
-class ChatNotifier extends StateNotifier<ChatState> {
-  final GetOrCreateConversationUseCase _getOrCreateConversationUseCase;
-  final LoadInitialMessagesUseCase _loadInitialMessagesUseCase;
-  final LoadMoreMessagesUseCase _loadMoreMessagesUseCase;
-  final StreamNewMessagesUseCase _streamNewMessagesUseCase;
-  final SendTextMessageUseCase _sendTextMessageUseCase;
-  final SendMediaMessageUseCase _sendMediaMessageUseCase;
-  final CloseConversationUseCase _closeConversationUseCase; // ✅ Thêm
+part 'chat_notifier.g.dart';
 
+@riverpod
+class ChatNotifier extends _$ChatNotifier {
   StreamSubscription<dynamic>? _messagesSubscription;
 
-  ChatNotifier(
-    this._getOrCreateConversationUseCase,
-    this._loadInitialMessagesUseCase,
-    this._loadMoreMessagesUseCase,
-    this._streamNewMessagesUseCase,
-    this._sendTextMessageUseCase,
-    this._sendMediaMessageUseCase,
-    this._closeConversationUseCase, // ✅ Thêm
-  ) : super(const ChatState());
-
   @override
-  void dispose() {
-    _messagesSubscription?.cancel();
-    super.dispose();
+  ChatState build() {
+    ref.onDispose(() {
+      _messagesSubscription?.cancel();
+    });
+    return const ChatState();
   }
 
   Future<void> initializeChat(int userId, String userEmail, String? userName) async {
     state = state.copyWith(status: ChatStatus.loading);
 
     try {
-      // 1. Get or create conversation
-      final result = await _getOrCreateConversationUseCase(userId, userEmail, userName);
+      final getOrCreateConversationUseCase = ref.read(getOrCreateConversationUseCaseProvider);
+      final result = await getOrCreateConversationUseCase(userId, userEmail, userName);
 
       await result.fold(
         (failure) async {
@@ -57,8 +37,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
         (conversation) async {
           state = state.copyWith(conversation: conversation);
 
-          // 2. Load initial messages (50 latest) using UseCase
-          final messagesResult = await _loadInitialMessagesUseCase(
+          final loadInitialMessagesUseCase = ref.read(loadInitialMessagesUseCaseProvider);
+          final messagesResult = await loadInitialMessagesUseCase(
             conversation.id,
             limit: state.pageSize,
           );
@@ -105,7 +85,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
     AppLogger.d('Listening to new messages after ${afterTimestamp.toIso8601String()}');
 
-    _messagesSubscription = _streamNewMessagesUseCase(conversationId, afterTimestamp).listen(
+    final streamNewMessagesUseCase = ref.read(streamNewMessagesUseCaseProvider);
+    _messagesSubscription = streamNewMessagesUseCase(conversationId, afterTimestamp).listen(
       (result) {
         result.fold(
           (failure) {
@@ -138,7 +119,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
     state = state.copyWith(isLoadingMore: true);
     AppLogger.d('Loading more messages before ${state.oldestMessage!.timestamp.toIso8601String()}');
 
-    final result = await _loadMoreMessagesUseCase(
+    final loadMoreMessagesUseCase = ref.read(loadMoreMessagesUseCaseProvider);
+    final result = await loadMoreMessagesUseCase(
       state.conversation!.id,
       state.oldestMessage!.timestamp,
       limit: state.pageSize,
@@ -187,7 +169,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
     state = state.copyWith(isSendingMessage: true);
 
     try {
-      final result = await _sendTextMessageUseCase(
+      final sendTextMessageUseCase = ref.read(sendTextMessageUseCaseProvider);
+      final result = await sendTextMessageUseCase(
         state.conversation!.id,
         state.conversation!.userId,
         content.trim(),
@@ -220,7 +203,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
     state = state.copyWith(isSendingMessage: true);
 
     try {
-      final result = await _sendMediaMessageUseCase(
+      final sendMediaMessageUseCase = ref.read(sendMediaMessageUseCaseProvider);
+      final result = await sendMediaMessageUseCase(
         state.conversation!.id,
         state.conversation!.userId,
         filePath,
@@ -255,7 +239,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
     try {
       AppLogger.d('Closing conversation: ${state.conversation!.id}');
       
-      final result = await _closeConversationUseCase(
+      final closeConversationUseCase = ref.read(closeConversationUseCaseProvider);
+      final result = await closeConversationUseCase(
         state.conversation!.id,
         closeReason: reason ?? 'Đã giải quyết xong',
       );
@@ -301,17 +286,3 @@ class ChatNotifier extends StateNotifier<ChatState> {
     await initializeChat(userId, userEmail, userName);
   }
 }
-
-
-// Provider
-final chatNotifierProvider = StateNotifierProvider<ChatNotifier, ChatState>((ref) {
-  return ChatNotifier(
-    ref.watch(getOrCreateConversationUseCaseProvider),
-    ref.watch(loadInitialMessagesUseCaseProvider),
-    ref.watch(loadMoreMessagesUseCaseProvider),
-    ref.watch(streamNewMessagesUseCaseProvider),
-    ref.watch(sendTextMessageUseCaseProvider),
-    ref.watch(sendMediaMessageUseCaseProvider),
-    ref.watch(closeConversationUseCaseProvider), // ✅ Thêm
-  );
-});

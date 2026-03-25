@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/theme_extensions.dart';
-import '../../../profile/presentation/providers/profile_providers.dart';
-import '../providers/chat_notifier.dart';
+import '../../../profile/presentation/providers/providers.dart';
+import '../providers/providers.dart';
 import 'widgets/chat_input_widget.dart';
 import 'widgets/chat_message_list_widget.dart';
 
@@ -26,11 +26,11 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
   }
 
   void _initializeChat() {
-    final profileState = ref.read(profileStateProvider);
+    final profileState = ref.read(profileProvider);
     if (profileState.hasUser) {
       final user = profileState.user!;
       ref
-          .read(chatNotifierProvider.notifier)
+          .read(chatProvider.notifier)
           .initializeChat(user.id ?? user.authId, user.email, user.fullName);
     }
   }
@@ -62,7 +62,7 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
     );
 
     if (confirmed == true && mounted) {
-      await ref.read(chatNotifierProvider.notifier).closeConversation();
+      await ref.read(chatProvider.notifier).closeConversation();
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -78,11 +78,11 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
 
   // ✅ Bắt đầu conversation mới
   Future<void> _startNewConversation() async {
-    final profileState = ref.read(profileStateProvider);
+    final profileState = ref.read(profileProvider);
     if (profileState.hasUser) {
       final user = profileState.user!;
       await ref
-          .read(chatNotifierProvider.notifier)
+          .read(chatProvider.notifier)
           .startNewConversation(
             user.id ?? user.authId,
             user.email,
@@ -102,7 +102,7 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final chatState = ref.watch(chatNotifierProvider);
+    final chatState = ref.watch(chatProvider);
     final theme = Theme.of(context);
 
     return Scaffold(

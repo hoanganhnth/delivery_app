@@ -60,6 +60,9 @@ final sendMediaMessageUseCaseProvider = Provider<SendMediaMessageUseCase>((ref) 
 
 // ✅ Thêm CloseConversationUseCase provider
 final closeConversationUseCaseProvider = Provider<CloseConversationUseCase>((ref) {
-  final repository = ref.watch(supportRepositoryProvider);
-  return CloseConversationUseCase(repository);
+  return CloseConversationUseCase(ref.watch(supportRepositoryProvider));
 });
+
+// chatNotifierProvider is removed as we now generate it
+
+// Provider to get faq topics
