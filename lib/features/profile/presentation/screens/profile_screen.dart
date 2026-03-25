@@ -1,6 +1,6 @@
-import 'package:delivery_app/features/auth/presentation/providers/auth_providers.dart';
+import 'package:delivery_app/features/auth/presentation/providers/providers.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
+import 'package:delivery_app/features/profile/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,7 +11,7 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profileState = ref.watch(profileStateProvider);
+    final profileState = ref.watch(profileProvider);
     
     return Scaffold(
       appBar: AppBar(
@@ -72,7 +72,7 @@ class ProfileScreen extends ConsumerWidget {
                 leading: const Icon(Icons.logout),
                 title: const Text('Logout'),
                 onTap: () async {
-                  final authNotifier = ref.read(authStateProvider.notifier);
+                  final authNotifier = ref.read(authProvider.notifier);
                   await authNotifier.logout();
                 },
               ),

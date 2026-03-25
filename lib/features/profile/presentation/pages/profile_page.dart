@@ -2,9 +2,8 @@ import 'package:delivery_app/core/routing/navigation_helper.dart';
 import 'package:delivery_app/core/routing/routing.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/services/app_initializer_service.dart';
-import 'package:delivery_app/features/auth/presentation/providers/auth_providers.dart';
-import 'package:delivery_app/features/auth/presentation/providers/auth_state.dart';
-import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
+import 'package:delivery_app/features/auth/presentation/providers/providers.dart';
+import 'package:delivery_app/features/profile/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../generated/l10n.dart';
@@ -16,11 +15,11 @@ class ProfilePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profileProvider = ref.watch(profileStateProvider);
-    final user = profileProvider.user;
+    final profileState = ref.watch(profileProvider);
+    final user = profileState.user;
 
     // Listen to auth state changes and navigate when logged out
-    ref.listen<AuthState>(authStateProvider, (previous, next) {
+    ref.listen<AuthState>(authProvider, (previous, next) {
       if (previous?.isAuthenticated == true && !next.isAuthenticated) {
         // User has just logged out
         context.goToLogin();
@@ -121,7 +120,7 @@ class ProfilePage extends ConsumerWidget {
               child: ElevatedButton.icon(
                 onPressed: () async {
                   // Just call logout, navigation will be handled by the listener
-                  await ref.read(authStateProvider.notifier).logout();
+                    await ref.read(authProvider.notifier).logout();
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 icon: const Icon(Icons.logout, color: Colors.white),

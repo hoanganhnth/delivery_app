@@ -9,8 +9,6 @@ import 'package:delivery_app/features/profile/domain/usecases/clear_profile_cach
 import 'package:delivery_app/features/profile/domain/usecases/get_user_profile_usecase.dart';
 import 'package:delivery_app/features/profile/domain/usecases/update_user_profile_usecase.dart';
 import 'package:delivery_app/features/profile/domain/usecases/upload_avatar_usecase.dart';
-import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
-import 'package:delivery_app/features/profile/presentation/providers/profile_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final profileApiServiceProvider = Provider<ProfileApiService>((ref) {
@@ -43,7 +41,7 @@ final getUserProfileUseCaseProvider = Provider<GetUserProfileUseCase>((ref) {
   return GetUserProfileUseCase(repository);
 });
 
-final updateuserProfileUseCaseProvider = Provider<UpdateUserProfileUseCase>((
+final updateUserProfileUseCaseProvider = Provider<UpdateUserProfileUseCase>((
   ref,
 ) {
   final repository = ref.watch(profileRepositoryProvider);
@@ -59,34 +57,3 @@ final clearProfileCacheUseCaseProvider = Provider<ClearProfileCacheUseCase>((ref
   final repository = ref.watch(profileRepositoryProvider);
   return ClearProfileCacheUseCase(repository);
 });
-
-final profileStateProvider =
-    StateNotifierProvider<ProfileNotifier, ProfileState>(
-      (ref) {
-        final getUserProfileUseCase = ref.watch(getUserProfileUseCaseProvider);
-        final updateUserProfileUseCase = ref.watch(
-          updateuserProfileUseCaseProvider,
-        );
-        final uploadAvatarUseCase = ref.watch(
-          uploadProfileImageUseCaseProvider,
-        );
-        final clearProfileCacheUseCase = ref.watch(
-          clearProfileCacheUseCaseProvider,
-        );
-        return ProfileNotifier(
-          getUserProfileUseCase: getUserProfileUseCase,
-          updateUserProfileUseCase: updateUserProfileUseCase,
-          uploadAvatarUseCase: uploadAvatarUseCase,
-          clearProfileCacheUseCase: clearProfileCacheUseCase,
-        );
-      },
-      // dependencies: [
-      //   authenticatedDioProvider,
-      //   profileApiServiceProvider,
-      //   profileRemoteDataSourceProvider,
-      //   profileRepositoryProvider,
-      //   getUserProfileUseCaseProvider,
-      //   updateuserProfileUseCaseProvider,
-      //   uploadProfileImageUseCaseProvider,
-      // ],
-    );

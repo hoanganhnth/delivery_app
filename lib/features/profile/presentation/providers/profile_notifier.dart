@@ -1,28 +1,19 @@
-import 'package:delivery_app/features/profile/domain/usecases/clear_profile_cache_usecase.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:delivery_app/features/profile/domain/usecases/get_user_profile_usecase.dart';
 import 'package:delivery_app/features/profile/domain/usecases/update_user_profile_usecase.dart';
 import 'package:delivery_app/features/profile/domain/usecases/upload_avatar_usecase.dart';
 import 'package:delivery_app/features/profile/presentation/providers/profile_state.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
 import 'package:delivery_app/core/usecases/usecase.dart';
 
-class ProfileNotifier extends StateNotifier<ProfileState> {
-  final GetUserProfileUseCase _getUserProfileUseCase;
-  final UpdateUserProfileUseCase _updateUserProfileUseCase;
-  final UploadAvatarUseCase _uploadAvatarUseCase;
-  final ClearProfileCacheUseCase _clearProfileCacheUseCase;
-  
+part 'profile_notifier.g.dart';
 
-  ProfileNotifier({
-    required GetUserProfileUseCase getUserProfileUseCase,
-    required UpdateUserProfileUseCase updateUserProfileUseCase,
-    required UploadAvatarUseCase uploadAvatarUseCase,
-    required ClearProfileCacheUseCase clearProfileCacheUseCase,
-  }) : _getUserProfileUseCase = getUserProfileUseCase,
-       _updateUserProfileUseCase = updateUserProfileUseCase,
-       _uploadAvatarUseCase = uploadAvatarUseCase,
-       _clearProfileCacheUseCase = clearProfileCacheUseCase,
-       super(const ProfileState());
+@riverpod
+class ProfileNotifier extends _$ProfileNotifier {
+  @override
+  ProfileState build() {
+    return const ProfileState();
+  }
 
   Future<void> getUserProfile({bool forceRefresh = false, bool useCache = true}) async {
     state = state.copyWith(isLoading: true, clearFailure: true);
@@ -30,7 +21,10 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
       forceRefresh: forceRefresh,
       useCache: useCache,
     );
-    final result = await _getUserProfileUseCase(params);
+    
+    final getUserProfileUseCase = ref.read(getUserProfileUseCaseProvider);
+    final result = await getUserProfileUseCase(params);
+    
     result.fold(
       (failure) {
         state = state.copyWith(isLoading: false, failure: failure);
@@ -54,7 +48,10 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
         address: address ?? state.user!.address,
       ),
     );
-    final result = await _updateUserProfileUseCase(params);
+    
+    final updateUserProfileUseCase = ref.read(updateUserProfileUseCaseProvider);
+    final result = await updateUserProfileUseCase(params);
+    
     result.fold(
       (failure) {
         state = state.copyWith(isLoading: false, failure: failure);
@@ -67,9 +64,12 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
 
   Future<void> uploadAvatar(String filePath) async {
     state = state.copyWith(isLoading: true, clearFailure: true);
-    final result = await _uploadAvatarUseCase(
+    
+    final uploadAvatarUseCase = ref.read(uploadProfileImageUseCaseProvider);
+    final result = await uploadAvatarUseCase(
       UploadAvatarParams(imagePath: filePath),
     );
+    
     result.fold(
       (failure) {
         state = state.copyWith(isLoading: false, failure: failure);
@@ -82,7 +82,9 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
   }
 
   Future<void> clearProfileCache() async {
-    final result = await _clearProfileCacheUseCase(NoParams());
+    final clearProfileCacheUseCase = ref.read(clearProfileCacheUseCaseProvider);
+    final result = await clearProfileCacheUseCase(NoParams());
+    
     result.fold(
       (failure) {
         // Log error but don't change state
@@ -93,6 +95,4 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
       },
     );
   }
-
- 
 }
