@@ -33,9 +33,18 @@ class AppSetup {
 
   // init mapbox
   static Future<void> initializeMapbox() async {
-    MapboxOptions.setAccessToken(
-      "MAPBOX_TOKEN_REMOVED",
+    // Use environment variable or default token
+    const String mapboxToken = String.fromEnvironment(
+      'MAPBOX_ACCESS_TOKEN',
+      defaultValue: '', // Remove hardcoded token for security
     );
+    
+    if (mapboxToken.isNotEmpty) {
+      MapboxOptions.setAccessToken(mapboxToken);
+    } else {
+      // Log warning if no token provided
+      debugPrint('Warning: Mapbox access token not provided');
+    }
   }
 
   /// Setup the main app with ProviderScope and overrides
