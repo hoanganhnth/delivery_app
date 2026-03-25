@@ -6,39 +6,39 @@ import '../providers/navigation_provider.dart';
 class NavigationUtils {
   /// Chuyển đến tab bằng enum
   static void goToTab(WidgetRef ref, AppTab tab) {
-    ref.read(selectedTabProvider.notifier).state = tab;
+    ref.read(selectedTabProvider.notifier).setTab(tab);
   }
 
   /// Chuyển đến tab bằng index
   static void goToTabByIndex(WidgetRef ref, int index) {
     if (index >= 0 && index < AppTab.values.length) {
-      ref.read(selectedTabProvider.notifier).state = AppTab.values[index];
+      ref.read(selectedTabProvider.notifier).setTab(AppTab.values[index]);
     }
   }
 
   /// Chuyển đến Home tab
   static void goToHome(WidgetRef ref) {
-    ref.read(selectedTabProvider.notifier).state = AppTab.home;
+    ref.read(selectedTabProvider.notifier).setTab(AppTab.home);
   }
 
   /// Chuyển đến Restaurants tab
   static void goToRestaurants(WidgetRef ref) {
-    ref.read(selectedTabProvider.notifier).state = AppTab.restaurants;
+    ref.read(selectedTabProvider.notifier).setTab(AppTab.restaurants);
   }
 
   /// Chuyển đến Cart tab
   static void goToCart(WidgetRef ref) {
-    ref.read(selectedTabProvider.notifier).state = AppTab.cart;
+    ref.read(selectedTabProvider.notifier).setTab(AppTab.cart);
   }
 
   /// Chuyển đến Orders tab
   static void goToOrders(WidgetRef ref) {
-    ref.read(selectedTabProvider.notifier).state = AppTab.orders;
+    ref.read(selectedTabProvider.notifier).setTab(AppTab.orders);
   }
 
   /// Chuyển đến Profile tab
   static void goToProfile(WidgetRef ref) {
-    ref.read(selectedTabProvider.notifier).state = AppTab.profile;
+    ref.read(selectedTabProvider.notifier).setTab(AppTab.profile);
   }
 
   /// Lấy tab hiện tại

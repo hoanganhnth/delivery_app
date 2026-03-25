@@ -60,8 +60,8 @@ class MainScreen extends ConsumerWidget {
                 ],
                 selectedIndex: currentTab.tabIndex, // chọn tab bằng AppTab
                 onTabChange: (index) {
-                  ref.read(selectedTabProvider.notifier).state =
-                      AppTab.values[index]; // gán lại AppTab thay vì int
+                  ref.read(selectedTabProvider.notifier).setTab(
+                      AppTab.values[index]); // gán lại AppTab thay vì int
                 },
               ),
             ),
