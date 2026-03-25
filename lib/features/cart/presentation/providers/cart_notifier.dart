@@ -1,41 +1,28 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../domain/entities/cart_entity.dart';
 import '../../domain/entities/cart_item_entity.dart';
 import '../../domain/usecases/cart_usecases.dart';
+import 'cart_providers.dart';
 import 'cart_state.dart';
 
-/// Cart notifier for state management
-class CartNotifier extends StateNotifier<CartState> {
-  final GetCartUseCase _getCartUseCase;
-  final AddToCartUseCase _addToCartUseCase;
-  final UpdateCartItemQuantityUseCase _updateQuantityUseCase;
-  final RemoveFromCartUseCase _removeFromCartUseCase;
-  final ClearCartUseCase _clearCartUseCase;
-  final UpdateCartItemNotesUseCase _updateNotesUseCase;
+part 'cart_notifier.g.dart';
 
-  CartNotifier({
-    required GetCartUseCase getCartUseCase,
-    required AddToCartUseCase addToCartUseCase,
-    required UpdateCartItemQuantityUseCase updateQuantityUseCase,
-    required RemoveFromCartUseCase removeFromCartUseCase,
-    required ClearCartUseCase clearCartUseCase,
-    required UpdateCartItemNotesUseCase updateNotesUseCase,
-  })  : _getCartUseCase = getCartUseCase,
-        _addToCartUseCase = addToCartUseCase,
-        _updateQuantityUseCase = updateQuantityUseCase,
-        _removeFromCartUseCase = removeFromCartUseCase,
-        _clearCartUseCase = clearCartUseCase,
-        _updateNotesUseCase = updateNotesUseCase,
-        super(const CartState.initial()) {
-    loadCart();
+/// Cart notifier for state management
+@riverpod
+class CartNotifier extends _$CartNotifier {
+  @override
+  CartState build() {
+    Future.microtask(() => loadCart());
+    return const CartState.initial();
   }
 
   /// Load cart from storage
   Future<void> loadCart() async {
     state = state.copyWith(isLoading: true, clearFailure: true);
 
-    final result = await _getCartUseCase(NoParams());
+    final getCartUseCase = ref.read(getCartUseCaseProvider);
+    final result = await getCartUseCase(NoParams());
 
     result.fold(
       (failure) => state = state.copyWith(
@@ -53,7 +40,8 @@ class CartNotifier extends StateNotifier<CartState> {
   Future<void> addItem(CartItemEntity item) async {
     state = state.copyWith(isLoading: true, clearFailure: true);
 
-    final result = await _addToCartUseCase(AddToCartParams(item: item));
+    final addToCartUseCase = ref.read(addToCartUseCaseProvider);
+    final result = await addToCartUseCase(AddToCartParams(item: item));
 
     result.fold(
       (failure) => state = state.copyWith(
@@ -76,7 +64,8 @@ class CartNotifier extends StateNotifier<CartState> {
 
     state = state.copyWith(isLoading: true, clearFailure: true);
 
-    final result = await _updateQuantityUseCase(
+    final updateQuantityUseCase = ref.read(updateCartItemQuantityUseCaseProvider);
+    final result = await updateQuantityUseCase(
       UpdateCartItemQuantityParams(menuItemId: menuItemId, quantity: quantity),
     );
 
@@ -96,7 +85,8 @@ class CartNotifier extends StateNotifier<CartState> {
   Future<void> removeItem(num menuItemId) async {
     state = state.copyWith(isLoading: true, clearFailure: true);
 
-    final result = await _removeFromCartUseCase(
+    final removeFromCartUseCase = ref.read(removeFromCartUseCaseProvider);
+    final result = await removeFromCartUseCase(
       RemoveFromCartParams(menuItemId: menuItemId),
     );
 
@@ -116,7 +106,8 @@ class CartNotifier extends StateNotifier<CartState> {
   Future<void> clearCart() async {
     state = state.copyWith(isLoading: true, clearFailure: true);
 
-    final result = await _clearCartUseCase(NoParams());
+    final clearCartUseCase = ref.read(clearCartUseCaseProvider);
+    final result = await clearCartUseCase(NoParams());
 
     result.fold(
       (failure) => state = state.copyWith(
@@ -138,7 +129,8 @@ class CartNotifier extends StateNotifier<CartState> {
   Future<void> updateItemNotes(num menuItemId, String? notes) async {
     state = state.copyWith(isLoading: true, clearFailure: true);
 
-    final result = await _updateNotesUseCase(
+    final updateNotesUseCase = ref.read(updateCartItemNotesUseCaseProvider);
+    final result = await updateNotesUseCase(
       UpdateCartItemNotesParams(menuItemId: menuItemId, notes: notes),
     );
 

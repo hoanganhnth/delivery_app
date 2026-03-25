@@ -1,13 +1,11 @@
-import 'package:delivery_app/core/routing/routing.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/features/cart/presentation/providers/cart_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/theme_extensions.dart';
+import '../../../../core/theme/theme_provider.dart' hide Theme;
 import '../../../../generated/l10n.dart';
-import '../providers/cart_providers.dart';
 import '../widgets/cart_item_widget.dart';
-import '../widgets/cart_summary_widget.dart';
 import '../widgets/empty_cart_widget.dart';
 
 /// Main cart screen showing cart items and checkout
@@ -19,12 +17,12 @@ class CartScreen extends ConsumerStatefulWidget {
 }
 
 class _CartScreenState extends ConsumerState<CartScreen> {
-  bool _showOrderSummary = true;
-
   @override
   Widget build(BuildContext context) {
-    final cartState = ref.watch(cartNotifierProvider);
-    final cartNotifier = ref.read(cartNotifierProvider.notifier);
+    final cartState = ref.watch(cartProvider);
+    final cartNotifier = ref.read(cartProvider.notifier);
+    final themeColors = ref.watch(themeColorsProvider);
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       appBar: AppBar(
@@ -40,15 +38,48 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             ),
         ],
       ),
-      body: cartState.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : cartState.isEmpty
-              ? const EmptyCartWidget()
-              : Column(
-                  children: [
-                    // Restaurant info
-                    if (cartState.cart.currentRestaurantName != null)
-                      Container(
+      backgroundColor: themeColors.surface,
+      body: Builder(
+        builder: (context) {
+          if (cartState.isLoading && cartState.cart.items.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          
+          if (cartState.failure != null && cartState.cart.items.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    cartState.failure?.message ?? 'Đã xảy ra lỗi',
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => cartNotifier.loadCart(),
+                    child: const Text('Thử lại'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          final cart = cartState.cart;
+
+          if (cart.items.isEmpty) {
+            return const EmptyCartWidget();
+          }
+
+          return Stack(
+            children: [
+              CustomScrollView(
+                slivers: [
+                  // Restaurant info
+                  if (cartState.cart.currentRestaurantName != null)
+                    SliverToBoxAdapter(
+                      child: Container(
                         width: double.infinity,
                         padding: EdgeInsets.all(16.w),
                         color: context.colors.surface,
@@ -70,36 +101,38 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                           ],
                         ),
                       ),
-
-                    // Cart items list
-                    Expanded(
-                      child: ListView.separated(
-                        padding: EdgeInsets.all(16.w),
-                        itemCount: cartState.cart.items.length,
-                        separatorBuilder: (context, index) => const Divider(),
-                        itemBuilder: (context, index) {
-                          final item = cartState.cart.items[index];
-                          return CartItemWidget(
-                            cartItem: item,
-                            onQuantityChanged: () {},
-                          );
-                        },
-                      ),
                     ),
 
-                    // Cart summary and checkout
-                    CartSummaryWidget(
-                      onCheckoutPressed: () => _navigateToCheckout(context),
-                      showOrderSummary: _showOrderSummary,
-                      onToggleOrderSummary: () => setState(() => _showOrderSummary = !_showOrderSummary),
+                  // Cart items list
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final item = cart.items[index];
+                        return CartItemWidget(
+                          cartItem: item,
+                        );
+                      },
+                      childCount: cart.items.length,
                     ),
-                  ],
+                  ),
+                ],
+              ),
+              if (cartState.isLoading)
+                Container(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 ),
+            ],
+          );
+        }
+      ),
     );
   }
 
-  void _showClearCartDialog(BuildContext context, CartNotifier cartNotifier) {
-    showDialog(
+  Future<void> _showClearCartDialog(BuildContext context, CartNotifier cartNotifier) async {
+    await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(S.of(context).clearCartTitle),
@@ -119,10 +152,5 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         ],
       ),
     );
-  }
-
-  void _navigateToCheckout(BuildContext context) {
-    // Navigate to checkout screen
-    context.pushCheckout();
   }
 }

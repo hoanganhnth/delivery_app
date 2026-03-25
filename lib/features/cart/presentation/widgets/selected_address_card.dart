@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../../core/routing/navigation_helper.dart';
 import '../../../user_address/domain/entities/user_address_entity.dart';
-import '../../../user_address/presentation/providers/user_address_providers.dart';
-import '../../../profile/presentation/providers/profile_providers.dart';
+import '../../../user_address/presentation/providers/user_address_notifiers.dart';
+import '../../../profile/presentation/providers/profile_notifier.dart';
 
 /// Widget hiển thị địa chỉ giao hàng được chọn hoặc button để chọn địa chỉ
 class SelectedAddressCard extends ConsumerStatefulWidget {
@@ -33,7 +33,7 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
   }
 
   void _loadAddresses() {
-    final user = ref.read(profileStateProvider).user;
+    final user = ref.read(profileProvider).user;
     if (user?.id != null) {
       ref.read(userAddressListProvider.notifier).loadAddresses(user!.id!);
     }

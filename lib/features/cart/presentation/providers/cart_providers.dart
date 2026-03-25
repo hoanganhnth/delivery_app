@@ -1,123 +1,108 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/usecases/cart_usecases.dart';
+
+import '../../data/datasources/cart_local_datasource.dart';
 import '../../data/datasources/cart_local_datasource_impl.dart';
 import '../../data/repositories_impl/cart_repository_impl.dart';
+import '../../domain/usecases/cart_usecases.dart';
 import 'cart_notifier.dart';
-import 'cart_state.dart';
+
+part 'cart_providers.g.dart';
 
 // ================================
 // DATA LAYER PROVIDERS
 // ================================
 
 /// Data source provider
-final cartLocalDataSourceProvider = Provider<CartLocalDataSourceImpl>((ref) {
+@Riverpod(keepAlive: true)
+CartLocalDataSource cartLocalDataSource(Ref ref) {
   return CartLocalDataSourceImpl();
-});
+}
 
 /// Repository provider
-final cartRepositoryProvider = Provider<CartRepositoryImpl>((ref) {
+@riverpod
+CartRepositoryImpl cartRepository(Ref ref) {
   final localDataSource = ref.watch(cartLocalDataSourceProvider);
   return CartRepositoryImpl(localDataSource);
-});
+}
 
 // ================================
 // USE CASE PROVIDERS
 // ================================
 
 /// Get cart use case provider
-final getCartUseCaseProvider = Provider<GetCartUseCase>((ref) {
+@riverpod
+GetCartUseCase getCartUseCase(Ref ref) {
   final repository = ref.watch(cartRepositoryProvider);
   return GetCartUseCase(repository);
-});
+}
 
 /// Add to cart use case provider
-final addToCartUseCaseProvider = Provider<AddToCartUseCase>((ref) {
+@riverpod
+AddToCartUseCase addToCartUseCase(Ref ref) {
   final repository = ref.watch(cartRepositoryProvider);
   return AddToCartUseCase(repository);
-});
+}
 
 /// Update cart item quantity use case provider
-final updateCartItemQuantityUseCaseProvider =
-    Provider<UpdateCartItemQuantityUseCase>((ref) {
-      final repository = ref.watch(cartRepositoryProvider);
-      return UpdateCartItemQuantityUseCase(repository);
-    });
+@riverpod
+UpdateCartItemQuantityUseCase updateCartItemQuantityUseCase(Ref ref) {
+  final repository = ref.watch(cartRepositoryProvider);
+  return UpdateCartItemQuantityUseCase(repository);
+}
 
 /// Remove from cart use case provider
-final removeFromCartUseCaseProvider = Provider<RemoveFromCartUseCase>((ref) {
+@riverpod
+RemoveFromCartUseCase removeFromCartUseCase(Ref ref) {
   final repository = ref.watch(cartRepositoryProvider);
   return RemoveFromCartUseCase(repository);
-});
+}
 
 /// Clear cart use case provider
-final clearCartUseCaseProvider = Provider<ClearCartUseCase>((ref) {
+@riverpod
+ClearCartUseCase clearCartUseCase(Ref ref) {
   final repository = ref.watch(cartRepositoryProvider);
   return ClearCartUseCase(repository);
-});
+}
 
 /// Update cart item notes use case provider
-final updateCartItemNotesUseCaseProvider = Provider<UpdateCartItemNotesUseCase>(
-  (ref) {
-    final repository = ref.watch(cartRepositoryProvider);
-    return UpdateCartItemNotesUseCase(repository);
-  },
-);
+@riverpod
+UpdateCartItemNotesUseCase updateCartItemNotesUseCase(Ref ref) {
+  final repository = ref.watch(cartRepositoryProvider);
+  return UpdateCartItemNotesUseCase(repository);
+}
 
 // ================================
-// MAIN CART PROVIDER
+// CONVENIENCE PROVIDERS
 // ================================
 
-/// Main cart notifier provider
-final cartNotifierProvider = StateNotifierProvider<CartNotifier, CartState>((
-  ref,
-) {
-  return CartNotifier(
-    getCartUseCase: ref.watch(getCartUseCaseProvider),
-    addToCartUseCase: ref.watch(addToCartUseCaseProvider),
-    updateQuantityUseCase: ref.watch(updateCartItemQuantityUseCaseProvider),
-    removeFromCartUseCase: ref.watch(removeFromCartUseCaseProvider),
-    clearCartUseCase: ref.watch(clearCartUseCaseProvider),
-    updateNotesUseCase: ref.watch(updateCartItemNotesUseCaseProvider),
-  );
-});
-
-// ================================
-// HELPER PROVIDERS
-// ================================
-
-/// Get total items count in cart
+/// Cart items count provider
 final cartItemsCountProvider = Provider<int>((ref) {
-  return ref.watch(cartNotifierProvider).totalItems;
+  final cartState = ref.watch(cartProvider);
+  return cartState.totalItems;
 });
 
-/// Get total amount in cart
+/// Cart total amount provider
 final cartTotalAmountProvider = Provider<double>((ref) {
-  return ref.watch(cartNotifierProvider).totalAmount;
+  final cartState = ref.watch(cartProvider);
+  return cartState.totalAmount;
 });
 
-/// Check if cart is empty
+/// Is cart empty provider
 final isCartEmptyProvider = Provider<bool>((ref) {
-  return ref.watch(cartNotifierProvider).isEmpty;
+  final cartState = ref.watch(cartProvider);
+  return cartState.isEmpty;
 });
 
-/// Get current restaurant ID
-final currentRestaurantIdProvider = Provider<num?>((ref) {
-  return ref.watch(cartNotifierProvider).currentRestaurantId;
-});
-
-/// Get quantity of specific menu item in cart
+/// Menu item quantity in cart provider
 final menuItemQuantityProvider = Provider.family<int, num>((ref, menuItemId) {
-  final state = ref.watch(cartNotifierProvider);
-  return state.cart.getItemQuantity(menuItemId);
+  final cartState = ref.watch(cartProvider);
+  final item = cartState.cart.items.where((i) => i.menuItemId == menuItemId).firstOrNull;
+  return item?.quantity ?? 0;
 });
 
-/// Check if can add from restaurant
-final canAddFromRestaurantProvider = Provider.family<bool, num>((
-  ref,
-  restaurantId,
-) {
-  return ref
-      .watch(cartNotifierProvider)
-      .cart
-      .canAddFromRestaurant(restaurantId);
+/// Can add from restaurant provider (check if cart is empty or same restaurant)
+final canAddFromRestaurantProvider = Provider.family<bool, num>((ref, restaurantId) {
+  final cartState = ref.watch(cartProvider);
+  return cartState.isEmpty || cartState.currentRestaurantId == restaurantId;
 });

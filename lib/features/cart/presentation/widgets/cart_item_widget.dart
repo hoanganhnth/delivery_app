@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../domain/entities/cart_item_entity.dart';
-import '../providers/cart_providers.dart';
+import '../providers/cart_notifier.dart';
 
 /// Widget for displaying a single cart item
 class CartItemWidget extends ConsumerWidget {
@@ -135,12 +135,12 @@ class CartItemWidget extends ConsumerWidget {
                       InkWell(
                         onTap: cartItem.quantity > 1
                             ? () {
-                                ref.read(cartNotifierProvider.notifier)
+                                ref.read(cartProvider.notifier)
                                     .updateItemQuantity(cartItem.menuItemId, cartItem.quantity - 1);
                                 onQuantityChanged?.call();
                               }
                             : () {
-                                ref.read(cartNotifierProvider.notifier)
+                                ref.read(cartProvider.notifier)
                                     .removeItem(cartItem.menuItemId);
                                 onQuantityChanged?.call();
                               },
@@ -173,7 +173,7 @@ class CartItemWidget extends ConsumerWidget {
                       // Increase button
                       InkWell(
                         onTap: () {
-                          ref.read(cartNotifierProvider.notifier)
+                          ref.read(cartProvider.notifier)
                               .updateItemQuantity(cartItem.menuItemId, cartItem.quantity + 1);
                           onQuantityChanged?.call();
                         },
