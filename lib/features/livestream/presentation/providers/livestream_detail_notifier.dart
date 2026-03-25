@@ -1,33 +1,39 @@
 import 'dart:async';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../domain/entities/livestream_comment_entity.dart';
 import '../../domain/usecases/get_livestreams_usecase.dart';
 import '../../domain/usecases/livestream_interaction_usecases.dart';
+import 'livestream_providers.dart';
 import 'livestream_state.dart';
 
+part 'livestream_detail_notifier.g.dart';
+
 /// Livestream detail notifier
-class LivestreamDetailNotifier extends StateNotifier<LivestreamDetailState> {
-  final GetLivestreamByIdUseCase _getLivestreamByIdUseCase;
-  final StreamCommentsUseCase _streamCommentsUseCase;
-  final StreamLikesUseCase _streamLikesUseCase;
-  
+@riverpod
+class LivestreamDetail extends _$LivestreamDetail {
   StreamSubscription? _commentsSubscription;
   StreamSubscription? _likesSubscription;
 
-  LivestreamDetailNotifier({
-    required GetLivestreamByIdUseCase getLivestreamByIdUseCase,
-    required StreamCommentsUseCase streamCommentsUseCase,
-    required StreamLikesUseCase streamLikesUseCase,
-  })  : _getLivestreamByIdUseCase = getLivestreamByIdUseCase,
-        _streamCommentsUseCase = streamCommentsUseCase,
-        _streamLikesUseCase = streamLikesUseCase,
-        super(const LivestreamDetailState());
+  @override
+  LivestreamDetailState build(num id) {
+    // start loading details immediately upon build
+    Future.microtask(() => loadLivestreamDetail(id));
+    
+    // cleanup on dispose
+    ref.onDispose(() {
+      _commentsSubscription?.cancel();
+      _likesSubscription?.cancel();
+    });
+
+    return const LivestreamDetailState();
+  }
 
   /// Load livestream detail
   Future<void> loadLivestreamDetail(num id) async {
     state = state.copyWith(isLoading: true, clearFailure: true);
 
-    final result = await _getLivestreamByIdUseCase(
+    final getLivestreamByIdUseCase = ref.read(getLivestreamByIdUseCaseProvider);
+    final result = await getLivestreamByIdUseCase(
       GetLivestreamByIdParams(id: id),
     );
 
@@ -55,7 +61,8 @@ class LivestreamDetailNotifier extends StateNotifier<LivestreamDetailState> {
   void _startStreamingComments(num livestreamId) {
     _commentsSubscription?.cancel();
     
-    final commentsStream = _streamCommentsUseCase(
+    final streamCommentsUseCase = ref.read(streamCommentsUseCaseProvider);
+    final commentsStream = streamCommentsUseCase(
       StreamCommentsParams(livestreamId: livestreamId),
     );
 
@@ -68,7 +75,8 @@ class LivestreamDetailNotifier extends StateNotifier<LivestreamDetailState> {
   void _startStreamingLikes(num livestreamId) {
     _likesSubscription?.cancel();
     
-    final likesStream = _streamLikesUseCase(
+    final streamLikesUseCase = ref.read(streamLikesUseCaseProvider);
+    final likesStream = streamLikesUseCase(
       StreamLikesParams(livestreamId: livestreamId),
     );
 
@@ -88,13 +96,6 @@ class LivestreamDetailNotifier extends StateNotifier<LivestreamDetailState> {
   /// Update viewer count
   void updateViewerCount(int count) {
     state = state.copyWith(currentViewerCount: count);
-  }
-
-  @override
-  void dispose() {
-    _commentsSubscription?.cancel();
-    _likesSubscription?.cancel();
-    super.dispose();
   }
 }
 
@@ -128,25 +129,22 @@ class LivestreamInteractionState {
 }
 
 /// Livestream interaction notifier
-class LivestreamInteractionNotifier extends StateNotifier<LivestreamInteractionState> {
-  final SendCommentUseCase _sendCommentUseCase;
-  final SendLikeUseCase _sendLikeUseCase;
-  final StreamCommentsUseCase _streamCommentsUseCase;
-  final StreamLikesUseCase _streamLikesUseCase;
-
+@riverpod
+class LivestreamInteraction extends _$LivestreamInteraction {
   StreamSubscription? _commentsSubscription;
   StreamSubscription? _likesSubscription;
 
-  LivestreamInteractionNotifier({
-    required SendCommentUseCase sendCommentUseCase,
-    required SendLikeUseCase sendLikeUseCase,
-    required StreamCommentsUseCase streamCommentsUseCase,
-    required StreamLikesUseCase streamLikesUseCase,
-  })  : _sendCommentUseCase = sendCommentUseCase,
-        _sendLikeUseCase = sendLikeUseCase,
-        _streamCommentsUseCase = streamCommentsUseCase,
-        _streamLikesUseCase = streamLikesUseCase,
-        super(const LivestreamInteractionState());
+  @override
+  LivestreamInteractionState build(num id) {
+    Future.microtask(() => startStreaming(id));
+    
+    ref.onDispose(() {
+      _commentsSubscription?.cancel();
+      _likesSubscription?.cancel();
+    });
+
+    return const LivestreamInteractionState();
+  }
 
   /// Start streaming interactions
   void startStreaming(num livestreamId) {
@@ -157,7 +155,8 @@ class LivestreamInteractionNotifier extends StateNotifier<LivestreamInteractionS
   void _startStreamingComments(num livestreamId) {
     _commentsSubscription?.cancel();
 
-    final commentsStream = _streamCommentsUseCase(
+    final streamCommentsUseCase = ref.read(streamCommentsUseCaseProvider);
+    final commentsStream = streamCommentsUseCase(
       StreamCommentsParams(livestreamId: livestreamId),
     );
 
@@ -174,7 +173,8 @@ class LivestreamInteractionNotifier extends StateNotifier<LivestreamInteractionS
   void _startStreamingLikes(num livestreamId) {
     _likesSubscription?.cancel();
 
-    final likesStream = _streamLikesUseCase(
+    final streamLikesUseCase = ref.read(streamLikesUseCaseProvider);
+    final likesStream = streamLikesUseCase(
       StreamLikesParams(livestreamId: livestreamId),
     );
 
@@ -195,7 +195,8 @@ class LivestreamInteractionNotifier extends StateNotifier<LivestreamInteractionS
   Future<void> sendComment(LivestreamCommentEntity comment) async {
     state = state.copyWith(isSendingComment: true);
 
-    final result = await _sendCommentUseCase(
+    final sendCommentUseCase = ref.read(sendCommentUseCaseProvider);
+    final result = await sendCommentUseCase(
       SendCommentParams(comment: comment),
     );
 
@@ -213,7 +214,8 @@ class LivestreamInteractionNotifier extends StateNotifier<LivestreamInteractionS
   Future<void> sendLike(LivestreamLikeEntity like) async {
     state = state.copyWith(isSendingLike: true);
 
-    final result = await _sendLikeUseCase(
+    final sendLikeUseCase = ref.read(sendLikeUseCaseProvider);
+    final result = await sendLikeUseCase(
       SendLikeParams(like: like),
     );
 
@@ -225,12 +227,5 @@ class LivestreamInteractionNotifier extends StateNotifier<LivestreamInteractionS
         state = state.copyWith(isSendingLike: false);
       },
     );
-  }
-
-  @override
-  void dispose() {
-    _commentsSubscription?.cancel();
-    _likesSubscription?.cancel();
-    super.dispose();
   }
 }

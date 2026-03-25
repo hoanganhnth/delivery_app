@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LivestreamCommentDto {
 
- String get id;@JsonKey(name: 'livestream_id') num get livestreamId;@JsonKey(name: 'user_id') String get userId;@JsonKey(name: 'user_name') String get userName;@JsonKey(name: 'user_avatar') String? get userAvatar; String get message; int get timestamp;
+ String get id; num get livestreamId; String get userId; String get userName; String? get userAvatar; String get message; int get timestamp;
 /// Create a copy of LivestreamCommentDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $LivestreamCommentDtoCopyWith<$Res>  {
   factory $LivestreamCommentDtoCopyWith(LivestreamCommentDto value, $Res Function(LivestreamCommentDto) _then) = _$LivestreamCommentDtoCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'livestream_id') num livestreamId,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'user_name') String userName,@JsonKey(name: 'user_avatar') String? userAvatar, String message, int timestamp
+ String id, num livestreamId, String userId, String userName, String? userAvatar, String message, int timestamp
 });
 
 
@@ -159,7 +159,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'livestream_id')  num livestreamId, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'user_name')  String userName, @JsonKey(name: 'user_avatar')  String? userAvatar,  String message,  int timestamp)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  num livestreamId,  String userId,  String userName,  String? userAvatar,  String message,  int timestamp)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LivestreamCommentDto() when $default != null:
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.message,_that.timestamp);case _:
@@ -180,7 +180,7 @@ return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'livestream_id')  num livestreamId, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'user_name')  String userName, @JsonKey(name: 'user_avatar')  String? userAvatar,  String message,  int timestamp)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  num livestreamId,  String userId,  String userName,  String? userAvatar,  String message,  int timestamp)  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamCommentDto():
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.message,_that.timestamp);case _:
@@ -200,7 +200,7 @@ return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'livestream_id')  num livestreamId, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'user_name')  String userName, @JsonKey(name: 'user_avatar')  String? userAvatar,  String message,  int timestamp)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  num livestreamId,  String userId,  String userName,  String? userAvatar,  String message,  int timestamp)?  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamCommentDto() when $default != null:
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.message,_that.timestamp);case _:
@@ -215,14 +215,14 @@ return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.us
 @JsonSerializable()
 
 class _LivestreamCommentDto extends LivestreamCommentDto {
-  const _LivestreamCommentDto({required this.id, @JsonKey(name: 'livestream_id') required this.livestreamId, @JsonKey(name: 'user_id') required this.userId, @JsonKey(name: 'user_name') required this.userName, @JsonKey(name: 'user_avatar') this.userAvatar, required this.message, required this.timestamp}): super._();
+  const _LivestreamCommentDto({required this.id, required this.livestreamId, required this.userId, required this.userName, this.userAvatar, required this.message, required this.timestamp}): super._();
   factory _LivestreamCommentDto.fromJson(Map<String, dynamic> json) => _$LivestreamCommentDtoFromJson(json);
 
 @override final  String id;
-@override@JsonKey(name: 'livestream_id') final  num livestreamId;
-@override@JsonKey(name: 'user_id') final  String userId;
-@override@JsonKey(name: 'user_name') final  String userName;
-@override@JsonKey(name: 'user_avatar') final  String? userAvatar;
+@override final  num livestreamId;
+@override final  String userId;
+@override final  String userName;
+@override final  String? userAvatar;
 @override final  String message;
 @override final  int timestamp;
 
@@ -259,7 +259,7 @@ abstract mixin class _$LivestreamCommentDtoCopyWith<$Res> implements $Livestream
   factory _$LivestreamCommentDtoCopyWith(_LivestreamCommentDto value, $Res Function(_LivestreamCommentDto) _then) = __$LivestreamCommentDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'livestream_id') num livestreamId,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'user_name') String userName,@JsonKey(name: 'user_avatar') String? userAvatar, String message, int timestamp
+ String id, num livestreamId, String userId, String userName, String? userAvatar, String message, int timestamp
 });
 
 
@@ -296,7 +296,7 @@ as int,
 /// @nodoc
 mixin _$LivestreamLikeDto {
 
- String get id;@JsonKey(name: 'livestream_id') num get livestreamId;@JsonKey(name: 'user_id') String get userId;@JsonKey(name: 'user_name') String? get userName;@JsonKey(name: 'user_avatar') String? get userAvatar; int get timestamp;
+ String get id; num get livestreamId; String get userId; String? get userName; String? get userAvatar; int get timestamp;
 /// Create a copy of LivestreamLikeDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -329,7 +329,7 @@ abstract mixin class $LivestreamLikeDtoCopyWith<$Res>  {
   factory $LivestreamLikeDtoCopyWith(LivestreamLikeDto value, $Res Function(LivestreamLikeDto) _then) = _$LivestreamLikeDtoCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'livestream_id') num livestreamId,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'user_name') String? userName,@JsonKey(name: 'user_avatar') String? userAvatar, int timestamp
+ String id, num livestreamId, String userId, String? userName, String? userAvatar, int timestamp
 });
 
 
@@ -439,7 +439,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'livestream_id')  num livestreamId, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'user_name')  String? userName, @JsonKey(name: 'user_avatar')  String? userAvatar,  int timestamp)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  num livestreamId,  String userId,  String? userName,  String? userAvatar,  int timestamp)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LivestreamLikeDto() when $default != null:
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.timestamp);case _:
@@ -460,7 +460,7 @@ return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'livestream_id')  num livestreamId, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'user_name')  String? userName, @JsonKey(name: 'user_avatar')  String? userAvatar,  int timestamp)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  num livestreamId,  String userId,  String? userName,  String? userAvatar,  int timestamp)  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamLikeDto():
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.timestamp);case _:
@@ -480,7 +480,7 @@ return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'livestream_id')  num livestreamId, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'user_name')  String? userName, @JsonKey(name: 'user_avatar')  String? userAvatar,  int timestamp)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  num livestreamId,  String userId,  String? userName,  String? userAvatar,  int timestamp)?  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamLikeDto() when $default != null:
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.timestamp);case _:
@@ -495,14 +495,14 @@ return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.us
 @JsonSerializable()
 
 class _LivestreamLikeDto extends LivestreamLikeDto {
-  const _LivestreamLikeDto({required this.id, @JsonKey(name: 'livestream_id') required this.livestreamId, @JsonKey(name: 'user_id') required this.userId, @JsonKey(name: 'user_name') this.userName, @JsonKey(name: 'user_avatar') this.userAvatar, required this.timestamp}): super._();
+  const _LivestreamLikeDto({required this.id, required this.livestreamId, required this.userId, this.userName, this.userAvatar, required this.timestamp}): super._();
   factory _LivestreamLikeDto.fromJson(Map<String, dynamic> json) => _$LivestreamLikeDtoFromJson(json);
 
 @override final  String id;
-@override@JsonKey(name: 'livestream_id') final  num livestreamId;
-@override@JsonKey(name: 'user_id') final  String userId;
-@override@JsonKey(name: 'user_name') final  String? userName;
-@override@JsonKey(name: 'user_avatar') final  String? userAvatar;
+@override final  num livestreamId;
+@override final  String userId;
+@override final  String? userName;
+@override final  String? userAvatar;
 @override final  int timestamp;
 
 /// Create a copy of LivestreamLikeDto
@@ -538,7 +538,7 @@ abstract mixin class _$LivestreamLikeDtoCopyWith<$Res> implements $LivestreamLik
   factory _$LivestreamLikeDtoCopyWith(_LivestreamLikeDto value, $Res Function(_LivestreamLikeDto) _then) = __$LivestreamLikeDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'livestream_id') num livestreamId,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'user_name') String? userName,@JsonKey(name: 'user_avatar') String? userAvatar, int timestamp
+ String id, num livestreamId, String userId, String? userName, String? userAvatar, int timestamp
 });
 
 

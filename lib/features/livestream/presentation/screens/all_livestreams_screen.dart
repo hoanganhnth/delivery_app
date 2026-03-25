@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../providers/livestream_providers.dart';
+import '../providers/providers.dart';
 import '../widgets/livestream_card_grid.dart';
 
 /// Màn hình hiển thị tất cả livestream theo grid 2 cột
@@ -20,7 +20,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
     super.initState();
     // Load livestreams when screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(livestreamNotifierProvider.notifier).loadLivestreams(refresh: true);
+      ref.read(livestreamProvider.notifier).loadLivestreams(refresh: true);
     });
 
     // Setup infinite scroll
@@ -29,9 +29,9 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
 
   void _onScroll() {
     if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
-      final state = ref.read(livestreamNotifierProvider);
+      final state = ref.read(livestreamProvider);
       if (!state.isLoading && state.hasMore) {
-        ref.read(livestreamNotifierProvider.notifier).loadLivestreams();
+        ref.read(livestreamProvider.notifier).loadLivestreams();
       }
     }
   }
@@ -44,7 +44,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final livestreamState = ref.watch(livestreamNotifierProvider);
+    final livestreamState = ref.watch(livestreamProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -71,7 +71,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          await ref.read(livestreamNotifierProvider.notifier).loadLivestreams(refresh: true);
+          await ref.read(livestreamProvider.notifier).loadLivestreams(refresh: true);
         },
         child: livestreamState.isLoading && livestreamState.livestreams.isEmpty
             ? const Center(child: CircularProgressIndicator())
@@ -89,7 +89,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
                         SizedBox(height: 16.w),
                         ElevatedButton(
                           onPressed: () {
-                            ref.read(livestreamNotifierProvider.notifier).loadLivestreams(refresh: true);
+                            ref.read(livestreamProvider.notifier).loadLivestreams(refresh: true);
                           },
                           child: const Text('Thử lại'),
                         ),

@@ -47,14 +47,13 @@ class _LivestreamApiService implements LivestreamApiService {
     try {
       _value = BaseResponseDto<List<LivestreamDto>>.fromJson(
         _result.data!,
-        (json) =>
-            json is List<dynamic>
-                ? json
-                    .map<LivestreamDto>(
-                      (i) => LivestreamDto.fromJson(i as Map<String, dynamic>),
-                    )
-                    .toList()
-                : List.empty(),
+        (json) => json is List<dynamic>
+            ? json
+                  .map<LivestreamDto>(
+                    (i) => LivestreamDto.fromJson(i as Map<String, dynamic>),
+                  )
+                  .toList()
+            : List.empty(),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
@@ -117,14 +116,13 @@ class _LivestreamApiService implements LivestreamApiService {
     try {
       _value = BaseResponseDto<List<LivestreamDto>>.fromJson(
         _result.data!,
-        (json) =>
-            json is List<dynamic>
-                ? json
-                    .map<LivestreamDto>(
-                      (i) => LivestreamDto.fromJson(i as Map<String, dynamic>),
-                    )
-                    .toList()
-                : List.empty(),
+        (json) => json is List<dynamic>
+            ? json
+                  .map<LivestreamDto>(
+                    (i) => LivestreamDto.fromJson(i as Map<String, dynamic>),
+                  )
+                  .toList()
+            : List.empty(),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LivestreamDto {
 
- num get id; String get title;@JsonKey(name: 'streamer_id') String get streamerId;@JsonKey(name: 'streamer_name') String get streamerName;@JsonKey(name: 'streamer_avatar') String? get streamerAvatar;@JsonKey(name: 'channel_name') String get channelName;@JsonKey(name: 'rtc_token') String get rtcToken; int get uid; String get description;@JsonKey(name: 'viewer_count') int get viewerCount;@JsonKey(name: 'like_count') int get likeCount; String get status;@JsonKey(name: 'thumbnail_url') String? get thumbnailUrl;@JsonKey(name: 'cover_image_url') String? get coverImageUrl;@JsonKey(name: 'start_time') String get startTime;@JsonKey(name: 'end_time') String? get endTime; List<LivestreamProductDto>? get products;
+ num get id; String get title; String get streamerId; String get streamerName; String? get streamerAvatar; String get channelName; String get rtcToken; int get uid; String get description; int get viewerCount; int get likeCount; String get status; String? get thumbnailUrl; String? get coverImageUrl; String get startTime; String? get endTime; List<LivestreamProductDto>? get products;
 /// Create a copy of LivestreamDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $LivestreamDtoCopyWith<$Res>  {
   factory $LivestreamDtoCopyWith(LivestreamDto value, $Res Function(LivestreamDto) _then) = _$LivestreamDtoCopyWithImpl;
 @useResult
 $Res call({
- num id, String title,@JsonKey(name: 'streamer_id') String streamerId,@JsonKey(name: 'streamer_name') String streamerName,@JsonKey(name: 'streamer_avatar') String? streamerAvatar,@JsonKey(name: 'channel_name') String channelName,@JsonKey(name: 'rtc_token') String rtcToken, int uid, String description,@JsonKey(name: 'viewer_count') int viewerCount,@JsonKey(name: 'like_count') int likeCount, String status,@JsonKey(name: 'thumbnail_url') String? thumbnailUrl,@JsonKey(name: 'cover_image_url') String? coverImageUrl,@JsonKey(name: 'start_time') String startTime,@JsonKey(name: 'end_time') String? endTime, List<LivestreamProductDto>? products
+ num id, String title, String streamerId, String streamerName, String? streamerAvatar, String channelName, String rtcToken, int uid, String description, int viewerCount, int likeCount, String status, String? thumbnailUrl, String? coverImageUrl, String startTime, String? endTime, List<LivestreamProductDto>? products
 });
 
 
@@ -169,7 +169,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( num id,  String title, @JsonKey(name: 'streamer_id')  String streamerId, @JsonKey(name: 'streamer_name')  String streamerName, @JsonKey(name: 'streamer_avatar')  String? streamerAvatar, @JsonKey(name: 'channel_name')  String channelName, @JsonKey(name: 'rtc_token')  String rtcToken,  int uid,  String description, @JsonKey(name: 'viewer_count')  int viewerCount, @JsonKey(name: 'like_count')  int likeCount,  String status, @JsonKey(name: 'thumbnail_url')  String? thumbnailUrl, @JsonKey(name: 'cover_image_url')  String? coverImageUrl, @JsonKey(name: 'start_time')  String startTime, @JsonKey(name: 'end_time')  String? endTime,  List<LivestreamProductDto>? products)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( num id,  String title,  String streamerId,  String streamerName,  String? streamerAvatar,  String channelName,  String rtcToken,  int uid,  String description,  int viewerCount,  int likeCount,  String status,  String? thumbnailUrl,  String? coverImageUrl,  String startTime,  String? endTime,  List<LivestreamProductDto>? products)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LivestreamDto() when $default != null:
 return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startTime,_that.endTime,_that.products);case _:
@@ -190,7 +190,7 @@ return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.s
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num id,  String title, @JsonKey(name: 'streamer_id')  String streamerId, @JsonKey(name: 'streamer_name')  String streamerName, @JsonKey(name: 'streamer_avatar')  String? streamerAvatar, @JsonKey(name: 'channel_name')  String channelName, @JsonKey(name: 'rtc_token')  String rtcToken,  int uid,  String description, @JsonKey(name: 'viewer_count')  int viewerCount, @JsonKey(name: 'like_count')  int likeCount,  String status, @JsonKey(name: 'thumbnail_url')  String? thumbnailUrl, @JsonKey(name: 'cover_image_url')  String? coverImageUrl, @JsonKey(name: 'start_time')  String startTime, @JsonKey(name: 'end_time')  String? endTime,  List<LivestreamProductDto>? products)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num id,  String title,  String streamerId,  String streamerName,  String? streamerAvatar,  String channelName,  String rtcToken,  int uid,  String description,  int viewerCount,  int likeCount,  String status,  String? thumbnailUrl,  String? coverImageUrl,  String startTime,  String? endTime,  List<LivestreamProductDto>? products)  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamDto():
 return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startTime,_that.endTime,_that.products);case _:
@@ -210,7 +210,7 @@ return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.s
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( num id,  String title, @JsonKey(name: 'streamer_id')  String streamerId, @JsonKey(name: 'streamer_name')  String streamerName, @JsonKey(name: 'streamer_avatar')  String? streamerAvatar, @JsonKey(name: 'channel_name')  String channelName, @JsonKey(name: 'rtc_token')  String rtcToken,  int uid,  String description, @JsonKey(name: 'viewer_count')  int viewerCount, @JsonKey(name: 'like_count')  int likeCount,  String status, @JsonKey(name: 'thumbnail_url')  String? thumbnailUrl, @JsonKey(name: 'cover_image_url')  String? coverImageUrl, @JsonKey(name: 'start_time')  String startTime, @JsonKey(name: 'end_time')  String? endTime,  List<LivestreamProductDto>? products)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( num id,  String title,  String streamerId,  String streamerName,  String? streamerAvatar,  String channelName,  String rtcToken,  int uid,  String description,  int viewerCount,  int likeCount,  String status,  String? thumbnailUrl,  String? coverImageUrl,  String startTime,  String? endTime,  List<LivestreamProductDto>? products)?  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamDto() when $default != null:
 return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startTime,_that.endTime,_that.products);case _:
@@ -225,25 +225,25 @@ return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.s
 @JsonSerializable()
 
 class _LivestreamDto extends LivestreamDto {
-  const _LivestreamDto({required this.id, required this.title, @JsonKey(name: 'streamer_id') required this.streamerId, @JsonKey(name: 'streamer_name') required this.streamerName, @JsonKey(name: 'streamer_avatar') this.streamerAvatar, @JsonKey(name: 'channel_name') required this.channelName, @JsonKey(name: 'rtc_token') required this.rtcToken, required this.uid, required this.description, @JsonKey(name: 'viewer_count') required this.viewerCount, @JsonKey(name: 'like_count') required this.likeCount, required this.status, @JsonKey(name: 'thumbnail_url') this.thumbnailUrl, @JsonKey(name: 'cover_image_url') this.coverImageUrl, @JsonKey(name: 'start_time') required this.startTime, @JsonKey(name: 'end_time') this.endTime, final  List<LivestreamProductDto>? products}): _products = products,super._();
+  const _LivestreamDto({required this.id, required this.title, required this.streamerId, required this.streamerName, this.streamerAvatar, required this.channelName, required this.rtcToken, required this.uid, required this.description, required this.viewerCount, required this.likeCount, required this.status, this.thumbnailUrl, this.coverImageUrl, required this.startTime, this.endTime, final  List<LivestreamProductDto>? products}): _products = products,super._();
   factory _LivestreamDto.fromJson(Map<String, dynamic> json) => _$LivestreamDtoFromJson(json);
 
 @override final  num id;
 @override final  String title;
-@override@JsonKey(name: 'streamer_id') final  String streamerId;
-@override@JsonKey(name: 'streamer_name') final  String streamerName;
-@override@JsonKey(name: 'streamer_avatar') final  String? streamerAvatar;
-@override@JsonKey(name: 'channel_name') final  String channelName;
-@override@JsonKey(name: 'rtc_token') final  String rtcToken;
+@override final  String streamerId;
+@override final  String streamerName;
+@override final  String? streamerAvatar;
+@override final  String channelName;
+@override final  String rtcToken;
 @override final  int uid;
 @override final  String description;
-@override@JsonKey(name: 'viewer_count') final  int viewerCount;
-@override@JsonKey(name: 'like_count') final  int likeCount;
+@override final  int viewerCount;
+@override final  int likeCount;
 @override final  String status;
-@override@JsonKey(name: 'thumbnail_url') final  String? thumbnailUrl;
-@override@JsonKey(name: 'cover_image_url') final  String? coverImageUrl;
-@override@JsonKey(name: 'start_time') final  String startTime;
-@override@JsonKey(name: 'end_time') final  String? endTime;
+@override final  String? thumbnailUrl;
+@override final  String? coverImageUrl;
+@override final  String startTime;
+@override final  String? endTime;
  final  List<LivestreamProductDto>? _products;
 @override List<LivestreamProductDto>? get products {
   final value = _products;
@@ -287,7 +287,7 @@ abstract mixin class _$LivestreamDtoCopyWith<$Res> implements $LivestreamDtoCopy
   factory _$LivestreamDtoCopyWith(_LivestreamDto value, $Res Function(_LivestreamDto) _then) = __$LivestreamDtoCopyWithImpl;
 @override @useResult
 $Res call({
- num id, String title,@JsonKey(name: 'streamer_id') String streamerId,@JsonKey(name: 'streamer_name') String streamerName,@JsonKey(name: 'streamer_avatar') String? streamerAvatar,@JsonKey(name: 'channel_name') String channelName,@JsonKey(name: 'rtc_token') String rtcToken, int uid, String description,@JsonKey(name: 'viewer_count') int viewerCount,@JsonKey(name: 'like_count') int likeCount, String status,@JsonKey(name: 'thumbnail_url') String? thumbnailUrl,@JsonKey(name: 'cover_image_url') String? coverImageUrl,@JsonKey(name: 'start_time') String startTime,@JsonKey(name: 'end_time') String? endTime, List<LivestreamProductDto>? products
+ num id, String title, String streamerId, String streamerName, String? streamerAvatar, String channelName, String rtcToken, int uid, String description, int viewerCount, int likeCount, String status, String? thumbnailUrl, String? coverImageUrl, String startTime, String? endTime, List<LivestreamProductDto>? products
 });
 
 
@@ -334,7 +334,7 @@ as List<LivestreamProductDto>?,
 /// @nodoc
 mixin _$LivestreamProductDto {
 
- num get id; String get name; double get price; String get image;@JsonKey(name: 'restaurant_id') num get restaurantId;@JsonKey(name: 'restaurant_name') String get restaurantName;@JsonKey(name: 'discount_price') double? get discountPrice; String? get description;@JsonKey(name: 'stock_quantity') int? get stockQuantity;
+ num get id; String get name; double get price; String get image; num get restaurantId; String get restaurantName; double? get discountPrice; String? get description; int? get stockQuantity;
 /// Create a copy of LivestreamProductDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -367,7 +367,7 @@ abstract mixin class $LivestreamProductDtoCopyWith<$Res>  {
   factory $LivestreamProductDtoCopyWith(LivestreamProductDto value, $Res Function(LivestreamProductDto) _then) = _$LivestreamProductDtoCopyWithImpl;
 @useResult
 $Res call({
- num id, String name, double price, String image,@JsonKey(name: 'restaurant_id') num restaurantId,@JsonKey(name: 'restaurant_name') String restaurantName,@JsonKey(name: 'discount_price') double? discountPrice, String? description,@JsonKey(name: 'stock_quantity') int? stockQuantity
+ num id, String name, double price, String image, num restaurantId, String restaurantName, double? discountPrice, String? description, int? stockQuantity
 });
 
 
@@ -480,7 +480,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( num id,  String name,  double price,  String image, @JsonKey(name: 'restaurant_id')  num restaurantId, @JsonKey(name: 'restaurant_name')  String restaurantName, @JsonKey(name: 'discount_price')  double? discountPrice,  String? description, @JsonKey(name: 'stock_quantity')  int? stockQuantity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( num id,  String name,  double price,  String image,  num restaurantId,  String restaurantName,  double? discountPrice,  String? description,  int? stockQuantity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LivestreamProductDto() when $default != null:
 return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_that.restaurantName,_that.discountPrice,_that.description,_that.stockQuantity);case _:
@@ -501,7 +501,7 @@ return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num id,  String name,  double price,  String image, @JsonKey(name: 'restaurant_id')  num restaurantId, @JsonKey(name: 'restaurant_name')  String restaurantName, @JsonKey(name: 'discount_price')  double? discountPrice,  String? description, @JsonKey(name: 'stock_quantity')  int? stockQuantity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num id,  String name,  double price,  String image,  num restaurantId,  String restaurantName,  double? discountPrice,  String? description,  int? stockQuantity)  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamProductDto():
 return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_that.restaurantName,_that.discountPrice,_that.description,_that.stockQuantity);case _:
@@ -521,7 +521,7 @@ return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( num id,  String name,  double price,  String image, @JsonKey(name: 'restaurant_id')  num restaurantId, @JsonKey(name: 'restaurant_name')  String restaurantName, @JsonKey(name: 'discount_price')  double? discountPrice,  String? description, @JsonKey(name: 'stock_quantity')  int? stockQuantity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( num id,  String name,  double price,  String image,  num restaurantId,  String restaurantName,  double? discountPrice,  String? description,  int? stockQuantity)?  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamProductDto() when $default != null:
 return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_that.restaurantName,_that.discountPrice,_that.description,_that.stockQuantity);case _:
@@ -536,18 +536,18 @@ return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_
 @JsonSerializable()
 
 class _LivestreamProductDto extends LivestreamProductDto {
-  const _LivestreamProductDto({required this.id, required this.name, required this.price, required this.image, @JsonKey(name: 'restaurant_id') required this.restaurantId, @JsonKey(name: 'restaurant_name') required this.restaurantName, @JsonKey(name: 'discount_price') this.discountPrice, this.description, @JsonKey(name: 'stock_quantity') this.stockQuantity}): super._();
+  const _LivestreamProductDto({required this.id, required this.name, required this.price, required this.image, required this.restaurantId, required this.restaurantName, this.discountPrice, this.description, this.stockQuantity}): super._();
   factory _LivestreamProductDto.fromJson(Map<String, dynamic> json) => _$LivestreamProductDtoFromJson(json);
 
 @override final  num id;
 @override final  String name;
 @override final  double price;
 @override final  String image;
-@override@JsonKey(name: 'restaurant_id') final  num restaurantId;
-@override@JsonKey(name: 'restaurant_name') final  String restaurantName;
-@override@JsonKey(name: 'discount_price') final  double? discountPrice;
+@override final  num restaurantId;
+@override final  String restaurantName;
+@override final  double? discountPrice;
 @override final  String? description;
-@override@JsonKey(name: 'stock_quantity') final  int? stockQuantity;
+@override final  int? stockQuantity;
 
 /// Create a copy of LivestreamProductDto
 /// with the given fields replaced by the non-null parameter values.
@@ -582,7 +582,7 @@ abstract mixin class _$LivestreamProductDtoCopyWith<$Res> implements $Livestream
   factory _$LivestreamProductDtoCopyWith(_LivestreamProductDto value, $Res Function(_LivestreamProductDto) _then) = __$LivestreamProductDtoCopyWithImpl;
 @override @useResult
 $Res call({
- num id, String name, double price, String image,@JsonKey(name: 'restaurant_id') num restaurantId,@JsonKey(name: 'restaurant_name') String restaurantName,@JsonKey(name: 'discount_price') double? discountPrice, String? description,@JsonKey(name: 'stock_quantity') int? stockQuantity
+ num id, String name, double price, String image, num restaurantId, String restaurantName, double? discountPrice, String? description, int? stockQuantity
 });
 
 

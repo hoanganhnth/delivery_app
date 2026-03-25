@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../providers/livestream_providers.dart';
+import '../providers/providers.dart';
 import '../widgets/livestream_card_horizontal.dart';
 
 /// Widget hiển thị danh sách livestream theo hàng ngang ở trang Home
@@ -18,13 +18,13 @@ class _LivestreamHomeSectionState extends ConsumerState<LivestreamHomeSection> {
     super.initState();
     // Load featured livestreams when widget initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(livestreamNotifierProvider.notifier).loadFeaturedLivestreams();
+      ref.read(livestreamProvider.notifier).loadFeaturedLivestreams();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final livestreamState = ref.watch(livestreamNotifierProvider);
+    final livestreamState = ref.watch(livestreamProvider);
 
     // Don't show section if no livestreams
     if (livestreamState.livestreams.isEmpty && !livestreamState.isLoading) {

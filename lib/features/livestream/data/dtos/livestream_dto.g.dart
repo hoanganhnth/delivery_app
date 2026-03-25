@@ -10,46 +10,43 @@ _LivestreamDto _$LivestreamDtoFromJson(Map<String, dynamic> json) =>
     _LivestreamDto(
       id: json['id'] as num,
       title: json['title'] as String,
-      streamerId: json['streamer_id'] as String,
-      streamerName: json['streamer_name'] as String,
-      streamerAvatar: json['streamer_avatar'] as String?,
-      channelName: json['channel_name'] as String,
-      rtcToken: json['rtc_token'] as String,
+      streamerId: json['streamerId'] as String,
+      streamerName: json['streamerName'] as String,
+      streamerAvatar: json['streamerAvatar'] as String?,
+      channelName: json['channelName'] as String,
+      rtcToken: json['rtcToken'] as String,
       uid: (json['uid'] as num).toInt(),
       description: json['description'] as String,
-      viewerCount: (json['viewer_count'] as num).toInt(),
-      likeCount: (json['like_count'] as num).toInt(),
+      viewerCount: (json['viewerCount'] as num).toInt(),
+      likeCount: (json['likeCount'] as num).toInt(),
       status: json['status'] as String,
-      thumbnailUrl: json['thumbnail_url'] as String?,
-      coverImageUrl: json['cover_image_url'] as String?,
-      startTime: json['start_time'] as String,
-      endTime: json['end_time'] as String?,
-      products:
-          (json['products'] as List<dynamic>?)
-              ?.map(
-                (e) => LivestreamProductDto.fromJson(e as Map<String, dynamic>),
-              )
-              .toList(),
+      thumbnailUrl: json['thumbnailUrl'] as String?,
+      coverImageUrl: json['coverImageUrl'] as String?,
+      startTime: json['startTime'] as String,
+      endTime: json['endTime'] as String?,
+      products: (json['products'] as List<dynamic>?)
+          ?.map((e) => LivestreamProductDto.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$LivestreamDtoToJson(_LivestreamDto instance) =>
     <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
-      'streamer_id': instance.streamerId,
-      'streamer_name': instance.streamerName,
-      'streamer_avatar': instance.streamerAvatar,
-      'channel_name': instance.channelName,
-      'rtc_token': instance.rtcToken,
+      'streamerId': instance.streamerId,
+      'streamerName': instance.streamerName,
+      'streamerAvatar': instance.streamerAvatar,
+      'channelName': instance.channelName,
+      'rtcToken': instance.rtcToken,
       'uid': instance.uid,
       'description': instance.description,
-      'viewer_count': instance.viewerCount,
-      'like_count': instance.likeCount,
+      'viewerCount': instance.viewerCount,
+      'likeCount': instance.likeCount,
       'status': instance.status,
-      'thumbnail_url': instance.thumbnailUrl,
-      'cover_image_url': instance.coverImageUrl,
-      'start_time': instance.startTime,
-      'end_time': instance.endTime,
+      'thumbnailUrl': instance.thumbnailUrl,
+      'coverImageUrl': instance.coverImageUrl,
+      'startTime': instance.startTime,
+      'endTime': instance.endTime,
       'products': instance.products,
     };
 
@@ -60,11 +57,11 @@ _LivestreamProductDto _$LivestreamProductDtoFromJson(
   name: json['name'] as String,
   price: (json['price'] as num).toDouble(),
   image: json['image'] as String,
-  restaurantId: json['restaurant_id'] as num,
-  restaurantName: json['restaurant_name'] as String,
-  discountPrice: (json['discount_price'] as num?)?.toDouble(),
+  restaurantId: json['restaurantId'] as num,
+  restaurantName: json['restaurantName'] as String,
+  discountPrice: (json['discountPrice'] as num?)?.toDouble(),
   description: json['description'] as String?,
-  stockQuantity: (json['stock_quantity'] as num?)?.toInt(),
+  stockQuantity: (json['stockQuantity'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$LivestreamProductDtoToJson(
@@ -74,9 +71,9 @@ Map<String, dynamic> _$LivestreamProductDtoToJson(
   'name': instance.name,
   'price': instance.price,
   'image': instance.image,
-  'restaurant_id': instance.restaurantId,
-  'restaurant_name': instance.restaurantName,
-  'discount_price': instance.discountPrice,
+  'restaurantId': instance.restaurantId,
+  'restaurantName': instance.restaurantName,
+  'discountPrice': instance.discountPrice,
   'description': instance.description,
-  'stock_quantity': instance.stockQuantity,
+  'stockQuantity': instance.stockQuantity,
 };

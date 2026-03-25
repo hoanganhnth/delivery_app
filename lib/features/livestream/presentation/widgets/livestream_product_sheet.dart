@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../cart/domain/entities/cart_item_entity.dart';
-import '../../../cart/presentation/providers/cart_providers.dart';
+import '../../../cart/presentation/providers/providers.dart';
 import '../../domain/entities/livestream_entity.dart';
 
 /// Bottom sheet hiển thị danh sách sản phẩm trong livestream
@@ -88,7 +88,7 @@ class _ProductItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartNotifier = ref.watch(cartNotifierProvider.notifier);
+    final cartNotifier = ref.watch(cartProvider.notifier);
 
     return Container(
       margin: EdgeInsets.only(bottom: 12.w),

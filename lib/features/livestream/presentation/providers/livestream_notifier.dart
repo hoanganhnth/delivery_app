@@ -1,18 +1,17 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../domain/usecases/get_livestreams_usecase.dart';
+import 'livestream_providers.dart';
 import 'livestream_state.dart';
 
-/// Livestream list notifier
-class LivestreamNotifier extends StateNotifier<LivestreamState> {
-  final GetLivestreamsUseCase _getLivestreamsUseCase;
-  final GetFeaturedLivestreamsUseCase _getFeaturedLivestreamsUseCase;
+part 'livestream_notifier.g.dart';
 
-  LivestreamNotifier({
-    required GetLivestreamsUseCase getLivestreamsUseCase,
-    required GetFeaturedLivestreamsUseCase getFeaturedLivestreamsUseCase,
-  })  : _getLivestreamsUseCase = getLivestreamsUseCase,
-        _getFeaturedLivestreamsUseCase = getFeaturedLivestreamsUseCase,
-        super(const LivestreamState());
+/// Livestream list notifier
+@riverpod
+class LivestreamNotifier extends _$LivestreamNotifier {
+  @override
+  LivestreamState build() {
+    return const LivestreamState();
+  }
 
   /// Load livestreams
   Future<void> loadLivestreams({bool refresh = false}) async {
@@ -22,7 +21,8 @@ class LivestreamNotifier extends StateNotifier<LivestreamState> {
       state = state.copyWith(isLoading: true, clearFailure: true);
     }
 
-    final result = await _getLivestreamsUseCase(
+    final getLivestreamsUseCase = ref.read(getLivestreamsUseCaseProvider);
+    final result = await getLivestreamsUseCase(
       GetLivestreamsParams(
         page: refresh ? 1 : state.currentPage,
         limit: 20,
@@ -48,7 +48,8 @@ class LivestreamNotifier extends StateNotifier<LivestreamState> {
   Future<void> loadFeaturedLivestreams() async {
     state = state.copyWith(isLoading: true, clearFailure: true);
 
-    final result = await _getFeaturedLivestreamsUseCase(
+    final getFeaturedLivestreamsUseCase = ref.read(getFeaturedLivestreamsUseCaseProvider);
+    final result = await getFeaturedLivestreamsUseCase(
       GetFeaturedLivestreamsParams(limit: 10),
     );
 

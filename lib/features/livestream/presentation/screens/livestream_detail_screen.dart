@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:delivery_app/features/livestream/presentation/providers/livestream_detail_notifier.dart';
-import 'package:delivery_app/features/livestream/presentation/providers/livestream_state.dart'
-    show LivestreamDetailState;
+import 'package:delivery_app/features/livestream/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,7 +9,6 @@ import '../../../../core/logger/app_logger.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../domain/entities/livestream_comment_entity.dart';
 import '../../domain/entities/livestream_entity.dart';
-import '../providers/livestream_providers.dart';
 import '../services/agora_service.dart';
 import '../widgets/livestream_comment_item.dart';
 import '../widgets/livestream_like_animation.dart';
@@ -101,13 +98,13 @@ class _LivestreamDetailScreenState
   /// Load livestream detail and join channel
   Future<void> _loadLivestreamAndJoin() async {
     final detailState = ref.read(
-      livestreamDetailNotifierProvider(widget.livestreamId),
+      livestreamDetailProvider(widget.livestreamId),
     );
     
     if (detailState.livestream == null) {
       // Load from API first
       await ref.read(
-        livestreamDetailNotifierProvider(widget.livestreamId).notifier,
+        livestreamDetailProvider(widget.livestreamId).notifier,
       ).loadLivestreamDetail(widget.livestreamId);
       
       // Wait for state update
@@ -115,7 +112,7 @@ class _LivestreamDetailScreenState
     }
 
     final updatedState = ref.read(
-      livestreamDetailNotifierProvider(widget.livestreamId),
+      livestreamDetailProvider(widget.livestreamId),
     );
     
     if (updatedState.livestream != null) {
@@ -148,7 +145,7 @@ class _LivestreamDetailScreenState
 
       try {
         final notifier = ref.read(
-          livestreamInteractionNotifierProvider(widget.livestreamId).notifier,
+          livestreamInteractionProvider(widget.livestreamId).notifier,
         );
         await notifier.sendComment(comment);
 
@@ -177,7 +174,7 @@ class _LivestreamDetailScreenState
 
     try {
       final notifier = ref.read(
-        livestreamInteractionNotifierProvider(widget.livestreamId).notifier,
+        livestreamInteractionProvider(widget.livestreamId).notifier,
       );
       await notifier.sendLike(like);
     } catch (e) {
@@ -226,7 +223,7 @@ class _LivestreamDetailScreenState
 
   void _showProductSheet() {
     final detailState = ref.read(
-      livestreamDetailNotifierProvider(widget.livestreamId),
+      livestreamDetailProvider(widget.livestreamId),
     );
     if (detailState.livestream?.products == null || 
         detailState.livestream!.products!.isEmpty) {
@@ -280,10 +277,10 @@ class _LivestreamDetailScreenState
   @override
   Widget build(BuildContext context) {
     final detailState = ref.watch(
-      livestreamDetailNotifierProvider(widget.livestreamId),
+      livestreamDetailProvider(widget.livestreamId),
     );
     final interactionState = ref.watch(
-      livestreamInteractionNotifierProvider(widget.livestreamId),
+      livestreamInteractionProvider(widget.livestreamId),
     );
 
     if (detailState.isLoading) {
@@ -546,7 +543,7 @@ class _LivestreamDetailScreenState
   /// Build bottom controls
   Widget _buildBottomControls(LivestreamEntity livestream) {
     final detailState = ref.watch(
-      livestreamDetailNotifierProvider(widget.livestreamId),
+      livestreamDetailProvider(widget.livestreamId),
     );
 
     return Container(
