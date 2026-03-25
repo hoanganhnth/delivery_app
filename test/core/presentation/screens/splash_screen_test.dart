@@ -4,6 +4,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:delivery_app/core/presentation/screens/splash_screen.dart';
 import 'package:delivery_app/core/presentation/controllers/splash_controller.dart';
 
+// Mock SplashController for testing
+class _MockSplashController extends SplashController {
+  final SplashState _mockState;
+  
+  _MockSplashController(this._mockState);
+  
+  @override
+  SplashState build() => _mockState;
+}
+
 void main() {
   group('SplashScreen', () {
     testWidgets('should display app logo and name', (WidgetTester tester) async {
@@ -42,12 +52,10 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            splashControllerProvider.overrideWith((ref) {
-              final controller = SplashController(ref);
-              // Mock error state
-              controller.state = SplashState.error;
-              return controller;
-            }),
+            // Override with a mock that always returns error state
+            splashControllerProvider.overrideWith(
+              () => _MockSplashController(SplashState.error),
+            ),
           ],
           child: MaterialApp(
             home: SplashScreen(),
