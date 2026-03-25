@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../generated/l10n.dart';
-import '../../../restaurants/presentation/providers/restaurant_providers.dart';
+import '../../../restaurants/presentation/providers/providers.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -19,7 +19,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     super.initState();
     // Load featured restaurants when page initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(restaurantsNotifierProvider.notifier).loadFeaturedRestaurants();
+      ref.read(restaurantsProvider.notifier).loadFeaturedRestaurants();
     });
   }
   @override
