@@ -1,4 +1,4 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/datasources/token_local_data_source.dart';
@@ -9,37 +9,45 @@ import '../../domain/usecases/clear_tokens_usecase.dart';
 import '../../domain/usecases/get_tokens_usecase.dart';
 import '../../domain/usecases/store_tokens_usecase.dart';
 
+part 'token_storage_providers.g.dart';
+
 /// Provider for SharedPreferences
-final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
+@Riverpod(keepAlive: true)
+SharedPreferences sharedPreferences(Ref ref) {
   throw UnimplementedError('SharedPreferences must be overridden');
-});
+}
 
 /// Provider for TokenLocalDataSource
-final tokenLocalDataSourceProvider = Provider<TokenLocalDataSource>((ref) {
+@Riverpod(keepAlive: true)
+TokenLocalDataSource tokenLocalDataSource(Ref ref) {
   final prefs = ref.read(sharedPreferencesProvider);
   return TokenLocalDataSourceImpl(prefs);
-});
+}
 
 /// Provider for TokenStorageRepository
-final tokenStorageRepositoryProvider = Provider<TokenStorageRepository>((ref) {
+@Riverpod(keepAlive: true)
+TokenStorageRepository tokenStorageRepository(Ref ref) {
   final localDataSource = ref.read(tokenLocalDataSourceProvider);
   return TokenStorageRepositoryImpl(localDataSource);
-});
+}
 
 /// Provider for StoreTokensUseCase
-final storeTokensUseCaseProvider = Provider<StoreTokensUseCase>((ref) {
+@Riverpod(keepAlive: true)
+StoreTokensUseCase storeTokensUseCase(Ref ref) {
   final repository = ref.read(tokenStorageRepositoryProvider);
   return StoreTokensUseCase(repository);
-});
+}
 
 /// Provider for GetTokensUseCase
-final getTokensUseCaseProvider = Provider<GetTokensUseCase>((ref) {
+@Riverpod(keepAlive: true)
+GetTokensUseCase getTokensUseCase(Ref ref) {
   final repository = ref.read(tokenStorageRepositoryProvider);
   return GetTokensUseCase(repository);
-});
+}
 
 /// Provider for ClearTokensUseCase
-final clearTokensUseCaseProvider = Provider<ClearTokensUseCase>((ref) {
+@Riverpod(keepAlive: true)
+ClearTokensUseCase clearTokensUseCase(Ref ref) {
   final repository = ref.read(tokenStorageRepositoryProvider);
   return ClearTokensUseCase(repository);
-});
+}

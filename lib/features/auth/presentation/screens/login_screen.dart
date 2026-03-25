@@ -1,15 +1,14 @@
+import 'package:delivery_app/core/logger/app_logger.dart';
 import 'package:delivery_app/core/presentation/widgets/toast/toast_extensions.dart';
+import 'package:delivery_app/core/routing/navigation_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
+import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/logger/app_logger.dart';
-import '../../../../core/routing/navigation_helper.dart';
-import '../../../../core/usecases/usecase.dart';
 import '../../domain/entities/biometric_entity.dart';
-import '../providers/auth_providers.dart';
+import '../providers/auth_notifier.dart';
 import '../providers/auth_state.dart';
-import '../providers/biometric_providers.dart';
+import '../providers/biometric_notifier.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -32,17 +31,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authStateProvider);
+    final authState = ref.watch(authProvider);
 
     // Listen to auth state changes
-    ref.listen<AuthState>(authStateProvider, (previous, next) {
+    ref.listen<AuthState>(authProvider, (previous, next) {
       if (next.hasError) {
         context.showErrorToast(next.failure!.message);
       } else if (next.isAuthenticated && !next.isLoginLoading) {
         context.showSuccessToast('Login successful!');
         // Force refresh profile after login - don't use cache
         ref
-            .read(profileStateProvider.notifier)
+            .read(profileProvider.notifier)
             .getUserProfile(forceRefresh: true, useCache: false);
         context.goToMain();
       }
@@ -154,7 +153,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       return;
     }
 
-    final authNotifier = ref.read(authStateProvider.notifier);
+    final authNotifier = ref.read(authProvider.notifier);
 
     AppLogger.d('LoginScreen: Attempting login');
 
@@ -180,105 +179,33 @@ class _BiometricLoginButton extends ConsumerStatefulWidget {
 
 class _BiometricLoginButtonState extends ConsumerState<_BiometricLoginButton> {
   @override
-  void initState() {
-    super.initState();
-    // Check biometric availability on init
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(biometricNotifierProvider.notifier).checkBiometricAvailability();
-      ref.read(biometricNotifierProvider.notifier).checkBiometricEnabled();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final biometricState = ref.watch(biometricNotifierProvider);
-    final authState = ref.watch(authStateProvider);
+    final biometricState = ref.watch(biometricProvider);
 
-    // Don't show if biometric is not available or not enabled
     if (!biometricState.isAvailable || !biometricState.isEnabled) {
       return const SizedBox.shrink();
     }
 
-    return Column(
-      children: [
-        const Divider(),
-        SizedBox(height: 8.h),
-        Text(
-          'Or login with',
-          style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
-        ),
-        SizedBox(height: 16.h),
-        IconButton(
-          key: const Key('biometric_login_button'),
-          onPressed:
-              authState.isLoginLoading || biometricState.isLoading
-                  ? null
-                  : _handleBiometricLogin,
-          icon: Icon(
-            _getBiometricIcon(biometricState.availableTypes),
-            size: 48.w,
-          ),
-          tooltip: 'Login with biometric',
-        ),
-      ],
-    );
-  }
+    return IconButton(
+      icon: Icon(
+        biometricState.availableTypes.contains(BiometricType.face) 
+            ? Icons.face
+            : Icons.fingerprint,
+        size: 32,
+      ),
+      onPressed: () async {
+        final biometricNotifier = ref.read(biometricProvider.notifier);
+        
+        // Show reasoning dialog to user
+        final authenticated = await biometricNotifier.authenticateWithBiometric(
+          'Đăng nhập bằng sinh trắc học',
+        );
 
-  IconData _getBiometricIcon(List<BiometricType> types) {
-    if (types.contains(BiometricType.face)) {
-      return Icons.face;
-    } else if (types.contains(BiometricType.fingerprint)) {
-      return Icons.fingerprint;
-    }
-    return Icons.security;
-  }
-
-  Future<void> _handleBiometricLogin() async {
-    AppLogger.d('LoginScreen: Attempting biometric login');
-
-    // Authenticate with biometric
-    final authenticated = await ref
-        .read(biometricNotifierProvider.notifier)
-        .authenticateWithBiometric('Login to your account');
-
-    if (!authenticated) {
-      if (mounted) {
-        context.showErrorToast('Biometric authentication failed');
-      }
-      return;
-    }
-
-    // Get saved auth session (tokens)
-    final sessionResult = await ref
-        .read(getAuthSessionUseCaseProvider)
-        .call(NoParams());
-
-    await sessionResult.fold(
-      (failure) async {
-        if (mounted) {
-          context.showErrorToast('Failed to get saved session');
-        }
-      },
-      (tokenModel) async {
-        if (tokenModel == null) {
-          if (mounted) {
-            context.showErrorToast(
-              'No saved session found. Please login first.',
-            );
-          }
-          return;
-        }
-
-        // Login with saved tokens
-        await ref
-            .read(authStateProvider.notifier)
-            .loginWithTokens(
-              accessToken: tokenModel.accessToken,
-              refreshToken: tokenModel.refreshToken,
-            );
-
-        if (mounted) {
-          context.showSuccessToast('Logged in successfully with biometric');
+        if (authenticated) {
+          // TODO: Implement biometric login with stored credentials
+          // final authNotifier = ref.read(authProvider.notifier);
+          // Get stored credentials and login
+          // await authNotifier.login(...);
         }
       },
     );

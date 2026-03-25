@@ -21,6 +21,11 @@ class BiometricState {
   bool get hasError => failure != null;
   String? get errorMessage => failure?.message;
   bool get canUseBiometric => isAvailable && availableTypes.isNotEmpty;
+  
+  // Compatibility aliases for backward compatibility
+  bool get isSupported => isAvailable;
+  bool get isBiometricEnabled => isEnabled;
+  List<BiometricType> get availableBiometrics => availableTypes;
 
   BiometricState copyWith({
     bool? isAvailable,

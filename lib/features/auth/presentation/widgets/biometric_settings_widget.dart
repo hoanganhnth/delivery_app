@@ -1,40 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/presentation/widgets/toast/toast_extensions.dart';
-import '../../domain/entities/biometric_entity.dart';
-import '../providers/auth_providers.dart';
-import '../providers/biometric_providers.dart';
+import '../../domain/entities/biometric_entity.dart' as app;
+import '../providers/biometric_notifier.dart';
+import '../providers/auth_notifier.dart';
 
-/// Widget for biometric settings in profile/settings screen
-class BiometricSettingsWidget extends ConsumerStatefulWidget {
+class BiometricSettingsWidget extends ConsumerWidget {
   const BiometricSettingsWidget({super.key});
 
   @override
-  ConsumerState<BiometricSettingsWidget> createState() =>
-      _BiometricSettingsWidgetState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    // We only need to show this if biometrics are available
+    final biometricState = ref.watch(biometricProvider);
 
-class _BiometricSettingsWidgetState
-    extends ConsumerState<BiometricSettingsWidget> {
-  @override
-  void initState() {
-    super.initState();
-    // Check biometric availability on init
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(biometricNotifierProvider.notifier).checkBiometricAvailability();
-      ref.read(biometricNotifierProvider.notifier).checkBiometricEnabled();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final biometricState = ref.watch(biometricNotifierProvider);
-
-    // Don't show if biometric is not available
-    if (!biometricState.isAvailable) {
+    // If not supported, don't show the widget
+    if (!biometricState.isSupported) {
       return const SizedBox.shrink();
     }
+
+    final availableBiometrics = biometricState.availableBiometrics;
 
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -46,10 +30,11 @@ class _BiometricSettingsWidgetState
             Row(
               children: [
                 Icon(
-                  _getBiometricIcon(biometricState.availableTypes),
-                  size: 24.w,
+                  _getBiometricIcon(availableBiometrics),
+                  size: 28,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
-                SizedBox(width: 12.w),
+                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,7 +48,7 @@ class _BiometricSettingsWidgetState
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        _getBiometricDescription(biometricState.availableTypes),
+                        _getBiometricDescription(availableBiometrics),
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: Colors.grey[600],
@@ -72,12 +57,13 @@ class _BiometricSettingsWidgetState
                     ],
                   ),
                 ),
+                const SizedBox(width: 8),
                 Switch(
-                  value: biometricState.isEnabled,
-                  onChanged:
-                      biometricState.isLoading
-                          ? null
-                          : (value) => _handleToggleBiometric(value),
+                  value: biometricState.isBiometricEnabled,
+                  onChanged: biometricState.isSupported
+                      ? (value) => _handleToggleBiometric(context, ref, value)
+                      : null,
+                  activeColor: Theme.of(context).colorScheme.primary,
                 ),
               ],
             ),
@@ -92,18 +78,18 @@ class _BiometricSettingsWidgetState
     );
   }
 
-  IconData _getBiometricIcon(List<BiometricType> types) {
-    if (types.contains(BiometricType.face)) {
+  IconData _getBiometricIcon(List<app.BiometricType> types) {
+    if (types.contains(app.BiometricType.face)) {
       return Icons.face;
-    } else if (types.contains(BiometricType.fingerprint)) {
+    } else if (types.contains(app.BiometricType.fingerprint)) {
       return Icons.fingerprint;
-    } else if (types.contains(BiometricType.iris)) {
+    } else if (types.contains(app.BiometricType.iris)) {
       return Icons.remove_red_eye;
     }
     return Icons.security;
   }
 
-  String _getBiometricDescription(List<BiometricType> types) {
+  String _getBiometricDescription(List<app.BiometricType> types) {
     if (types.isEmpty) {
       return 'No biometric available';
     }
@@ -112,69 +98,65 @@ class _BiometricSettingsWidgetState
     return 'Use $typeNames to login quickly';
   }
 
-  Future<void> _handleToggleBiometric(bool enable) async {
-    final notifier = ref.read(biometricNotifierProvider.notifier);
+  Future<void> _handleToggleBiometric(BuildContext context, WidgetRef ref, bool enable) async {
+    final notifier = ref.read(biometricProvider.notifier);
 
     if (enable) {
-      // Show dialog to confirm and authenticate
-      final confirmed = await _showEnableBiometricDialog();
+      // User wants to enable, show dialog first
+      final confirmed = await _showEnableBiometricDialog(context);
       if (confirmed == true) {
         // Authenticate first
         final authenticated = await notifier.authenticateWithBiometric(
           'Authenticate to enable biometric login',
         );
 
-        if (authenticated && mounted) {
-          // Get current auth tokens from auth state
-          final authState = ref.read(authStateProvider);
-
-          if (authState.accessToken != null) {
-            // Save tokens for biometric login
-            await notifier.enableBiometric(
-              authState.accessToken!,
-              refreshToken: authState.refreshToken,
-            );
-
-            if (mounted) {
-              context.showSuccessToast('Biometric login enabled successfully');
-            }
-          } else {
-            if (mounted) {
-              context.showErrorToast('Please login first to enable biometric');
+        if (authenticated) {
+          if (context.mounted) {
+            // Get access token from auth state
+            final authState = ref.read(authProvider);
+            if (authState.accessToken != null) {
+              await notifier.enableBiometric(
+                authState.accessToken!,
+                refreshToken: authState.refreshToken,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Đã bật đăng nhập bằng sinh trắc học')),
+              );
             }
           }
         }
       }
     } else {
-      // Disable biometric
+      // Direct disable
       await notifier.disableBiometric();
-      if (mounted) {
-        context.showSuccessToast('Biometric login disabled');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Đã tắt đăng nhập bằng sinh trắc học')),
+        );
       }
     }
   }
 
-  Future<bool?> _showEnableBiometricDialog() {
+  Future<bool?> _showEnableBiometricDialog(BuildContext context) {
     return showDialog<bool>(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Enable Biometric Login'),
-            content: const Text(
-              'Do you want to enable biometric login? '
-              'This will allow you to login quickly using your fingerprint or face.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Enable'),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: const Text('Enable Biometric Login'),
+        content: const Text(
+          'Do you want to enable biometric login? '
+          'This will allow you to login quickly using your fingerprint or face.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
           ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Enable'),
+          ),
+        ],
+      ),
     );
   }
 }

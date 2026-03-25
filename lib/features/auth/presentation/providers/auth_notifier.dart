@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../domain/entities/auth_entity.dart';
@@ -9,29 +8,31 @@ import '../../domain/usecases/store_tokens_usecase.dart';
 import '../../domain/usecases/get_tokens_usecase.dart';
 import '../../domain/usecases/clear_tokens_usecase.dart';
 import 'auth_state.dart';
+import 'auth_providers.dart';
+import 'token_storage_providers.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class AuthNotifier extends StateNotifier<AuthState> {
-  final LoginUseCase _loginUseCase;
-  final RegisterUseCase _registerUseCase;
-  final RefreshTokenUseCase _refreshTokenUseCase;
-  final StoreTokensUseCase _storeTokensUseCase;
-  final GetTokensUseCase _getTokensUseCase;
-  final ClearTokensUseCase _clearTokensUseCase;
+part 'auth_notifier.g.dart';
 
-  AuthNotifier({
-    required LoginUseCase loginUseCase,
-    required RegisterUseCase registerUseCase,
-    required RefreshTokenUseCase refreshTokenUseCase,
-    required StoreTokensUseCase storeTokensUseCase,
-    required GetTokensUseCase getTokensUseCase,
-    required ClearTokensUseCase clearTokensUseCase,
-  }) : _loginUseCase = loginUseCase,
-       _registerUseCase = registerUseCase,
-       _refreshTokenUseCase = refreshTokenUseCase,
-       _storeTokensUseCase = storeTokensUseCase,
-       _getTokensUseCase = getTokensUseCase,
-       _clearTokensUseCase = clearTokensUseCase,
-       super(const AuthState());
+@riverpod
+class AuthNotifier extends _$AuthNotifier {
+  late final LoginUseCase _loginUseCase;
+  late final RegisterUseCase _registerUseCase;
+  late final RefreshTokenUseCase _refreshTokenUseCase;
+  late final StoreTokensUseCase _storeTokensUseCase;
+  late final GetTokensUseCase _getTokensUseCase;
+  late final ClearTokensUseCase _clearTokensUseCase;
+
+  @override
+  AuthState build() {
+    _loginUseCase = ref.read(loginUseCaseProvider);
+    _registerUseCase = ref.read(registerUseCaseProvider);
+    _refreshTokenUseCase = ref.read(refreshTokenUseCaseProvider);
+    _storeTokensUseCase = ref.read(storeTokensUseCaseProvider);
+    _getTokensUseCase = ref.read(getTokensUseCaseProvider);
+    _clearTokensUseCase = ref.read(clearTokensUseCaseProvider);
+    return const AuthState();
+  }
 
   // Login method
   Future<void> login({
@@ -109,7 +110,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       ),
     );
 
-    await storeResult.fold(
+    storeResult.fold(
       (failure) {
         AppLogger.e(
           'AuthNotifier: Failed to store tokens - ${failure.message}',

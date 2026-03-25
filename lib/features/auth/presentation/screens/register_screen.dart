@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../../../core/routing/navigation_helper.dart';
-import '../providers/auth_providers.dart';
+import '../providers/auth_notifier.dart';
 import '../providers/auth_state.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -32,10 +32,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authStateProvider);
+    final authState = ref.watch(authProvider);
 
     // Listen to auth state changes
-    ref.listen<AuthState>(authStateProvider, (previous, next) {
+    ref.listen<AuthState>(authProvider, (previous, next) {
       if (next.hasError) {
         _showErrorSnackBar(context, next.failure!);
       } else if (next.isAuthenticated) {
@@ -180,7 +180,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       return;
     }
 
-    final authNotifier = ref.read(authStateProvider.notifier);
+    final authNotifier = ref.read(authProvider.notifier);
     
     AppLogger.d('RegisterScreen: Attempting registration');
     
@@ -215,7 +215,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           label: 'Dismiss',
           textColor: Colors.white,
           onPressed: () {
-            // ref.read(authStateProvider.notifier).clearError();
+            // ref.read(authNotifierProvider.notifier).clearError();
           },
         ),
       ),

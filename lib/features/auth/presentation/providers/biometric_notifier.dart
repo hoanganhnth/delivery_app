@@ -1,4 +1,5 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../../../../core/logger/app_logger.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../domain/usecases/authenticate_with_biometric_usecase.dart';
@@ -8,30 +9,30 @@ import '../../domain/usecases/enable_biometric_usecase.dart';
 import '../../domain/usecases/get_available_biometrics_usecase.dart';
 import '../../domain/usecases/get_auth_session_usecase.dart';
 import 'biometric_state.dart';
+import 'biometric_providers.dart';
+
+part 'biometric_notifier.g.dart';
 
 /// Notifier for biometric authentication state
-class BiometricNotifier extends StateNotifier<BiometricState> {
-  final CheckBiometricAvailabilityUseCase _checkAvailability;
-  final GetAvailableBiometricsUseCase _getAvailableBiometrics;
-  final AuthenticateWithBiometricUseCase _authenticate;
-  final EnableBiometricUseCase _enableBiometric;
-  final DisableBiometricUseCase _disableBiometric;
-  final GetAuthSessionUseCase _getAuthSession;
+@riverpod
+class BiometricNotifier extends _$BiometricNotifier {
+  late final CheckBiometricAvailabilityUseCase _checkAvailability;
+  late final GetAvailableBiometricsUseCase _getAvailableBiometrics;
+  late final AuthenticateWithBiometricUseCase _authenticate;
+  late final EnableBiometricUseCase _enableBiometric;
+  late final DisableBiometricUseCase _disableBiometric;
+  late final GetAuthSessionUseCase _getAuthSession;
 
-  BiometricNotifier({
-    required CheckBiometricAvailabilityUseCase checkAvailability,
-    required GetAvailableBiometricsUseCase getAvailableBiometrics,
-    required AuthenticateWithBiometricUseCase authenticate,
-    required EnableBiometricUseCase enableBiometric,
-    required DisableBiometricUseCase disableBiometric,
-    required GetAuthSessionUseCase getAuthSession,
-  }) : _checkAvailability = checkAvailability,
-       _getAvailableBiometrics = getAvailableBiometrics,
-       _authenticate = authenticate,
-       _enableBiometric = enableBiometric,
-       _disableBiometric = disableBiometric,
-       _getAuthSession = getAuthSession,
-       super(const BiometricState());
+  @override
+  BiometricState build() {
+    _checkAvailability = ref.read(checkBiometricAvailabilityUseCaseProvider);
+    _getAvailableBiometrics = ref.read(getAvailableBiometricsUseCaseProvider);
+    _authenticate = ref.read(authenticateWithBiometricUseCaseProvider);
+    _enableBiometric = ref.read(enableBiometricUseCaseProvider);
+    _disableBiometric = ref.read(disableBiometricUseCaseProvider);
+    _getAuthSession = ref.read(getAuthSessionUseCaseProvider);
+    return const BiometricState();
+  }
 
   /// Check if biometric is available and get available types
   Future<void> checkBiometricAvailability() async {
