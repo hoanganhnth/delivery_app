@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
-import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
+import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
 import 'package:delivery_app/core/presentation/widgets/toast/toast_utils.dart';
 import 'package:delivery_app/core/routing/navigation_helper.dart';
 import '../../../location/presentation/providers/location_providers.dart';
 import '../../domain/entities/user_address_entity.dart';
 import '../../data/dtos/user_address_request_dto.dart';
-import '../providers/user_address_providers.dart';
+import '../providers/user_address_notifiers.dart';
 
 class AddEditAddressScreen extends ConsumerStatefulWidget {
   final UserAddressEntity? address; // null for add, non-null for edit
@@ -103,7 +103,7 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
             }
             // Navigate back to address list
             // call get all restaruants
-            final user = ref.read(profileStateProvider).user;
+            final user = ref.read(profileProvider).user;
             if (user?.id != null) {
               ref
                   .read(userAddressListProvider.notifier)
@@ -572,7 +572,7 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
       return;
     }
 
-    final user = ref.read(profileStateProvider).user;
+    final user = ref.read(profileProvider).user;
     if (user?.id == null) {
       ToastUtils.showAddressAddError(
         context,

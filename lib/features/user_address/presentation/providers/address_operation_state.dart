@@ -1,4 +1,6 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'address_operation_state.g.dart';
 
 /// Enum for operation types
 enum UserAddressOperationType {
@@ -38,8 +40,12 @@ class AddressOperationResult {
 }
 
 /// StateNotifier for operation results
-class AddressOperationNotifier extends StateNotifier<AddressOperationResult?> {
-  AddressOperationNotifier() : super(null);
+@riverpod
+class AddressOperationNotifier extends _$AddressOperationNotifier {
+  @override
+  AddressOperationResult? build() {
+    return null;
+  }
 
   void notifySuccess(UserAddressOperationType type, [String? message]) {
     state = AddressOperationResult(
@@ -63,8 +69,3 @@ class AddressOperationNotifier extends StateNotifier<AddressOperationResult?> {
     state = null;
   }
 }
-
-/// Provider for operation results
-final addressOperationProvider = StateNotifierProvider<AddressOperationNotifier, AddressOperationResult?>((ref) {
-  return AddressOperationNotifier();
-});

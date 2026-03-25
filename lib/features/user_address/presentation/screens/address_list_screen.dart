@@ -3,10 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/routing/navigation_helper.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
-import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
+import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
 import 'package:delivery_app/core/presentation/widgets/toast/toast_utils.dart';
 import '../../domain/entities/user_address_entity.dart';
-import '../providers/user_address_providers.dart';
+import '../providers/user_address_notifiers.dart';
+import '../providers/user_address_state.dart';
 import '../widgets/address_item_widget.dart';
 
 class AddressListScreen extends ConsumerStatefulWidget {
@@ -42,7 +43,7 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
   }
 
   void _loadAddresses() {
-    final user = ref.read(profileStateProvider).user;
+    final user = ref.read(profileProvider).user;
     if (user?.id != null) {
       ref.read(userAddressListProvider.notifier).loadAddresses(user!.id!);
     }
@@ -53,9 +54,9 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
     final addressState = ref.watch(userAddressListProvider);
     
     // Listen for error messages to show toast
-    ref.listen(userAddressListProvider, (previous, next) {
+    ref.listen<UserAddressListState>(userAddressListProvider, (previous, next) {
       if (next.errorMessage != null && previous?.errorMessage != next.errorMessage) {
-        ToastUtils.showAddressLoadError(context, message: next.errorMessage);
+        ToastUtils.showAddressLoadError(context, message: next.errorMessage!);
       }
       
       // Listen for operation results

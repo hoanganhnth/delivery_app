@@ -1,29 +1,25 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../domain/entities/user_address_entity.dart';
 import '../../data/dtos/user_address_request_dto.dart';
-import '../../domain/usecases/user_address_usecases.dart';
 import 'user_address_state.dart';
+import 'user_address_providers.dart';
 
-/// StateNotifier cho quản lý danh sách địa chỉ
-class UserAddressListNotifier extends StateNotifier<UserAddressListState> {
-  final GetUserAddressesUseCase _getUserAddressesUseCase;
-  final DeleteAddressUseCase _deleteAddressUseCase;
-  final SetDefaultAddressUseCase _setDefaultAddressUseCase;
+part 'user_address_notifiers.g.dart';
 
-  UserAddressListNotifier({
-    required GetUserAddressesUseCase getUserAddressesUseCase,
-    required DeleteAddressUseCase deleteAddressUseCase,
-    required SetDefaultAddressUseCase setDefaultAddressUseCase,
-  })  : _getUserAddressesUseCase = getUserAddressesUseCase,
-        _deleteAddressUseCase = deleteAddressUseCase,
-        _setDefaultAddressUseCase = setDefaultAddressUseCase,
-        super(const UserAddressListState());
+/// Notifier cho quản lý danh sách địa chỉ
+@riverpod
+class UserAddressListNotifier extends _$UserAddressListNotifier {
+  @override
+  UserAddressListState build() {
+    return const UserAddressListState();
+  }
 
   /// Load danh sách địa chỉ của user
   Future<void> loadAddresses(int userId) async {
     state = state.copyWith(isLoading: true, clearError: true);
 
-    final result = await _getUserAddressesUseCase(userId);
+    final getUserAddressesUseCase = ref.read(getUserAddressesUseCaseProvider);
+    final result = await getUserAddressesUseCase(userId);
 
     result.fold(
       (failure) => state = state.copyWith(
@@ -43,7 +39,8 @@ class UserAddressListNotifier extends StateNotifier<UserAddressListState> {
     final address = state.addresses.firstWhere((addr) => addr.id == addressId);
     final addressLabel = address.label;
     
-    final result = await _deleteAddressUseCase(addressId);
+    final deleteAddressUseCase = ref.read(deleteAddressUseCaseProvider);
+    final result = await deleteAddressUseCase(addressId);
 
     result.fold(
       (failure) {
@@ -89,7 +86,8 @@ class UserAddressListNotifier extends StateNotifier<UserAddressListState> {
     final address = state.addresses.firstWhere((addr) => addr.id == addressId);
     final addressLabel = address.label;
     
-    final result = await _setDefaultAddressUseCase(addressId);
+    final setDefaultAddressUseCase = ref.read(setDefaultAddressUseCaseProvider);
+    final result = await setDefaultAddressUseCase(addressId);
 
     result.fold(
       (failure) {
@@ -155,26 +153,20 @@ class UserAddressListNotifier extends StateNotifier<UserAddressListState> {
   }
 }
 
-/// StateNotifier cho tạo/cập nhật địa chỉ
-class AddressFormNotifier extends StateNotifier<AsyncValue<UserAddressEntity?>> {
-  final CreateAddressUseCase _createAddressUseCase;
-  final UpdateAddressUseCase _updateAddressUseCase;
-  final GetAddressByIdUseCase _getAddressByIdUseCase;
-
-  AddressFormNotifier({
-    required CreateAddressUseCase createAddressUseCase,
-    required UpdateAddressUseCase updateAddressUseCase,
-    required GetAddressByIdUseCase getAddressByIdUseCase,
-  })  : _createAddressUseCase = createAddressUseCase,
-        _updateAddressUseCase = updateAddressUseCase,
-        _getAddressByIdUseCase = getAddressByIdUseCase,
-        super(const AsyncValue.data(null));
+/// Notifier cho tạo/cập nhật địa chỉ
+@riverpod
+class AddressFormNotifier extends _$AddressFormNotifier {
+  @override
+  AsyncValue<UserAddressEntity?> build() {
+    return const AsyncValue.data(null);
+  }
 
   /// Load địa chỉ để edit
   Future<void> loadAddress(int addressId) async {
     state = const AsyncValue.loading();
 
-    final result = await _getAddressByIdUseCase(addressId);
+    final getAddressByIdUseCase = ref.read(getAddressByIdUseCaseProvider);
+    final result = await getAddressByIdUseCase(addressId);
 
     result.fold(
       (failure) => state = AsyncValue.error(failure.message, StackTrace.current),
@@ -189,7 +181,8 @@ class AddressFormNotifier extends StateNotifier<AsyncValue<UserAddressEntity?>> 
   ) async {
     state = const AsyncValue.loading();
 
-    final result = await _createAddressUseCase(userId, request);
+    final createAddressUseCase = ref.read(createAddressUseCaseProvider);
+    final result = await createAddressUseCase(userId, request);
 
     return result.fold(
       (failure) {
@@ -210,7 +203,8 @@ class AddressFormNotifier extends StateNotifier<AsyncValue<UserAddressEntity?>> 
   ) async {
     state = const AsyncValue.loading();
 
-    final result = await _updateAddressUseCase(addressId, request);
+    final updateAddressUseCase = ref.read(updateAddressUseCaseProvider);
+    final result = await updateAddressUseCase(addressId, request);
 
     return result.fold(
       (failure) {
