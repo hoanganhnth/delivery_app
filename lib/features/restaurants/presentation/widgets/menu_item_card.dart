@@ -3,8 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../generated/l10n.dart';
-import '../../../cart/presentation/providers/cart_providers.dart';
-import '../../../cart/presentation/providers/cart_state.dart';
+import '../../../cart/presentation/providers/providers.dart';
 
 class MenuItemCard extends ConsumerWidget {
   final MenuItemEntity menuItem;
@@ -19,12 +18,12 @@ class MenuItemCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isUnavailable = menuItem.status != MenuItemStatus.available;
-    final cartNotifier = ref.read(cartNotifierProvider.notifier);
+    final cartNotifier = ref.read(cartProvider.notifier);
     final itemQuantity = ref.watch(menuItemQuantityProvider(menuItem.id ?? 0));
     final canAddFromRestaurant = ref.watch(canAddFromRestaurantProvider(menuItem.restaurantId ?? 0));
 
     // Listen for cart state changes to show error messages
-    ref.listen<CartState>(cartNotifierProvider, (previous, next) {
+    ref.listen<CartState>(cartProvider, (previous, next) {
       if (next.hasError && next.failure != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

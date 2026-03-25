@@ -3,14 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/features/restaurants/presentation/widgets/feature_restaurant_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/restaurant_providers.dart';
+import '../providers/providers.dart';
 
 class RestaurantHomePage extends ConsumerWidget {
   const RestaurantHomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final restaurantsState = ref.watch(restaurantsNotifierProvider);
+    final restaurantsState = ref.watch(restaurantsProvider);
 
     return Column(
       children: [

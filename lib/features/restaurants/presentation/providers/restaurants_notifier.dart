@@ -1,24 +1,27 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../domain/usecases/get_restaurants_usecase.dart';
 import '../../domain/usecases/search_restaurants_usecase.dart';
 import '../../domain/usecases/get_restaurants_nearby_usecase.dart';
 import '../mock/mock_restaurant_service.dart';
 import 'restaurant_state.dart';
+import 'restaurant_providers.dart';
 
-class RestaurantsNotifier extends StateNotifier<RestaurantsState> {
-  final GetRestaurantsUseCase _getRestaurantsUseCase;
-  final SearchRestaurantsUseCase _searchRestaurantsUseCase;
-  final GetRestaurantsNearByUseCase _getRestaurantsNearByUseCase;
+part 'restaurants_notifier.g.dart';
 
-  RestaurantsNotifier({
-    required GetRestaurantsUseCase getRestaurantsUseCase,
-    required SearchRestaurantsUseCase searchRestaurantsUseCase,
-    required GetRestaurantsNearByUseCase getRestaurantsNearByUseCase,
-  }) : _getRestaurantsUseCase = getRestaurantsUseCase,
-       _searchRestaurantsUseCase = searchRestaurantsUseCase,
-       _getRestaurantsNearByUseCase = getRestaurantsNearByUseCase,
-       super(const RestaurantsState());
+@riverpod
+class RestaurantsNotifier extends _$RestaurantsNotifier {
+  late final GetRestaurantsUseCase _getRestaurantsUseCase;
+  late final SearchRestaurantsUseCase _searchRestaurantsUseCase;
+  late final GetRestaurantsNearByUseCase _getRestaurantsNearByUseCase;
+
+  @override
+  RestaurantsState build() {
+    _getRestaurantsUseCase = ref.read(getRestaurantsUseCaseProvider);
+    _searchRestaurantsUseCase = ref.read(searchRestaurantsUseCaseProvider);
+    _getRestaurantsNearByUseCase = ref.read(getRestaurantsNearByUseCaseProvider);
+    return const RestaurantsState();
+  }
 
   /// Load all restaurants
   Future<void> loadRestaurants({

@@ -4,8 +4,8 @@ import 'package:delivery_app/features/restaurants/presentation/widgets/menu_item
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../providers/restaurant_providers.dart';
-import '../../../cart/presentation/providers/cart_providers.dart';
+import '../providers/providers.dart';
+import '../../../cart/presentation/providers/providers.dart';
 
 class RestaurantDetailScreen extends ConsumerStatefulWidget {
   final num restaurantId;
@@ -25,14 +25,14 @@ class _RestaurantDetailScreenState
     // Load restaurant detail when screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
-          .read(restaurantDetailNotifierProvider.notifier)
+          .read(restaurantDetailProvider.notifier)
           .loadRestaurantDetail(widget.restaurantId);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final detailState = ref.watch(restaurantDetailNotifierProvider);
+    final detailState = ref.watch(restaurantDetailProvider);
     final restaurant = detailState.restaurant;
     final menuItems = detailState.menuItems;
     final cartItemsCount = ref.watch(cartItemsCountProvider);

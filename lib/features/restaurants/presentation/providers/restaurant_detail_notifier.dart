@@ -1,21 +1,25 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../domain/entities/restaurant_entity.dart';
 import '../../domain/usecases/get_restaurant_by_id_usecase.dart';
 import '../../domain/usecases/get_menu_items_usecase.dart';
 import '../mock/mock_restaurant_service.dart';
 import 'restaurant_state.dart';
+import 'restaurant_providers.dart';
 
-class RestaurantDetailNotifier extends StateNotifier<RestaurantDetailState> {
-  final GetRestaurantByIdUseCase _getRestaurantByIdUseCase;
-  final GetMenuItemsUseCase _getMenuItemsUseCase;
+part 'restaurant_detail_notifier.g.dart';
 
-  RestaurantDetailNotifier({
-    required GetRestaurantByIdUseCase getRestaurantByIdUseCase,
-    required GetMenuItemsUseCase getMenuItemsUseCase,
-  }) : _getRestaurantByIdUseCase = getRestaurantByIdUseCase,
-       _getMenuItemsUseCase = getMenuItemsUseCase,
-       super(const RestaurantDetailState());
+@riverpod
+class RestaurantDetailNotifier extends _$RestaurantDetailNotifier {
+  late final GetRestaurantByIdUseCase _getRestaurantByIdUseCase;
+  late final GetMenuItemsUseCase _getMenuItemsUseCase;
+
+  @override
+  RestaurantDetailState build() {
+    _getRestaurantByIdUseCase = ref.read(getRestaurantByIdUseCaseProvider);
+    _getMenuItemsUseCase = ref.read(getMenuItemsUseCaseProvider);
+    return const RestaurantDetailState();
+  }
 
   /// Load restaurant details and menu items
   Future<void> loadRestaurantDetail(num restaurantId) async {

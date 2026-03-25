@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../domain/entities/restaurant_entity.dart';
-import '../providers/restaurant_providers.dart';
+import '../providers/providers.dart';
 
 class AllRestaurantsScreen extends ConsumerStatefulWidget {
   const AllRestaurantsScreen({super.key});
@@ -20,13 +20,13 @@ class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
     super.initState();
     // Load all restaurants when screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(restaurantsNotifierProvider.notifier).loadRestaurants();
+      ref.read(restaurantsProvider.notifier).loadRestaurants();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final restaurantsState = ref.watch(restaurantsNotifierProvider);
+    final restaurantsState = ref.watch(restaurantsProvider);
 
     return Scaffold(
       appBar: AppBar(

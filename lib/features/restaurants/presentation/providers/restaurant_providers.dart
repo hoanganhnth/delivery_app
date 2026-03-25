@@ -1,4 +1,4 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../domain/entities/restaurant_entity.dart';
 import '../../domain/entities/menu_item_entity.dart';
 import '../../data/repositories_impl/restaurant_repository_impl.dart';
@@ -11,96 +11,93 @@ import '../../domain/usecases/get_restaurants_nearby_usecase.dart';
 import 'restaurant_network_providers.dart';
 import 'restaurants_notifier.dart';
 import 'restaurant_detail_notifier.dart';
-import 'restaurant_state.dart';
+
+part 'restaurant_providers.g.dart';
 
 // Repository provider
-final restaurantRepositoryProvider = Provider<RestaurantRepository>((ref) {
+@Riverpod(keepAlive: true)
+RestaurantRepository restaurantRepository(Ref ref) {
   final remoteDataSource = ref.watch(restaurantRemoteDataSourceProvider);
   return RestaurantRepositoryImpl(remoteDataSource: remoteDataSource);
-});
+}
 
 // Use cases providers
-final getRestaurantsUseCaseProvider = Provider<GetRestaurantsUseCase>((ref) {
+@Riverpod(keepAlive: true)
+GetRestaurantsUseCase getRestaurantsUseCase(Ref ref) {
   final repository = ref.watch(restaurantRepositoryProvider);
   return GetRestaurantsUseCase(repository);
-});
+}
 
-final getRestaurantByIdUseCaseProvider = Provider<GetRestaurantByIdUseCase>((ref) {
+@Riverpod(keepAlive: true)
+GetRestaurantByIdUseCase getRestaurantByIdUseCase(Ref ref) {
   final repository = ref.watch(restaurantRepositoryProvider);
   return GetRestaurantByIdUseCase(repository);
-});
+}
 
-final getMenuItemsUseCaseProvider = Provider<GetMenuItemsUseCase>((ref) {
+@Riverpod(keepAlive: true)
+GetMenuItemsUseCase getMenuItemsUseCase(Ref ref) {
   final repository = ref.watch(restaurantRepositoryProvider);
   return GetMenuItemsUseCase(repository);
-});
+}
 
-final searchRestaurantsUseCaseProvider = Provider<SearchRestaurantsUseCase>((ref) {
+@Riverpod(keepAlive: true)
+SearchRestaurantsUseCase searchRestaurantsUseCase(Ref ref) {
   final repository = ref.watch(restaurantRepositoryProvider);
   return SearchRestaurantsUseCase(repository);
-});
+}
 
-final getRestaurantsNearByUseCaseProvider = Provider<GetRestaurantsNearByUseCase>((ref) {
+@Riverpod(keepAlive: true)
+GetRestaurantsNearByUseCase getRestaurantsNearByUseCase(Ref ref) {
   final repository = ref.watch(restaurantRepositoryProvider);
   return GetRestaurantsNearByUseCase(repository);
-});
-
-// State notifier providers
-final restaurantsNotifierProvider = StateNotifierProvider<RestaurantsNotifier, RestaurantsState>((ref) {
-  return RestaurantsNotifier(
-    getRestaurantsUseCase: ref.watch(getRestaurantsUseCaseProvider),
-    searchRestaurantsUseCase: ref.watch(searchRestaurantsUseCaseProvider),
-    getRestaurantsNearByUseCase: ref.watch(getRestaurantsNearByUseCaseProvider),
-  );
-});
-
-final restaurantDetailNotifierProvider = StateNotifierProvider<RestaurantDetailNotifier, RestaurantDetailState>((ref) {
-  return RestaurantDetailNotifier(
-    getRestaurantByIdUseCase: ref.watch(getRestaurantByIdUseCaseProvider),
-    getMenuItemsUseCase: ref.watch(getMenuItemsUseCaseProvider),
-  );
-});
-
-// Convenience providers for backward compatibility
-final restaurantsProvider = Provider<List<RestaurantEntity>>((ref) {
-  final state = ref.watch(restaurantsNotifierProvider);
-  return state.restaurants;
-});
-
-final restaurantDetailProvider = Provider<RestaurantDetailState>((ref) {
-  return ref.watch(restaurantDetailNotifierProvider);
-});
+}
 
 // Helper providers for specific use cases
-final featuredRestaurantsProvider = Provider<List<RestaurantEntity>>((ref) {
-  final state = ref.watch(restaurantsNotifierProvider);
+@riverpod
+List<RestaurantEntity> featuredRestaurants(Ref ref) {
+  final state = ref.watch(restaurantsProvider);
   return state.featuredRestaurants;
-});
+}
 
-final restaurantByIdProvider = Provider.family<RestaurantEntity?, num>((ref, restaurantId) {
-  final state = ref.watch(restaurantsNotifierProvider);
+@riverpod
+RestaurantEntity? restaurantById(Ref ref, num restaurantId) {
+  final state = ref.watch(restaurantsProvider);
   try {
     return state.restaurants.firstWhere((r) => r.id == restaurantId);
   } catch (e) {
     return null;
   }
-});
+}
 
-final menuItemsByRestaurantProvider = Provider.family<List<MenuItemEntity>, num>((ref, restaurantId) {
-  final state = ref.watch(restaurantDetailNotifierProvider);
+@riverpod
+List<MenuItemEntity> menuItemsByRestaurant(Ref ref, num restaurantId) {
+  final state = ref.watch(restaurantDetailProvider);
   if (state.restaurant?.id == restaurantId) {
     return state.menuItems;
   }
   return [];
-});
+}
 
 // Search query provider
-final searchQueryProvider = StateProvider<String>((ref) => '');
+@riverpod
+class SearchQuery extends _$SearchQuery {
+  @override
+  String build() => '';
+
+  void setQuery(String query) {
+    state = query;
+  }
+
+  void clear() {
+    state = '';
+  }
+}
 
 // Filtered restaurants based on search query
-final filteredRestaurantsProvider = Provider<List<RestaurantEntity>>((ref) {
+@riverpod
+List<RestaurantEntity> filteredRestaurants(Ref ref) {
   final query = ref.watch(searchQueryProvider);
-  final state = ref.watch(restaurantsNotifierProvider);
+  final state = ref.watch(restaurantsProvider);
   
   if (query.isEmpty) {
     return state.restaurants;
@@ -111,54 +108,65 @@ final filteredRestaurantsProvider = Provider<List<RestaurantEntity>>((ref) {
           restaurant.name.toLowerCase().contains(query.toLowerCase()) ||
           (restaurant.description?.toLowerCase().contains(query.toLowerCase()) ?? false))
       .toList();
-});
+}
 
 // Loading states
-final isLoadingRestaurantsProvider = Provider<bool>((ref) {
-  return ref.watch(restaurantsNotifierProvider).isLoading;
-});
+@riverpod
+bool isLoadingRestaurants(Ref ref) {
+  return ref.watch(restaurantsProvider).isLoading;
+}
 
-final isLoadingRestaurantDetailProvider = Provider<bool>((ref) {
-  return ref.watch(restaurantDetailNotifierProvider).isLoading;
-});
+@riverpod
+bool isLoadingRestaurantDetail(Ref ref, num restaurantId) {
+  return ref.watch(restaurantDetailProvider).isLoading;
+}
 
-final isLoadingSearchProvider = Provider<bool>((ref) {
-  return ref.watch(restaurantsNotifierProvider).isSearchLoading;
-});
+@riverpod
+bool isLoadingSearch(Ref ref) {
+  return ref.watch(restaurantsProvider).isSearchLoading;
+}
 
-final isLoadingNearbyProvider = Provider<bool>((ref) {
-  return ref.watch(restaurantsNotifierProvider).isNearbyLoading;
-});
+@riverpod
+bool isLoadingNearby(Ref ref) {
+  return ref.watch(restaurantsProvider).isNearbyLoading;
+}
 
-final isLoadingFeaturedProvider = Provider<bool>((ref) {
-  return ref.watch(restaurantsNotifierProvider).isFeaturedLoading;
-});
+@riverpod
+bool isLoadingFeatured(Ref ref) {
+  return ref.watch(restaurantsProvider).isFeaturedLoading;
+}
 
-final isLoadingMenuProvider = Provider<bool>((ref) {
-  return ref.watch(restaurantDetailNotifierProvider).isMenuLoading;
-});
+@riverpod
+bool isLoadingMenu(Ref ref, num restaurantId) {
+  return ref.watch(restaurantDetailProvider).isMenuLoading;
+}
 
 // Error states
-final restaurantsErrorProvider = Provider<String?>((ref) {
-  return ref.watch(restaurantsNotifierProvider).errorMessage;
-});
+@riverpod
+String? restaurantsError(Ref ref) {
+  return ref.watch(restaurantsProvider).errorMessage;
+}
 
-final restaurantDetailErrorProvider = Provider<String?>((ref) {
-  return ref.watch(restaurantDetailNotifierProvider).errorMessage;
-});
+@riverpod
+String? restaurantDetailError(Ref ref, num restaurantId) {
+  return ref.watch(restaurantDetailProvider).errorMessage;
+}
 
 // Has data states
-final hasRestaurantsProvider = Provider<bool>((ref) {
-  final state = ref.watch(restaurantsNotifierProvider);
+@riverpod
+bool hasRestaurants(Ref ref) {
+  final state = ref.watch(restaurantsProvider);
   return state.restaurants.isNotEmpty;
-});
+}
 
-final hasRestaurantDetailProvider = Provider<bool>((ref) {
-  final state = ref.watch(restaurantDetailNotifierProvider);
+@riverpod
+bool hasRestaurantDetail(Ref ref, num restaurantId) {
+  final state = ref.watch(restaurantDetailProvider);
   return state.hasRestaurant;
-});
+}
 
-final hasMenuItemsProvider = Provider<bool>((ref) {
-  final state = ref.watch(restaurantDetailNotifierProvider);
+@riverpod
+bool hasMenuItems(Ref ref, num restaurantId) {
+  final state = ref.watch(restaurantDetailProvider);
   return state.hasMenuItems;
-});
+}
