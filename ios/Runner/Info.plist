@@ -46,7 +46,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MBXAccessToken</key>
-	<string>pk.eyJ1IjoiaG9hbmdhbmhudGgyazMiLCJhIjoiY21kZTdwYWhzMDZseDJvcHZtZXd0NTVmciJ9.y0pYbmhi7oS7_eZ57_uEgA</string>
+	<string>$(MAPBOX_ACCESS_TOKEN)</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

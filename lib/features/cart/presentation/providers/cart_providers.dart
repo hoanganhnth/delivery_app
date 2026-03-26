@@ -1,5 +1,4 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/datasources/cart_local_datasource.dart';
 import '../../data/datasources/cart_local_datasource_impl.dart';
@@ -77,32 +76,41 @@ UpdateCartItemNotesUseCase updateCartItemNotesUseCase(Ref ref) {
 // ================================
 
 /// Cart items count provider
-final cartItemsCountProvider = Provider<int>((ref) {
-  final cartState = ref.watch(cartProvider);
-  return cartState.totalItems;
-});
+@riverpod
+int cartItemsCount(Ref ref) {
+  final cartAsyncValue = ref.watch(cartProvider);
+  return cartAsyncValue.value?.totalItems ?? 0;
+}
 
 /// Cart total amount provider
-final cartTotalAmountProvider = Provider<double>((ref) {
-  final cartState = ref.watch(cartProvider);
-  return cartState.totalAmount;
-});
+@riverpod
+double cartTotalAmount(Ref ref) {
+  final cartAsyncValue = ref.watch(cartProvider);
+  return cartAsyncValue.value?.totalAmount ?? 0.0;
+}
 
 /// Is cart empty provider
-final isCartEmptyProvider = Provider<bool>((ref) {
-  final cartState = ref.watch(cartProvider);
-  return cartState.isEmpty;
-});
+@riverpod
+bool isCartEmpty(Ref ref) {
+  final cartAsyncValue = ref.watch(cartProvider);
+  return cartAsyncValue.value?.isEmpty ?? true;
+}
 
 /// Menu item quantity in cart provider
-final menuItemQuantityProvider = Provider.family<int, num>((ref, menuItemId) {
-  final cartState = ref.watch(cartProvider);
-  final item = cartState.cart.items.where((i) => i.menuItemId == menuItemId).firstOrNull;
+@riverpod
+int menuItemQuantity(Ref ref, num menuItemId) {
+  final cartAsyncValue = ref.watch(cartProvider);
+  final cart = cartAsyncValue.value;
+  if (cart == null) return 0;
+  final item = cart.items.where((i) => i.menuItemId == menuItemId).firstOrNull;
   return item?.quantity ?? 0;
-});
+}
 
 /// Can add from restaurant provider (check if cart is empty or same restaurant)
-final canAddFromRestaurantProvider = Provider.family<bool, num>((ref, restaurantId) {
-  final cartState = ref.watch(cartProvider);
-  return cartState.isEmpty || cartState.currentRestaurantId == restaurantId;
-});
+@riverpod
+bool canAddFromRestaurant(Ref ref, num restaurantId) {
+  final cartAsyncValue = ref.watch(cartProvider);
+  final cart = cartAsyncValue.value;
+  if (cart == null) return true;
+  return cart.isEmpty || cart.currentRestaurantId == restaurantId;
+}

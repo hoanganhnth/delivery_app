@@ -19,7 +19,7 @@ class CartScreen extends ConsumerStatefulWidget {
 class _CartScreenState extends ConsumerState<CartScreen> {
   @override
   Widget build(BuildContext context) {
-    final cartState = ref.watch(cartProvider);
+    final cartAsyncValue = ref.watch(cartProvider);
     final cartNotifier = ref.read(cartProvider.notifier);
     final themeColors = ref.watch(themeColorsProvider);
     final textTheme = Theme.of(context).textTheme;
@@ -30,44 +30,39 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         backgroundColor: context.colors.primary,
         foregroundColor: context.colors.onPrimary,
         actions: [
-          if (cartState.isNotEmpty)
-            IconButton(
-              icon: const Icon(Icons.delete_outline),
-              onPressed: () => _showClearCartDialog(context, cartNotifier),
-              tooltip: S.of(context).clearCart,
-            ),
+          cartAsyncValue.whenOrNull(
+            data: (cart) => cart.isNotEmpty
+                ? IconButton(
+                    icon: const Icon(Icons.delete_outline),
+                    onPressed: () => _showClearCartDialog(context, cartNotifier),
+                    tooltip: S.of(context).clearCart,
+                  )
+                : null,
+          ) ?? const SizedBox.shrink(),
         ],
       ),
       backgroundColor: themeColors.surface,
-      body: Builder(
-        builder: (context) {
-          if (cartState.isLoading && cartState.cart.items.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          
-          if (cartState.failure != null && cartState.cart.items.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    cartState.failure?.message ?? 'Đã xảy ra lỗi',
-                    style: textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => cartNotifier.loadCart(),
-                    child: const Text('Thử lại'),
-                  ),
-                ],
+      body: cartAsyncValue.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                error.toString(),
+                style: textTheme.bodyLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.error,
+                ),
               ),
-            );
-          }
-
-          final cart = cartState.cart;
-
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => ref.invalidate(cartProvider),
+                child: const Text('Thử lại'),
+              ),
+            ],
+          ),
+        ),
+        data: (cart) {
           if (cart.items.isEmpty) {
             return const EmptyCartWidget();
           }
@@ -77,7 +72,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               CustomScrollView(
                 slivers: [
                   // Restaurant info
-                  if (cartState.cart.currentRestaurantName != null)
+                  if (cart.currentRestaurantName != null)
                     SliverToBoxAdapter(
                       child: Container(
                         width: double.infinity,
@@ -92,7 +87,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             ),
                             SizedBox(width: 8.w),
                             Text(
-                              S.of(context).itemsFrom(cartState.cart.currentRestaurantName ?? ''),
+                              S.of(context).itemsFrom(cart.currentRestaurantName ?? ''),
                               style: TextStyle(
                                 color: context.colors.textSecondary,
                                 fontWeight: FontWeight.w500,
@@ -117,16 +112,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   ),
                 ],
               ),
-              if (cartState.isLoading)
-                Container(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
             ],
           );
-        }
+        },
       ),
     );
   }

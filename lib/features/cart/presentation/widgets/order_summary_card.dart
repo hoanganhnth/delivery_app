@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/theme_extensions.dart';
-import '../providers/cart_state.dart';
+import '../../../cart/domain/entities/cart_entity.dart';
 
 /// Widget tóm tắt đơn hàng trong checkout
 class OrderSummaryCard extends StatelessWidget {
-  final CartState cartState;
+  final CartEntity cart;
 
   const OrderSummaryCard({
     super.key,
-    required this.cartState,
+    required this.cart,
   });
 
   @override
@@ -22,7 +22,7 @@ class OrderSummaryCard extends StatelessWidget {
         child: Column(
           children: [
             // Order items
-            ...cartState.cart.items.map(
+            ...cart.items.map(
               (item) => Padding(
                 padding: EdgeInsets.only(bottom: 8.w),
                 child: Row(
@@ -65,7 +65,7 @@ class OrderSummaryCard extends StatelessWidget {
                   style: TextStyle(color: context.colors.textSecondary),
                 ),
                 Text(
-                  '${cartState.cart.totalAmount.toStringAsFixed(0)}₫',
+                  '${cart.totalAmount.toStringAsFixed(0)}₫',
                   style: TextStyle(color: context.colors.textPrimary),
                 ),
               ],
@@ -102,7 +102,7 @@ class OrderSummaryCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '${cartState.cart.totalAmount.toStringAsFixed(0)}₫',
+                  '${cart.totalAmount.toStringAsFixed(0)}₫',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,

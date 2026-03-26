@@ -15,12 +15,16 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'features/auth/presentation/providers/token_storage_providers.dart';
 
 Future<void> main() async {
   runZonedGuarded<Future<void>>(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+
+      // ✅ Load environment variables
+      await dotenv.load();
 
       // ✅ Khởi tạo Firebase
       await Firebase.initializeApp(

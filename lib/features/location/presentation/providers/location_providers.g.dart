@@ -373,7 +373,7 @@ final class CurrentLocationNotifierProvider
 }
 
 String _$currentLocationNotifierHash() =>
-    r'bf0a878911d8641f758fd14eae87037f19df8134';
+    r'6d8f487e7049c78a75525cbc653a11934176d20e';
 
 /// StateNotifier để quản lý current location state
 

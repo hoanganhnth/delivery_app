@@ -63,7 +63,7 @@
             android:value="2" />
             <meta-data
         android:name="MAPBOX_ACCESS_TOKEN"
-        android:value="pk.eyJ1IjoiaG9hbmdhbmhudGgyazMiLCJhIjoiY21kZTdwYWhzMDZseDJvcHZtZXd0NTVmciJ9.y0pYbmhi7oS7_eZ57_uEgA" />
+        android:value="${MAPBOX_ACCESS_TOKEN}" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

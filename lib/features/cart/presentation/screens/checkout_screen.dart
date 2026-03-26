@@ -17,7 +17,7 @@ class CheckoutScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartState = ref.watch(cartProvider);
+    final cartAsyncValue = ref.watch(cartProvider);
     final themeColors = ref.watch(themeColorsProvider);
     final textTheme = Theme.of(context).textTheme;
     final createOrderState = ref.watch(createOrderProvider);
@@ -42,8 +42,6 @@ class CheckoutScreen extends ConsumerWidget {
       );
     });
 
-    final cart = cartState.cart;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Thanh toán'),
@@ -65,8 +63,14 @@ class CheckoutScreen extends ConsumerWidget {
         ),
       ),
       backgroundColor: themeColors.background,
-      body: cart.items.isEmpty
-          ? Center(
+      body: cartAsyncValue.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(
+          child: Text('Error: ${error.toString()}'),
+        ),
+        data: (cart) {
+          if (cart.items.isEmpty) {
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -102,8 +106,10 @@ class CheckoutScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-            )
-          : Form(
+            );
+          }
+
+          return Form(
               child: Column(
                 children: [
                   Expanded(
@@ -113,7 +119,7 @@ class CheckoutScreen extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Restaurant Info Card
-                          RestaurantInfoCard(cartState: cartState),
+                          RestaurantInfoCard(cart: cart),
                           SizedBox(height: 16.w),
 
                           // Delivery Address Section
@@ -141,7 +147,7 @@ class CheckoutScreen extends ConsumerWidget {
                             icon: Icons.receipt_long,
                           ),
                           SizedBox(height: 8.w),
-                          OrderSummaryCard(cartState: cartState),
+                          OrderSummaryCard(cart: cart),
                           SizedBox(height: 16.w),
 
                           // Notes Section
@@ -158,7 +164,7 @@ class CheckoutScreen extends ConsumerWidget {
 
                   // Bottom Checkout Section
                   CheckoutBottomSection(
-                    cartState: cartState,
+                    cart: cart,
                     isLoading: createOrderState.isLoading,
                     onPlaceOrder: () {
                       final addressState = ref.read(userAddressListProvider);
@@ -194,7 +200,9 @@ class CheckoutScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-            ),
+            );
+        },
+      ),
     );
   }
 }

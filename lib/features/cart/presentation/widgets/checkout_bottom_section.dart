@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/theme_extensions.dart';
+import '../../../cart/domain/entities/cart_entity.dart';
 
 /// Widget phần thanh toán ở cuối trang checkout
 class CheckoutBottomSection extends StatelessWidget {
-  final dynamic cartState;
+  final CartEntity cart;
   final bool isLoading;
   final VoidCallback onPlaceOrder;
 
   const CheckoutBottomSection({
     super.key,
-    required this.cartState,
+    required this.cart,
     required this.isLoading,
     required this.onPlaceOrder,
   });
@@ -44,7 +45,7 @@ class CheckoutBottomSection extends StatelessWidget {
                 ),
               ),
               Text(
-                '${cartState.cart.totalAmount.toStringAsFixed(0)}₫',
+                '${cart.totalAmount.toStringAsFixed(0)}₫',
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w700,

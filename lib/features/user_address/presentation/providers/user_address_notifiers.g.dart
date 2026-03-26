@@ -45,7 +45,7 @@ final class UserAddressListNotifierProvider
 }
 
 String _$userAddressListNotifierHash() =>
-    r'cf3d390ee464bf8c650a69267539d8ac73d7dd68';
+    r'b112b7d60fba5c6937e366e0bf35bf987ca0965f';
 
 /// Notifier cho quản lý danh sách địa chỉ
 
@@ -108,7 +108,7 @@ final class AddressFormNotifierProvider
 }
 
 String _$addressFormNotifierHash() =>
-    r'e7d943c90d6e677644cadc7cb4f03e16a2bb033c';
+    r'e091cf4a82733ce1d646bfeca6c88619fbaab61f';
 
 /// Notifier cho tạo/cập nhật địa chỉ
 

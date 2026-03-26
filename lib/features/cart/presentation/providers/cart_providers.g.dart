@@ -423,3 +423,311 @@ final class UpdateCartItemNotesUseCaseProvider
 
 String _$updateCartItemNotesUseCaseHash() =>
     r'be3926a3a7d34dd2fb3108fce0b5a823d6a96938';
+
+/// Cart items count provider
+
+@ProviderFor(cartItemsCount)
+final cartItemsCountProvider = CartItemsCountProvider._();
+
+/// Cart items count provider
+
+final class CartItemsCountProvider extends $FunctionalProvider<int, int, int>
+    with $Provider<int> {
+  /// Cart items count provider
+  CartItemsCountProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'cartItemsCountProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$cartItemsCountHash();
+
+  @$internal
+  @override
+  $ProviderElement<int> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  int create(Ref ref) {
+    return cartItemsCount(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(int value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<int>(value),
+    );
+  }
+}
+
+String _$cartItemsCountHash() => r'6324b738008e07f52fefd2c84ef06cbd5e249b06';
+
+/// Cart total amount provider
+
+@ProviderFor(cartTotalAmount)
+final cartTotalAmountProvider = CartTotalAmountProvider._();
+
+/// Cart total amount provider
+
+final class CartTotalAmountProvider
+    extends $FunctionalProvider<double, double, double>
+    with $Provider<double> {
+  /// Cart total amount provider
+  CartTotalAmountProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'cartTotalAmountProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$cartTotalAmountHash();
+
+  @$internal
+  @override
+  $ProviderElement<double> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  double create(Ref ref) {
+    return cartTotalAmount(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double>(value),
+    );
+  }
+}
+
+String _$cartTotalAmountHash() => r'13960056e77362b490ada9658caec5240d770da3';
+
+/// Is cart empty provider
+
+@ProviderFor(isCartEmpty)
+final isCartEmptyProvider = IsCartEmptyProvider._();
+
+/// Is cart empty provider
+
+final class IsCartEmptyProvider extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  /// Is cart empty provider
+  IsCartEmptyProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'isCartEmptyProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$isCartEmptyHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return isCartEmpty(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$isCartEmptyHash() => r'd544b191fab5d357335f7b4ad8ec7411720ba692';
+
+/// Menu item quantity in cart provider
+
+@ProviderFor(menuItemQuantity)
+final menuItemQuantityProvider = MenuItemQuantityFamily._();
+
+/// Menu item quantity in cart provider
+
+final class MenuItemQuantityProvider extends $FunctionalProvider<int, int, int>
+    with $Provider<int> {
+  /// Menu item quantity in cart provider
+  MenuItemQuantityProvider._({
+    required MenuItemQuantityFamily super.from,
+    required num super.argument,
+  }) : super(
+         retry: null,
+         name: r'menuItemQuantityProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$menuItemQuantityHash();
+
+  @override
+  String toString() {
+    return r'menuItemQuantityProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<int> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  int create(Ref ref) {
+    final argument = this.argument as num;
+    return menuItemQuantity(ref, argument);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(int value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<int>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is MenuItemQuantityProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$menuItemQuantityHash() => r'4f0ddb22683af71870a5e0305e00b58c7b95dd2c';
+
+/// Menu item quantity in cart provider
+
+final class MenuItemQuantityFamily extends $Family
+    with $FunctionalFamilyOverride<int, num> {
+  MenuItemQuantityFamily._()
+    : super(
+        retry: null,
+        name: r'menuItemQuantityProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Menu item quantity in cart provider
+
+  MenuItemQuantityProvider call(num menuItemId) =>
+      MenuItemQuantityProvider._(argument: menuItemId, from: this);
+
+  @override
+  String toString() => r'menuItemQuantityProvider';
+}
+
+/// Can add from restaurant provider (check if cart is empty or same restaurant)
+
+@ProviderFor(canAddFromRestaurant)
+final canAddFromRestaurantProvider = CanAddFromRestaurantFamily._();
+
+/// Can add from restaurant provider (check if cart is empty or same restaurant)
+
+final class CanAddFromRestaurantProvider
+    extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  /// Can add from restaurant provider (check if cart is empty or same restaurant)
+  CanAddFromRestaurantProvider._({
+    required CanAddFromRestaurantFamily super.from,
+    required num super.argument,
+  }) : super(
+         retry: null,
+         name: r'canAddFromRestaurantProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$canAddFromRestaurantHash();
+
+  @override
+  String toString() {
+    return r'canAddFromRestaurantProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    final argument = this.argument as num;
+    return canAddFromRestaurant(ref, argument);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is CanAddFromRestaurantProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$canAddFromRestaurantHash() =>
+    r'9903bf3f47f0cdcf3706e53993ecd4aa4a725615';
+
+/// Can add from restaurant provider (check if cart is empty or same restaurant)
+
+final class CanAddFromRestaurantFamily extends $Family
+    with $FunctionalFamilyOverride<bool, num> {
+  CanAddFromRestaurantFamily._()
+    : super(
+        retry: null,
+        name: r'canAddFromRestaurantProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Can add from restaurant provider (check if cart is empty or same restaurant)
+
+  CanAddFromRestaurantProvider call(num restaurantId) =>
+      CanAddFromRestaurantProvider._(argument: restaurantId, from: this);
+
+  @override
+  String toString() => r'canAddFromRestaurantProvider';
+}

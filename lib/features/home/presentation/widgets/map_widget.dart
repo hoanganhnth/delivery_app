@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 class FullMap extends StatefulWidget {
@@ -16,7 +17,10 @@ class FullMapState extends State<FullMap> {
   }
   @override
   void initState() {
-     MapboxOptions.setAccessToken("pk.eyJ1IjoiaG9hbmdhbmhudGgyazMiLCJhIjoiY21kZTdwYWhzMDZseDJvcHZtZXd0NTVmciJ9.y0pYbmhi7oS7_eZ57_uEgA");
+     final token = dotenv.env['MAPBOX_ACCESS_TOKEN'] ?? '';
+     if (token.isNotEmpty) {
+       MapboxOptions.setAccessToken(token);
+     }
     super.initState();
   }
 

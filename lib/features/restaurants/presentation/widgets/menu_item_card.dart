@@ -22,16 +22,18 @@ class MenuItemCard extends ConsumerWidget {
     final itemQuantity = ref.watch(menuItemQuantityProvider(menuItem.id ?? 0));
     final canAddFromRestaurant = ref.watch(canAddFromRestaurantProvider(menuItem.restaurantId ?? 0));
 
-    // Listen for cart state changes to show error messages
-    ref.listen<CartState>(cartProvider, (previous, next) {
-      if (next.hasError && next.failure != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(next.failure!.message),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+    // Listen for cart AsyncValue changes to show error messages
+    ref.listen(cartProvider, (previous, next) {
+      next.whenOrNull(
+        error: (error, stackTrace) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(error.toString()),
+              backgroundColor: Colors.red,
+            ),
+          );
+        },
+      );
     });
 
     // Show error message when trying to add from different restaurant

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/theme_extensions.dart';
+import '../../domain/entities/cart_entity.dart';
 
 /// Widget hiển thị thông tin nhà hàng trong checkout
 class RestaurantInfoCard extends StatelessWidget {
-  final dynamic cartState;
+  final CartEntity cart;
 
   const RestaurantInfoCard({
     super.key,
-    required this.cartState,
+    required this.cart,
   });
 
   @override
@@ -39,7 +40,7 @@ class RestaurantInfoCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    cartState.cart.currentRestaurantName ?? 'Nhà hàng',
+                    cart.currentRestaurantName ?? 'Nhà hàng',
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
@@ -48,7 +49,7 @@ class RestaurantInfoCard extends StatelessWidget {
                   ),
                   SizedBox(height: 4.w),
                   Text(
-                    '${cartState.cart.items.length} món • ${cartState.cart.totalItems} sản phẩm',
+                    '${cart.items.length} món • ${cart.totalItems} sản phẩm',
                     style: TextStyle(
                       fontSize: 14.sp,
                       color: context.colors.textSecondary,

@@ -23,31 +23,35 @@ class CartSummaryWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartState = ref.watch(cartProvider);
+    final cartAsyncValue = ref.watch(cartProvider);
     final totalPrice = ref.watch(cartTotalAmountProvider);
     final totalItems = ref.watch(cartItemsCountProvider);
 
-    if (cartState.cart.items.isEmpty) {
-      return const SizedBox.shrink();
-    }
+    return cartAsyncValue.when(
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+      data: (cart) {
+        if (cart.items.isEmpty) {
+          return const SizedBox.shrink();
+        }
 
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: context.colors.surface,
-        border: Border(
-          top: BorderSide(color: context.colors.divider, width: 1.w),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: context.colors.shadow.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
+        return Container(
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            color: context.colors.surface,
+            border: Border(
+              top: BorderSide(color: context.colors.divider, width: 1.w),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: context.colors.shadow.withValues(alpha: 0.1),
+                blurRadius: 8,
+                offset: const Offset(0, -2),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
         children: [
           // Toggle Button for Order Summary
           if (onToggleOrderSummary != null)
@@ -145,7 +149,7 @@ class CartSummaryWidget extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: cartState.isLoading ? null : onCheckoutPressed,
+                onPressed: onCheckoutPressed,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.colors.primary,
                   foregroundColor: context.colors.onPrimary,
@@ -155,36 +159,20 @@ class CartSummaryWidget extends ConsumerWidget {
                   ),
                   elevation: 2,
                 ),
-                child: cartState.isLoading
-                    ? SizedBox(
-                        height: 20.w,
-                        width: 20.w,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            context.colors.onPrimary,
-                          ),
-                        ),
-                      )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.shopping_bag_outlined),
-                          SizedBox(width: 8.w),
-                          Text(
-                            S.of(context).proceedToCheckout,
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
+                child: Text(
+                  S.of(context).proceedToCheckout,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
           ],
         ],
       ),
+    );
+      },
     );
   }
 

@@ -8,15 +8,18 @@ part of 'cart_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Cart notifier for state management
+/// Cart notifier for state management using AsyncNotifier
+/// Returns CartEntity directly, AsyncValue handles loading/error states
 
 @ProviderFor(CartNotifier)
 final cartProvider = CartNotifierProvider._();
 
-/// Cart notifier for state management
+/// Cart notifier for state management using AsyncNotifier
+/// Returns CartEntity directly, AsyncValue handles loading/error states
 final class CartNotifierProvider
-    extends $NotifierProvider<CartNotifier, CartState> {
-  /// Cart notifier for state management
+    extends $AsyncNotifierProvider<CartNotifier, CartEntity> {
+  /// Cart notifier for state management using AsyncNotifier
+  /// Returns CartEntity directly, AsyncValue handles loading/error states
   CartNotifierProvider._()
     : super(
         from: null,
@@ -34,31 +37,24 @@ final class CartNotifierProvider
   @$internal
   @override
   CartNotifier create() => CartNotifier();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(CartState value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<CartState>(value),
-    );
-  }
 }
 
-String _$cartNotifierHash() => r'5ada540c8dc6d6ba83bdac862e472e7c78814f5f';
+String _$cartNotifierHash() => r'3771b0082cbfa5d8adda9c17b1ed1c13fb4eddb4';
 
-/// Cart notifier for state management
+/// Cart notifier for state management using AsyncNotifier
+/// Returns CartEntity directly, AsyncValue handles loading/error states
 
-abstract class _$CartNotifier extends $Notifier<CartState> {
-  CartState build();
+abstract class _$CartNotifier extends $AsyncNotifier<CartEntity> {
+  FutureOr<CartEntity> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<CartState, CartState>;
+    final ref = this.ref as $Ref<AsyncValue<CartEntity>, CartEntity>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<CartState, CartState>,
-              CartState,
+              AnyNotifier<AsyncValue<CartEntity>, CartEntity>,
+              AsyncValue<CartEntity>,
               Object?,
               Object?
             >;
