@@ -23,6 +23,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _passwordController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    // Check biometric availability when entering login screen
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(biometricProvider.notifier).checkBiometricAvailability();
+      ref.read(biometricProvider.notifier).checkBiometricEnabled();
+    });
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();

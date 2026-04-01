@@ -119,9 +119,11 @@ class BiometricSettingsWidget extends ConsumerWidget {
                 authState.accessToken!,
                 refreshToken: authState.refreshToken,
               );
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Đã bật đăng nhập bằng sinh trắc học')),
-              );
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Đã bật đăng nhập bằng sinh trắc học')),
+                );
+              }
             }
           }
         }

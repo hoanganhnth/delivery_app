@@ -12,10 +12,6 @@ class AppSetup {
   static Future<void> initializeHive() async {
     await Hive.initFlutter();
 
-    // Register Hive adapters
-    if (!Hive.isAdapterRegistered(1)) {
-      Hive.registerAdapter(UserModelAdapter());
-    }
 
     // Open boxes
     await Hive.openBox('biometric_credentials');

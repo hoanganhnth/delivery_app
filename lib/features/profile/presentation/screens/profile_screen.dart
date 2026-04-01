@@ -1,4 +1,5 @@
 import 'package:delivery_app/features/auth/presentation/providers/providers.dart';
+import 'package:delivery_app/features/auth/presentation/widgets/biometric_settings_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/features/profile/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,12 @@ class ProfileScreen extends ConsumerWidget {
                 ),
               ],
               SizedBox(height: 32.w),
+              
+              // Biometric settings section
+              const BiometricSettingsWidget(),
+              
+              SizedBox(height: 16.w),
+              
               ListTile(
                 leading: const Icon(Icons.support_agent),
                 title: const Text('Hỗ trợ khách hàng'),
