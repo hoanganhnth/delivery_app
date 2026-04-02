@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
-import '../features/profile/data/models/user_model.dart';
 
 /// Main app setup with all necessary provider overrides
 /// This ensures that all features use the same Dio instance with proper authentication
