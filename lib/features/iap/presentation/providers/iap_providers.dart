@@ -1,3 +1,8 @@
+import 'package:delivery_app/core/network/dio/authenticated_network_providers.dart';
+import 'package:delivery_app/features/auth/presentation/providers/token_storage_providers.dart';
+import 'package:delivery_app/features/iap/data/datasources/iap_api_service.dart';
+import 'package:delivery_app/features/iap/data/datasources/iap_local_datasource.dart';
+import 'package:delivery_app/features/iap/data/datasources/iap_local_datasource_impl.dart';
 import 'package:delivery_app/features/iap/data/datasources/iap_remote_datasource.dart';
 import 'package:delivery_app/features/iap/data/datasources/iap_remote_datasource_impl.dart';
 import 'package:delivery_app/features/iap/data/repositories_impl/iap_repository_impl.dart';
@@ -17,7 +22,6 @@ import 'package:delivery_app/features/iap/domain/usecases/purchase_subscription_
 import 'package:delivery_app/features/iap/domain/usecases/restore_purchases_usecase.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'iap_providers.g.dart';
 
@@ -27,27 +31,35 @@ InAppPurchase inAppPurchase(Ref ref) {
   return InAppPurchase.instance;
 }
 
-/// Provider for SharedPreferences
+/// Provider for IAP API service
 @riverpod
-Future<SharedPreferences> iapSharedPreferences(Ref ref) async {
-  return await SharedPreferences.getInstance();
+IapApiService iapApiService(Ref ref) {
+  final dio = ref.watch(authenticatedDioProvider);
+  return IapApiService(dio);
+}
+
+/// Provider for IAP local data source
+@riverpod
+IapLocalDataSource iapLocalDataSource(Ref ref) {
+  final prefs = ref.watch(sharedPreferencesProvider);
+  return IapLocalDataSourceImpl(prefs);
 }
 
 /// Provider for IAP remote data source
 @riverpod
-Future<IapRemoteDataSource> iapRemoteDataSource(Ref ref) async {
+IapRemoteDataSource iapRemoteDataSource(Ref ref) {
   final inAppPurchase = ref.watch(inAppPurchaseProvider);
-  final prefs = await ref.watch(iapSharedPreferencesProvider.future);
-  return IapRemoteDataSourceImpl(inAppPurchase, prefs);
+  final apiService = ref.watch(iapApiServiceProvider);
+  return IapRemoteDataSourceImpl(inAppPurchase, apiService);
 }
 
 /// Provider for IAP repository
 @riverpod
 Future<IapRepository> iapRepository(Ref ref) async {
-  final remoteDataSource = await ref.watch(iapRemoteDataSourceProvider.future);
-  final prefs = await ref.watch(iapSharedPreferencesProvider.future);
+  final remoteDataSource = ref.watch(iapRemoteDataSourceProvider);
+  final localDataSource = ref.watch(iapLocalDataSourceProvider);
   
-  final repository = IapRepositoryImpl(remoteDataSource, prefs);
+  final repository = IapRepositoryImpl(remoteDataSource, localDataSource);
   
   // Initialize IAP on repository creation
   await repository.initialize();

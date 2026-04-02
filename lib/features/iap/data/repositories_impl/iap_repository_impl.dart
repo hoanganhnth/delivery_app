@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:delivery_app/core/error/failures.dart';
+import 'package:delivery_app/features/iap/data/datasources/iap_local_datasource.dart';
 import 'package:delivery_app/features/iap/data/datasources/iap_remote_datasource.dart';
 import 'package:delivery_app/features/iap/data/dtos/consumable_dto.dart';
+import 'package:delivery_app/features/iap/data/dtos/purchase_dto.dart';
 import 'package:delivery_app/features/iap/domain/entities/consumable_entity.dart';
 import 'package:delivery_app/features/iap/domain/entities/iap_product_entity.dart';
 import 'package:delivery_app/features/iap/domain/entities/non_consumable_entity.dart';
@@ -10,21 +12,34 @@ import 'package:delivery_app/features/iap/domain/entities/purchase_entity.dart';
 import 'package:delivery_app/features/iap/domain/entities/subscription_entity.dart';
 import 'package:delivery_app/features/iap/domain/repositories/iap_repository.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+/// Implementation of IapRepository
+/// Uses:
+/// - IapRemoteDataSource for Store API and Backend API operations
+/// - IapLocalDataSource for caching and offline access
 class IapRepositoryImpl implements IapRepository {
   final IapRemoteDataSource _remoteDataSource;
-  final SharedPreferences _prefs;
+  final IapLocalDataSource _localDataSource;
+  
+  // Stream subscription for purchase updates
+  StreamSubscription<List<PurchaseDto>>? _purchaseSubscription;
 
-  static const String _activeSubscriptionKey = 'active_subscription_tier';
-  static const String _subscriptionExpiryKey = 'subscription_expiry_date';
+  IapRepositoryImpl(this._remoteDataSource, this._localDataSource);
 
-  IapRepositoryImpl(this._remoteDataSource, this._prefs);
+  // ============================================================
+  // INITIALIZATION
+  // ============================================================
 
   @override
   Future<Either<Failure, bool>> initialize() async {
     try {
       final result = await _remoteDataSource.initialize();
+      
+      // Listen to purchase stream for verification
+      _purchaseSubscription = _remoteDataSource.purchaseStream.listen(
+        _handlePurchaseUpdates,
+      );
+      
       return right(result);
     } on Exception catch (e) {
       return left(_mapExceptionToFailure(e));
@@ -32,6 +47,10 @@ class IapRepositoryImpl implements IapRepository {
       return left(const ServerFailure('Unexpected error occurred'));
     }
   }
+
+  // ============================================================
+  // PRODUCT OPERATIONS
+  // ============================================================
 
   @override
   Future<Either<Failure, List<IapProductEntity>>> getProducts(
@@ -47,25 +66,28 @@ class IapRepositoryImpl implements IapRepository {
     }
   }
 
+  // ============================================================
+  // SUBSCRIPTION OPERATIONS
+  // ============================================================
+
   @override
   Future<Either<Failure, List<SubscriptionEntity>>> getSubscriptionTiers() async {
     try {
       final products = await _remoteDataSource.getSubscriptionProducts();
       
-      // Convert to subscription entities
+      // Get cached active tier for comparison
+      final cachedActiveTier = _localDataSource.getCachedSubscriptionTier();
+      
       final subscriptions = products.map((productDto) {
         final product = productDto.toEntity();
         final tier = _getTierFromProductId(product.id);
-        
-        // Check if this subscription is currently active
-        final activeTier = _getStoredSubscriptionTier();
-        final isActive = activeTier == tier;
+        final isActive = cachedActiveTier == tier && tier != SubscriptionTier.free;
         
         return SubscriptionEntity(
           product: product,
           isActive: isActive,
-          expiryDate: isActive ? _getStoredExpiryDate() : null,
-          isAutoRenewing: true, // Default to auto-renewing
+          expiryDate: isActive ? _localDataSource.getCachedSubscriptionExpiry() : null,
+          isAutoRenewing: true,
           tier: tier,
         );
       }).toList();
@@ -79,16 +101,11 @@ class IapRepositoryImpl implements IapRepository {
   }
 
   @override
-  Future<Either<Failure, PurchaseEntity>> purchaseSubscription(
-    SubscriptionTier tier,
-  ) async {
+  Future<Either<Failure, void>> purchaseSubscription(SubscriptionTier tier) async {
     try {
-      final purchase = await _remoteDataSource.purchaseSubscription(tier);
-      
-      // Store subscription info locally
-      await _storeSubscriptionInfo(tier);
-      
-      return right(purchase.toEntity());
+      // Initiate purchase - result will come via stream
+      await _remoteDataSource.purchaseSubscription(tier);
+      return right(null);
     } on Exception catch (e) {
       return left(_mapExceptionToFailure(e));
     } catch (e) {
@@ -97,19 +114,11 @@ class IapRepositoryImpl implements IapRepository {
   }
 
   @override
-  Future<Either<Failure, List<PurchaseEntity>>> restorePurchases() async {
+  Future<Either<Failure, void>> restorePurchases() async {
     try {
-      final purchases = await _remoteDataSource.restorePurchases();
-      
-      // Update stored subscription info based on restored purchases
-      for (final purchase in purchases) {
-        final tier = _getTierFromProductId(purchase.productId);
-        if (tier != SubscriptionTier.free) {
-          await _storeSubscriptionInfo(tier);
-        }
-      }
-      
-      return right(purchases.map((dto) => dto.toEntity()).toList());
+      await _remoteDataSource.restorePurchases();
+      // Restored purchases will come via stream
+      return right(null);
     } on Exception catch (e) {
       return left(_mapExceptionToFailure(e));
     } catch (e) {
@@ -120,8 +129,15 @@ class IapRepositoryImpl implements IapRepository {
   @override
   Future<Either<Failure, void>> completePurchase(PurchaseEntity purchase) async {
     try {
-      // Convert entity back to DTO (simplified)
-      // In real app, track PurchaseDetails objects
+      final dto = PurchaseDto(
+        purchaseId: purchase.purchaseId,
+        productId: purchase.productId,
+        transactionDate: purchase.transactionDate,
+        status: purchase.status.name,
+        verificationData: purchase.verificationData,
+        pendingCompletePurchase: true,
+      );
+      await _remoteDataSource.completePurchase(dto);
       return right(null);
     } on Exception catch (e) {
       return left(_mapExceptionToFailure(e));
@@ -133,22 +149,32 @@ class IapRepositoryImpl implements IapRepository {
   @override
   Future<Either<Failure, bool>> hasActiveSubscription() async {
     try {
-      final tier = _getStoredSubscriptionTier();
+      // First try to get from remote
+      final activeSubscription = await _remoteDataSource.getActiveSubscription();
       
-      if (tier == SubscriptionTier.free) {
+      if (activeSubscription != null && activeSubscription.isActive) {
+        // Cache locally
+        await _localDataSource.saveSubscriptionTier(activeSubscription.tier);
+        if (activeSubscription.expiryDate != null) {
+          await _localDataSource.saveSubscriptionExpiry(activeSubscription.expiryDate!);
+        }
+        return right(true);
+      }
+      
+      // Fallback to local cache check
+      final cachedTier = _localDataSource.getCachedSubscriptionTier();
+      if (cachedTier == SubscriptionTier.free) {
         return right(false);
       }
 
-      // Check expiry date
-      final expiryDate = _getStoredExpiryDate();
+      final expiryDate = _localDataSource.getCachedSubscriptionExpiry();
       if (expiryDate == null) {
         return right(false);
       }
 
       final expiry = DateTime.tryParse(expiryDate);
       if (expiry == null || expiry.isBefore(DateTime.now())) {
-        // Subscription expired, clear it
-        await _clearSubscriptionInfo();
+        await _localDataSource.clearSubscriptionCache();
         return right(false);
       }
 
@@ -161,32 +187,17 @@ class IapRepositoryImpl implements IapRepository {
   @override
   Future<Either<Failure, SubscriptionEntity?>> getActiveSubscription() async {
     try {
-      final hasActive = await hasActiveSubscription();
+      // Get from backend API
+      final subscription = await _remoteDataSource.getActiveSubscription();
       
-      if (hasActive.isLeft() || !hasActive.getOrElse((_) => false)) {
-        return right(null);
+      if (subscription != null) {
+        // Cache locally
+        await _localDataSource.saveSubscriptionTier(subscription.tier);
+        if (subscription.expiryDate != null) {
+          await _localDataSource.saveSubscriptionExpiry(subscription.expiryDate!);
+        }
       }
-
-      final tier = _getStoredSubscriptionTier();
-      final expiryDate = _getStoredExpiryDate();
-
-      // Create a subscription entity from stored data
-      final subscription = SubscriptionEntity(
-        product: IapProductEntity(
-          id: tier.productId,
-          title: tier.displayName,
-          description: tier.benefits.join(', '),
-          price: '', // Would need to fetch from store
-          currencyCode: 'USD',
-          rawPrice: 0.0,
-          productType: IapProductType.subscription,
-        ),
-        isActive: true,
-        expiryDate: expiryDate,
-        isAutoRenewing: true,
-        tier: tier,
-      );
-
+      
       return right(subscription);
     } on Exception catch (e) {
       return left(_mapExceptionToFailure(e));
@@ -204,59 +215,12 @@ class IapRepositoryImpl implements IapRepository {
 
   @override
   Future<void> dispose() async {
+    await _purchaseSubscription?.cancel();
     await _remoteDataSource.dispose();
   }
 
-  // Helper methods
-
-  SubscriptionTier _getTierFromProductId(String productId) {
-    for (final tier in SubscriptionTier.values) {
-      if (tier.productId == productId) {
-        return tier;
-      }
-    }
-    return SubscriptionTier.free;
-  }
-
-  SubscriptionTier _getStoredSubscriptionTier() {
-    final tierName = _prefs.getString(_activeSubscriptionKey);
-    if (tierName == null) {
-      return SubscriptionTier.free;
-    }
-
-    return SubscriptionTier.values.firstWhere(
-      (tier) => tier.name == tierName,
-      orElse: () => SubscriptionTier.free,
-    );
-  }
-
-  String? _getStoredExpiryDate() {
-    return _prefs.getString(_subscriptionExpiryKey);
-  }
-
-  Future<void> _storeSubscriptionInfo(SubscriptionTier tier) async {
-    await _prefs.setString(_activeSubscriptionKey, tier.name);
-    
-    // Calculate expiry date based on tier
-    final now = DateTime.now();
-    final expiry = tier == SubscriptionTier.premiumYearly
-        ? now.add(const Duration(days: 365))
-        : now.add(const Duration(days: 30)); // Monthly or VIP
-    
-    await _prefs.setString(_subscriptionExpiryKey, expiry.toIso8601String());
-  }
-
-  Future<void> _clearSubscriptionInfo() async {
-    await _prefs.remove(_activeSubscriptionKey);
-    await _prefs.remove(_subscriptionExpiryKey);
-  }
-
-  Failure _mapExceptionToFailure(Exception e) {
-    return ServerFailure(e.toString());
-  }
-
   // ============================================================
-  // CONSUMABLE IAP METHODS
+  // CONSUMABLE OPERATIONS
   // ============================================================
 
   @override
@@ -272,12 +236,11 @@ class IapRepositoryImpl implements IapRepository {
   }
 
   @override
-  Future<Either<Failure, PurchaseEntity>> purchaseConsumable(
-    String productId,
-  ) async {
+  Future<Either<Failure, void>> purchaseConsumable(String productId) async {
     try {
-      final purchase = await _remoteDataSource.purchaseConsumable(productId);
-      return right(purchase.toEntity());
+      await _remoteDataSource.purchaseConsumable(productId);
+      // Result will come via stream
+      return right(null);
     } on Exception catch (e) {
       return left(_mapExceptionToFailure(e));
     } catch (e) {
@@ -288,8 +251,17 @@ class IapRepositoryImpl implements IapRepository {
   @override
   Future<Either<Failure, int>> getUserCredits() async {
     try {
-      final credits = await _remoteDataSource.getUserCredits();
-      return right(credits);
+      // Try remote first
+      try {
+        final credits = await _remoteDataSource.getUserCredits();
+        // Cache locally
+        await _localDataSource.saveUserCredits(credits);
+        return right(credits);
+      } catch (_) {
+        // Fallback to local cache
+        final cachedCredits = _localDataSource.getCachedUserCredits();
+        return right(cachedCredits);
+      }
     } on Exception catch (e) {
       return left(_mapExceptionToFailure(e));
     } catch (e) {
@@ -300,9 +272,13 @@ class IapRepositoryImpl implements IapRepository {
   @override
   Future<Either<Failure, int>> addCredits(int amount) async {
     try {
-      final currentCredits = await _remoteDataSource.getUserCredits();
+      final currentCredits = _localDataSource.getCachedUserCredits();
       final newBalance = currentCredits + amount;
-      await _remoteDataSource.saveUserCredits(newBalance);
+      
+      // Save to local cache
+      await _localDataSource.saveUserCredits(newBalance);
+      
+      // TODO: Sync with backend via API
       return right(newBalance);
     } on Exception catch (e) {
       return left(_mapExceptionToFailure(e));
@@ -314,12 +290,16 @@ class IapRepositoryImpl implements IapRepository {
   @override
   Future<Either<Failure, int>> deductCredits(int amount) async {
     try {
-      final currentCredits = await _remoteDataSource.getUserCredits();
+      final currentCredits = _localDataSource.getCachedUserCredits();
+      
       if (currentCredits < amount) {
         return left(const ValidationFailure('Insufficient credits'));
       }
+      
       final newBalance = currentCredits - amount;
-      await _remoteDataSource.saveUserCredits(newBalance);
+      await _localDataSource.saveUserCredits(newBalance);
+      
+      // TODO: Sync with backend via API
       return right(newBalance);
     } on Exception catch (e) {
       return left(_mapExceptionToFailure(e));
@@ -331,8 +311,19 @@ class IapRepositoryImpl implements IapRepository {
   @override
   Future<Either<Failure, List<ConsumableEntity>>> getUserVouchers() async {
     try {
-      final vouchers = await _remoteDataSource.getUserVouchers();
-      return right(vouchers.map((dto) => dto.toEntity()).toList());
+      // Try remote first
+      try {
+        final vouchers = await _remoteDataSource.getUserVouchers();
+        // Cache locally
+        for (final voucher in vouchers) {
+          await _localDataSource.saveVoucher(voucher);
+        }
+        return right(vouchers.map((dto) => dto.toEntity()).toList());
+      } catch (_) {
+        // Fallback to local cache
+        final cachedVouchers = _localDataSource.getCachedUserVouchers();
+        return right(cachedVouchers.map((dto) => dto.toEntity()).toList());
+      }
     } on Exception catch (e) {
       return left(_mapExceptionToFailure(e));
     } catch (e) {
@@ -344,7 +335,8 @@ class IapRepositoryImpl implements IapRepository {
   Future<Either<Failure, void>> addVoucher(ConsumableEntity voucher) async {
     try {
       final dto = ConsumableDto.fromEntity(voucher);
-      await _remoteDataSource.saveVoucher(dto);
+      await _localDataSource.saveVoucher(dto);
+      // TODO: Sync with backend via API
       return right(null);
     } on Exception catch (e) {
       return left(_mapExceptionToFailure(e));
@@ -356,7 +348,8 @@ class IapRepositoryImpl implements IapRepository {
   @override
   Future<Either<Failure, void>> useVoucher(String voucherId) async {
     try {
-      await _remoteDataSource.removeVoucher(voucherId);
+      await _localDataSource.removeVoucher(voucherId);
+      // TODO: Sync with backend via API
       return right(null);
     } on Exception catch (e) {
       return left(_mapExceptionToFailure(e));
@@ -366,7 +359,7 @@ class IapRepositoryImpl implements IapRepository {
   }
 
   // ============================================================
-  // NON-CONSUMABLE IAP METHODS
+  // NON-CONSUMABLE OPERATIONS
   // ============================================================
 
   @override
@@ -382,19 +375,11 @@ class IapRepositoryImpl implements IapRepository {
   }
 
   @override
-  Future<Either<Failure, PurchaseEntity>> purchaseNonConsumable(
-    String productId,
-  ) async {
+  Future<Either<Failure, void>> purchaseNonConsumable(String productId) async {
     try {
-      final purchase = await _remoteDataSource.purchaseNonConsumable(productId);
-      
-      // After successful purchase, unlock the feature
-      final featureType = FeatureTypeExtension.fromProductId(productId);
-      if (featureType != null) {
-        await _remoteDataSource.saveUnlockedFeature(featureType);
-      }
-      
-      return right(purchase.toEntity());
+      await _remoteDataSource.purchaseNonConsumable(productId);
+      // Result will come via stream
+      return right(null);
     } on Exception catch (e) {
       return left(_mapExceptionToFailure(e));
     } catch (e) {
@@ -403,12 +388,21 @@ class IapRepositoryImpl implements IapRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> isFeatureUnlocked(
-    FeatureType featureType,
-  ) async {
+  Future<Either<Failure, bool>> isFeatureUnlocked(FeatureType featureType) async {
     try {
-      final isUnlocked = await _remoteDataSource.isFeatureUnlocked(featureType);
-      return right(isUnlocked);
+      // Try remote first
+      try {
+        final isUnlocked = await _remoteDataSource.isFeatureUnlocked(featureType.name);
+        if (isUnlocked) {
+          // Cache locally
+          await _localDataSource.saveUnlockedFeature(featureType.name);
+        }
+        return right(isUnlocked);
+      } catch (_) {
+        // Fallback to local cache
+        final cachedUnlocked = _localDataSource.isFeatureUnlockedInCache(featureType.name);
+        return right(cachedUnlocked);
+      }
     } on Exception catch (e) {
       return left(_mapExceptionToFailure(e));
     } catch (e) {
@@ -419,8 +413,28 @@ class IapRepositoryImpl implements IapRepository {
   @override
   Future<Either<Failure, List<FeatureType>>> getUnlockedFeatures() async {
     try {
-      final features = await _remoteDataSource.getUnlockedFeatures();
-      return right(features);
+      // Try remote first
+      try {
+        final featureNames = await _remoteDataSource.getUnlockedFeatures();
+        // Cache locally
+        for (final name in featureNames) {
+          await _localDataSource.saveUnlockedFeature(name);
+        }
+        // Convert to FeatureType
+        final features = featureNames
+            .map((name) => FeatureTypeExtension.fromString(name))
+            .whereType<FeatureType>()
+            .toList();
+        return right(features);
+      } catch (_) {
+        // Fallback to local cache
+        final cachedFeatureNames = _localDataSource.getCachedUnlockedFeatures();
+        final features = cachedFeatureNames
+            .map((name) => FeatureTypeExtension.fromString(name))
+            .whereType<FeatureType>()
+            .toList();
+        return right(features);
+      }
     } on Exception catch (e) {
       return left(_mapExceptionToFailure(e));
     } catch (e) {
@@ -431,12 +445,57 @@ class IapRepositoryImpl implements IapRepository {
   @override
   Future<Either<Failure, void>> unlockFeature(FeatureType featureType) async {
     try {
-      await _remoteDataSource.saveUnlockedFeature(featureType);
+      await _localDataSource.saveUnlockedFeature(featureType.name);
+      // TODO: Sync with backend via API
       return right(null);
     } on Exception catch (e) {
       return left(_mapExceptionToFailure(e));
     } catch (e) {
       return left(const ServerFailure('Unexpected error occurred'));
     }
+  }
+
+  // ============================================================
+  // PRIVATE HELPER METHODS
+  // ============================================================
+
+  SubscriptionTier _getTierFromProductId(String productId) {
+    for (final tier in SubscriptionTier.values) {
+      if (tier.productId == productId) {
+        return tier;
+      }
+    }
+    return SubscriptionTier.free;
+  }
+
+  Future<void> _handlePurchaseUpdates(List<PurchaseDto> purchases) async {
+    for (final purchase in purchases) {
+      // Verify purchase with backend
+      final verified = await _remoteDataSource.verifyPurchase(purchase);
+      
+      if (verified && purchase.status == 'purchased') {
+        // Determine purchase type and handle accordingly
+        final tier = _getTierFromProductId(purchase.productId);
+        
+        if (tier != SubscriptionTier.free) {
+          // It's a subscription
+          await _localDataSource.saveSubscriptionTier(tier);
+          
+          // Calculate expiry (simplified - backend should provide this)
+          final now = DateTime.now();
+          final expiry = tier == SubscriptionTier.premiumYearly
+              ? now.add(const Duration(days: 365))
+              : now.add(const Duration(days: 30));
+          await _localDataSource.saveSubscriptionExpiry(expiry.toIso8601String());
+        }
+        
+        // Complete the purchase
+        await _remoteDataSource.completePurchase(purchase);
+      }
+    }
+  }
+
+  Failure _mapExceptionToFailure(Exception e) {
+    return ServerFailure(e.toString());
   }
 }

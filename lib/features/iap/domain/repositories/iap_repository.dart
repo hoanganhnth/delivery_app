@@ -34,7 +34,8 @@ abstract class IapRepository {
   Future<Either<Failure, List<SubscriptionEntity>>> getSubscriptionTiers();
 
   /// Purchase a subscription
-  Future<Either<Failure, PurchaseEntity>> purchaseSubscription(
+  /// Note: Result will come via purchaseStream, not the return value
+  Future<Either<Failure, void>> purchaseSubscription(
     SubscriptionTier tier,
   );
 
@@ -45,7 +46,8 @@ abstract class IapRepository {
   Future<Either<Failure, SubscriptionEntity?>> getActiveSubscription();
 
   /// Restore previous purchases (subscriptions and non-consumables)
-  Future<Either<Failure, List<PurchaseEntity>>> restorePurchases();
+  /// Note: Results will come via purchaseStream, not the return value
+  Future<Either<Failure, void>> restorePurchases();
 
   /// Complete a pending purchase
   Future<Either<Failure, void>> completePurchase(PurchaseEntity purchase);
@@ -58,7 +60,8 @@ abstract class IapRepository {
   Future<Either<Failure, List<ConsumableEntity>>> getConsumableProducts();
 
   /// Purchase a consumable product
-  Future<Either<Failure, PurchaseEntity>> purchaseConsumable(String productId);
+  /// Note: Result will come via purchaseStream, not the return value
+  Future<Either<Failure, void>> purchaseConsumable(String productId);
 
   /// Get user's current credits balance
   Future<Either<Failure, int>> getUserCredits();
@@ -86,7 +89,8 @@ abstract class IapRepository {
   Future<Either<Failure, List<NonConsumableEntity>>> getNonConsumableProducts();
 
   /// Purchase a non-consumable product (unlock a feature)
-  Future<Either<Failure, PurchaseEntity>> purchaseNonConsumable(
+  /// Note: Result will come via purchaseStream, not the return value
+  Future<Either<Failure, void>> purchaseNonConsumable(
     String productId,
   );
 

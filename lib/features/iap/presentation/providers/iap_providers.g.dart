@@ -54,52 +54,104 @@ final class InAppPurchaseProvider
 
 String _$inAppPurchaseHash() => r'd2388a0c220ac74d20580556be0896d1eac71cdc';
 
-/// Provider for SharedPreferences
+/// Provider for IAP API service
 
-@ProviderFor(iapSharedPreferences)
-final iapSharedPreferencesProvider = IapSharedPreferencesProvider._();
+@ProviderFor(iapApiService)
+final iapApiServiceProvider = IapApiServiceProvider._();
 
-/// Provider for SharedPreferences
+/// Provider for IAP API service
 
-final class IapSharedPreferencesProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<SharedPreferences>,
-          SharedPreferences,
-          FutureOr<SharedPreferences>
-        >
-    with
-        $FutureModifier<SharedPreferences>,
-        $FutureProvider<SharedPreferences> {
-  /// Provider for SharedPreferences
-  IapSharedPreferencesProvider._()
+final class IapApiServiceProvider
+    extends $FunctionalProvider<IapApiService, IapApiService, IapApiService>
+    with $Provider<IapApiService> {
+  /// Provider for IAP API service
+  IapApiServiceProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'iapSharedPreferencesProvider',
+        name: r'iapApiServiceProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$iapSharedPreferencesHash();
+  String debugGetCreateSourceHash() => _$iapApiServiceHash();
 
   @$internal
   @override
-  $FutureProviderElement<SharedPreferences> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
+  $ProviderElement<IapApiService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
   @override
-  FutureOr<SharedPreferences> create(Ref ref) {
-    return iapSharedPreferences(ref);
+  IapApiService create(Ref ref) {
+    return iapApiService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IapApiService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IapApiService>(value),
+    );
   }
 }
 
-String _$iapSharedPreferencesHash() =>
-    r'508379ef114da0076a377323673af24ab42f338a';
+String _$iapApiServiceHash() => r'4fdb53a17a30dc22c63dabb2a82a8aaf4d409380';
+
+/// Provider for IAP local data source
+
+@ProviderFor(iapLocalDataSource)
+final iapLocalDataSourceProvider = IapLocalDataSourceProvider._();
+
+/// Provider for IAP local data source
+
+final class IapLocalDataSourceProvider
+    extends
+        $FunctionalProvider<
+          IapLocalDataSource,
+          IapLocalDataSource,
+          IapLocalDataSource
+        >
+    with $Provider<IapLocalDataSource> {
+  /// Provider for IAP local data source
+  IapLocalDataSourceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'iapLocalDataSourceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$iapLocalDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<IapLocalDataSource> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  IapLocalDataSource create(Ref ref) {
+    return iapLocalDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IapLocalDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IapLocalDataSource>(value),
+    );
+  }
+}
+
+String _$iapLocalDataSourceHash() =>
+    r'1eac3fa3fdab066c50e26868a6d67dc43c0bd4d3';
 
 /// Provider for IAP remote data source
 
@@ -111,13 +163,11 @@ final iapRemoteDataSourceProvider = IapRemoteDataSourceProvider._();
 final class IapRemoteDataSourceProvider
     extends
         $FunctionalProvider<
-          AsyncValue<IapRemoteDataSource>,
           IapRemoteDataSource,
-          FutureOr<IapRemoteDataSource>
+          IapRemoteDataSource,
+          IapRemoteDataSource
         >
-    with
-        $FutureModifier<IapRemoteDataSource>,
-        $FutureProvider<IapRemoteDataSource> {
+    with $Provider<IapRemoteDataSource> {
   /// Provider for IAP remote data source
   IapRemoteDataSourceProvider._()
     : super(
@@ -135,18 +185,26 @@ final class IapRemoteDataSourceProvider
 
   @$internal
   @override
-  $FutureProviderElement<IapRemoteDataSource> $createElement(
+  $ProviderElement<IapRemoteDataSource> $createElement(
     $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
+  ) => $ProviderElement(pointer);
 
   @override
-  FutureOr<IapRemoteDataSource> create(Ref ref) {
+  IapRemoteDataSource create(Ref ref) {
     return iapRemoteDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IapRemoteDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IapRemoteDataSource>(value),
+    );
   }
 }
 
 String _$iapRemoteDataSourceHash() =>
-    r'a8ddcc7c9abf97aea869e81372568edec77571ae';
+    r'2b47299db370c747dc809193db9ff7f8f5d2e46e';
 
 /// Provider for IAP repository
 
@@ -190,7 +248,7 @@ final class IapRepositoryProvider
   }
 }
 
-String _$iapRepositoryHash() => r'340d1ab9a98560b3e06bf646410b722f23443816';
+String _$iapRepositoryHash() => r'faec0b0d09295a2ebe7a52cfd1d80a4b945a0a69';
 
 /// Provider for GetSubscriptionTiersUseCase
 

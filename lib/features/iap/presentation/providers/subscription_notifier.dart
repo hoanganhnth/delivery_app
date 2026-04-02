@@ -96,14 +96,14 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
         isLoading: false,
         failure: failure,
       ),
-      (purchase) {
+      (_) {
         state = state.copyWith(
           isLoading: false,
-          currentPurchase: purchase,
-          successMessage: 'Purchase initiated successfully',
+          successMessage: 'Purchase initiated successfully. Waiting for confirmation...',
         );
         
         // Reload active subscription after purchase
+        // Note: The actual purchase result will come via purchaseStream
         loadActiveSubscription();
       },
     );
@@ -120,15 +120,14 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
         isLoading: false,
         failure: failure,
       ),
-      (purchases) {
+      (_) {
         state = state.copyWith(
           isLoading: false,
-          successMessage: purchases.isEmpty
-              ? 'No purchases to restore'
-              : 'Purchases restored successfully',
+          successMessage: 'Restore initiated. Previous purchases will be restored.',
         );
         
         // Reload subscriptions after restore
+        // Note: The actual restored purchases will come via purchaseStream
         loadActiveSubscription();
         loadSubscriptionTiers();
       },

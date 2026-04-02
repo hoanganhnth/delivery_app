@@ -157,6 +157,16 @@ extension FeatureTypeExtension on FeatureType {
     }
     return null;
   }
+
+  /// Convert from string name to FeatureType
+  static FeatureType? fromString(String name) {
+    for (final type in FeatureType.values) {
+      if (type.name == name) {
+        return type;
+      }
+    }
+    return null;
+  }
 }
 
 /// Predefined non-consumable products
