@@ -100,59 +100,6 @@ final class IapApiServiceProvider
 
 String _$iapApiServiceHash() => r'4fdb53a17a30dc22c63dabb2a82a8aaf4d409380';
 
-/// Provider for IAP local data source
-
-@ProviderFor(iapLocalDataSource)
-final iapLocalDataSourceProvider = IapLocalDataSourceProvider._();
-
-/// Provider for IAP local data source
-
-final class IapLocalDataSourceProvider
-    extends
-        $FunctionalProvider<
-          IapLocalDataSource,
-          IapLocalDataSource,
-          IapLocalDataSource
-        >
-    with $Provider<IapLocalDataSource> {
-  /// Provider for IAP local data source
-  IapLocalDataSourceProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'iapLocalDataSourceProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$iapLocalDataSourceHash();
-
-  @$internal
-  @override
-  $ProviderElement<IapLocalDataSource> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
-
-  @override
-  IapLocalDataSource create(Ref ref) {
-    return iapLocalDataSource(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(IapLocalDataSource value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<IapLocalDataSource>(value),
-    );
-  }
-}
-
-String _$iapLocalDataSourceHash() =>
-    r'1eac3fa3fdab066c50e26868a6d67dc43c0bd4d3';
-
 /// Provider for IAP remote data source
 
 @ProviderFor(iapRemoteDataSource)
@@ -248,7 +195,7 @@ final class IapRepositoryProvider
   }
 }
 
-String _$iapRepositoryHash() => r'faec0b0d09295a2ebe7a52cfd1d80a4b945a0a69';
+String _$iapRepositoryHash() => r'e42e19b59b7bc716cb14d9920eeef76227b778d9';
 
 /// Provider for GetSubscriptionTiersUseCase
 

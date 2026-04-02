@@ -1,8 +1,5 @@
 import 'package:delivery_app/core/network/dio/authenticated_network_providers.dart';
-import 'package:delivery_app/features/auth/presentation/providers/token_storage_providers.dart';
 import 'package:delivery_app/features/iap/data/datasources/iap_api_service.dart';
-import 'package:delivery_app/features/iap/data/datasources/iap_local_datasource.dart';
-import 'package:delivery_app/features/iap/data/datasources/iap_local_datasource_impl.dart';
 import 'package:delivery_app/features/iap/data/datasources/iap_remote_datasource.dart';
 import 'package:delivery_app/features/iap/data/datasources/iap_remote_datasource_impl.dart';
 import 'package:delivery_app/features/iap/data/repositories_impl/iap_repository_impl.dart';
@@ -38,13 +35,6 @@ IapApiService iapApiService(Ref ref) {
   return IapApiService(dio);
 }
 
-/// Provider for IAP local data source
-@riverpod
-IapLocalDataSource iapLocalDataSource(Ref ref) {
-  final prefs = ref.watch(sharedPreferencesProvider);
-  return IapLocalDataSourceImpl(prefs);
-}
-
 /// Provider for IAP remote data source
 @riverpod
 IapRemoteDataSource iapRemoteDataSource(Ref ref) {
@@ -57,9 +47,8 @@ IapRemoteDataSource iapRemoteDataSource(Ref ref) {
 @riverpod
 Future<IapRepository> iapRepository(Ref ref) async {
   final remoteDataSource = ref.watch(iapRemoteDataSourceProvider);
-  final localDataSource = ref.watch(iapLocalDataSourceProvider);
   
-  final repository = IapRepositoryImpl(remoteDataSource, localDataSource);
+  final repository = IapRepositoryImpl(remoteDataSource);
   
   // Initialize IAP on repository creation
   await repository.initialize();
