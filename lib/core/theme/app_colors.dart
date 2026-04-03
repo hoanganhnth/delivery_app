@@ -49,52 +49,52 @@ abstract class AppColors {
   Brightness get brightness;
 }
 
-/// Light theme colors
+/// Light theme colors - Amber Hearth Design System
 class LightColors implements AppColors {
   @override
-  Color get primary => const Color(0xFFFF9800); // Orange color
+  Color get primary => const Color(0xFFf49d25); // Amber - flagship color
 
   @override
-  Color get primaryLight => const Color(0xFFFFB74D); // Lighter orange
+  Color get primaryLight => const Color(0xFFffc266); // Lighter amber
 
   @override
-  Color get primaryDark => const Color(0xFFF57C00); // Darker orange
+  Color get primaryDark => const Color(0xFFc77700); // Darker amber
 
   @override
   Color get onPrimary => Colors.white;
 
   @override
-  Color get secondary => const Color(0xFF03DAC6);
+  Color get secondary => const Color(0xFF9c7a49); // Muted Umber - sophisticated anchor
 
   @override
-  Color get secondaryLight => const Color(0xFF4FE8D7);
+  Color get secondaryLight => const Color(0xFFb89764);
 
   @override
-  Color get secondaryDark => const Color(0xFF00B8A4);
+  Color get secondaryDark => const Color(0xFF7d6038);
 
   @override
-  Color get onSecondary => Colors.black;
+  Color get onSecondary => Colors.white;
 
   @override
-  Color get background => const Color(0xFFF5F5F5);
+  Color get background => const Color(0xFFf8f7f5); // Warm neutral background
 
   @override
-  Color get surface => Colors.white;
+  Color get surface => Colors.white; // Pure white for maximum content clarity
 
   @override
-  Color get onBackground => Colors.black;
+  Color get onBackground => const Color(0xFF212121);
 
   @override
-  Color get onSurface => Colors.black;
+  Color get onSurface => const Color(0xFF212121);
 
   @override
   Color get textPrimary => const Color(0xFF212121);
 
   @override
-  Color get textSecondary => const Color(0xFF757575);
+  Color get textSecondary => const Color(0xFF9c7a49); // Warm muted instead of grey
 
   @override
-  Color get textDisabled => const Color(0xFFBDBDBD);
+  Color get textDisabled => const Color(0xFFc9b89a); // Warm disabled state
 
   @override
   Color get success => const Color(0xFF4CAF50);
@@ -109,22 +109,22 @@ class LightColors implements AppColors {
   Color get info => const Color(0xFF2196F3);
 
   @override
-  Color get border => const Color(0xFFE0E0E0);
+  Color get border => const Color(0xFFe8e4df); // Warm border color
 
   @override
-  Color get divider => const Color(0xFFE0E0E0);
+  Color get divider => const Color(0xFFe8e4df); // Warm divider
 
   @override
-  Color get cardBackground => Colors.white;
+  Color get cardBackground => Colors.white; // Surface Lowest: Pure white
 
   @override
   Color get inputBackground => Colors.white;
 
   @override
-  Color get buttonDisabled => const Color(0xFFE0E0E0);
+  Color get buttonDisabled => const Color(0xFFc9b89a); // Warm disabled state
 
   @override
-  Color get shadow => Colors.black.withValues(alpha: 0.1);
+  Color get shadow => const Color(0xFF9c7a49).withValues(alpha: 0.08); // Amber-tinted shadow
 
   @override
   Brightness get brightness => Brightness.light;

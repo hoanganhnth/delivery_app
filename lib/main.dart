@@ -82,7 +82,7 @@ class _MainAppState extends ConsumerState<MainApp> {
 
     return ScreenUtilInit(
       // Thiết kế kích thước chuẩn iPhone X/11/12/13 mini
-      designSize: const Size(375, 812),
+      designSize: const Size(390, 812),
       // Đảm bảo text scale theo kích thước màn hình
       minTextAdapt: true,
       // Split screen support cho tablet

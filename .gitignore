@@ -43,6 +43,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/src/debug/AndroidManifest.xml
 
 # Flutter & Dart
 

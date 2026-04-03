@@ -1,139 +1,171 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// Text styles for the app
+/// Text styles for the app - Amber Hearth Design System
+/// Uses Plus Jakarta Sans with extreme weight variations
 class AppTextStyles {
-  // Headings
-  static TextStyle get h1  => TextStyle(
-    fontSize: 32.sp,
-    fontWeight: FontWeight.bold,
-    height: 1.25.w,
+  // Display & Large Headlines - Black/ExtraBold for editorial impact
+  static TextStyle get display => TextStyle(
+    fontSize: 36.sp, // 2.25rem
+    fontWeight: FontWeight.w900, // Black weight
+    height: 1.2,
+    letterSpacing: -0.02, // Negative spacing for compact feel
+    fontFamily: 'PlusJakartaSans',
   );
 
-  static TextStyle get h2  => TextStyle(
-    fontSize: 28.sp,
-    fontWeight: FontWeight.bold,
-    height: 1.29.w,
+  static TextStyle get h1 => TextStyle(
+    fontSize: 30.sp, // 1.875rem
+    fontWeight: FontWeight.w800, // ExtraBold
+    height: 1.25,
+    letterSpacing: -0.02,
+    fontFamily: 'PlusJakartaSans',
   );
 
-  static TextStyle get h3  => TextStyle(
+  static TextStyle get h2 => TextStyle(
     fontSize: 24.sp,
-    fontWeight: FontWeight.w600,
-    height: 1.33.w,
+    fontWeight: FontWeight.w800,
+    height: 1.3,
+    letterSpacing: -0.01,
+    fontFamily: 'PlusJakartaSans',
   );
 
-  static TextStyle get h4  => TextStyle(
-    fontSize: 20.sp,
-    fontWeight: FontWeight.w600,
-    height: 1.4.w,
+  static TextStyle get h3 => TextStyle(
+    fontSize: 20.sp, // 1.25rem
+    fontWeight: FontWeight.w700, // Bold for subheadings
+    height: 1.4,
+    fontFamily: 'PlusJakartaSans',
   );
 
-  static TextStyle get h5  => TextStyle(
-    fontSize: 18.sp,
-    fontWeight: FontWeight.w600,
-    height: 1.44.w,
+  static TextStyle get h4 => TextStyle(
+    fontSize: 18.sp, // 1.125rem
+    fontWeight: FontWeight.w700,
+    height: 1.44,
+    fontFamily: 'PlusJakartaSans',
   );
 
-  static TextStyle get h6  => TextStyle(
+  static TextStyle get h5 => TextStyle(
     fontSize: 16.sp,
-    fontWeight: FontWeight.w600,
-    height: 1.5.w,
+    fontWeight: FontWeight.w700,
+    height: 1.5,
+    fontFamily: 'PlusJakartaSans',
   );
 
-  // Body text
-  static TextStyle get bodyLarge  => TextStyle(
-    fontSize: 16.sp,
-    fontWeight: FontWeight.normal,
-    height: 1.5.w,
-  );
-
-  static TextStyle get bodyMedium  => TextStyle(
+  static TextStyle get h6 => TextStyle(
     fontSize: 14.sp,
-    fontWeight: FontWeight.normal,
-    height: 1.43.w,
+    fontWeight: FontWeight.w600,
+    height: 1.5,
+    fontFamily: 'PlusJakartaSans',
   );
 
-  static TextStyle get bodySmall  => TextStyle(
+  // Body text - High legibility at 14px (0.875rem)
+  static TextStyle get bodyLarge => TextStyle(
+    fontSize: 16.sp,
+    fontWeight: FontWeight.normal,
+    height: 1.5,
+    fontFamily: 'PlusJakartaSans',
+  );
+
+  static TextStyle get bodyMedium => TextStyle(
+    fontSize: 14.sp, // 0.875rem - primary body size
+    fontWeight: FontWeight.normal,
+    height: 1.5,
+    fontFamily: 'PlusJakartaSans',
+  );
+
+  static TextStyle get bodySmall => TextStyle(
     fontSize: 12.sp,
     fontWeight: FontWeight.normal,
-    height: 1.33.w,
+    height: 1.4,
+    fontFamily: 'PlusJakartaSans',
   );
 
   // Labels
-  static TextStyle get labelLarge  => TextStyle(
+  static TextStyle get labelLarge => TextStyle(
     fontSize: 14.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.43.w,
+    fontWeight: FontWeight.w600,
+    height: 1.43,
+    fontFamily: 'PlusJakartaSans',
   );
 
-  static TextStyle get labelMedium  => TextStyle(
+  static TextStyle get labelMedium => TextStyle(
     fontSize: 12.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.33.w,
+    fontWeight: FontWeight.w600,
+    height: 1.33,
+    fontFamily: 'PlusJakartaSans',
   );
 
-  static TextStyle get labelSmall  => TextStyle(
-    fontSize: 11.sp,
+  static TextStyle get labelSmall => TextStyle(
+    fontSize: 10.sp, // Micro-labels for rating stars
     fontWeight: FontWeight.w500,
-    height: 1.45.w,
+    height: 1.6,
+    fontFamily: 'PlusJakartaSans',
   );
 
   // Captions
-  static TextStyle get caption  => TextStyle(
+  static TextStyle get caption => TextStyle(
     fontSize: 12.sp,
     fontWeight: FontWeight.normal,
-    height: 1.33.w,
+    height: 1.33,
+    fontFamily: 'PlusJakartaSans',
   );
 
-  static TextStyle get overline  => TextStyle(
+  static TextStyle get overline => TextStyle(
     fontSize: 10.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.6.w,
-    letterSpacing: 1.5,
+    fontWeight: FontWeight.w600,
+    height: 1.6,
+    letterSpacing: 1.2, // Editorial spacing
+    fontFamily: 'PlusJakartaSans',
   );
 
-  // Button text styles
-  static TextStyle get buttonLarge  => TextStyle(
+  // Button text styles - Bold for emphasis
+  static TextStyle get buttonLarge => TextStyle(
     fontSize: 16.sp,
-    fontWeight: FontWeight.w600,
-    height: 1.25.w,
+    fontWeight: FontWeight.w700,
+    height: 1.25,
+    fontFamily: 'PlusJakartaSans',
   );
 
-  static TextStyle get buttonMedium  => TextStyle(
+  static TextStyle get buttonMedium => TextStyle(
     fontSize: 14.sp,
-    fontWeight: FontWeight.w600,
-    height: 1.43.w,
+    fontWeight: FontWeight.w700,
+    height: 1.43,
+    fontFamily: 'PlusJakartaSans',
   );
 
-  static TextStyle get buttonSmall  => TextStyle(
+  static TextStyle get buttonSmall => TextStyle(
     fontSize: 12.sp,
     fontWeight: FontWeight.w600,
-    height: 1.33.w,
+    height: 1.33,
+    fontFamily: 'PlusJakartaSans',
   );
 
   // Input text styles
-  static TextStyle get input  => TextStyle(
+  static TextStyle get input => TextStyle(
     fontSize: 16.sp,
     fontWeight: FontWeight.normal,
-    height: 1.5.w,
+    height: 1.5,
+    fontFamily: 'PlusJakartaSans',
   );
 
-  static TextStyle get inputLabel  => TextStyle(
+  static TextStyle get inputLabel => TextStyle(
     fontSize: 14.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.43.w,
+    fontWeight: FontWeight.w600,
+    height: 1.43,
+    fontFamily: 'PlusJakartaSans',
   );
 
-  static TextStyle get inputHint  => TextStyle(
+  static TextStyle get inputHint => TextStyle(
     fontSize: 16.sp,
     fontWeight: FontWeight.normal,
-    height: 1.5.w,
+    height: 1.5,
+    fontFamily: 'PlusJakartaSans',
   );
 
-  static TextStyle get inputError  => TextStyle(
+  static TextStyle get inputError => TextStyle(
     fontSize: 12.sp,
     fontWeight: FontWeight.normal,
-    height: 1.33.w,
+    height: 1.33,
+    fontFamily: 'PlusJakartaSans',
   );
 
   // Navigation styles
