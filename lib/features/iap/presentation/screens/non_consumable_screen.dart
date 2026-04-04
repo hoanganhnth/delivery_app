@@ -291,7 +291,7 @@ class NonConsumableScreen extends ConsumerWidget {
                     Text(
                       product.featureType.description,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
+                        color: context.colors.textSecondary,
                       ),
                     ),
                     if (product.purchaseDate != null)

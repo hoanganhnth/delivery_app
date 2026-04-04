@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../domain/entities/biometric_entity.dart';
 import '../providers/biometric_notifier.dart';
 
@@ -52,7 +53,7 @@ class _BiometricLoginButtonState extends ConsumerState<BiometricLoginButton> {
               ? Icons.face
               : Icons.fingerprint,
           size: 28,
-          color: const Color(0xFF9C7A49),
+          color: context.colors.secondary,
         ),
         onPressed: () async {
           final biometricNotifier = ref.read(biometricProvider.notifier);

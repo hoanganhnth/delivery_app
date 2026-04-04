@@ -35,7 +35,7 @@ class FeaturedRestaurantCard extends StatelessWidget {
                     color: Colors.grey[300],
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Icon(Icons.restaurant, size: 40, color: Colors.grey),
                   ),
                 )

@@ -209,7 +209,7 @@ class IapMenuScreen extends StatelessWidget {
               Text(
                 subtitle,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey[600],
+                  color: context.colors.textSecondary,
                 ),
                 textAlign: TextAlign.center,
               ),

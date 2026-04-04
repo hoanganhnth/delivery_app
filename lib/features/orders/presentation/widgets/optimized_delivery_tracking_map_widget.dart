@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../domain/entities/delivery_tracking_entity.dart';
 import '../../domain/entities/delivery_status.dart';
@@ -435,7 +436,7 @@ class _OptimizedDeliveryTrackingMapWidgetState
                         Text(
                           '${widget.shipper!.vehicleType.toUpperCase()} • ${widget.shipper!.vehicleNumber}',
                           style: TextStyle(
-                            color: Colors.grey[600],
+                            color: context.colors.textSecondary,
                             fontSize: 12.sp,
                           ),
                         ),
@@ -530,7 +531,7 @@ class _OptimizedDeliveryTrackingMapWidgetState
                 ),
                 Text(
                   '${widget.shipper!.vehicleType.toUpperCase()} • ${widget.shipper!.vehicleNumber}',
-                  style: TextStyle(color: Colors.grey[600], fontSize: 12.sp),
+                  style: TextStyle(color: context.colors.textSecondary, fontSize: 12.sp),
                 ),
               ],
             ),

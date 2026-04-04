@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Custom text field matching Stitch design (Login screen)
-/// 
+///
 /// Features:
 /// - Floating label positioned above the field
 /// - Rounded corners (12px)
@@ -42,29 +43,26 @@ class StitchTextField extends StatelessWidget {
           padding: const EdgeInsets.only(left: 16),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            color: const Color(0xFFF8F7F5),
+            color: context.colors.background,
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
-                color: Color(0xFF9C7A49),
+                color: context.colors.secondary,
                 letterSpacing: 2,
               ),
             ),
           ),
         ),
         const SizedBox(height: 4),
-        
+
         // Text field
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: const Color(0xFFF4EEE7),
-              width: 2,
-            ),
+            border: Border.all(color: const Color(0xFFF4EEE7), width: 2),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.02),
@@ -91,11 +89,7 @@ class StitchTextField extends StatelessWidget {
                 fontWeight: FontWeight.w400,
                 color: Color(0xFFD9C3AE),
               ),
-              prefixIcon: Icon(
-                icon,
-                color: const Color(0xFF9C7A49),
-                size: 22,
-              ),
+              prefixIcon: Icon(icon, color: context.colors.secondary, size: 22),
               suffixIcon: suffixIcon,
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(

@@ -12,10 +12,10 @@ class MenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Menu'),
+        title: Text('Menu'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.shopping_cart),
+            icon: Icon(Icons.shopping_cart),
             onPressed: () => context.pushNamed('cart'),
           ),
         ],
@@ -26,11 +26,11 @@ class MenuScreen extends StatelessWidget {
           return Card(
             margin: EdgeInsets.all(8.0.w),
             child: ListTile(
-              leading: const Icon(Icons.fastfood, size: 40),
+              leading: Icon(Icons.fastfood, size: 40),
               title: Text('Menu Item ${index + 1}'),
               subtitle: Text('Delicious item description • \$${(10 + index * 2)}'),
               trailing: IconButton(
-                icon: const Icon(Icons.add_shopping_cart),
+                icon: Icon(Icons.add_shopping_cart),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

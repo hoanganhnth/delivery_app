@@ -239,7 +239,7 @@ class ConsumableScreen extends ConsumerWidget {
                   Text(
                     product.product.description,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
+                      color: context.colors.textSecondary,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -351,7 +351,7 @@ class ConsumableScreen extends ConsumerWidget {
                     Text(
                       'Code: ${voucher.code}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
+                        color: context.colors.textSecondary,
                       ),
                     ),
                   if (voucher.expiryDate != null)
@@ -360,7 +360,7 @@ class ConsumableScreen extends ConsumerWidget {
                           ? 'Expired'
                           : 'Expires: ${_formatDate(voucher.expiryDate!)}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: isExpired ? Colors.red : Colors.grey[600],
+                        color: isExpired ? Colors.red : context.colors.textSecondary,
                       ),
                     ),
                 ],

@@ -26,7 +26,7 @@ class RestaurantHomePage extends ConsumerWidget {
                 ),
                 GestureDetector(
                   onTap: () => context.pushToRestaurants(),
-                  child: const Text(
+                  child: Text(
                     'Xem tất cả',
                     style: TextStyle(
                       color: Colors.orange,
@@ -42,7 +42,7 @@ class RestaurantHomePage extends ConsumerWidget {
         SizedBox(
           height: 200.w,
           child: restaurantsState.isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ? Center(child: CircularProgressIndicator())
               : restaurantsState.hasError
               ? Center(
                   child: Text(

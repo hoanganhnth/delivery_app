@@ -1,9 +1,12 @@
 import 'package:delivery_app/core/presentation/widgets/toast/toast_utils.dart';
 import 'package:delivery_app/core/routing/routing.dart';
+import 'package:delivery_app/core/widgets/glass_app_bar.dart';
+import 'package:delivery_app/features/cart/presentation/widgets/checkout_empty_state.dart';
+import 'package:delivery_app/features/cart/presentation/widgets/checkout_section_card.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/theme_provider.dart' hide Theme;
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../../orders/domain/entities/order_entity.dart';
 import '../../../orders/data/dtos/create_order_request_dto.dart';
 import '../../../orders/presentation/providers/orders/create_order_async_notifiers.dart';
@@ -11,15 +14,14 @@ import '../../../user_address/presentation/providers/user_address_notifiers.dart
 import '../providers/cart_notifier.dart';
 import '../widgets/widgets.dart';
 
-/// Checkout Screen với giao diện đẹp và tạo order
+/// Checkout Screen với giao diện Amber Hearth
 class CheckoutScreen extends ConsumerWidget {
   const CheckoutScreen({super.key});
 
+  // Amber Hearth design tokens
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cartAsyncValue = ref.watch(cartProvider);
-    final themeColors = ref.watch(themeColorsProvider);
-    final textTheme = Theme.of(context).textTheme;
     final createOrderState = ref.watch(createOrderProvider);
 
     // Listen to create order state for success/error
@@ -43,12 +45,11 @@ class CheckoutScreen extends ConsumerWidget {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Thanh toán'),
-        backgroundColor: themeColors.surface,
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
+      backgroundColor: context.colors.background,
+      appBar: GlassAppBar(
+        titleText: 'Thanh toán',
+        leading: GlassActionButton(
+          icon: Icons.close,
           onPressed: () {
             if (context.canPop()) {
               context.pop();
@@ -56,153 +57,162 @@ class CheckoutScreen extends ConsumerWidget {
               context.go(AppRoutes.home);
             }
           },
-          icon: Icon(
-            Icons.close,
-            color: textTheme.bodyLarge?.color,
-          ),
         ),
       ),
-      backgroundColor: themeColors.background,
       body: cartAsyncValue.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => Center(
+          child: CircularProgressIndicator(color: context.colors.primary),
+        ),
         error: (error, stack) => Center(
-          child: Text('Error: ${error.toString()}'),
+          child: Padding(
+            padding: EdgeInsets.all(24.w),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  color: const Color(0xFFBA1A1A),
+                  size: 64.w,
+                ),
+                SizedBox(height: 16.w),
+                Text(
+                  'Error: ${error.toString()}',
+                  style: TextStyle(
+                    color: const Color(0xFFBA1A1A),
+                    fontSize: 14.sp,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
         ),
         data: (cart) {
           if (cart.items.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/empty_cart.png',
-                    width: 150.w,
-                    height: 150.h,
-                    fit: BoxFit.cover,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Giỏ hàng của bạn đang trống',
-                    style: textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Hãy thêm ít nhất một món hàng để tiếp tục.',
-                    style: textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (context.canPop()) {
-                        context.pop();
-                      } else {
-                        context.go(AppRoutes.home);
-                      }
-                    },
-                    child: const Text('Tiếp tục mua sắm'),
-                  ),
-                ],
-              ),
-            );
+            return const CheckoutEmptyState();
           }
 
           return Form(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.all(16.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Restaurant Info Card
-                          RestaurantInfoCard(cart: cart),
-                          SizedBox(height: 16.w),
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(16.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Restaurant Info Card
+                        CheckoutSectionCard(
+                          child: RestaurantInfoCard(cart: cart),
+                        ),
+                        SizedBox(height: 16.w),
 
-                          // Delivery Address Section
-                          SelectedAddressCard(
+                        // Delivery Address Section
+                        CheckoutSectionHeader(
+                          title: 'Địa chỉ giao hàng',
+                          icon: Icons.location_on_outlined,
+                        ),
+                        SizedBox(height: 8.w),
+                        CheckoutSectionCard(
+                          child: SelectedAddressCard(
                             addressController: TextEditingController(),
                             onAddressSelected: (address) {},
                           ),
-                          SizedBox(height: 16.w),
+                        ),
+                        SizedBox(height: 16.w),
 
-                          // Payment Method Section
-                          CheckoutSectionHeader(
-                            title: 'Phương thức thanh toán',
-                            icon: Icons.payment,
-                          ),
-                          SizedBox(height: 8.w),
-                          PaymentMethodCard(
+                        // Payment Method Section
+                        CheckoutSectionHeader(
+                          title: 'Phương thức thanh toán',
+                          icon: Icons.payment_outlined,
+                        ),
+                        SizedBox(height: 8.w),
+                        CheckoutSectionCard(
+                          child: PaymentMethodCard(
                             selectedPaymentMethod: PaymentMethod.cod,
                             onPaymentMethodChanged: (method) {},
                           ),
-                          SizedBox(height: 16.w),
+                        ),
+                        SizedBox(height: 16.w),
 
-                          // Order Items Summary
-                          CheckoutSectionHeader(
-                            title: 'Chi tiết đơn hàng',
-                            icon: Icons.receipt_long,
-                          ),
-                          SizedBox(height: 8.w),
-                          OrderSummaryCard(cart: cart),
-                          SizedBox(height: 16.w),
+                        // Order Items Summary
+                        CheckoutSectionHeader(
+                          title: 'Chi tiết đơn hàng',
+                          icon: Icons.receipt_long_outlined,
+                        ),
+                        SizedBox(height: 8.w),
+                        CheckoutSectionCard(
+                          child: OrderSummaryCard(cart: cart),
+                        ),
+                        SizedBox(height: 16.w),
 
-                          // Notes Section
-                          CheckoutSectionHeader(
-                            title: 'Ghi chú (không bắt buộc)',
-                            icon: Icons.note,
-                          ),
-                          SizedBox(height: 8.w),
-                          NotesCard(notesController: TextEditingController()),
-                        ],
-                      ),
+                        // Notes Section
+                        CheckoutSectionHeader(
+                          title: 'Ghi chú (không bắt buộc)',
+                          icon: Icons.note_outlined,
+                        ),
+                        SizedBox(height: 8.w),
+                        CheckoutSectionCard(
+                          child: NotesCard(notesController: TextEditingController()),
+                        ),
+                        
+                        // Bottom padding
+                        SizedBox(height: 24.w),
+                      ],
                     ),
                   ),
+                ),
 
-                  // Bottom Checkout Section
-                  CheckoutBottomSection(
-                    cart: cart,
-                    isLoading: createOrderState.isLoading,
-                    onPlaceOrder: () {
-                      final addressState = ref.read(userAddressListProvider);
-                      final selectedAddress = addressState.defaultAddress;
-                      
-                      if (selectedAddress != null && cart.currentRestaurantId != null) {
-                        final request = CreateOrderRequestDto(
-                          restaurantId: cart.currentRestaurantId! as int,
-                          restaurantName: cart.currentRestaurantName ?? '',
-                          restaurantAddress: '', // TODO: Get from restaurant data
-                          restaurantPhone: '', // TODO: Get from restaurant data
-                          deliveryAddress: selectedAddress.fullAddress,
-                          deliveryLat: selectedAddress.latitude,
-                          deliveryLng: selectedAddress.longitude,
-                          customerName: selectedAddress.recipientName,
-                          customerPhone: selectedAddress.phoneNumber,
-                          paymentMethod: 'COD',
-                          notes: '',
-                          items: cart.items.map((item) => OrderItemRequest(
-                            menuItemId: item.menuItemId as int,
-                            menuItemName: item.menuItemName,
-                            quantity: item.quantity,
-                            price: item.price,
-                          )).toList(),
-                        );
-                        ref.read(createOrderProvider.notifier).createOrder(request);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Vui lòng chọn địa chỉ giao hàng')),
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
-            );
+                // Bottom Checkout Section
+                CheckoutBottomSection(
+                  cart: cart,
+                  isLoading: createOrderState.isLoading,
+                  onPlaceOrder: () => _placeOrder(context, ref, cart),
+                ),
+              ],
+            ),
+          );
         },
       ),
     );
+  }
+
+  void _placeOrder(BuildContext context, WidgetRef ref, dynamic cart) {
+    final addressState = ref.read(userAddressListProvider);
+    final selectedAddress = addressState.defaultAddress;
+    
+    if (selectedAddress != null && cart.currentRestaurantId != null) {
+      final request = CreateOrderRequestDto(
+        restaurantId: cart.currentRestaurantId! as int,
+        restaurantName: cart.currentRestaurantName ?? '',
+        restaurantAddress: '', // TODO: Get from restaurant data
+        restaurantPhone: '', // TODO: Get from restaurant data
+        deliveryAddress: selectedAddress.fullAddress,
+        deliveryLat: selectedAddress.latitude,
+        deliveryLng: selectedAddress.longitude,
+        customerName: selectedAddress.recipientName,
+        customerPhone: selectedAddress.phoneNumber,
+        paymentMethod: 'COD',
+        notes: '',
+        items: cart.items.map<OrderItemRequest>((item) => OrderItemRequest(
+          menuItemId: item.menuItemId as int,
+          menuItemName: item.menuItemName,
+          quantity: item.quantity,
+          price: item.price,
+        )).toList(),
+      );
+      ref.read(createOrderProvider.notifier).createOrder(request);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Vui lòng chọn địa chỉ giao hàng'),
+          backgroundColor: const Color(0xFFBA1A1A),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      );
+    }
   }
 }

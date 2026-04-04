@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../domain/entities/restaurant_entity.dart';
 import '../providers/providers.dart';
 
@@ -31,7 +32,7 @@ class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange,
-        title: const Text(
+        title: Text(
           'Tất cả nhà hàng',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
@@ -77,7 +78,7 @@ class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
           // Restaurants list
           Expanded(
             child: restaurantsState.isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? Center(child: CircularProgressIndicator())
                 : restaurantsState.hasError
                 ? Center(
                     child: Text(
@@ -156,7 +157,7 @@ class RestaurantListCard extends StatelessWidget {
             child: Stack(
               children: [
                 if (restaurant.image == null)
-                  const Center(
+                  Center(
                     child: Icon(Icons.restaurant, size: 60, color: Colors.grey),
                   ),
 
@@ -221,19 +222,19 @@ class RestaurantListCard extends StatelessWidget {
                 if (restaurant.description != null)
                   Text(
                     restaurant.description!,
-                    style: TextStyle(color: Colors.grey[600], fontSize: 14.sp),
+                    style: TextStyle(color: context.colors.textSecondary, fontSize: 14.sp),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 SizedBox(height: 8.w),
                 Row(
                   children: [
-                    Icon(Icons.location_on, size: 14, color: Colors.grey[600]),
+                    Icon(Icons.location_on, size: 14, color: context.colors.textSecondary),
                     SizedBox(width: 4.w),
                     Expanded(
                       child: Text(
                         restaurant.address,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 12.sp),
+                        style: TextStyle(color: context.colors.textSecondary, fontSize: 12.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -258,7 +259,7 @@ class RestaurantListCard extends StatelessWidget {
                       style: TextStyle(fontSize: 12.sp, color: Colors.grey),
                     ),
                     const Spacer(),
-                    Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
+                    Icon(Icons.access_time, size: 14, color: context.colors.textSecondary),
                     SizedBox(width: 2.w),
                     Text(
                       '20-30 phút',
@@ -268,7 +269,7 @@ class RestaurantListCard extends StatelessWidget {
                     Icon(
                       Icons.delivery_dining,
                       size: 14,
-                      color: Colors.grey[600],
+                      color: context.colors.textSecondary,
                     ),
                     SizedBox(width: 2.w),
                     Text(

@@ -5,6 +5,7 @@ import 'package:delivery_app/core/routing/navigation_helper.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
 import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
 import 'package:delivery_app/core/presentation/widgets/toast/toast_utils.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../domain/entities/user_address_entity.dart';
 import '../providers/user_address_notifiers.dart';
 import '../providers/user_address_state.dart';
@@ -129,7 +130,7 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
             style: TextStyle(
               fontSize: ResponsiveSize.fontL,
               fontWeight: FontWeight.w500,
-              color: Colors.grey[600],
+              color: context.colors.textSecondary,
             ),
           ),
           SizedBox(height: ResponsiveSize.s),

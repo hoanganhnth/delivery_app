@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/features/orders/presentation/widgets/optimized_delivery_tracking_map_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../domain/entities/order_entity.dart';
 import '../providers/providers.dart';
 
@@ -90,7 +91,7 @@ class _OrderDeliveryTrackingCardState
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
-                        color: Colors.grey[800],
+                        color: context.colors.textPrimary,
                       ),
                     ),
                     const Spacer(),
@@ -238,7 +239,7 @@ class _OrderDeliveryTrackingCardState
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
-                  color: Colors.grey[600],
+                  color: context.colors.textSecondary,
                 ),
               ),
               SizedBox(height: 8.w),

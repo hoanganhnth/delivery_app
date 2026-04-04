@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../domain/entities/livestream_entity.dart';
 
 /// Card hiển thị livestream theo hàng ngang
@@ -132,7 +133,7 @@ class LivestreamCardHorizontal extends StatelessWidget {
                         livestream.streamerName,
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: Colors.grey[600],
+                          color: context.colors.textSecondary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

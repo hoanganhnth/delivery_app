@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../services/share_service.dart';
 import '../../services/deep_link_service.dart';
 import '../../routing/router_config.dart';
@@ -33,7 +34,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
               'Base URL: ${config.baseUrl ?? "Not configured"}',
               style: Theme.of(
                 context,
-              ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+              ).textTheme.bodySmall?.copyWith(color: context.colors.textSecondary),
             ),
             SizedBox(height: 16.w),
 

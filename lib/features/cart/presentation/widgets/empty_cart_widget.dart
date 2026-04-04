@@ -41,7 +41,7 @@ class EmptyCartWidget extends StatelessWidget {
             SizedBox(height: 32.w),
             ElevatedButton.icon(
               onPressed: () => Navigator.of(context).pushReplacementNamed('/restaurants'),
-              icon: const Icon(Icons.restaurant_menu),
+              icon: Icon(Icons.restaurant_menu),
               label: Text(S.of(context).browseRestaurants),
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.w),

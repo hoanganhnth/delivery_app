@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app_links/app_links.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../services/share_service.dart';
 import '../../routing/router_config.dart';
 
@@ -75,7 +76,7 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
             Text(
               'Using app_links package for deep linking',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
+                color: context.colors.textSecondary,
               ),
             ),
             SizedBox(height: 16.w),

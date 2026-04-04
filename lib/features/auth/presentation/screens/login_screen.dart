@@ -4,6 +4,7 @@ import 'package:delivery_app/core/routing/navigation_helper.dart';
 import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../providers/auth_notifier.dart';
 import '../providers/auth_state.dart';
 import '../providers/biometric_notifier.dart';
@@ -60,7 +61,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F7F5),
+      backgroundColor: context.colors.background,
       body: Stack(
         children: [
           // Ambient blur effects
@@ -71,7 +72,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               width: 192,
               height: 192,
               decoration: BoxDecoration(
-                color: const Color(0xFFF49D25).withValues(alpha: 0.05),
+                color: context.colors.primary.withValues(alpha: 0.05),
                 shape: BoxShape.circle,
               ),
             ),
@@ -95,7 +96,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               width: double.infinity,
               constraints: const BoxConstraints(maxWidth: 448),
               decoration: BoxDecoration(
-                color: const Color(0xFFF8F7F5),
+                color: context.colors.background,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.1),
@@ -117,14 +118,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           begin: Alignment.bottomLeft,
                           end: Alignment.topRight,
                           colors: [
-                            const Color(0xFFF49D25),
-                            const Color(0xFFF49D25).withValues(alpha: 0.9),
+                            context.colors.primary,
+                            context.colors.primary.withValues(alpha: 0.9),
                             const Color(0xFFFF9800),
                           ],
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFF49D25).withValues(alpha: 0.3),
+                            color: context.colors.primary.withValues(alpha: 0.3),
                             blurRadius: 16,
                             offset: const Offset(0, 4),
                           ),
@@ -214,7 +215,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
-                                color: const Color(0xFF9C7A49),
+                                color: context.colors.secondary,
                               ),
                             ),
                             const SizedBox(height: 40),
@@ -255,7 +256,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   _obscurePassword
                                       ? Icons.visibility_outlined
                                       : Icons.visibility_off_outlined,
-                                  color: const Color(0xFF9C7A49),
+                                  color: context.colors.secondary,
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -292,7 +293,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w700,
-                                    color: const Color(0xFFF49D25),
+                                    color: context.colors.primary,
                                   ),
                                 ),
                               ),
@@ -311,10 +312,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           ? null
                                           : _handleLogin,
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: const Color(0xFFF49D25),
+                                        backgroundColor: context.colors.primary,
                                         foregroundColor: Colors.white,
                                         elevation: 8,
-                                        shadowColor: const Color(0xFFF49D25)
+                                        shadowColor: context.colors.primary
                                             .withValues(alpha: 0.3),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(28),
@@ -354,7 +355,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
-                                      color: const Color(0xFF9C7A49),
+                                      color: context.colors.secondary,
                                     ),
                                   ),
                                   TextButton(
@@ -374,7 +375,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w900,
-                                        color: const Color(0xFFF49D25),
+                                        color: context.colors.primary,
                                         decoration: TextDecoration.underline,
                                         decorationThickness: 2,
                                       ),

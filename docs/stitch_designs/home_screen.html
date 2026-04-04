@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary": "#ffffff",
+              "surface": "#ffffff",
+              "tertiary-container": "#ffdad6",
+              "outline": "#d9c3ae",
+              "on-tertiary-fixed-variant": "#93000a",
+              "on-primary-container": "#d6810d",
+              "on-error": "#ffffff",
+              "error": "#ba1a1a",
+              "on-primary": "#ffffff",
+              "on-surface": "#1c160d",
+              "secondary-container": "#fecb94",
+              "surface-variant": "#ffffff",
+              "secondary-fixed-dim": "#efbd87",
+              "surface-tint": "#f49d25",
+              "surface-container-highest": "#e6e0d9",
+              "inverse-surface": "#2d2418",
+              "on-surface-variant": "#9c7a49",
+              "on-primary-fixed": "#2b1700",
+              "primary-fixed-dim": "#ffb866",
+              "surface-container-high": "#ede7e0",
+              "outline-variant": "#f4eee7",
+              "secondary": "#9c7a49",
+              "on-secondary-container": "#795427",
+              "on-background": "#1c160d",
+              "surface-container": "#f4eee7",
+              "primary-fixed": "#ffddba",
+              "inverse-primary": "#ffb866",
+              "on-primary-fixed-variant": "#673d00",
+              "secondary-fixed": "#ffddba",
+              "error-container": "#ffdad6",
+              "primary": "#f49d25",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Plus Jakarta Sans"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- TopAppBar (Minimal) -->
+<header class="w-full top-0 sticky z-50 flex justify-between items-center px-6 py-4 bg-stone-50/80 dark:bg-stone-950/80 backdrop-blur-md shadow-sm">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-orange-500 dark:text-orange-400">restaurant</span>
+<span class="font-['Plus_Jakarta_Sans'] font-black tracking-tighter text-orange-500 dark:text-orange-400 text-xl">Amber Hearth</span>
+</div>
+<button class="text-orange-500 dark:text-orange-400 hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined text-2xl">search</span>
+</button>
+</header>
+<main class="px-6 pt-4 space-y-8">
+<!-- Search Bar Section -->
+<section>
+<div class="relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-primary">search</span>
+</div>
+<input class="w-full h-14 pl-12 pr-16 bg-white border-none rounded-xl shadow-md focus:ring-2 focus:ring-primary/50 placeholder:text-secondary/50 font-medium" placeholder="What are you craving today?" type="text"/>
+<div class="absolute right-2 top-2 bottom-2">
+<button class="h-full px-4 bg-primary text-white rounded-lg font-bold shadow-md shadow-primary/30 hover:opacity-90 transition-all">
+                        Find
+                    </button>
+</div>
+</div>
+</section>
+<!-- Food Categories -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-xl font-black tracking-tight">Categories</h2>
+<button class="text-primary font-bold text-sm">View All</button>
+</div>
+<div class="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+<!-- Burger -->
+<div class="flex-shrink-0 group">
+<div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm group-hover:-translate-y-1 transition-transform border border-surface-container-high">
+<span class="material-symbols-outlined text-primary text-3xl">lunch_dining</span>
+</div>
+<p class="text-center text-[11px] font-bold mt-2 uppercase tracking-wider text-secondary">Burgers</p>
+</div>
+<!-- Pizza -->
+<div class="flex-shrink-0 group">
+<div class="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20 -translate-y-1 transition-transform">
+<span class="material-symbols-outlined text-white text-3xl">local_pizza</span>
+</div>
+<p class="text-center text-[11px] font-bold mt-2 uppercase tracking-wider text-primary">Pizza</p>
+</div>
+<!-- Sushi -->
+<div class="flex-shrink-0 group">
+<div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm group-hover:-translate-y-1 transition-transform border border-surface-container-high">
+<span class="material-symbols-outlined text-primary text-3xl">set_meal</span>
+</div>
+<p class="text-center text-[11px] font-bold mt-2 uppercase tracking-wider text-secondary">Sushi</p>
+</div>
+<!-- Coffee -->
+<div class="flex-shrink-0 group">
+<div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm group-hover:-translate-y-1 transition-transform border border-surface-container-high">
+<span class="material-symbols-outlined text-primary text-3xl">coffee</span>
+</div>
+<p class="text-center text-[11px] font-bold mt-2 uppercase tracking-wider text-secondary">Coffee</p>
+</div>
+<!-- Desserts -->
+<div class="flex-shrink-0 group">
+<div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm group-hover:-translate-y-1 transition-transform border border-surface-container-high">
+<span class="material-symbols-outlined text-primary text-3xl">icecream</span>
+</div>
+<p class="text-center text-[11px] font-bold mt-2 uppercase tracking-wider text-secondary">Sweets</p>
+</div>
+</div>
+</section>
+<!-- Flash Sale Countdown Section -->
+<section class="bg-primary/5 rounded-3xl p-6 relative overflow-hidden">
+<div class="absolute -right-10 -top-10 opacity-10">
+<span class="material-symbols-outlined text-[200px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="flex items-center justify-between mb-5 relative z-10">
+<div>
+<h2 class="text-2xl font-black tracking-tight text-on-surface flex items-center gap-2">
+                        Flash Sale
+                        <span class="material-symbols-outlined text-primary animate-pulse">bolt</span>
+</h2>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-xs font-bold text-secondary uppercase tracking-widest">Ending In</span>
+<div class="flex gap-1">
+<span class="bg-on-surface text-white px-1.5 py-0.5 rounded text-[10px] font-black">04</span>
+<span class="text-on-surface font-bold">:</span>
+<span class="bg-on-surface text-white px-1.5 py-0.5 rounded text-[10px] font-black">22</span>
+<span class="text-on-surface font-bold">:</span>
+<span class="bg-on-surface text-white px-1.5 py-0.5 rounded text-[10px] font-black">15</span>
+</div>
+</div>
+</div>
+<button class="bg-white px-4 py-2 rounded-full text-xs font-black shadow-sm text-primary">SHOP NOW</button>
+</div>
+<div class="flex gap-4 overflow-x-auto no-scrollbar relative z-10">
+<!-- Sale Item 1 -->
+<div class="bg-white rounded-2xl p-3 min-w-[160px] shadow-sm">
+<div class="relative h-28 w-full mb-3 overflow-hidden rounded-xl">
+<img alt="Gourmet Burger" class="w-full h-full object-cover" data-alt="Close up of a gourmet cheeseburger with melting cheese, fresh lettuce, and tomatoes on a wooden board, high contrast editorial food photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7Bj-6Dr_MUqZnOoChEsZrrG8-IZQYixRDzxDbRDSn29C893lBWJDX14B2JFE1pftLjbmXxAti_eOKhzpJgnoYR5bBxG_g3ZPMwKCYUQtdiJKuJPkG7ao6rGVcAL1OpW1aN_CgpxeJmIViX8pRNq2dadFqFH9PKnQ35TYJR4OGRVEGEPKPMtwUS1MqzOI_SchC2v6a42vhs4oCdGRnoS0RB5YU4CVOSOrnL-_cthn3nRgTxuZfgZTjPf3QdYRlvBfifI75c1AQwqc"/>
+<div class="absolute top-2 left-2 bg-error text-white text-[10px] font-black px-2 py-1 rounded">50% OFF</div>
+</div>
+<h3 class="font-bold text-sm truncate">Double Wagyu Burger</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-primary font-black text-sm">$8.50</span>
+<span class="text-secondary/50 text-[10px] line-through">$17.00</span>
+</div>
+</div>
+<!-- Sale Item 2 -->
+<div class="bg-white rounded-2xl p-3 min-w-[160px] shadow-sm">
+<div class="relative h-28 w-full mb-3 overflow-hidden rounded-xl">
+<img alt="Margherita Pizza" class="w-full h-full object-cover" data-alt="Top view of a fresh artisan Margherita pizza with bubbling mozzarella and basil leaves, warm golden hour lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4c67PEZCL59DIE28mx20ZtRi7qn5WyzZld08qsrf3APlCgQRFLiSMUMrC0gqxYyCQ2hUhdpl8-vyBFn0o0bifh_UQyTWarXY7l_6DMs6I4Ozy1fo6jAZGtXjHKrbhkBjg1biLFdQowVpFt0VtLdW85TDUV16RRqEOR5HI4c0n3DmFslThdZOCbPX8u_2JfUgA1AP495TdgDYba3hUQAPKOTBTRAUj1HJpe2MVvo8fbfKWIwobKzvV3X42O5hDvwzWEx6FOA32hFk"/>
+<div class="absolute top-2 left-2 bg-error text-white text-[10px] font-black px-2 py-1 rounded">BOGO</div>
+</div>
+<h3 class="font-bold text-sm truncate">Classic Margherita</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-primary font-black text-sm">$12.00</span>
+<span class="text-secondary/50 text-[10px] line-through">$24.00</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Popular Nearby Section -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-2xl font-black tracking-tight">Popular Nearby</h2>
+<button class="text-secondary font-bold text-sm flex items-center gap-1">
+                    Sort by <span class="material-symbols-outlined text-lg">tune</span>
+</button>
+</div>
+<div class="space-y-6">
+<!-- Restaurant 1 -->
+<div class="group">
+<div class="relative h-48 rounded-[2.5rem] overflow-hidden mb-4 shadow-lg">
+<img alt="The Golden Grill" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Interior of a luxury modern restaurant with warm pendant lights and elegant table settings, high-end editorial vibe" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUBPe517xT72fYeYUMRAF1vmM78haVmAyMCd-yxOmmxXxeaOAt_fv-4-lzS4MSWZugru00Rx13H0iXm2I7gYAoU6itFlVhwL29LnUxgRzTfIzrs-ck3-C79pgwMYhiWi7ZsRsZPpD9o-6Cu_kbMvTZUZpjtmcV3sFLloLvaBH9lyQRrIIk9hxK5fWhfnFYozEf5-92LY_S2orn-G1CpM405_3E1fhzif8_u6euw8nOin6leSxTTYhU-BstzBcKMH_RTadbEEfq3tA"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-amber-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-black text-xs">4.9</span>
+</div>
+<div class="absolute bottom-4 left-4 bg-on-surface/80 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-2 text-white">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span class="font-bold text-xs uppercase tracking-wider">15-25 min</span>
+</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-black text-on-surface">The Golden Grill</h3>
+<p class="text-secondary text-sm font-medium">Modern American • $$$ • 1.2 miles</p>
+</div>
+<div class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Free Delivery</div>
+</div>
+</div>
+<!-- Restaurant 2 -->
+<div class="group">
+<div class="relative h-48 rounded-[2.5rem] overflow-hidden mb-4 shadow-lg">
+<img alt="Sakura Zen" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A minimalist and elegant sushi platter on a slate plate with fresh wasabi and ginger, dramatic moody lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAFT59VA6KGdPJ6twxkDhkhW-9a3BZLXOs88n8_kyNsYHk_dTMo0VEK1VZgr1mB5qC0rWc7saTDJyyQhz-coN9_ByNTXSehuU39CwS6BBKbTJuFo9ksylvjSlZLGTjaMMiVjyvwPLeFoH87OP-apJNSIp7-Fg89gTo4mPNcS0kkje8nWMKMOnkeAe-d8HI9626gWo3kEfxeLxazd4Y2J3Wis8uw_cx9wEfBGbXWjwiH4jDJxFiblxkY3RSXSCESJGFPwX36KUirvY"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-amber-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-black text-xs">4.7</span>
+</div>
+<div class="absolute bottom-4 left-4 bg-on-surface/80 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-2 text-white">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span class="font-bold text-xs uppercase tracking-wider">30-40 min</span>
+</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-black text-on-surface">Sakura Zen</h3>
+<p class="text-secondary text-sm font-medium">Japanese • $$$$ • 2.5 miles</p>
+</div>
+<div class="bg-surface-container-high text-secondary px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">$2.99 Delivery</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pro Member Banner -->
+<section class="mb-12">
+<div class="relative rounded-[2.5rem] bg-stone-900 p-8 overflow-hidden">
+<div class="absolute right-0 top-0 w-1/2 h-full opacity-30">
+<div class="w-full h-full bg-gradient-to-l from-primary/40 to-transparent"></div>
+</div>
+<div class="relative z-10 flex flex-col items-start gap-4">
+<div class="bg-amber-500/20 text-amber-400 border border-amber-500/30 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">PRO MEMBERSHIP</div>
+<h2 class="text-3xl font-black text-white leading-tight">Zero Delivery Fees<br/>Every Single Time.</h2>
+<p class="text-stone-400 text-sm font-medium max-w-[200px]">Join Hearth Pro for exclusive discounts and priority support.</p>
+<button class="bg-primary hover:bg-amber-500 text-white font-black py-4 px-8 rounded-full shadow-lg shadow-primary/40 transition-all active:scale-95">
+                        Upgrade for $9.99/mo
+                    </button>
+</div>
+<span class="absolute -bottom-10 -right-10 material-symbols-outlined text-white/5 text-[240px]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+</section>
+</main>
+<!-- Floating Chat Icon -->
+<button class="fixed bottom-32 right-6 w-14 h-14 bg-white text-primary rounded-full shadow-xl flex items-center justify-center z-40 border border-surface-container-high active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+</button>
+<!-- BottomNavBar (Floating Dark) -->
+<nav class="fixed bottom-6 left-0 right-0 z-50 flex justify-around items-center px-4">
+<div class="bg-stone-900 dark:bg-stone-800 w-[90%] mx-auto flex justify-around items-center h-16 rounded-full shadow-lg shadow-orange-900/20 relative">
+<!-- Home (Active) -->
+<a class="flex flex-col items-center justify-center bg-orange-500 text-white rounded-full p-3 min-w-[64px] h-[64px] -translate-y-2 shadow-md shadow-orange-500/40 active:scale-90 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-0.5">Home</span>
+</a>
+<!-- Favorites -->
+<a class="flex flex-col items-center justify-center text-stone-400 p-2 hover:text-stone-200 transition-colors active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined text-2xl">favorite</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Favorites</span>
+</a>
+<!-- Orders -->
+<a class="flex flex-col items-center justify-center text-stone-400 p-2 hover:text-stone-200 transition-colors active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined text-2xl">receipt_long</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Orders</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-stone-400 p-2 hover:text-stone-200 transition-colors active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined text-2xl">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

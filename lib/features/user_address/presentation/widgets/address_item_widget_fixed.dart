@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../domain/entities/user_address_entity.dart';
 
 class AddressItemWidget extends StatelessWidget {
@@ -51,7 +52,7 @@ class AddressItemWidget extends StatelessWidget {
                       Icons.location_on,
                       color: address.isDefault
                           ? Colors.orange
-                          : Colors.grey[600],
+                          : context.colors.textSecondary,
                       size: 20.sp,
                     ),
                     SizedBox(width: 8.w),
@@ -107,7 +108,7 @@ class AddressItemWidget extends StatelessWidget {
                       icon: Icon(
                         Icons.more_vert,
                         size: 20.sp,
-                        color: Colors.grey[600],
+                        color: context.colors.textSecondary,
                       ),
                       onSelected: (value) {
                         switch (value) {
@@ -163,7 +164,7 @@ class AddressItemWidget extends StatelessWidget {
                   _getFullAddress(),
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: Colors.grey[600],
+                    color: context.colors.textSecondary,
                     height: 1.4,
                   ),
                   maxLines: 2,

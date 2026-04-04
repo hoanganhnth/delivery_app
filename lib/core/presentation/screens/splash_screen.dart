@@ -114,7 +114,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                             // Amber-tinted shadow for "Hearth" warmth
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFF9c7a49).withValues(alpha: 0.3),
+                                color: context.colors.secondary.withValues(alpha: 0.3),
                                 blurRadius: 32,
                                 offset: const Offset(0, 8),
                               ),
@@ -167,7 +167,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                                 height: 1.1,
                                 shadows: [
                                   Shadow(
-                                    color: const Color(0xFF9c7a49).withValues(alpha: 0.5),
+                                    color: context.colors.secondary.withValues(alpha: 0.5),
                                     blurRadius: 12,
                                     offset: const Offset(0, 4),
                                   ),
@@ -270,7 +270,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                                   borderRadius: BorderRadius.circular(24),
                                 ),
                                 elevation: 8,
-                                shadowColor: const Color(0xFF9c7a49).withValues(alpha: 0.4),
+                                shadowColor: context.colors.secondary.withValues(alpha: 0.4),
                               ),
                               child: Text(
                                 'Retry',

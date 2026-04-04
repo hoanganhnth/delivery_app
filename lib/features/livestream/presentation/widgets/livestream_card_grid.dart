@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../domain/entities/livestream_entity.dart';
 
 /// Card hiển thị livestream trong grid view
@@ -134,7 +135,7 @@ class LivestreamCardGrid extends StatelessWidget {
                         livestream.streamerName,
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: Colors.grey[600],
+                          color: context.colors.textSecondary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -151,7 +152,7 @@ class LivestreamCardGrid extends StatelessWidget {
                       _formatCount(livestream.likeCount),
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: Colors.grey[600],
+                        color: context.colors.textSecondary,
                       ),
                     ),
                   ],

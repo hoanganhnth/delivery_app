@@ -10,24 +10,24 @@ class OrderConfirmationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Order Confirmed'),
+        title: Text('Order Confirmed'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.check_circle, size: 100, color: Colors.green),
+            Icon(Icons.check_circle, size: 100, color: Colors.green),
             SizedBox(height: 16.w),
             Text(
               'Order Confirmed!',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             SizedBox(height: 8.w),
-            const Text('Your order will be delivered in 25-30 minutes'),
+            Text('Your order will be delivered in 25-30 minutes'),
             SizedBox(height: 32.w),
             ElevatedButton(
               onPressed: () => context.pushNamed('orders'),
-              child: const Text('Track Order'),
+              child: Text('Track Order'),
             ),
           ],
         ),

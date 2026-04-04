@@ -4,6 +4,7 @@ import 'package:delivery_app/features/orders/orders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../../../generated/l10n.dart';
 import '../../../cart/presentation/pages/cart_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
@@ -51,7 +52,7 @@ class MainScreen extends ConsumerWidget {
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.w),
                 duration: const Duration(milliseconds: 400),
                 tabBackgroundColor: Colors.orange,
-                color: Colors.grey[600],
+                color: context.colors.textSecondary,
                 tabs: [
                   GButton(icon: Icons.home, text: S.of(context).home),
                   GButton(icon: Icons.shopping_cart, text: S.of(context).cart),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../domain/entities/biometric_entity.dart' as app;
 import '../providers/biometric_notifier.dart';
 import '../providers/auth_notifier.dart';
@@ -51,7 +52,7 @@ class BiometricSettingsWidget extends ConsumerWidget {
                         _getBiometricDescription(availableBiometrics),
                         style: TextStyle(
                           fontSize: 14.sp,
-                          color: Colors.grey[600],
+                          color: context.colors.textSecondary,
                         ),
                       ),
                     ],

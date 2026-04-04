@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Custom text field for register screen matching Stitch design
 /// 
@@ -44,10 +45,10 @@ class StitchRegisterField extends StatelessWidget {
           padding: const EdgeInsets.only(left: 4, bottom: 8),
           child: Text(
             label,
-            style: const TextStyle(
+            style:  TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w900,
-              color: Color(0xFF9C7A49),
+              color: context.colors.secondary,
               letterSpacing: 2,
             ),
           ),
@@ -85,7 +86,7 @@ class StitchRegisterField extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 child: Icon(
                   icon,
-                  color: const Color(0xFF9C7A49),
+                  color: context.colors.secondary,
                   size: 22,
                 ),
               ),
@@ -112,7 +113,7 @@ class StitchRegisterField extends StatelessWidget {
               helperText!,
               style: TextStyle(
                 fontSize: 10,
-                color: const Color(0xFF9C7A49).withValues(alpha: 0.7),
+                color: context.colors.secondary.withValues(alpha: 0.7),
               ),
             ),
           ),

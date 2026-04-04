@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../../../core/routing/navigation_helper.dart';
@@ -48,7 +49,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     });
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F7F5),
+      backgroundColor: context.colors.background,
       body: Column(
         children: [
           // Hero Header Section
@@ -64,8 +65,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          const Color(0xFFF49D25).withValues(alpha: 0.3),
-                          const Color(0xFFF8F7F5).withValues(alpha: 0.9),
+                          context.colors.primary.withValues(alpha: 0.3),
+                          context.colors.background.withValues(alpha: 0.9),
                         ],
                       ),
                     ),
@@ -81,7 +82,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         end: Alignment.bottomCenter,
                         colors: [
                           Colors.transparent,
-                          const Color(0xFFF8F7F5).withValues(alpha: 0.9),
+                          context.colors.background.withValues(alpha: 0.9),
                         ],
                       ),
                     ),
@@ -124,7 +125,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF49D25),
+                          color: context.colors.primary,
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
@@ -169,7 +170,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: const Color(0xFF9C7A49),
+                        color: context.colors.secondary,
                         height: 1.5,
                       ),
                     ),
@@ -226,7 +227,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                 _obscurePassword
                                     ? Icons.visibility_outlined
                                     : Icons.visibility_off_outlined,
-                                color: const Color(0xFF9C7A49),
+                                color: context.colors.secondary,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -259,7 +260,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                 _obscureConfirmPassword
                                     ? Icons.visibility_outlined
                                     : Icons.visibility_off_outlined,
-                                color: const Color(0xFF9C7A49),
+                                color: context.colors.secondary,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -288,10 +289,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   ? null
                                   : _handleRegister,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFF49D25),
+                                backgroundColor: context.colors.primary,
                                 foregroundColor: Colors.white,
                                 elevation: 8,
-                                shadowColor: const Color(0xFFF49D25)
+                                shadowColor: context.colors.primary
                                     .withValues(alpha: 0.3),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(28),
@@ -339,7 +340,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
-                                    color: const Color(0xFF9C7A49),
+                                    color: context.colors.secondary,
                                   ),
                                 ),
                                 TextButton(
@@ -359,7 +360,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w900,
-                                      color: const Color(0xFFF49D25),
+                                      color: context.colors.primary,
                                       decoration: TextDecoration.underline,
                                       decorationThickness: 2,
                                     ),
@@ -384,7 +385,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               TextSpan(
                 style: TextStyle(
                   fontSize: 11,
-                  color: const Color(0xFF9C7A49).withValues(alpha: 0.6),
+                  color: context.colors.secondary.withValues(alpha: 0.6),
                   height: 1.5,
                 ),
                 children: [

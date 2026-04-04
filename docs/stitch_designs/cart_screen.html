@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Amber Hearth - Cart</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-dim": "#f8f7f5",
+                        "primary": "#f49d25",
+                        "on-primary-fixed": "#2b1700",
+                        "on-surface": "#1c160d",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#9c7a49",
+                        "on-background": "#1c160d",
+                        "surface-tint": "#f49d25",
+                        "surface-container-highest": "#e6e0d9",
+                        "on-tertiary-fixed-variant": "#93000a",
+                        "tertiary-container": "#ffdad6",
+                        "inverse-on-surface": "#f8f7f5",
+                        "secondary-fixed-dim": "#efbd87",
+                        "inverse-primary": "#ffb866",
+                        "inverse-surface": "#2d2418",
+                        "on-secondary-fixed-variant": "#624015",
+                        "surface-container-low": "#f8f7f5",
+                        "surface-container": "#f4eee7",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#673d00",
+                        "tertiary-fixed-dim": "#ffb4ab",
+                        "on-surface-variant": "#9c7a49",
+                        "primary-container": "#ffedd5",
+                        "surface-variant": "#ffffff",
+                        "on-primary-container": "#d6810d",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#410002",
+                        "on-secondary-container": "#795427",
+                        "surface-bright": "#ffffff",
+                        "error": "#ba1a1a",
+                        "background": "#f8f7f5",
+                        "outline-variant": "#f4eee7",
+                        "secondary-container": "#fecb94",
+                        "surface": "#ffffff",
+                        "outline": "#d9c3ae",
+                        "on-tertiary-container": "#93000a",
+                        "on-secondary-fixed": "#2b1700",
+                        "tertiary-fixed": "#ffdad6",
+                        "surface-container-high": "#ede7e0",
+                        "tertiary": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#ffb866",
+                        "primary-fixed": "#ffddba",
+                        "secondary-fixed": "#ffddba",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-40">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 flex items-center justify-between px-6 py-4 w-full bg-white/90 dark:bg-stone-950/90 backdrop-blur-lg shadow-md">
+<div class="flex items-center gap-4">
+<button class="scale-95 active:duration-150 text-on-surface">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-['Plus_Jakarta_Sans'] font-black tracking-tighter text-stone-900 dark:text-stone-50 text-xl">Giỏ hàng</h1>
+</div>
+<button class="scale-95 active:duration-150 text-secondary hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete_sweep">delete_sweep</span>
+</button>
+</header>
+<main class="px-6 py-6 space-y-8">
+<!-- Restaurant Header Section -->
+<section class="relative overflow-hidden rounded-3xl bg-surface p-6 shadow-sm">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-2xl overflow-hidden shadow-orange-200 shadow-md">
+<img alt="Restaurant Logo" class="w-full h-full object-cover" data-alt="Modern upscale bistro interior with warm ambient lighting and rustic wood details for a culinary brand identity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAG2NcrGaZVPgDt-ye0iW6Mq_b7W1mCH_olcuhDrQMtRy-xmK5H9G-ny0bDjO1FIiYQO-iSWLedHR_EZGbosEBzr6Yi6GfUALq6BWXhGFejgNd02lX-luMmOB12xfs_bEaEs75x-aVrNtJea0JmS35NjUrv7dKctYT1AmVCgn8ldcvgBlWuO4eB_lu0_ysnAtaV8tCMVZzwbVbuF0aTe_HxGsBv0sOB6NXoaJQsCvFt-p7vAe1xPngSRyTygyw-t0Xpb23cnEdzjHw"/>
+</div>
+<div class="flex flex-col">
+<span class="text-secondary font-bold text-[10px] uppercase tracking-widest">Đang đặt tại</span>
+<h2 class="text-xl font-black text-on-surface tracking-tight">The Golden Hearth Bistro</h2>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-on-surface">4.9</span>
+<span class="text-xs text-secondary ml-1">• 1.2km</span>
+</div>
+</div>
+</div>
+<!-- Decorative Watermark -->
+<span class="material-symbols-outlined absolute -right-4 -bottom-4 text-primary/5 text-9xl pointer-events-none" style="font-variation-settings: 'FILL' 1;">verified</span>
+</section>
+<!-- Cart Items List -->
+<div class="space-y-4">
+<h3 class="font-extrabold text-lg text-on-surface flex items-center gap-2">
+                Danh sách món ăn
+                <span class="bg-primary-container text-on-primary-container text-[10px] px-2 py-0.5 rounded-full uppercase tracking-tighter">3 Món</span>
+</h3>
+<!-- CartItemWidget 1 -->
+<div class="group relative flex items-center gap-4 bg-surface p-4 rounded-[2rem] shadow-sm hover:shadow-md transition-all duration-300">
+<div class="relative w-24 h-24 rounded-2xl overflow-hidden shrink-0">
+<img alt="Food Item" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Top down view of a gourmet steak with roasted vegetables on a white plate with dramatic natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8n2TbHDGpyCr_8-YszyQzYPzaf1jTclDog424uXjUrL0jwdG_K-MokEzoAupL9NdL9gJRMlxIuQtIHNnJOjgihnIQ2EUGH0dD8KYvKgEnyfnEwzRLqSU5L69JzCnZioAS1UsW5H9QQKrvV-Hsx6MKxfFT_ToCkmRC9Ft-qFU41qYyS3TuMfWAiFEM1fvZBjD9Kbo1GeJADB4dsFM_6pyl28xneUUVFgtcfAZ22vuozfQpg7CTk51NU8IwLYISIPVCDaGjCKYHxAk"/>
+</div>
+<div class="flex flex-col flex-1 gap-1">
+<h4 class="font-bold text-on-surface leading-tight">Bít tết thảo mộc cao cấp</h4>
+<p class="text-secondary text-xs italic">Medium Rare • Khoai tây nghiền</p>
+<span class="text-primary font-black text-lg mt-1">450.000đ</span>
+</div>
+<div class="flex flex-col items-center gap-2 bg-surface-container-low p-1.5 rounded-full shadow-inner">
+<button class="w-8 h-8 flex items-center justify-center bg-white rounded-full text-secondary shadow-sm hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+<span class="font-black text-sm text-on-surface">1</span>
+<button class="w-8 h-8 flex items-center justify-center bg-white rounded-full text-secondary shadow-sm hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+</div>
+</div>
+<!-- CartItemWidget 2 -->
+<div class="group relative flex items-center gap-4 bg-surface p-4 rounded-[2rem] shadow-sm hover:shadow-md transition-all duration-300">
+<div class="relative w-24 h-24 rounded-2xl overflow-hidden shrink-0">
+<img alt="Food Item" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Artisanal pasta carbonara with creamy sauce and pancetta in a rustic ceramic bowl on a dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtpOCFoSo2Eqz-QWSFlf55qPPve5R8scePFPXBFRLe35-9JCfIuEFfcC9GjrH3K9tHB1DRZKonRMmwiu7rRL0OdltqN_aKMVIjwsQ57LbfW3t3SpYKy_MiqYmZIX3cjH9Z9TyRnwmjB5jmXRobAO1WcYFdXpfqdUzssYI27jzjgSbfEM9GPQ1o8ecjGnKx1yDa4Ym96YIshKKKY5dnOrGv82NTywP_-aCMjDql65s01oSZ9-ZsPHhRdNuGq42ZUFFFdnH4mlz4NiE"/>
+</div>
+<div class="flex flex-col flex-1 gap-1">
+<h4 class="font-bold text-on-surface leading-tight">Mì Ý Carbonara Hun Khói</h4>
+<p class="text-secondary text-xs italic">Thêm phô mai Parmesan</p>
+<span class="text-primary font-black text-lg mt-1">185.000đ</span>
+</div>
+<div class="flex flex-col items-center gap-2 bg-surface-container-low p-1.5 rounded-full shadow-inner">
+<button class="w-8 h-8 flex items-center justify-center bg-white rounded-full text-secondary shadow-sm hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+<span class="font-black text-sm text-on-surface">2</span>
+<button class="w-8 h-8 flex items-center justify-center bg-white rounded-full text-secondary shadow-sm hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+</div>
+</div>
+<!-- CartItemWidget 3 -->
+<div class="group relative flex items-center gap-4 bg-surface p-4 rounded-[2rem] shadow-sm hover:shadow-md transition-all duration-300">
+<div class="relative w-24 h-24 rounded-2xl overflow-hidden shrink-0">
+<img alt="Food Item" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Refreshing glass of orange and basil mocktail with ice cubes and condensation in soft morning sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhKDRcMeF6VRqtOu_5a1tNwFKX4cKKSAdR0K2XlU2541svDLdSo8ktc3SeuWHBpWYKlaVBQorjf-4JlWqmhuadJixzlFOhV6bc14bt-_CyHtPXwpDDmSkFyyvdeIxzicK0-3QFjGt6C6lvvRI2FIm_3q3JOifmKpdmZ0Nacg8BD6CFPQS1lEMrnRmCs-Jd17KnTGW29fMamY4aPNu9uwcjHaAe9ZPEo-bEBEg9PFz8XD4gxevP0A6O-8mZL08IbmAwVEWeJNwxYqc"/>
+</div>
+<div class="flex flex-col flex-1 gap-1">
+<h4 class="font-bold text-on-surface leading-tight">Nước Ép Cam Thảo Mộc</h4>
+<p class="text-secondary text-xs italic">Ít đường • Đá viên</p>
+<span class="text-primary font-black text-lg mt-1">65.000đ</span>
+</div>
+<div class="flex flex-col items-center gap-2 bg-surface-container-low p-1.5 rounded-full shadow-inner">
+<button class="w-8 h-8 flex items-center justify-center bg-white rounded-full text-secondary shadow-sm hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+<span class="font-black text-sm text-on-surface">1</span>
+<button class="w-8 h-8 flex items-center justify-center bg-white rounded-full text-secondary shadow-sm hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Promo Section -->
+<div class="bg-primary-container rounded-[2rem] p-6 border border-primary/10 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-primary-container">confirmation_number</span>
+<div>
+<p class="text-on-primary-container font-black text-sm">HEARTH2024</p>
+<p class="text-on-primary-container/70 text-[10px] uppercase font-bold tracking-widest">Giảm 20k cho đơn hàng đầu tiên</p>
+</div>
+</div>
+<button class="text-primary font-black text-xs underline decoration-2 underline-offset-4">THAY ĐỔI</button>
+</div>
+</main>
+<!-- Bottom Checkout Panel -->
+<section class="fixed bottom-0 left-0 w-full z-50 bg-white dark:bg-stone-950 rounded-t-[2.5rem] shadow-[0_-4px_30px_0_rgba(0,0,0,0.1)] p-8">
+<div class="flex flex-col gap-6">
+<!-- Order Summary Details -->
+<div class="space-y-2">
+<div class="flex justify-between items-center text-secondary">
+<span class="text-xs font-bold uppercase tracking-widest">Tạm tính</span>
+<span class="font-bold">885.000đ</span>
+</div>
+<div class="flex justify-between items-center text-secondary">
+<span class="text-xs font-bold uppercase tracking-widest">Phí giao hàng (2.5km)</span>
+<span class="font-bold">15.000đ</span>
+</div>
+<div class="pt-4 border-t border-dashed border-outline-variant flex justify-between items-center">
+<span class="text-sm font-black text-on-surface uppercase tracking-tight">Tổng thanh toán</span>
+<span class="text-2xl font-black text-primary">900.000đ</span>
+</div>
+</div>
+<!-- Checkout Button -->
+<button class="w-full bg-primary text-white rounded-full py-5 px-8 font-black text-lg shadow-lg shadow-orange-200 flex items-center justify-between group active:scale-95 transition-all">
+<span>THANH TOÁN NGAY</span>
+<div class="flex items-center gap-2">
+<span class="h-6 w-px bg-white/30"></span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+</button>
+</div>
+</section>
+<!-- BottomNavBar (Suppressed for focused Transactional screen as per mandate, but included if needed as per JSON shell layout rules for generic navigation) -->
+<!-- Note: Following the "Destination Rule" & "Automatic Suppression" for focused cart view, 
+         the BottomNavBar is visually hidden here to prioritize the Checkout CTA. -->
+</body></html>

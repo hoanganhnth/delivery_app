@@ -2,6 +2,7 @@ import 'package:delivery_app/features/restaurants/domain/entities/menu_item_enti
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../../../generated/l10n.dart';
 import '../../../cart/presentation/providers/providers.dart';
 
@@ -90,7 +91,7 @@ class MenuItemCard extends ConsumerWidget {
                     color: menuItem.image == null ? Colors.grey[300] : null,
                   ),
                   child: menuItem.image == null
-                      ? const Icon(Icons.fastfood, color: Colors.grey)
+                      ? Icon(Icons.fastfood, color: Colors.grey)
                       : null,
                 ),
 
@@ -111,7 +112,7 @@ class MenuItemCard extends ConsumerWidget {
                       SizedBox(height: 4.w),
                       Text(
                         menuItem.description,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 14.sp),
+                        style: TextStyle(color: context.colors.textSecondary, fontSize: 14.sp),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
