@@ -11,17 +11,16 @@ abstract class RestaurantEntity with _$RestaurantEntity {
     required String address,
     String? phone,
     String? image,
-    // required double rating,
-    // required int reviewCount,
-    // required double deliveryFee,
-    // required int deliveryTime, // in minutes
-    // required bool isOpen,
+    double? rating,
+    int? reviewCount,
+    double? deliveryFee,
+    int? deliveryTime, // in minutes
+    bool? isOpen,
     String? closingHour,
     String? openingHour,
-    // required List<String> categories,
+    String? category,
     double? addressLat,
     double? addressLng,
-    // DateTime? openTime,
-    // DateTime? closeTime,
+    double? distance, // in kilometers
   }) = _RestaurantEntity;
 }

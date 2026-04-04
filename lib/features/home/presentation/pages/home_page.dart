@@ -294,12 +294,12 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  Widget _buildRestaurantsList(dynamic restaurantsState) {
-    if (restaurantsState.isLoading) {
+  Widget _buildRestaurantsList(RestaurantsState restaurantsState) {
+    if (restaurantsState.isLoading || restaurantsState.isFeaturedLoading) {
       return SliverToBoxAdapter(
         child: Center(
           child: Padding(
-            padding: EdgeInsets.all(32),
+            padding: EdgeInsets.all(32.w),
             child: CircularProgressIndicator(
               color: context.colors.primary,
             ),
@@ -355,8 +355,8 @@ class _HomePageState extends ConsumerState<HomePage> {
             return Padding(
               padding: EdgeInsets.only(bottom: 16.w),
               child: RestaurantCard(
-                name: restaurant.name ?? 'Nhà hàng',
-                imageUrl: restaurant.imageUrl ?? 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800',
+                name: restaurant.name,
+                imageUrl: restaurant.image ?? 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800',
                 rating: restaurant.rating ?? 4.5,
                 deliveryTime: '${restaurant.deliveryTime ?? 25}-${(restaurant.deliveryTime ?? 25) + 10} min',
                 category: restaurant.category ?? 'Đa dạng',

@@ -1,11 +1,8 @@
 import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/features/orders/orders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:delivery_app/core/theme/theme_extensions.dart';
-import '../../../../generated/l10n.dart';
+import 'package:delivery_app/features/home/presentation/widgets/amber_bottom_nav_bar.dart';
 import '../../../cart/presentation/pages/cart_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../providers/navigation_provider.dart';
@@ -26,48 +23,14 @@ class MainScreen extends ConsumerWidget {
 
     return Scaffold(
       body: pages[currentTab.tabIndex], // dùng tabIndex từ AppTab
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20,
-              color: Colors.black.withValues(alpha: 0.1),
-            ),
-          ],
-        ),
-        child: SingleChildScrollView(
-          // scrollDirection: Axis.horizontal,
-          child: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.0.w, vertical: 8.w),
-              child: GNav(
-                
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                rippleColor: Colors.grey[300]!,
-                hoverColor: Colors.grey[100]!,
-                gap: 8,
-                activeColor: Colors.white,
-                iconSize: 24,
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.w),
-                duration: const Duration(milliseconds: 400),
-                tabBackgroundColor: Colors.orange,
-                color: context.colors.textSecondary,
-                tabs: [
-                  GButton(icon: Icons.home, text: S.of(context).home),
-                  GButton(icon: Icons.shopping_cart, text: S.of(context).cart),
-                  GButton(icon: Icons.receipt_long, text: S.of(context).orders),
-                  GButton(icon: Icons.person, text: S.of(context).profile),
-                ],
-                selectedIndex: currentTab.tabIndex, // chọn tab bằng AppTab
-                onTabChange: (index) {
-                  ref.read(selectedTabProvider.notifier).setTab(
-                      AppTab.values[index]); // gán lại AppTab thay vì int
-                },
-              ),
-            ),
-          ),
-        ),
+      extendBody: true,
+      bottomNavigationBar: AmberBottomNavBar(
+        currentIndex: currentTab.tabIndex,
+        onTap: (index) {
+          ref.read(selectedTabProvider.notifier).setTab(
+            AppTab.values[index],
+          );
+        },
       ),
     );
   }
