@@ -41,6 +41,7 @@ GoRouter router(Ref ref) {
     debugLogDiagnostics: config.debugLogDiagnostics,
     redirect: config.enableRedirects
         ? (context, state) {
+          return AppRoutes.main;//need remove
             final authState = ref.read(authProvider);
             final isAuthenticated = authState.isAuthenticated;
 
@@ -118,7 +119,7 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: AppRoutes.main,
         name: 'main',
-        redirect: guardManager.applyAuthGuard,
+        // redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const MainScreen(),
       ),
 

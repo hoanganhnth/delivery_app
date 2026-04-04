@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserProfileDto {
 
- int? get id; int get authId; String get email; String get role; String? get fullName; String? get phone; String? get dob; String? get avatarUrl; String? get address; String? get createdAtString; String? get updatedAtString;
+ int? get id; int get authId; String get email; String get role;@JsonKey(name: 'my_property') String? get fullName; String? get phone; String? get dob; String? get avatarUrl; String? get address; String? get createdAtString; String? get updatedAtString;
 /// Create a copy of UserProfileDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $UserProfileDtoCopyWith<$Res>  {
   factory $UserProfileDtoCopyWith(UserProfileDto value, $Res Function(UserProfileDto) _then) = _$UserProfileDtoCopyWithImpl;
 @useResult
 $Res call({
- int? id, int authId, String email, String role, String? fullName, String? phone, String? dob, String? avatarUrl, String? address, String? createdAtString, String? updatedAtString
+ int? id, int authId, String email, String role,@JsonKey(name: 'my_property') String? fullName, String? phone, String? dob, String? avatarUrl, String? address, String? createdAtString, String? updatedAtString
 });
 
 
@@ -163,7 +163,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int authId,  String email,  String role,  String? fullName,  String? phone,  String? dob,  String? avatarUrl,  String? address,  String? createdAtString,  String? updatedAtString)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int authId,  String email,  String role, @JsonKey(name: 'my_property')  String? fullName,  String? phone,  String? dob,  String? avatarUrl,  String? address,  String? createdAtString,  String? updatedAtString)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserProfileDto() when $default != null:
 return $default(_that.id,_that.authId,_that.email,_that.role,_that.fullName,_that.phone,_that.dob,_that.avatarUrl,_that.address,_that.createdAtString,_that.updatedAtString);case _:
@@ -184,7 +184,7 @@ return $default(_that.id,_that.authId,_that.email,_that.role,_that.fullName,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int authId,  String email,  String role,  String? fullName,  String? phone,  String? dob,  String? avatarUrl,  String? address,  String? createdAtString,  String? updatedAtString)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int authId,  String email,  String role, @JsonKey(name: 'my_property')  String? fullName,  String? phone,  String? dob,  String? avatarUrl,  String? address,  String? createdAtString,  String? updatedAtString)  $default,) {final _that = this;
 switch (_that) {
 case _UserProfileDto():
 return $default(_that.id,_that.authId,_that.email,_that.role,_that.fullName,_that.phone,_that.dob,_that.avatarUrl,_that.address,_that.createdAtString,_that.updatedAtString);case _:
@@ -204,7 +204,7 @@ return $default(_that.id,_that.authId,_that.email,_that.role,_that.fullName,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int authId,  String email,  String role,  String? fullName,  String? phone,  String? dob,  String? avatarUrl,  String? address,  String? createdAtString,  String? updatedAtString)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int authId,  String email,  String role, @JsonKey(name: 'my_property')  String? fullName,  String? phone,  String? dob,  String? avatarUrl,  String? address,  String? createdAtString,  String? updatedAtString)?  $default,) {final _that = this;
 switch (_that) {
 case _UserProfileDto() when $default != null:
 return $default(_that.id,_that.authId,_that.email,_that.role,_that.fullName,_that.phone,_that.dob,_that.avatarUrl,_that.address,_that.createdAtString,_that.updatedAtString);case _:
@@ -219,14 +219,14 @@ return $default(_that.id,_that.authId,_that.email,_that.role,_that.fullName,_tha
 @JsonSerializable()
 
 class _UserProfileDto implements UserProfileDto {
-  const _UserProfileDto({this.id, required this.authId, required this.email, required this.role, this.fullName, this.phone, this.dob, this.avatarUrl, this.address, this.createdAtString, this.updatedAtString});
+  const _UserProfileDto({this.id, required this.authId, required this.email, required this.role, @JsonKey(name: 'my_property') this.fullName, this.phone, this.dob, this.avatarUrl, this.address, this.createdAtString, this.updatedAtString});
   factory _UserProfileDto.fromJson(Map<String, dynamic> json) => _$UserProfileDtoFromJson(json);
 
 @override final  int? id;
 @override final  int authId;
 @override final  String email;
 @override final  String role;
-@override final  String? fullName;
+@override@JsonKey(name: 'my_property') final  String? fullName;
 @override final  String? phone;
 @override final  String? dob;
 @override final  String? avatarUrl;
@@ -267,7 +267,7 @@ abstract mixin class _$UserProfileDtoCopyWith<$Res> implements $UserProfileDtoCo
   factory _$UserProfileDtoCopyWith(_UserProfileDto value, $Res Function(_UserProfileDto) _then) = __$UserProfileDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, int authId, String email, String role, String? fullName, String? phone, String? dob, String? avatarUrl, String? address, String? createdAtString, String? updatedAtString
+ int? id, int authId, String email, String role,@JsonKey(name: 'my_property') String? fullName, String? phone, String? dob, String? avatarUrl, String? address, String? createdAtString, String? updatedAtString
 });
 
 
