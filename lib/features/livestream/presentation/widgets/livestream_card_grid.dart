@@ -1,11 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:delivery_app/core/theme/theme_extensions.dart';
+import '../../../../core/widgets/live_indicator_badge.dart';
 import '../../domain/entities/livestream_entity.dart';
 
-/// Card hiển thị livestream trong grid view
-class LivestreamCardGrid extends StatelessWidget {
+/// Card hiển thị livestream trong grid view - Editorial Style
+/// Features:
+/// - Rounded corners 24px (Stitch design)
+/// - Gradient vignette overlay
+/// - Animated LIVE badge
+/// - Hover scale effect (desktop/web)
+class LivestreamCardGrid extends StatefulWidget {
   final LivestreamEntity livestream;
 
   const LivestreamCardGrid({
@@ -14,153 +19,237 @@ class LivestreamCardGrid extends StatelessWidget {
   });
 
   @override
+  State<LivestreamCardGrid> createState() => _LivestreamCardGridState();
+}
+
+class _LivestreamCardGridState extends State<LivestreamCardGrid> {
+  bool _isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Thumbnail với LIVE badge
-          Expanded(
+    final theme = Theme.of(context);
+    
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        transform: Matrix4.identity()
+          ..scale(_isHovered ? 1.03 : 1.0),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: _isHovered ? 0.15 : 0.08),
+                blurRadius: _isHovered ? 20 : 12,
+                offset: Offset(0, _isHovered ? 8 : 4),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24.r),
             child: Stack(
+              fit: StackFit.expand,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                  child: CachedNetworkImage(
-                    imageUrl: livestream.thumbnailUrl ?? livestream.coverImageUrl ?? '',
-                    width: double.infinity,
-                    height: double.infinity,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      color: Colors.grey[300],
-                      child: Center(child: CircularProgressIndicator()),
-                    ),
-                    errorWidget: (context, url, error) => Container(
-                      color: Colors.grey[300],
-                      child: Icon(Icons.live_tv, size: 50, color: Colors.grey),
-                    ),
-                  ),
-                ),
+                // Thumbnail
+                _buildThumbnail(),
+
+                // Gradient overlay
+                _buildGradientOverlay(),
 
                 // LIVE badge
-                if (livestream.isLive)
+                if (widget.livestream.isLive)
                   Positioned(
-                    top: 8.w,
-                    left: 8.w,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.w),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.circle, color: Colors.white, size: 6),
-                          SizedBox(width: 4.w),
-                          Text(
-                            'LIVE',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10.sp,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    top: 12.w,
+                    left: 12.w,
+                    child: const LiveIndicatorBadge(),
                   ),
 
                 // Viewer count
                 Positioned(
-                  bottom: 8.w,
-                  right: 8.w,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.w),
-                    decoration: BoxDecoration(
-                      color: Colors.black54,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.visibility, color: Colors.white, size: 10),
-                        SizedBox(width: 3.w),
-                        Text(
-                          _formatCount(livestream.viewerCount),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  top: 12.w,
+                  right: 12.w,
+                  child: _buildViewerBadge(theme),
+                ),
+
+                // Bottom info
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: _buildBottomInfo(theme),
                 ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
 
-          // Info
-          Padding(
-            padding: EdgeInsets.all(8.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  livestream.title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13.sp,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(height: 6.w),
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 8,
-                      backgroundImage: livestream.streamerAvatar != null
-                          ? CachedNetworkImageProvider(livestream.streamerAvatar!)
-                          : null,
-                      child: livestream.streamerAvatar == null
-                          ? Icon(Icons.person, size: 10)
-                          : null,
-                    ),
-                    SizedBox(width: 6.w),
-                    Expanded(
-                      child: Text(
-                        livestream.streamerName,
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          color: context.colors.textSecondary,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 4.w),
-                Row(
-                  children: [
-                    Icon(Icons.favorite, color: Colors.red, size: 12),
-                    SizedBox(width: 4.w),
-                    Text(
-                      _formatCount(livestream.likeCount),
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        color: context.colors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+  Widget _buildThumbnail() {
+    return CachedNetworkImage(
+      imageUrl: widget.livestream.thumbnailUrl ?? 
+                widget.livestream.coverImageUrl ?? '',
+      fit: BoxFit.cover,
+      placeholder: (context, url) => Container(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        child: Center(
+          child: Icon(
+            Icons.live_tv_rounded,
+            size: 40.sp,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ),
+      errorWidget: (context, url, error) => Container(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        child: Center(
+          child: Icon(
+            Icons.image_not_supported_rounded,
+            size: 40.sp,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGradientOverlay() {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.transparent,
+            Colors.transparent,
+            Colors.black.withValues(alpha: 0.7),
+          ],
+          stops: const [0.0, 0.5, 1.0],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildViewerBadge(ThemeData theme) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.6),
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.visibility_rounded,
+            color: Colors.white,
+            size: 12.sp,
+          ),
+          SizedBox(width: 4.w),
+          Text(
+            _formatCount(widget.livestream.viewerCount),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 11.sp,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildBottomInfo(ThemeData theme) {
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Title
+          Text(
+            widget.livestream.title,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 14.sp,
+              height: 1.2,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          SizedBox(height: 8.h),
+          // Streamer info
+          Row(
+            children: [
+              // Avatar
+              Container(
+                width: 24.w,
+                height: 24.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.3),
+                    width: 1,
+                  ),
+                ),
+                child: ClipOval(
+                  child: widget.livestream.streamerAvatar != null
+                      ? CachedNetworkImage(
+                          imageUrl: widget.livestream.streamerAvatar!,
+                          fit: BoxFit.cover,
+                          errorWidget: (_, __, ___) => _buildDefaultAvatar(),
+                        )
+                      : _buildDefaultAvatar(),
+                ),
+              ),
+              SizedBox(width: 8.w),
+              // Name
+              Expanded(
+                child: Text(
+                  widget.livestream.streamerName,
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.9),
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              // Likes
+              Icon(
+                Icons.favorite_rounded,
+                color: theme.colorScheme.error,
+                size: 14.sp,
+              ),
+              SizedBox(width: 4.w),
+              Text(
+                _formatCount(widget.livestream.likeCount),
+                style: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.9),
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDefaultAvatar() {
+    return Container(
+      color: Theme.of(context).colorScheme.primaryContainer,
+      child: Icon(
+        Icons.person_rounded,
+        size: 14.sp,
+        color: Theme.of(context).colorScheme.onPrimaryContainer,
       ),
     );
   }

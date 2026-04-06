@@ -1,34 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
+import '../../../../core/widgets/editorial_header.dart';
+import '../../../../core/widgets/category_pill.dart';
 import '../providers/providers.dart';
 import '../widgets/livestream_card_grid.dart';
 
-/// Màn hình hiển thị tất cả livestream theo grid 2 cột
+/// Màn hình hiển thị tất cả livestream - Stitch Editorial Redesign
+/// Design: Editorial style với rounded cards, category pills, staggered grid
 class AllLivestreamsScreen extends ConsumerStatefulWidget {
   const AllLivestreamsScreen({super.key});
 
   @override
-  ConsumerState<AllLivestreamsScreen> createState() => _AllLivestreamsScreenState();
+  ConsumerState<AllLivestreamsScreen> createState() =>
+      _AllLivestreamsScreenState();
 }
 
 class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
   final ScrollController _scrollController = ScrollController();
+  String _selectedCategory = 'All';
+
+  final List<Map<String, dynamic>> _categoryData = [
+    {'icon': Icons.restaurant_menu, 'label': 'All'},
+    {'icon': Icons.local_fire_department, 'label': 'Street Food'},
+    {'icon': Icons.dining, 'label': 'Fine Dining'},
+    {'icon': Icons.cake, 'label': 'Baking'},
+    {'icon': Icons.icecream, 'label': 'Desserts'},
+    {'icon': Icons.local_cafe, 'label': 'Drinks'},
+  ];
 
   @override
   void initState() {
     super.initState();
-    // Load livestreams when screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(livestreamProvider.notifier).loadLivestreams(refresh: true);
     });
-
-    // Setup infinite scroll
     _scrollController.addListener(_onScroll);
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.8) {
       final state = ref.read(livestreamProvider);
       if (!state.isLoading && state.hasMore) {
         ref.read(livestreamProvider.notifier).loadLivestreams();
@@ -44,104 +58,314 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final livestreamState = ref.watch(livestreamProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: const Text(
-          'Tất cả Livestream',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: SafeArea(
+        child: CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            // Custom AppBar
+            SliverToBoxAdapter(
+              child: _buildAppBar(context, theme),
+            ),
+
+            // Editorial Header
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
+                child: EditorialHeader(
+                  subtitle: 'LIVE NOW',
+                  title: 'Foodie ',
+                  titleHighlight: 'Live',
+                  description: 'Watch chefs cook in real-time',
+                ),
+              ),
+            ),
+
+            // Category Pills - Horizontal scroll
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 100.h,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  itemCount: _categoryData.length,
+                  separatorBuilder: (_, __) => SizedBox(width: 12.w),
+                  itemBuilder: (context, index) {
+                    final category = _categoryData[index];
+                    final isActive = category['label'] == _selectedCategory;
+                    return CategoryPill(
+                      icon: category['icon'] as IconData,
+                      label: category['label'] as String,
+                      isActive: isActive,
+                      onTap: () {
+                        setState(() {
+                          _selectedCategory = category['label'] as String;
+                        });
+                        // TODO: Filter livestreams by category
+                      },
+                    );
+                  },
+                ),
+              ),
+            ),
+
+            SliverToBoxAdapter(child: SizedBox(height: 20.h)),
+
+            // Content
+            _buildContent(context, theme, livestreamState),
+
+            // Bottom padding for navigation
+            SliverToBoxAdapter(child: SizedBox(height: 100.h)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppBar(BuildContext context, ThemeData theme) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+      child: Row(
+        children: [
+          // Back button
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Container(
+              width: 44.w,
+              height: 44.w,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              child: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 18.sp,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
           ),
-        ),
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
+          const Spacer(),
+          // Search button
+          GestureDetector(
+            onTap: () {
               // TODO: Implement search
             },
-            icon: const Icon(Icons.search, color: Colors.white),
+            child: Container(
+              width: 44.w,
+              height: 44.w,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              child: Icon(
+                Icons.search_rounded,
+                size: 22.sp,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+          ),
+          SizedBox(width: 12.w),
+          // Filter button
+          GestureDetector(
+            onTap: () {
+              // TODO: Show filter bottom sheet
+            },
+            child: Container(
+              width: 44.w,
+              height: 44.w,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary,
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              child: Icon(
+                Icons.tune_rounded,
+                size: 20.sp,
+                color: theme.colorScheme.onPrimary,
+              ),
+            ),
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await ref.read(livestreamProvider.notifier).loadLivestreams(refresh: true);
-        },
-        child: livestreamState.isLoading && livestreamState.livestreams.isEmpty
-            ? const Center(child: CircularProgressIndicator())
-            : livestreamState.hasError && livestreamState.livestreams.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.error_outline, size: 60, color: Colors.grey),
-                        SizedBox(height: 16.w),
-                        Text(
-                          'Lỗi: ${livestreamState.errorMessage}',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        SizedBox(height: 16.w),
-                        ElevatedButton(
-                          onPressed: () {
-                            ref.read(livestreamProvider.notifier).loadLivestreams(refresh: true);
-                          },
-                          child: const Text('Thử lại'),
-                        ),
-                      ],
-                    ),
-                  )
-                : livestreamState.livestreams.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.live_tv_outlined, size: 80, color: Colors.grey),
-                            SizedBox(height: 16.w),
-                            Text(
-                              'Chưa có livestream nào',
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : GridView.builder(
-                        controller: _scrollController,
-                        padding: EdgeInsets.all(16.w),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 12.w,
-                          mainAxisSpacing: 12.w,
-                          childAspectRatio: 0.7,
-                        ),
-                        itemCount: livestreamState.livestreams.length + (livestreamState.hasMore ? 1 : 0),
-                        itemBuilder: (context, index) {
-                          if (index >= livestreamState.livestreams.length) {
-                            // Loading indicator for pagination
-                            return const Center(child: CircularProgressIndicator());
-                          }
+    );
+  }
 
-                          final livestream = livestreamState.livestreams[index];
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/livestream-detail',
-                                arguments: livestream.id,
-                              );
-                            },
-                            child: LivestreamCardGrid(livestream: livestream),
-                          );
-                        },
-                      ),
+  Widget _buildContent(
+    BuildContext context,
+    ThemeData theme,
+    dynamic livestreamState,
+  ) {
+    // Loading state
+    if (livestreamState.isLoading && livestreamState.livestreams.isEmpty) {
+      return SliverFillRemaining(
+        child: Center(
+          child: CircularProgressIndicator(
+            color: theme.colorScheme.primary,
+          ),
+        ),
+      );
+    }
+
+    // Error state
+    if (livestreamState.hasError && livestreamState.livestreams.isEmpty) {
+      return SliverFillRemaining(
+        child: _buildErrorState(context, theme, livestreamState.errorMessage),
+      );
+    }
+
+    // Empty state
+    if (livestreamState.livestreams.isEmpty) {
+      return SliverFillRemaining(
+        child: _buildEmptyState(theme),
+      );
+    }
+
+    // Livestream Grid - Staggered layout
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      sliver: SliverMasonryGrid.count(
+        crossAxisCount: 2,
+        mainAxisSpacing: 16.h,
+        crossAxisSpacing: 16.w,
+        childCount: livestreamState.livestreams.length +
+            (livestreamState.hasMore ? 1 : 0),
+        itemBuilder: (context, index) {
+          // Loading indicator for pagination
+          if (index >= livestreamState.livestreams.length) {
+            return Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.w),
+                child: CircularProgressIndicator(
+                  color: theme.colorScheme.primary,
+                  strokeWidth: 2,
+                ),
+              ),
+            );
+          }
+
+          final livestream = livestreamState.livestreams[index];
+          // Staggered heights: alternate between tall and normal
+          final isLarge = index % 3 == 0;
+
+          return GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                '/livestream-detail',
+                arguments: livestream.id,
+              );
+            },
+            child: SizedBox(
+              height: isLarge ? 280.h : 220.h,
+              child: LivestreamCardGrid(livestream: livestream),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildErrorState(
+    BuildContext context,
+    ThemeData theme,
+    String? errorMessage,
+  ) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(32.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 80.w,
+              height: 80.w,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.errorContainer.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(24.r),
+              ),
+              child: Icon(
+                Icons.wifi_off_rounded,
+                size: 40.sp,
+                color: theme.colorScheme.error,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              'Oops! Something went wrong',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              errorMessage ?? 'Unable to load livestreams',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 24.h),
+            FilledButton.icon(
+              onPressed: () {
+                ref
+                    .read(livestreamProvider.notifier)
+                    .loadLivestreams(refresh: true);
+              },
+              icon: const Icon(Icons.refresh_rounded),
+              label: const Text('Try Again'),
+              style: FilledButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(ThemeData theme) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(32.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 100.w,
+              height: 100.w,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(32.r),
+              ),
+              child: Icon(
+                Icons.live_tv_rounded,
+                size: 48.sp,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              'No Livestreams Yet',
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              'Check back later for live cooking sessions',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }

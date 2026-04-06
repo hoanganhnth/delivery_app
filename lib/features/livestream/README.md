@@ -1,5 +1,42 @@
 # Livestream Feature
 
+## 🎨 New Design (from Stitch)
+**Reference:** `.stitch_designs/DESIGN_ANALYSIS.md`
+- **Screens**: Foodie Live - Dark Nav, Livestream Detail
+- **Style**: Editorial with glassmorphism, dark bottom nav, Material 3 colors
+
+## ✅ Đã hoàn thành
+- [x] Danh sách livestreams (grid layout)
+- [x] Chi tiết livestream với video player (Agora)
+- [x] Real-time comments (Firebase)
+- [x] Like animation
+- [x] Product sheet overlay
+- [x] Livestream home section widget
+- [x] **Editorial header** với decorative line (`EditorialHeader`)
+- [x] **LiveIndicatorBadge** - animated pulse badge
+- [x] **LivestreamCardGrid** - editorial style với gradient overlay
+- [x] **AllLivestreamsScreen** - staggered grid, category pills
+- [x] **CategoryPill** widget với hover effect
+- [x] **LivestreamDetailScreen** - glassmorphic UI redesign ✅ NEW
+
+## 🎨 Stitch Redesign Progress
+- [x] Editorial header với decorative line ✅
+- [ ] Featured Bento card (420px, rounded-[2.5rem])
+- [x] Staggered grid với hover effects ✅
+- [x] Category pills (horizontal scroll) ✅
+- [ ] Dark bottom navigation (floating pill)
+- [x] Glassmorphic overlays (top bar, bottom controls) ✅
+- [x] Comment section với fade gradient ✅
+- [ ] Floating product card (GlassmorphicProductCard)
+
+## 📄 Ghi chú
+- Sử dụng Riverpod Generator, Clean Architecture
+- Agora RTC Engine cho livestream
+- Firebase Firestore cho comments real-time
+- New design: Plus Jakarta Sans font, Material 3 palette
+- Live indicator: Animated pulse (red #BA1A1A)
+- Primary color: Amber #F49D25
+
 Feature xem livestream với Agora RTC Engine cho ứng dụng Delivery.
 
 ## 📋 Tính năng

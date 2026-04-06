@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-lowest": "#ffffff",
+              "inverse-on-surface": "#f8f7f5",
+              "outline": "#d9c3ae",
+              "on-primary-fixed": "#2b1700",
+              "on-tertiary-fixed-variant": "#93000a",
+              "tertiary-container": "#ffdad6",
+              "on-secondary": "#ffffff",
+              "surface-container-highest": "#e6e0d9",
+              "primary-fixed-dim": "#ffb866",
+              "surface-variant": "#ffffff",
+              "tertiary": "#ba1a1a",
+              "secondary": "#9c7a49",
+              "on-tertiary-container": "#93000a",
+              "surface-dim": "#f8f7f5",
+              "on-surface-variant": "#9c7a49",
+              "inverse-primary": "#ffb866",
+              "on-tertiary-fixed": "#410002",
+              "error-container": "#ffdad6",
+              "secondary-fixed": "#ffddba",
+              "primary": "#f49d25",
+              "on-primary-container": "#d6810d",
+              "on-error": "#ffffff",
+              "on-primary": "#ffffff",
+              "surface-container-high": "#ede7e0",
+              "surface-container": "#f4eee7",
+              "tertiary-fixed-dim": "#ffb4ab",
+              "on-surface": "#1c160d",
+              "secondary-fixed-dim": "#efbd87",
+              "outline-variant": "#f4eee7",
+              "primary-fixed": "#ffddba",
+              "on-tertiary": "#ffffff",
+              "on-secondary-fixed-variant": "#624015",
+              "surface-bright": "#ffffff",
+              "on-secondary-container": "#795427",
+              "surface-tint": "#f49d25",
+              "inverse-surface": "#2d2418",
+              "on-error-container": "#93000a",
+              "secondary-container": "#fecb94",
+              "primary-container": "#ffedd5",
+              "on-background": "#1c160d",
+              "tertiary-fixed": "#ffdad6",
+              "surface-container-low": "#f8f7f5",
+              "background": "#f8f7f5",
+              "on-secondary-fixed": "#2b1700",
+              "error": "#ba1a1a",
+              "on-primary-fixed-variant": "#673d00",
+              "surface": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Plus Jakarta Sans"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scrolling-chat::-webkit-scrollbar {
+            display: none;
+        }
+        .editorial-overlay {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.8) 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-background antialiased overflow-hidden">
+<!-- Full Screen Video Player Container -->
+<main class="relative h-screen w-full bg-stone-950 overflow-hidden">
+<!-- Background Livestream (Visual Placeholder) -->
+<div class="absolute inset-0 z-0">
+<img alt="high-end culinary masterclass with professional chef preparing artisanal pasta in a sunlit warm kitchen studio" class="h-full w-full object-cover" data-alt="high-end culinary masterclass with professional chef preparing artisanal pasta in a sunlit warm kitchen studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKYadUQnhjMM-onek_pGW3F5FG38Tf5xj8UFWVy_dsOqLbOHRuWLVsjxej4E7X0zJbb8ClXbm_lIIIsVS0Tzlz7WRGtm11zr5b_FwYgaeBAVbQkMWpxK2RrJd-hTy5WHsaojVu9rSWSiC1VXnjEMw-43Ztmm3ghQNhs4SFijqYN1E95L8aO8tdbGBOn1NuWfgctkRTMm4rhYFgqUUlidqV8IxHe_LyQtZy4iYSGAscghMcl8k2DpWchESM1JtPOgwh9zs5i2ffcHA"/>
+<!-- Editorial Vignette Overlay -->
+<div class="absolute inset-0 editorial-overlay z-10 pointer-events-none"></div>
+</div>
+<!-- Top AppBar Shell (From JSON Guidance) -->
+<header class="sticky top-0 z-50 flex items-center justify-between px-6 py-6 w-full">
+<div class="flex items-center gap-4">
+<button class="w-12 h-12 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex items-center bg-stone-900/40 backdrop-blur-xl rounded-full pl-1 pr-4 py-1 gap-3 border border-white/10 shadow-lg">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary">
+<img alt="Professional chef profile" data-alt="portrait of a professional male chef with a warm smile wearing a clean white coat in a luxury kitchen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA972HZ6iuovgJ0swymQr0JZ_rgPunWImFTBGBkC51incuQXJzOO0mSjECeVJcDEw9yQYraFfK2CQ3ZnMCEylFf94F7RpGmuvsPusMjYU6dESPsouY2jyQf0tHQmvdRyAL0bgVbpFkvm42kmTvaBISM1TSDQs44jjBPY8xa_gK2LfcAwu0fCHDtP0eEyQmCEMvDQ_OMJRNY1zOjoDxtzLIqY9bKZlmliHK6VY8gScMnTBNkECmO4yUOb7Y_T0aJkDatnCuLgAvslPw"/>
+</div>
+<div>
+<p class="text-white font-bold text-sm leading-none tracking-tight">Chef Julian Vane</p>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+<span class="text-[10px] font-black uppercase tracking-widest text-stone-300">Live • 1.2k Viewers</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="bg-primary px-4 py-2 rounded-full shadow-lg shadow-primary/20">
+<span class="text-white font-black text-xs uppercase tracking-tighter">Premium Workshop</span>
+</div>
+<button class="w-12 h-12 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md text-white">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</header>
+<!-- Product Highlight Card (Glassmorphism Bento) -->
+<div class="absolute top-28 right-6 z-40 w-48 animate-fade-in">
+<div class="bg-white/10 backdrop-blur-2xl border border-white/20 p-3 rounded-2xl shadow-2xl">
+<div class="relative rounded-xl overflow-hidden mb-3 aspect-square">
+<img alt="Copper cookware" data-alt="artisanal copper sauté pan with brass handles resting on a rustic wooden surface with warm lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuBdNGWnR3LK4YAOxVMjCqEUz_S8Icpkxs2TmlelRcFnBZCkFdaECigu3swvlSTdiR9hqisswmaBThTqQ8b5WJmVNc1azKxRQg6MigfPMHjmhnoWsGv3HaNwZO_rlwR8pwb6PAu3lnH8Iil9EKO4hGJ4h3_rbRWXQ5ASuJamI6MCH31MY1eYVC6-ksy8xG6YI9z5_njf3HIDvB1_LXiikqhmiH3zRFp-9Z7wmOCVbEPo8LcHcmfvU_IX1JNdN4ifipTpT_AdIoCsg"/>
+<div class="absolute top-2 left-2 bg-primary text-white text-[10px] font-black px-2 py-0.5 rounded-sm italic">
+                        20% OFF
+                    </div>
+</div>
+<p class="text-white font-bold text-xs leading-snug">Hearth Signature Copper Sauté Pan</p>
+<p class="text-primary font-black text-sm mt-1">$189.00</p>
+<button class="w-full mt-3 bg-white text-stone-900 rounded-lg py-2 text-[11px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-colors">
+                    Add to Cart
+                </button>
+</div>
+</div>
+<!-- Interactive Lower Canvas -->
+<div class="absolute bottom-0 left-0 w-full z-30 p-6 flex flex-col md:flex-row md:items-end gap-6 h-[442px]">
+<!-- Scrolling Chat Section -->
+<div class="flex-1 max-w-md h-full flex flex-col justify-end">
+<div class="scrolling-chat overflow-y-auto space-y-4 pb-4 mask-fade-top">
+<!-- Message -->
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-stone-300 overflow-hidden flex-shrink-0 border border-white/20">
+<img alt="User" data-alt="close-up headshot of a smiling man with a beard and clear skin" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbybo4AC3blooo6WgKlTQsqsZO6f_viudNm5bMX1WEePeWnlSZEbZex0l1fPa014AMYE9E8_1r7UKb49i20SMa4kADrdX5qLf5WzIDkLTogfOfciyiZIhLxShenQaHdQZur-30paB6EcpzJo1Nqs847846fKGDyeGCy29E-xKV4vQvk3l7u07be4lqG_dkytTtFUFfUO1qGr8HlKDKiG3O991uoSCe5gFY33essKOwqvG4jUOXRdmSWA6fpFbEQ5ACMriF4lZws18"/>
+</div>
+<div class="bg-white/5 backdrop-blur-md rounded-2xl rounded-tl-none px-4 py-2 border border-white/10">
+<span class="text-primary font-bold text-[11px] block mb-0.5">Marcus Stone</span>
+<p class="text-white/90 text-sm leading-tight">Does the copper heat evenly on induction stoves?</p>
+</div>
+</div>
+<!-- Message -->
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-stone-300 overflow-hidden flex-shrink-0 border border-white/20">
+<img alt="User" data-alt="portrait of a young woman with curly hair smiling in a bright studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzjs7sfRU_VUNJmC5-aWWa03G963Cnb7sjQR7u9KEL8Q0yAXYNm2TXEpB4ytdkqdYAcerQUpm8empguhSAOA7AWvkIP_YM9N4Dg0uOHq1TKcQXnAKRBJr7X_-CONxsDLwxCscPmXP2Bgo8j_SF91CpYjKgMmOhegk8xJIR-Bz6tnL90tewWMl2rOWGI3SVBL-3l70ufWXOb7ZLcD3nHF3lfoL-q7mCpjeLvpnoXLhLDoby_exK7VWYcMB44onr6EWIzat-rh8EaCk"/>
+</div>
+<div class="bg-white/5 backdrop-blur-md rounded-2xl rounded-tl-none px-4 py-2 border border-white/10">
+<span class="text-secondary font-bold text-[11px] block mb-0.5">Elena Rossi</span>
+<p class="text-white/90 text-sm leading-tight">That sauce looks incredible! Just bought the pan 🤩</p>
+</div>
+</div>
+<!-- Message -->
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-stone-300 overflow-hidden flex-shrink-0 border border-white/20">
+<img alt="User" data-alt="young man with glasses smiling confidently in natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_ja7XTGKgFItcOoLRg8IKNO_Xk5N7Pspbt12Gib-npPLjRMlP0Q2FVjdXy7AxEEt4uzLeTiNAEMqnC1k9FLtlSHvOJvdoCA0hHPqNKd9iD3T3rwmf2s0iUUaaFouKDZWAdjGAnKdncqBQ3evHlJEwXh1N1c3Zdn1pHMU59MWDqIoVIeaViaq2w2ycFr_67KTDiRzFu1vD7rpa6HarhtPEetX9yeRiyhqD-Io7-SJo1Pp4xpUXaQTvHNaonf_QKChRWEc-DmceaDs"/>
+</div>
+<div class="bg-white/5 backdrop-blur-md rounded-2xl rounded-tl-none px-4 py-2 border border-white/10">
+<span class="text-amber-300 font-bold text-[11px] block mb-0.5">David Chen</span>
+<p class="text-white/90 text-sm leading-tight">Joining from Singapore! Hello Chef!</p>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="mt-4 relative group">
+<input class="w-full h-14 bg-white/10 backdrop-blur-3xl border border-white/20 rounded-full px-6 text-white placeholder-stone-400 focus:outline-none focus:border-primary transition-all" placeholder="Join the conversation..." type="text"/>
+<button class="absolute right-2 top-2 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+<!-- Vertical Action Sidebar (Mobile Responsive Layout) -->
+<div class="flex md:flex-col gap-4 items-center justify-center pb-2">
+<button class="group flex flex-col items-center gap-1">
+<div class="w-14 h-14 bg-white/10 backdrop-blur-xl rounded-full flex items-center justify-center text-white border border-white/10 group-active:scale-125 transition-transform duration-150">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<span class="text-[10px] font-black text-white uppercase tracking-widest">2.4k</span>
+</button>
+<button class="group flex flex-col items-center gap-1">
+<div class="w-14 h-14 bg-primary rounded-full flex items-center justify-center text-white border border-primary-container/20 shadow-lg shadow-primary/30 hover:-translate-y-1 transition-transform">
+<span class="material-symbols-outlined">shopping_bag</span>
+</div>
+<span class="text-[10px] font-black text-white uppercase tracking-widest">Shop</span>
+</button>
+<button class="group flex flex-col items-center gap-1">
+<div class="w-14 h-14 bg-stone-900 rounded-full flex items-center justify-center text-white border border-white/5 hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Floating Reactions Container -->
+<div class="absolute right-8 bottom-40 z-20 pointer-events-none overflow-hidden h-64 w-20 flex flex-col-reverse items-center gap-4">
+<span class="material-symbols-outlined text-primary/80 animate-bounce" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="material-symbols-outlined text-white/60 animate-pulse" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="material-symbols-outlined text-secondary/80 animate-bounce" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="material-symbols-outlined text-primary/40" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+</main>
+<!-- Bottom Nav Bar (As per JSON Blueprint for top-level screens, but modified for immersive context) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-transparent">
+<div class="flex items-center gap-8 bg-stone-950/80 backdrop-blur-2xl px-10 py-4 rounded-full border border-white/10 shadow-2xl">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-stone-400 p-2 hover:text-amber-400 transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Home</span>
+</a>
+<!-- Favorites -->
+<a class="flex flex-col items-center justify-center text-stone-400 p-2 hover:text-amber-400 transition-colors" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Favorites</span>
+</a>
+<!-- Orders (Active Intent Check: User watching commerce stream) -->
+<a class="flex flex-col items-center justify-center bg-amber-500 text-white rounded-full px-5 py-2 shadow-lg shadow-amber-200/20 -translate-y-1 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Orders</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-stone-400 p-2 hover:text-amber-400 transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</div>
+</nav>
+<style>
+        .mask-fade-top {
+            -webkit-mask-image: linear-gradient(to top, black 85%, transparent 100%);
+            mask-image: linear-gradient(to top, black 85%, transparent 100%);
+        }
+        
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fade-in 0.6s ease-out forwards;
+        }
+    </style>
+</body></html>

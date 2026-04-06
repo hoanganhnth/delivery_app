@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary": "#9c7a49",
+              "on-primary-fixed": "#2b1700",
+              "on-tertiary-container": "#93000a",
+              "tertiary": "#ba1a1a",
+              "surface": "#ffffff",
+              "outline-variant": "#f4eee7",
+              "surface-container": "#f4eee7",
+              "on-tertiary-fixed-variant": "#93000a",
+              "tertiary-fixed": "#ffdad6",
+              "on-primary-fixed-variant": "#673d00",
+              "on-secondary-container": "#795427",
+              "background": "#f8f7f5",
+              "tertiary-container": "#ffdad6",
+              "secondary-container": "#fecb94",
+              "on-secondary": "#ffffff",
+              "on-secondary-fixed": "#2b1700",
+              "surface-container-highest": "#e6e0d9",
+              "inverse-primary": "#ffb866",
+              "on-surface-variant": "#9c7a49",
+              "surface-container-high": "#ede7e0",
+              "primary-fixed-dim": "#ffb866",
+              "primary-container": "#ffedd5",
+              "on-tertiary": "#ffffff",
+              "on-error-container": "#93000a",
+              "surface-container-low": "#f8f7f5",
+              "surface-container-lowest": "#ffffff",
+              "outline": "#d9c3ae",
+              "on-tertiary-fixed": "#410002",
+              "on-secondary-fixed-variant": "#624015",
+              "on-surface": "#1c160d",
+              "inverse-on-surface": "#f8f7f5",
+              "on-primary-container": "#d6810d",
+              "error": "#ba1a1a",
+              "secondary-fixed-dim": "#efbd87",
+              "tertiary-fixed-dim": "#ffb4ab",
+              "primary": "#f49d25",
+              "secondary-fixed": "#ffddba",
+              "surface-tint": "#f49d25",
+              "on-primary": "#ffffff",
+              "inverse-surface": "#2d2418",
+              "surface-bright": "#ffffff",
+              "error-container": "#ffdad6",
+              "surface-variant": "#ffffff",
+              "on-background": "#1c160d",
+              "surface-dim": "#f8f7f5",
+              "on-error": "#ffffff",
+              "primary-fixed": "#ffddba"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Plus Jakarta Sans"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 flex items-center justify-between px-6 py-4 w-full bg-white/90 dark:bg-stone-950/90 backdrop-blur-lg shadow-md">
+<div class="flex items-center gap-4">
+<button class="hover:opacity-80 transition-opacity scale-95 active:duration-150">
+<span class="material-symbols-outlined text-on-surface" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex flex-col">
+<span class="font-black tracking-tighter text-stone-900 dark:text-stone-50 leading-none">Order #8821</span>
+<span class="text-[10px] uppercase tracking-widest text-secondary font-bold">Hearth Support</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden shadow-sm">
+<img alt="Support Specialist" class="w-full h-full object-cover" data-alt="Professional headshot of a friendly female support specialist with a warm smile in a brightly lit modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_3LGZDLe5f9t0i_zUoSR9XXyIivBJiq4gcYis4P0JBNbCWJj52D7wUVV5g7y5YHYEIZHEluuyvReAI3ahhixdnBiAs8SAYIyDmYjSf2SEXjxstEDZK0cq73z5VVDRL3kmscks4udAuhuyXQcxG0bbvi9hZqkltdHLoKT8gCOhu2d0rS2xy0IbxFW11AQkEpkq-vXVm_bJnJV5l5fzwYYzQt4vzCpQNVp-wgEpFCeKvWo0KIX_wtzJNyAMQzII7qM7sbghp4ANo0o"/>
+</div>
+<span class="material-symbols-outlined text-primary" data-icon="search">search</span>
+</div>
+</header>
+<!-- Chat Canvas -->
+<main class="flex-1 px-4 py-6 space-y-8 overflow-y-auto pb-40">
+<!-- Date Divider -->
+<div class="flex justify-center">
+<span class="bg-surface-container text-on-surface-variant text-[10px] px-4 py-1 rounded-full font-bold uppercase tracking-widest">Today</span>
+</div>
+<!-- Support Message -->
+<div class="flex gap-3 max-w-[85%]">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="support_agent">support_agent</span>
+</div>
+<div class="space-y-1">
+<div class="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-outline-variant">
+<p class="text-sm leading-relaxed text-on-surface">Hello! This is Sarah from Amber Hearth. I see you're asking about your recent order from <span class="font-bold text-primary">The Golden Grille</span>. How can I help you today?</p>
+</div>
+<span class="text-[10px] text-on-surface-variant ml-1">14:02</span>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex flex-row-reverse gap-3 max-w-[85%] ml-auto">
+<div class="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-outline shadow-sm">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Candid portrait of a young man smiling against an urban brick wall background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqowh5DyYJBcOz8Zn_nlM4KhVi3iB5_EYaqsMtWCAxKCHByj-tJN2R27SnptlmlTKpU4_HEtSLUF3UKWmp8vOjxzZeK3FelD7NdGbC2X4yJt1clEDmpk8NOBq32CR-nKAi1vTmuRClGBx7PYz0d69xXEACqGQvJ5tFxFRK9BlJLJN3zcw348J0dM-1g-GmDzpD0YwWCylrB25FEo_58zHDmwu4OiQakN5flMAKMYDRCwdm61J1mnbu48OIvWCJvpkjaB6pshA5uAw"/>
+</div>
+<div class="space-y-1 text-right">
+<div class="bg-primary p-4 rounded-2xl rounded-tr-none shadow-md shadow-orange-100">
+<p class="text-sm leading-relaxed text-white">Hi Sarah. My order was supposed to arrive 15 minutes ago but the app still says "Preparing". Is there a delay?</p>
+</div>
+<span class="text-[10px] text-on-surface-variant mr-1">14:05</span>
+</div>
+</div>
+<!-- Support Typing State (Animated Placeholder) -->
+<div class="flex gap-3 max-w-[85%]">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="support_agent">support_agent</span>
+</div>
+<div class="bg-surface-container-high px-4 py-3 rounded-full flex gap-1 items-center">
+<div class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse"></div>
+<div class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse delay-75"></div>
+<div class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse delay-150"></div>
+</div>
+</div>
+<!-- Contextual Card (Asymmetric Bento Element) -->
+<div class="bg-white rounded-3xl p-5 shadow-lg border border-outline-variant relative overflow-hidden">
+<div class="absolute -right-4 -top-4 opacity-5 rotate-12">
+<span class="material-symbols-outlined text-[120px]" data-icon="verified">verified</span>
+</div>
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-black text-lg tracking-tight text-on-surface">Order Details</h3>
+<p class="text-xs text-secondary font-medium">Tracking Status: In Kitchen</p>
+</div>
+<div class="bg-primary-container text-primary font-bold text-[10px] px-3 py-1 rounded-full">
+                    PRIORITY
+                </div>
+</div>
+<div class="flex items-center gap-4 bg-background p-3 rounded-2xl">
+<div class="w-12 h-12 rounded-xl overflow-hidden shadow-sm">
+<img alt="Food Item" class="w-full h-full object-cover" data-alt="Close up of a gourmet burger with melted cheese and crispy bacon on a toasted brioche bun" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXReKfBzPbNERUh8azDO3uCckuFghVMANZGjJBgmqEOlN3znuH-HO4lHtwF6S-91jdDLJ2a1JAS15XA507kqhRa7muks922ah7O-OYUAwW2VJTDBic45Oai0qldt84gNQDsU1QjE3mBZpX6CKbYQymcL6oo8majArh17vKRWXByAMgqt0WEHZezQIH5mi6CPSsJ6_p8Iml8_sVtZRc54XEus6XFCIPp-GNFWXKz1BG3C-bMdqeCtBb6qD0t0s9OP_iKv0ilT_b8oE"/>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold">2x Hearth Signature Burgers</p>
+<p class="text-[10px] text-on-surface-variant italic">Special Request: No Onions</p>
+</div>
+<p class="font-black text-primary">$34.00</p>
+</div>
+</div>
+</main>
+<!-- Bottom Action Bar & Input -->
+<div class="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-xl border-t border-outline-variant p-4 space-y-4">
+<!-- Quick Reply Chips -->
+<div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+<button class="whitespace-nowrap bg-white border border-outline px-4 py-2 rounded-full text-xs font-bold text-on-surface hover:border-primary hover:text-primary transition-colors shadow-sm">
+                Cancel Order
+            </button>
+<button class="whitespace-nowrap bg-white border border-outline px-4 py-2 rounded-full text-xs font-bold text-on-surface hover:border-primary hover:text-primary transition-colors shadow-sm">
+                Contact Rider
+            </button>
+<button class="whitespace-nowrap bg-white border border-outline px-4 py-2 rounded-full text-xs font-bold text-on-surface hover:border-primary hover:text-primary transition-colors shadow-sm">
+                Missing Items
+            </button>
+<button class="whitespace-nowrap bg-white border border-outline px-4 py-2 rounded-full text-xs font-bold text-on-surface hover:border-primary hover:text-primary transition-colors shadow-sm">
+                Change Address
+            </button>
+</div>
+<!-- Message Input -->
+<div class="flex items-center gap-3">
+<button class="w-12 h-12 flex items-center justify-center rounded-2xl bg-surface-container text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+</button>
+<div class="flex-1 relative">
+<input class="w-full h-12 bg-surface-container-low border-none rounded-2xl px-4 pr-12 text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface-variant font-medium" placeholder="Type your message..." type="text"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined" data-icon="image">image</span>
+</button>
+</div>
+<button class="w-12 h-12 bg-primary text-white rounded-2xl shadow-md shadow-orange-200 flex items-center justify-center hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="send">send</span>
+</button>
+</div>
+<!-- Home Indicator Area Spacer -->
+<div class="h-4"></div>
+</div>
+<!-- Background Decoration (Brand Watermark) -->
+<div class="fixed top-1/4 -left-20 pointer-events-none opacity-[0.02] -z-10 select-none">
+<span class="material-symbols-outlined text-[400px]" data-icon="verified">verified</span>
+</div>
+</body></html>

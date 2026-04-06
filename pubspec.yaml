@@ -58,6 +58,8 @@ dependencies:
   permission_handler: ^11.3.1
   flutter_riverpod: ^3.1.0
   riverpod_annotation: ^4.0.0
+  google_fonts: ^6.2.1
+  flutter_staggered_grid_view: ^0.7.0
 
 
 dev_dependencies:

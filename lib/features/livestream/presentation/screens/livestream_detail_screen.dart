@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:delivery_app/features/livestream/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/logger/app_logger.dart';
-import '../../../../core/theme/theme_extensions.dart';
+import '../../../../core/widgets/live_indicator_badge.dart';
 import '../../domain/entities/livestream_comment_entity.dart';
 import '../../domain/entities/livestream_entity.dart';
 import '../services/agora_service.dart';
@@ -388,132 +389,147 @@ class _LivestreamDetailScreenState
     );
   }
 
-  /// Build top bar
+  /// Build top bar - Glassmorphic style
   Widget _buildTopBar(
     LivestreamEntity livestream,
     LivestreamDetailState detailState,
   ) {
+    final theme = Theme.of(context);
+    
     return Container(
       padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Colors.black.withValues(alpha: 0.6), Colors.transparent],
-        ),
-      ),
       child: Row(
         children: [
-          // Back button
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.black38,
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
+          // Back button - Glassmorphic
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16.r),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(
+                width: 44.w,
+                height: 44.w,
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.1),
+                    width: 1,
+                  ),
+                ),
+                child: IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(
+                    Icons.arrow_back_ios_new_rounded, 
+                    color: Colors.white,
+                    size: 18.sp,
+                  ),
+                ),
+              ),
             ),
           ),
 
           SizedBox(width: 12.w),
 
-          // Streamer info
+          // Streamer info - Glassmorphic card
           Expanded(
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundImage:
-                      livestream.streamerAvatar != null
-                          ? NetworkImage(livestream.streamerAvatar!)
-                          : null,
-                  child:
-                      livestream.streamerAvatar == null
-                          ? const Icon(Icons.person)
-                          : null,
-                ),
-                SizedBox(width: 8.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20.r),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(20.r),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.1),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
                     children: [
-                      Text(
-                        livestream.streamerName,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14.sp,
+                      // Avatar with ring
+                      Container(
+                        width: 36.w,
+                        height: 36.w,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: theme.colorScheme.primary,
+                            width: 2,
+                          ),
+                        ),
+                        child: ClipOval(
+                          child: livestream.streamerAvatar != null
+                              ? Image.network(
+                                  livestream.streamerAvatar!,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => _buildDefaultAvatar(),
+                                )
+                              : _buildDefaultAvatar(),
                         ),
                       ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 6.w,
-                          vertical: 2.w,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Row(
+                      SizedBox(width: 10.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.circle, color: Colors.white, size: 6),
-                            SizedBox(width: 4.w),
                             Text(
-                              'LIVE',
+                              livestream.streamerName,
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 10.sp,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13.sp,
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
+                            SizedBox(height: 2.h),
+                            const LiveIndicatorBadge(fontSize: 9),
                           ],
                         ),
                       ),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
 
-          // Viewer count
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
-            decoration: BoxDecoration(
-              color: Colors.black38,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.visibility, color: Colors.white, size: 16),
-                SizedBox(width: 4.w),
-                Text(
-                  _formatCount(detailState.currentViewerCount),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.bold,
+          SizedBox(width: 12.w),
+
+          // Viewer count badge - Glassmorphic
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16.r),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.1),
+                    width: 1,
                   ),
                 ),
-              ],
-            ),
-          ),
-
-          SizedBox(width: 8.w),
-
-          // Share button
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.black38,
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.share, color: Colors.white),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.visibility_rounded, color: Colors.white, size: 16.sp),
+                    SizedBox(width: 6.w),
+                    Text(
+                      _formatCount(detailState.currentViewerCount),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
@@ -521,126 +537,177 @@ class _LivestreamDetailScreenState
     );
   }
 
-  /// Build comments section
+  Widget _buildDefaultAvatar() {
+    return Container(
+      color: Theme.of(context).colorScheme.primaryContainer,
+      child: Icon(
+        Icons.person_rounded,
+        size: 20.sp,
+        color: Theme.of(context).colorScheme.onPrimaryContainer,
+      ),
+    );
+  }
+
+  /// Build comments section - Glassmorphic overlay
   Widget _buildCommentsSection(LivestreamInteractionState interactionState) {
     return Container(
-      height: 200.w,
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child:
-          interactionState.comments.isEmpty
-              ? const SizedBox.shrink()
-              : ListView.builder(
+      height: 200.h,
+      margin: EdgeInsets.symmetric(horizontal: 16.w),
+      child: ShaderMask(
+        shaderCallback: (Rect bounds) {
+          return LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.transparent,
+              Colors.black,
+              Colors.black,
+            ],
+            stops: const [0.0, 0.15, 1.0],
+          ).createShader(bounds);
+        },
+        blendMode: BlendMode.dstIn,
+        child: interactionState.comments.isEmpty
+            ? const SizedBox.shrink()
+            : ListView.builder(
                 controller: _scrollController,
                 itemCount: interactionState.comments.length,
                 itemBuilder: (context, index) {
                   final comment = interactionState.comments[index];
-                  return LivestreamCommentItem(comment: comment);
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 8.h),
+                    child: LivestreamCommentItem(comment: comment),
+                  );
                 },
               ),
+      ),
     );
   }
 
-  /// Build bottom controls
+  /// Build bottom controls - Glassmorphic pill bar
   Widget _buildBottomControls(LivestreamEntity livestream) {
+    final theme = Theme.of(context);
     final detailState = ref.watch(
       livestreamDetailProvider(widget.livestreamId),
     );
 
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      child: Row(
-        children: [
-          // Comment input
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w),
-              decoration: BoxDecoration(
-                color: Colors.black54,
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: Colors.white24),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _commentController,
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        hintText: 'Viết bình luận...',
-                        hintStyle: TextStyle(color: Colors.white54),
-                        border: InputBorder.none,
-                      ),
-                      onSubmitted: (_) => _sendComment(),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: _sendComment,
-                    icon: Icon(Icons.send, color: context.colors.primary),
-                  ),
-                ],
-              ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(28.r),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 16.w),
+          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.4),
+            borderRadius: BorderRadius.circular(28.r),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.1),
+              width: 1,
             ),
           ),
-
-          SizedBox(width: 8.w),
-
-          // Like button
-          Column(
-            mainAxisSize: MainAxisSize.min,
+          child: Row(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.black54,
-                  shape: BoxShape.circle,
-                ),
-                child: IconButton(
-                  onPressed: _sendLike,
-                  icon: Icon(Icons.favorite, color: Colors.red, size: 28),
+              // Comment input
+              Expanded(
+                child: Container(
+                  height: 44.h,
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(22.r),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _commentController,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.sp,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: 'Viết bình luận...',
+                            hintStyle: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.5),
+                              fontSize: 14.sp,
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                          onSubmitted: (_) => _sendComment(),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: _sendComment,
+                        child: Icon(
+                          Icons.send_rounded,
+                          color: theme.colorScheme.primary,
+                          size: 20.sp,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              Text(
-                _formatCount(detailState.currentLikeCount),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.bold,
-                ),
+
+              SizedBox(width: 12.w),
+
+              // Like button
+              _buildControlButton(
+                icon: Icons.favorite_rounded,
+                color: Colors.red,
+                count: detailState.currentLikeCount,
+                onTap: _sendLike,
               ),
+
+              // Products button
+              if (livestream.products != null && livestream.products!.isNotEmpty)
+                Padding(
+                  padding: EdgeInsets.only(left: 8.w),
+                  child: _buildControlButton(
+                    icon: Icons.shopping_bag_rounded,
+                    color: theme.colorScheme.primary,
+                    count: livestream.products!.length,
+                    onTap: _showProductSheet,
+                  ),
+                ),
             ],
           ),
+        ),
+      ),
+    );
+  }
 
-          SizedBox(width: 8.w),
-
-          // Products button
-          if (livestream.products != null && livestream.products!.isNotEmpty)
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black54,
-                    shape: BoxShape.circle,
-                  ),
-                  child: IconButton(
-                    onPressed: _showProductSheet,
-                    icon: Icon(
-                      Icons.shopping_bag,
-                      color: Colors.orange,
-                      size: 28,
-                    ),
-                  ),
-                ),
-                Text(
-                  '${livestream.products!.length}',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+  Widget _buildControlButton({
+    required IconData icon,
+    required Color color,
+    required int count,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: color, size: 22.sp),
+            SizedBox(width: 6.w),
+            Text(
+              _formatCount(count),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-        ],
+          ],
+        ),
       ),
     );
   }
