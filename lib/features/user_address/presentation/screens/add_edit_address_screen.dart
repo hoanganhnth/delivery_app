@@ -136,16 +136,45 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
     });
 
     return Scaffold(
+      backgroundColor: context.colors.background,
       appBar: AppBar(
-        title: Text(_isEditing ? 'Sửa địa chỉ' : 'Thêm địa chỉ mới'),
-        backgroundColor: Colors.orange,
+        title: Text(
+          _isEditing ? 'Sửa địa chỉ' : 'Thêm địa chỉ mới',
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: context.colors.primary,
         foregroundColor: Colors.white,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                context.colors.primaryDark,
+                context.colors.primary,
+              ],
+            ),
+          ),
+        ),
         actions: _isEditing
             ? [
                 IconButton(
-                  icon: const Icon(Icons.delete),
+                  icon: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(ResponsiveSize.radiusM),
+                    ),
+                    child: const Icon(Icons.delete_outline, color: Colors.white),
+                  ),
                   onPressed: () => _showDeleteConfirmation(),
                 ),
+                SizedBox(width: ResponsiveSize.s),
               ]
             : null,
       ),
@@ -164,12 +193,21 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Quick labels section
+        _buildSectionTitle('Loại địa chỉ'),
+        SizedBox(height: ResponsiveSize.s),
+        _buildQuickLabelChips(),
+        
+        SizedBox(height: ResponsiveSize.l),
+        
         // Label field
+        _buildSectionTitle('Thông tin địa chỉ'),
+        SizedBox(height: ResponsiveSize.s),
         _buildTextFormField(
           controller: _labelController,
           label: 'Nhãn địa chỉ',
           hintText: 'Ví dụ: Nhà riêng, Công ty...',
-          icon: Icons.label,
+          icon: Icons.label_outline,
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return 'Vui lòng nhập nhãn địa chỉ';
@@ -185,7 +223,7 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
           controller: _recipientNameController,
           label: 'Tên người nhận',
           hintText: 'Nhập tên người nhận hàng',
-          icon: Icons.person,
+          icon: Icons.person_outline,
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return 'Vui lòng nhập tên người nhận';
@@ -201,7 +239,7 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
           controller: _phoneController,
           label: 'Số điện thoại',
           hintText: 'Nhập số điện thoại người nhận',
-          icon: Icons.phone,
+          icon: Icons.phone_outlined,
           keyboardType: TextInputType.phone,
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
@@ -214,14 +252,23 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
           },
         ),
 
-        SizedBox(height: ResponsiveSize.m),
+        SizedBox(height: ResponsiveSize.l),
 
+        // Get current location button
+        _buildGetLocationButton(),
+
+        SizedBox(height: ResponsiveSize.l),
+
+        // Address section
+        _buildSectionTitle('Chi tiết địa chỉ'),
+        SizedBox(height: ResponsiveSize.s),
+        
         // Address line field
         _buildTextFormField(
           controller: _addressLineController,
           label: 'Địa chỉ chi tiết',
           hintText: 'Số nhà, tên đường...',
-          icon: Icons.home,
+          icon: Icons.home_outlined,
           maxLines: 2,
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
@@ -233,84 +280,164 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
 
         SizedBox(height: ResponsiveSize.m),
 
-        // Ward field
-        _buildTextFormField(
-          controller: _wardController,
-          label: 'Phường/Xã',
-          hintText: 'Nhập phường/xã',
-          icon: Icons.location_city,
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return 'Vui lòng nhập phường/xã';
-            }
-            return null;
-          },
+        // Ward & District in row
+        Row(
+          children: [
+            Expanded(
+              child: _buildTextFormField(
+                controller: _wardController,
+                label: 'Phường/Xã',
+                hintText: 'Nhập phường/xã',
+                icon: Icons.location_city_outlined,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Bắt buộc';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            SizedBox(width: ResponsiveSize.m),
+            Expanded(
+              child: _buildTextFormField(
+                controller: _districtController,
+                label: 'Quận/Huyện',
+                hintText: 'Nhập quận/huyện',
+                icon: Icons.location_city_outlined,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Bắt buộc';
+                  }
+                  return null;
+                },
+              ),
+            ),
+          ],
         ),
 
         SizedBox(height: ResponsiveSize.m),
 
-        // District field
-        _buildTextFormField(
-          controller: _districtController,
-          label: 'Quận/Huyện',
-          hintText: 'Nhập quận/huyện',
-          icon: Icons.location_city,
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return 'Vui lòng nhập quận/huyện';
-            }
-            return null;
-          },
-        ),
-
-        SizedBox(height: ResponsiveSize.m),
-
-        // City field
-        _buildTextFormField(
-          controller: _cityController,
-          label: 'Tỉnh/Thành phố',
-          hintText: 'Nhập tỉnh/thành phố',
-          icon: Icons.location_city,
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return 'Vui lòng nhập tỉnh/thành phố';
-            }
-            return null;
-          },
-        ),
-
-        SizedBox(height: ResponsiveSize.m),
-
-        // Postal code field (optional)
-        _buildTextFormField(
-          controller: _postalCodeController,
-          label: 'Mã bưu điện (Tùy chọn)',
-          hintText: 'Nhập mã bưu điện',
-          icon: Icons.markunread_mailbox,
-          keyboardType: TextInputType.number,
+        // City & Postal code in row
+        Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: _buildTextFormField(
+                controller: _cityController,
+                label: 'Tỉnh/Thành phố',
+                hintText: 'Nhập tỉnh/thành phố',
+                icon: Icons.location_city_outlined,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Bắt buộc';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            SizedBox(width: ResponsiveSize.m),
+            Expanded(
+              child: _buildTextFormField(
+                controller: _postalCodeController,
+                label: 'Mã bưu điện',
+                hintText: 'Tùy chọn',
+                icon: Icons.markunread_mailbox_outlined,
+                keyboardType: TextInputType.number,
+              ),
+            ),
+          ],
         ),
 
         SizedBox(height: ResponsiveSize.l),
 
-        // Get current location button
-        _buildGetLocationButton(),
-
-        SizedBox(height: ResponsiveSize.l),
-
-        // Set as default checkbox
-        CheckboxListTile(
-          title: const Text('Đặt làm địa chỉ mặc định'),
-          subtitle: const Text('Địa chỉ này sẽ được chọn tự động khi đặt hàng'),
-          value: _isDefault,
-          onChanged: (value) {
-            setState(() {
-              _isDefault = value ?? false;
-            });
-          },
-          activeColor: Colors.orange,
-          controlAffinity: ListTileControlAffinity.leading,
+        // Set as default - Card style
+        Container(
+          decoration: BoxDecoration(
+            color: context.colors.cardBackground,
+            borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
+            border: Border.all(color: context.colors.border),
+          ),
+          child: CheckboxListTile(
+            title: const Text('Đặt làm địa chỉ mặc định'),
+            subtitle: const Text('Địa chỉ này sẽ được chọn tự động khi đặt hàng'),
+            value: _isDefault,
+            onChanged: (value) {
+              setState(() {
+                _isDefault = value ?? false;
+              });
+            },
+            activeColor: context.colors.primary,
+            controlAffinity: ListTileControlAffinity.leading,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
+            ),
+          ),
         ),
+        
+        SizedBox(height: ResponsiveSize.l),
       ],
+    );
+  }
+  
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontSize: ResponsiveSize.fontL,
+        fontWeight: FontWeight.bold,
+        color: context.colors.textPrimary,
+      ),
+    );
+  }
+  
+  Widget _buildQuickLabelChips() {
+    final labels = [
+      {'label': 'Nhà riêng', 'icon': Icons.home_outlined},
+      {'label': 'Công ty', 'icon': Icons.business_outlined},
+      {'label': 'Trường học', 'icon': Icons.school_outlined},
+      {'label': 'Khác', 'icon': Icons.location_on_outlined},
+    ];
+    
+    return Wrap(
+      spacing: ResponsiveSize.s,
+      runSpacing: ResponsiveSize.s,
+      children: labels.map((item) {
+        final isSelected = _labelController.text == item['label'];
+        return ChoiceChip(
+          label: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                item['icon'] as IconData,
+                size: 16.w,
+                color: isSelected ? Colors.white : context.colors.primary,
+              ),
+              SizedBox(width: 4.w),
+              Text(item['label'] as String),
+            ],
+          ),
+          selected: isSelected,
+          selectedColor: context.colors.primary,
+          backgroundColor: context.colors.cardBackground,
+          labelStyle: TextStyle(
+            color: isSelected ? Colors.white : context.colors.textPrimary,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
+            side: BorderSide(
+              color: isSelected ? context.colors.primary : context.colors.border,
+            ),
+          ),
+          onSelected: (selected) {
+            if (selected) {
+              setState(() {
+                _labelController.text = item['label'] as String;
+              });
+            }
+          },
+        );
+      }).toList(),
     );
   }
 
@@ -323,21 +450,40 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
     TextInputType keyboardType = TextInputType.text,
     int maxLines = 1,
   }) {
+    final colors = context.colors;
     return TextFormField(
       controller: controller,
       validator: validator,
       keyboardType: keyboardType,
       maxLines: maxLines,
+      style: TextStyle(color: colors.textPrimary),
       decoration: InputDecoration(
         labelText: label,
         hintText: hintText,
-        prefixIcon: Icon(icon, color: Colors.orange),
+        labelStyle: TextStyle(color: colors.textSecondary),
+        hintStyle: TextStyle(color: colors.textDisabled),
+        prefixIcon: Icon(icon, color: colors.primary),
+        filled: true,
+        fillColor: colors.cardBackground,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(ResponsiveSize.radiusM),
+          borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
+          borderSide: BorderSide(color: colors.border),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
+          borderSide: BorderSide(color: colors.border),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(ResponsiveSize.radiusM),
-          borderSide: const BorderSide(color: Colors.orange, width: 2),
+          borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
+          borderSide: BorderSide(color: colors.primary, width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
+          borderSide: BorderSide(color: colors.error),
+        ),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: ResponsiveSize.m,
+          vertical: ResponsiveSize.m,
         ),
       ),
     );
@@ -346,16 +492,17 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
   Widget _buildBottomActions() {
     final formState = ref.watch(addressFormProvider);
     final isLoading = formState.isLoading;
+    final colors = context.colors;
 
     return Container(
       padding: EdgeInsets.all(ResponsiveSize.m),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colors.cardBackground,
         boxShadow: [
           BoxShadow(
             offset: const Offset(0, -2),
-            blurRadius: 6,
-            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 10,
+            color: colors.shadow,
           ),
         ],
       ),
@@ -367,11 +514,14 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: isLoading ? null : () => _showDeleteConfirmation(),
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  label: const Text('Xóa', style: TextStyle(color: Colors.red)),
+                  icon: Icon(Icons.delete_outline, color: colors.error),
+                  label: Text('Xóa', style: TextStyle(color: colors.error)),
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.red),
+                    side: BorderSide(color: colors.error),
                     padding: EdgeInsets.symmetric(vertical: ResponsiveSize.m),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
+                    ),
                   ),
                 ),
               ),
@@ -394,12 +544,18 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
                           ),
                         ),
                       )
-                    : const Icon(Icons.save),
-                label: Text(_isEditing ? 'Lưu' : 'Thêm địa chỉ'),
+                    : const Icon(Icons.check),
+                label: Text(
+                  _isEditing ? 'Lưu thay đổi' : 'Thêm địa chỉ',
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
+                  backgroundColor: colors.primary,
                   foregroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(vertical: ResponsiveSize.m),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
+                  ),
                 ),
               ),
             ),
@@ -411,75 +567,117 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
 
   Widget _buildGetLocationButton() {
     final locationState = ref.watch(currentLocationProvider);
+    final colors = context.colors;
 
-    return Card(
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.cardBackground,
+        borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
+        border: Border.all(color: colors.border),
+        boxShadow: [
+          BoxShadow(
+            color: colors.shadow,
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Padding(
         padding: EdgeInsets.all(ResponsiveSize.m),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Lấy vị trí hiện tại',
-              style: TextStyle(
-                fontSize: ResponsiveSize.fontM,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-            SizedBox(height: ResponsiveSize.s),
-            Text(
-              'Tự động điền địa chỉ từ vị trí GPS hiện tại của bạn',
-              style: TextStyle(
-                fontSize: ResponsiveSize.fontS,
-                color: context.colors.textSecondary,
-              ),
+            Row(
+              children: [
+                Container(
+                  width: 44.w,
+                  height: 44.w,
+                  decoration: BoxDecoration(
+                    color: colors.info.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(ResponsiveSize.radiusM),
+                  ),
+                  child: Icon(
+                    Icons.gps_fixed,
+                    color: colors.info,
+                    size: 22.w,
+                  ),
+                ),
+                SizedBox(width: ResponsiveSize.m),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Lấy vị trí hiện tại',
+                        style: TextStyle(
+                          fontSize: ResponsiveSize.fontM,
+                          fontWeight: FontWeight.w600,
+                          color: colors.textPrimary,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        'Tự động điền địa chỉ từ GPS',
+                        style: TextStyle(
+                          fontSize: ResponsiveSize.fontS,
+                          color: colors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: ResponsiveSize.m),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton.icon(
+              child: OutlinedButton.icon(
                 onPressed: locationState.isLoading ? null : _getCurrentLocation,
                 icon: locationState.isLoading
                     ? SizedBox(
                         width: 16.w,
                         height: 16.w,
-                        child: const CircularProgressIndicator(
+                        child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(colors.info),
                         ),
                       )
-                    : const Icon(Icons.my_location),
+                    : Icon(Icons.my_location, color: colors.info),
                 label: Text(
                   locationState.isLoading ? 'Đang lấy vị trí...' : 'Lấy vị trí hiện tại',
+                  style: TextStyle(color: colors.info, fontWeight: FontWeight.w600),
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(vertical: ResponsiveSize.s),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: colors.info),
+                  padding: EdgeInsets.symmetric(vertical: ResponsiveSize.m),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
+                  ),
                 ),
               ),
             ),
             
             // Hiển thị tọa độ hiện tại (nếu có)
             if (_latitude != null && _longitude != null) ...[
-              SizedBox(height: ResponsiveSize.s),
+              SizedBox(height: ResponsiveSize.m),
               Container(
                 padding: EdgeInsets.all(ResponsiveSize.s),
                 decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(ResponsiveSize.radiusS),
-                  border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+                  color: colors.success.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(ResponsiveSize.radiusM),
+                  border: Border.all(color: colors.success.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.location_on, color: Colors.green, size: 16.w),
+                    Icon(Icons.check_circle, color: colors.success, size: 16.w),
                     SizedBox(width: ResponsiveSize.s),
                     Expanded(
                       child: Text(
                         'Tọa độ: ${_latitude!.toStringAsFixed(6)}, ${_longitude!.toStringAsFixed(6)}',
                         style: TextStyle(
                           fontSize: ResponsiveSize.fontS,
-                          color: Colors.green[700],
+                          color: colors.success,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
