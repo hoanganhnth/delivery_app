@@ -9,16 +9,18 @@ part 'auth_network_providers.g.dart';
 /// This provider will be used by other features that need authenticated requests
 @Riverpod(keepAlive: true)
 Dio authAwareDio(Ref ref) {
+  final authState = ref.watch(
+    authProvider,
+  ); // Watch auth state to trigger updates when it changes
+  final authNotifier = ref.read(authProvider.notifier);
   final dioClient = DioClient(
     getToken: () async {
       // Get token from auth state
-      final authState = ref.read(authProvider);
       return authState.accessToken;
     },
     onRefreshToken: () async {
       // Handle token refresh
       try {
-        final authNotifier = ref.read(authProvider.notifier);
         final access = await authNotifier.refreshToken();
         return access;
       } catch (e) {
@@ -28,5 +30,3 @@ Dio authAwareDio(Ref ref) {
   );
   return dioClient.dio;
 }
-
-

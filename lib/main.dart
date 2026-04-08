@@ -62,18 +62,18 @@ Future<void> main() async {
           child: const MainApp(),
           additionalOverrides: [
             sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-            
             // 🔑 Conditional override: Chỉ override khi user đã login
             core_net.authenticatedDioProvider.overrideWith((ref) {
-              final authState = ref.watch(authProvider);
+              return ref.watch(auth_net.authAwareDioProvider);
+              // final authState = ref.watch(authProvider);
               
-              // ✅ Nếu đã login, dùng authAwareDio (có token)
-              if (authState.isAuthenticated && authState.accessToken != null) {
-                return ref.watch(auth_net.authAwareDioProvider);
-              }
+              // // ✅ Nếu đã login, dùng authAwareDio (có token)
+              // if (authState.isAuthenticated && authState.accessToken != null) {
+              //   return ref.watch(auth_net.authAwareDioProvider);
+              // }
               
-              // ❌ Chưa login, dùng Dio mặc định (không token)
-              return ref.watch(dioProvider);
+              // // ❌ Chưa login, dùng Dio mặc định (không token)
+              // return ref.watch(dioProvider);
             }),
           ],
         ),
