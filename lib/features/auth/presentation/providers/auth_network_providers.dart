@@ -7,7 +7,7 @@ part 'auth_network_providers.g.dart';
 
 /// Auth-aware Dio provider that includes authentication
 /// This provider will be used by other features that need authenticated requests
-@riverpod
+@Riverpod(keepAlive: true)
 Dio authAwareDio(Ref ref) {
   final dioClient = DioClient(
     getToken: () async {
@@ -29,9 +29,4 @@ Dio authAwareDio(Ref ref) {
   return dioClient.dio;
 }
 
-/// Provider override for the entire app
-/// Use this in your main app to enable authenticated networking
-@riverpod
-Dio getAuthenticatedDioOverride(Ref ref) {
-  return ref.watch(authAwareDioProvider);
-}
+

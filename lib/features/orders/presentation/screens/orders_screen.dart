@@ -1,6 +1,10 @@
 import 'package:delivery_app/core/routing/routing.dart';
+import 'package:delivery_app/core/theme/app_colors.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
+import 'package:delivery_app/core/utils/screen_util_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../domain/entities/order_entity.dart';
 import '../providers/providers.dart';
 import '../widgets/orders_tab_bar.dart';
@@ -8,7 +12,6 @@ import '../widgets/orders_list.dart' as orders_widget;
 import '../widgets/orders_empty_state.dart';
 import '../widgets/orders_error_state.dart';
 import '../widgets/cancel_order_dialog.dart';
-import '../../../../generated/l10n.dart';
 
 class OrdersScreen extends ConsumerStatefulWidget {
   const OrdersScreen({super.key});
@@ -26,7 +29,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this); // All, Active, Completed
     _loadInitialData();
     _setupTabListener();
   }
@@ -54,11 +57,14 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
 
   OrderStatus? _getStatusForTab(int index) {
     switch (index) {
-      case 0: return null; // All orders
-      case 1: return OrderStatus.pending;
-      case 2: return OrderStatus.delivering;
-      case 3: return OrderStatus.delivered;
-      default: return null;
+      case 0:
+        return null; // All orders
+      case 1:
+        return OrderStatus.pending; // Active (will filter pending + delivering)
+      case 2:
+        return OrderStatus.delivered; // Completed
+      default:
+        return null;
     }
   }
 
@@ -94,20 +100,67 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
   }
 
   List<OrderEntity> _getFilteredOrders(List<OrderEntity> orders) {
-    if (currentStatus == null) return orders;
+    if (currentStatus == null) return orders; // All
+    if (currentStatus == OrderStatus.pending) {
+      // Active tab: show pending + delivering
+      return orders
+          .where((order) =>
+              order.status == OrderStatus.pending ||
+              order.status == OrderStatus.delivering)
+          .toList();
+    }
+    // Completed tab
     return orders.where((order) => order.status == currentStatus).toList();
   }
 
   @override
   Widget build(BuildContext context) {
     final ordersState = ref.watch(ordersListProvider);
-    final theme = Theme.of(context);
+    final colors = context.colors;
 
     return Scaffold(
-      appBar: _buildAppBar(theme),
+      backgroundColor: colors.background,
+      appBar: _buildAppBar(colors),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header Section - Editorial style
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+              ResponsiveSize.m,
+              ResponsiveSize.l,
+              ResponsiveSize.m,
+              ResponsiveSize.s,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Your Orders',
+                  style: TextStyle(
+                    fontSize: 36.sp,
+                    fontWeight: FontWeight.w900,
+                    color: colors.textPrimary,
+                    letterSpacing: -1,
+                    height: 1.1,
+                  ),
+                ),
+                SizedBox(height: ResponsiveSize.xs),
+                Text(
+                  'Track your current cravings and past delights.',
+                  style: TextStyle(
+                    fontSize: ResponsiveSize.fontM,
+                    fontWeight: FontWeight.w500,
+                    color: colors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Filter Tabs
           OrdersTabBar(tabController: _tabController),
+          SizedBox(height: ResponsiveSize.s),
+          // Orders List
           Expanded(
             child: RefreshIndicator(
               onRefresh: _refreshOrders,
@@ -119,18 +172,22 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
     );
   }
 
-  PreferredSizeWidget _buildAppBar(ThemeData theme) {
+  PreferredSizeWidget _buildAppBar(AppColors colors) {
     return AppBar(
-      title: Text(
-        S.of(context).orders,
-        style: theme.textTheme.headlineSmall?.copyWith(
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-      ),
-      backgroundColor: theme.primaryColor,
+      backgroundColor: colors.background,
       elevation: 0,
-      centerTitle: true,
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back, color: colors.textPrimary),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.search, color: colors.textSecondary),
+          onPressed: () {
+            // TODO: Implement search
+          },
+        ),
+      ],
     );
   }
 

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "secondary-fixed": "#ffddba",
+            "primary-fixed": "#ffddba",
+            "on-secondary-fixed": "#2b1700",
+            "secondary-container": "#fecb94",
+            "error-container": "#ffdad6",
+            "tertiary-container": "#ffdad6",
+            "surface-tint": "#f49d25",
+            "on-primary-container": "#d6810d",
+            "on-error-container": "#93000a",
+            "surface-container": "#f4eee7",
+            "on-secondary-fixed-variant": "#624015",
+            "surface-container-highest": "#e6e0d9",
+            "surface-container-high": "#ede7e0",
+            "secondary-fixed-dim": "#efbd87",
+            "tertiary-fixed-dim": "#ffb4ab",
+            "outline-variant": "#f4eee7",
+            "outline": "#d9c3ae",
+            "on-tertiary": "#ffffff",
+            "tertiary-fixed": "#ffdad6",
+            "surface-dim": "#f8f7f5",
+            "inverse-primary": "#ffb866",
+            "on-secondary": "#ffffff",
+            "primary-container": "#ffedd5",
+            "on-tertiary-fixed": "#410002",
+            "inverse-surface": "#2d2418",
+            "surface": "#ffffff",
+            "primary-fixed-dim": "#ffb866",
+            "on-background": "#1c160d",
+            "tertiary": "#ba1a1a",
+            "surface-variant": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "secondary": "#9c7a49",
+            "primary": "#f49d25",
+            "on-primary-fixed-variant": "#673d00",
+            "on-tertiary-container": "#93000a",
+            "background": "#f8f7f5",
+            "on-surface-variant": "#9c7a49",
+            "on-surface": "#1c160d",
+            "on-primary-fixed": "#2b1700",
+            "surface-bright": "#ffffff",
+            "on-error": "#ffffff",
+            "on-primary": "#ffffff",
+            "on-tertiary-fixed-variant": "#93000a",
+            "error": "#ba1a1a",
+            "surface-container-low": "#f8f7f5",
+            "inverse-on-surface": "#f8f7f5",
+            "on-secondary-container": "#795427"
+          },
+          fontFamily: {
+            "headline": ["Plus Jakarta Sans"],
+            "body": ["Plus Jakarta Sans"],
+            "label": ["Plus Jakarta Sans"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #d9c3ae;
+      border-radius: 10px;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Shell -->
+<header class="bg-white/90 dark:bg-stone-950/90 backdrop-blur-md shadow-md dark:shadow-stone-900/50 fixed top-0 w-full z-50 flex justify-between items-center px-6 h-20 w-full">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform text-stone-500">
+<span class="material-symbols-outlined text-2xl">arrow_back_ios_new</span>
+</button>
+<div class="flex flex-col">
+<span class="font-['Plus_Jakarta_Sans'] font-black tracking-tighter text-orange-600 dark:text-orange-400">Order #AH-8291</span>
+<span class="text-xs text-stone-500 font-bold uppercase tracking-widest">Amber Hearth Delivery</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="bg-stone-100 rounded-full h-10 w-10 flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-stone-600">help_outline</span>
+</div>
+</div>
+</header>
+<main class="pt-20 pb-24 min-h-screen flex flex-col">
+<!-- Map Canvas Section -->
+<section class="relative h-[397px] w-full overflow-hidden">
+<img alt="High-fidelity city map showing real-time courier movement and route" class="w-full h-full object-cover grayscale-[20%] contrast-[1.1]" data-alt="Top-down high-fidelity 3D map of a modern city grid with warm sunset lighting and glowing orange route paths" data-location="Singapore" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqhOyO1ulSgUN7y7sS2cu6vcdcej8Igr2pfyTvQYn46Xb2RFvClqobdnnAIM47uoar1yAJtXCE6gh3h99WMVot11IVHOlGEJjsjLyAjznQbBrfwFo8nIulKvvfTrc19H0LxNKy190uRsfUidO7CIBpeMHJwfhWdKXGkFOe69RdAGMLX0oD5sotA1NmgqAtWgf3Rkx4ZCHE7t0ghweRhZzm2oZfpfZwk20a3jZjg47bvxZuLG2jgeoROYO9dLQFSRFTFgKgccyNWE0"/>
+<!-- Live Courier Overlay -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+<div class="relative">
+<div class="absolute -inset-4 bg-primary/20 rounded-full animate-ping"></div>
+<div class="relative bg-white p-1 rounded-full shadow-lg border-2 border-primary">
+<div class="bg-primary p-2 rounded-full text-white">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">delivery_dining</span>
+</div>
+</div>
+<div class="absolute top-full mt-2 left-1/2 -translate-x-1/2 whitespace-nowrap">
+<span class="bg-inverse-surface text-surface text-[10px] px-3 py-1 rounded-full font-bold shadow-md">Shipper is 3 mins away</span>
+</div>
+</div>
+</div>
+<!-- Destination Marker -->
+<div class="absolute top-[30%] right-[25%] pointer-events-none">
+<div class="bg-stone-900 p-2 rounded-full shadow-lg border-2 border-white">
+<span class="material-symbols-outlined text-white text-xl" style="font-variation-settings: 'FILL' 1;">home</span>
+</div>
+</div>
+</section>
+<!-- Tracking Info Overlay -->
+<div class="flex-1 bg-background relative -mt-6 rounded-t-[2.5rem] shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] z-10 px-6 pt-8">
+<!-- Drag Handle -->
+<div class="w-12 h-1 bg-stone-200 rounded-full mx-auto mb-8"></div>
+<!-- Shipper Profile & Actions -->
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img class="w-16 h-16 rounded-2xl object-cover shadow-md" data-alt="Professional portrait of a friendly delivery courier smiling in a sunlit outdoor setting with soft bokeh background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCU4MBSYaOzLJDNT8doM609TXoNU7-zHO2YASz0N30WIYaDbgT_miOOz21bBPQGkDIQ2UpXvdluv5xHTwrpkqeamamLW3-vgf0MBLUHWGR3J2Nhk8lttxk63xYmg6dKni00P6NQo34rWnd6YusYPOZJW77OEiRO3IOfyeaUAKEY7iqwIvyXOp0gCXjCJ7WfpLPJkTdZx4Q8rvuGQ1G42iW7Fx55PeBd1jInRYlTKlp0gp7YgEN7Eeyneb7bij-mt1ppoULZLkr5gaA"/>
+<div class="absolute -bottom-1 -right-1 bg-green-500 h-4 w-4 rounded-full border-2 border-white"></div>
+</div>
+<div class="flex flex-col">
+<h3 class="font-headline font-black text-xl text-on-surface tracking-tight">Marcus Thorne</h3>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-bold text-on-surface">4.9</span>
+<span class="text-sm text-secondary ml-1">• Amber Elite Driver</span>
+</div>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-sm border border-outline-variant text-primary active:scale-90 transition-transform">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+<button class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white shadow-md shadow-orange-200 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">call</span>
+</button>
+</div>
+</div>
+<!-- Delivery Progress Status -->
+<div class="bg-surface-container-low rounded-3xl p-6 mb-8">
+<div class="flex justify-between items-end mb-6">
+<div>
+<p class="text-xs font-bold uppercase tracking-widest text-secondary mb-1">Estimated Arrival</p>
+<h2 class="text-3xl font-headline font-black text-primary">12:45 PM</h2>
+</div>
+<div class="text-right">
+<span class="inline-flex items-center gap-1 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+              On the Way
+            </span>
+</div>
+</div>
+<!-- Status Timeline -->
+<div class="relative flex items-center justify-between">
+<div class="absolute h-[2px] bg-stone-200 w-full top-1/2 -translate-y-1/2 z-0"></div>
+<div class="absolute h-[2px] bg-primary w-[75%] top-1/2 -translate-y-1/2 z-0"></div>
+<div class="relative z-10 bg-primary w-8 h-8 rounded-full border-4 border-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xs" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="relative z-10 bg-primary w-8 h-8 rounded-full border-4 border-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xs" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="relative z-10 bg-primary w-10 h-10 rounded-full border-4 border-surface shadow-lg shadow-orange-200 flex items-center justify-center scale-110">
+<span class="material-symbols-outlined text-white text-base" style="font-variation-settings: 'FILL' 1;">delivery_dining</span>
+</div>
+<div class="relative z-10 bg-stone-200 w-8 h-8 rounded-full border-4 border-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-stone-400 text-xs">flag</span>
+</div>
+</div>
+<div class="flex justify-between mt-3 px-1">
+<span class="text-[10px] font-bold text-secondary">Accepted</span>
+<span class="text-[10px] font-bold text-secondary">Kitchen</span>
+<span class="text-[10px] font-bold text-primary">Picked Up</span>
+<span class="text-[10px] font-bold text-stone-400">Arrived</span>
+</div>
+</div>
+<!-- Collapsible Order Details -->
+<div class="bg-white rounded-3xl border border-outline-variant overflow-hidden">
+<div class="p-5 flex items-center justify-between border-b border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-stone-100 rounded-xl">
+<span class="material-symbols-outlined text-stone-600">restaurant</span>
+</div>
+<div>
+<p class="text-xs font-bold text-secondary uppercase tracking-wider">Restaurant</p>
+<h4 class="font-headline font-black text-on-surface">The Golden Truffle</h4>
+</div>
+</div>
+<span class="material-symbols-outlined text-stone-400">keyboard_arrow_down</span>
+</div>
+<div class="p-5 max-h-60 overflow-y-auto custom-scrollbar">
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 flex items-center justify-center bg-primary-container text-on-primary-container text-xs font-black rounded-lg">2</span>
+<span class="text-sm font-semibold text-on-surface">Wagyu Beef Sliders</span>
+</div>
+<span class="text-sm font-bold text-on-surface">$34.00</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 flex items-center justify-center bg-primary-container text-on-primary-container text-xs font-black rounded-lg">1</span>
+<span class="text-sm font-semibold text-on-surface">Truffle Parmesan Fries</span>
+</div>
+<span class="text-sm font-bold text-on-surface">$12.50</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 flex items-center justify-center bg-primary-container text-on-primary-container text-xs font-black rounded-lg">1</span>
+<span class="text-sm font-semibold text-on-surface">Hibiscus Elderberry Soda</span>
+</div>
+<span class="text-sm font-bold text-on-surface">$8.00</span>
+</div>
+<div class="pt-4 mt-4 border-t border-dashed border-outline-variant space-y-2">
+<div class="flex justify-between text-xs text-secondary font-medium">
+<span>Subtotal</span>
+<span>$54.50</span>
+</div>
+<div class="flex justify-between text-xs text-secondary font-medium">
+<span>Delivery Fee</span>
+<span class="text-green-600">Free</span>
+</div>
+<div class="flex justify-between text-base font-black text-on-surface pt-2">
+<span>Total Amount</span>
+<span>$54.50</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Shell (Only Home active visually, but tailored for orders) -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] rounded-full bg-stone-900/95 backdrop-blur-lg shadow-lg shadow-orange-900/20 z-50 flex justify-around items-center px-4 py-2 mx-auto max-w-md">
+<a class="flex flex-col items-center justify-center text-stone-400 p-3 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home_app_logo">home_app_logo</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 p-3 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Favorites</span>
+</a>
+<a class="flex flex-col items-center justify-center text-orange-500 bg-white/10 rounded-full p-3 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 p-3 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

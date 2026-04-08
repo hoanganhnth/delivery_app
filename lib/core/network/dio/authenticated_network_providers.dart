@@ -25,7 +25,7 @@ part 'authenticated_network_providers.g.dart';
 ///   return dioClient.dio;
 /// }
 /// ```
-@riverpod
+@Riverpod(keepAlive: true)
 Dio authenticatedDio(Ref ref) {
   // Default implementation without authentication
   // This should be overridden by auth module

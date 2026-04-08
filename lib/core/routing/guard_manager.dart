@@ -44,7 +44,7 @@ class GuardManager {
   String? applyGuestGuard(BuildContext context, GoRouterState state) {
     final authState = _ref.read(authProvider);
     final isAuthenticated = authState.isAuthenticated;
- return AppRoutes.home;
+//  return AppRoutes.home;
     if (isAuthenticated) {
       return AppRoutes.home;
     }

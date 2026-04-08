@@ -7,7 +7,7 @@ part 'network_providers.g.dart';
 
 /// Global Dio provider for the entire app
 /// This should be used by all features that need HTTP client
-@riverpod
+@Riverpod(keepAlive: true)
 Dio dio(Ref ref) {
   // Create DioClient without auth dependencies to avoid circular reference
   final dioClient = DioClient();
