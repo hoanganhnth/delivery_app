@@ -48,16 +48,16 @@ class _RestaurantDetailScreenState
 
     if (detailState.isLoading) {
       return Scaffold(
-        backgroundColor: context.colors.background,
+        backgroundColor: ref.colors.background,
         body: Center(
-          child: CircularProgressIndicator(color: context.colors.primary),
+          child: CircularProgressIndicator(color: ref.colors.primary),
         ),
       );
     }
 
     if (detailState.hasError) {
       return Scaffold(
-        backgroundColor: context.colors.background,
+        backgroundColor: ref.colors.background,
         appBar: _buildErrorAppBar(),
         body: Center(
           child: Column(
@@ -78,7 +78,7 @@ class _RestaurantDetailScreenState
 
     if (restaurant == null) {
       return Scaffold(
-        backgroundColor: context.colors.background,
+        backgroundColor: ref.colors.background,
         appBar: _buildErrorAppBar(),
         body: Center(
           child: Column(
@@ -89,7 +89,7 @@ class _RestaurantDetailScreenState
               Text(
                 'Không tìm thấy nhà hàng',
                 style: TextStyle(
-                  color: context.colors.textSecondary,
+                  color: ref.colors.textSecondary,
                   fontSize: 16.sp,
                 ),
               ),
@@ -100,7 +100,7 @@ class _RestaurantDetailScreenState
     }
 
     return Scaffold(
-      backgroundColor: context.colors.background,
+      backgroundColor: ref.colors.background,
       body: CustomScrollView(
         slivers: [
           // Hero image with glass overlay

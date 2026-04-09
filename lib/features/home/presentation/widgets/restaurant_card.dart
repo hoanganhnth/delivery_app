@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Amber Hearth style restaurant card
@@ -10,7 +11,7 @@ import 'package:delivery_app/core/theme/theme_extensions.dart';
 /// - Hover: Image scale-105 transition-500
 /// - Badge position: Absolute top-4 right-4
 /// - Time badge: Bottom-4 left-4 with backdrop-blur
-class RestaurantCard extends StatefulWidget {
+class RestaurantCard extends ConsumerStatefulWidget {
   /// Restaurant name
   final String name;
   
@@ -56,10 +57,10 @@ class RestaurantCard extends StatefulWidget {
   });
 
   @override
-  State<RestaurantCard> createState() => _RestaurantCardState();
+  ConsumerState<RestaurantCard> createState() => _RestaurantCardState();
 }
 
-class _RestaurantCardState extends State<RestaurantCard> {
+class _RestaurantCardState extends ConsumerState<RestaurantCard> {
   bool _isHovered = false;
 
   @override
@@ -103,7 +104,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
                                 color: const Color(0xFFF4EEE7),
                                 child: Center(
                                   child: CircularProgressIndicator(
-                                    color: context.colors.primary,
+                                    color: ref.colors.primary,
                                   ),
                                 ),
                               ),
@@ -112,7 +113,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
                                 child: Icon(
                                   Icons.restaurant,
                                   size: 64,
-                                  color: context.colors.secondary,
+                                  color: ref.colors.secondary,
                                 ),
                               ),
                             )
@@ -121,7 +122,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
                               child: Icon(
                                 Icons.restaurant,
                                 size: 64,
-                                color: context.colors.secondary,
+                                color: ref.colors.secondary,
                               ),
                             ),
                     ),
@@ -247,7 +248,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
                           fontFamily: 'Plus Jakarta Sans',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: context.colors.secondary,
+                          color: ref.colors.secondary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -266,7 +267,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
                   ),
                   decoration: BoxDecoration(
                     color: widget.isFreeDelivery
-                        ? context.colors.primary.withValues(alpha: 0.1)
+                        ? ref.colors.primary.withValues(alpha: 0.1)
                         : const Color(0xFFEDE7E0),
                     borderRadius: BorderRadius.circular(9999),
                   ),
@@ -278,8 +279,8 @@ class _RestaurantCardState extends State<RestaurantCard> {
                       fontWeight: FontWeight.w900,
                       letterSpacing: 1.5,
                       color: widget.isFreeDelivery
-                          ? context.colors.primary
-                          : context.colors.secondary,
+                          ? ref.colors.primary
+                          : ref.colors.secondary,
                     ),
                   ),
                 ),

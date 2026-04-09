@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Custom text field matching Stitch design (Login screen)
@@ -9,7 +10,7 @@ import 'package:delivery_app/core/theme/theme_extensions.dart';
 /// - Border with Amber Hearth color scheme
 /// - Icon prefix and optional suffix icon
 /// - Focus states with amber accent
-class StitchTextField extends StatelessWidget {
+class StitchTextField extends ConsumerWidget {
   final TextEditingController controller;
   final String label;
   final String hint;
@@ -34,7 +35,7 @@ class StitchTextField extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -43,13 +44,13 @@ class StitchTextField extends StatelessWidget {
           padding: const EdgeInsets.only(left: 16),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            color: context.colors.background,
+            color: ref.colors.background,
             child: Text(
               label,
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
-                color: context.colors.secondary,
+                color: ref.colors.secondary,
                 letterSpacing: 2,
               ),
             ),
@@ -89,7 +90,7 @@ class StitchTextField extends StatelessWidget {
                 fontWeight: FontWeight.w400,
                 color: Color(0xFFD9C3AE),
               ),
-              prefixIcon: Icon(icon, color: context.colors.secondary, size: 22),
+              prefixIcon: Icon(icon, color: ref.colors.secondary, size: 22),
               suffixIcon: suffixIcon,
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(

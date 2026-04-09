@@ -16,8 +16,8 @@ class NonConsumableScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Unlock Features'),
-        backgroundColor: context.colors.primary,
-        foregroundColor: context.colors.onPrimary,
+        backgroundColor: ref.colors.primary,
+        foregroundColor: ref.colors.onPrimary,
       ),
       body: stateAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -239,7 +239,7 @@ class NonConsumableScreen extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: isUnlocked
                       ? Colors.green.withValues(alpha: 0.1)
-                      : context.colors.primary.withValues(alpha: 0.1),
+                      : ref.colors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
@@ -291,7 +291,7 @@ class NonConsumableScreen extends ConsumerWidget {
                     Text(
                       product.featureType.description,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: context.colors.textSecondary,
+                        color: ref.colors.textSecondary,
                       ),
                     ),
                     if (product.purchaseDate != null)
@@ -317,7 +317,7 @@ class NonConsumableScreen extends ConsumerWidget {
                       product.product.price,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: context.colors.primary,
+                        color: ref.colors.primary,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -328,8 +328,8 @@ class NonConsumableScreen extends ConsumerWidget {
                               .read(nonConsumableProvider.notifier)
                               .purchaseFeature(product.featureType),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: context.colors.primary,
-                        foregroundColor: context.colors.onPrimary,
+                        backgroundColor: ref.colors.primary,
+                        foregroundColor: ref.colors.onPrimary,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 8,

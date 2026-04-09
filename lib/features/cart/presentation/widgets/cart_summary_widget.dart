@@ -38,13 +38,13 @@ class CartSummaryWidget extends ConsumerWidget {
         return Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: context.colors.surface,
+            color: ref.colors.surface,
             border: Border(
-              top: BorderSide(color: context.colors.divider, width: 1.w),
+              top: BorderSide(color: ref.colors.divider, width: 1.w),
             ),
             boxShadow: [
               BoxShadow(
-                color: context.colors.shadow.withValues(alpha: 0.1),
+                color: ref.colors.shadow.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, -2),
               ),
@@ -61,7 +61,7 @@ class CartSummaryWidget extends ConsumerWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 12.w),
                 decoration: BoxDecoration(
-                  color: context.colors.primary.withValues(alpha: 0.1),
+                  color: ref.colors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -70,7 +70,7 @@ class CartSummaryWidget extends ConsumerWidget {
                     Text(
                       showOrderSummary ? S.of(context).hideOrderDetails : S.of(context).showOrderDetails,
                       style: TextStyle(
-                        color: context.colors.primary,
+                        color: ref.colors.primary,
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                       ),
@@ -78,7 +78,7 @@ class CartSummaryWidget extends ConsumerWidget {
                     SizedBox(width: 8.w),
                     Icon(
                       showOrderSummary ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                      color: context.colors.primary,
+                      color: ref.colors.primary,
                       size: 20,
                     ),
                   ],
@@ -98,14 +98,14 @@ class CartSummaryWidget extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w600,
-                    color: context.colors.textPrimary,
+                    color: ref.colors.textPrimary,
                   ),
                 ),
                 Text(
                   S.of(context).items(totalItems),
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: context.colors.textSecondary,
+                    color: ref.colors.textSecondary,
                   ),
                 ),
               ],
@@ -115,29 +115,32 @@ class CartSummaryWidget extends ConsumerWidget {
             // Pricing Details
             _buildPriceRow(
               context,
+              ref,
               S.of(context).subtotal,
               '\$${totalPrice.toStringAsFixed(2)}',
               isSubtotal: true,
             ),
             SizedBox(height: 8.w),
-            _buildPriceRow(context, S.of(context).deliveryFee, '\$3.99'),
+            _buildPriceRow(context, ref, S.of(context).deliveryFee, '\$3.99'),
             SizedBox(height: 8.w),
-            _buildPriceRow(context, S.of(context).serviceFee, '\$2.50'),
+            _buildPriceRow(context, ref, S.of(context).serviceFee, '\$2.50'),
             SizedBox(height: 8.w),
             _buildPriceRow(
               context,
+              ref,
               S.of(context).tax,
               '\$${(totalPrice * 0.08).toStringAsFixed(2)}',
             ),
 
             SizedBox(height: 12.w),
-            Divider(color: context.colors.divider),
+            Divider(color: ref.colors.divider),
             SizedBox(height: 12.w),
           ],
 
           // Total (luôn hiển thị)
           _buildPriceRow(
             context,
+            ref,
             S.of(context).total,
             '\$${(totalPrice + 3.99 + 2.50 + (totalPrice * 0.08)).toStringAsFixed(2)}',
             isTotal: true,
@@ -151,8 +154,8 @@ class CartSummaryWidget extends ConsumerWidget {
               child: ElevatedButton(
                 onPressed: onCheckoutPressed,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: context.colors.primary,
-                  foregroundColor: context.colors.onPrimary,
+                  backgroundColor: ref.colors.primary,
+                  foregroundColor: ref.colors.onPrimary,
                   padding: EdgeInsets.symmetric(vertical: 16.w),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -178,6 +181,7 @@ class CartSummaryWidget extends ConsumerWidget {
 
   Widget _buildPriceRow(
     BuildContext context,
+    WidgetRef ref,
     String label,
     String price, {
     bool isSubtotal = false,
@@ -192,8 +196,8 @@ class CartSummaryWidget extends ConsumerWidget {
             fontSize: isTotal ? 16.sp : 14.sp,
             fontWeight: isTotal ? FontWeight.w600 : FontWeight.w400,
             color: isTotal
-                ? context.colors.textPrimary
-                : context.colors.textSecondary,
+                ? ref.colors.textPrimary
+                : ref.colors.textSecondary,
           ),
         ),
         Text(
@@ -202,10 +206,10 @@ class CartSummaryWidget extends ConsumerWidget {
             fontSize: isTotal ? 18.sp : 14.sp,
             fontWeight: isTotal ? FontWeight.w700 : FontWeight.w500,
             color: isTotal
-                ? context.colors.primary
+                ? ref.colors.primary
                 : (isSubtotal
-                      ? context.colors.textPrimary
-                      : context.colors.textSecondary),
+                      ? ref.colors.textPrimary
+                      : ref.colors.textSecondary),
           ),
         ),
       ],
@@ -234,11 +238,11 @@ class CompactCartSummaryWidget extends ConsumerWidget {
         margin: EdgeInsets.all(16.w),
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.w),
         decoration: BoxDecoration(
-          color: context.colors.primary,
+          color: ref.colors.primary,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: context.colors.primary.withValues(alpha: 0.3),
+              color: ref.colors.primary.withValues(alpha: 0.3),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -255,13 +259,13 @@ class CompactCartSummaryWidget extends ConsumerWidget {
                     vertical: 4.w,
                   ),
                   decoration: BoxDecoration(
-                    color: context.colors.onPrimary.withValues(alpha: 0.2),
+                    color: ref.colors.onPrimary.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     '$totalItems',
                     style: TextStyle(
-                      color: context.colors.onPrimary,
+                      color: ref.colors.onPrimary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -270,7 +274,7 @@ class CompactCartSummaryWidget extends ConsumerWidget {
                 Text(
                   'View Cart',
                   style: TextStyle(
-                    color: context.colors.onPrimary,
+                    color: ref.colors.onPrimary,
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
                   ),
@@ -282,7 +286,7 @@ class CompactCartSummaryWidget extends ConsumerWidget {
                 Text(
                   '\$${totalPrice.toStringAsFixed(2)}',
                   style: TextStyle(
-                    color: context.colors.onPrimary,
+                    color: ref.colors.onPrimary,
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w700,
                   ),
@@ -290,7 +294,7 @@ class CompactCartSummaryWidget extends ConsumerWidget {
                 SizedBox(width: 8.w),
                 Icon(
                   Icons.arrow_forward_ios,
-                  color: context.colors.onPrimary,
+                  color: ref.colors.onPrimary,
                   size: 16,
                 ),
               ],

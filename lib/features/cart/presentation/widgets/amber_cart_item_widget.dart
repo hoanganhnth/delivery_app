@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Amber Hearth style cart item widget
@@ -10,7 +11,7 @@ import 'package:delivery_app/core/theme/theme_extensions.dart';
 /// - Image: 96x96px rounded-2xl
 /// - Quantity control: Vertical pill with shadow-inner
 /// - Hover: shadow-md elevation
-class AmberCartItemWidget extends StatefulWidget {
+class AmberCartItemWidget extends ConsumerStatefulWidget {
   /// Item name
   final String name;
   
@@ -48,10 +49,10 @@ class AmberCartItemWidget extends StatefulWidget {
   });
 
   @override
-  State<AmberCartItemWidget> createState() => _AmberCartItemWidgetState();
+  ConsumerState<AmberCartItemWidget> createState() => _AmberCartItemWidgetState();
 }
 
-class _AmberCartItemWidgetState extends State<AmberCartItemWidget> {
+class _AmberCartItemWidgetState extends ConsumerState<AmberCartItemWidget> {
   bool _isHovered = false;
 
   @override
@@ -91,7 +92,7 @@ class _AmberCartItemWidgetState extends State<AmberCartItemWidget> {
                             color: const Color(0xFFF4EEE7),
                             child: Center(
                               child: CircularProgressIndicator(
-                                color: context.colors.primary,
+                                color: ref.colors.primary,
                               ),
                             ),
                           ),
@@ -100,7 +101,7 @@ class _AmberCartItemWidgetState extends State<AmberCartItemWidget> {
                             child: Icon(
                               Icons.fastfood,
                               size: 48,
-                              color: context.colors.secondary,
+                              color: ref.colors.secondary,
                             ),
                           ),
                         )
@@ -109,7 +110,7 @@ class _AmberCartItemWidgetState extends State<AmberCartItemWidget> {
                           child: Icon(
                             Icons.fastfood,
                             size: 48,
-                            color: context.colors.secondary,
+                            color: ref.colors.secondary,
                           ),
                         ),
                 ),
@@ -142,7 +143,7 @@ class _AmberCartItemWidgetState extends State<AmberCartItemWidget> {
                           fontFamily: 'Plus Jakarta Sans',
                           fontSize: 12,
                           fontStyle: FontStyle.italic,
-                          color: context.colors.secondary.withValues(alpha: 0.8),
+                          color: ref.colors.secondary.withValues(alpha: 0.8),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -155,7 +156,7 @@ class _AmberCartItemWidgetState extends State<AmberCartItemWidget> {
                         fontFamily: 'Plus Jakarta Sans',
                         fontSize: 18,
                         fontWeight: FontWeight.w900,
-                        color: context.colors.primary,
+                        color: ref.colors.primary,
                       ),
                     ),
                   ],
@@ -168,7 +169,7 @@ class _AmberCartItemWidgetState extends State<AmberCartItemWidget> {
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: context.colors.background,
+                  color: ref.colors.background,
                   borderRadius: BorderRadius.circular(9999),
                   boxShadow: [
                     BoxShadow(
@@ -219,7 +220,7 @@ class _AmberCartItemWidgetState extends State<AmberCartItemWidget> {
 }
 
 /// Quantity button (+ or -)
-class _QuantityButton extends StatefulWidget {
+class _QuantityButton extends ConsumerStatefulWidget {
   final IconData icon;
   final VoidCallback? onTap;
 
@@ -229,10 +230,10 @@ class _QuantityButton extends StatefulWidget {
   });
 
   @override
-  State<_QuantityButton> createState() => _QuantityButtonState();
+  ConsumerState<_QuantityButton> createState() => _QuantityButtonState();
 }
 
-class _QuantityButtonState extends State<_QuantityButton> {
+class _QuantityButtonState extends ConsumerState<_QuantityButton> {
   bool _isPressed = false;
 
   @override
@@ -263,7 +264,7 @@ class _QuantityButtonState extends State<_QuantityButton> {
         child: Icon(
           widget.icon,
           size: 16,
-          color: context.colors.secondary,
+          color: ref.colors.secondary,
         ),
       ),
     );

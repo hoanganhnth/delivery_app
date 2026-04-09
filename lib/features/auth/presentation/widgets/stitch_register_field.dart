@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Custom text field for register screen matching Stitch design
@@ -9,7 +10,7 @@ import 'package:delivery_app/core/theme/theme_extensions.dart';
 /// - Border with Amber Hearth outline color
 /// - Icon prefix and optional suffix icon
 /// - Optional helper text below the field
-class StitchRegisterField extends StatelessWidget {
+class StitchRegisterField extends ConsumerWidget {
   final TextEditingController controller;
   final String label;
   final String hint;
@@ -36,7 +37,7 @@ class StitchRegisterField extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -48,7 +49,7 @@ class StitchRegisterField extends StatelessWidget {
             style:  TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w900,
-              color: context.colors.secondary,
+              color: ref.colors.secondary,
               letterSpacing: 2,
             ),
           ),
@@ -86,7 +87,7 @@ class StitchRegisterField extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 child: Icon(
                   icon,
-                  color: context.colors.secondary,
+                  color: ref.colors.secondary,
                   size: 22,
                 ),
               ),
@@ -113,7 +114,7 @@ class StitchRegisterField extends StatelessWidget {
               helperText!,
               style: TextStyle(
                 fontSize: 10,
-                color: context.colors.secondary.withValues(alpha: 0.7),
+                color: ref.colors.secondary.withValues(alpha: 0.7),
               ),
             ),
           ),

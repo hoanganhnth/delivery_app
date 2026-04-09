@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
 
 /// GPS Location Card - Hiển thị vị trí GPS và button "Lấy vị trí"
-class GPSLocationCard extends StatelessWidget {
+class GPSLocationCard extends ConsumerWidget {
   final double? latitude;
   final double? longitude;
   final bool isLoading;
@@ -19,8 +20,8 @@ class GPSLocationCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
 
     return Container(
       padding: EdgeInsets.all(ResponsiveSize.m),

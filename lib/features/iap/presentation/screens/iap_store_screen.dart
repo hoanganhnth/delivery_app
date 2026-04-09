@@ -3,20 +3,21 @@ import 'package:delivery_app/features/iap/presentation/screens/consumable_screen
 import 'package:delivery_app/features/iap/presentation/screens/non_consumable_screen.dart';
 import 'package:delivery_app/features/iap/presentation/screens/subscription_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Main store screen with tabs for all IAP types
-class IapStoreScreen extends StatelessWidget {
+class IapStoreScreen extends ConsumerWidget {
   const IapStoreScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Premium Store'),
-          backgroundColor: context.colors.primary,
-          foregroundColor: context.colors.onPrimary,
+          backgroundColor: ref.colors.primary,
+          foregroundColor: ref.colors.onPrimary,
           elevation: 0,
           bottom: TabBar(
             indicatorColor: Colors.white,
@@ -51,44 +52,44 @@ class IapStoreScreen extends StatelessWidget {
   }
 }
 
-class _SubscriptionTab extends StatelessWidget {
+class _SubscriptionTab extends ConsumerWidget {
   const _SubscriptionTab();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return const SubscriptionScreen();
   }
 }
 
-class _ConsumableTab extends StatelessWidget {
+class _ConsumableTab extends ConsumerWidget {
   const _ConsumableTab();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return const ConsumableScreen();
   }
 }
 
-class _NonConsumableTab extends StatelessWidget {
+class _NonConsumableTab extends ConsumerWidget {
   const _NonConsumableTab();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return const NonConsumableScreen();
   }
 }
 
 /// Simple grid card to navigate to specific IAP screens
-class IapMenuScreen extends StatelessWidget {
+class IapMenuScreen extends ConsumerWidget {
   const IapMenuScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Premium Store'),
-        backgroundColor: context.colors.primary,
-        foregroundColor: context.colors.onPrimary,
+        backgroundColor: ref.colors.primary,
+        foregroundColor: ref.colors.onPrimary,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -110,6 +111,7 @@ class IapMenuScreen extends StatelessWidget {
                 children: [
                   _buildMenuCard(
                     context,
+                    ref,
                     title: 'Subscriptions',
                     subtitle: 'Premium plans',
                     icon: Icons.card_membership,
@@ -123,6 +125,7 @@ class IapMenuScreen extends StatelessWidget {
                   ),
                   _buildMenuCard(
                     context,
+                    ref,
                     title: 'Credits',
                     subtitle: 'Buy delivery credits',
                     icon: Icons.monetization_on,
@@ -136,6 +139,7 @@ class IapMenuScreen extends StatelessWidget {
                   ),
                   _buildMenuCard(
                     context,
+                    ref,
                     title: 'Features',
                     subtitle: 'Unlock forever',
                     icon: Icons.lock_open,
@@ -149,6 +153,7 @@ class IapMenuScreen extends StatelessWidget {
                   ),
                   _buildMenuCard(
                     context,
+                    ref,
                     title: 'All Store',
                     subtitle: 'Browse everything',
                     icon: Icons.store,
@@ -170,7 +175,8 @@ class IapMenuScreen extends StatelessWidget {
   }
 
   Widget _buildMenuCard(
-    BuildContext context, {
+    BuildContext context,
+    WidgetRef ref, {
     required String title,
     required String subtitle,
     required IconData icon,
@@ -209,7 +215,7 @@ class IapMenuScreen extends StatelessWidget {
               Text(
                 subtitle,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: context.colors.textSecondary,
+                  color: ref.colors.textSecondary,
                 ),
                 textAlign: TextAlign.center,
               ),

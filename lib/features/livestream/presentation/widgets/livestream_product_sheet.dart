@@ -21,7 +21,7 @@ class LivestreamProductSheet extends ConsumerWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 0.7,
       decoration: BoxDecoration(
-        color: context.colors.surface,
+        color: ref.colors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
@@ -47,7 +47,7 @@ class LivestreamProductSheet extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
-                    color: context.colors.textPrimary,
+                    color: ref.colors.textPrimary,
                   ),
                 ),
                 const Spacer(),
@@ -55,7 +55,7 @@ class LivestreamProductSheet extends ConsumerWidget {
                   '${products.length} sản phẩm',
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: context.colors.textSecondary,
+                    color: ref.colors.textSecondary,
                   ),
                 ),
               ],
@@ -94,7 +94,7 @@ class _ProductItem extends ConsumerWidget {
       margin: EdgeInsets.only(bottom: 12.w),
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        color: context.colors.cardBackground,
+        color: ref.colors.cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey[200]!),
       ),
@@ -131,7 +131,7 @@ class _ProductItem extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w600,
-                    color: context.colors.textPrimary,
+                    color: ref.colors.textPrimary,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -143,7 +143,7 @@ class _ProductItem extends ConsumerWidget {
                     product.description!,
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: context.colors.textSecondary,
+                      color: ref.colors.textSecondary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -171,7 +171,7 @@ class _ProductItem extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
-                        color: context.colors.primary,
+                        color: ref.colors.primary,
                       ),
                     ),
                     if (product.hasDiscount) ...[
@@ -242,7 +242,7 @@ class _ProductItem extends ConsumerWidget {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: context.colors.primary,
+              backgroundColor: ref.colors.primary,
               foregroundColor: Colors.white,
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
               shape: RoundedRectangleBorder(

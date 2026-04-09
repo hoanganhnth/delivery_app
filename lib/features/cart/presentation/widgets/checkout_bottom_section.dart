@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../cart/domain/entities/cart_entity.dart';
 
 /// Widget phần thanh toán ở cuối trang checkout
-class CheckoutBottomSection extends StatelessWidget {
+class CheckoutBottomSection extends ConsumerWidget {
   final CartEntity cart;
   final bool isLoading;
   final VoidCallback onPlaceOrder;
@@ -17,11 +18,11 @@ class CheckoutBottomSection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: context.colors.surface,
+        color: ref.colors.surface,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
@@ -41,7 +42,7 @@ class CheckoutBottomSection extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
-                  color: context.colors.textPrimary,
+                  color: ref.colors.textPrimary,
                 ),
               ),
               Text(
@@ -49,7 +50,7 @@ class CheckoutBottomSection extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w700,
-                  color: context.colors.primary,
+                  color: ref.colors.primary,
                 ),
               ),
             ],
@@ -60,8 +61,8 @@ class CheckoutBottomSection extends StatelessWidget {
             child: ElevatedButton(
               onPressed: isLoading ? null : onPlaceOrder,
               style: ElevatedButton.styleFrom(
-                backgroundColor: context.colors.primary,
-                foregroundColor: context.colors.onPrimary,
+                backgroundColor: ref.colors.primary,
+                foregroundColor: ref.colors.onPrimary,
                 padding: EdgeInsets.symmetric(vertical: 16.w),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

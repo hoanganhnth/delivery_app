@@ -19,7 +19,7 @@ class TrackOrderScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final orderState = ref.watch(orderDetailProvider(orderId));
-    final colors = context.colors;
+    final colors = ref.colors;
     
     return Scaffold(
       backgroundColor: colors.background,
@@ -87,14 +87,14 @@ class TrackOrderScreen extends ConsumerWidget {
   }
 }
 
-class _TrackOrderBody extends StatelessWidget {
+class _TrackOrderBody extends ConsumerWidget {
   final OrderEntity order;
 
   const _TrackOrderBody({required this.order});
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     
     return Stack(
       children: [
@@ -128,14 +128,14 @@ class _TrackOrderBody extends StatelessWidget {
 }
 
 /// Map Section với placeholder
-class _MapSection extends StatelessWidget {
+class _MapSection extends ConsumerWidget {
   final OrderEntity order;
 
   const _MapSection({required this.order});
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     
     return Container(
       decoration: BoxDecoration(
@@ -264,7 +264,7 @@ class _MapSection extends StatelessWidget {
 }
 
 /// Map Marker Widget
-class _MapMarker extends StatelessWidget {
+class _MapMarker extends ConsumerWidget {
   final IconData icon;
   final Color color;
   final String label;
@@ -278,8 +278,8 @@ class _MapMarker extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -350,13 +350,13 @@ class _MapGridPainter extends CustomPainter {
 }
 
 /// Floating Back Button
-class _FloatingBackButton extends StatelessWidget {
+class _FloatingBackButton extends ConsumerWidget {
   final AppColors colors;
 
   const _FloatingBackButton({required this.colors});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pop(),
       child: Container(
@@ -384,14 +384,14 @@ class _FloatingBackButton extends StatelessWidget {
 }
 
 /// Main Content Card with status and timeline
-class _MainContentCard extends StatelessWidget {
+class _MainContentCard extends ConsumerWidget {
   final OrderEntity order;
 
   const _MainContentCard({required this.order});
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     
     return Container(
       decoration: BoxDecoration(
@@ -511,14 +511,14 @@ class _MainContentCard extends StatelessWidget {
 }
 
 /// Status Header
-class _StatusHeader extends StatelessWidget {
+class _StatusHeader extends ConsumerWidget {
   final OrderEntity order;
 
   const _StatusHeader({required this.order});
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     
     return Row(
       children: [
@@ -599,14 +599,14 @@ class _StatusHeader extends StatelessWidget {
 }
 
 /// Order Details Card with dashed border
-class _OrderDetailsCard extends StatelessWidget {
+class _OrderDetailsCard extends ConsumerWidget {
   final OrderEntity order;
 
   const _OrderDetailsCard({required this.order});
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     
     return Container(
       padding: EdgeInsets.all(ResponsiveSize.m),

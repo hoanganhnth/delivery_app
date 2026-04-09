@@ -42,7 +42,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final orderDetailState = ref.watch(orderDetailProvider(widget.orderId));
-    final colors = context.colors;
+    final colors = ref.colors;
     
     return Scaffold(
       backgroundColor: colors.background,
@@ -79,7 +79,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
   }
 
   Widget _buildBody(AsyncValue<OrderEntity?> orderDetailState) {
-    final colors = context.colors;
+    final colors = ref.colors;
     return orderDetailState.when(
       data: (order) => order == null
           ? const OrderNotFoundWidget()

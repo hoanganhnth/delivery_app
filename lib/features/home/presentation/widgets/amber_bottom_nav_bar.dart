@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Amber Hearth style floating dark bottom navigation bar
@@ -8,7 +9,7 @@ import 'package:delivery_app/core/theme/theme_extensions.dart';
 /// - Active state: Elevated orange pill with -translate-y effect
 /// - Inactive state: Gray icons with hover effects
 /// - Smooth transitions with scale animations
-class AmberBottomNavBar extends StatelessWidget {
+class AmberBottomNavBar extends ConsumerWidget {
   /// Current selected index (0-based)
   final int currentIndex;
   
@@ -22,7 +23,7 @@ class AmberBottomNavBar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.only(
         left: 24,
@@ -37,7 +38,7 @@ class AmberBottomNavBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(9999), // rounded-full
           boxShadow: [
             BoxShadow(
-              color: context.colors.primary.withValues(alpha: 0.2),
+              color: ref.colors.primary.withValues(alpha: 0.2),
               blurRadius: 20,
               offset: const Offset(0, 4),
             ),
@@ -78,7 +79,7 @@ class AmberBottomNavBar extends StatelessWidget {
 }
 
 /// Individual navigation item with active/inactive states
-class _NavItem extends StatelessWidget {
+class _NavItem extends ConsumerWidget {
   final IconData icon;
   final String label;
   final bool isActive;
@@ -92,7 +93,7 @@ class _NavItem extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -106,13 +107,13 @@ class _NavItem extends StatelessWidget {
           height: isActive ? 72 : 56,
           decoration: BoxDecoration(
             color: isActive 
-                ? context.colors.primary // primary
+                ? ref.colors.primary // primary
                 : Colors.transparent,
             shape: BoxShape.circle,
             boxShadow: isActive
                 ? [
                     BoxShadow(
-                      color: context.colors.primary.withValues(alpha: 0.4),
+                      color: ref.colors.primary.withValues(alpha: 0.4),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),

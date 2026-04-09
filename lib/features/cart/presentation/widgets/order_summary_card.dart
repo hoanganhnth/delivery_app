@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../cart/domain/entities/cart_entity.dart';
 
 /// Widget tóm tắt đơn hàng trong checkout
-class OrderSummaryCard extends StatelessWidget {
+class OrderSummaryCard extends ConsumerWidget {
   final CartEntity cart;
 
   const OrderSummaryCard({
@@ -13,7 +14,7 @@ class OrderSummaryCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -31,7 +32,7 @@ class OrderSummaryCard extends StatelessWidget {
                       width: 4.w,
                       height: 4.w,
                       decoration: BoxDecoration(
-                        color: context.colors.textSecondary,
+                        color: ref.colors.textSecondary,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -39,14 +40,14 @@ class OrderSummaryCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         '${item.quantity}x ${item.menuItemName}',
-                        style: TextStyle(color: context.colors.textPrimary),
+                        style: TextStyle(color: ref.colors.textPrimary),
                       ),
                     ),
                     Text(
                       '${(item.price * item.quantity).toStringAsFixed(0)}₫',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        color: context.colors.textPrimary,
+                        color: ref.colors.textPrimary,
                       ),
                     ),
                   ],
@@ -62,11 +63,11 @@ class OrderSummaryCard extends StatelessWidget {
               children: [
                 Text(
                   'Tạm tính',
-                  style: TextStyle(color: context.colors.textSecondary),
+                  style: TextStyle(color: ref.colors.textSecondary),
                 ),
                 Text(
                   '${cart.totalAmount.toStringAsFixed(0)}₫',
-                  style: TextStyle(color: context.colors.textPrimary),
+                  style: TextStyle(color: ref.colors.textPrimary),
                 ),
               ],
             ),
@@ -78,11 +79,11 @@ class OrderSummaryCard extends StatelessWidget {
               children: [
                 Text(
                   'Phí giao hàng',
-                  style: TextStyle(color: context.colors.textSecondary),
+                  style: TextStyle(color: ref.colors.textSecondary),
                 ),
                 Text(
                   '${0}₫',
-                  style: TextStyle(color: context.colors.textPrimary),
+                  style: TextStyle(color: ref.colors.textPrimary),
                 ),
               ],
             ),
@@ -98,7 +99,7 @@ class OrderSummaryCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
-                    color: context.colors.textPrimary,
+                    color: ref.colors.textPrimary,
                   ),
                 ),
                 Text(
@@ -106,7 +107,7 @@ class OrderSummaryCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
-                    color: context.colors.primary,
+                    color: ref.colors.primary,
                   ),
                 ),
               ],

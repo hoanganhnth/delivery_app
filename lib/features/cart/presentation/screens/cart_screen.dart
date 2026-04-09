@@ -29,7 +29,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     final cartNotifier = ref.read(cartProvider.notifier);
 
     return Scaffold(
-      backgroundColor: context.colors.background,
+      backgroundColor: ref.colors.background,
       appBar: GlassAppBar(
         titleText: S.of(context).shoppingCart,
         leading: GlassBackButton(
@@ -48,7 +48,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       ),
       body: cartAsyncValue.when(
         loading: () => Center(
-          child: CircularProgressIndicator(color: context.colors.primary),
+          child: CircularProgressIndicator(color: ref.colors.primary),
         ),
         error: (error, stack) => Center(
           child: Padding(
@@ -74,7 +74,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 ElevatedButton(
                   onPressed: () => ref.invalidate(cartProvider),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: context.colors.primary,
+                    backgroundColor: ref.colors.primary,
                     foregroundColor: Colors.white,
                     padding: EdgeInsets.symmetric(
                       horizontal: 24.w,
@@ -127,7 +127,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             style: TextStyle(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w800,
-                              color: context.colors.textPrimary,
+                              color: ref.colors.textPrimary,
                               letterSpacing: -0.5,
                             ),
                           ),
@@ -137,7 +137,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w600,
-                              color: context.colors.primary,
+                              color: ref.colors.primary,
                             ),
                           ),
                         ],
@@ -234,7 +234,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           S.of(context).clearCartMessage,
           style: TextStyle(
             fontSize: 14.sp,
-            color: context.colors.textSecondary,
+            color: ref.colors.textSecondary,
           ),
         ),
         actions: [
@@ -243,7 +243,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             child: Text(
               S.of(context).cancel,
               style: TextStyle(
-                color: context.colors.textSecondary,
+                color: ref.colors.textSecondary,
                 fontWeight: FontWeight.w600,
               ),
             ),

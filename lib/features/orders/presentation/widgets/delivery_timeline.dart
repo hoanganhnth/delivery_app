@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
 
 /// Delivery Timeline Widget - Vertical stepper với animated progress
-class DeliveryTimeline extends StatelessWidget {
+class DeliveryTimeline extends ConsumerWidget {
   final String currentStep; // 'confirming', 'preparing', 'delivering', 'delivered'
   
   const DeliveryTimeline({
@@ -13,7 +14,7 @@ class DeliveryTimeline extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         // Step 1: Confirming
@@ -70,7 +71,7 @@ class DeliveryTimeline extends StatelessWidget {
 }
 
 /// Single Timeline Step
-class _TimelineStep extends StatelessWidget {
+class _TimelineStep extends ConsumerWidget {
   final IconData icon;
   final bool iconFilled;
   final String title;
@@ -92,8 +93,8 @@ class _TimelineStep extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     final iconSize = isLarge ? 40.w : 32.w;
     final titleSize = isLarge ? ResponsiveSize.fontXl : ResponsiveSize.fontM;
     

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../orders/domain/entities/order_entity.dart';
 
 /// Widget chọn phương thức thanh toán trong checkout
-class PaymentMethodCard extends StatelessWidget {
+class PaymentMethodCard extends ConsumerWidget {
   final PaymentMethod selectedPaymentMethod;
   final ValueChanged<PaymentMethod> onPaymentMethodChanged;
 
@@ -15,7 +16,7 @@ class PaymentMethodCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -25,6 +26,7 @@ class PaymentMethodCard extends StatelessWidget {
           children: [
             _buildPaymentOption(
               context,
+              ref,
               PaymentMethod.cod,
               'Tiền mặt (COD)',
               'Thanh toán khi nhận hàng',
@@ -33,6 +35,7 @@ class PaymentMethodCard extends StatelessWidget {
             const Divider(),
             _buildPaymentOption(
               context,
+              ref,
               PaymentMethod.wallet,
               'Thanh toán online',
               'Thẻ tín dụng, ví điện tử...',
@@ -46,6 +49,7 @@ class PaymentMethodCard extends StatelessWidget {
 
   Widget _buildPaymentOption(
     BuildContext context,
+    WidgetRef ref,
     PaymentMethod method,
     String title,
     String subtitle,
@@ -61,7 +65,7 @@ class PaymentMethodCard extends StatelessWidget {
       },
       title: Row(
         children: [
-          Icon(icon, color: context.colors.primary),
+          Icon(icon, color: ref.colors.primary),
           SizedBox(width: 8.w),
           Text(title, style: TextStyle(fontWeight: FontWeight.w500)),
         ],

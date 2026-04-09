@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../domain/entities/livestream_entity.dart';
 
 /// Card hiển thị livestream theo hàng ngang
-class LivestreamCardHorizontal extends StatelessWidget {
+class LivestreamCardHorizontal extends ConsumerWidget {
   final LivestreamEntity livestream;
 
   const LivestreamCardHorizontal({
@@ -14,7 +15,7 @@ class LivestreamCardHorizontal extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -133,7 +134,7 @@ class LivestreamCardHorizontal extends StatelessWidget {
                         livestream.streamerName,
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: context.colors.textSecondary,
+                          color: ref.colors.textSecondary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

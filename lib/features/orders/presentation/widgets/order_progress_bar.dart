@@ -1,5 +1,6 @@
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Thanh tiến trình đơn hàng với animation
@@ -8,7 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 /// ```dart
 /// OrderProgressBar(progress: 0.66) // 66% complete
 /// ```
-class OrderProgressBar extends StatefulWidget {
+class OrderProgressBar extends ConsumerStatefulWidget {
   final double progress; // 0.0 to 1.0
 
   const OrderProgressBar({
@@ -17,10 +18,10 @@ class OrderProgressBar extends StatefulWidget {
   }) : assert(progress >= 0.0 && progress <= 1.0);
 
   @override
-  State<OrderProgressBar> createState() => _OrderProgressBarState();
+  ConsumerState<OrderProgressBar> createState() => _OrderProgressBarState();
 }
 
-class _OrderProgressBarState extends State<OrderProgressBar>
+class _OrderProgressBarState extends ConsumerState<OrderProgressBar>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -68,7 +69,7 @@ class _OrderProgressBarState extends State<OrderProgressBar>
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
+    final colors = ref.colors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -3,11 +3,12 @@ import 'dart:ui';
 import 'package:delivery_app/core/widgets/app_image.dart';
 import 'package:delivery_app/core/widgets/glass_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 /// Restaurant hero section with image, gradient overlay, and info
-class RestaurantHeroSection extends StatelessWidget {
+class RestaurantHeroSection extends ConsumerWidget {
   final dynamic restaurant;
   
   const RestaurantHeroSection({
@@ -16,7 +17,7 @@ class RestaurantHeroSection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SliverAppBar(
       expandedHeight: 280.w,
       pinned: true,
@@ -125,7 +126,7 @@ class RestaurantHeroSection extends StatelessWidget {
                           vertical: 6.w,
                         ),
                         decoration: BoxDecoration(
-                          color: context.colors.primary,
+                          color: ref.colors.primary,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(

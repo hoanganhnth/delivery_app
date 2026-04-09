@@ -81,7 +81,7 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
           children: [
             Icon(
               Icons.location_on,
-              color: context.colors.primary,
+              color: ref.colors.primary,
               size: 20,
             ),
             SizedBox(width: 8.w),
@@ -91,7 +91,7 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
-                  color: context.colors.textPrimary,
+                  color: ref.colors.textPrimary,
                 ),
               ),
             ),
@@ -99,7 +99,7 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
               'Thay đổi',
               style: TextStyle(
                 fontSize: 14.sp,
-                color: context.colors.primary,
+                color: ref.colors.primary,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -107,7 +107,7 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
             Icon(
               Icons.arrow_forward_ios,
               size: 14,
-              color: context.colors.primary,
+              color: ref.colors.primary,
             ),
           ],
         ),
@@ -123,7 +123,7 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.w),
                 decoration: BoxDecoration(
-                  color: context.colors.primary,
+                  color: ref.colors.primary,
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
@@ -142,15 +142,15 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.w),
               decoration: BoxDecoration(
-                color: context.colors.surface,
+                color: ref.colors.surface,
                 borderRadius: BorderRadius.circular(4),
-                border: Border.all(color: context.colors.outline),
+                border: Border.all(color: ref.colors.outline),
               ),
               child: Text(
                 address.label,
                 style: TextStyle(
                   fontSize: 10.sp,
-                  color: context.colors.textSecondary,
+                  color: ref.colors.textSecondary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -165,7 +165,7 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
           '${address.recipientName} | ${address.phoneNumber}',
           style: TextStyle(
             fontSize: 14.sp,
-            color: context.colors.textPrimary,
+            color: ref.colors.textPrimary,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -177,7 +177,7 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
           _buildFullAddressString(address),
           style: TextStyle(
             fontSize: 14.sp,
-            color: context.colors.textSecondary,
+            color: ref.colors.textSecondary,
             height: 1.4,
           ),
           maxLines: 2,
@@ -194,7 +194,7 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
           children: [
             Icon(
               Icons.location_on_outlined,
-              color: context.colors.textSecondary,
+              color: ref.colors.textSecondary,
               size: 24,
             ),
             SizedBox(width: 12.w),
@@ -207,7 +207,7 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
-                      color: context.colors.textPrimary,
+                      color: ref.colors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 4.w),
@@ -215,7 +215,7 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
                     'Vui lòng chọn địa chỉ để tiếp tục đặt hàng',
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: context.colors.textSecondary,
+                      color: ref.colors.textSecondary,
                     ),
                   ),
                 ],
@@ -224,7 +224,7 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
             Icon(
               Icons.arrow_forward_ios,
               size: 16,
-              color: context.colors.primary,
+              color: ref.colors.primary,
             ),
           ],
         ),

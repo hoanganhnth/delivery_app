@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Floating cart button for restaurant detail screen
-class RestaurantCartButton extends StatelessWidget {
+class RestaurantCartButton extends ConsumerWidget {
   final bool isCartEmpty;
   final int cartItemsCount;
   final double cartTotalAmount;  
@@ -16,7 +17,7 @@ class RestaurantCartButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).padding.bottom > 0
@@ -27,7 +28,7 @@ class RestaurantCartButton extends StatelessWidget {
         top: 12.w,
       ),
       decoration: BoxDecoration(
-        color: context.colors.surface,
+        color: ref.colors.surface,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -42,7 +43,7 @@ class RestaurantCartButton extends StatelessWidget {
         child: ElevatedButton(
           onPressed: isCartEmpty ? null : () => context.push('/cart'),
           style: ElevatedButton.styleFrom(
-            backgroundColor: isCartEmpty ? Colors.grey[300] : context.colors.primary,
+            backgroundColor: isCartEmpty ? Colors.grey[300] : ref.colors.primary,
             foregroundColor: Colors.white,
             disabledBackgroundColor: Colors.grey[300],
             disabledForegroundColor: Colors.grey[500],
@@ -51,7 +52,7 @@ class RestaurantCartButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
             ),
             elevation: isCartEmpty ? 0 : 4,
-            shadowColor: context.colors.primary.withValues(alpha: 0.3),
+            shadowColor: ref.colors.primary.withValues(alpha: 0.3),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

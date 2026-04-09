@@ -1,9 +1,10 @@
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Order summary card showing subtotal, delivery fee, and total
-class CartOrderSummary extends StatelessWidget {
+class CartOrderSummary extends ConsumerWidget {
   final double subtotal;
   final double deliveryFee;
   
@@ -14,14 +15,14 @@ class CartOrderSummary extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final total = subtotal + deliveryFee;
 
     return Container(
       margin: EdgeInsets.all(16.w),
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: context.colors.surface,
+        color: ref.colors.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -39,7 +40,7 @@ class CartOrderSummary extends StatelessWidget {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w700,
-              color: context.colors.textPrimary,
+              color: ref.colors.textPrimary,
             ),
           ),
           SizedBox(height: 16.w),
@@ -74,7 +75,7 @@ class CartOrderSummary extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w800,
-                  color: context.colors.textPrimary,
+                  color: ref.colors.textPrimary,
                 ),
               ),
               Text(
@@ -82,7 +83,7 @@ class CartOrderSummary extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w900,
-                  color: context.colors.primary,
+                  color: ref.colors.primary,
                 ),
               ),
             ],
@@ -93,7 +94,7 @@ class CartOrderSummary extends StatelessWidget {
   }
 }
 
-class _SummaryRow extends StatelessWidget {
+class _SummaryRow extends ConsumerWidget {
   final String label;
   final String value;
 
@@ -103,7 +104,7 @@ class _SummaryRow extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -111,7 +112,7 @@ class _SummaryRow extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 14.sp,
-            color: context.colors.textSecondary,
+            color: ref.colors.textSecondary,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -119,7 +120,7 @@ class _SummaryRow extends StatelessWidget {
           value,
           style: TextStyle(
             fontSize: 14.sp,
-            color: context.colors.textPrimary,
+            color: ref.colors.textPrimary,
             fontWeight: FontWeight.w600,
           ),
         ),

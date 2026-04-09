@@ -124,13 +124,13 @@ class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
   }
 }
 
-class RestaurantListCard extends StatelessWidget {
+class RestaurantListCard extends ConsumerWidget {
   final RestaurantEntity restaurant;
 
   const RestaurantListCard({super.key, required this.restaurant});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       elevation: 2,
       margin: EdgeInsets.only(bottom: 16.w),
@@ -222,19 +222,19 @@ class RestaurantListCard extends StatelessWidget {
                 if (restaurant.description != null)
                   Text(
                     restaurant.description!,
-                    style: TextStyle(color: context.colors.textSecondary, fontSize: 14.sp),
+                    style: TextStyle(color: ref.colors.textSecondary, fontSize: 14.sp),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 SizedBox(height: 8.w),
                 Row(
                   children: [
-                    Icon(Icons.location_on, size: 14, color: context.colors.textSecondary),
+                    Icon(Icons.location_on, size: 14, color: ref.colors.textSecondary),
                     SizedBox(width: 4.w),
                     Expanded(
                       child: Text(
                         restaurant.address,
-                        style: TextStyle(color: context.colors.textSecondary, fontSize: 12.sp),
+                        style: TextStyle(color: ref.colors.textSecondary, fontSize: 12.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -259,7 +259,7 @@ class RestaurantListCard extends StatelessWidget {
                       style: TextStyle(fontSize: 12.sp, color: Colors.grey),
                     ),
                     const Spacer(),
-                    Icon(Icons.access_time, size: 14, color: context.colors.textSecondary),
+                    Icon(Icons.access_time, size: 14, color: ref.colors.textSecondary),
                     SizedBox(width: 2.w),
                     Text(
                       '20-30 phút',
@@ -269,7 +269,7 @@ class RestaurantListCard extends StatelessWidget {
                     Icon(
                       Icons.delivery_dining,
                       size: 14,
-                      color: context.colors.textSecondary,
+                      color: ref.colors.textSecondary,
                     ),
                     SizedBox(width: 2.w),
                     Text(

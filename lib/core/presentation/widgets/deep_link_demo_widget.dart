@@ -34,7 +34,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
               'Base URL: ${config.baseUrl ?? "Not configured"}',
               style: Theme.of(
                 context,
-              ).textTheme.bodySmall?.copyWith(color: context.colors.textSecondary),
+              ).textTheme.bodySmall?.copyWith(color: ref.colors.textSecondary),
             ),
             SizedBox(height: 16.w),
 

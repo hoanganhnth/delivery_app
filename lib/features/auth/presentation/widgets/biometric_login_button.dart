@@ -53,7 +53,7 @@ class _BiometricLoginButtonState extends ConsumerState<BiometricLoginButton> {
               ? Icons.face
               : Icons.fingerprint,
           size: 28,
-          color: context.colors.secondary,
+          color: ref.colors.secondary,
         ),
         onPressed: () async {
           final biometricNotifier = ref.read(biometricProvider.notifier);

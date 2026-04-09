@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Restaurant info section with address, hours, and promo
-class RestaurantInfoSection extends StatelessWidget {
+class RestaurantInfoSection extends ConsumerWidget {
   final dynamic restaurant;
   
   const RestaurantInfoSection({
@@ -12,10 +13,10 @@ class RestaurantInfoSection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SliverToBoxAdapter(
       child: Container(
-        color: context.colors.surface,
+        color: ref.colors.surface,
         child: Column(
           children: [
             // Restaurant info card
@@ -23,7 +24,7 @@ class RestaurantInfoSection extends StatelessWidget {
               margin: EdgeInsets.all(16.w),
               padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
-                color: context.colors.background,
+                color: ref.colors.background,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: Colors.grey.withValues(alpha: 0.1),
@@ -37,12 +38,12 @@ class RestaurantInfoSection extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.all(8.w),
                         decoration: BoxDecoration(
-                          color: context.colors.primary.withValues(alpha: 0.1),
+                          color: ref.colors.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(
                           Icons.location_on,
-                          color: context.colors.primary,
+                          color: ref.colors.primary,
                           size: 20.w,
                         ),
                       ),
@@ -51,7 +52,7 @@ class RestaurantInfoSection extends StatelessWidget {
                         child: Text(
                           restaurant.address,
                           style: TextStyle(
-                            color: context.colors.textPrimary,
+                            color: ref.colors.textPrimary,
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
                           ),
@@ -68,12 +69,12 @@ class RestaurantInfoSection extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.all(8.w),
                         decoration: BoxDecoration(
-                          color: context.colors.secondary.withValues(alpha: 0.1),
+                          color: ref.colors.secondary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(
                           Icons.access_time,
-                          color: context.colors.secondary,
+                          color: ref.colors.secondary,
                           size: 20.w,
                         ),
                       ),
@@ -118,15 +119,15 @@ class RestaurantInfoSection extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    context.colors.primary.withValues(alpha: 0.1),
-                    context.colors.primary.withValues(alpha: 0.05),
+                    ref.colors.primary.withValues(alpha: 0.1),
+                    ref.colors.primary.withValues(alpha: 0.05),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: context.colors.primary.withValues(alpha: 0.2),
+                  color: ref.colors.primary.withValues(alpha: 0.2),
                 ),
               ),
               child: Row(
@@ -134,7 +135,7 @@ class RestaurantInfoSection extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(10.w),
                     decoration: BoxDecoration(
-                      color: context.colors.primary,
+                      color: ref.colors.primary,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -153,7 +154,7 @@ class RestaurantInfoSection extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w700,
-                            color: context.colors.primary,
+                            color: ref.colors.primary,
                           ),
                         ),
                         SizedBox(height: 2.w),

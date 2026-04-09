@@ -45,7 +45,7 @@ class CheckoutScreen extends ConsumerWidget {
     });
 
     return Scaffold(
-      backgroundColor: context.colors.background,
+      backgroundColor: ref.colors.background,
       appBar: GlassAppBar(
         titleText: 'Thanh toán',
         leading: GlassActionButton(
@@ -61,7 +61,7 @@ class CheckoutScreen extends ConsumerWidget {
       ),
       body: cartAsyncValue.when(
         loading: () => Center(
-          child: CircularProgressIndicator(color: context.colors.primary),
+          child: CircularProgressIndicator(color: ref.colors.primary),
         ),
         error: (error, stack) => Center(
           child: Padding(

@@ -3,10 +3,11 @@ import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../generated/l10n.dart';
 
 /// Filter TabBar - Editorial rounded-full pills
-class OrdersTabBar extends StatelessWidget {
+class OrdersTabBar extends ConsumerWidget {
   final TabController tabController;
 
   const OrdersTabBar({
@@ -15,8 +16,8 @@ class OrdersTabBar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
 
     return AnimatedBuilder(
       animation: tabController,

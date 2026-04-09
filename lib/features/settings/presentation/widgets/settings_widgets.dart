@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
 
 /// Settings Card - Container cho nhóm settings tiles
-class SettingsCard extends StatelessWidget {
+class SettingsCard extends ConsumerWidget {
   final List<Widget> children;
 
   const SettingsCard({
@@ -13,8 +14,8 @@ class SettingsCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     return Container(
       decoration: BoxDecoration(
         color: colors.cardBackground,
@@ -35,7 +36,7 @@ class SettingsCard extends StatelessWidget {
 }
 
 /// Settings Tile - Row với icon, title, subtitle, và trailing
-class SettingsTile extends StatelessWidget {
+class SettingsTile extends ConsumerWidget {
   final IconData icon;
   final String title;
   final String? subtitle;
@@ -54,8 +55,8 @@ class SettingsTile extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
@@ -120,7 +121,7 @@ class SettingsTile extends StatelessWidget {
 }
 
 /// Section Title - Title cho mỗi nhóm settings
-class SectionTitle extends StatelessWidget {
+class SectionTitle extends ConsumerWidget {
   final String title;
 
   const SectionTitle({
@@ -129,8 +130,8 @@ class SectionTitle extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     return Padding(
       padding: EdgeInsets.only(
         left: ResponsiveSize.m,

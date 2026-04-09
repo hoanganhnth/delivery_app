@@ -49,7 +49,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     final restaurantsState = ref.watch(restaurantsProvider);
     
     return Scaffold(
-      backgroundColor: context.colors.background,
+      backgroundColor: ref.colors.background,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -163,7 +163,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   children: [
                     Icon(
                       Icons.location_on,
-                      color: context.colors.primary,
+                      color: ref.colors.primary,
                       size: 20.w,
                     ),
                     SizedBox(width: 4.w),
@@ -171,12 +171,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                       'Giao đến',
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: context.colors.textSecondary,
+                        color: ref.colors.textSecondary,
                       ),
                     ),
                     Icon(
                       Icons.keyboard_arrow_down,
-                      color: context.colors.textSecondary,
+                      color: ref.colors.textSecondary,
                       size: 18.w,
                     ),
                   ],
@@ -187,7 +187,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
-                    color: context.colors.textPrimary,
+                    color: ref.colors.textPrimary,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -227,7 +227,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
-              color: context.colors.textPrimary,
+              color: ref.colors.textPrimary,
             ),
           ),
         ),
@@ -274,7 +274,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
-              color: context.colors.textPrimary,
+              color: ref.colors.textPrimary,
             ),
           ),
           if (onSeeAll != null)
@@ -285,7 +285,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
-                  color: context.colors.primary,
+                  color: ref.colors.primary,
                 ),
               ),
             ),
@@ -301,7 +301,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           child: Padding(
             padding: EdgeInsets.all(32.w),
             child: CircularProgressIndicator(
-              color: context.colors.primary,
+              color: ref.colors.primary,
             ),
           ),
         ),
@@ -337,7 +337,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             child: Text(
               'Không có nhà hàng nào',
               style: TextStyle(
-                color: context.colors.textSecondary,
+                color: ref.colors.textSecondary,
                 fontSize: 14.sp,
               ),
             ),

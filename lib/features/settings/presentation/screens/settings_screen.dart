@@ -21,7 +21,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
+    final colors = ref.colors;
     final isDarkMode = ref.watch(isDarkThemeProvider);
 
     return Scaffold(
@@ -231,7 +231,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       style: TextStyle(
         fontSize: ResponsiveSize.fontL,
         fontWeight: FontWeight.bold,
-        color: context.colors.textPrimary,
+        color: ref.colors.textPrimary,
       ),
     );
   }
@@ -242,14 +242,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: context.colors.cardBackground,
+        color: ref.colors.cardBackground,
         borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
         border: borderColor != null
             ? Border.all(color: borderColor, width: 1)
             : null,
         boxShadow: [
           BoxShadow(
-            color: context.colors.shadow,
+            color: ref.colors.shadow,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -266,7 +266,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     required bool value,
     required ValueChanged<bool> onChanged,
   }) {
-    final colors = context.colors;
+    final colors = ref.colors;
     return Padding(
       padding: EdgeInsets.all(ResponsiveSize.m),
       child: Row(
@@ -314,7 +314,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     Color? iconColor,
     Color? textColor,
   }) {
-    final colors = context.colors;
+    final colors = ref.colors;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
@@ -373,14 +373,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget _buildDivider() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ResponsiveSize.m),
-      child: Divider(height: 1, color: context.colors.divider),
+      child: Divider(height: 1, color: ref.colors.divider),
     );
   }
 
   void _showLanguageSheet() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: context.colors.cardBackground,
+      backgroundColor: ref.colors.cardBackground,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(ResponsiveSize.radiusXl),
@@ -397,7 +397,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 width: 40.w,
                 height: 4.h,
                 decoration: BoxDecoration(
-                  color: context.colors.divider,
+                  color: ref.colors.divider,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -408,7 +408,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               style: TextStyle(
                 fontSize: ResponsiveSize.fontXl,
                 fontWeight: FontWeight.bold,
-                color: context.colors.textPrimary,
+                color: ref.colors.textPrimary,
               ),
             ),
             SizedBox(height: ResponsiveSize.m),
@@ -430,11 +430,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         language,
         style: TextStyle(
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          color: context.colors.textPrimary,
+          color: ref.colors.textPrimary,
         ),
       ),
       trailing: isSelected
-          ? Icon(Icons.check_circle, color: context.colors.primary)
+          ? Icon(Icons.check_circle, color: ref.colors.primary)
           : null,
       onTap: () {
         setState(() => _selectedLanguage = language);
@@ -453,7 +453,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           width: 64.w,
           height: 64.w,
           decoration: BoxDecoration(
-            color: context.colors.primary,
+            color: ref.colors.primary,
             borderRadius: BorderRadius.circular(ResponsiveSize.radiusM),
           ),
           child: Icon(
@@ -465,7 +465,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         children: [
           Text(
             'Ứng dụng giao đồ ăn nhanh chóng và tiện lợi.',
-            style: TextStyle(color: context.colors.textSecondary),
+            style: TextStyle(color: ref.colors.textSecondary),
           ),
         ],
       ),
@@ -494,7 +494,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             },
             child: Text(
               'Xóa',
-              style: TextStyle(color: context.colors.warning),
+              style: TextStyle(color: ref.colors.warning),
             ),
           ),
         ],
@@ -508,7 +508,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       builder: (context) => AlertDialog(
         title: Text(
           'Xóa tài khoản?',
-          style: TextStyle(color: context.colors.error),
+          style: TextStyle(color: ref.colors.error),
         ),
         content: const Text(
           'Hành động này không thể hoàn tác. Tất cả dữ liệu của bạn sẽ bị xóa vĩnh viễn.',
@@ -525,7 +525,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             },
             child: Text(
               'Xóa vĩnh viễn',
-              style: TextStyle(color: context.colors.error),
+              style: TextStyle(color: ref.colors.error),
             ),
           ),
         ],

@@ -116,7 +116,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
   @override
   Widget build(BuildContext context) {
     final ordersState = ref.watch(ordersListProvider);
-    final colors = context.colors;
+    final colors = ref.colors;
 
     return Scaffold(
       backgroundColor: colors.background,

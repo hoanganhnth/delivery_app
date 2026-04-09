@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/core/theme/app_colors.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
 
 /// Courier Info Card - Driver info với photo, rating, và action buttons
-class CourierInfoCard extends StatelessWidget {
+class CourierInfoCard extends ConsumerWidget {
   final String courierName;
   final String? courierPhoto;
   final double rating;
@@ -22,8 +23,8 @@ class CourierInfoCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     
     return Container(
       padding: EdgeInsets.all(ResponsiveSize.m),
@@ -127,7 +128,7 @@ class CourierInfoCard extends StatelessWidget {
                 ? Image.network(
                     courierPhoto!,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, __, ___) => _buildPlaceholder(context.colors),
+                    errorBuilder: (context, __, ___) => _buildPlaceholder(colors),
                   )
                 : _buildPlaceholder(colors),
           ),

@@ -73,7 +73,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   Widget build(BuildContext context) {
     ref.watch(splashControllerProvider);
     final splashController = ref.read(splashControllerProvider.notifier);
-    final colors = context.colors;
+    final colors = ref.colors;
 
     return Scaffold(
       body: Container(
@@ -114,7 +114,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                             // Amber-tinted shadow for "Hearth" warmth
                             boxShadow: [
                               BoxShadow(
-                                color: context.colors.secondary.withValues(alpha: 0.3),
+                                color: ref.colors.secondary.withValues(alpha: 0.3),
                                 blurRadius: 32,
                                 offset: const Offset(0, 8),
                               ),
@@ -167,7 +167,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                                 height: 1.1,
                                 shadows: [
                                   Shadow(
-                                    color: context.colors.secondary.withValues(alpha: 0.5),
+                                    color: ref.colors.secondary.withValues(alpha: 0.5),
                                     blurRadius: 12,
                                     offset: const Offset(0, 4),
                                   ),
@@ -270,7 +270,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                                   borderRadius: BorderRadius.circular(24),
                                 ),
                                 elevation: 8,
-                                shadowColor: context.colors.secondary.withValues(alpha: 0.4),
+                                shadowColor: ref.colors.secondary.withValues(alpha: 0.4),
                               ),
                               child: Text(
                                 'Retry',

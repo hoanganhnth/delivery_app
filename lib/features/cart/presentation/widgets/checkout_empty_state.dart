@@ -1,14 +1,15 @@
 import 'package:delivery_app/core/routing/routing.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Empty state widget for checkout when cart is empty
-class CheckoutEmptyState extends StatelessWidget {  
+class CheckoutEmptyState extends ConsumerWidget {  
   const CheckoutEmptyState({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Center(
       child: Padding(
         padding: EdgeInsets.all(32.w),
@@ -18,13 +19,13 @@ class CheckoutEmptyState extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(24.w),
               decoration: BoxDecoration(
-                color: context.colors.primary.withValues(alpha: 0.1),
+                color: ref.colors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.shopping_cart_outlined,
                 size: 64.w,
-                color: context.colors.primary,
+                color: ref.colors.primary,
               ),
             ),
             SizedBox(height: 24.w),
@@ -33,7 +34,7 @@ class CheckoutEmptyState extends StatelessWidget {
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w800,
-                color: context.colors.textPrimary,
+                color: ref.colors.textPrimary,
               ),
             ),
             SizedBox(height: 8.w),
@@ -41,7 +42,7 @@ class CheckoutEmptyState extends StatelessWidget {
               'Hãy thêm ít nhất một món hàng để tiếp tục.',
               style: TextStyle(
                 fontSize: 14.sp,
-                color: context.colors.textSecondary,
+                color: ref.colors.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -55,7 +56,7 @@ class CheckoutEmptyState extends StatelessWidget {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: context.colors.primary,
+                backgroundColor: ref.colors.primary,
                 foregroundColor: Colors.white,
                 padding: EdgeInsets.symmetric(
                   horizontal: 32.w,
@@ -65,7 +66,7 @@ class CheckoutEmptyState extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 elevation: 4,
-                shadowColor: context.colors.primary.withValues(alpha: 0.3),
+                shadowColor: ref.colors.primary.withValues(alpha: 0.3),
               ),
               child: Text(
                 'Tiếp tục mua sắm',

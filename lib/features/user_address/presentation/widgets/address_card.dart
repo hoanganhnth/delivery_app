@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
 import '../../domain/entities/user_address_entity.dart';
 
 /// Address Card Widget - Editorial style với icon tự động, popup menu, và default badge
-class AddressCard extends StatelessWidget {
+class AddressCard extends ConsumerWidget {
   final UserAddressEntity address;
   final VoidCallback onTap;
   final VoidCallback onEdit;
@@ -22,8 +23,8 @@ class AddressCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     final isDefault = address.isDefault;
 
     return GestureDetector(
@@ -68,7 +69,7 @@ class AddressCard extends StatelessWidget {
 }
 
 /// Header với icon, label, default badge, và popup menu
-class _AddressCardHeader extends StatelessWidget {
+class _AddressCardHeader extends ConsumerWidget {
   final UserAddressEntity address;
   final bool isDefault;
   final VoidCallback onEdit;
@@ -84,8 +85,8 @@ class _AddressCardHeader extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
 
     return Padding(
       padding: EdgeInsets.all(ResponsiveSize.m),
@@ -144,7 +145,7 @@ class _AddressCardHeader extends StatelessWidget {
 }
 
 /// Icon box với màu tự động theo loại địa chỉ
-class _AddressIconBox extends StatelessWidget {
+class _AddressIconBox extends ConsumerWidget {
   final String label;
 
   const _AddressIconBox({required this.label});
@@ -165,8 +166,8 @@ class _AddressIconBox extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     return Container(
       width: 44.w,
       height: 44.w,
@@ -184,10 +185,10 @@ class _AddressIconBox extends StatelessWidget {
 }
 
 /// Badge "Mặc định"
-class _DefaultBadge extends StatelessWidget {
+class _DefaultBadge extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: ResponsiveSize.s,
@@ -210,7 +211,7 @@ class _DefaultBadge extends StatelessWidget {
 }
 
 /// Popup menu cho edit/set default/delete
-class _AddressPopupMenu extends StatelessWidget {
+class _AddressPopupMenu extends ConsumerWidget {
   final bool isDefault;
   final VoidCallback onEdit;
   final VoidCallback onSetDefault;
@@ -224,8 +225,8 @@ class _AddressPopupMenu extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     return PopupMenuButton<String>(
       icon: Icon(
         Icons.more_vert,
@@ -285,7 +286,7 @@ class _AddressPopupMenu extends StatelessWidget {
 }
 
 /// Chi tiết địa chỉ (phone + full address)
-class _AddressCardDetails extends StatelessWidget {
+class _AddressCardDetails extends ConsumerWidget {
   final UserAddressEntity address;
 
   const _AddressCardDetails({required this.address});
@@ -300,8 +301,8 @@ class _AddressCardDetails extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     return Padding(
       padding: EdgeInsets.all(ResponsiveSize.m),
       child: Column(

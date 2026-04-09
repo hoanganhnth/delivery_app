@@ -9,7 +9,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentTheme = ref.watch(themeProvider);
-    final colors = context.colors;
+    final colors = ref.colors;
 
     return Scaffold(
       appBar: AppBar(
@@ -240,7 +240,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
   }
 }
 
-class _ColorSwatch extends StatelessWidget {
+class _ColorSwatch extends ConsumerWidget {
   final String label;
   final Color color;
 
@@ -250,7 +250,7 @@ class _ColorSwatch extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -261,7 +261,7 @@ class _ColorSwatch extends StatelessWidget {
             color: color,
             borderRadius: BorderRadius.circular(AppRadius.sm),
             border: Border.all(
-              color: context.colors.outline,
+              color: ref.colors.outline,
               width: 1.w,
             ),
           ),
@@ -270,7 +270,7 @@ class _ColorSwatch extends StatelessWidget {
         Text(
           label,
           style: AppTextStyles.labelSmall.copyWith(
-            color: context.colors.onSurfaceVariant,
+            color: ref.colors.onSurfaceVariant,
           ),
         ),
       ],

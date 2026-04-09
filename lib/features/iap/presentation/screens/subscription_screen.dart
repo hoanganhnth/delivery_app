@@ -55,7 +55,7 @@ class SubscriptionScreen extends ConsumerWidget {
         children: [
           // Current Subscription Card
           if (state.activeSubscription != null)
-            _buildActiveSubscriptionCard(context, state.activeSubscription!, textTheme),
+            _buildActiveSubscriptionCard(context, ref, state.activeSubscription!, textTheme),
 
           const SizedBox(height: 24),
 
@@ -98,6 +98,7 @@ class SubscriptionScreen extends ConsumerWidget {
 
   Widget _buildActiveSubscriptionCard(
     BuildContext context,
+    WidgetRef ref,
     SubscriptionEntity subscription,
     TextTheme textTheme,
   ) {
@@ -110,8 +111,8 @@ class SubscriptionScreen extends ConsumerWidget {
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
             colors: [
-              context.colors.primary,
-              context.colors.primary.withValues(alpha: 0.8),
+              ref.colors.primary,
+              ref.colors.primary.withValues(alpha: 0.8),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -172,7 +173,7 @@ class SubscriptionScreen extends ConsumerWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: isCurrentTier
-            ? BorderSide(color: context.colors.primary, width: 2)
+            ? BorderSide(color: ref.colors.primary, width: 2)
             : BorderSide.none,
       ),
       elevation: isCurrentTier ? 8 : 2,
@@ -197,7 +198,7 @@ class SubscriptionScreen extends ConsumerWidget {
                       Text(
                         subscription.product.price,
                         style: textTheme.titleMedium?.copyWith(
-                          color: context.colors.primary,
+                          color: ref.colors.primary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -211,7 +212,7 @@ class SubscriptionScreen extends ConsumerWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: context.colors.primary,
+                      color: ref.colors.primary,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Text(
@@ -232,7 +233,7 @@ class SubscriptionScreen extends ConsumerWidget {
                     children: [
                       Icon(
                         Icons.check_circle,
-                        color: context.colors.primary,
+                        color: ref.colors.primary,
                         size: 20,
                       ),
                       const SizedBox(width: 8),
@@ -250,8 +251,8 @@ class SubscriptionScreen extends ConsumerWidget {
                         .read(subscriptionProvider.notifier)
                         .purchaseSubscription(tier),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: context.colors.primary,
-                  foregroundColor: context.colors.onPrimary,
+                  backgroundColor: ref.colors.primary,
+                  foregroundColor: ref.colors.onPrimary,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),

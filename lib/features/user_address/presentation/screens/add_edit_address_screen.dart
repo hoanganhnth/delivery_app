@@ -136,7 +136,7 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
     });
 
     return Scaffold(
-      backgroundColor: context.colors.background,
+      backgroundColor: ref.colors.background,
       appBar: AppBar(
         title: Text(
           _isEditing ? 'Sửa địa chỉ' : 'Thêm địa chỉ mới',
@@ -146,7 +146,7 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: context.colors.primary,
+        backgroundColor: ref.colors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
         flexibleSpace: Container(
@@ -155,8 +155,8 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                context.colors.primaryDark,
-                context.colors.primary,
+                ref.colors.primaryDark,
+                ref.colors.primary,
               ],
             ),
           ),
@@ -353,9 +353,9 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
         // Set as default - Card style
         Container(
           decoration: BoxDecoration(
-            color: context.colors.cardBackground,
+            color: ref.colors.cardBackground,
             borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
-            border: Border.all(color: context.colors.border),
+            border: Border.all(color: ref.colors.border),
           ),
           child: CheckboxListTile(
             title: const Text('Đặt làm địa chỉ mặc định'),
@@ -366,7 +366,7 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
                 _isDefault = value ?? false;
               });
             },
-            activeColor: context.colors.primary,
+            activeColor: ref.colors.primary,
             controlAffinity: ListTileControlAffinity.leading,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
@@ -385,7 +385,7 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
       style: TextStyle(
         fontSize: ResponsiveSize.fontL,
         fontWeight: FontWeight.bold,
-        color: context.colors.textPrimary,
+        color: ref.colors.textPrimary,
       ),
     );
   }
@@ -410,23 +410,23 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
               Icon(
                 item['icon'] as IconData,
                 size: 16.w,
-                color: isSelected ? Colors.white : context.colors.primary,
+                color: isSelected ? Colors.white : ref.colors.primary,
               ),
               SizedBox(width: 4.w),
               Text(item['label'] as String),
             ],
           ),
           selected: isSelected,
-          selectedColor: context.colors.primary,
-          backgroundColor: context.colors.cardBackground,
+          selectedColor: ref.colors.primary,
+          backgroundColor: ref.colors.cardBackground,
           labelStyle: TextStyle(
-            color: isSelected ? Colors.white : context.colors.textPrimary,
+            color: isSelected ? Colors.white : ref.colors.textPrimary,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
             side: BorderSide(
-              color: isSelected ? context.colors.primary : context.colors.border,
+              color: isSelected ? ref.colors.primary : ref.colors.border,
             ),
           ),
           onSelected: (selected) {
@@ -450,7 +450,7 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
     TextInputType keyboardType = TextInputType.text,
     int maxLines = 1,
   }) {
-    final colors = context.colors;
+    final colors = ref.colors;
     return TextFormField(
       controller: controller,
       validator: validator,
@@ -492,7 +492,7 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
   Widget _buildBottomActions() {
     final formState = ref.watch(addressFormProvider);
     final isLoading = formState.isLoading;
-    final colors = context.colors;
+    final colors = ref.colors;
 
     return Container(
       padding: EdgeInsets.all(ResponsiveSize.m),
@@ -567,7 +567,7 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
 
   Widget _buildGetLocationButton() {
     final locationState = ref.watch(currentLocationProvider);
-    final colors = context.colors;
+    final colors = ref.colors;
 
     return Container(
       decoration: BoxDecoration(

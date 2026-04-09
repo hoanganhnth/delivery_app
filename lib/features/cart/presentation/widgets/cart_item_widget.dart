@@ -35,7 +35,7 @@ class CartItemWidget extends ConsumerWidget {
                   child: Container(
                     width: 80.w,
                     height: 80.w,
-                    color: context.colors.surface,
+                    color: ref.colors.surface,
                     child: cartItem.imageUrl != null
                         ? Image.network(
                             cartItem.imageUrl!,
@@ -44,14 +44,14 @@ class CartItemWidget extends ConsumerWidget {
                               return Icon(
                                 Icons.restaurant,
                                 size: 40,
-                                color: context.colors.textSecondary,
+                                color: ref.colors.textSecondary,
                               );
                             },
                           )
                         : Icon(
                             Icons.restaurant,
                             size: 40,
-                            color: context.colors.textSecondary,
+                            color: ref.colors.textSecondary,
                           ),
                   ),
                 ),
@@ -66,7 +66,7 @@ class CartItemWidget extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
-                          color: context.colors.textPrimary,
+                          color: ref.colors.textPrimary,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -77,7 +77,7 @@ class CartItemWidget extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w700,
-                          color: context.colors.primary,
+                          color: ref.colors.primary,
                         ),
                       ),
                       SizedBox(height: 8.w),
@@ -85,7 +85,7 @@ class CartItemWidget extends ConsumerWidget {
                         'Total: \$${(cartItem.price * cartItem.quantity).toStringAsFixed(2)}',
                         style: TextStyle(
                           fontSize: 14.sp,
-                          color: context.colors.textSecondary,
+                          color: ref.colors.textSecondary,
                         ),
                       ),
                     ],
@@ -104,14 +104,14 @@ class CartItemWidget extends ConsumerWidget {
                     child: Container(
                       padding: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
-                        color: context.colors.surface,
+                        color: ref.colors.surface,
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         'Note: ${cartItem.notes}',
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: context.colors.textSecondary,
+                          color: ref.colors.textSecondary,
                           fontStyle: FontStyle.italic,
                         ),
                       ),
@@ -125,7 +125,7 @@ class CartItemWidget extends ConsumerWidget {
                 // Quantity Controls
                 Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: context.colors.outline),
+                    border: Border.all(color: ref.colors.outline),
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: Row(
@@ -151,8 +151,8 @@ class CartItemWidget extends ConsumerWidget {
                             cartItem.quantity > 1 ? Icons.remove : Icons.delete_outline,
                             size: 20,
                             color: cartItem.quantity > 1 
-                                ? context.colors.textPrimary 
-                                : context.colors.error,
+                                ? ref.colors.textPrimary 
+                                : ref.colors.error,
                           ),
                         ),
                       ),
@@ -165,7 +165,7 @@ class CartItemWidget extends ConsumerWidget {
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
-                            color: context.colors.textPrimary,
+                            color: ref.colors.textPrimary,
                           ),
                         ),
                       ),
@@ -183,7 +183,7 @@ class CartItemWidget extends ConsumerWidget {
                           child: Icon(
                             Icons.add,
                             size: 20,
-                            color: context.colors.primary,
+                            color: ref.colors.primary,
                           ),
                         ),
                       ),

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../domain/entities/cart_entity.dart';
 
 /// Widget hiển thị thông tin nhà hàng trong checkout
-class RestaurantInfoCard extends StatelessWidget {
+class RestaurantInfoCard extends ConsumerWidget {
   final CartEntity cart;
 
   const RestaurantInfoCard({
@@ -13,7 +14,7 @@ class RestaurantInfoCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -25,12 +26,12 @@ class RestaurantInfoCard extends StatelessWidget {
               width: 50.w,
               height: 50.w,
               decoration: BoxDecoration(
-                color: context.colors.primary.withValues(alpha: 0.1),
+                color: ref.colors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 Icons.restaurant,
-                color: context.colors.primary,
+                color: ref.colors.primary,
                 size: 24,
               ),
             ),
@@ -44,7 +45,7 @@ class RestaurantInfoCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
-                      color: context.colors.textPrimary,
+                      color: ref.colors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 4.w),
@@ -52,7 +53,7 @@ class RestaurantInfoCard extends StatelessWidget {
                     '${cart.items.length} món • ${cart.totalItems} sản phẩm',
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: context.colors.textSecondary,
+                      color: ref.colors.textSecondary,
                     ),
                   ),
                 ],

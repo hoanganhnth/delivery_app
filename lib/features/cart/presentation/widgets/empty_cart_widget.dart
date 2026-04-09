@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../../generated/l10n.dart';
 
 /// Widget displayed when cart is empty
-class EmptyCartWidget extends StatelessWidget {
+class EmptyCartWidget extends ConsumerWidget {
   const EmptyCartWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Center(
       child: Padding(
         padding: EdgeInsets.all(32.w),
@@ -18,7 +19,7 @@ class EmptyCartWidget extends StatelessWidget {
             Icon(
               Icons.shopping_cart_outlined,
               size: 120,
-              color: context.colors.textDisabled,
+              color: ref.colors.textDisabled,
             ),
             SizedBox(height: 24.w),
             Text(
@@ -26,7 +27,7 @@ class EmptyCartWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24.sp,
                 fontWeight: FontWeight.w600,
-                color: context.colors.textPrimary,
+                color: ref.colors.textPrimary,
               ),
             ),
             SizedBox(height: 12.w),
@@ -34,7 +35,7 @@ class EmptyCartWidget extends StatelessWidget {
               S.of(context).addSomeDeliciousItems,
               style: TextStyle(
                 fontSize: 16.sp,
-                color: context.colors.textSecondary,
+                color: ref.colors.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),

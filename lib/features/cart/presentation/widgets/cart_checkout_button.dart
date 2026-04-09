@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Floating checkout button for cart screen
-class CartCheckoutButton extends StatelessWidget {
+class CartCheckoutButton extends ConsumerWidget {
   final double totalAmount;
   final VoidCallback onPressed;  
   const CartCheckoutButton({
@@ -13,12 +14,12 @@ class CartCheckoutButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: context.colors.primary.withValues(alpha: 0.3),
+            color: ref.colors.primary.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -27,7 +28,7 @@ class CartCheckoutButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: context.colors.primary,
+          backgroundColor: ref.colors.primary,
           foregroundColor: Colors.white,
           padding: EdgeInsets.symmetric(vertical: 18.w),
           shape: RoundedRectangleBorder(

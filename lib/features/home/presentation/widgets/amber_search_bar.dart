@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Amber Hearth style search bar
@@ -10,7 +11,7 @@ import 'package:delivery_app/core/theme/theme_extensions.dart';
 /// - Inner "Find" button with primary color
 /// - Focus ring: primary/50 opacity
 /// - Search icon prefix
-class AmberSearchBar extends StatefulWidget {
+class AmberSearchBar extends ConsumerStatefulWidget {
   /// Placeholder text
   final String placeholder;
   
@@ -40,10 +41,10 @@ class AmberSearchBar extends StatefulWidget {
   });
 
   @override
-  State<AmberSearchBar> createState() => _AmberSearchBarState();
+  ConsumerState<AmberSearchBar> createState() => _AmberSearchBarState();
 }
 
-class _AmberSearchBarState extends State<AmberSearchBar> {
+class _AmberSearchBarState extends ConsumerState<AmberSearchBar> {
   late TextEditingController _controller;
   final FocusNode _focusNode = FocusNode();
   bool _isFocused = false;
@@ -89,7 +90,7 @@ class _AmberSearchBarState extends State<AmberSearchBar> {
         ],
         border: _isFocused
             ? Border.all(
-                color: context.colors.primary.withValues(alpha: 0.5),
+                color: ref.colors.primary.withValues(alpha: 0.5),
                 width: 2,
               )
             : null,
@@ -101,7 +102,7 @@ class _AmberSearchBarState extends State<AmberSearchBar> {
             padding: EdgeInsets.only(left: 16),
             child: Icon(
               Icons.search,
-              color: context.colors.primary,
+              color: ref.colors.primary,
               size: 24,
             ),
           ),
@@ -125,7 +126,7 @@ class _AmberSearchBarState extends State<AmberSearchBar> {
                   fontFamily: 'Plus Jakarta Sans',
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
-                  color: context.colors.secondary.withValues(alpha: 0.5),
+                  color: ref.colors.secondary.withValues(alpha: 0.5),
                 ),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(
@@ -146,11 +147,11 @@ class _AmberSearchBarState extends State<AmberSearchBar> {
                   height: 40,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
-                    color: context.colors.primary,
+                    color: ref.colors.primary,
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: context.colors.primary.withValues(alpha: 0.3),
+                        color: ref.colors.primary.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),

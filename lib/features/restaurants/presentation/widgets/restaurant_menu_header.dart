@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Restaurant menu header with filter button
-class RestaurantMenuHeader extends StatelessWidget {  
+class RestaurantMenuHeader extends ConsumerWidget {  
   const RestaurantMenuHeader({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SliverToBoxAdapter(
       child: Container(
         padding: EdgeInsets.fromLTRB(16.w, 8.w, 16.w, 16.w),
-        color: context.colors.surface,
+        color: ref.colors.surface,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -20,7 +21,7 @@ class RestaurantMenuHeader extends StatelessWidget {
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w800,
-                color: context.colors.textPrimary,
+                color: ref.colors.textPrimary,
                 letterSpacing: -0.5,
               ),
             ),
@@ -30,7 +31,7 @@ class RestaurantMenuHeader extends StatelessWidget {
                 vertical: 6.w,
               ),
               decoration: BoxDecoration(
-                color: context.colors.background,
+                color: ref.colors.background,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
@@ -39,7 +40,7 @@ class RestaurantMenuHeader extends StatelessWidget {
                   Icon(
                     Icons.filter_list,
                     size: 16.w,
-                    color: context.colors.primary,
+                    color: ref.colors.primary,
                   ),
                   SizedBox(width: 4.w),
                   Text(
@@ -47,7 +48,7 @@ class RestaurantMenuHeader extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
-                      color: context.colors.primary,
+                      color: ref.colors.primary,
                     ),
                   ),
                 ],

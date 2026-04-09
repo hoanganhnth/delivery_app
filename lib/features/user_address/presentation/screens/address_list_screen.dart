@@ -53,7 +53,7 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
   @override
   Widget build(BuildContext context) {
     final addressState = ref.watch(userAddressListProvider);
-    final colors = context.colors;
+    final colors = ref.colors;
 
     // Listen for error messages to show toast
     ref.listen<UserAddressListState>(userAddressListProvider, (previous, next) {
@@ -189,7 +189,7 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
   }
 
   Widget _buildEmptyState() {
-    final colors = context.colors;
+    final colors = ref.colors;
     return Center(
       child: Padding(
         padding: EdgeInsets.all(ResponsiveSize.l),
@@ -275,7 +275,7 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
 
   void _showDeleteConfirmation(
       BuildContext context, UserAddressEntity address) {
-    final colors = context.colors;
+    final colors = ref.colors;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

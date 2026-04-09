@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/app_colors.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
@@ -6,7 +7,7 @@ import 'package:delivery_app/core/utils/screen_util_extensions.dart';
 import '../../domain/entities/order_entity.dart';
 
 /// Order Card - Editorial style với image, status badge, và hover effects
-class OrderCard extends StatefulWidget {
+class OrderCard extends ConsumerStatefulWidget {
   final OrderEntity order;
   final VoidCallback? onTap;
   final VoidCallback? onCancel;
@@ -19,15 +20,15 @@ class OrderCard extends StatefulWidget {
   });
 
   @override
-  State<OrderCard> createState() => _OrderCardState();
+  ConsumerState<OrderCard> createState() => _OrderCardState();
 }
 
-class _OrderCardState extends State<OrderCard> {
+class _OrderCardState extends ConsumerState<OrderCard> {
   bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
+    final colors = ref.colors;
     final isActive = widget.order.status == OrderStatus.pending ||
         widget.order.status == OrderStatus.delivering;
     final isCompleted = widget.order.status == OrderStatus.delivered;
@@ -248,14 +249,14 @@ class _OrderCardState extends State<OrderCard> {
 }
 
 /// Status Badge - Uppercase với tracking widest
-class _OrderStatusBadge extends StatelessWidget {
+class _OrderStatusBadge extends ConsumerWidget {
   final OrderStatus status;
 
   const _OrderStatusBadge({required this.status});
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     Color bgColor;
     Color textColor;
     String text;

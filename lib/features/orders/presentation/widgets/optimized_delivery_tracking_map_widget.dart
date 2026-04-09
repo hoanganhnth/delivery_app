@@ -436,7 +436,7 @@ class _OptimizedDeliveryTrackingMapWidgetState
                         Text(
                           '${widget.shipper!.vehicleType.toUpperCase()} • ${widget.shipper!.vehicleNumber}',
                           style: TextStyle(
-                            color: context.colors.textSecondary,
+                            color: ref.colors.textSecondary,
                             fontSize: 12.sp,
                           ),
                         ),
@@ -531,7 +531,7 @@ class _OptimizedDeliveryTrackingMapWidgetState
                 ),
                 Text(
                   '${widget.shipper!.vehicleType.toUpperCase()} • ${widget.shipper!.vehicleNumber}',
-                  style: TextStyle(color: context.colors.textSecondary, fontSize: 12.sp),
+                  style: TextStyle(color: ref.colors.textSecondary, fontSize: 12.sp),
                 ),
               ],
             ),

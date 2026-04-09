@@ -16,8 +16,8 @@ class ConsumableScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Credits & Vouchers'),
-        backgroundColor: context.colors.primary,
-        foregroundColor: context.colors.onPrimary,
+        backgroundColor: ref.colors.primary,
+        foregroundColor: ref.colors.onPrimary,
       ),
       body: stateAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -77,7 +77,7 @@ class ConsumableScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         children: [
           // Credits Balance Card
-          _buildCreditsBalanceCard(context, state),
+          _buildCreditsBalanceCard(context, ref, state),
           const SizedBox(height: 24),
 
           // Credits Products Section
@@ -131,7 +131,7 @@ class ConsumableScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildCreditsBalanceCard(BuildContext context, ConsumableState state) {
+  Widget _buildCreditsBalanceCard(BuildContext context, WidgetRef ref, ConsumableState state) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -141,8 +141,8 @@ class ConsumableScreen extends ConsumerWidget {
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
             colors: [
-              context.colors.primary,
-              context.colors.primary.withValues(alpha: 0.8),
+              ref.colors.primary,
+              ref.colors.primary.withValues(alpha: 0.8),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -212,7 +212,7 @@ class ConsumableScreen extends ConsumerWidget {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: context.colors.primary.withValues(alpha: 0.1),
+                color: ref.colors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
@@ -239,14 +239,14 @@ class ConsumableScreen extends ConsumerWidget {
                   Text(
                     product.product.description,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: context.colors.textSecondary,
+                      color: ref.colors.textSecondary,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     '+${product.value.toInt()} ${product.type.displayName}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: context.colors.primary,
+                      color: ref.colors.primary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -262,7 +262,7 @@ class ConsumableScreen extends ConsumerWidget {
                   product.product.price,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: context.colors.primary,
+                    color: ref.colors.primary,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -273,8 +273,8 @@ class ConsumableScreen extends ConsumerWidget {
                           .read(consumableProvider.notifier)
                           .purchaseConsumable(product),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: context.colors.primary,
-                    foregroundColor: context.colors.onPrimary,
+                    backgroundColor: ref.colors.primary,
+                    foregroundColor: ref.colors.onPrimary,
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     shape: RoundedRectangleBorder(
@@ -323,7 +323,7 @@ class ConsumableScreen extends ConsumerWidget {
               decoration: BoxDecoration(
                 color: isExpired
                     ? Colors.grey[400]
-                    : context.colors.primary.withValues(alpha: 0.1),
+                    : ref.colors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Center(
@@ -351,7 +351,7 @@ class ConsumableScreen extends ConsumerWidget {
                     Text(
                       'Code: ${voucher.code}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: context.colors.textSecondary,
+                        color: ref.colors.textSecondary,
                       ),
                     ),
                   if (voucher.expiryDate != null)
@@ -360,7 +360,7 @@ class ConsumableScreen extends ConsumerWidget {
                           ? 'Expired'
                           : 'Expires: ${_formatDate(voucher.expiryDate!)}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: isExpired ? Colors.red : context.colors.textSecondary,
+                        color: isExpired ? Colors.red : ref.colors.textSecondary,
                       ),
                     ),
                 ],
@@ -374,7 +374,7 @@ class ConsumableScreen extends ConsumerWidget {
                   : '-\$${voucher.value.toStringAsFixed(2)}',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: isExpired ? Colors.grey : context.colors.primary,
+                color: isExpired ? Colors.grey : ref.colors.primary,
               ),
             ),
           ],

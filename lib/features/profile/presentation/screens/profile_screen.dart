@@ -15,7 +15,7 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileState = ref.watch(profileProvider);
-    final colors = context.colors;
+    final colors = ref.colors;
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -116,29 +116,32 @@ class ProfileScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Quick Actions
-                  _buildSectionTitle(context, 'Tài khoản'),
+                  _buildSectionTitle(context, ref, 'Tài khoản'),
                   SizedBox(height: ResponsiveSize.s),
                   _buildSettingsCard(
-                    context,
+                    context, ref,
                     children: [
                       _buildSettingsTile(
                         context,
+                        ref,
                         icon: Icons.person_outline,
                         title: 'Chỉnh sửa hồ sơ',
                         subtitle: 'Cập nhật thông tin cá nhân',
                         onTap: () {},
                       ),
-                      _buildDivider(context),
+                      _buildDivider(context, ref),
                       _buildSettingsTile(
                         context,
+                        ref,
                         icon: Icons.location_on_outlined,
                         title: 'Địa chỉ của tôi',
                         subtitle: 'Quản lý địa chỉ giao hàng',
                         onTap: () => context.push('/address-list'),
                       ),
-                      _buildDivider(context),
+                      _buildDivider(context, ref),
                       _buildSettingsTile(
                         context,
+                        ref,
                         icon: Icons.payment_outlined,
                         title: 'Phương thức thanh toán',
                         subtitle: 'Thêm hoặc xóa thẻ',
@@ -150,19 +153,20 @@ class ProfileScreen extends ConsumerWidget {
                   SizedBox(height: ResponsiveSize.l),
 
                   // Security Section
-                  _buildSectionTitle(context, 'Bảo mật'),
+                  _buildSectionTitle(context, ref, 'Bảo mật'),
                   SizedBox(height: ResponsiveSize.s),
                   _buildSettingsCard(
-                    context,
+                    context, ref,
                     children: [
                       _buildSettingsTile(
                         context,
+                        ref,
                         icon: Icons.lock_outline,
                         title: 'Đổi mật khẩu',
                         subtitle: 'Cập nhật mật khẩu định kỳ',
                         onTap: () {},
                       ),
-                      _buildDivider(context),
+                      _buildDivider(context, ref),
                       // Biometric settings
                       const BiometricSettingsWidget(),
                     ],
@@ -171,29 +175,32 @@ class ProfileScreen extends ConsumerWidget {
                   SizedBox(height: ResponsiveSize.l),
 
                   // Support Section
-                  _buildSectionTitle(context, 'Hỗ trợ'),
+                  _buildSectionTitle(context, ref, 'Hỗ trợ'),
                   SizedBox(height: ResponsiveSize.s),
                   _buildSettingsCard(
-                    context,
+                    context, ref,
                     children: [
                       _buildSettingsTile(
                         context,
+                        ref,
                         icon: Icons.support_agent_outlined,
                         title: 'Hỗ trợ khách hàng',
                         subtitle: 'Chat với CSKH 24/7',
                         onTap: () => context.go('/support-chat'),
                       ),
-                      _buildDivider(context),
+                      _buildDivider(context, ref),
                       _buildSettingsTile(
                         context,
+                        ref,
                         icon: Icons.help_outline,
                         title: 'Trợ giúp & FAQ',
                         subtitle: 'Câu hỏi thường gặp',
                         onTap: () {},
                       ),
-                      _buildDivider(context),
+                      _buildDivider(context, ref),
                       _buildSettingsTile(
                         context,
+                        ref,
                         icon: Icons.policy_outlined,
                         title: 'Điều khoản & Chính sách',
                         subtitle: 'Quy định sử dụng',
@@ -243,26 +250,26 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSectionTitle(BuildContext context, String title) {
+  Widget _buildSectionTitle(BuildContext context, WidgetRef ref, String title) {
     return Text(
       title,
       style: TextStyle(
         fontSize: ResponsiveSize.fontL,
         fontWeight: FontWeight.bold,
-        color: context.colors.textPrimary,
+        color: ref.colors.textPrimary,
       ),
     );
   }
 
-  Widget _buildSettingsCard(BuildContext context,
+  Widget _buildSettingsCard(BuildContext context, WidgetRef ref,
       {required List<Widget> children}) {
     return Container(
       decoration: BoxDecoration(
-        color: context.colors.cardBackground,
+        color: ref.colors.cardBackground,
         borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
         boxShadow: [
           BoxShadow(
-            color: context.colors.shadow,
+            color: ref.colors.shadow,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -275,14 +282,15 @@ class ProfileScreen extends ConsumerWidget {
   }
 
   Widget _buildSettingsTile(
-    BuildContext context, {
+    BuildContext context,
+    WidgetRef ref, {
     required IconData icon,
     required String title,
     required String subtitle,
     required VoidCallback onTap,
     Widget? trailing,
   }) {
-    final colors = context.colors;
+    final colors = ref.colors;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
@@ -342,12 +350,12 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDivider(BuildContext context) {
+  Widget _buildDivider(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ResponsiveSize.m),
       child: Divider(
         height: 1,
-        color: context.colors.divider,
+        color: ref.colors.divider,
       ),
     );
   }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
 
 /// Quick Label ChoiceChips - Nhà riêng, Công ty, Trường học, Khác
-class QuickLabelChips extends StatelessWidget {
+class QuickLabelChips extends ConsumerWidget {
   final String selectedLabel;
   final ValueChanged<String> onSelected;
 
@@ -14,8 +15,8 @@ class QuickLabelChips extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
     final labels = ['Nhà riêng', 'Công ty', 'Trường học', 'Khác'];
 
     return Wrap(

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/theme_extensions.dart';
 
 /// Widget form địa chỉ giao hàng trong checkout
-class DeliveryAddressCard extends StatelessWidget {
+class DeliveryAddressCard extends ConsumerWidget {
   final TextEditingController addressController;
 
   const DeliveryAddressCard({
@@ -12,7 +13,7 @@ class DeliveryAddressCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -57,18 +58,18 @@ class DeliveryAddressCard extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
-                  border: Border.all(color: context.colors.primary),
+                  border: Border.all(color: ref.colors.primary),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.map, color: context.colors.primary),
+                    Icon(Icons.map, color: ref.colors.primary),
                     SizedBox(width: 8.w),
                     Text(
                       'Chọn vị trí trên bản đồ',
                       style: TextStyle(
-                        color: context.colors.primary,
+                        color: ref.colors.primary,
                         fontWeight: FontWeight.w500,
                       ),
                     ),

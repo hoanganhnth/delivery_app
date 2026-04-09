@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Card wrapper for checkout sections
-class CheckoutSectionCard extends StatelessWidget {
+class CheckoutSectionCard extends ConsumerWidget {
   final Widget child;  
   const CheckoutSectionCard({
     super.key,
@@ -10,10 +11,10 @@ class CheckoutSectionCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
-        color: context.colors.surface,
+        color: ref.colors.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(

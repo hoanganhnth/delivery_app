@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../domain/entities/user_address_entity.dart';
 
-class AddressItemWidget extends StatelessWidget {
+class AddressItemWidget extends ConsumerWidget {
   final UserAddressEntity address;
   final bool isSelected;
   final VoidCallback? onTap;
@@ -22,7 +23,7 @@ class AddressItemWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -52,7 +53,7 @@ class AddressItemWidget extends StatelessWidget {
                       Icons.location_on,
                       color: address.isDefault
                           ? Colors.orange
-                          : context.colors.textSecondary,
+                          : ref.colors.textSecondary,
                       size: 20.sp,
                     ),
                     SizedBox(width: 8.w),
@@ -108,7 +109,7 @@ class AddressItemWidget extends StatelessWidget {
                       icon: Icon(
                         Icons.more_vert,
                         size: 20.sp,
-                        color: context.colors.textSecondary,
+                        color: ref.colors.textSecondary,
                       ),
                       onSelected: (value) {
                         switch (value) {
@@ -164,7 +165,7 @@ class AddressItemWidget extends StatelessWidget {
                   _getFullAddress(),
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: context.colors.textSecondary,
+                    color: ref.colors.textSecondary,
                     height: 1.4,
                   ),
                   maxLines: 2,

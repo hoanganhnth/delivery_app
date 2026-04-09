@@ -112,7 +112,7 @@ class MenuItemCard extends ConsumerWidget {
                       SizedBox(height: 4.w),
                       Text(
                         menuItem.description,
-                        style: TextStyle(color: context.colors.textSecondary, fontSize: 14.sp),
+                        style: TextStyle(color: ref.colors.textSecondary, fontSize: 14.sp),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),

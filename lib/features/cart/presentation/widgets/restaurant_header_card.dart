@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Restaurant header card for cart screen
@@ -10,7 +11,7 @@ import 'package:delivery_app/core/theme/theme_extensions.dart';
 /// - "Đang đặt tại" uppercase badge
 /// - Rating and distance info
 /// - Large verified icon watermark (primary/5)
-class RestaurantHeaderCard extends StatelessWidget {
+class RestaurantHeaderCard extends ConsumerWidget {
   /// Restaurant name
   final String name;
   
@@ -36,7 +37,7 @@ class RestaurantHeaderCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -61,7 +62,7 @@ class RestaurantHeaderCard extends StatelessWidget {
               child: Icon(
                 Icons.verified,
                 size: 144,
-                color: context.colors.primary.withValues(alpha: 0.05),
+                color: ref.colors.primary.withValues(alpha: 0.05),
               ),
             ),
             
@@ -76,7 +77,7 @@ class RestaurantHeaderCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: context.colors.primary.withValues(alpha: 0.2),
+                        color: ref.colors.primary.withValues(alpha: 0.2),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -92,7 +93,7 @@ class RestaurantHeaderCard extends StatelessWidget {
                               color: const Color(0xFFF4EEE7),
                               child: Center(
                                 child: CircularProgressIndicator(
-                                  color: context.colors.primary,
+                                  color: ref.colors.primary,
                                 ),
                               ),
                             ),
@@ -101,7 +102,7 @@ class RestaurantHeaderCard extends StatelessWidget {
                               child: Icon(
                                 Icons.restaurant,
                                 size: 32,
-                                color: context.colors.secondary,
+                                color: ref.colors.secondary,
                               ),
                             ),
                           )
@@ -110,7 +111,7 @@ class RestaurantHeaderCard extends StatelessWidget {
                             child: Icon(
                               Icons.restaurant,
                               size: 32,
-                              color: context.colors.secondary,
+                              color: ref.colors.secondary,
                             ),
                           ),
                   ),
@@ -130,7 +131,7 @@ class RestaurantHeaderCard extends StatelessWidget {
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 1.5,
-                          color: context.colors.secondary,
+                          color: ref.colors.secondary,
                         ),
                       ),
                       SizedBox(height: 4),
@@ -152,7 +153,7 @@ class RestaurantHeaderCard extends StatelessWidget {
                           Icon(
                             Icons.star,
                             size: 14,
-                            color: context.colors.primary,
+                            color: ref.colors.primary,
                           ),
                           SizedBox(width: 4),
                           Text(
@@ -171,7 +172,7 @@ class RestaurantHeaderCard extends StatelessWidget {
                               fontFamily: 'Plus Jakarta Sans',
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: context.colors.secondary,
+                              color: ref.colors.secondary,
                             ),
                           ),
                         ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Category pill widget following Amber Hearth design
@@ -9,7 +10,7 @@ import 'package:delivery_app/core/theme/theme_extensions.dart';
 /// - Hover effect: -translate-y-1
 /// - Active: Primary background with shadow-lg
 /// - Inactive: White with border
-class CategoryPill extends StatefulWidget {
+class CategoryPill extends ConsumerStatefulWidget {
   /// Category icon
   final IconData icon;
   
@@ -31,10 +32,10 @@ class CategoryPill extends StatefulWidget {
   });
 
   @override
-  State<CategoryPill> createState() => _CategoryPillState();
+  ConsumerState<CategoryPill> createState() => _CategoryPillState();
 }
 
-class _CategoryPillState extends State<CategoryPill> {
+class _CategoryPillState extends ConsumerState<CategoryPill> {
   bool _isHovered = false;
 
   @override
@@ -60,7 +61,7 @@ class _CategoryPillState extends State<CategoryPill> {
                 height: 64,
                 decoration: BoxDecoration(
                   color: widget.isActive
-                      ? context.colors.primary // primary
+                      ? ref.colors.primary // primary
                       : Colors.white,
                   borderRadius: BorderRadius.circular(16), // rounded-2xl
                   border: widget.isActive
@@ -72,7 +73,7 @@ class _CategoryPillState extends State<CategoryPill> {
                   boxShadow: widget.isActive
                       ? [
                           BoxShadow(
-                            color: context.colors.primary.withValues(alpha: 0.2),
+                            color: ref.colors.primary.withValues(alpha: 0.2),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),
@@ -90,7 +91,7 @@ class _CategoryPillState extends State<CategoryPill> {
                   size: 30,
                   color: widget.isActive
                       ? Colors.white
-                      : context.colors.primary, // primary
+                      : ref.colors.primary, // primary
                 ),
               ),
               SizedBox(height: 8),
@@ -104,8 +105,8 @@ class _CategoryPillState extends State<CategoryPill> {
                   fontWeight: FontWeight.w700,
                   letterSpacing: 1.5,
                   color: widget.isActive
-                      ? context.colors.primary // primary
-                      : context.colors.secondary, // secondary
+                      ? ref.colors.primary // primary
+                      : ref.colors.secondary, // secondary
                 ),
               ),
             ],

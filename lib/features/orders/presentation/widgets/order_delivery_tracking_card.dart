@@ -91,7 +91,7 @@ class _OrderDeliveryTrackingCardState
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
-                        color: context.colors.textPrimary,
+                        color: ref.colors.textPrimary,
                       ),
                     ),
                     const Spacer(),
@@ -239,7 +239,7 @@ class _OrderDeliveryTrackingCardState
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
-                  color: context.colors.textSecondary,
+                  color: ref.colors.textSecondary,
                 ),
               ),
               SizedBox(height: 8.w),

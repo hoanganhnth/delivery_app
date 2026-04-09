@@ -52,7 +52,7 @@ class BiometricSettingsWidget extends ConsumerWidget {
                         _getBiometricDescription(availableBiometrics),
                         style: TextStyle(
                           fontSize: 14.sp,
-                          color: context.colors.textSecondary,
+                          color: ref.colors.textSecondary,
                         ),
                       ),
                     ],

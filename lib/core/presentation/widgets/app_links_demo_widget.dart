@@ -76,7 +76,7 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
             Text(
               'Using app_links package for deep linking',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: context.colors.textSecondary,
+                color: ref.colors.textSecondary,
               ),
             ),
             SizedBox(height: 16.w),

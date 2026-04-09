@@ -5,27 +5,6 @@ import 'app_text_styles.dart';
 import 'app_dimensions.dart';
 import 'theme_provider.dart';
 
-/// Extension on BuildContext to easily access theme colors
-extension ThemeExtension on BuildContext {
-  /// Get current app colors
-  AppColors get colors {
-    return ProviderScope.containerOf(this)
-        .read(themeColorsProvider);
-  }
-
-  /// Get current theme type
-  bool get isDarkTheme {
-    return ProviderScope.containerOf(this)
-        .read(isDarkThemeProvider);
-  }
-
-  /// Get current theme type
-  bool get isLightTheme {
-    return ProviderScope.containerOf(this)
-        .read(isLightThemeProvider);
-  }
-}
-
 /// Extension on WidgetRef to easily access theme data
 extension ThemeRefExtension on WidgetRef {
   /// Get current app colors

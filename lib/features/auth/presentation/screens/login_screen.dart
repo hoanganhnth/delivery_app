@@ -61,7 +61,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     return Scaffold(
-      backgroundColor: context.colors.background,
+      backgroundColor: ref.colors.background,
       body: Stack(
         children: [
           // Ambient blur effects
@@ -72,7 +72,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               width: 192,
               height: 192,
               decoration: BoxDecoration(
-                color: context.colors.primary.withValues(alpha: 0.05),
+                color: ref.colors.primary.withValues(alpha: 0.05),
                 shape: BoxShape.circle,
               ),
             ),
@@ -96,7 +96,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               width: double.infinity,
               constraints: const BoxConstraints(maxWidth: 448),
               decoration: BoxDecoration(
-                color: context.colors.background,
+                color: ref.colors.background,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.1),
@@ -118,14 +118,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           begin: Alignment.bottomLeft,
                           end: Alignment.topRight,
                           colors: [
-                            context.colors.primary,
-                            context.colors.primary.withValues(alpha: 0.9),
+                            ref.colors.primary,
+                            ref.colors.primary.withValues(alpha: 0.9),
                             const Color(0xFFFF9800),
                           ],
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: context.colors.primary.withValues(alpha: 0.3),
+                            color: ref.colors.primary.withValues(alpha: 0.3),
                             blurRadius: 16,
                             offset: const Offset(0, 4),
                           ),
@@ -215,7 +215,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
-                                color: context.colors.secondary,
+                                color: ref.colors.secondary,
                               ),
                             ),
                             const SizedBox(height: 40),
@@ -256,7 +256,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   _obscurePassword
                                       ? Icons.visibility_outlined
                                       : Icons.visibility_off_outlined,
-                                  color: context.colors.secondary,
+                                  color: ref.colors.secondary,
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -293,7 +293,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w700,
-                                    color: context.colors.primary,
+                                    color: ref.colors.primary,
                                   ),
                                 ),
                               ),
@@ -312,10 +312,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           ? null
                                           : _handleLogin,
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: context.colors.primary,
+                                        backgroundColor: ref.colors.primary,
                                         foregroundColor: Colors.white,
                                         elevation: 8,
-                                        shadowColor: context.colors.primary
+                                        shadowColor: ref.colors.primary
                                             .withValues(alpha: 0.3),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(28),
@@ -355,7 +355,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
-                                      color: context.colors.secondary,
+                                      color: ref.colors.secondary,
                                     ),
                                   ),
                                   TextButton(
@@ -375,7 +375,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w900,
-                                        color: context.colors.primary,
+                                        color: ref.colors.primary,
                                         decoration: TextDecoration.underline,
                                         decorationThickness: 2,
                                       ),

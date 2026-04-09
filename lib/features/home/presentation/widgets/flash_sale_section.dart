@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Flash Sale Section following Amber Hearth design
@@ -10,7 +11,7 @@ import 'package:delivery_app/core/theme/theme_extensions.dart';
 /// - Horizontal scroll sale items
 /// - Discount badges (error color)
 /// - Animated bolt icon
-class FlashSaleSection extends StatelessWidget {
+class FlashSaleSection extends ConsumerWidget {
   /// Sale items to display
   final List<FlashSaleItem> items;
   
@@ -36,11 +37,11 @@ class FlashSaleSection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: context.colors.primary.withValues(alpha: 0.05),
+        color: ref.colors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(24),
       ),
       child: Stack(
@@ -52,7 +53,7 @@ class FlashSaleSection extends StatelessWidget {
             child: Icon(
               Icons.verified,
               size: 200,
-              color: context.colors.primary.withValues(alpha: 0.1),
+              color: ref.colors.primary.withValues(alpha: 0.1),
             ),
           ),
           
@@ -91,7 +92,7 @@ class FlashSaleSection extends StatelessWidget {
                                   scale: value,
                                   child: Icon(
                                     Icons.bolt,
-                                    color: context.colors.primary,
+                                    color: ref.colors.primary,
                                     size: 24,
                                   ),
                                 );
@@ -112,7 +113,7 @@ class FlashSaleSection extends StatelessWidget {
                                 fontSize: 11,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 1.5,
-                                color: context.colors.secondary,
+                                color: ref.colors.secondary,
                               ),
                             ),
                             SizedBox(width: 8),
@@ -153,7 +154,7 @@ class FlashSaleSection extends StatelessWidget {
                           fontSize: 11,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 1.5,
-                          color: context.colors.primary,
+                          color: ref.colors.primary,
                         ),
                       ),
                     ),
@@ -184,13 +185,13 @@ class FlashSaleSection extends StatelessWidget {
 }
 
 /// Countdown chip widget
-class _CountdownChip extends StatelessWidget {
+class _CountdownChip extends ConsumerWidget {
   final String value;
 
   const _CountdownChip({required this.value});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
@@ -211,11 +212,11 @@ class _CountdownChip extends StatelessWidget {
 }
 
 /// Countdown separator ":"
-class _CountdownSeparator extends StatelessWidget {
+class _CountdownSeparator extends ConsumerWidget {
   const _CountdownSeparator();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 2),
       child: Text(
@@ -232,13 +233,13 @@ class _CountdownSeparator extends StatelessWidget {
 }
 
 /// Sale item card widget
-class _SaleItemCard extends StatelessWidget {
+class _SaleItemCard extends ConsumerWidget {
   final FlashSaleItem item;
 
   const _SaleItemCard({required this.item});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: item.onTap,
       child: Container(
@@ -274,7 +275,7 @@ class _SaleItemCard extends StatelessWidget {
                               color: const Color(0xFFF4EEE7),
                               child: Center(
                                 child: CircularProgressIndicator(
-                                  color: context.colors.primary,
+                                  color: ref.colors.primary,
                                 ),
                               ),
                             ),
@@ -283,7 +284,7 @@ class _SaleItemCard extends StatelessWidget {
                               child: Icon(
                                 Icons.fastfood,
                                 size: 48,
-                                color: context.colors.secondary,
+                                color: ref.colors.secondary,
                               ),
                             ),
                           )
@@ -292,7 +293,7 @@ class _SaleItemCard extends StatelessWidget {
                             child: Icon(
                               Icons.fastfood,
                               size: 48,
-                              color: context.colors.secondary,
+                              color: ref.colors.secondary,
                             ),
                           ),
                   ),
@@ -351,7 +352,7 @@ class _SaleItemCard extends StatelessWidget {
                     fontFamily: 'Plus Jakarta Sans',
                     fontSize: 14,
                     fontWeight: FontWeight.w900,
-                    color: context.colors.primary,
+                    color: ref.colors.primary,
                   ),
                 ),
                 SizedBox(width: 8),
@@ -361,7 +362,7 @@ class _SaleItemCard extends StatelessWidget {
                     fontFamily: 'Plus Jakarta Sans',
                     fontSize: 10,
                     decoration: TextDecoration.lineThrough,
-                    color: context.colors.secondary.withValues(alpha: 0.5),
+                    color: ref.colors.secondary.withValues(alpha: 0.5),
                   ),
                 ),
               ],
