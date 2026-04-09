@@ -39,8 +39,9 @@ extension UserDtoX on UserDto {
 ## Pattern: Entity (Domain Layer)
 
 ```dart
+// BẮT BUỘC: Sử dụng `sealed class` cho Entity và State
 @freezed
-abstract class UserEntity with _$UserEntity {
+sealed class UserEntity with _$UserEntity {
   const factory UserEntity({
     required String id,
     required String name,
@@ -53,8 +54,9 @@ abstract class UserEntity with _$UserEntity {
 ## Pattern: State Class
 
 ```dart
+// BẮT BUỘC: Sử dụng `sealed class` để khai báo State
 @freezed
-class AuthState with _$AuthState {
+sealed class AuthState with _$AuthState {
   const factory AuthState({
     @Default(false) bool isLoading,
     @Default(false) bool isAuthenticated,

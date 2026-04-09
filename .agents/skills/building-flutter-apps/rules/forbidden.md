@@ -46,6 +46,41 @@ ref.listen(provider, (prev, next) {
 });
 ```
 
+### initState & ref.read
+```dart
+// ❌ DO NOT use ref.read directly in initState
+@override
+void initState() {
+  super.initState();
+  ref.read(provider.notifier).load(); // WRONG!
+}
+
+// ✅ Use addPostFrameCallback
+@override
+void initState() {
+  super.initState();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    ref.read(provider.notifier).load();
+  });
+}
+```
+
+### shrinkWrap in Lists
+```dart
+// ❌ shrinkWrap: true (Defeats lazy loading, reduces performance)
+ListView.builder(
+  shrinkWrap: true, // WRONG!
+  itemBuilder: (context, index) => Text('Item'),
+)
+
+// ✅ Build properly with constraints or slivers
+Expanded(
+  child: ListView.builder(
+    itemBuilder: (context, index) => Text('Item'),
+  ),
+)
+```
+
 ### Either in DataSource
 ```dart
 // ❌ Either in datasource

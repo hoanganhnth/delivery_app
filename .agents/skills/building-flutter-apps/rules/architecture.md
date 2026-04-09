@@ -33,8 +33,8 @@ Presentation → Domain ← Data
 
 ### Domain Layer
 - Pure Dart classes (no Flutter imports)
-- Business entities
-- Repository interfaces (abstract classes)
+- Business entities (sealed classes)
+- Repository interfaces (`abstract interface class` of Dart 3)
 - Use cases (single responsibility)
 
 ### Data Layer

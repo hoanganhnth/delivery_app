@@ -43,6 +43,8 @@ Future<void> loadItems() async {
   
   final result = await _useCase(params);
   
+  if (!ref.mounted) return; // LUÔN LUÔN check mounted sau await
+  
   state = result.fold(
     (failure) => state.copyWith(isLoading: false, failure: failure),
     (items) => state.copyWith(isLoading: false, items: items),

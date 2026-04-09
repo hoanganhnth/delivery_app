@@ -5,33 +5,30 @@
 ## Access Colors
 
 ```dart
-// In Widget (BuildContext)
-Container(
-  color: context.colors.primary,
-  child: Text(
-    'Hello',
-    style: TextStyle(color: context.colors.textPrimary),
-  ),
-)
-
-// In ConsumerWidget (WidgetRef)
-Consumer(builder: (context, ref, child) {
-  return Container(color: ref.colors.surface);
-})
+// In ConsumerWidget / ConsumerStatefulWidget
+Widget build(BuildContext context, WidgetRef ref) {
+  return Container(
+    color: ref.colors.primary,
+    child: Text(
+      'Hello',
+      style: TextStyle(color: ref.colors.textPrimary),
+    ),
+  );
+}
 ```
 
 ## Available Colors
 
 ```dart
-context.colors.primary        // Primary amber (#F49D25)
-context.colors.secondary      // Secondary umber
-context.colors.background     // Background color
-context.colors.surface        // Surface/card color
-context.colors.textPrimary    // Primary text
-context.colors.textSecondary  // Secondary text
-context.colors.error          // Error red
-context.colors.success        // Success green
-context.colors.warning        // Warning orange
+ref.colors.primary        // Primary amber (#F49D25)
+ref.colors.secondary      // Secondary umber
+ref.colors.background     // Background color
+ref.colors.surface        // Surface/card color
+ref.colors.textPrimary    // Primary text
+ref.colors.textSecondary  // Secondary text
+ref.colors.error          // Error red
+ref.colors.success        // Success green
+ref.colors.warning        // Warning orange
 ```
 
 ## Typography
@@ -57,11 +54,11 @@ borderRadius: BorderRadius.circular(AppDimensions.radiusLarge)   // 16
 ## Theme Detection
 
 ```dart
-if (context.isDarkTheme) {
+if (ref.isDarkTheme) {
   // Dark mode specific
 }
 
-if (context.isLightTheme) {
+if (ref.isLightTheme) {
   // Light mode specific
 }
 ```

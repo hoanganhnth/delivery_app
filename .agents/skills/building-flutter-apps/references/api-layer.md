@@ -4,7 +4,11 @@
 
 ## Pattern: Remote DataSource (throws Exception)
 
-```dart
+// Định nghĩa bắt buộc: Xài `abstract interface class` của Dart 3
+abstract interface class FeatureRemoteDataSource {
+  Future<BaseResponseDto<FeatureDto>> getItems();
+}
+
 class FeatureRemoteDataSourceImpl implements FeatureRemoteDataSource {
   final FeatureApiService _apiService;
 
@@ -30,7 +34,11 @@ class FeatureRemoteDataSourceImpl implements FeatureRemoteDataSource {
 
 ## Pattern: Repository (returns Either)
 
-```dart
+// Định nghĩa bắt buộc: Xài `abstract interface class` của Dart 3
+abstract interface class FeatureRepository {
+  Future<Either<Failure, List<FeatureEntity>>> getItems();
+}
+
 class FeatureRepositoryImpl implements FeatureRepository {
   final FeatureRemoteDataSource _remoteDataSource;
 

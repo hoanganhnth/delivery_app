@@ -71,6 +71,9 @@ class FeatureNotifier extends _$FeatureNotifier {
     
     final result = await _useCase(NoParams());
     
+    // BẮT BUỘC: Check mounted sau khi await
+    if (!ref.mounted) return;
+    
     state = result.fold(
       (failure) => state.copyWith(isLoading: false, failure: failure),
       (items) => state.copyWith(isLoading: false, items: items),
@@ -226,6 +229,8 @@ class _FeatureScreenState extends ConsumerState<FeatureScreen> {
   @override
   void initState() {
     super.initState();
+    // LUÔN LUÔN dùng addPostFrameCallback khi muốn đọc provider ở initState
+    // KHÔNG BAO GIỜ được gọi ref.read() trực tiếp trong initState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(featureNotifierProvider.notifier).loadItems();
     });
@@ -233,16 +238,18 @@ class _FeatureScreenState extends ConsumerState<FeatureScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(featureNotifierProvider);
+    // KHUYẾN NGHỊ: Dùng .select() để chỉ rebuild khi state cụ thể thay đổi
+    final items = ref.watch(featureNotifierProvider.select((state) => state.items));
+    final isLoading = ref.watch(featureNotifierProvider.select((state) => state.isLoading));
 
     // Side effects
     ref.listen(featureNotifierProvider, (prev, next) {
-      if (next.failure != null) {
+      if (next.failure != null && (prev == null || prev.failure != next.failure)) {
         context.showErrorToast(next.failure!.message);
       }
     });
 
-    return Scaffold(body: _buildBody(state));
+    return Scaffold(body: _buildBody(items, isLoading));
   }
 }
 ```
