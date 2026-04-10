@@ -1,4 +1,5 @@
 import 'package:delivery_app/core/data/dtos/base_response_dto.dart';
+import 'package:delivery_app/features/livestream/data/dtos/join_livestream_dto.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/error_mapper.dart';
 import '../../../../core/error/failures.dart';
@@ -168,6 +169,23 @@ class LivestreamRepositoryImpl implements LivestreamRepository {
       }
       
       return left(const CacheFailure('Livestream not found in cache'));
+    } catch (e) {
+      return left(const ServerFailure('Unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, JoinLivestreamDto>> joinLivestream(num id) async {
+    try {
+      final response = await remoteDataSource.joinLivestream(id);
+
+      if (response.isSuccess && response.data != null) {
+        return right(response.data!);
+      } else {
+        return left(ServerFailure(response.message));
+      }
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
     } catch (e) {
       return left(const ServerFailure('Unexpected error occurred'));
     }

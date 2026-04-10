@@ -105,7 +105,7 @@ class _LivestreamApiService implements LivestreamApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/livestreams/featured',
+            '/livestreams/active',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -123,6 +123,36 @@ class _LivestreamApiService implements LivestreamApiService {
                   )
                   .toList()
             : List.empty(),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<BaseResponseDto<JoinLivestreamDto>> joinLivestream(num id) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<BaseResponseDto<JoinLivestreamDto>>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/livestreams/${id}/join',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late BaseResponseDto<JoinLivestreamDto> _value;
+    try {
+      _value = BaseResponseDto<JoinLivestreamDto>.fromJson(
+        _result.data!,
+        (json) => JoinLivestreamDto.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);

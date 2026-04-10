@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import '../../../../core/data/dtos/base_response_dto.dart';
+import '../dtos/join_livestream_dto.dart';
 import '../dtos/livestream_dto.dart';
 
 part 'livestream_remote_datasource_impl.g.dart';
@@ -22,10 +23,15 @@ abstract class LivestreamApiService {
     @Path('id') num id,
   );
 
-  @GET('/livestreams/featured')
+  @GET('/livestreams/active')
   Future<BaseResponseDto<List<LivestreamDto>>> getFeaturedLivestreams({
     @Query('limit') int? limit,
   });
+
+  @POST('/livestreams/{id}/join')
+  Future<BaseResponseDto<JoinLivestreamDto>> joinLivestream(
+    @Path('id') num id,
+  );
 }
 
 /// Remote datasource interface
@@ -41,6 +47,8 @@ abstract class LivestreamRemoteDataSource {
   Future<BaseResponseDto<List<LivestreamDto>>> getFeaturedLivestreams({
     int limit = 5,
   });
+
+  Future<BaseResponseDto<JoinLivestreamDto>> joinLivestream(num id);
 }
 
 /// Remote datasource implementation
@@ -103,6 +111,18 @@ class LivestreamRemoteDataSourceImpl implements LivestreamRemoteDataSource {
       rethrow;
     } catch (e) {
       // AppLogger.e('Unexpected error getting featured livestreams', e);
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<BaseResponseDto<JoinLivestreamDto>> joinLivestream(num id) async {
+    try {
+      final response = await _apiService.joinLivestream(id);
+      return response;
+    } on DioException catch (_) {
+      rethrow;
+    } catch (e) {
       throw Exception('Unexpected error: ${e.toString()}');
     }
   }

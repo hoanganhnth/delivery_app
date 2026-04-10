@@ -1,5 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
+import '../../data/dtos/join_livestream_dto.dart';
 import '../entities/livestream_entity.dart';
 
 /// Repository interface for livestream operations
@@ -30,4 +31,7 @@ abstract class LivestreamRepository {
     num livestreamId,
     int likeCount,
   );
+
+  /// Join livestream - get Agora token
+  Future<Either<Failure, JoinLivestreamDto>> joinLivestream(num id);
 }

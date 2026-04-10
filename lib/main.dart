@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:delivery_app/core/app_setup.dart';
-import 'package:delivery_app/core/network/dio/network_providers.dart';
 import 'package:delivery_app/core/routing/app_router.dart';
 import 'package:delivery_app/core/theme/theme.dart';
 import 'package:delivery_app/core/adapter/hive_registry.dart';
@@ -17,10 +16,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'features/auth/presentation/providers/token_storage_providers.dart';
-import 'features/auth/presentation/providers/auth_notifier.dart';
 import 'features/auth/presentation/providers/auth_network_providers.dart' as auth_net;
 import 'core/network/dio/authenticated_network_providers.dart' as core_net;
-import 'core/network/dio/dio_client.dart';
 
 Future<void> main() async {
   runZonedGuarded<Future<void>>(
