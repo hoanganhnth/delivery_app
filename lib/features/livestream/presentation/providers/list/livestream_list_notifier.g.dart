@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'livestream_notifier.dart';
+part of 'livestream_list_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -10,56 +10,55 @@ part of 'livestream_notifier.dart';
 // ignore_for_file: type=lint, type=warning
 /// Livestream list notifier
 
-@ProviderFor(LivestreamNotifier)
-final livestreamProvider = LivestreamNotifierProvider._();
+@ProviderFor(LivestreamList)
+final livestreamListProvider = LivestreamListProvider._();
 
 /// Livestream list notifier
-final class LivestreamNotifierProvider
-    extends $NotifierProvider<LivestreamNotifier, LivestreamState> {
+final class LivestreamListProvider
+    extends $NotifierProvider<LivestreamList, LivestreamListState> {
   /// Livestream list notifier
-  LivestreamNotifierProvider._()
+  LivestreamListProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'livestreamProvider',
+        name: r'livestreamListProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$livestreamNotifierHash();
+  String debugGetCreateSourceHash() => _$livestreamListHash();
 
   @$internal
   @override
-  LivestreamNotifier create() => LivestreamNotifier();
+  LivestreamList create() => LivestreamList();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(LivestreamState value) {
+  Override overrideWithValue(LivestreamListState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<LivestreamState>(value),
+      providerOverride: $SyncValueProvider<LivestreamListState>(value),
     );
   }
 }
 
-String _$livestreamNotifierHash() =>
-    r'e3c4780f4b90eec62ad8a10a7a687ba183bae5a4';
+String _$livestreamListHash() => r'7c2d66774a3a034e7531e422ee830b01b02c2434';
 
 /// Livestream list notifier
 
-abstract class _$LivestreamNotifier extends $Notifier<LivestreamState> {
-  LivestreamState build();
+abstract class _$LivestreamList extends $Notifier<LivestreamListState> {
+  LivestreamListState build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<LivestreamState, LivestreamState>;
+    final ref = this.ref as $Ref<LivestreamListState, LivestreamListState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<LivestreamState, LivestreamState>,
-              LivestreamState,
+              AnyNotifier<LivestreamListState, LivestreamListState>,
+              LivestreamListState,
               Object?,
               Object?
             >;

@@ -35,7 +35,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(livestreamProvider.notifier).loadLivestreams(refresh: true);
+      ref.read(livestreamListProvider.notifier).loadLivestreams(refresh: true);
     });
     _scrollController.addListener(_onScroll);
   }
@@ -43,9 +43,9 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent * 0.8) {
-      final state = ref.read(livestreamProvider);
+      final state = ref.read(livestreamListProvider);
       if (!state.isLoading && state.hasMore) {
-        ref.read(livestreamProvider.notifier).loadLivestreams();
+        ref.read(livestreamListProvider.notifier).loadLivestreams();
       }
     }
   }
@@ -59,7 +59,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final livestreamState = ref.watch(livestreamProvider);
+    final livestreamState = ref.watch(livestreamListProvider);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -311,7 +311,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
             FilledButton.icon(
               onPressed: () {
                 ref
-                    .read(livestreamProvider.notifier)
+                    .read(livestreamListProvider.notifier)
                     .loadLivestreams(refresh: true);
               },
               icon: const Icon(Icons.refresh_rounded),

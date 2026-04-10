@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../providers/livestream_detail_notifier.dart';
+import '../providers/interaction/livestream_interaction_state.dart';
 import 'livestream_comment_item.dart';
 
 class LivestreamCommentsList extends StatelessWidget {

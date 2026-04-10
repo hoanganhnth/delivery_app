@@ -1,91 +1,88 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/network/dio/authenticated_network_providers.dart';
-import '../../data/datasources/livestream_firebase_datasource_impl.dart';
-import '../../data/datasources/livestream_remote_datasource_impl.dart';
-import '../../data/repositories_impl/livestream_interaction_repository_impl.dart';
-import '../../data/repositories_impl/livestream_repository_impl.dart';
-import '../../domain/usecases/get_livestreams_usecase.dart';
-import '../../domain/usecases/livestream_interaction_usecases.dart';
+import '../../../../../core/network/dio/authenticated_network_providers.dart';
+import '../../../data/datasources/livestream_firebase_datasource_impl.dart';
+import '../../../data/datasources/livestream_remote_datasource_impl.dart';
+import '../../../data/repositories_impl/livestream_interaction_repository_impl.dart';
+import '../../../data/repositories_impl/livestream_repository_impl.dart';
+import '../../../domain/usecases/get_livestreams_usecase.dart';
+import '../../../domain/usecases/livestream_interaction_usecases.dart';
 
 // ================================
-// DATA LAYER PROVIDERS
+// DATA LAYER DI
+// Legacy Provider is fine for DI factories (no mutable state)
 // ================================
 
-/// API Service provider
+/// API Service
 final livestreamApiServiceProvider = Provider<LivestreamApiService>((ref) {
   final dio = ref.watch(authenticatedDioProvider);
   return LivestreamApiService(dio);
 });
 
-/// Remote datasource provider
-final livestreamRemoteDataSourceProvider = Provider<LivestreamRemoteDataSource>((ref) {
+/// Remote datasource
+final livestreamRemoteDataSourceProvider =
+    Provider<LivestreamRemoteDataSource>((ref) {
   final apiService = ref.watch(livestreamApiServiceProvider);
   return LivestreamRemoteDataSourceImpl(apiService);
 });
 
-/// Firebase datasource provider
-final livestreamFirebaseDataSourceProvider = Provider<LivestreamFirebaseDataSource>((ref) {
+/// Firebase datasource
+final livestreamFirebaseDataSourceProvider =
+    Provider<LivestreamFirebaseDataSource>((ref) {
   return LivestreamFirebaseDataSourceImpl(FirebaseFirestore.instance);
 });
 
-/// Repository provider
-final livestreamRepositoryProvider = Provider<LivestreamRepositoryImpl>((ref) {
+/// Repository
+final livestreamRepositoryProvider =
+    Provider<LivestreamRepositoryImpl>((ref) {
   final remoteDataSource = ref.watch(livestreamRemoteDataSourceProvider);
   return LivestreamRepositoryImpl(remoteDataSource);
 });
 
-/// Interaction repository provider
-final livestreamInteractionRepositoryProvider = Provider<LivestreamInteractionRepositoryImpl>((ref) {
+/// Interaction repository
+final livestreamInteractionRepositoryProvider =
+    Provider<LivestreamInteractionRepositoryImpl>((ref) {
   final firebaseDataSource = ref.watch(livestreamFirebaseDataSourceProvider);
   return LivestreamInteractionRepositoryImpl(firebaseDataSource);
 });
 
 // ================================
-// USE CASE PROVIDERS
+// USE CASE DI
 // ================================
 
-/// Get livestreams use case
 final getLivestreamsUseCaseProvider = Provider<GetLivestreamsUseCase>((ref) {
   final repository = ref.watch(livestreamRepositoryProvider);
   return GetLivestreamsUseCase(repository);
 });
 
-/// Get livestream by ID use case
-final getLivestreamByIdUseCaseProvider = Provider<GetLivestreamByIdUseCase>((ref) {
+final getLivestreamByIdUseCaseProvider =
+    Provider<GetLivestreamByIdUseCase>((ref) {
   final repository = ref.watch(livestreamRepositoryProvider);
   return GetLivestreamByIdUseCase(repository);
 });
 
-/// Get featured livestreams use case
-final getFeaturedLivestreamsUseCaseProvider = Provider<GetFeaturedLivestreamsUseCase>((ref) {
+final getFeaturedLivestreamsUseCaseProvider =
+    Provider<GetFeaturedLivestreamsUseCase>((ref) {
   final repository = ref.watch(livestreamRepositoryProvider);
   return GetFeaturedLivestreamsUseCase(repository);
 });
 
-/// Send comment use case
 final sendCommentUseCaseProvider = Provider<SendCommentUseCase>((ref) {
   final repository = ref.watch(livestreamInteractionRepositoryProvider);
   return SendCommentUseCase(repository);
 });
 
-/// Stream comments use case
 final streamCommentsUseCaseProvider = Provider<StreamCommentsUseCase>((ref) {
   final repository = ref.watch(livestreamInteractionRepositoryProvider);
   return StreamCommentsUseCase(repository);
 });
 
-/// Send like use case
 final sendLikeUseCaseProvider = Provider<SendLikeUseCase>((ref) {
   final repository = ref.watch(livestreamInteractionRepositoryProvider);
   return SendLikeUseCase(repository);
 });
 
-/// Stream likes use case
 final streamLikesUseCaseProvider = Provider<StreamLikesUseCase>((ref) {
   final repository = ref.watch(livestreamInteractionRepositoryProvider);
   return StreamLikesUseCase(repository);
 });
-
-// Since LivestreamNotifier, LivestreamDetailNotifier, and LivestreamInteractionNotifier
-// are/will be generated by Riverpod Generator, we should not keep standard StateNotifierProvider here

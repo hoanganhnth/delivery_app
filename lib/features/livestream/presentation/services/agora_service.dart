@@ -3,8 +3,30 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import '../../../../core/config/agora_config.dart';
 import '../../../../core/logger/app_logger.dart';
 
+/// Interface contract for Agora RTC Engine management
+abstract interface class IAgoraService {
+  bool get isJoined;
+  bool get isInitialized;
+  RtcEngine? get engine;
+  int? get remoteUid;
+  String? get channelName;
+
+  Stream<bool> get onJoinChannel;
+  Stream<AgoraError> get onError;
+  Stream<int?> get onRemoteUserChanged;
+
+  Future<bool> initialize();
+  Future<bool> joinChannel({
+    required String token,
+    required String channelName,
+    required int uid,
+  });
+  Future<void> leaveChannel();
+  Future<void> dispose();
+}
+
 /// Service quản lý Agora RTC Engine cho Viewer (audience)
-class AgoraService {
+class AgoraService implements IAgoraService {
   RtcEngine? _engine;
   bool _isInitialized = false;
   bool _isJoined = false;
@@ -17,17 +39,26 @@ class AgoraService {
   final StreamController<AgoraError> _errorController = StreamController.broadcast();
   final StreamController<int?> _remoteUidController = StreamController.broadcast();
 
+  @override
   Stream<bool> get onJoinChannel => _joinController.stream;
+  @override
   Stream<AgoraError> get onError => _errorController.stream;
+  @override
   Stream<int?> get onRemoteUserChanged => _remoteUidController.stream;
 
+  @override
   bool get isJoined => _isJoined;
+  @override
   bool get isInitialized => _isInitialized;
+  @override
   RtcEngine? get engine => _engine;
+  @override
   int? get remoteUid => _remoteUid;
+  @override
   String? get channelName => _channelName;
 
   /// Initialize Agora RTC Engine
+  @override
   Future<bool> initialize() async {
     if (_isInitialized) {
       AppLogger.w('Agora already initialized');
@@ -126,6 +157,7 @@ class AgoraService {
   }
 
   /// Join Agora channel với token, channelName, uid từ backend
+  @override
   Future<bool> joinChannel({
     required String token,
     required String channelName,
@@ -168,6 +200,7 @@ class AgoraService {
   }
 
   /// Leave channel
+  @override
   Future<void> leaveChannel() async {
     if (!_isJoined) {
       AppLogger.w('Not joined any channel');
@@ -186,6 +219,7 @@ class AgoraService {
   }
 
   /// Dispose service and release resources
+  @override
   Future<void> dispose() async {
     AppLogger.d('Disposing Agora service');
     

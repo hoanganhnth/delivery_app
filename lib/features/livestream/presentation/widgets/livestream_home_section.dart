@@ -18,13 +18,13 @@ class _LivestreamHomeSectionState extends ConsumerState<LivestreamHomeSection> {
     super.initState();
     // Load featured livestreams when widget initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(livestreamProvider.notifier).loadFeaturedLivestreams();
+      ref.read(livestreamListProvider.notifier).loadFeaturedLivestreams();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final livestreamState = ref.watch(livestreamProvider);
+    final livestreamState = ref.watch(livestreamListProvider);
 
     // Don't show section if no livestreams
     if (livestreamState.livestreams.isEmpty && !livestreamState.isLoading) {

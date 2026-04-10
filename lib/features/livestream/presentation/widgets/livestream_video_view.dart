@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../services/agora_service.dart';
 
 class LivestreamVideoView extends StatelessWidget {
-  final AgoraService agoraService;
+  final IAgoraService agoraService;
   final int? remoteUid;
 
   const LivestreamVideoView({

@@ -1,242 +1,205 @@
 import 'dart:async';
-import 'package:delivery_app/features/livestream/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/logger/app_logger.dart';
 import '../../domain/entities/livestream_comment_entity.dart';
-import '../services/agora_service.dart';
-import '../widgets/livestream_like_animation.dart';
-import '../widgets/livestream_product_sheet.dart';
-import '../widgets/livestream_video_view.dart';
-import '../widgets/livestream_top_bar.dart';
+import '../providers/providers.dart';
 import '../widgets/livestream_bottom_controls.dart';
 import '../widgets/livestream_comments_list.dart';
+import '../widgets/livestream_like_animation.dart';
+import '../widgets/livestream_product_sheet.dart';
+import '../widgets/livestream_top_bar.dart';
+import '../widgets/livestream_video_view.dart';
 
-/// Màn hình chi tiết livestream với Agora RTC
-class LivestreamDetailScreen extends ConsumerStatefulWidget {
+/// Màn hình chi tiết livestream — UI thuần, logic do Riverpod quản lý
+class LivestreamDetailScreen extends ConsumerWidget {
   final num livestreamId;
 
   const LivestreamDetailScreen({super.key, required this.livestreamId});
 
   @override
-  ConsumerState<LivestreamDetailScreen> createState() =>
-      _LivestreamDetailScreenState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewerState = ref.watch(livestreamViewerProvider(livestreamId));
+
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: switch (viewerState) {
+        LivestreamViewerIdle() || LivestreamViewerConnecting() =>
+          const Center(child: CircularProgressIndicator(color: Colors.white)),
+        LivestreamViewerError(:final message) => _LivestreamErrorView(
+            message: message,
+            onRetry: () => ref
+                .read(livestreamViewerProvider(livestreamId).notifier)
+                .joinLivestream(),
+            onBack: () => Navigator.pop(context),
+          ),
+        LivestreamViewerWatching(:final channelName, :final remoteUid) =>
+          _LivestreamWatchingView(
+            livestreamId: livestreamId,
+            channelName: channelName,
+            remoteUid: remoteUid,
+          ),
+        LivestreamViewerDisconnected() => _LivestreamErrorView(
+            message: 'Livestream đã kết thúc',
+            onRetry: null,
+            onBack: () => Navigator.pop(context),
+          ),
+      },
+    );
+  }
 }
 
-class _LivestreamDetailScreenState
-    extends ConsumerState<LivestreamDetailScreen> {
-  // Agora service
-  late final AgoraService _agoraService;
-  
-  // Controllers
+/// Error / Disconnected view
+class _LivestreamErrorView extends StatelessWidget {
+  final String message;
+  final VoidCallback? onRetry;
+  final VoidCallback onBack;
+
+  const _LivestreamErrorView({
+    required this.message,
+    this.onRetry,
+    required this.onBack,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.all(16.w),
+              child: IconButton(
+                onPressed: onBack,
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+              ),
+            ),
+          ),
+          const Spacer(),
+          Icon(Icons.error_outline, color: Colors.red, size: 48.sp),
+          SizedBox(height: 16.h),
+          Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 16.sp),
+            textAlign: TextAlign.center,
+          ),
+          if (onRetry != null) ...[
+            SizedBox(height: 16.h),
+            ElevatedButton(
+              onPressed: onRetry,
+              child: const Text('Thử lại'),
+            ),
+          ],
+          const Spacer(),
+        ],
+      ),
+    );
+  }
+}
+
+/// Watching view — contains ephemeral UI state (controllers, like animations)
+/// This is StatefulWidget because TextEditingController & ScrollController
+/// are ephemeral local state (SKILL anti-pattern rule #129)
+class _LivestreamWatchingView extends ConsumerStatefulWidget {
+  final num livestreamId;
+  final String channelName;
+  final int? remoteUid;
+
+  const _LivestreamWatchingView({
+    required this.livestreamId,
+    required this.channelName,
+    this.remoteUid,
+  });
+
+  @override
+  ConsumerState<_LivestreamWatchingView> createState() =>
+      _LivestreamWatchingViewState();
+}
+
+class _LivestreamWatchingViewState
+    extends ConsumerState<_LivestreamWatchingView> {
   final TextEditingController _commentController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
-  // Like animation pool (giới hạn 5 animation cùng lúc)
+  // Like animation pool — ephemeral local UI state
   final List<int> _likeAnimations = [];
   static const int _maxLikeAnimations = 5;
-  
-  // Debounce timer cho comment
   Timer? _commentDebounce;
 
-  // Remote user UID (streamer) cho video rendering
-  int? _remoteUid;
-  
-  // Subscriptions
-  StreamSubscription? _joinSubscription;
-  StreamSubscription? _errorSubscription;
-  StreamSubscription? _remoteUidSubscription;
-
   @override
-  void initState() {
-    super.initState();
-    _agoraService = AgoraService();
-    _initAgora();
-    
-    // Auto scroll listener
-    _scrollController.addListener(_onScroll);
+  void dispose() {
+    _commentDebounce?.cancel();
+    _commentController.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
-  void _onScroll() {
-    // Có thể thêm logic lazy load comments cũ hơn
-  }
-
-  /// Initialize Agora RTC Engine
-  Future<void> _initAgora() async {
-    try {
-      AppLogger.d('Initializing Agora service for livestream ${widget.livestreamId}');
-      
-      // Initialize Agora service
-      final initialized = await _agoraService.initialize();
-      if (!initialized) {
-        _showErrorSnackbar('Không thể khởi tạo video player');
-        return;
-      }
-
-      // Listen to join events
-      _joinSubscription = _agoraService.onJoinChannel.listen((joined) {
-        if (mounted) {
-          setState(() {});
-        }
-      });
-
-      // Listen to errors
-      _errorSubscription = _agoraService.onError.listen((error) {
-        if (mounted) {
-          _showErrorSnackbar(error.message);
-        }
-      });
-
-      // Listen to remote user (streamer) joined/left
-      _remoteUidSubscription = _agoraService.onRemoteUserChanged.listen((uid) {
-        if (mounted) {
-          setState(() {
-            _remoteUid = uid;
-          });
-        }
-      });
-
-      // Load livestream detail and join channel
-      await _loadLivestreamAndJoin();
-    } catch (e) {
-      AppLogger.e('Failed to initialize Agora', e);
-      _showErrorSnackbar('Lỗi khởi tạo livestream');
-    }
-  }
-
-  /// Load livestream detail and join Agora channel via backend API
-  Future<void> _loadLivestreamAndJoin() async {
-    // 1. Load livestream detail first
-    final detailState = ref.read(
-      livestreamDetailProvider(widget.livestreamId),
-    );
-    
-    if (detailState.livestream == null) {
-      await ref.read(
-        livestreamDetailProvider(widget.livestreamId).notifier,
-      ).loadLivestreamDetail(widget.livestreamId);
-      
-      await Future.delayed(const Duration(milliseconds: 100));
-    }
-
-    // 2. Call join API to get Agora token
-    final repository = ref.read(livestreamRepositoryProvider);
-    final joinResult = await repository.joinLivestream(widget.livestreamId);
-    
-    joinResult.fold(
-      (failure) {
-        _showErrorSnackbar('Không thể tham gia livestream: ${failure.message}');
-      },
-      (joinData) async {
-        // 3. Join Agora channel with token from backend
-        await _agoraService.joinChannel(
-          token: joinData.token,
-          channelName: joinData.channelName,
-          uid: joinData.uid,
-        );
-
-        // 4. Update viewer count if available
-        if (joinData.currentViewers != null) {
-          ref.read(
-            livestreamDetailProvider(widget.livestreamId).notifier,
-          ).updateViewerCount(joinData.currentViewers!);
-        }
-      },
-    );
-  }
-
-  /// Send comment with debounce (tránh spam)
-  Future<void> _sendComment() async {
+  void _sendComment() {
     final message = _commentController.text.trim();
     if (message.isEmpty) return;
 
-    // Cancel previous debounce
     _commentDebounce?.cancel();
-
-    // Debounce 300ms
     _commentDebounce = Timer(const Duration(milliseconds: 300), () async {
       _commentController.clear();
-      
-      // TODO: Get current user info from auth
+
+      // TODO: Get current user info from auth provider
       final comment = LivestreamCommentEntity(
         id: const Uuid().v4(),
         livestreamId: widget.livestreamId,
-        userId: 'user123', // Replace with actual user ID
-        userName: 'User Name', // Replace with actual user name
+        userId: 'user123',
+        userName: 'User Name',
         userAvatar: null,
         message: message,
         timestamp: DateTime.now(),
       );
 
       try {
-        final notifier = ref.read(
-          livestreamInteractionProvider(widget.livestreamId).notifier,
-        );
-        await notifier.sendComment(comment);
-
-        // Auto scroll to bottom
+        await ref
+            .read(
+                livestreamInteractionProvider(widget.livestreamId).notifier)
+            .sendComment(comment);
         _scrollToBottom();
       } catch (e) {
         AppLogger.e('Failed to send comment', e);
-        _showErrorSnackbar('Không thể gửi bình luận');
       }
     });
   }
 
-  /// Send like (optimized with pool limit)
-  Future<void> _sendLike() async {
-    // Trigger animation first (optimistic UI)
+  void _sendLike() {
     _triggerLikeAnimation();
-    
+
     final like = LivestreamLikeEntity(
       id: const Uuid().v4(),
       livestreamId: widget.livestreamId,
-      userId: 'user123', // Replace with actual user ID
+      userId: 'user123',
       userName: 'User Name',
       userAvatar: null,
       timestamp: DateTime.now(),
     );
 
-    try {
-      final notifier = ref.read(
-        livestreamInteractionProvider(widget.livestreamId).notifier,
-      );
-      await notifier.sendLike(like);
-    } catch (e) {
-      AppLogger.e('Failed to send like', e);
-      // Silent fail for like (không cần thông báo lỗi)
-    }
+    ref
+        .read(livestreamInteractionProvider(widget.livestreamId).notifier)
+        .sendLike(like);
   }
 
-  /// Trigger like animation with pool limit
   void _triggerLikeAnimation() {
-    // Giới hạn số animation đồng thời
-    if (_likeAnimations.length >= _maxLikeAnimations) {
-      return; // Skip nếu đã đủ animation
-    }
-    
-    final animId = DateTime.now().millisecondsSinceEpoch;
-    
-    setState(() {
-      _likeAnimations.add(animId);
-    });
+    if (_likeAnimations.length >= _maxLikeAnimations) return;
 
-    // Remove animation after 2 seconds
+    final animId = DateTime.now().millisecondsSinceEpoch;
+    setState(() => _likeAnimations.add(animId));
+
     Timer(const Duration(seconds: 2), () {
       if (mounted) {
-        setState(() {
-          _likeAnimations.remove(animId);
-        });
+        setState(() => _likeAnimations.remove(animId));
       }
     });
   }
 
   void _scrollToBottom() {
     if (!_scrollController.hasClients) return;
-    
-    // Smooth scroll to bottom
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
@@ -252,7 +215,7 @@ class _LivestreamDetailScreenState
     final detailState = ref.read(
       livestreamDetailProvider(widget.livestreamId),
     );
-    if (detailState.livestream?.products == null || 
+    if (detailState.livestream?.products == null ||
         detailState.livestream!.products!.isEmpty) {
       return;
     }
@@ -269,39 +232,6 @@ class _LivestreamDetailScreenState
     );
   }
 
-  void _showErrorSnackbar(String message) {
-    if (!mounted) return;
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        duration: const Duration(seconds: 3),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    AppLogger.d('Disposing LivestreamDetailScreen');
-    
-    // Cancel all timers and subscriptions
-    _commentDebounce?.cancel();
-    _joinSubscription?.cancel();
-    _errorSubscription?.cancel();
-    _remoteUidSubscription?.cancel();
-    
-    // Dispose controllers
-    _commentController.dispose();
-    _scrollController.dispose();
-    
-    // Dispose Agora service
-    _agoraService.dispose();
-    
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final detailState = ref.watch(
@@ -311,88 +241,68 @@ class _LivestreamDetailScreenState
       livestreamInteractionProvider(widget.livestreamId),
     );
 
-    if (detailState.isLoading) {
-      return Scaffold(
-        backgroundColor: Colors.black,
-        body: const Center(child: CircularProgressIndicator()),
+    // Get agora service from provider for video view
+    final agoraService =
+        ref.watch(agoraServiceForViewerProvider(widget.livestreamId));
+
+    final livestream = detailState.livestream;
+    if (livestream == null) {
+      return const Center(
+        child: CircularProgressIndicator(color: Colors.white),
       );
     }
 
-    if (detailState.hasError || !detailState.hasLivestream) {
-      return Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          leading: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
+    return Stack(
+      children: [
+        // Video player (Agora RTC)
+        LivestreamVideoView(
+          agoraService: agoraService,
+          remoteUid: widget.remoteUid,
+        ),
+
+        // Overlay UI
+        SafeArea(
+          child: Column(
+            children: [
+              // Top bar
+              LivestreamTopBar(
+                livestream: livestream,
+                viewerCount: detailState.currentViewerCount,
+                onBack: () => Navigator.pop(context),
+              ),
+
+              const Spacer(),
+
+              // Comments section
+              LivestreamCommentsList(
+                interactionState: interactionState,
+                scrollController: _scrollController,
+              ),
+
+              SizedBox(height: 16.w),
+
+              // Bottom controls
+              LivestreamBottomControls(
+                livestream: livestream,
+                likeCount: detailState.currentLikeCount,
+                commentController: _commentController,
+                onSendComment: _sendComment,
+                onSendLike: _sendLike,
+                onShowProducts: _showProductSheet,
+              ),
+            ],
           ),
         ),
-        body: Center(
-          child: Text(
-            'Không tìm thấy livestream',
-            style: TextStyle(color: Colors.white),
+
+        // Like animations — isolated with RepaintBoundary
+        RepaintBoundary(
+          child: Stack(
+            children: _likeAnimations
+                .map((id) => LivestreamLikeAnimation(key: ValueKey(id)))
+                .toList(),
           ),
         ),
-      );
-    }
-
-    final livestream = detailState.livestream!;
-
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          // Video player (Agora RTC)
-          LivestreamVideoView(
-            agoraService: _agoraService,
-            remoteUid: _remoteUid,
-          ),
-
-          // Overlay UI
-          SafeArea(
-            child: Column(
-              children: [
-                // Top bar
-                LivestreamTopBar(
-                  livestream: livestream,
-                  viewerCount: detailState.currentViewerCount,
-                  onBack: () => Navigator.pop(context),
-                ),
-
-                const Spacer(),
-
-                // Comments section
-                LivestreamCommentsList(
-                  interactionState: interactionState,
-                  scrollController: _scrollController,
-                ),
-
-                SizedBox(height: 16.w),
-
-                // Bottom controls
-                LivestreamBottomControls(
-                  livestream: livestream,
-                  likeCount: detailState.currentLikeCount,
-                  commentController: _commentController,
-                  onSendComment: _sendComment,
-                  onSendLike: _sendLike,
-                  onShowProducts: _showProductSheet,
-                ),
-              ],
-            ),
-          ),
-
-          // Like animations
-          ...(_likeAnimations.map(
-            (id) => LivestreamLikeAnimation(key: ValueKey(id)),
-          )),
-        ],
-      ),
+      ],
     );
   }
-
-  /// ---
-  /// Helpers extracted to widget files
-  /// ---
 }
