@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../domain/entities/biometric_entity.dart';
-import '../providers/biometric_notifier.dart';
+import '../providers/providers.dart';
 
 /// Widget for biometric login button
 /// 

@@ -1,4 +1,4 @@
-import 'package:delivery_app/features/auth/presentation/providers/auth_notifier.dart';
+import 'package:delivery_app/features/auth/presentation/providers/providers.dart';
 import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../logger/app_logger.dart';

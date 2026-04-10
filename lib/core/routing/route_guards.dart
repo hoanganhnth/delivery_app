@@ -2,7 +2,7 @@ import 'package:delivery_app/features/profile/presentation/providers/profile_not
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../features/auth/presentation/providers/auth_notifier.dart';
+import '../../features/auth/presentation/providers/providers.dart';
 import 'app_routes.dart';
 
 /// Base class for route guards

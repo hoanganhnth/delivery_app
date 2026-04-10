@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../domain/entities/biometric_entity.dart' as app;
-import '../providers/biometric_notifier.dart';
-import '../providers/auth_notifier.dart';
+import '../providers/providers.dart';
 
 class BiometricSettingsWidget extends ConsumerWidget {
   const BiometricSettingsWidget({super.key});

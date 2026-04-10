@@ -5,7 +5,7 @@ import 'package:delivery_app/features/cart/presentation/widgets/restaurant_heade
 import 'package:delivery_app/features/cart/presentation/widgets/cart_order_summary.dart';
 import 'package:delivery_app/features/cart/presentation/widgets/cart_checkout_button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:delivery_app/features/cart/presentation/providers/cart_notifier.dart';
+import 'package:delivery_app/features/cart/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';

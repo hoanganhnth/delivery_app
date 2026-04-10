@@ -1,6 +1,9 @@
 // Auth presentation providers barrel file
-export 'auth_state.dart';
-export 'auth_notifier.dart';
-export 'auth_network_providers.dart';
-export 'biometric_state.dart';
-export 'biometric_notifier.dart';
+export 'session/auth_state.dart';
+export 'session/auth_notifier.dart';
+export 'di/auth_network_providers.dart';
+export 'di/auth_di_providers.dart';
+export 'di/biometric_di_providers.dart';
+export 'di/storage_di_providers.dart';
+export 'biometric/biometric_state.dart';
+export 'biometric/biometric_notifier.dart';

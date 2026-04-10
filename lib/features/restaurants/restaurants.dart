@@ -7,11 +7,7 @@ export 'presentation/screens/restaurant_detail_screen.dart';
 export 'presentation/screens/menu_screen.dart';
 
 // Providers
-export 'presentation/providers/restaurant_providers.dart';
-export 'presentation/providers/restaurant_state.dart';
-export 'presentation/providers/restaurants_notifier.dart';
-export 'presentation/providers/restaurant_detail_notifier.dart';
-export 'presentation/providers/restaurant_network_providers.dart';
+export 'presentation/providers/providers.dart';
 
 // Domain exports
 export 'domain/entities/restaurant_entity.dart';

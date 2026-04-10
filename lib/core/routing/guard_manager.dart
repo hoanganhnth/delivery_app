@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:go_router/go_router.dart';
-import '../../features/auth/presentation/providers/auth_notifier.dart';
+import '../../features/auth/presentation/providers/providers.dart';
 import 'app_routes.dart';
 
 part 'guard_manager.g.dart';

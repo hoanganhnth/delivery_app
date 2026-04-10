@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/auth/presentation/screens/forgot_password_screen.dart';
-import '../../features/auth/presentation/providers/auth_notifier.dart';
+import '../../features/auth/presentation/providers/providers.dart';
 import '../../features/main/presentation/pages/main_screen.dart';
 import '../../features/profile/profile.dart';
 import '../../features/settings/settings.dart';

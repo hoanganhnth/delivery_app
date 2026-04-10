@@ -3,8 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../../generated/l10n.dart';
-import '../providers/cart_notifier.dart';
-import '../providers/cart_providers.dart';
+import '../providers/providers.dart';
 
 /// Widget displaying cart totals and checkout button
 class CartSummaryWidget extends ConsumerWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/auth_notifier.dart';
+import '../providers/providers.dart';
 
 /// Example widget showing how to use token storage
 class TokenStorageExample extends ConsumerWidget {

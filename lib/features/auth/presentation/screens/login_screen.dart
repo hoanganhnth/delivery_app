@@ -5,9 +5,7 @@ import 'package:delivery_app/features/profile/presentation/providers/profile_not
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
-import '../providers/auth_notifier.dart';
-import '../providers/auth_state.dart';
-import '../providers/biometric_notifier.dart';
+import '../providers/providers.dart';
 import '../widgets/asymmetric_clipper.dart';
 import '../widgets/biometric_login_button.dart';
 import '../widgets/stitch_text_field.dart';

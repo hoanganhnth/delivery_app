@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:go_router/go_router.dart';
-import '../../../features/auth/presentation/providers/auth_notifier.dart';
+import '../../../features/auth/presentation/providers/providers.dart';
 import '../../logger/app_logger.dart';
 import '../../routing/app_routes.dart';
 import '../../services/app_initializer_service.dart';

@@ -9,7 +9,7 @@ import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../../location/presentation/providers/location_providers.dart';
 import '../../domain/entities/user_address_entity.dart';
 import '../../data/dtos/user_address_request_dto.dart';
-import '../providers/user_address_notifiers.dart';
+import '../providers/providers.dart';
 
 class AddEditAddressScreen extends ConsumerStatefulWidget {
   final UserAddressEntity? address; // null for add, non-null for edit

@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../domain/entities/cart_item_entity.dart';
-import '../providers/cart_notifier.dart';
+import '../providers/providers.dart';
 
 /// Widget for displaying a single cart item
 class CartItemWidget extends ConsumerWidget {

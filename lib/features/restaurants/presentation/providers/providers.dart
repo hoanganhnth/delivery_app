@@ -1,6 +1,7 @@
 // Restaurants presentation providers barrel file
-export 'restaurant_state.dart';
-export 'restaurants_notifier.dart';
-export 'restaurant_detail_notifier.dart';
-export 'restaurant_providers.dart';
-export 'restaurant_network_providers.dart';
+export 'di/restaurant_di_providers.dart';
+export 'di/restaurant_network_providers.dart';
+export 'list/restaurants_state.dart';
+export 'list/restaurants_notifier.dart';
+export 'detail/restaurant_detail_state.dart';
+export 'detail/restaurant_detail_notifier.dart';

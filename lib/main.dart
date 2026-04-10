@@ -15,8 +15,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'features/auth/presentation/providers/token_storage_providers.dart';
-import 'features/auth/presentation/providers/auth_network_providers.dart' as auth_net;
+import 'features/auth/presentation/providers/di/storage_di_providers.dart';
+import 'features/auth/presentation/providers/di/auth_network_providers.dart' as auth_net;
 import 'core/network/dio/authenticated_network_providers.dart' as core_net;
 
 Future<void> main() async {

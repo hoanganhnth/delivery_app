@@ -7,8 +7,7 @@ import 'package:delivery_app/features/profile/presentation/providers/profile_not
 import 'package:delivery_app/core/presentation/widgets/toast/toast_utils.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../domain/entities/user_address_entity.dart';
-import '../providers/user_address_notifiers.dart';
-import '../providers/user_address_state.dart';
+import '../providers/providers.dart';
 import '../widgets/address_card.dart';
 
 class AddressListScreen extends ConsumerStatefulWidget {

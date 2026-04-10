@@ -10,8 +10,8 @@ import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../../orders/domain/entities/order_entity.dart';
 import '../../../orders/data/dtos/create_order_request_dto.dart';
 import '../../../orders/presentation/providers/orders/create_order_async_notifiers.dart';
-import '../../../user_address/presentation/providers/user_address_notifiers.dart';
-import '../providers/cart_notifier.dart';
+import '../../../user_address/presentation/providers/providers.dart';
+import '../providers/providers.dart';
 import '../widgets/widgets.dart';
 
 /// Checkout Screen với giao diện Amber Hearth

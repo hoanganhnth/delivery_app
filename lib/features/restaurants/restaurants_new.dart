@@ -7,7 +7,7 @@ export 'presentation/screens/restaurant_detail_screen.dart';
 export 'presentation/screens/menu_screen.dart';
 
 // Providers
-export 'presentation/providers/restaurant_providers.dart';
+export 'presentation/providers/providers.dart';
 
 // Add other exports as the feature grows:
 // export 'domain/entities/restaurant_entity.dart';
