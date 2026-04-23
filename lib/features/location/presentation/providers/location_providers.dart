@@ -7,12 +7,15 @@ import '../../domain/repositories/location_repository.dart';
 import '../../domain/usecases/location_usecases.dart';
 import '../../domain/entities/location_entity.dart';
 
+import '../../../../core/services/_riverpod/location_service_provider.dart';
+
 part 'location_providers.g.dart';
 
 /// Provider cho LocationDataSource
 @Riverpod(keepAlive: true)
 LocationDataSource locationDataSource(Ref ref) {
-  return LocationDataSourceImpl();
+  final service = ref.watch(locationServiceProvider);
+  return LocationDataSourceImpl(service);
 }
 
 /// Provider cho LocationRepository

@@ -59,7 +59,7 @@ final class LocationDataSourceProvider
 }
 
 String _$locationDataSourceHash() =>
-    r'c3548a00297b5844090cb4a0a8a5c204f2197674';
+    r'8495189e5ff5a04560aae5f56cce2e267a4a28db';
 
 /// Provider cho LocationRepository
 

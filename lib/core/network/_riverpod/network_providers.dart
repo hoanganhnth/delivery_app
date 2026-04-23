@@ -1,7 +1,7 @@
 // import 'package:delivery_app/core/constants/api_constants.dart';
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'dio_client.dart';
+import '../dio/dio_client.dart';
 
 part 'network_providers.g.dart';
 

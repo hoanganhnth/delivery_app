@@ -1,4 +1,4 @@
-import 'package:delivery_app/core/network/dio/authenticated_network_providers.dart';
+import 'package:delivery_app/core/network/_riverpod/authenticated_network_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/network/socket/stomp_client.dart';
 import 'package:delivery_app/features/orders/data/datasources/delivery_tracking_remote_datasource_impl.dart';

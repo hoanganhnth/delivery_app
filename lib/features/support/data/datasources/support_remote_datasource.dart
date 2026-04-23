@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/logger/app_logger.dart';
-import '../../../../core/services/cloudinary_service.dart';
+import '../../../../core/services/i_image_upload_service.dart';
 import '../models/chat_message_model.dart';
 import '../models/conversation_model.dart';
 
@@ -51,14 +51,14 @@ abstract class SupportRemoteDataSource {
 
 class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
   final FirebaseFirestore _firestore;
-  final CloudinaryService _cloudinaryService;
+  final IImageUploadService _imageUploadService;
   final Uuid _uuid = const Uuid();
 
   SupportRemoteDataSourceImpl({
     FirebaseFirestore? firestore,
-    CloudinaryService? cloudinaryService,
+    required IImageUploadService imageUploadService,
   }) : _firestore = firestore ?? FirebaseFirestore.instance,
-       _cloudinaryService = cloudinaryService ?? CloudinaryService();
+       _imageUploadService = imageUploadService;
 
   @override
   Future<ConversationModel> getOrCreateConversation(
@@ -324,28 +324,28 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
       String? thumbnailUrl;
 
       if (type == 'image') {
-        final response = await _cloudinaryService.uploadImage(
+        final response = await _imageUploadService.uploadImage(
           file,
           folder: 'support_chat/$conversationId',
           publicId: publicId,
         );
         mediaUrl = response.secureUrl;
         // Get optimized thumbnail
-        thumbnailUrl = _cloudinaryService.getOptimizedImageUrl(
+        thumbnailUrl = _imageUploadService.getOptimizedImageUrl(
           response.publicId,
           width: 400,
           height: 300,
         );
       } else {
         // Video
-        final response = await _cloudinaryService.uploadVideo(
+        final response = await _imageUploadService.uploadVideo(
           file,
           folder: 'support_chat/$conversationId',
           publicId: publicId,
         );
         mediaUrl = response.secureUrl;
         // Get video thumbnail
-        thumbnailUrl = _cloudinaryService.getVideoThumbnailUrl(
+        thumbnailUrl = _imageUploadService.getVideoThumbnailUrl(
           response.publicId,
           width: 400,
           height: 300,

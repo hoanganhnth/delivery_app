@@ -55,7 +55,7 @@ final class SupportRemoteDataSourceProvider
 }
 
 String _$supportRemoteDataSourceHash() =>
-    r'be057c9392322f3131a60441572e103a35be0317';
+    r'aabbbf74425b828f7449d47ec66e0af588793411';
 
 @ProviderFor(supportRepository)
 final supportRepositoryProvider = SupportRepositoryProvider._();

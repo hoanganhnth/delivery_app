@@ -1,6 +1,6 @@
 import '../models/location_model.dart';
 import '../models/address_model.dart';
-import '../../../../core/services/location_service.dart';
+import '../../../../core/services/i_location_service.dart';
 
 /// Interface cho location data source
 abstract class LocationDataSource {
@@ -24,7 +24,9 @@ abstract class LocationDataSource {
 
 /// Implementation của LocationDataSource sử dụng geolocator và geocoding
 class LocationDataSourceImpl implements LocationDataSource {
-  final LocationService _locationService = LocationService.instance;
+  final ILocationService _locationService;
+
+  LocationDataSourceImpl(this._locationService);
 
   @override
   Future<bool> requestLocationPermission() async {

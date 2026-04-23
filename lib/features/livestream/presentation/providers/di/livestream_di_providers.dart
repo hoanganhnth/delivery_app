@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:delivery_app/core/network/dio/authenticated_network_providers.dart';
+import 'package:delivery_app/core/network/_riverpod/authenticated_network_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../data/datasources/livestream_firebase_datasource_impl.dart';
 import '../../../data/datasources/livestream_remote_datasource_impl.dart';

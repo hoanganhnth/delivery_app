@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../../../core/network/dio/authenticated_network_providers.dart';
+import '../../../../../core/network/_riverpod/authenticated_network_providers.dart';
 import '../../../domain/usecases/user_address_usecases.dart';
 import '../../../domain/repositories/user_address_repository.dart';
 import '../../../data/repositories/user_address_repository_impl.dart';

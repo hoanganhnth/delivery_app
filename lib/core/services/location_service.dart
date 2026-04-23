@@ -1,26 +1,20 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import '../logger/app_logger.dart';
+import 'i_location_service.dart';
 
-/// Singleton service để xử lý location và geocoding
-class LocationService {
-  static LocationService? _instance;
+/// Implementation of ILocationService using Geolocator and Geocoding packages
+class LocationService implements ILocationService {
+  LocationService();
 
-  LocationService._();
-
-  static LocationService get instance {
-    _instance ??= LocationService._();
-    return _instance!;
-  }
-
-  /// Yêu cầu quyền truy cập location
+  @override
   Future<bool> requestLocationPermission() async {
     try {
-      AppLogger.d('Requesting location permission');
+      AppLogger.debug('Requesting location permission');
 
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        AppLogger.w('Location service is disabled');
+        AppLogger.warn('Location service is disabled');
         return false;
       }
 
@@ -28,28 +22,28 @@ class LocationService {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          AppLogger.w('Location permission denied');
+          AppLogger.warn('Location permission denied');
           return false;
         }
       }
 
       if (permission == LocationPermission.deniedForever) {
-        AppLogger.w('Location permission denied forever');
+        AppLogger.warn('Location permission denied forever');
         return false;
       }
 
-      AppLogger.i('Location permission granted');
+      AppLogger.info('Location permission granted');
       return true;
     } catch (e) {
-      AppLogger.e('Error requesting location permission', e);
+      AppLogger.error('Error requesting location permission', e);
       return false;
     }
   }
 
-  /// Lấy vị trí hiện tại
+  @override
   Future<Position?> getCurrentPosition() async {
     try {
-      AppLogger.d('Getting current position');
+      AppLogger.debug('Getting current position');
 
       bool hasPermission = await requestLocationPermission();
       if (!hasPermission) {
@@ -57,29 +51,29 @@ class LocationService {
       }
 
       Position position = await Geolocator.getCurrentPosition(
-        locationSettings: LocationSettings(
+        locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
           distanceFilter: 10,
         ),
       );
 
-      AppLogger.i(
+      AppLogger.info(
         'Current position obtained: ${position.latitude}, ${position.longitude}',
       );
       return position;
     } catch (e) {
-      AppLogger.e('Error getting current position', e);
+      AppLogger.error('Error getting current position', e);
       rethrow;
     }
   }
 
-  /// Chuyển đổi tọa độ thành địa chỉ
+  @override
   Future<String> getAddressFromCoordinates(
     double latitude,
     double longitude,
   ) async {
     try {
-      AppLogger.d('Getting address from coordinates: $latitude, $longitude');
+      AppLogger.debug('Getting address from coordinates: $latitude, $longitude');
 
       List<Placemark> placemarks = await placemarkFromCoordinates(
         latitude,
@@ -111,22 +105,22 @@ class LocationService {
           address += place.country!;
         }
 
-        AppLogger.i('Address obtained: $address');
+        AppLogger.info('Address obtained: $address');
         return address.isNotEmpty ? address : 'Không thể xác định địa chỉ';
       } else {
-        AppLogger.w('No placemarks found for coordinates');
+        AppLogger.warn('No placemarks found for coordinates');
         return 'Không thể xác định địa chỉ';
       }
     } catch (e) {
-      AppLogger.e('Error getting address from coordinates', e);
+      AppLogger.error('Error getting address from coordinates', e);
       return 'Không thể xác định địa chỉ';
     }
   }
 
-  /// Chuyển đổi địa chỉ thành tọa độ
+  @override
   Future<Position?> getCoordinatesFromAddress(String address) async {
     try {
-      AppLogger.d('Getting coordinates from address: $address');
+      AppLogger.debug('Getting coordinates from address: $address');
 
       List<Location> locations = await locationFromAddress(address);
 
@@ -145,21 +139,21 @@ class LocationService {
           headingAccuracy: 0,
         );
 
-        AppLogger.i(
+        AppLogger.info(
           'Coordinates obtained: ${position.latitude}, ${position.longitude}',
         );
         return position;
       } else {
-        AppLogger.w('No coordinates found for address');
+        AppLogger.warn('No coordinates found for address');
         return null;
       }
     } catch (e) {
-      AppLogger.e('Error getting coordinates from address', e);
+      AppLogger.error('Error getting coordinates from address', e);
       return null;
     }
   }
 
-  /// Tính khoảng cách giữa 2 điểm
+  @override
   double calculateDistance(
     double startLatitude,
     double startLongitude,
@@ -174,17 +168,17 @@ class LocationService {
     );
   }
 
-  /// Kiểm tra location service có được bật không
+  @override
   Future<bool> isLocationServiceEnabled() async {
     return await Geolocator.isLocationServiceEnabled();
   }
 
-  /// Mở settings để bật location service
+  @override
   Future<void> openLocationSettings() async {
     await Geolocator.openLocationSettings();
   }
 
-  /// Mở app settings để cấp quyền
+  @override
   Future<void> openAppSettings() async {
     await Geolocator.openAppSettings();
   }

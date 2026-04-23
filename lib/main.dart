@@ -17,7 +17,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'features/auth/presentation/providers/di/storage_di_providers.dart';
 import 'features/auth/presentation/providers/di/auth_network_providers.dart' as auth_net;
-import 'core/network/dio/authenticated_network_providers.dart' as core_net;
+import 'package:delivery_app/core/network/_riverpod/authenticated_network_providers.dart' as core_net;
 
 Future<void> main() async {
   runZonedGuarded<Future<void>>(

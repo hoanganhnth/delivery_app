@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'dio_client.dart';
+import '../dio/dio_client.dart';
 
 part 'authenticated_network_providers.g.dart';
 
