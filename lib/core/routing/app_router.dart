@@ -1,6 +1,7 @@
 import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
 import 'package:delivery_app/features/orders/presentation/screens/order_detail_screen.dart';
 import 'package:delivery_app/features/support/presentation/screens/support_chat_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
@@ -35,8 +36,22 @@ GoRouter router(Ref ref) {
   final config = ref.watch(routerConfigProvider);
   final guardManager = GuardManager(ref);
 
+  final refreshListenable = ValueNotifier<bool>(false);
+  
+  ref.listen<AuthState>(
+    authProvider,
+    (previous, next) {
+      if (previous?.isAuthenticated != next.isAuthenticated) {
+        refreshListenable.value = next.isAuthenticated;
+      }
+    },
+    fireImmediately: true,
+  );
+  ref.onDispose(refreshListenable.dispose);
+
   // Create router
   final router = GoRouter(
+    refreshListenable: refreshListenable,
     initialLocation: config.initialLocation,
     debugLogDiagnostics: config.debugLogDiagnostics,
     redirect: config.enableRedirects

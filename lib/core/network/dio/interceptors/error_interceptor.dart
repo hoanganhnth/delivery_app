@@ -48,6 +48,7 @@
               response: err.response,
               type: DioExceptionType.badResponse,
             ));
+            
           }
         }).catchError((e, st) {
           AppLogger.e("Exception during token refresh: $e", e, st);
