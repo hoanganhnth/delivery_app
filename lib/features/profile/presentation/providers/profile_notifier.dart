@@ -8,7 +8,7 @@ import 'package:delivery_app/core/usecases/usecase.dart';
 
 part 'profile_notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class ProfileNotifier extends _$ProfileNotifier {
   @override
   ProfileState build() {

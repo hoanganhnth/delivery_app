@@ -84,7 +84,7 @@ final class AuthenticatedDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
         argument: null,
         retry: null,
         name: r'authenticatedDioProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -111,4 +111,4 @@ final class AuthenticatedDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$authenticatedDioHash() => r'19b3289dac538c22468980414a1df4828735c278';
+String _$authenticatedDioHash() => r'92f60f29d69704fdee1d19a84dcd35d0c3ec7ef3';

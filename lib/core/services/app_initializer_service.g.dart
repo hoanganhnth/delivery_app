@@ -26,7 +26,7 @@ final class AppInitializerServiceProvider
         argument: null,
         retry: null,
         name: r'appInitializerServiceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -55,4 +55,4 @@ final class AppInitializerServiceProvider
 }
 
 String _$appInitializerServiceHash() =>
-    r'c571eb46826d1cc08ecd0031988bd29b0e39934b';
+    r'4891afcb9c0b22175c1469d9516c57b2c36af37b';
