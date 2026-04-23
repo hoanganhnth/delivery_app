@@ -191,28 +191,26 @@ class AuthNotifier extends _$AuthNotifier {
   }
 
   // Check if user is logged in
-  Future<void> checkAuthStatus() async {
-    // AppLogger.d('AuthNotifier: Checking auth status');
-
+  Future<AuthState> checkAuthStatus() async {
     final tokensResult = await _getTokensUseCase(NoParams());
 
-    tokensResult.fold(
+    // fold trả về giá trị gì thì return luôn giá trị đó
+    return tokensResult.fold(
       (failure) {
-        // AppLogger.e('AuthNotifier: Failed to get tokens - ${failure.message}');
         state = state.copyWith(isAuthenticated: false, clearUser: true);
+        return state;
       },
       (tokens) {
         if (tokens != null) {
-          // AppLogger.d('AuthNotifier: Found stored tokens');
           state = state.copyWith(
             isAuthenticated: true,
             accessToken: tokens.accessToken,
             refreshToken: tokens.refreshToken,
           );
         } else {
-          // AppLogger.d('AuthNotifier: No tokens found');
           state = state.copyWith(isAuthenticated: false, clearUser: true);
         }
+        return state;
       },
     );
   }
