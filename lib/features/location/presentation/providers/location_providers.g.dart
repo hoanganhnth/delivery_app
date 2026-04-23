@@ -30,7 +30,7 @@ final class LocationDataSourceProvider
         argument: null,
         retry: null,
         name: r'locationDataSourceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -59,7 +59,7 @@ final class LocationDataSourceProvider
 }
 
 String _$locationDataSourceHash() =>
-    r'81a6588c93e50e125b8664b45a135156bb5d8a12';
+    r'c3548a00297b5844090cb4a0a8a5c204f2197674';
 
 /// Provider cho LocationRepository
 
@@ -83,7 +83,7 @@ final class LocationRepositoryProvider
         argument: null,
         retry: null,
         name: r'locationRepositoryProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -112,7 +112,7 @@ final class LocationRepositoryProvider
 }
 
 String _$locationRepositoryHash() =>
-    r'3739cebdd19e259b8630a7b6233a0ba57455ce9f';
+    r'ed9e3034cfb2a7bf13a5f63d0b16cf35d8800494';
 
 /// Provider cho GetCurrentLocationUseCase
 
@@ -136,7 +136,7 @@ final class GetCurrentLocationUseCaseProvider
         argument: null,
         retry: null,
         name: r'getCurrentLocationUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -165,7 +165,7 @@ final class GetCurrentLocationUseCaseProvider
 }
 
 String _$getCurrentLocationUseCaseHash() =>
-    r'5f18f65858ed135ad86e9e1218d4f072ff3c0ab4';
+    r'4190dd9cf488631f77db17756d8a167ed16c7015';
 
 /// Provider cho GetAddressFromCoordinatesUseCase
 
@@ -190,7 +190,7 @@ final class GetAddressFromCoordinatesUseCaseProvider
         argument: null,
         retry: null,
         name: r'getAddressFromCoordinatesUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -221,7 +221,7 @@ final class GetAddressFromCoordinatesUseCaseProvider
 }
 
 String _$getAddressFromCoordinatesUseCaseHash() =>
-    r'89a4d8190623ddd5adf6680af8ce2f71b93bd4f4';
+    r'a1387b03cc8c3998777f2be2f00d59d5e9b76714';
 
 /// Provider cho GetCoordinatesFromAddressUseCase
 
@@ -246,7 +246,7 @@ final class GetCoordinatesFromAddressUseCaseProvider
         argument: null,
         retry: null,
         name: r'getCoordinatesFromAddressUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -277,7 +277,7 @@ final class GetCoordinatesFromAddressUseCaseProvider
 }
 
 String _$getCoordinatesFromAddressUseCaseHash() =>
-    r'adaeda35effd07322d259308f768bfa418087f80';
+    r'3fa01cac1b6a75954569ed7de5e631826bf76310';
 
 /// Provider cho CalculateDistanceUseCase
 
@@ -301,7 +301,7 @@ final class CalculateDistanceUseCaseProvider
         argument: null,
         retry: null,
         name: r'calculateDistanceUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -330,7 +330,7 @@ final class CalculateDistanceUseCaseProvider
 }
 
 String _$calculateDistanceUseCaseHash() =>
-    r'9b5226c42d766c7e7f68b494af8bbc55df96ad9b';
+    r'4100a06fbffcb3e3d9fd76445c2b8af6bffb05cd';
 
 /// StateNotifier để quản lý current location state
 

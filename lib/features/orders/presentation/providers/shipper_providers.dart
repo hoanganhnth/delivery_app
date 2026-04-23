@@ -1,47 +1,56 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/network/dio/authenticated_network_providers.dart';
-import '../../data/datasources/shipper_remote_datasource_impl.dart';
-import '../../data/repositories/shipper_repository_impl.dart';
-import '../../domain/usecases/get_shipper_usecase.dart';
+import 'package:delivery_app/core/network/dio/authenticated_network_providers.dart';
+import 'package:delivery_app/features/orders/data/datasources/shipper_remote_datasource.dart';
+import 'package:delivery_app/features/orders/data/datasources/shipper_remote_datasource_impl.dart';
+import 'package:delivery_app/features/orders/data/repositories/shipper_repository_impl.dart';
+import 'package:delivery_app/features/orders/domain/repositories/shipper_repository.dart';
+import 'package:delivery_app/features/orders/domain/usecases/get_shipper_usecase.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'shipper_providers.g.dart';
 
 // =============================================================================
 // NETWORK PROVIDERS
 // =============================================================================
 
 /// Provider cho ShipperApiService
-final shipperApiServiceProvider = Provider<ShipperApiService>((ref) {
+@Riverpod(keepAlive: true)
+ShipperApiService shipperApiService(Ref ref) {
   final dio = ref.watch(authenticatedDioProvider);
   return ShipperApiService(dio);
-});
+}
 
 /// Provider cho ShipperRemoteDataSource
-final shipperRemoteDataSourceProvider = Provider<ShipperRemoteDataSourceImpl>((ref) {
+@Riverpod(keepAlive: true)
+ShipperRemoteDataSource shipperRemoteDataSource(Ref ref) {
   final apiService = ref.watch(shipperApiServiceProvider);
   return ShipperRemoteDataSourceImpl(apiService);
-});
+}
 
 // =============================================================================
 // REPOSITORY PROVIDERS
 // =============================================================================
 
 /// Provider cho ShipperRepository
-final shipperRepositoryProvider = Provider<ShipperRepositoryImpl>((ref) {
+@Riverpod(keepAlive: true)
+ShipperRepository shipperRepository(Ref ref) {
   final remoteDataSource = ref.watch(shipperRemoteDataSourceProvider);
   return ShipperRepositoryImpl(remoteDataSource);
-});
+}
 
 // =============================================================================
 // USECASE PROVIDERS
 // =============================================================================
 
 /// Provider cho GetShipperByIdUseCase
-final getShipperByIdUseCaseProvider = Provider<GetShipperByIdUseCase>((ref) {
+@Riverpod(keepAlive: true)
+GetShipperByIdUseCase getShipperByIdUseCase(Ref ref) {
   final repository = ref.watch(shipperRepositoryProvider);
   return GetShipperByIdUseCase(repository);
-});
+}
 
 /// Provider cho GetShippersInAreaUseCase
-final getShippersInAreaUseCaseProvider = Provider<GetShippersInAreaUseCase>((ref) {
+@Riverpod(keepAlive: true)
+GetShippersInAreaUseCase getShippersInAreaUseCase(Ref ref) {
   final repository = ref.watch(shipperRepositoryProvider);
   return GetShippersInAreaUseCase(repository);
-});
+}

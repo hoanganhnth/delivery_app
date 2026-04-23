@@ -25,7 +25,7 @@ final class InAppPurchaseProvider
         argument: null,
         retry: null,
         name: r'inAppPurchaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -52,7 +52,7 @@ final class InAppPurchaseProvider
   }
 }
 
-String _$inAppPurchaseHash() => r'd2388a0c220ac74d20580556be0896d1eac71cdc';
+String _$inAppPurchaseHash() => r'fb3c7e600ea6835241b4be249fabfd992de703ff';
 
 /// Provider for IAP API service
 
@@ -71,7 +71,7 @@ final class IapApiServiceProvider
         argument: null,
         retry: null,
         name: r'iapApiServiceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -98,7 +98,7 @@ final class IapApiServiceProvider
   }
 }
 
-String _$iapApiServiceHash() => r'4fdb53a17a30dc22c63dabb2a82a8aaf4d409380';
+String _$iapApiServiceHash() => r'55502956d0604743edc0b5ee3e5a8e415a1de22e';
 
 /// Provider for IAP remote data source
 
@@ -122,7 +122,7 @@ final class IapRemoteDataSourceProvider
         argument: null,
         retry: null,
         name: r'iapRemoteDataSourceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -151,7 +151,7 @@ final class IapRemoteDataSourceProvider
 }
 
 String _$iapRemoteDataSourceHash() =>
-    r'2b47299db370c747dc809193db9ff7f8f5d2e46e';
+    r'56fd0ca8f111d95d008a28b3dcccd111d6f87e71';
 
 /// Provider for IAP repository
 
@@ -175,7 +175,7 @@ final class IapRepositoryProvider
         argument: null,
         retry: null,
         name: r'iapRepositoryProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -195,7 +195,7 @@ final class IapRepositoryProvider
   }
 }
 
-String _$iapRepositoryHash() => r'e42e19b59b7bc716cb14d9920eeef76227b778d9';
+String _$iapRepositoryHash() => r'273bf9c0f19d638299d912dab5d61edd887a39fd';
 
 /// Provider for GetSubscriptionTiersUseCase
 
@@ -222,7 +222,7 @@ final class GetSubscriptionTiersUseCaseProvider
         argument: null,
         retry: null,
         name: r'getSubscriptionTiersUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -243,7 +243,7 @@ final class GetSubscriptionTiersUseCaseProvider
 }
 
 String _$getSubscriptionTiersUseCaseHash() =>
-    r'40ef6d2c5fa2e0244fc93c8deddf720e91a865b6';
+    r'52c66f3a6ff7ead834d07897d0b8a8fd307298d6';
 
 /// Provider for GetActiveSubscriptionUseCase
 
@@ -270,7 +270,7 @@ final class GetActiveSubscriptionUseCaseProvider
         argument: null,
         retry: null,
         name: r'getActiveSubscriptionUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -291,7 +291,7 @@ final class GetActiveSubscriptionUseCaseProvider
 }
 
 String _$getActiveSubscriptionUseCaseHash() =>
-    r'f26deac31e8ceb7277e12ce6cbcbb545b3022502';
+    r'7383b10f5fa434316289a16b35a4fc0977be88e1';
 
 /// Provider for PurchaseSubscriptionUseCase
 
@@ -318,7 +318,7 @@ final class PurchaseSubscriptionUseCaseProvider
         argument: null,
         retry: null,
         name: r'purchaseSubscriptionUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -339,7 +339,7 @@ final class PurchaseSubscriptionUseCaseProvider
 }
 
 String _$purchaseSubscriptionUseCaseHash() =>
-    r'a5e2bbc163e2ec1573a1b685461041bdb1df3b94';
+    r'c1b28e1f4947d6bf90597c4613e249e5009b49af';
 
 /// Provider for RestorePurchasesUseCase
 
@@ -365,7 +365,7 @@ final class RestorePurchasesUseCaseProvider
         argument: null,
         retry: null,
         name: r'restorePurchasesUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -386,7 +386,7 @@ final class RestorePurchasesUseCaseProvider
 }
 
 String _$restorePurchasesUseCaseHash() =>
-    r'45edb69af8103e38460e2ec4253d2a6ab4d20630';
+    r'227792779bae293271b13ee387826641bd1f75ed';
 
 /// Provider for GetConsumableProductsUseCase
 
@@ -413,7 +413,7 @@ final class GetConsumableProductsUseCaseProvider
         argument: null,
         retry: null,
         name: r'getConsumableProductsUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -434,7 +434,7 @@ final class GetConsumableProductsUseCaseProvider
 }
 
 String _$getConsumableProductsUseCaseHash() =>
-    r'8bc8c1553a875fea3bc5e4fbcf1d61a5b8793644';
+    r'6f8020fa458c75c6c7c6a8b089ea831f4a8f834d';
 
 /// Provider for PurchaseConsumableUseCase
 
@@ -460,7 +460,7 @@ final class PurchaseConsumableUseCaseProvider
         argument: null,
         retry: null,
         name: r'purchaseConsumableUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -481,7 +481,7 @@ final class PurchaseConsumableUseCaseProvider
 }
 
 String _$purchaseConsumableUseCaseHash() =>
-    r'54881b8694abf5ef787e37463f0976758a58d9b6';
+    r'b18c47535210dac75e68189a4531f0e992ab5fb6';
 
 /// Provider for GetUserCreditsUseCase
 
@@ -507,7 +507,7 @@ final class GetUserCreditsUseCaseProvider
         argument: null,
         retry: null,
         name: r'getUserCreditsUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -528,7 +528,7 @@ final class GetUserCreditsUseCaseProvider
 }
 
 String _$getUserCreditsUseCaseHash() =>
-    r'd970edcdca9e19f7f9049cda51ca22f4d948edc1';
+    r'637da1eb155b7d042e4b724a97076ad9f90f442a';
 
 /// Provider for AddCreditsUseCase
 
@@ -554,7 +554,7 @@ final class AddCreditsUseCaseProvider
         argument: null,
         retry: null,
         name: r'addCreditsUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -574,7 +574,7 @@ final class AddCreditsUseCaseProvider
   }
 }
 
-String _$addCreditsUseCaseHash() => r'de7e6f9a05ba8ab32fa1224600baaf8106299d0c';
+String _$addCreditsUseCaseHash() => r'f5c6e47e2178411e9fd39c7013c4514e54dc222e';
 
 /// Provider for DeductCreditsUseCase
 
@@ -600,7 +600,7 @@ final class DeductCreditsUseCaseProvider
         argument: null,
         retry: null,
         name: r'deductCreditsUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -621,7 +621,7 @@ final class DeductCreditsUseCaseProvider
 }
 
 String _$deductCreditsUseCaseHash() =>
-    r'15ca818cd780b64042f6b21a86e6c55494872444';
+    r'9bab0450efdc7b7419ee8350e7aed1c7e0474012';
 
 /// Provider for GetNonConsumableProductsUseCase
 
@@ -648,7 +648,7 @@ final class GetNonConsumableProductsUseCaseProvider
         argument: null,
         retry: null,
         name: r'getNonConsumableProductsUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -669,7 +669,7 @@ final class GetNonConsumableProductsUseCaseProvider
 }
 
 String _$getNonConsumableProductsUseCaseHash() =>
-    r'5d2b450d590bb6869c32b28d7684bcc80ea4f002';
+    r'05334eea85dc601b8545cfc94c30c35c546596df';
 
 /// Provider for PurchaseNonConsumableUseCase
 
@@ -696,7 +696,7 @@ final class PurchaseNonConsumableUseCaseProvider
         argument: null,
         retry: null,
         name: r'purchaseNonConsumableUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -717,7 +717,7 @@ final class PurchaseNonConsumableUseCaseProvider
 }
 
 String _$purchaseNonConsumableUseCaseHash() =>
-    r'7266ddb35a23f8a3e9338d6a4bd8aeb3322d562c';
+    r'cd8c37ad87f0b68b830e5ddc65d3cde1a74e6775';
 
 /// Provider for GetUnlockedFeaturesUseCase
 
@@ -744,7 +744,7 @@ final class GetUnlockedFeaturesUseCaseProvider
         argument: null,
         retry: null,
         name: r'getUnlockedFeaturesUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -765,7 +765,7 @@ final class GetUnlockedFeaturesUseCaseProvider
 }
 
 String _$getUnlockedFeaturesUseCaseHash() =>
-    r'9686c875346a9ac88069450a9986e2d4e77ee934';
+    r'143b2e4e977feec8d60b17496e2f93b8875448ef';
 
 /// Provider for CheckFeatureUnlockedUseCase
 
@@ -792,7 +792,7 @@ final class CheckFeatureUnlockedUseCaseProvider
         argument: null,
         retry: null,
         name: r'checkFeatureUnlockedUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -813,4 +813,4 @@ final class CheckFeatureUnlockedUseCaseProvider
 }
 
 String _$checkFeatureUnlockedUseCaseHash() =>
-    r'6798f6e4fa9aa59ba0b3e74486a58e292c2dd9d0';
+    r'7c552b5e2bd18bcb08bcb47475699b65b8003990';

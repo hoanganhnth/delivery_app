@@ -23,20 +23,20 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'iap_providers.g.dart';
 
 /// Provider for InAppPurchase instance
-@riverpod
+@Riverpod(keepAlive: true)
 InAppPurchase inAppPurchase(Ref ref) {
   return InAppPurchase.instance;
 }
 
 /// Provider for IAP API service
-@riverpod
+@Riverpod(keepAlive: true)
 IapApiService iapApiService(Ref ref) {
   final dio = ref.watch(authenticatedDioProvider);
   return IapApiService(dio);
 }
 
 /// Provider for IAP remote data source
-@riverpod
+@Riverpod(keepAlive: true)
 IapRemoteDataSource iapRemoteDataSource(Ref ref) {
   final inAppPurchase = ref.watch(inAppPurchaseProvider);
   final apiService = ref.watch(iapApiServiceProvider);
@@ -44,7 +44,7 @@ IapRemoteDataSource iapRemoteDataSource(Ref ref) {
 }
 
 /// Provider for IAP repository
-@riverpod
+@Riverpod(keepAlive: true)
 Future<IapRepository> iapRepository(Ref ref) async {
   final remoteDataSource = ref.watch(iapRemoteDataSourceProvider);
   
@@ -61,28 +61,28 @@ Future<IapRepository> iapRepository(Ref ref) async {
 // ============================================================
 
 /// Provider for GetSubscriptionTiersUseCase
-@riverpod
+@Riverpod(keepAlive: true)
 Future<GetSubscriptionTiersUseCase> getSubscriptionTiersUseCase(Ref ref) async {
   final repository = await ref.watch(iapRepositoryProvider.future);
   return GetSubscriptionTiersUseCase(repository);
 }
 
 /// Provider for GetActiveSubscriptionUseCase
-@riverpod
+@Riverpod(keepAlive: true)
 Future<GetActiveSubscriptionUseCase> getActiveSubscriptionUseCase(Ref ref) async {
   final repository = await ref.watch(iapRepositoryProvider.future);
   return GetActiveSubscriptionUseCase(repository);
 }
 
 /// Provider for PurchaseSubscriptionUseCase
-@riverpod
+@Riverpod(keepAlive: true)
 Future<PurchaseSubscriptionUseCase> purchaseSubscriptionUseCase(Ref ref) async {
   final repository = await ref.watch(iapRepositoryProvider.future);
   return PurchaseSubscriptionUseCase(repository);
 }
 
 /// Provider for RestorePurchasesUseCase
-@riverpod
+@Riverpod(keepAlive: true)
 Future<RestorePurchasesUseCase> restorePurchasesUseCase(Ref ref) async {
   final repository = await ref.watch(iapRepositoryProvider.future);
   return RestorePurchasesUseCase(repository);
@@ -93,35 +93,35 @@ Future<RestorePurchasesUseCase> restorePurchasesUseCase(Ref ref) async {
 // ============================================================
 
 /// Provider for GetConsumableProductsUseCase
-@riverpod
+@Riverpod(keepAlive: true)
 Future<GetConsumableProductsUseCase> getConsumableProductsUseCase(Ref ref) async {
   final repository = await ref.watch(iapRepositoryProvider.future);
   return GetConsumableProductsUseCase(repository);
 }
 
 /// Provider for PurchaseConsumableUseCase
-@riverpod
+@Riverpod(keepAlive: true)
 Future<PurchaseConsumableUseCase> purchaseConsumableUseCase(Ref ref) async {
   final repository = await ref.watch(iapRepositoryProvider.future);
   return PurchaseConsumableUseCase(repository);
 }
 
 /// Provider for GetUserCreditsUseCase
-@riverpod
+@Riverpod(keepAlive: true)
 Future<GetUserCreditsUseCase> getUserCreditsUseCase(Ref ref) async {
   final repository = await ref.watch(iapRepositoryProvider.future);
   return GetUserCreditsUseCase(repository);
 }
 
 /// Provider for AddCreditsUseCase
-@riverpod
+@Riverpod(keepAlive: true)
 Future<AddCreditsUseCase> addCreditsUseCase(Ref ref) async {
   final repository = await ref.watch(iapRepositoryProvider.future);
   return AddCreditsUseCase(repository);
 }
 
 /// Provider for DeductCreditsUseCase
-@riverpod
+@Riverpod(keepAlive: true)
 Future<DeductCreditsUseCase> deductCreditsUseCase(Ref ref) async {
   final repository = await ref.watch(iapRepositoryProvider.future);
   return DeductCreditsUseCase(repository);
@@ -132,28 +132,28 @@ Future<DeductCreditsUseCase> deductCreditsUseCase(Ref ref) async {
 // ============================================================
 
 /// Provider for GetNonConsumableProductsUseCase
-@riverpod
+@Riverpod(keepAlive: true)
 Future<GetNonConsumableProductsUseCase> getNonConsumableProductsUseCase(Ref ref) async {
   final repository = await ref.watch(iapRepositoryProvider.future);
   return GetNonConsumableProductsUseCase(repository);
 }
 
 /// Provider for PurchaseNonConsumableUseCase
-@riverpod
+@Riverpod(keepAlive: true)
 Future<PurchaseNonConsumableUseCase> purchaseNonConsumableUseCase(Ref ref) async {
   final repository = await ref.watch(iapRepositoryProvider.future);
   return PurchaseNonConsumableUseCase(repository);
 }
 
 /// Provider for GetUnlockedFeaturesUseCase
-@riverpod
+@Riverpod(keepAlive: true)
 Future<GetUnlockedFeaturesUseCase> getUnlockedFeaturesUseCase(Ref ref) async {
   final repository = await ref.watch(iapRepositoryProvider.future);
   return GetUnlockedFeaturesUseCase(repository);
 }
 
 /// Provider for CheckFeatureUnlockedUseCase
-@riverpod
+@Riverpod(keepAlive: true)
 Future<CheckFeatureUnlockedUseCase> checkFeatureUnlockedUseCase(Ref ref) async {
   final repository = await ref.watch(iapRepositoryProvider.future);
   return CheckFeatureUnlockedUseCase(repository);

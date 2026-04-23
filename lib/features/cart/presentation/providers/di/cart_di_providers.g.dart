@@ -69,13 +69,8 @@ final cartRepositoryProvider = CartRepositoryProvider._();
 /// Repository provider
 
 final class CartRepositoryProvider
-    extends
-        $FunctionalProvider<
-          CartRepositoryImpl,
-          CartRepositoryImpl,
-          CartRepositoryImpl
-        >
-    with $Provider<CartRepositoryImpl> {
+    extends $FunctionalProvider<CartRepository, CartRepository, CartRepository>
+    with $Provider<CartRepository> {
   /// Repository provider
   CartRepositoryProvider._()
     : super(
@@ -83,7 +78,7 @@ final class CartRepositoryProvider
         argument: null,
         retry: null,
         name: r'cartRepositoryProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -93,25 +88,24 @@ final class CartRepositoryProvider
 
   @$internal
   @override
-  $ProviderElement<CartRepositoryImpl> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  $ProviderElement<CartRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
   @override
-  CartRepositoryImpl create(Ref ref) {
+  CartRepository create(Ref ref) {
     return cartRepository(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(CartRepositoryImpl value) {
+  Override overrideWithValue(CartRepository value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<CartRepositoryImpl>(value),
+      providerOverride: $SyncValueProvider<CartRepository>(value),
     );
   }
 }
 
-String _$cartRepositoryHash() => r'f3f7036f8cd94a024afa84d1776407f944f24000';
+String _$cartRepositoryHash() => r'b04a0bbb436f839dd7e1bc454d4f1b54990a0cb6';
 
 /// Get cart use case provider
 
@@ -130,7 +124,7 @@ final class GetCartUseCaseProvider
         argument: null,
         retry: null,
         name: r'getCartUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -157,7 +151,7 @@ final class GetCartUseCaseProvider
   }
 }
 
-String _$getCartUseCaseHash() => r'89e5dc5208faea7e2d4c0ae933b2eba22a085b9f';
+String _$getCartUseCaseHash() => r'904db0a0e814f8244cb9ecb22b62cbc4e5b97bd7';
 
 /// Add to cart use case provider
 
@@ -181,7 +175,7 @@ final class AddToCartUseCaseProvider
         argument: null,
         retry: null,
         name: r'addToCartUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -208,7 +202,7 @@ final class AddToCartUseCaseProvider
   }
 }
 
-String _$addToCartUseCaseHash() => r'c3827af3d6686a3fcd177dc3bc3b7cbaf9aec7ba';
+String _$addToCartUseCaseHash() => r'0773a09e488759232d14f607deec44be8b5f829f';
 
 /// Update cart item quantity use case provider
 
@@ -233,7 +227,7 @@ final class UpdateCartItemQuantityUseCaseProvider
         argument: null,
         retry: null,
         name: r'updateCartItemQuantityUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -264,7 +258,7 @@ final class UpdateCartItemQuantityUseCaseProvider
 }
 
 String _$updateCartItemQuantityUseCaseHash() =>
-    r'1f62b5285bb2aea1fb107b509ff86eae94b26069';
+    r'feb18a07828aa404f5151ffb0ae7c8041a8a7dc5';
 
 /// Remove from cart use case provider
 
@@ -288,7 +282,7 @@ final class RemoveFromCartUseCaseProvider
         argument: null,
         retry: null,
         name: r'removeFromCartUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -317,7 +311,7 @@ final class RemoveFromCartUseCaseProvider
 }
 
 String _$removeFromCartUseCaseHash() =>
-    r'b02a0a9288413bc43c3413547a8c17c08c93122d';
+    r'de9d651cc24f551588cf4281df7232a1de1e8ea7';
 
 /// Clear cart use case provider
 
@@ -341,7 +335,7 @@ final class ClearCartUseCaseProvider
         argument: null,
         retry: null,
         name: r'clearCartUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -368,7 +362,7 @@ final class ClearCartUseCaseProvider
   }
 }
 
-String _$clearCartUseCaseHash() => r'a306aa590f6c594b07b46e51ec57ce55254a22db';
+String _$clearCartUseCaseHash() => r'ec33e423a11da6373ff69f74054c452420581bfd';
 
 /// Update cart item notes use case provider
 
@@ -393,7 +387,7 @@ final class UpdateCartItemNotesUseCaseProvider
         argument: null,
         retry: null,
         name: r'updateCartItemNotesUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -422,7 +416,7 @@ final class UpdateCartItemNotesUseCaseProvider
 }
 
 String _$updateCartItemNotesUseCaseHash() =>
-    r'be3926a3a7d34dd2fb3108fce0b5a823d6a96938';
+    r'165f6d39afc0c2ed63314f30b5ae9148b00a7562';
 
 /// Cart items count provider
 

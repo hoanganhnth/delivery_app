@@ -22,7 +22,7 @@ final class SelectedTabProvider extends $NotifierProvider<SelectedTab, AppTab> {
         argument: null,
         retry: null,
         name: r'selectedTabProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -43,7 +43,7 @@ final class SelectedTabProvider extends $NotifierProvider<SelectedTab, AppTab> {
   }
 }
 
-String _$selectedTabHash() => r'f08ddf0e151214cc3764df915015be434252d63c';
+String _$selectedTabHash() => r'e44c1033e42413252591df7cccc5590f90e2e6f3';
 
 /// Provider để quản lý trạng thái tab hiện tại
 
@@ -87,7 +87,7 @@ final class NavigationControllerProvider
         argument: null,
         retry: null,
         name: r'navigationControllerProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -116,4 +116,4 @@ final class NavigationControllerProvider
 }
 
 String _$navigationControllerHash() =>
-    r'd2504068648076a43074dec66ab20539596cb5ac';
+    r'40947c410b84ebf51727d61f6a34618e1a5b301b';

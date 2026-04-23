@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../data/datasources/cart_local_datasource.dart';
 import '../../../data/datasources/cart_local_datasource_impl.dart';
 import '../../../data/repositories_impl/cart_repository_impl.dart';
+import '../../../domain/repositories/cart_repository.dart';
 import '../../../domain/usecases/cart_usecases.dart';
 import '../state/cart_notifier.dart';
 
@@ -19,8 +20,8 @@ CartLocalDataSource cartLocalDataSource(Ref ref) {
 }
 
 /// Repository provider
-@riverpod
-CartRepositoryImpl cartRepository(Ref ref) {
+@Riverpod(keepAlive: true)
+CartRepository cartRepository(Ref ref) {
   final localDataSource = ref.watch(cartLocalDataSourceProvider);
   return CartRepositoryImpl(localDataSource);
 }
@@ -30,42 +31,42 @@ CartRepositoryImpl cartRepository(Ref ref) {
 // ================================
 
 /// Get cart use case provider
-@riverpod
+@Riverpod(keepAlive: true)
 GetCartUseCase getCartUseCase(Ref ref) {
   final repository = ref.watch(cartRepositoryProvider);
   return GetCartUseCase(repository);
 }
 
 /// Add to cart use case provider
-@riverpod
+@Riverpod(keepAlive: true)
 AddToCartUseCase addToCartUseCase(Ref ref) {
   final repository = ref.watch(cartRepositoryProvider);
   return AddToCartUseCase(repository);
 }
 
 /// Update cart item quantity use case provider
-@riverpod
+@Riverpod(keepAlive: true)
 UpdateCartItemQuantityUseCase updateCartItemQuantityUseCase(Ref ref) {
   final repository = ref.watch(cartRepositoryProvider);
   return UpdateCartItemQuantityUseCase(repository);
 }
 
 /// Remove from cart use case provider
-@riverpod
+@Riverpod(keepAlive: true)
 RemoveFromCartUseCase removeFromCartUseCase(Ref ref) {
   final repository = ref.watch(cartRepositoryProvider);
   return RemoveFromCartUseCase(repository);
 }
 
 /// Clear cart use case provider
-@riverpod
+@Riverpod(keepAlive: true)
 ClearCartUseCase clearCartUseCase(Ref ref) {
   final repository = ref.watch(cartRepositoryProvider);
   return ClearCartUseCase(repository);
 }
 
 /// Update cart item notes use case provider
-@riverpod
+@Riverpod(keepAlive: true)
 UpdateCartItemNotesUseCase updateCartItemNotesUseCase(Ref ref) {
   final repository = ref.watch(cartRepositoryProvider);
   return UpdateCartItemNotesUseCase(repository);

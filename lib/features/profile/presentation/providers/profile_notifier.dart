@@ -65,7 +65,7 @@ class ProfileNotifier extends _$ProfileNotifier {
   Future<void> uploadAvatar(String filePath) async {
     state = state.copyWith(isLoading: true, clearFailure: true);
     
-    final uploadAvatarUseCase = ref.read(uploadProfileImageUseCaseProvider);
+    final uploadAvatarUseCase = ref.read(uploadAvatarUseCaseProvider);
     final result = await uploadAvatarUseCase(
       UploadAvatarParams(imagePath: filePath),
     );

@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'navigation_provider.g.dart';
 
 /// Provider để quản lý trạng thái tab hiện tại
-@riverpod
+@Riverpod(keepAlive: true)
 class SelectedTab extends _$SelectedTab {
   @override
   AppTab build() => AppTab.home;
@@ -12,7 +12,7 @@ class SelectedTab extends _$SelectedTab {
 }
 
 /// Provider để quản lý việc chuyển tab
-@riverpod
+@Riverpod(keepAlive: true)
 NavigationController navigationController(Ref ref) {
   return NavigationController(ref);
 }

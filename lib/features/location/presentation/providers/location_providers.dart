@@ -10,43 +10,43 @@ import '../../domain/entities/location_entity.dart';
 part 'location_providers.g.dart';
 
 /// Provider cho LocationDataSource
-@riverpod
+@Riverpod(keepAlive: true)
 LocationDataSource locationDataSource(Ref ref) {
   return LocationDataSourceImpl();
 }
 
 /// Provider cho LocationRepository
-@riverpod
+@Riverpod(keepAlive: true)
 LocationRepository locationRepository(Ref ref) {
-  final dataSource = ref.read(locationDataSourceProvider);
+  final dataSource = ref.watch(locationDataSourceProvider);
   return LocationRepositoryImpl(dataSource: dataSource);
 }
 
 /// Provider cho GetCurrentLocationUseCase
-@riverpod
+@Riverpod(keepAlive: true)
 GetCurrentLocationUseCase getCurrentLocationUseCase(Ref ref) {
-  final repository = ref.read(locationRepositoryProvider);
+  final repository = ref.watch(locationRepositoryProvider);
   return GetCurrentLocationUseCase(repository);
 }
 
 /// Provider cho GetAddressFromCoordinatesUseCase
-@riverpod
+@Riverpod(keepAlive: true)
 GetAddressFromCoordinatesUseCase getAddressFromCoordinatesUseCase(Ref ref) {
-  final repository = ref.read(locationRepositoryProvider);
+  final repository = ref.watch(locationRepositoryProvider);
   return GetAddressFromCoordinatesUseCase(repository);
 }
 
 /// Provider cho GetCoordinatesFromAddressUseCase
-@riverpod
+@Riverpod(keepAlive: true)
 GetCoordinatesFromAddressUseCase getCoordinatesFromAddressUseCase(Ref ref) {
-  final repository = ref.read(locationRepositoryProvider);
+  final repository = ref.watch(locationRepositoryProvider);
   return GetCoordinatesFromAddressUseCase(repository);
 }
 
 /// Provider cho CalculateDistanceUseCase
-@riverpod
+@Riverpod(keepAlive: true)
 CalculateDistanceUseCase calculateDistanceUseCase(Ref ref) {
-  final repository = ref.read(locationRepositoryProvider);
+  final repository = ref.watch(locationRepositoryProvider);
   return CalculateDistanceUseCase(repository);
 }
 

@@ -45,8 +45,6 @@ class AuthNotifier extends _$AuthNotifier {
   }) async {
     state = state.copyWith(isLoginLoading: true, clearFailure: true);
 
-    // AppLogger.d('AuthNotifier: Starting login for $email');
-
     final params = LoginParams(
       email: email,
       password: password,
@@ -59,7 +57,6 @@ class AuthNotifier extends _$AuthNotifier {
 
     result.fold(
       (failure) {
-        // AppLogger.e('AuthNotifier: Login failed - ${failure.message}');
         state = state.copyWith(
           isLoginLoading: false,
           isAuthenticated: false,
@@ -68,8 +65,6 @@ class AuthNotifier extends _$AuthNotifier {
         );
       },
       (user) async {
-        // AppLogger.i('AuthNotifier: Login successful');
-
         // Store tokens locally
         final storeResult = await _storeTokensUseCase(
           StoreTokensParams(tokens: user),
@@ -172,8 +167,6 @@ class AuthNotifier extends _$AuthNotifier {
 
   // Logout method
   Future<void> logout() async {
-    // AppLogger.d('AuthNotifier: Logging out');
-
     // Clear stored tokens
     final clearResult = await _clearTokensUseCase(NoParams());
     clearResult.fold(

@@ -12,57 +12,57 @@ import '../../../domain/entities/user_address_entity.dart';
 part 'user_address_di_providers.g.dart';
 
 /// Network providers
-@riverpod
+@Riverpod(keepAlive: true)
 UserAddressApiService userAddressApiService(Ref ref) {
   final dio = ref.watch(authenticatedDioProvider);
   return UserAddressApiService(dio);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 UserAddressRemoteDataSource userAddressRemoteDataSource(Ref ref) {
   final apiService = ref.watch(userAddressApiServiceProvider);
   return UserAddressRemoteDataSourceImpl(apiService);
 }
 
 /// Repository provider
-@riverpod
+@Riverpod(keepAlive: true)
 UserAddressRepository userAddressRepository(Ref ref) {
   final remoteDataSource = ref.watch(userAddressRemoteDataSourceProvider);
   return UserAddressRepositoryImpl(remoteDataSource);
 }
 
 /// UseCase providers
-@riverpod
+@Riverpod(keepAlive: true)
 GetUserAddressesUseCase getUserAddressesUseCase(Ref ref) {
   final repository = ref.watch(userAddressRepositoryProvider);
   return GetUserAddressesUseCase(repository);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 GetAddressByIdUseCase getAddressByIdUseCase(Ref ref) {
   final repository = ref.watch(userAddressRepositoryProvider);
   return GetAddressByIdUseCase(repository);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 CreateAddressUseCase createAddressUseCase(Ref ref) {
   final repository = ref.watch(userAddressRepositoryProvider);
   return CreateAddressUseCase(repository);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 UpdateAddressUseCase updateAddressUseCase(Ref ref) {
   final repository = ref.watch(userAddressRepositoryProvider);
   return UpdateAddressUseCase(repository);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 DeleteAddressUseCase deleteAddressUseCase(Ref ref) {
   final repository = ref.watch(userAddressRepositoryProvider);
   return DeleteAddressUseCase(repository);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 SetDefaultAddressUseCase setDefaultAddressUseCase(Ref ref) {
   final repository = ref.watch(userAddressRepositoryProvider);
   return SetDefaultAddressUseCase(repository);

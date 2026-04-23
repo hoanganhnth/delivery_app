@@ -1,55 +1,63 @@
 import 'package:delivery_app/core/network/dio/authenticated_network_providers.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../data/datasources/mock_order_service.dart';
-import '../../../data/datasources/order_api_service.dart';
-import '../../../data/datasources/order_remote_datasource.dart';
-import '../../../data/datasources/order_remote_datasource_impl.dart';
-import '../../../data/repositories/order_repository_impl.dart';
-import '../../../domain/repositories/order_repository.dart';
-import '../../../domain/usecases/orders_usecases.dart';
+import 'package:delivery_app/features/orders/data/datasources/mock_order_service.dart';
+import 'package:delivery_app/features/orders/data/datasources/order_api_service.dart';
+import 'package:delivery_app/features/orders/data/datasources/order_remote_datasource.dart';
+import 'package:delivery_app/features/orders/data/datasources/order_remote_datasource_impl.dart';
+import 'package:delivery_app/features/orders/data/repositories/order_repository_impl.dart';
+import 'package:delivery_app/features/orders/domain/repositories/order_repository.dart';
+import 'package:delivery_app/features/orders/domain/usecases/orders_usecases.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'order_providers.g.dart';
 
 // Data Source Providers
-final orderApiServiceProvider = Provider<OrderApiService>((ref) {
+@Riverpod(keepAlive: true)
+OrderApiService orderApiService(Ref ref) {
   final dio = ref.watch(authenticatedDioProvider);
   return OrderApiService(dio);
-});
+}
 
-final orderRemoteDataSourceProvider = Provider<OrderRemoteDataSource>((ref) {
+@Riverpod(keepAlive: true)
+OrderRemoteDataSource orderRemoteDataSource(Ref ref) {
   final apiService = ref.watch(orderApiServiceProvider);
   return OrderRemoteDataSourceImpl(apiService);
-});
+}
 
 // Mock Service Provider
-final mockOrderServiceProvider = Provider<MockOrderService>((ref) {
+@Riverpod(keepAlive: true)
+MockOrderService mockOrderService(Ref ref) {
   return MockOrderService();
-});
+}
 
 // Repository Provider
-final orderRepositoryProvider = Provider<OrderRepository>((ref) {
+@Riverpod(keepAlive: true)
+OrderRepository orderRepository(Ref ref) {
   final remoteDataSource = ref.watch(orderRemoteDataSourceProvider);
   final mockOrderService = ref.watch(mockOrderServiceProvider);
   return OrderRepositoryImpl(remoteDataSource, mockOrderService);
-});
+}
 
 // UseCase Providers
-final getUserOrdersUseCaseProvider = Provider<GetUserOrdersUseCase>((ref) {
+@Riverpod(keepAlive: true)
+GetUserOrdersUseCase getUserOrdersUseCase(Ref ref) {
   final repository = ref.watch(orderRepositoryProvider);
   return GetUserOrdersUseCase(repository);
-});
+}
 
-final getOrderByIdUseCaseProvider = Provider<GetOrderByIdUseCase>((ref) {
+@Riverpod(keepAlive: true)
+GetOrderByIdUseCase getOrderByIdUseCase(Ref ref) {
   final repository = ref.watch(orderRepositoryProvider);
   return GetOrderByIdUseCase(repository);
-});
+}
 
-final createOrderUseCaseProvider = Provider<CreateOrderUseCase>((ref) {
+@Riverpod(keepAlive: true)
+CreateOrderUseCase createOrderUseCase(Ref ref) {
   final repository = ref.watch(orderRepositoryProvider);
   return CreateOrderUseCase(repository);
-});
+}
 
-final cancelOrderUseCaseProvider = Provider<CancelOrderUseCase>((ref) {
+@Riverpod(keepAlive: true)
+CancelOrderUseCase cancelOrderUseCase(Ref ref) {
   final repository = ref.watch(orderRepositoryProvider);
   return CancelOrderUseCase(repository);
-});
-
-// Since CreateOrder and CancelOrder are now generated, we can remove the explicit ones
+}

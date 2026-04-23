@@ -30,7 +30,7 @@ final class UserAddressApiServiceProvider
         argument: null,
         retry: null,
         name: r'userAddressApiServiceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -59,7 +59,7 @@ final class UserAddressApiServiceProvider
 }
 
 String _$userAddressApiServiceHash() =>
-    r'0b6dd092d863e41d621b3ef09395261e0d736a59';
+    r'e76ea82f297bd65dae45c1cc745aab72fee23188';
 
 @ProviderFor(userAddressRemoteDataSource)
 final userAddressRemoteDataSourceProvider =
@@ -79,7 +79,7 @@ final class UserAddressRemoteDataSourceProvider
         argument: null,
         retry: null,
         name: r'userAddressRemoteDataSourceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -108,7 +108,7 @@ final class UserAddressRemoteDataSourceProvider
 }
 
 String _$userAddressRemoteDataSourceHash() =>
-    r'5be01cee242122dd3298d1b41c778a7bb0d44621';
+    r'e11753aeaf1b3685c8d5316a9161d77f740a5343';
 
 /// Repository provider
 
@@ -132,7 +132,7 @@ final class UserAddressRepositoryProvider
         argument: null,
         retry: null,
         name: r'userAddressRepositoryProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -161,7 +161,7 @@ final class UserAddressRepositoryProvider
 }
 
 String _$userAddressRepositoryHash() =>
-    r'85ad630ae48afd01fbdaaa23fa07e2e32f5eb0ee';
+    r'b5b43b39788abf67b4c3d2e6a7e57fc2ee4bdf3e';
 
 /// UseCase providers
 
@@ -185,7 +185,7 @@ final class GetUserAddressesUseCaseProvider
         argument: null,
         retry: null,
         name: r'getUserAddressesUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -214,7 +214,7 @@ final class GetUserAddressesUseCaseProvider
 }
 
 String _$getUserAddressesUseCaseHash() =>
-    r'be8f790d9c1d66272b5c8c5e3c33ff86999f7150';
+    r'3a753dfe8d9b3932eae9d3ea4a00cd25170bb44a';
 
 @ProviderFor(getAddressByIdUseCase)
 final getAddressByIdUseCaseProvider = GetAddressByIdUseCaseProvider._();
@@ -233,7 +233,7 @@ final class GetAddressByIdUseCaseProvider
         argument: null,
         retry: null,
         name: r'getAddressByIdUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -262,7 +262,7 @@ final class GetAddressByIdUseCaseProvider
 }
 
 String _$getAddressByIdUseCaseHash() =>
-    r'5232c3fd868da5de4b4976e0f3c7082802aff92a';
+    r'a6881d9a4523d72405d3ee1a74806e82e6a01ea7';
 
 @ProviderFor(createAddressUseCase)
 final createAddressUseCaseProvider = CreateAddressUseCaseProvider._();
@@ -281,7 +281,7 @@ final class CreateAddressUseCaseProvider
         argument: null,
         retry: null,
         name: r'createAddressUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -310,7 +310,7 @@ final class CreateAddressUseCaseProvider
 }
 
 String _$createAddressUseCaseHash() =>
-    r'd22cddf870987bac09492fe335352d31f33e7c52';
+    r'70b39dca2e23b77ba0f0644b22847b58c2f7c3ff';
 
 @ProviderFor(updateAddressUseCase)
 final updateAddressUseCaseProvider = UpdateAddressUseCaseProvider._();
@@ -329,7 +329,7 @@ final class UpdateAddressUseCaseProvider
         argument: null,
         retry: null,
         name: r'updateAddressUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -358,7 +358,7 @@ final class UpdateAddressUseCaseProvider
 }
 
 String _$updateAddressUseCaseHash() =>
-    r'7cc44399c8abb2c30aa738d1d03db75f1a8f9ab5';
+    r'be7dd7f308351b546bb4d2e2b1d46d52c44bd104';
 
 @ProviderFor(deleteAddressUseCase)
 final deleteAddressUseCaseProvider = DeleteAddressUseCaseProvider._();
@@ -377,7 +377,7 @@ final class DeleteAddressUseCaseProvider
         argument: null,
         retry: null,
         name: r'deleteAddressUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -406,7 +406,7 @@ final class DeleteAddressUseCaseProvider
 }
 
 String _$deleteAddressUseCaseHash() =>
-    r'bea061e7b9f7df66de8f964be78ce77f705c1382';
+    r'd34504d6229babc8b9f63def529290eb4364f8ab';
 
 @ProviderFor(setDefaultAddressUseCase)
 final setDefaultAddressUseCaseProvider = SetDefaultAddressUseCaseProvider._();
@@ -425,7 +425,7 @@ final class SetDefaultAddressUseCaseProvider
         argument: null,
         retry: null,
         name: r'setDefaultAddressUseCaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -454,7 +454,7 @@ final class SetDefaultAddressUseCaseProvider
 }
 
 String _$setDefaultAddressUseCaseHash() =>
-    r'e20e28fac5ecf15c6379569e8831075612fa2e51';
+    r'287068788cb649ec1bbd3cc95aa43ea9dc75b446';
 
 /// Helper providers
 

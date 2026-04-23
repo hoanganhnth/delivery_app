@@ -1,5 +1,4 @@
 import 'package:delivery_app/core/network/dio/authenticated_network_providers.dart';
-// import 'package:delivery_app/core/network/network_providers.dart';
 import 'package:delivery_app/features/profile/data/datasources/profile_local_datasource.dart';
 import 'package:delivery_app/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:delivery_app/features/profile/data/datasources/profile_remote_datasource_impl.dart';
@@ -9,51 +8,57 @@ import 'package:delivery_app/features/profile/domain/usecases/clear_profile_cach
 import 'package:delivery_app/features/profile/domain/usecases/get_user_profile_usecase.dart';
 import 'package:delivery_app/features/profile/domain/usecases/update_user_profile_usecase.dart';
 import 'package:delivery_app/features/profile/domain/usecases/upload_avatar_usecase.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final profileApiServiceProvider = Provider<ProfileApiService>((ref) {
+part 'profile_providers.g.dart';
+
+@Riverpod(keepAlive: true)
+ProfileApiService profileApiService(Ref ref) {
   final dio = ref.watch(authenticatedDioProvider);
   return ProfileApiService(dio);
-});
+}
 
-final profileRemoteDataSourceProvider = Provider<ProfileRemoteDataSource>((
-  ref,
-) {
+@Riverpod(keepAlive: true)
+ProfileRemoteDataSource profileRemoteDataSource(Ref ref) {
   final apiService = ref.watch(profileApiServiceProvider);
   return ProfileRemoteDataSourceImpl(apiService);
-});
-final profileLocalDataSourceProvider = Provider<ProfileLocalDataSource>((ref) {
-  // Implement and return your local data source here
-  return ProfileLocalDataSourceImpl();
-});
+}
 
-final profileRepositoryProvider = Provider<ProfileRepository>((ref) {
+@Riverpod(keepAlive: true)
+ProfileLocalDataSource profileLocalDataSource(Ref ref) {
+  return ProfileLocalDataSourceImpl();
+}
+
+@Riverpod(keepAlive: true)
+ProfileRepository profileRepository(Ref ref) {
   final remoteDataSource = ref.watch(profileRemoteDataSourceProvider);
   final localDataSource = ref.watch(profileLocalDataSourceProvider);
   return ProfileRepositoryImpl(
     localDataSource: localDataSource,
     remoteDataSource: remoteDataSource,
   );
-});
+}
 
-final getUserProfileUseCaseProvider = Provider<GetUserProfileUseCase>((ref) {
+@Riverpod(keepAlive: true)
+GetUserProfileUseCase getUserProfileUseCase(Ref ref) {
   final repository = ref.watch(profileRepositoryProvider);
   return GetUserProfileUseCase(repository);
-});
+}
 
-final updateUserProfileUseCaseProvider = Provider<UpdateUserProfileUseCase>((
-  ref,
-) {
+@Riverpod(keepAlive: true)
+UpdateUserProfileUseCase updateUserProfileUseCase(Ref ref) {
   final repository = ref.watch(profileRepositoryProvider);
   return UpdateUserProfileUseCase(repository);
-});
+}
 
-final uploadProfileImageUseCaseProvider = Provider<UploadAvatarUseCase>((ref) {
+@Riverpod(keepAlive: true)
+UploadAvatarUseCase uploadAvatarUseCase(Ref ref) {
   final repository = ref.watch(profileRepositoryProvider);
   return UploadAvatarUseCase(repository);
-});
+}
 
-final clearProfileCacheUseCaseProvider = Provider<ClearProfileCacheUseCase>((ref) {
+@Riverpod(keepAlive: true)
+ClearProfileCacheUseCase clearProfileCacheUseCase(Ref ref) {
   final repository = ref.watch(profileRepositoryProvider);
   return ClearProfileCacheUseCase(repository);
-});
+}

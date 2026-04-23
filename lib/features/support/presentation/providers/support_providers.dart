@@ -1,8 +1,8 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../data/datasources/support_remote_datasource.dart';
 import '../../data/repositories/support_repository_impl.dart';
 import '../../domain/repositories/support_repository.dart';
-import '../../domain/usecases/close_conversation_usecase.dart'; // ✅ Thêm
+import '../../domain/usecases/close_conversation_usecase.dart';
 import '../../domain/usecases/get_or_create_conversation_usecase.dart';
 import '../../domain/usecases/load_initial_messages_usecase.dart';
 import '../../domain/usecases/load_more_messages_usecase.dart';
@@ -11,58 +11,66 @@ import '../../domain/usecases/send_text_message_usecase.dart';
 import '../../domain/usecases/stream_messages_usecase.dart';
 import '../../domain/usecases/stream_new_messages_usecase.dart';
 
+part 'support_providers.g.dart';
+
 // Data Source
-final supportRemoteDataSourceProvider = Provider<SupportRemoteDataSource>((ref) {
+@Riverpod(keepAlive: true)
+SupportRemoteDataSource supportRemoteDataSource(Ref ref) {
   return SupportRemoteDataSourceImpl();
-});
+}
 
 // Repository
-final supportRepositoryProvider = Provider<SupportRepository>((ref) {
+@Riverpod(keepAlive: true)
+SupportRepository supportRepository(Ref ref) {
   final dataSource = ref.watch(supportRemoteDataSourceProvider);
   return SupportRepositoryImpl(dataSource);
-});
+}
 
 // Use Cases
-final getOrCreateConversationUseCaseProvider = Provider<GetOrCreateConversationUseCase>((ref) {
+@Riverpod(keepAlive: true)
+GetOrCreateConversationUseCase getOrCreateConversationUseCase(Ref ref) {
   final repository = ref.watch(supportRepositoryProvider);
   return GetOrCreateConversationUseCase(repository);
-});
+}
 
-final streamMessagesUseCaseProvider = Provider<StreamMessagesUseCase>((ref) {
+@Riverpod(keepAlive: true)
+StreamMessagesUseCase streamMessagesUseCase(Ref ref) {
   final repository = ref.watch(supportRepositoryProvider);
   return StreamMessagesUseCase(repository);
-});
+}
 
-final loadInitialMessagesUseCaseProvider = Provider<LoadInitialMessagesUseCase>((ref) {
+@Riverpod(keepAlive: true)
+LoadInitialMessagesUseCase loadInitialMessagesUseCase(Ref ref) {
   final repository = ref.watch(supportRepositoryProvider);
   return LoadInitialMessagesUseCase(repository);
-});
+}
 
-final loadMoreMessagesUseCaseProvider = Provider<LoadMoreMessagesUseCase>((ref) {
+@Riverpod(keepAlive: true)
+LoadMoreMessagesUseCase loadMoreMessagesUseCase(Ref ref) {
   final repository = ref.watch(supportRepositoryProvider);
   return LoadMoreMessagesUseCase(repository);
-});
+}
 
-final streamNewMessagesUseCaseProvider = Provider<StreamNewMessagesUseCase>((ref) {
+@Riverpod(keepAlive: true)
+StreamNewMessagesUseCase streamNewMessagesUseCase(Ref ref) {
   final repository = ref.watch(supportRepositoryProvider);
   return StreamNewMessagesUseCase(repository);
-});
+}
 
-final sendTextMessageUseCaseProvider = Provider<SendTextMessageUseCase>((ref) {
+@Riverpod(keepAlive: true)
+SendTextMessageUseCase sendTextMessageUseCase(Ref ref) {
   final repository = ref.watch(supportRepositoryProvider);
   return SendTextMessageUseCase(repository);
-});
+}
 
-final sendMediaMessageUseCaseProvider = Provider<SendMediaMessageUseCase>((ref) {
+@Riverpod(keepAlive: true)
+SendMediaMessageUseCase sendMediaMessageUseCase(Ref ref) {
   final repository = ref.watch(supportRepositoryProvider);
   return SendMediaMessageUseCase(repository);
-});
+}
 
-// ✅ Thêm CloseConversationUseCase provider
-final closeConversationUseCaseProvider = Provider<CloseConversationUseCase>((ref) {
-  return CloseConversationUseCase(ref.watch(supportRepositoryProvider));
-});
-
-// chatNotifierProvider is removed as we now generate it
-
-// Provider to get faq topics
+@Riverpod(keepAlive: true)
+CloseConversationUseCase closeConversationUseCase(Ref ref) {
+  final repository = ref.watch(supportRepositoryProvider);
+  return CloseConversationUseCase(repository);
+}
