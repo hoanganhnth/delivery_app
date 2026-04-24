@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'app_initializer_service.dart';
+part of 'app_initializer_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -15,11 +15,11 @@ final appInitializerServiceProvider = AppInitializerServiceProvider._();
 final class AppInitializerServiceProvider
     extends
         $FunctionalProvider<
-          AppInitializerService,
-          AppInitializerService,
-          AppInitializerService
+          IAppInitializerService,
+          IAppInitializerService,
+          IAppInitializerService
         >
-    with $Provider<AppInitializerService> {
+    with $Provider<IAppInitializerService> {
   AppInitializerServiceProvider._()
     : super(
         from: null,
@@ -36,23 +36,23 @@ final class AppInitializerServiceProvider
 
   @$internal
   @override
-  $ProviderElement<AppInitializerService> $createElement(
+  $ProviderElement<IAppInitializerService> $createElement(
     $ProviderPointer pointer,
   ) => $ProviderElement(pointer);
 
   @override
-  AppInitializerService create(Ref ref) {
+  IAppInitializerService create(Ref ref) {
     return appInitializerService(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(AppInitializerService value) {
+  Override overrideWithValue(IAppInitializerService value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<AppInitializerService>(value),
+      providerOverride: $SyncValueProvider<IAppInitializerService>(value),
     );
   }
 }
 
 String _$appInitializerServiceHash() =>
-    r'4891afcb9c0b22175c1469d9516c57b2c36af37b';
+    r'9507d4c5a3c4b982377f4ccef3a6300edbfc4e97';

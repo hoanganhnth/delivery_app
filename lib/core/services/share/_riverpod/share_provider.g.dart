@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'share_service.dart';
+part of 'share_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -8,17 +8,13 @@ part of 'share_service.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Provider for share service
 
 @ProviderFor(shareService)
 final shareServiceProvider = ShareServiceProvider._();
 
-/// Provider for share service
-
 final class ShareServiceProvider
-    extends $FunctionalProvider<ShareService, ShareService, ShareService>
-    with $Provider<ShareService> {
-  /// Provider for share service
+    extends $FunctionalProvider<IShareService, IShareService, IShareService>
+    with $Provider<IShareService> {
   ShareServiceProvider._()
     : super(
         from: null,
@@ -35,21 +31,21 @@ final class ShareServiceProvider
 
   @$internal
   @override
-  $ProviderElement<ShareService> $createElement($ProviderPointer pointer) =>
+  $ProviderElement<IShareService> $createElement($ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  ShareService create(Ref ref) {
+  IShareService create(Ref ref) {
     return shareService(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ShareService value) {
+  Override overrideWithValue(IShareService value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<ShareService>(value),
+      providerOverride: $SyncValueProvider<IShareService>(value),
     );
   }
 }
 
-String _$shareServiceHash() => r'a0af791eb6ede802d524630efc027efd9f798451';
+String _$shareServiceHash() => r'9d6823c38db1ff558ed60143ab35b5d7bda525c2';

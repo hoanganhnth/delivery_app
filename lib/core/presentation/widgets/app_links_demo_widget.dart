@@ -4,7 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app_links/app_links.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
-import '../../services/share_service.dart';
+import 'package:delivery_app/core/services/share/i_share_service.dart';
+import 'package:delivery_app/core/services/share/_riverpod/share_provider.dart';
 import '../../routing/router_config.dart';
 
 /// Demo widget for testing app_links deep linking
@@ -312,7 +313,7 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
     );
   }
 
-  Future<void> _shareRestaurant(ShareService shareService) async {
+  Future<void> _shareRestaurant(IShareService shareService) async {
     try {
       await shareService.shareRestaurant('rest_1', 'Amazing Restaurant');
       if (mounted) {
@@ -329,7 +330,7 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
     }
   }
 
-  Future<void> _shareOrder(ShareService shareService) async {
+  Future<void> _shareOrder(IShareService shareService) async {
     try {
       await shareService.shareOrder('ORD1001');
       if (mounted) {

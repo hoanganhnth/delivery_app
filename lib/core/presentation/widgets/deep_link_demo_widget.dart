@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
-import '../../services/share_service.dart';
-import '../../services/deep_link_service.dart';
+import 'package:delivery_app/core/services/share/_riverpod/share_provider.dart';
+import 'package:delivery_app/core/services/deep_link/_riverpod/deep_link_provider.dart';
 import '../../routing/router_config.dart';
 
 /// Demo widget for testing deep links
@@ -14,6 +14,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final shareService = ref.watch(shareServiceProvider);
+    final deepLinkService = ref.watch(deepLinkServiceProvider);
     final config = ref.watch(routerConfigProvider);
 
     return Card(
@@ -45,7 +46,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
                 'Restaurant #1',
                 () => _copyLink(
                   context,
-                  DeepLinkService.generateRestaurantLink(
+                  deepLinkService.generateRestaurantLink(
                     config.baseUrl ?? 'https://deliveryapp.com',
                     'rest_1',
                   ),
@@ -70,7 +71,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
                 'Order #ORD1001',
                 () => _copyLink(
                   context,
-                  DeepLinkService.generateOrderLink(
+                  deepLinkService.generateOrderLink(
                     config.baseUrl ?? 'https://deliveryapp.com',
                     'ORD1001',
                   ),
@@ -81,7 +82,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
                 'Track Order',
                 () => _copyLink(
                   context,
-                  DeepLinkService.generateTrackingLink(
+                  deepLinkService.generateTrackingLink(
                     config.baseUrl ?? 'https://deliveryapp.com',
                     'ORD1001',
                   ),
@@ -98,7 +99,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
                 'SAVE20 Promo',
                 () => _copyLink(
                   context,
-                  DeepLinkService.generatePromoLink(
+                  deepLinkService.generatePromoLink(
                     config.baseUrl ?? 'https://deliveryapp.com',
                     'SAVE20',
                   ),
@@ -120,7 +121,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
                 'Menu Link',
                 () => _copyLink(
                   context,
-                  DeepLinkService.generateDeepLink(
+                  deepLinkService.generateDeepLink(
                     baseUrl: config.baseUrl ?? 'https://deliveryapp.com',
                     path: '/menu',
                     params: {'restaurant_id': 'rest_1'},
@@ -132,7 +133,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
                 'Reset Password',
                 () => _copyLink(
                   context,
-                  DeepLinkService.generateDeepLink(
+                  deepLinkService.generateDeepLink(
                     baseUrl: config.baseUrl ?? 'https://deliveryapp.com',
                     path: '/reset-password',
                     params: {'token': 'abc123'},

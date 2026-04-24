@@ -1,9 +1,9 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:go_router/go_router.dart';
-import '../../../features/auth/presentation/providers/providers.dart';
-import '../../logger/app_logger.dart';
-import '../../routing/app_routes.dart';
-import '../../services/app_initializer_service.dart';
+import 'package:delivery_app/features/auth/presentation/providers/providers.dart';
+import 'package:delivery_app/core/logger/app_logger.dart';
+import 'package:delivery_app/core/routing/app_routes.dart';
+import 'package:delivery_app/core/services/app_initializer/_riverpod/app_initializer_provider.dart';
 
 part 'splash_controller.g.dart';
 

@@ -1,16 +1,16 @@
 import 'dart:io';
 import 'package:cloudinary_public/cloudinary_public.dart';
-import '../logger/app_logger.dart';
+import '../../logger/app_logger.dart';
 import 'i_image_upload_service.dart';
 
 /// Cloudinary implementation of IImageUploadService
-class CloudinaryService implements IImageUploadService {
+class CloudinaryImageUploadService implements IImageUploadService {
   late final CloudinaryPublic _cloudinary;
   
   static const String _cloudName = 'djnfk8j8v';
   static const String _uploadPreset = 'delivery';
   
-  CloudinaryService() {
+  CloudinaryImageUploadService() {
     _cloudinary = CloudinaryPublic(_cloudName, _uploadPreset);
   }
 

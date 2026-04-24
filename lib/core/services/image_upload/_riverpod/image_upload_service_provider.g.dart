@@ -55,4 +55,4 @@ final class ImageUploadServiceProvider
 }
 
 String _$imageUploadServiceHash() =>
-    r'fee3fa0fd2e320939ebba5ee21decd0d9e4102b9';
+    r'e6bca85bbcea2821ff47010302426a7f8506ad1f';

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'deep_link_service.dart';
+part of 'deep_link_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -8,25 +8,25 @@ part of 'deep_link_service.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Provider for deep link service
 
 @ProviderFor(deepLinkService)
 final deepLinkServiceProvider = DeepLinkServiceProvider._();
 
-/// Provider for deep link service
-
 final class DeepLinkServiceProvider
     extends
-        $FunctionalProvider<DeepLinkService, DeepLinkService, DeepLinkService>
-    with $Provider<DeepLinkService> {
-  /// Provider for deep link service
+        $FunctionalProvider<
+          IDeepLinkService,
+          IDeepLinkService,
+          IDeepLinkService
+        >
+    with $Provider<IDeepLinkService> {
   DeepLinkServiceProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'deepLinkServiceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -36,21 +36,21 @@ final class DeepLinkServiceProvider
 
   @$internal
   @override
-  $ProviderElement<DeepLinkService> $createElement($ProviderPointer pointer) =>
+  $ProviderElement<IDeepLinkService> $createElement($ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  DeepLinkService create(Ref ref) {
+  IDeepLinkService create(Ref ref) {
     return deepLinkService(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(DeepLinkService value) {
+  Override overrideWithValue(IDeepLinkService value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<DeepLinkService>(value),
+      providerOverride: $SyncValueProvider<IDeepLinkService>(value),
     );
   }
 }
 
-String _$deepLinkServiceHash() => r'186ebcffddd5814162f463b315f5a26ea7bded6e';
+String _$deepLinkServiceHash() => r'09d94a5c50cae93fa01d0be75bf684a1aa7a15c1';

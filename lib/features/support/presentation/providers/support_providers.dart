@@ -11,7 +11,7 @@ import '../../domain/usecases/send_text_message_usecase.dart';
 import '../../domain/usecases/stream_messages_usecase.dart';
 import '../../domain/usecases/stream_new_messages_usecase.dart';
 
-import '../../../../core/services/_riverpod/image_upload_service_provider.dart';
+import '../../../../core/services/image_upload/_riverpod/image_upload_service_provider.dart';
 
 part 'support_providers.g.dart';
 

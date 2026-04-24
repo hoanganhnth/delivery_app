@@ -1,6 +1,6 @@
 import '../models/location_model.dart';
 import '../models/address_model.dart';
-import '../../../../core/services/i_location_service.dart';
+import '../../../../core/services/location/i_location_service.dart';
 
 /// Interface cho location data source
 abstract class LocationDataSource {

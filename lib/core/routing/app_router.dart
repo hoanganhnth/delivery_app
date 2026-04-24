@@ -4,29 +4,29 @@ import 'package:delivery_app/features/support/presentation/screens/support_chat_
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:go_router/go_router.dart';
-import '../../features/auth/presentation/screens/login_screen.dart';
-import '../../features/auth/presentation/screens/register_screen.dart';
-import '../../features/auth/presentation/screens/forgot_password_screen.dart';
-import '../../features/auth/presentation/providers/providers.dart';
-import '../../features/main/presentation/pages/main_screen.dart';
-import '../../features/profile/profile.dart';
-import '../../features/settings/settings.dart';
-import '../../features/settings/presentation/screens/theme_settings_screen.dart';
-import '../../features/orders/orders.dart';
-import '../../features/restaurants/restaurants.dart';
-import '../../features/cart/cart.dart';
-import '../../features/livestream/presentation/screens/all_livestreams_screen.dart';
-import '../../features/livestream/presentation/screens/livestream_detail_screen.dart';
-import '../../features/user_address/presentation/screens/address_list_screen.dart';
-import '../../features/user_address/presentation/screens/add_edit_address_screen.dart';
-import '../../features/user_address/domain/entities/user_address_entity.dart';
-import '../presentation/screens/splash_screen.dart';
-import '../presentation/screens/error_screens.dart';
-// import '../presentation/screens/admin_screen.dart';
-import 'app_routes.dart';
-import 'router_config.dart';
-import 'guard_manager.dart';
-import '../services/deep_link_service.dart';
+import 'package:delivery_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:delivery_app/features/auth/presentation/screens/register_screen.dart';
+import 'package:delivery_app/features/auth/presentation/screens/forgot_password_screen.dart';
+import 'package:delivery_app/features/auth/presentation/providers/providers.dart';
+import 'package:delivery_app/features/main/presentation/pages/main_screen.dart';
+import 'package:delivery_app/features/profile/profile.dart';
+import 'package:delivery_app/features/settings/settings.dart';
+import 'package:delivery_app/features/settings/presentation/screens/theme_settings_screen.dart';
+import 'package:delivery_app/features/orders/orders.dart';
+import 'package:delivery_app/features/restaurants/restaurants.dart';
+import 'package:delivery_app/features/cart/cart.dart';
+import 'package:delivery_app/features/livestream/presentation/screens/all_livestreams_screen.dart';
+import 'package:delivery_app/features/livestream/presentation/screens/livestream_detail_screen.dart';
+import 'package:delivery_app/features/user_address/presentation/screens/address_list_screen.dart';
+import 'package:delivery_app/features/user_address/presentation/screens/add_edit_address_screen.dart';
+import 'package:delivery_app/features/user_address/domain/entities/user_address_entity.dart';
+import 'package:delivery_app/core/presentation/screens/splash_screen.dart';
+import 'package:delivery_app/core/presentation/screens/error_screens.dart';
+// import 'package:delivery_app/core/presentation/screens/admin_screen.dart';
+import 'package:delivery_app/core/routing/app_routes.dart';
+import 'package:delivery_app/core/routing/router_config.dart';
+import 'package:delivery_app/core/routing/guard_manager.dart';
+import 'package:delivery_app/core/services/deep_link/_riverpod/deep_link_provider.dart';
 
 part 'app_router.g.dart';
 
@@ -37,16 +37,12 @@ GoRouter router(Ref ref) {
   final guardManager = GuardManager(ref);
 
   final refreshListenable = ValueNotifier<bool>(false);
-  
-  ref.listen<AuthState>(
-    authProvider,
-    (previous, next) {
-      if (previous?.isAuthenticated != next.isAuthenticated) {
-        refreshListenable.value = next.isAuthenticated;
-      }
-    },
-    fireImmediately: true,
-  );
+
+  ref.listen<AuthState>(authProvider, (previous, next) {
+    if (previous?.isAuthenticated != next.isAuthenticated) {
+      refreshListenable.value = next.isAuthenticated;
+    }
+  }, fireImmediately: true);
   ref.onDispose(refreshListenable.dispose);
 
   // Create router
@@ -54,45 +50,46 @@ GoRouter router(Ref ref) {
     refreshListenable: refreshListenable,
     initialLocation: config.initialLocation,
     debugLogDiagnostics: config.debugLogDiagnostics,
-    redirect: config.enableRedirects
-        ? (context, state) {
-          // return AppRoutes.main;//need remove
-            final authState = ref.read(authProvider);
-            final isAuthenticated = authState.isAuthenticated;
+    redirect:
+        config.enableRedirects
+            ? (context, state) {
+              // return AppRoutes.main;//need remove
+              final authState = ref.read(authProvider);
+              final isAuthenticated = authState.isAuthenticated;
 
-            // List of routes that don't require authentication
-            final publicRoutes = [
-              AppRoutes.login,
-              AppRoutes.register,
-              AppRoutes.forgotPassword,
-              AppRoutes.splash,
-              AppRoutes.root,
-            ];
+              // List of routes that don't require authentication
+              final publicRoutes = [
+                AppRoutes.login,
+                AppRoutes.register,
+                AppRoutes.forgotPassword,
+                AppRoutes.splash,
+                AppRoutes.root,
+              ];
 
-            final currentPath = state.uri.path;
-            final isPublicRoute = publicRoutes.contains(currentPath);
+              final currentPath = state.uri.path;
+              final isPublicRoute = publicRoutes.contains(currentPath);
 
-            // Don't redirect from splash - let splash controller handle navigation
-            if (currentPath == AppRoutes.splash) {
+              // Don't redirect from splash - let splash controller handle navigation
+              if (currentPath == AppRoutes.splash) {
+                return null;
+              }
+
+              // If user is not authenticated and trying to access protected route
+              if (!isAuthenticated && !isPublicRoute) {
+                return AppRoutes.login;
+              }
+
+              // If user is authenticated and trying to access auth routes, redirect to main
+              if (isAuthenticated &&
+                  (currentPath == AppRoutes.login ||
+                      currentPath == AppRoutes.register)) {
+                return AppRoutes.main;
+              }
+
+              // No redirect needed
               return null;
             }
-
-            // If user is not authenticated and trying to access protected route
-            if (!isAuthenticated && !isPublicRoute) {
-              return AppRoutes.login;
-            }
-
-            // If user is authenticated and trying to access auth routes, redirect to main
-            if (isAuthenticated &&
-                (currentPath == AppRoutes.login ||
-                    currentPath == AppRoutes.register)) {
-              return AppRoutes.main;
-            }
-
-            // No redirect needed
-            return null;
-          }
-        : null,
+            : null,
     routes: [
       // Root route - redirect to splash
       GoRoute(
@@ -282,14 +279,14 @@ GoRouter router(Ref ref) {
         redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const AddressListScreen(),
       ),
-      
+
       GoRoute(
         path: AppRoutes.addAddress,
         name: 'add-address',
         redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const AddEditAddressScreen(),
       ),
-      
+
       GoRoute(
         path: AppRoutes.editAddress,
         name: 'edit-address',
@@ -329,7 +326,7 @@ GoRouter router(Ref ref) {
   );
 
   // Initialize deep links with router
-  DeepLinkService.initialize(router);
+  ref.read(deepLinkServiceProvider).initialize(router);
 
   return router;
 }
@@ -356,7 +353,6 @@ extension GoRouterExtension on GoRouter {
   // Address management navigation
   void pushAddressList() => pushNamed('address-list');
   void pushAddAddress() => pushNamed('add-address');
-  void pushEditAddress(UserAddressEntity address) => 
+  void pushEditAddress(UserAddressEntity address) =>
       pushNamed('edit-address', extra: address);
 }
-

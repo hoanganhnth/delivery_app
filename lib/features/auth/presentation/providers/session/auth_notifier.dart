@@ -1,15 +1,15 @@
-import '../../../../../core/logger/app_logger.dart';
-import '../../../../../core/usecases/usecase.dart';
-import '../../../domain/entities/auth_entity.dart';
-import '../../../domain/usecases/login_usecase.dart';
-import '../../../domain/usecases/register_usecase.dart';
-import '../../../domain/usecases/refresh_token_usecase.dart';
-import '../../../domain/usecases/store_tokens_usecase.dart';
-import '../../../domain/usecases/get_tokens_usecase.dart';
-import '../../../domain/usecases/clear_tokens_usecase.dart';
-import 'auth_state.dart';
-import '../di/auth_di_providers.dart';
-import '../di/storage_di_providers.dart';
+import 'package:delivery_app/core/logger/app_logger.dart';
+import 'package:delivery_app/core/usecases/usecase.dart';
+import 'package:delivery_app/features/auth/domain/entities/auth_entity.dart';
+import 'package:delivery_app/features/auth/domain/usecases/login_usecase.dart';
+import 'package:delivery_app/features/auth/domain/usecases/register_usecase.dart';
+import 'package:delivery_app/features/auth/domain/usecases/refresh_token_usecase.dart';
+import 'package:delivery_app/features/auth/domain/usecases/store_tokens_usecase.dart';
+import 'package:delivery_app/features/auth/domain/usecases/get_tokens_usecase.dart';
+import 'package:delivery_app/features/auth/domain/usecases/clear_tokens_usecase.dart';
+import 'package:delivery_app/features/auth/presentation/providers/session/auth_state.dart';
+import 'package:delivery_app/features/auth/presentation/providers/di/auth_di_providers.dart';
+import 'package:delivery_app/features/auth/presentation/providers/di/storage_di_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_notifier.g.dart';

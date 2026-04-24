@@ -1,20 +1,16 @@
 import 'package:delivery_app/features/auth/presentation/providers/providers.dart';
 import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../logger/app_logger.dart';
+import 'package:delivery_app/core/logger/app_logger.dart';
+import 'i_app_initializer_service.dart';
 
-part 'app_initializer_service.g.dart';
-
-class AppInitializerService {
-  // Liệt kê rõ ràng các "đồ chơi" cần thiết
+/// Implementation of IAppInitializerService
+class AppInitializerService implements IAppInitializerService {
   final AuthNotifier auth;
   final ProfileNotifier profile;
-  // Giả sử sau này bạn thêm 5-7 thằng nữa ở đây...
-  // final SettingsNotifier settings;
-  // final AnalyticsService analytics;
 
   AppInitializerService({required this.auth, required this.profile});
 
+  @override
   Future<void> initialize() async {
     try {
       AppLogger.i('AppInitializerService: Khởi chạy...');
@@ -26,8 +22,6 @@ class AppInitializerService {
         // 2. Chạy song song tất cả các dịch vụ cần thiết
         await Future.wait([
           _initProfile(),
-          // _initSettings(),
-          // _initAnalytics(),
         ]);
       }
 
@@ -46,23 +40,10 @@ class AppInitializerService {
     }
   }
 
+  @override
   Future<void> clearDataAfterLogout() async {
-    // Dọn dẹp tất cả các notifier đã inject vào
     await Future.wait([
       profile.clearProfileCache(),
-      // settings.reset(),
     ]);
   }
-}
-
-@Riverpod(keepAlive: true)
-AppInitializerService appInitializerService(Ref ref) {
-  // "Nhặt" các món đồ cần thiết từ Store
-  final authNotifier = ref.read(authProvider.notifier);
-  final profileNotifier = ref.read(profileProvider.notifier);
-
-  // Sau này có thêm 10 thằng thì bạn cứ nhặt thêm ở đây rồi truyền vào Constructor
-  // final settings = ref.read(settingsProvider.notifier);
-
-  return AppInitializerService(auth: authNotifier, profile: profileNotifier);
 }

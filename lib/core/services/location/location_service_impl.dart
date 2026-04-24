@@ -1,11 +1,11 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
-import '../logger/app_logger.dart';
+import '../../logger/app_logger.dart';
 import 'i_location_service.dart';
 
 /// Implementation of ILocationService using Geolocator and Geocoding packages
-class LocationService implements ILocationService {
-  LocationService();
+class LocationServiceImpl implements ILocationService {
+  LocationServiceImpl();
 
   @override
   Future<bool> requestLocationPermission() async {

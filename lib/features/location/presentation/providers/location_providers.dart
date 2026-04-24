@@ -7,7 +7,7 @@ import '../../domain/repositories/location_repository.dart';
 import '../../domain/usecases/location_usecases.dart';
 import '../../domain/entities/location_entity.dart';
 
-import '../../../../core/services/_riverpod/location_service_provider.dart';
+import '../../../../core/services/location/_riverpod/location_service_provider.dart';
 
 part 'location_providers.g.dart';
 
