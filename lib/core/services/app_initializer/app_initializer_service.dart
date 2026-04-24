@@ -1,49 +1,47 @@
-import 'package:delivery_app/features/auth/presentation/providers/providers.dart';
-import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
 import 'package:delivery_app/core/logger/app_logger.dart';
 import 'i_app_initializer_service.dart';
 
-/// Implementation of IAppInitializerService
+/// Core implementation of IAppInitializerService.
+/// Domain-agnostic: runs generic tasks, knows nothing about Auth/Profile.
 class AppInitializerService implements IAppInitializerService {
-  final AuthNotifier auth;
-  final ProfileNotifier profile;
+  final List<InitTask> _initTasks;
+  final List<InitTask> _cleanupTasks;
 
-  AppInitializerService({required this.auth, required this.profile});
+  AppInitializerService({
+    required List<InitTask> initTasks,
+    List<InitTask> cleanupTasks = const [],
+  })  : _initTasks = initTasks,
+        _cleanupTasks = cleanupTasks;
 
   @override
-  Future<void> initialize() async {
+  Future<bool> initialize() async {
     try {
-      AppLogger.i('AppInitializerService: Khởi chạy...');
+      AppLogger.i('AppInitializerService: Initializing...');
 
-      // 1. Auth check
-      final authState = await auth.checkAuthStatus();
+      await Future.wait(
+        _initTasks.map((task) => task()),
+      );
 
-      if (authState.isAuthenticated) {
-        // 2. Chạy song song tất cả các dịch vụ cần thiết
-        await Future.wait([
-          _initProfile(),
-        ]);
-      }
-
-      AppLogger.i('AppInitializerService: Hoàn tất.');
+      AppLogger.i('AppInitializerService: Completed.');
+      return true;
     } catch (e) {
       AppLogger.e('AppInitializerService: Init Failed: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> _initProfile() async {
-    try {
-      await profile.getUserProfile(useCache: true);
-    } catch (e) {
-      AppLogger.w('Profile load failed but skipping...');
+      return false;
     }
   }
 
   @override
-  Future<void> clearDataAfterLogout() async {
-    await Future.wait([
-      profile.clearProfileCache(),
-    ]);
+  Future<void> cleanup() async {
+    try {
+      AppLogger.i('AppInitializerService: Cleaning up...');
+
+      await Future.wait(
+        _cleanupTasks.map((task) => task()),
+      );
+
+      AppLogger.i('AppInitializerService: Cleanup completed.');
+    } catch (e) {
+      AppLogger.e('AppInitializerService: Cleanup Failed: $e');
+    }
   }
 }

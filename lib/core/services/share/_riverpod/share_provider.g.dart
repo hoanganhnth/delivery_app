@@ -21,7 +21,7 @@ final class ShareServiceProvider
         argument: null,
         retry: null,
         name: r'shareServiceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -48,4 +48,4 @@ final class ShareServiceProvider
   }
 }
 
-String _$shareServiceHash() => r'9d6823c38db1ff558ed60143ab35b5d7bda525c2';
+String _$shareServiceHash() => r'dd997be8115c6d3733aa4e0d7e4c9bb18dea2aae';

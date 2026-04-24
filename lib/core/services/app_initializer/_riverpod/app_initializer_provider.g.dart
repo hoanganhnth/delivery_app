@@ -8,9 +8,14 @@ part of 'app_initializer_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// The provider is the "wiring point" where Feature-layer dependencies
+/// are injected into the domain-agnostic Core service.
 
 @ProviderFor(appInitializerService)
 final appInitializerServiceProvider = AppInitializerServiceProvider._();
+
+/// The provider is the "wiring point" where Feature-layer dependencies
+/// are injected into the domain-agnostic Core service.
 
 final class AppInitializerServiceProvider
     extends
@@ -20,6 +25,8 @@ final class AppInitializerServiceProvider
           IAppInitializerService
         >
     with $Provider<IAppInitializerService> {
+  /// The provider is the "wiring point" where Feature-layer dependencies
+  /// are injected into the domain-agnostic Core service.
   AppInitializerServiceProvider._()
     : super(
         from: null,
@@ -55,4 +62,4 @@ final class AppInitializerServiceProvider
 }
 
 String _$appInitializerServiceHash() =>
-    r'9507d4c5a3c4b982377f4ccef3a6300edbfc4e97';
+    r'ad68384385abe72ee4f1148b3f5294425e1c63a4';

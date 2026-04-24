@@ -23,7 +23,7 @@ class ProfilePage extends ConsumerWidget {
       if (previous?.isAuthenticated == true && !next.isAuthenticated) {
         // User has just logged out
         context.goToLogin();
-        ref.read(appInitializerServiceProvider).clearDataAfterLogout();
+        ref.read(appInitializerServiceProvider).cleanup();
       }
     });
 

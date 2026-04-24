@@ -1,29 +1,20 @@
+/// Core interface for sharing content.
+/// Domain-agnostic: only accepts primitive types (String, Map).
+/// Reusable across any app without modification.
 abstract class IShareService {
-  /// Share a restaurant
-  Future<void> shareRestaurant(String restaurantId, String restaurantName);
-  
-  /// Share an order
-  Future<void> shareOrder(String orderId);
-  
-  /// Share order tracking
-  Future<void> shareOrderTracking(String orderId);
-  
-  /// Share a promo code
-  Future<void> sharePromo(String promoCode, String description);
-  
-  /// Share app download link
-  Future<void> shareApp();
-  
-  /// Share custom content with deep link
-  Future<void> shareCustom({
-    required String path,
-    required String message,
-    Map<String, String>? params,
+  /// Share plain text content
+  Future<void> shareText({
+    required String text,
+    String? subject,
   });
 
-  /// Generate QR code data for sharing
-  String generateQRData({
-    required String path,
-    Map<String, String>? params,
+  /// Share a link with optional message
+  Future<void> shareLink({
+    required String url,
+    String? message,
+    String? subject,
   });
+
+  /// Generate QR data string from content
+  String generateQRData({required String content});
 }

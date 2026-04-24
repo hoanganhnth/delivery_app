@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/core/services/share/_riverpod/share_provider.dart';
 import 'package:delivery_app/core/services/deep_link/_riverpod/deep_link_provider.dart';
+import 'package:delivery_app/features/restaurants/domain/extensions/deep_link_extensions.dart';
+import 'package:delivery_app/features/restaurants/domain/extensions/share_extensions.dart';
 import '../../routing/router_config.dart';
 
 /// Demo widget for testing deep links
@@ -16,6 +18,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
     final shareService = ref.watch(shareServiceProvider);
     final deepLinkService = ref.watch(deepLinkServiceProvider);
     final config = ref.watch(routerConfigProvider);
+    final baseUrl = config.baseUrl ?? 'https://deliveryapp.com';
 
     return Card(
       margin: EdgeInsets.all(16.w),
@@ -46,34 +49,33 @@ class DeepLinkDemoWidget extends ConsumerWidget {
                 'Restaurant #1',
                 () => _copyLink(
                   context,
-                  deepLinkService.generateRestaurantLink(
-                    config.baseUrl ?? 'https://deliveryapp.com',
-                    'rest_1',
-                  ),
+                  deepLinkService.generateRestaurantLink(baseUrl, 'rest_1'),
                 ),
               ),
               _buildLinkButton(
                 context,
                 'Share Restaurant',
                 () => shareService.shareRestaurant(
-                  'rest_1',
-                  'Amazing Restaurant',
+                  restaurantId: 'rest_1',
+                  restaurantName: 'Amazing Restaurant',
+                  baseUrl: baseUrl,
                 ),
               ),
             ]),
 
             SizedBox(height: 16.w),
 
-            // Order Deep Links
+            // Order Deep Links — using generic generateDeepLink (Core method)
             _buildSection(context, 'Order Links', [
               _buildLinkButton(
                 context,
                 'Order #ORD1001',
                 () => _copyLink(
                   context,
-                  deepLinkService.generateOrderLink(
-                    config.baseUrl ?? 'https://deliveryapp.com',
-                    'ORD1001',
+                  deepLinkService.generateDeepLink(
+                    baseUrl: baseUrl,
+                    path: '/order',
+                    params: {'id': 'ORD1001'},
                   ),
                 ),
               ),
@@ -82,9 +84,10 @@ class DeepLinkDemoWidget extends ConsumerWidget {
                 'Track Order',
                 () => _copyLink(
                   context,
-                  deepLinkService.generateTrackingLink(
-                    config.baseUrl ?? 'https://deliveryapp.com',
-                    'ORD1001',
+                  deepLinkService.generateDeepLink(
+                    baseUrl: baseUrl,
+                    path: '/track',
+                    params: {'order_id': 'ORD1001'},
                   ),
                 ),
               ),
@@ -99,22 +102,23 @@ class DeepLinkDemoWidget extends ConsumerWidget {
                 'SAVE20 Promo',
                 () => _copyLink(
                   context,
-                  deepLinkService.generatePromoLink(
-                    config.baseUrl ?? 'https://deliveryapp.com',
-                    'SAVE20',
-                  ),
+                  deepLinkService.generatePromoLink(baseUrl, 'SAVE20'),
                 ),
               ),
               _buildLinkButton(
                 context,
                 'Share Promo',
-                () => shareService.sharePromo('SAVE20', '20% off your order'),
+                () => shareService.sharePromo(
+                  promoCode: 'SAVE20',
+                  description: '20% off your order',
+                  baseUrl: baseUrl,
+                ),
               ),
             ]),
 
             SizedBox(height: 16.w),
 
-            // Custom Deep Links
+            // Custom Deep Links — pure Core method
             _buildSection(context, 'Custom Links', [
               _buildLinkButton(
                 context,
@@ -122,7 +126,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
                 () => _copyLink(
                   context,
                   deepLinkService.generateDeepLink(
-                    baseUrl: config.baseUrl ?? 'https://deliveryapp.com',
+                    baseUrl: baseUrl,
                     path: '/menu',
                     params: {'restaurant_id': 'rest_1'},
                   ),
@@ -134,7 +138,7 @@ class DeepLinkDemoWidget extends ConsumerWidget {
                 () => _copyLink(
                   context,
                   deepLinkService.generateDeepLink(
-                    baseUrl: config.baseUrl ?? 'https://deliveryapp.com',
+                    baseUrl: baseUrl,
                     path: '/reset-password',
                     params: {'token': 'abc123'},
                   ),

@@ -1,18 +1,24 @@
 import 'package:flutter/foundation.dart';
 import 'package:app_links/app_links.dart';
 import 'package:go_router/go_router.dart';
-import '../../routing/app_routes.dart';
 import 'i_deep_link_service.dart';
 
-/// Implementation of IDeepLinkService using app_links package
+/// Core implementation of IDeepLinkService using app_links package.
+/// Domain-agnostic: does not reference AppRoutes, restaurants, orders, etc.
+/// Routing logic is delegated to the Feature layer via [DeepLinkHandler].
 class DeepLinkService implements IDeepLinkService {
   AppLinks? _appLinks;
   GoRouter? _router;
   String? _pendingRoute;
+  DeepLinkHandler? _onLinkReceived;
 
   @override
-  Future<void> initialize(GoRouter router) async {
+  Future<void> initialize(
+    GoRouter router, {
+    DeepLinkHandler? onLinkReceived,
+  }) async {
     _router = router;
+    _onLinkReceived = onLinkReceived;
 
     if (kIsWeb) {
       // Web deep links are handled automatically by go_router
@@ -26,7 +32,7 @@ class DeepLinkService implements IDeepLinkService {
       _appLinks!.uriLinkStream.listen(
         (Uri uri) {
           debugPrint('Received deep link: $uri');
-          _processDeepLink(uri);
+          _dispatchLink(uri);
         },
         onError: (err) {
           debugPrint('Deep link error: $err');
@@ -37,139 +43,24 @@ class DeepLinkService implements IDeepLinkService {
       final Uri? initialUri = await _appLinks!.getInitialLink();
       if (initialUri != null) {
         debugPrint('Initial deep link: $initialUri');
-        _processDeepLink(initialUri);
+        _dispatchLink(initialUri);
       }
     } catch (e) {
       debugPrint('Deep link initialization error: $e');
     }
   }
-  
-  @override
-  String? getPendingRoute() {
-    final route = _pendingRoute;
-    _pendingRoute = null;
-    return route;
-  }
 
-  void _processDeepLink(Uri uri) {
-    try {
-      debugPrint('Processing deep link: $uri');
-
-      final path = uri.path;
-      final queryParams = uri.queryParameters;
-
-      _handleDeepLinkRoute(path, queryParams);
-
-    } catch (e) {
-      debugPrint('Error processing deep link: $e');
-      _navigateToRoute(AppRoutes.home);
+  /// Dispatch the URI to the handler or navigate directly
+  void _dispatchLink(Uri uri) {
+    if (_onLinkReceived != null) {
+      // Delegate routing decision to Feature layer
+      _onLinkReceived!(uri);
+    } else {
+      // Fallback: navigate directly using the URI path
+      _navigateToRoute(uri.path);
     }
   }
-  
-  void _handleDeepLinkRoute(String path, Map<String, String> params) {
-    switch (path) {
-      case '/restaurant':
-        final restaurantId = params['id'];
-        if (restaurantId != null) {
-          _navigateToRoute('/restaurants/$restaurantId');
-        } else {
-          _navigateToRoute(AppRoutes.restaurants);
-        }
-        break;
-        
-      case '/menu':
-        final restaurantId = params['restaurant_id'];
-        if (restaurantId != null) {
-          _navigateToRoute('/restaurants/$restaurantId/menu');
-        } else {
-          _navigateToRoute(AppRoutes.restaurants);
-        }
-        break;
-        
-      case '/order':
-        final orderId = params['id'];
-        if (orderId != null) {
-          _navigateToRoute('/orders/$orderId');
-        } else {
-          _navigateToRoute(AppRoutes.orders);
-        }
-        break;
-        
-      case '/track':
-        final orderId = params['order_id'];
-        if (orderId != null) {
-          _navigateToRoute('/orders/$orderId/track');
-        } else {
-          _navigateToRoute(AppRoutes.orders);
-        }
-        break;
-        
-      case '/promo':
-        final promoCode = params['code'];
-        if (promoCode != null) {
-          _navigateToRoute('${AppRoutes.restaurants}?promo=$promoCode');
-        } else {
-          _navigateToRoute(AppRoutes.restaurants);
-        }
-        break;
-        
-      case '/share':
-        final type = params['type'];
-        final id = params['id'];
-        
-        switch (type) {
-          case 'restaurant':
-            if (id != null) _navigateToRoute('/restaurants/$id');
-            break;
-          case 'order':
-            if (id != null) _navigateToRoute('/orders/$id');
-            break;
-          default:
-            _navigateToRoute(AppRoutes.home);
-        }
-        break;
-        
-      case '/reset-password':
-        final token = params['token'];
-        if (token != null) {
-          _navigateToRoute('${AppRoutes.forgotPassword}?token=$token');
-        } else {
-          _navigateToRoute(AppRoutes.forgotPassword);
-        }
-        break;
-        
-      case '/verify-email':
-        final token = params['token'];
-        if (token != null) {
-          _navigateToRoute('${AppRoutes.home}?verified=true');
-        } else {
-          _navigateToRoute(AppRoutes.home);
-        }
-        break;
-        
-      case '/':
-      case '/home':
-        _navigateToRoute(AppRoutes.home);
-        break;
-        
-      case '/login':
-        _navigateToRoute(AppRoutes.login);
-        break;
-        
-      case '/register':
-        _navigateToRoute(AppRoutes.register);
-        break;
-        
-      default:
-        if (_isValidRoute(path)) {
-          _navigateToRoute(path);
-        } else {
-          debugPrint('Unknown deep link path: $path');
-          _navigateToRoute(AppRoutes.home);
-        }
-    }
-  }
-  
+
   void _navigateToRoute(String route) {
     if (_router != null) {
       _router!.go(route);
@@ -177,27 +68,14 @@ class DeepLinkService implements IDeepLinkService {
       _pendingRoute = route;
     }
   }
-  
-  bool _isValidRoute(String path) {
-    final validRoutes = [
-      AppRoutes.home,
-      AppRoutes.login,
-      AppRoutes.register,
-      AppRoutes.forgotPassword,
-      AppRoutes.orders,
-      AppRoutes.restaurants,
-      AppRoutes.cart,
-      AppRoutes.checkout,
-      AppRoutes.payment,
-      AppRoutes.orderConfirmation,
-      AppRoutes.admin,
-    ];
-    
-    return validRoutes.contains(path) || 
-           path.startsWith('/restaurants/') ||
-           path.startsWith('/orders/');
+
+  @override
+  String? getPendingRoute() {
+    final route = _pendingRoute;
+    _pendingRoute = null;
+    return route;
   }
-  
+
   @override
   String generateDeepLink({
     required String baseUrl,
@@ -206,44 +84,8 @@ class DeepLinkService implements IDeepLinkService {
   }) {
     final uri = Uri.parse(baseUrl).replace(
       path: path,
-      queryParameters: params,
+      queryParameters: params?.isNotEmpty == true ? params : null,
     );
     return uri.toString();
-  }
-  
-  @override
-  String generateRestaurantLink(String baseUrl, String restaurantId) {
-    return generateDeepLink(
-      baseUrl: baseUrl,
-      path: '/restaurant',
-      params: {'id': restaurantId},
-    );
-  }
-  
-  @override
-  String generateOrderLink(String baseUrl, String orderId) {
-    return generateDeepLink(
-      baseUrl: baseUrl,
-      path: '/order',
-      params: {'id': orderId},
-    );
-  }
-  
-  @override
-  String generateTrackingLink(String baseUrl, String orderId) {
-    return generateDeepLink(
-      baseUrl: baseUrl,
-      path: '/track',
-      params: {'order_id': orderId},
-    );
-  }
-  
-  @override
-  String generatePromoLink(String baseUrl, String promoCode) {
-    return generateDeepLink(
-      baseUrl: baseUrl,
-      path: '/promo',
-      params: {'code': promoCode},
-    );
   }
 }

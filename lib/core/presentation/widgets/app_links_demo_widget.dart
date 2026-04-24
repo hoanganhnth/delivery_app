@@ -6,6 +6,8 @@ import 'package:app_links/app_links.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/core/services/share/i_share_service.dart';
 import 'package:delivery_app/core/services/share/_riverpod/share_provider.dart';
+import 'package:delivery_app/features/restaurants/domain/extensions/share_extensions.dart';
+import 'package:delivery_app/features/orders/domain/extensions/share_extensions.dart';
 import '../../routing/router_config.dart';
 
 /// Demo widget for testing app_links deep linking
@@ -59,6 +61,7 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
   Widget build(BuildContext context) {
     final shareService = ref.watch(shareServiceProvider);
     final config = ref.watch(routerConfigProvider);
+    final baseUrl = config.baseUrl ?? 'https://deliveryapp.com';
     
     return Card(
       margin: EdgeInsets.all(16.w),
@@ -129,28 +132,28 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
               [
                 _buildTestButton(
                   'Restaurant',
-                  '${config.baseUrl ?? "https://deliveryapp.com"}/restaurant?id=rest_1',
+                  '$baseUrl/restaurant?id=rest_1',
                 ),
                 _buildTestButton(
                   'Order',
-                  '${config.baseUrl ?? "https://deliveryapp.com"}/order?id=ORD1001',
+                  '$baseUrl/order?id=ORD1001',
                 ),
                 _buildTestButton(
                   'Reset Password',
-                  '${config.baseUrl ?? "https://deliveryapp.com"}/reset-password?token=abc123',
+                  '$baseUrl/reset-password?token=abc123',
                 ),
               ],
             ),
             
             SizedBox(height: 16.w),
             
-            // Share Service Integration
+            // Share Service Integration — using Feature extensions
             _buildSection(
               context,
               'Share Service',
               [
                 ElevatedButton.icon(
-                  onPressed: () => _shareRestaurant(shareService),
+                  onPressed: () => _shareRestaurant(shareService, baseUrl),
                   icon: const Icon(Icons.share, size: 16),
                   label: const Text('Share Restaurant'),
                   style: ElevatedButton.styleFrom(
@@ -159,7 +162,7 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
                   ),
                 ),
                 ElevatedButton.icon(
-                  onPressed: () => _shareOrder(shareService),
+                  onPressed: () => _shareOrder(shareService, baseUrl),
                   icon: const Icon(Icons.share, size: 16),
                   label: const Text('Share Order'),
                   style: ElevatedButton.styleFrom(
@@ -313,9 +316,14 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
     );
   }
 
-  Future<void> _shareRestaurant(IShareService shareService) async {
+  /// Uses RestaurantShareX extension (Feature layer)
+  Future<void> _shareRestaurant(IShareService shareService, String baseUrl) async {
     try {
-      await shareService.shareRestaurant('rest_1', 'Amazing Restaurant');
+      await shareService.shareRestaurant(
+        restaurantId: 'rest_1',
+        restaurantName: 'Amazing Restaurant',
+        baseUrl: baseUrl,
+      );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Restaurant link shared!')),
@@ -330,9 +338,13 @@ class _AppLinksDemoWidgetState extends ConsumerState<AppLinksDemoWidget> {
     }
   }
 
-  Future<void> _shareOrder(IShareService shareService) async {
+  /// Uses OrderShareX extension (Feature layer)
+  Future<void> _shareOrder(IShareService shareService, String baseUrl) async {
     try {
-      await shareService.shareOrder('ORD1001');
+      await shareService.shareOrder(
+        orderId: 'ORD1001',
+        baseUrl: baseUrl,
+      );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Order link shared!')),
