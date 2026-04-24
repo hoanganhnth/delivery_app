@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'app_router.dart';
+part of 'router_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -8,24 +8,42 @@ part of 'app_router.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Router provider for the entire app
+/// Riverpod wiring point for the application router.
+///
+/// Responsibilities:
+/// 1. Creates [RiverpodAuthNotifier] from [AuthState].
+/// 2. Keeps the notifier alive and in sync via [ref.listen].
+/// 3. Calls [createAppRouter] (pure Dart factory) with interfaces.
+/// 4. Initialises deep link service once the router is created.
 
 @ProviderFor(router)
 final routerProvider = RouterProvider._();
 
-/// Router provider for the entire app
+/// Riverpod wiring point for the application router.
+///
+/// Responsibilities:
+/// 1. Creates [RiverpodAuthNotifier] from [AuthState].
+/// 2. Keeps the notifier alive and in sync via [ref.listen].
+/// 3. Calls [createAppRouter] (pure Dart factory) with interfaces.
+/// 4. Initialises deep link service once the router is created.
 
 final class RouterProvider
     extends $FunctionalProvider<GoRouter, GoRouter, GoRouter>
     with $Provider<GoRouter> {
-  /// Router provider for the entire app
+  /// Riverpod wiring point for the application router.
+  ///
+  /// Responsibilities:
+  /// 1. Creates [RiverpodAuthNotifier] from [AuthState].
+  /// 2. Keeps the notifier alive and in sync via [ref.listen].
+  /// 3. Calls [createAppRouter] (pure Dart factory) with interfaces.
+  /// 4. Initialises deep link service once the router is created.
   RouterProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'routerProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -52,4 +70,4 @@ final class RouterProvider
   }
 }
 
-String _$routerHash() => r'5529d860c6cdce53c85759354104e39d4ed80b86';
+String _$routerHash() => r'fd98cdab0e2e82d4d29c72dcdc5518d4ea6058d7';

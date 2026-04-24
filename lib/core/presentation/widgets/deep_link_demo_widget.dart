@@ -7,7 +7,7 @@ import 'package:delivery_app/core/services/share/_riverpod/share_provider.dart';
 import 'package:delivery_app/core/services/deep_link/_riverpod/deep_link_provider.dart';
 import 'package:delivery_app/features/restaurants/domain/extensions/deep_link_extensions.dart';
 import 'package:delivery_app/features/restaurants/domain/extensions/share_extensions.dart';
-import '../../routing/router_config.dart';
+import 'package:delivery_app/core/routing/routing.dart';
 
 /// Demo widget for testing deep links
 class DeepLinkDemoWidget extends ConsumerWidget {

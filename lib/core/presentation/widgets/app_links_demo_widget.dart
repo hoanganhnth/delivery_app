@@ -8,7 +8,7 @@ import 'package:delivery_app/core/services/share/i_share_service.dart';
 import 'package:delivery_app/core/services/share/_riverpod/share_provider.dart';
 import 'package:delivery_app/features/restaurants/domain/extensions/share_extensions.dart';
 import 'package:delivery_app/features/orders/domain/extensions/share_extensions.dart';
-import '../../routing/router_config.dart';
+import 'package:delivery_app/core/routing/routing.dart';
 
 /// Demo widget for testing app_links deep linking
 class AppLinksDemoWidget extends ConsumerStatefulWidget {

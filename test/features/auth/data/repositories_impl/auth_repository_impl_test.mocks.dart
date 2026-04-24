@@ -5,7 +5,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
 
-import 'package:delivery_app/core/network/resources/base_response_dto.dart' as _i2;
+import 'package:delivery_app/core/network/resources/base_response_dto.dart'
+    as _i2;
 import 'package:delivery_app/features/auth/data/datasources/auth_remote_datasource.dart'
     as _i3;
 import 'package:delivery_app/features/auth/data/dtos/auth_response_dto.dart'

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:delivery_app/core/routing/navigation_helper.dart';
+import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
 import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
 import 'package:delivery_app/core/presentation/widgets/toast/toast_utils.dart';

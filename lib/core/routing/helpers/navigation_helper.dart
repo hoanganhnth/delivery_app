@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'app_routes.dart';
+import 'package:delivery_app/core/routing/constants/app_routes.dart';
 
 /// Navigation helper class for easy navigation throughout the app
 class NavigationHelper {

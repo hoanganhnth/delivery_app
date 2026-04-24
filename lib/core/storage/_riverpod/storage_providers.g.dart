@@ -48,7 +48,7 @@ final class StorageProvider
   }
 }
 
-String _$storageHash() => r'e469241c4a8f7fb3fa397c2335164e0efa5b1f17';
+String _$storageHash() => r'025a7b082d9afc28b1a16ed8d7160630b2127dda';
 
 /// Specialized storage for auth/secure data if needed
 
@@ -94,4 +94,4 @@ final class AuthStorageProvider
   }
 }
 
-String _$authStorageHash() => r'514ead53c20bf63d11d0a33f4ea8db196ab9875e';
+String _$authStorageHash() => r'b01365438236258633950e3e75e6f9548f6ee131';

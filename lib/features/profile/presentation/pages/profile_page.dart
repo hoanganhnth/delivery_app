@@ -1,4 +1,3 @@
-import 'package:delivery_app/core/routing/navigation_helper.dart';
 import 'package:delivery_app/core/routing/routing.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/services/app_initializer/_riverpod/app_initializer_provider.dart';

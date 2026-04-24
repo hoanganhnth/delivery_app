@@ -8,21 +8,21 @@ part of 'router_config.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Router configuration provider
-/// This allows for easy customization of router behavior based on environment
+/// Router configuration provider.
+/// Wiring point: selects the correct config based on environment.
 
 @ProviderFor(routerConfig)
 final routerConfigProvider = RouterConfigProvider._();
 
-/// Router configuration provider
-/// This allows for easy customization of router behavior based on environment
+/// Router configuration provider.
+/// Wiring point: selects the correct config based on environment.
 
 final class RouterConfigProvider
     extends
         $FunctionalProvider<AppRouterConfig, AppRouterConfig, AppRouterConfig>
     with $Provider<AppRouterConfig> {
-  /// Router configuration provider
-  /// This allows for easy customization of router behavior based on environment
+  /// Router configuration provider.
+  /// Wiring point: selects the correct config based on environment.
   RouterConfigProvider._()
     : super(
         from: null,

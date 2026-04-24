@@ -1,13 +1,20 @@
+/// Pure Dart factory for creating the app's GoRouter.
+///
+/// No Riverpod, no BLoC — depends only on:
+/// - [IAuthNotifier]: tells the router WHO is logged in and WHEN state changes
+/// - [AppRouterConfig]: configuration (initial route, redirects, etc.)
+///
+/// This function can be tested in pure Dart unit tests by passing a mock
+/// [IAuthNotifier] implementation, with no framework mocking needed.
+library;
+
 import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
 import 'package:delivery_app/features/orders/presentation/screens/order_detail_screen.dart';
 import 'package:delivery_app/features/support/presentation/screens/support_chat_screen.dart';
-import 'package:flutter/foundation.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:delivery_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:delivery_app/features/auth/presentation/screens/register_screen.dart';
 import 'package:delivery_app/features/auth/presentation/screens/forgot_password_screen.dart';
-import 'package:delivery_app/features/auth/presentation/providers/providers.dart';
 import 'package:delivery_app/features/main/presentation/pages/main_screen.dart';
 import 'package:delivery_app/features/profile/profile.dart';
 import 'package:delivery_app/features/settings/settings.dart';
@@ -22,139 +29,86 @@ import 'package:delivery_app/features/user_address/presentation/screens/add_edit
 import 'package:delivery_app/features/user_address/domain/entities/user_address_entity.dart';
 import 'package:delivery_app/core/presentation/screens/splash_screen.dart';
 import 'package:delivery_app/core/presentation/screens/error_screens.dart';
-// import 'package:delivery_app/core/presentation/screens/admin_screen.dart';
-import 'package:delivery_app/core/routing/app_routes.dart';
-import 'package:delivery_app/core/routing/router_config.dart';
-import 'package:delivery_app/core/routing/guard_manager.dart';
-import 'package:delivery_app/core/services/deep_link/_riverpod/deep_link_provider.dart';
+import 'package:delivery_app/core/routing/constants/app_routes.dart';
+import 'package:delivery_app/core/routing/models/app_router_config.dart';
+import 'package:delivery_app/core/routing/models/i_auth_checker.dart';
+import 'package:delivery_app/core/routing/guards/guard_manager.dart';
 
-part 'app_router.g.dart';
+/// Creates the application's [GoRouter].
+///
+/// - [authNotifier] is used both as `refreshListenable` (reactive) and as
+///   [IAuthChecker] (readable state) for [GuardManager]. No duplicate state.
+/// - [config] controls initial location, redirect on/off, debug logging, etc.
+GoRouter createAppRouter({
+  required IAuthNotifier authNotifier,
+  required AppRouterConfig config,
+}) {
+  final guardManager = GuardManager(authNotifier);
 
-/// Router provider for the entire app
-@riverpod
-GoRouter router(Ref ref) {
-  final config = ref.watch(routerConfigProvider);
-  final guardManager = GuardManager(ref);
-
-  final refreshListenable = ValueNotifier<bool>(false);
-
-  ref.listen<AuthState>(authProvider, (previous, next) {
-    if (previous?.isAuthenticated != next.isAuthenticated) {
-      refreshListenable.value = next.isAuthenticated;
-    }
-  }, fireImmediately: true);
-  ref.onDispose(refreshListenable.dispose);
-
-  // Create router
-  final router = GoRouter(
-    refreshListenable: refreshListenable,
+  return GoRouter(
+    refreshListenable: authNotifier,
     initialLocation: config.initialLocation,
     debugLogDiagnostics: config.debugLogDiagnostics,
-    redirect:
-        config.enableRedirects
-            ? (context, state) {
-              // return AppRoutes.main;//need remove
-              final authState = ref.read(authProvider);
-              final isAuthenticated = authState.isAuthenticated;
-
-              // List of routes that don't require authentication
-              final publicRoutes = [
-                AppRoutes.login,
-                AppRoutes.register,
-                AppRoutes.forgotPassword,
-                AppRoutes.splash,
-                AppRoutes.root,
-              ];
-
-              final currentPath = state.uri.path;
-              final isPublicRoute = publicRoutes.contains(currentPath);
-
-              // Don't redirect from splash - let splash controller handle navigation
-              if (currentPath == AppRoutes.splash) {
-                return null;
-              }
-
-              // If user is not authenticated and trying to access protected route
-              if (!isAuthenticated && !isPublicRoute) {
-                return AppRoutes.login;
-              }
-
-              // If user is authenticated and trying to access auth routes, redirect to main
-              if (isAuthenticated &&
-                  (currentPath == AppRoutes.login ||
-                      currentPath == AppRoutes.register)) {
-                return AppRoutes.main;
-              }
-
-              // No redirect needed
-              return null;
-            }
-            : null,
+    redirect: config.enableRedirects
+        ? (context, state) {
+            // Splash handles its own navigation — skip guard
+            if (state.uri.path == AppRoutes.splash) return null;
+            return guardManager.applyAuthGuard(context, state);
+          }
+        : null,
     routes: [
-      // Root route - redirect to splash
+      // Root route — redirect to splash
       GoRoute(
         path: AppRoutes.root,
         name: 'root',
         redirect: (context, state) => AppRoutes.splash,
       ),
 
-      // Splash route
+      // Splash
       GoRoute(
         path: AppRoutes.splash,
         name: 'splash',
         builder: (context, state) => const SplashScreen(),
       ),
 
-      // Auth routes (with guest guard - redirect if already authenticated)
+      // Auth routes
       GoRoute(
         path: AppRoutes.login,
         name: 'login',
-        redirect: guardManager.applyGuestGuard,
         builder: (context, state) => const LoginScreen(),
       ),
-
       GoRoute(
         path: AppRoutes.register,
         name: 'register',
-        redirect: guardManager.applyGuestGuard,
         builder: (context, state) => const RegisterScreen(),
       ),
-
       GoRoute(
         path: AppRoutes.forgotPassword,
         name: 'forgot-password',
-        redirect: guardManager.applyGuestGuard,
         builder: (context, state) => const ForgotPasswordScreen(),
       ),
 
-      // Main navigation with bottom nav bar
+      // Main navigation
       GoRoute(
         path: AppRoutes.main,
         name: 'main',
-        redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const MainScreen(),
       ),
-
-      // Theme settings route (standalone)
       GoRoute(
         path: AppRoutes.themeSettings,
         name: 'theme-settings',
-        redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const ThemeSettingsScreen(),
       ),
 
-      // Main app routes (with auth guard)
+      // Home with nested profile
       GoRoute(
         path: AppRoutes.home,
         name: 'home',
-        redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const HomePage(),
         routes: [
-          // Nested routes under home (inherit auth guard)
           GoRoute(
             path: 'profile',
             name: 'profile',
-            // redirect: guardManager.applyAuthAndOnboarding,
             builder: (context, state) => const ProfileScreen(),
           ),
         ],
@@ -162,21 +116,18 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: AppRoutes.settings,
         name: 'settings',
-        redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const SettingsScreen(),
       ),
 
-      // Orders routes (with auth guard)
+      // Orders
       GoRoute(
         path: AppRoutes.orders,
         name: 'orders',
-        redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const OrdersScreen(),
         routes: [
           GoRoute(
             path: ':orderId',
             name: 'order-details',
-            redirect: guardManager.applyAuthGuard,
             builder: (context, state) {
               final orderId = state.pathParameters['orderId']!;
               return OrderDetailScreen(orderId: num.tryParse(orderId) ?? 0);
@@ -185,7 +136,6 @@ GoRouter router(Ref ref) {
               GoRoute(
                 path: 'track',
                 name: 'track-order',
-                redirect: guardManager.applyAuthGuard,
                 builder: (context, state) {
                   final orderId = state.pathParameters['orderId']!;
                   return TrackOrderScreen(orderId: num.tryParse(orderId) ?? 0);
@@ -196,17 +146,15 @@ GoRouter router(Ref ref) {
         ],
       ),
 
-      // Restaurants routes (with auth guard)
+      // Restaurants
       GoRoute(
         path: AppRoutes.restaurants,
         name: 'restaurants',
-        redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const AllRestaurantsScreen(),
         routes: [
           GoRoute(
             path: ':restaurantId',
             name: 'restaurant-details',
-            redirect: guardManager.applyAuthGuard,
             builder: (context, state) {
               final restaurantId =
                   num.tryParse(state.pathParameters['restaurantId']!) ?? 1;
@@ -216,7 +164,6 @@ GoRouter router(Ref ref) {
               GoRoute(
                 path: 'menu',
                 name: 'menu',
-                redirect: guardManager.applyAuthGuard,
                 builder: (context, state) {
                   final restaurantId = state.pathParameters['restaurantId']!;
                   return MenuScreen(restaurantId: restaurantId);
@@ -227,42 +174,34 @@ GoRouter router(Ref ref) {
         ],
       ),
 
-      // Cart and checkout routes (with auth guard)
+      // Cart & checkout
       GoRoute(
         path: AppRoutes.cart,
         name: 'cart',
-        redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const CartScreen(),
       ),
-
       GoRoute(
         path: AppRoutes.checkout,
         name: 'checkout',
-        redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const CheckoutScreen(),
       ),
-
       GoRoute(
         path: AppRoutes.payment,
         name: 'payment',
-        redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const PaymentScreen(),
       ),
-
       GoRoute(
         path: AppRoutes.orderConfirmation,
         name: 'order-confirmation',
-        redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const OrderConfirmationScreen(),
       ),
 
-      // Livestream routes
+      // Livestream
       GoRoute(
         path: '/livestreams',
         name: 'livestreams',
         builder: (context, state) => const AllLivestreamsScreen(),
       ),
-
       GoRoute(
         path: '/livestream-detail/:id',
         name: 'livestream-detail',
@@ -272,66 +211,45 @@ GoRouter router(Ref ref) {
         },
       ),
 
-      // Address management routes (with auth guard)
+      // Address management
       GoRoute(
         path: AppRoutes.addressList,
         name: 'address-list',
-        redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const AddressListScreen(),
       ),
-
       GoRoute(
         path: AppRoutes.addAddress,
         name: 'add-address',
-        redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const AddEditAddressScreen(),
       ),
-
       GoRoute(
         path: AppRoutes.editAddress,
         name: 'edit-address',
-        redirect: guardManager.applyAuthGuard,
         builder: (context, state) {
           final address = state.extra as UserAddressEntity?;
           return AddEditAddressScreen(address: address);
         },
       ),
 
-      // Support Chat routes (with auth guard)
+      // Support
       GoRoute(
         path: AppRoutes.supportChat,
         name: 'support-chat',
-        redirect: guardManager.applyAuthGuard,
         builder: (context, state) => const SupportChatScreen(),
       ),
 
-      // Admin routes (with admin guard)
-      // GoRoute(
-      //   path: AppRoutes.admin,
-      //   name: 'admin',
-      //   redirect: guardManager.applyAuthAndAdmin,
-      //   builder: (context, state) => const AdminScreen(),
-      // ),
-
-      // Error routes
+      // 404
       GoRoute(
         path: AppRoutes.notFound,
         name: 'not-found',
         builder: (context, state) => const NotFoundScreen(),
       ),
     ],
-
-    // Error handling
     errorBuilder: (context, state) => ErrorScreen(error: state.error),
   );
-
-  // Initialize deep links with router
-  ref.read(deepLinkServiceProvider).initialize(router);
-
-  return router;
 }
 
-/// Extension for easy navigation
+/// Navigation extension for [GoRouter] — named-route shortcuts.
 extension GoRouterExtension on GoRouter {
   void pushLogin() => pushNamed('login');
   void pushRegister() => pushNamed('register');
@@ -346,11 +264,10 @@ extension GoRouterExtension on GoRouter {
       pushNamed('order-details', pathParameters: {'orderId': orderId});
 
   void pushRestaurantDetails(String restaurantId) => pushNamed(
-    'restaurant-details',
-    pathParameters: {'restaurantId': restaurantId},
-  );
+        'restaurant-details',
+        pathParameters: {'restaurantId': restaurantId},
+      );
 
-  // Address management navigation
   void pushAddressList() => pushNamed('address-list');
   void pushAddAddress() => pushNamed('add-address');
   void pushEditAddress(UserAddressEntity address) =>

@@ -2,35 +2,27 @@
 /// Export all routing-related classes and utilities
 library;
 
-// Core routing
+// Constants (Pure string constants)
+export 'constants/app_routes.dart';
+
+// Models & Interfaces (Pure Dart — no framework dependency)
+export 'models/app_router_config.dart';
+export 'models/i_auth_checker.dart';
+
+// Guards (Logic — depends only on IAuthChecker)
+export 'guards/guard_manager.dart';
+export 'guards/route_guards.dart';
+
+// Helpers (UI/Extensions — depends on Flutter + GoRouter)
+export 'helpers/navigation_helper.dart';
+
+// Core Router Factory (Pure Dart — root of routing layer)
 export 'app_router.dart';
-export 'app_routes.dart';
-export 'navigation_helper.dart';
-export 'route_guards.dart';
-export 'router_config.dart';
+
+// Riverpod Wiring (Infrastucture/DI — isolated here)
+export 'providers/riverpod_auth_notifier.dart';
+export 'providers/router_provider.dart';
+export 'providers/router_config.dart';
 
 // GoRouter package
 export 'package:go_router/go_router.dart';
-
-/// Example usage:
-/// 
-/// ```dart
-/// import 'package:delivery_app/core/routing/routing.dart';
-/// 
-/// // In your widget:
-/// class MyWidget extends StatelessWidget {
-///   @override
-///   Widget build(BuildContext context) {
-///     return ElevatedButton(
-///       onPressed: () => context.goToHome(),
-///       child: Text('Go Home'),
-///     );
-///   }
-/// }
-/// 
-/// // Or using navigation helper:
-/// NavigationHelper.goToOrderDetails(context, 'order123');
-/// 
-/// // Or using GoRouter directly:
-/// context.go(AppRoutes.home);
-/// ```
