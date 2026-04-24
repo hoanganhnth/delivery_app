@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../../../core/logger/app_logger.dart';
+import '../../../../../core/utils/logger/app_logger.dart';
 import '../../../domain/usecases/get_restaurants_usecase.dart';
 import '../../../domain/usecases/search_restaurants_usecase.dart';
 import '../../../domain/usecases/get_restaurants_nearby_usecase.dart';

@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:local_auth/local_auth.dart' as local_auth;
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 import '../../domain/entities/biometric_entity.dart';
 import '../models/token_model.dart';
 import 'biometric_local_datasource.dart';

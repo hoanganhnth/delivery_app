@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 import '../models/token_model.dart';
 import 'token_local_data_source.dart';
 

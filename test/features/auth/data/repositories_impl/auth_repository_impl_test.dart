@@ -5,7 +5,7 @@ import 'package:delivery_app/features/auth/data/dtos/login_request_dto.dart';
 import 'package:delivery_app/features/auth/data/dtos/refresh_token_response_dto.dart';
 import 'package:delivery_app/features/auth/data/repositories_impl/auth_repository_impl.dart';
 import 'package:delivery_app/features/auth/domain/usecases/login_usecase.dart';
-import 'package:delivery_app/core/data/dtos/base_response_dto.dart';
+import 'package:delivery_app/core/network/resources/base_response_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';

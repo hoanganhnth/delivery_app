@@ -1,4 +1,4 @@
-import '../../../../core/data/dtos/base_response_dto.dart';
+import '../../../../core/network/resources/base_response_dto.dart';
 import '../dtos/current_delivery_dto.dart';
 
 /// Interface cho delivery tracking remote data source

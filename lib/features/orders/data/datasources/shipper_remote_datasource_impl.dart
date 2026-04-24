@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import '../../../../core/data/dtos/base_response_dto.dart';
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/network/resources/base_response_dto.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 import '../../../../core/error/dio_exception_handler.dart';
 import '../dtos/shipper_dto.dart';
 import 'shipper_remote_datasource.dart';

@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 import '../../domain/entities/auth_entity.dart';
 import '../../domain/repositories/token_storage_repository.dart';
 import '../datasources/token_local_data_source.dart';

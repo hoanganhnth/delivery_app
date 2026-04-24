@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 import '../../domain/entities/delivery_tracking_entity.dart';
 import '../../domain/entities/delivery_status.dart';
 import '../../domain/entities/shipper_entity.dart';

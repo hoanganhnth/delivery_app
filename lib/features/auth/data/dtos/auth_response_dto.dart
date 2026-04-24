@@ -1,6 +1,6 @@
 import 'package:delivery_app/features/auth/domain/entities/auth_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../../../core/data/dtos/base_response_dto.dart';
+import '../../../../core/network/resources/base_response_dto.dart';
 
 part 'auth_response_dto.freezed.dart';
 part 'auth_response_dto.g.dart';

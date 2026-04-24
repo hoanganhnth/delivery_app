@@ -1,4 +1,4 @@
-import '../../../../core/data/dtos/base_response_dto.dart';
+import '../../../../core/network/resources/base_response_dto.dart';
 import '../dtos/shipper_dto.dart';
 
 /// Interface cho shipper remote data source

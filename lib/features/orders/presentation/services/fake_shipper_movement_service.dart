@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 import '../../domain/entities/shipper_location_entity.dart';
 
 /// Service để xử lý fake shipper movement animation

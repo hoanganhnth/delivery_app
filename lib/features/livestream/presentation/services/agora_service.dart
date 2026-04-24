@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import '../../../../core/config/agora_config.dart';
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 
 /// Interface contract for Agora RTC Engine management
 abstract interface class IAgoraService {

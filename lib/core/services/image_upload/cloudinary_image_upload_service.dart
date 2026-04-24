@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:cloudinary_public/cloudinary_public.dart';
-import '../../logger/app_logger.dart';
+import '../../utils/logger/app_logger.dart';
 import 'i_image_upload_service.dart';
 
 /// Cloudinary implementation of IImageUploadService

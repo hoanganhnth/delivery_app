@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 import 'package:rxdart/rxdart.dart';
-import '../../logger/app_logger.dart';
+import '../../utils/logger/app_logger.dart';
 
 /// Base STOMP client - mỗi instance quản lý 1 URL duy nhất
 class StompSocketClient {

@@ -1,6 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:delivery_app/core/adapter/hive_registry.dart';
+import 'package:delivery_app/core/storage/adapter/hive_registry.dart';
 import '../../domain/entities/user_entity.dart';
 
 part 'user_model.freezed.dart';

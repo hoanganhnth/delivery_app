@@ -1,9 +1,9 @@
 import 'package:delivery_app/core/constants/api_constants.dart';
-import 'package:delivery_app/core/data/dtos/base_response_dto.dart';
+import 'package:delivery_app/core/network/resources/base_response_dto.dart';
 import 'package:delivery_app/core/error/dio_exception_handler.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 import '../dtos/restaurant_dto.dart';
 import '../dtos/menu_item_dto.dart';
 import '../dtos/get_restaurants_request_dto.dart';

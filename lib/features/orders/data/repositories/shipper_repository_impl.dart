@@ -1,4 +1,4 @@
-import 'package:delivery_app/core/data/dtos/base_response_dto.dart';
+import 'package:delivery_app/core/network/resources/base_response_dto.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/error/error_mapper.dart';

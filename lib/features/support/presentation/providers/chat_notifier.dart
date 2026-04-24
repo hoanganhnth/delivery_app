@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 import '../../domain/entities/chat_message_entity.dart';
 import '../../domain/entities/conversation_entity.dart';
 import 'chat_state.dart';

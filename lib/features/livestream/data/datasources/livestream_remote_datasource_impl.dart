@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import '../../../../core/data/dtos/base_response_dto.dart';
+import '../../../../core/network/resources/base_response_dto.dart';
 import '../dtos/join_livestream_dto.dart';
 import '../dtos/livestream_dto.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../../../core/logger/app_logger.dart';
+import '../../../../../core/utils/logger/app_logger.dart';
 import '../../services/agora_service.dart';
 import '../di/livestream_di_providers.dart';
 import '../detail/livestream_detail_notifier.dart';

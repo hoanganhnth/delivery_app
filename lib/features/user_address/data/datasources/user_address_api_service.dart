@@ -1,4 +1,4 @@
-import 'package:delivery_app/core/data/dtos/base_response_dto.dart';
+import 'package:delivery_app/core/network/resources/base_response_dto.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import '../dtos/user_address_request_dto.dart';

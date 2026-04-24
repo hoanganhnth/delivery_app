@@ -1,4 +1,4 @@
-import 'package:delivery_app/core/logger/app_logger.dart';
+import 'package:delivery_app/core/utils/logger/app_logger.dart';
 import 'package:delivery_app/core/presentation/widgets/toast/toast_extensions.dart';
 import 'package:delivery_app/core/routing/navigation_helper.dart';
 import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';

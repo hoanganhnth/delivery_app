@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import '../../../../core/adapter/hive_registry.dart';
+import '../../../../core/storage/adapter/hive_registry.dart';
 import '../dtos/cart_dto.dart';
 import '../dtos/cart_item_dto.dart';
 

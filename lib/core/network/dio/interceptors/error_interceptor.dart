@@ -1,7 +1,7 @@
   import 'package:delivery_app/core/error/exceptions.dart';
   import 'package:dio/dio.dart';
   import 'dart:async';
-  import '../../../logger/app_logger.dart';
+  import '../../../utils/logger/app_logger.dart';
 
 class ErrorInterceptor extends QueuedInterceptor {
   final Future<String?> Function()? onRefreshToken;

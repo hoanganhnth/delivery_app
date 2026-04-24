@@ -2,7 +2,7 @@ import 'package:delivery_app/core/error/error_mapper.dart';
 import 'package:delivery_app/core/error/exceptions.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 import '../../domain/entities/order_entity.dart';
 import '../../domain/repositories/order_repository.dart';
 import '../datasources/order_remote_datasource.dart';

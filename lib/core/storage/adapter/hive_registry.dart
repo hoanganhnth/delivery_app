@@ -1,8 +1,8 @@
 
 import 'package:hive_flutter/hive_flutter.dart';
-import '../../features/profile/data/models/user_model.dart';
-import '../../features/cart/data/adapters/cart_dto_adapter.dart';
-import '../../features/cart/data/adapters/cart_item_dto_adapter.dart';
+import '../../../features/profile/data/models/user_model.dart';
+import '../../../features/cart/data/adapters/cart_dto_adapter.dart';
+import '../../../features/cart/data/adapters/cart_item_dto_adapter.dart';
 
 /// Hive Type IDs - Centralized management to prevent conflicts
 class HiveTypeIds {

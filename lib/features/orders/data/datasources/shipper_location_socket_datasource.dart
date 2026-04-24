@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:rxdart/rxdart.dart';
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 import '../../../../core/network/socket/socket_client.dart';
 import '../../domain/entities/shipper_location_entity.dart';
 import 'shipper_location_datasource.dart';

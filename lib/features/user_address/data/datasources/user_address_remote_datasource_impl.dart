@@ -4,8 +4,8 @@ import '../dtos/user_address_response_dto.dart';
 import 'user_address_api_service.dart';
 import 'user_address_remote_datasource.dart';
 import '../../../../core/error/dio_exception_handler.dart';
-import '../../../../core/data/dtos/base_response_dto.dart';
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/network/resources/base_response_dto.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 
 class UserAddressRemoteDataSourceImpl implements UserAddressRemoteDataSource {
   final UserAddressApiService _apiService;

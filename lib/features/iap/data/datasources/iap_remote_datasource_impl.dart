@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:delivery_app/core/data/dtos/base_response_dto.dart';
-import 'package:delivery_app/core/logger/app_logger.dart';
+import 'package:delivery_app/core/network/resources/base_response_dto.dart';
+import 'package:delivery_app/core/utils/logger/app_logger.dart';
 import 'package:delivery_app/features/iap/data/datasources/iap_api_service.dart';
 import 'package:delivery_app/features/iap/data/datasources/iap_remote_datasource.dart';
 import 'package:delivery_app/features/iap/data/dtos/consumable_dto.dart';

@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../../core/logger/app_logger.dart';
+import '../../../../../core/utils/logger/app_logger.dart';
 import '../../../../../core/usecases/usecase.dart';
 import '../../../domain/usecases/authenticate_with_biometric_usecase.dart';
 import '../../../domain/usecases/check_biometric_availability_usecase.dart';

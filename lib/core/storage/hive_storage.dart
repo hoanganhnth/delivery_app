@@ -2,11 +2,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'i_storage.dart';
 
 /// Implementation of IStorage using Hive
-class HiveStorageImpl implements IStorage {
+class HiveStorage implements IStorage {
   final String boxName;
   Box? _box;
 
-  HiveStorageImpl({this.boxName = 'app_storage'});
+  HiveStorage({this.boxName = 'app_preferences'});
 
   Future<Box> get _getBox async {
     if (_box == null || !_box!.isOpen) {

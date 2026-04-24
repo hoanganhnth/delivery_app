@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../../../core/error/failures.dart';
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 import '../../../../core/routing/navigation_helper.dart';
 import '../providers/providers.dart';
 import '../widgets/stitch_register_field.dart';

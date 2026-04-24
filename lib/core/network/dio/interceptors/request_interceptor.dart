@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../../../logger/app_logger.dart';
+import '../../../utils/logger/app_logger.dart';
 
 class RequestInterceptor extends Interceptor {
   final Future<String?> Function()? getToken;

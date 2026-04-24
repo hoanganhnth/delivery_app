@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:delivery_app/core/logger/app_logger.dart';
+import 'package:delivery_app/core/utils/logger/app_logger.dart';
 import 'package:delivery_app/core/usecases/usecase.dart';
 import '../../../domain/usecases/tracking_usecases.dart';
 import '../../../domain/entities/shipper_location_entity.dart';

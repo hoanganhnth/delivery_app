@@ -1,4 +1,4 @@
-import 'package:delivery_app/core/logger/app_logger.dart';
+import 'package:delivery_app/core/utils/logger/app_logger.dart';
 import 'package:delivery_app/core/usecases/usecase.dart';
 import 'package:delivery_app/features/auth/domain/entities/auth_entity.dart';
 import 'package:delivery_app/features/auth/domain/usecases/login_usecase.dart';

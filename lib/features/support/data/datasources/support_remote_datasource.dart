@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 import '../../../../core/services/image_upload/i_image_upload_service.dart';
 import '../models/chat_message_model.dart';
 import '../models/conversation_model.dart';

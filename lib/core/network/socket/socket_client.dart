@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
 import 'package:rxdart/rxdart.dart';
-import '../../logger/app_logger.dart';
+import '../../utils/logger/app_logger.dart';
 
 /// Base WebSocket client - mỗi instance quản lý 1 URL duy nhất
 class SocketClient {

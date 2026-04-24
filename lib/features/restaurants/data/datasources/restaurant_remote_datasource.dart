@@ -1,4 +1,4 @@
-import '../../../../core/data/dtos/base_response_dto.dart';
+import '../../../../core/network/resources/base_response_dto.dart';
 import '../dtos/restaurant_dto.dart';
 import '../dtos/menu_item_dto.dart';
 import '../dtos/get_restaurants_request_dto.dart';

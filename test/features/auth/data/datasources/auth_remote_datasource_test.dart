@@ -1,4 +1,4 @@
-import 'package:delivery_app/core/data/dtos/base_response_dto.dart';
+import 'package:delivery_app/core/network/resources/base_response_dto.dart';
 import 'package:delivery_app/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:delivery_app/features/auth/data/dtos/auth_response_dto.dart';
 import 'package:delivery_app/features/auth/data/dtos/login_request_dto.dart';

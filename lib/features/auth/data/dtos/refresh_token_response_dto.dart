@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../../../core/data/dtos/base_response_dto.dart';
+import '../../../../core/network/resources/base_response_dto.dart';
 import '../../domain/entities/auth_entity.dart';
 
 part 'refresh_token_response_dto.freezed.dart';

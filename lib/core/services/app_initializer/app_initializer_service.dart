@@ -1,4 +1,4 @@
-import 'package:delivery_app/core/logger/app_logger.dart';
+import 'package:delivery_app/core/utils/logger/app_logger.dart';
 import 'i_app_initializer_service.dart';
 
 /// Core implementation of IAppInitializerService.

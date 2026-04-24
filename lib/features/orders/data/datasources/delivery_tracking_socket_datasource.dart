@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:rxdart/rxdart.dart';
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 import '../../../../core/network/socket/stomp_client.dart';
 import '../../domain/entities/delivery_tracking_entity.dart';
 import '../../domain/entities/delivery_status.dart';

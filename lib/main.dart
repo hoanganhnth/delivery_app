@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:delivery_app/core/app_setup.dart';
 import 'package:delivery_app/core/routing/app_router.dart';
 import 'package:delivery_app/core/theme/theme.dart';
-import 'package:delivery_app/core/adapter/hive_registry.dart';
+import 'package:delivery_app/core/storage/adapter/hive_registry.dart';
 import 'package:delivery_app/firebase_options.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';

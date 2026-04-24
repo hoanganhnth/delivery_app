@@ -1,7 +1,7 @@
 import 'package:delivery_app/core/error/error_mapper.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
-import '../../../../core/data/dtos/base_response_dto.dart';
+import '../../../../core/network/resources/base_response_dto.dart';
 import '../../domain/entities/restaurant_entity.dart';
 import '../../domain/entities/menu_item_entity.dart';
 import '../../domain/repositories/restaurant_repository.dart';

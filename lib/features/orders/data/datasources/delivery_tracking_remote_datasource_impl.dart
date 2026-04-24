@@ -1,8 +1,8 @@
 import 'package:delivery_app/core/constants/api_constants.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import '../../../../core/data/dtos/base_response_dto.dart';
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/network/resources/base_response_dto.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 import '../../../../core/error/dio_exception_handler.dart';
 import '../dtos/current_delivery_dto.dart';
 import 'delivery_tracking_remote_datasource.dart';

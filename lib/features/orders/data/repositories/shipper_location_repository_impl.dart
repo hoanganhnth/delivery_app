@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 import '../datasources/shipper_location_datasource.dart';
 import '../../domain/entities/shipper_location_entity.dart';
 import '../../domain/repositories/shipper_location_repository.dart';

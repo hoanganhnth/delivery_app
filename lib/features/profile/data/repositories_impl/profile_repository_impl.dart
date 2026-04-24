@@ -1,9 +1,9 @@
-import 'package:delivery_app/core/data/dtos/base_response_dto.dart';
+import 'package:delivery_app/core/network/resources/base_response_dto.dart';
 import 'package:delivery_app/core/error/error_mapper.dart';
 import 'package:delivery_app/features/profile/data/dtos/user_profile_dto.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
-import '../../../../core/logger/app_logger.dart';
+import '../../../../core/utils/logger/app_logger.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/profile_repository.dart';
 import '../datasources/profile_local_datasource.dart';

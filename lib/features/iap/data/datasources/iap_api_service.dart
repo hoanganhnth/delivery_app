@@ -1,4 +1,4 @@
-import 'package:delivery_app/core/data/dtos/base_response_dto.dart';
+import 'package:delivery_app/core/network/resources/base_response_dto.dart';
 import 'package:delivery_app/features/iap/data/dtos/consumable_dto.dart';
 import 'package:delivery_app/features/iap/data/dtos/iap_product_dto.dart';
 import 'package:delivery_app/features/iap/data/dtos/non_consumable_dto.dart';
