@@ -18,7 +18,7 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   int _selectedNavIndex = 0;
   int _selectedCategoryIndex = 0;
-  
+
   // Amber Hearth design tokens
   final List<CategoryItem> _categories = [
     CategoryItem(icon: Icons.restaurant_menu, label: 'Tất cả', isActive: true),
@@ -39,21 +39,19 @@ class _HomePageState extends ConsumerState<HomePage> {
       ref.read(restaurantsProvider.notifier).loadFeaturedRestaurants();
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final restaurantsState = ref.watch(restaurantsProvider);
-    
+
     return Scaffold(
       backgroundColor: ref.colors.background,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
             // Glass App Bar
-            SliverToBoxAdapter(
-              child: _buildHeader(context),
-            ),
-            
+            SliverToBoxAdapter(child: _buildHeader(context)),
+
             // Search bar
             SliverToBoxAdapter(
               child: Padding(
@@ -67,12 +65,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
               ),
             ),
-            
+
             // Categories horizontal scroll
-            SliverToBoxAdapter(
-              child: _buildCategoriesSection(),
-            ),
-            
+            SliverToBoxAdapter(child: _buildCategoriesSection()),
+
             // Flash Sale Section
             SliverToBoxAdapter(
               child: Padding(
@@ -84,21 +80,24 @@ class _HomePageState extends ConsumerState<HomePage> {
                   items: [
                     FlashSaleItem(
                       name: 'Combo Burger Deluxe',
-                      imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400',
+                      imageUrl:
+                          'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400',
                       originalPrice: '129.000đ',
                       salePrice: '79.000đ',
                       discountBadge: '-40%',
                     ),
                     FlashSaleItem(
                       name: 'Pizza 4 Cheese',
-                      imageUrl: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400',
+                      imageUrl:
+                          'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400',
                       originalPrice: '199.000đ',
                       salePrice: '99.000đ',
                       discountBadge: '-50%',
                     ),
                     FlashSaleItem(
                       name: 'Sushi Combo',
-                      imageUrl: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400',
+                      imageUrl:
+                          'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400',
                       originalPrice: '249.000đ',
                       salePrice: '149.000đ',
                       discountBadge: '-40%',
@@ -110,12 +109,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
               ),
             ),
-            
+
             // Featured livestreams section
-            const SliverToBoxAdapter(
-              child: LivestreamHomeSection(),
-            ),
-            
+            const SliverToBoxAdapter(child: LivestreamHomeSection()),
+
             // Featured restaurants section header
             SliverToBoxAdapter(
               child: _buildSectionHeader(
@@ -123,25 +120,16 @@ class _HomePageState extends ConsumerState<HomePage> {
                 onSeeAll: () => context.pushToRestaurants(),
               ),
             ),
-            
+
             // Featured restaurants list
             _buildRestaurantsList(restaurantsState),
-            
+
             // Bottom padding for nav bar
-            SliverToBoxAdapter(
-              child: SizedBox(height: 100.w),
-            ),
+            SliverToBoxAdapter(child: SizedBox(height: 100.w)),
           ],
         ),
       ),
       extendBody: true,
-      bottomNavigationBar: AmberBottomNavBar(
-        currentIndex: _selectedNavIndex,
-        onTap: (index) {
-          setState(() => _selectedNavIndex = index);
-          _handleNavigation(index, context);
-        },
-      ),
     );
   }
 
@@ -191,7 +179,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               ],
             ),
           ),
-          
+
           // Notification button
           GlassActionButton(
             icon: Icons.notifications_outlined,
@@ -199,9 +187,9 @@ class _HomePageState extends ConsumerState<HomePage> {
               // TODO: Open notifications
             },
           ),
-          
+
           SizedBox(width: 8.w),
-          
+
           // Cart button
           GlassActionButton(
             icon: Icons.shopping_cart_outlined,
@@ -236,7 +224,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             itemBuilder: (context, index) {
               final category = _categories[index];
               final isSelected = index == _selectedCategoryIndex;
-              
+
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: 4.w),
                 child: CategoryPill(
@@ -256,10 +244,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  Widget _buildSectionHeader({
-    required String title,
-    VoidCallback? onSeeAll,
-  }) {
+  Widget _buildSectionHeader({required String title, VoidCallback? onSeeAll}) {
     return Padding(
       padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 12.w),
       child: Row(
@@ -296,9 +281,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         child: Center(
           child: Padding(
             padding: EdgeInsets.all(32.w),
-            child: CircularProgressIndicator(
-              color: ref.colors.primary,
-            ),
+            child: CircularProgressIndicator(color: ref.colors.primary),
           ),
         ),
       );
@@ -345,27 +328,30 @@ class _HomePageState extends ConsumerState<HomePage> {
     return SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final restaurant = restaurantsState.restaurants[index];
-            return Padding(
-              padding: EdgeInsets.only(bottom: 16.w),
-              child: RestaurantCard(
-                name: restaurant.name,
-                imageUrl: restaurant.image ?? 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800',
-                rating: restaurant.rating ?? 4.5,
-                deliveryTime: '${restaurant.deliveryTime ?? 25}-${(restaurant.deliveryTime ?? 25) + 10} min',
-                category: restaurant.category ?? 'Đa dạng',
-                priceLevel: '\$\$',
-                distance: '${(restaurant.distance ?? 1.5).toStringAsFixed(1)} km',
-                deliveryFee: restaurant.deliveryFee == 0 ? 'Miễn phí giao hàng' : '${restaurant.deliveryFee?.toStringAsFixed(0) ?? "15"}k',
-                isFreeDelivery: restaurant.deliveryFee == 0,
-                onTap: () => context.pushToRestaurantDetails(restaurant.id.toString()),
-              ),
-            );
-          },
-          childCount: restaurantsState.restaurants.length,
-        ),
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final restaurant = restaurantsState.restaurants[index];
+          return Padding(
+            padding: EdgeInsets.only(bottom: 16.w),
+            child: RestaurantCard(
+              name: restaurant.name,
+              imageUrl:
+                  restaurant.image ??
+                  'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800',
+              rating: restaurant.rating ?? 4.5,
+              deliveryTime:
+                  '${restaurant.deliveryTime ?? 25}-${(restaurant.deliveryTime ?? 25) + 10} min',
+              category: restaurant.category ?? 'Đa dạng',
+              priceLevel: '\$\$',
+              distance: '${(restaurant.distance ?? 1.5).toStringAsFixed(1)} km',
+              deliveryFee: restaurant.deliveryFee == 0
+                  ? 'Miễn phí giao hàng'
+                  : '${restaurant.deliveryFee?.toStringAsFixed(0) ?? "15"}k',
+              isFreeDelivery: restaurant.deliveryFee == 0,
+              onTap: () =>
+                  context.pushToRestaurantDetails(restaurant.id.toString()),
+            ),
+          );
+        }, childCount: restaurantsState.restaurants.length),
       ),
     );
   }

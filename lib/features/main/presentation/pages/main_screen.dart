@@ -21,15 +21,47 @@ class MainScreen extends ConsumerWidget {
       ProfilePage(),
     ];
 
+    // Map AppTab to physical index for IndexedStack
+    int getPageIndex(AppTab tab) {
+      switch (tab) {
+        case AppTab.home:
+          return 0;
+        case AppTab.cart:
+          return 1;
+        case AppTab.orders:
+          return 2;
+        case AppTab.profile:
+          return 3;
+        default:
+          return 0; // Default to home if on restaurants or other
+      }
+    }
+
+    // Map physical index back to AppTab for currentTab.notifier
+    AppTab getTabFromIndex(int index) {
+      switch (index) {
+        case 0:
+          return AppTab.home;
+        case 1:
+          return AppTab.cart;
+        case 2:
+          return AppTab.orders;
+        case 3:
+          return AppTab.profile;
+        default:
+          return AppTab.home;
+      }
+    }
+
+    final currentIndex = getPageIndex(currentTab);
+
     return Scaffold(
-      body: pages[currentTab.tabIndex], // dùng tabIndex từ AppTab
-      extendBody: true,
+      body: IndexedStack(index: currentIndex, children: pages),
+      extendBody: false,
       bottomNavigationBar: AmberBottomNavBar(
-        currentIndex: currentTab.tabIndex,
+        currentIndex: currentIndex,
         onTap: (index) {
-          ref.read(selectedTabProvider.notifier).setTab(
-            AppTab.values[index],
-          );
+          ref.read(selectedTabProvider.notifier).setTab(getTabFromIndex(index));
         },
       ),
     );
