@@ -111,7 +111,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
 
             // Featured livestreams section
-            const SliverToBoxAdapter(child: LivestreamHomeSection()),
+            // const SliverToBoxAdapter(child: LivestreamHomeSection()),
 
             // Featured restaurants section header
             SliverToBoxAdapter(

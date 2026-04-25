@@ -22,6 +22,11 @@ class LivestreamViewer extends _$LivestreamViewer {
   LivestreamViewerState build(String livestreamId) {
     ref.onDispose(_cleanup);
 
+    // Watch dependencies to keep them alive throughout the lifecycle of this notifier.
+    // This prevents them from being auto-disposed while joinLivestream is awaiting async calls.
+    ref.listen(agoraServiceForViewerProvider(livestreamId), (_, __) {});
+    ref.listen(livestreamDetailProvider(livestreamId), (_, __) {});
+
     // Start join flow immediately
     Future.microtask(() => joinLivestream());
 
@@ -39,6 +44,16 @@ class LivestreamViewer extends _$LivestreamViewer {
           .loadLivestreamDetail(livestreamId);
       if (!ref.mounted) return;
 
+      // Check if detail loading failed
+      final detailState = ref.read(livestreamDetailProvider(livestreamId));
+      if (detailState.hasError || detailState.livestream == null) {
+        state = LivestreamViewerState.error(
+          detailState.failure?.message ??
+              'Lỗi tải thông tin chi tiết livestream',
+        );
+        return;
+      }
+
       // 2. Call join API to get Agora token
       final repository = ref.read(livestreamRepositoryProvider);
       final joinResult = await repository.joinLivestream(livestreamId);
@@ -46,14 +61,11 @@ class LivestreamViewer extends _$LivestreamViewer {
 
       joinResult.fold(
         (failure) {
-          state = LivestreamViewerState.error(
-            failure.message,
-          );
+          state = LivestreamViewerState.error(failure.message);
         },
         (joinData) async {
           // 3. Initialize Agora service
-          final agora =
-              ref.read(agoraServiceForViewerProvider(livestreamId));
+          final agora = ref.read(agoraServiceForViewerProvider(livestreamId));
           final initialized = await agora.initialize();
           if (!ref.mounted) return;
 

@@ -8,19 +8,19 @@ part 'livestream_dto.g.dart';
 @freezed
 abstract class LivestreamDto with _$LivestreamDto {
   const factory LivestreamDto({
-    required String id,
-    required String title,
+    String? id,
+    String? title,
     @JsonKey(name: 'sellerId') num? sellerId,
     @JsonKey(name: 'restaurantId') num? restaurantId,
     String? streamerName,
     String? streamerAvatar,
-    required String channelName,
+    String? channelName,
     String? rtcToken,
     int? uid,
-    required String description,
+    String? description,
     @Default(0) int viewerCount,
     @Default(0) int likeCount,
-    required String status,
+    String? status,
     String? thumbnailUrl,
     String? coverImageUrl,
     @JsonKey(name: 'startedAt') String? startedAt,
@@ -36,22 +36,24 @@ abstract class LivestreamDto with _$LivestreamDto {
   /// Convert DTO to Entity
   LivestreamEntity toEntity() {
     return LivestreamEntity(
-      id: id,
-      title: title,
+      id: id ?? '',
+      title: title ?? 'No Title',
       streamerId: sellerId?.toString() ?? '',
       streamerName: streamerName ?? 'Restaurant #$restaurantId',
       streamerAvatar: streamerAvatar,
-      channelName: channelName,
+      channelName: channelName ?? '',
       rtcToken: rtcToken ?? '',
       uid: uid ?? 0,
-      description: description,
+      description: description ?? '',
       viewerCount: viewerCount,
       likeCount: likeCount,
-      status: status.toLowerCase(),
+      status: status?.toLowerCase() ?? 'unknown',
       thumbnailUrl: thumbnailUrl,
       coverImageUrl: coverImageUrl,
-      startTime: startedAt != null ? DateTime.parse(startedAt!) : DateTime.now(),
-      endTime: endedAt != null ? DateTime.parse(endedAt!) : null,
+      startTime: startedAt != null
+          ? DateTime.tryParse(startedAt!) ?? DateTime.now()
+          : DateTime.now(),
+      endTime: endedAt != null ? DateTime.tryParse(endedAt!) : null,
       products: pinnedProducts?.map((p) => p.toEntity()).toList(),
     );
   }
@@ -61,12 +63,12 @@ abstract class LivestreamDto with _$LivestreamDto {
 @freezed
 abstract class LivestreamProductDto with _$LivestreamProductDto {
   const factory LivestreamProductDto({
-    required num id,
-    required String name,
-    required double price,
-    required String image,
-    required num restaurantId,
-    required String restaurantName,
+    num? id,
+    String? name,
+    double? price,
+    String? image,
+    num? restaurantId,
+    String? restaurantName,
     double? discountPrice,
     String? description,
     int? stockQuantity,
@@ -80,12 +82,12 @@ abstract class LivestreamProductDto with _$LivestreamProductDto {
   /// Convert DTO to Entity
   LivestreamProductEntity toEntity() {
     return LivestreamProductEntity(
-      id: id,
-      name: name,
-      price: price,
-      image: image,
-      restaurantId: restaurantId,
-      restaurantName: restaurantName,
+      id: id ?? 0,
+      name: name ?? 'Product',
+      price: price ?? 0.0,
+      image: image ?? '',
+      restaurantId: restaurantId ?? 0,
+      restaurantName: restaurantName ?? '',
       discountPrice: discountPrice,
       description: description,
       stockQuantity: stockQuantity,

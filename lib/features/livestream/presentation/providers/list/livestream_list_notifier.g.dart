@@ -44,7 +44,7 @@ final class LivestreamListProvider
   }
 }
 
-String _$livestreamListHash() => r'7c2d66774a3a034e7531e422ee830b01b02c2434';
+String _$livestreamListHash() => r'cbb434eb39fc7c2d6742450067144b5a11d0952c';
 
 /// Livestream list notifier
 

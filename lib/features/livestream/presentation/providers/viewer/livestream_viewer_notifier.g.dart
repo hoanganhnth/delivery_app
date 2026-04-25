@@ -70,7 +70,7 @@ final class LivestreamViewerProvider
   }
 }
 
-String _$livestreamViewerHash() => r'bef549425cf646e30562e662df9f25afcaa733d1';
+String _$livestreamViewerHash() => r'f32cf28efe007f146121bff086edfd3b0215d174';
 
 /// Orchestrates the entire viewer join flow:
 /// Load Detail → Join API → Init Agora → Join Channel

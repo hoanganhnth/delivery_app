@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
+import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
 import '../providers/providers.dart';
 import '../widgets/livestream_card_grid.dart';
@@ -63,61 +64,63 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
-        child: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            // Custom AppBar
-            SliverToBoxAdapter(child: _buildAppBar(context, theme)),
-
-            // Editorial Header
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
-                child: EditorialHeader(
-                  subtitle: 'LIVE NOW',
-                  title: 'Foodie ',
-                  titleHighlight: 'Live',
-                  description: 'Watch chefs cook in real-time',
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await ref.read(livestreamListProvider.notifier).loadLivestreams(refresh: true);
+          },
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Editorial Header
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
+                  child: EditorialHeader(
+                    subtitle: 'LIVE NOW',
+                    title: 'Foodie ',
+                    titleHighlight: 'Live',
+                    description: 'Watch chefs cook in real-time',
+                  ),
                 ),
-              ),
-            ),
 
-            // Category Pills - Horizontal scroll
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 100.h,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  itemCount: _categoryData.length,
-                  separatorBuilder: (_, __) => SizedBox(width: 12.w),
-                  itemBuilder: (context, index) {
-                    final category = _categoryData[index];
-                    final isActive = category['label'] == _selectedCategory;
-                    return CategoryPill(
-                      icon: category['icon'] as IconData,
-                      label: category['label'] as String,
-                      isActive: isActive,
-                      onTap: () {
-                        setState(() {
-                          _selectedCategory = category['label'] as String;
-                        });
-                        // TODO: Filter livestreams by category
-                      },
-                    );
-                  },
+                // Category Pills - Horizontal scroll
+                SizedBox(
+                  height: 100.h,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    itemCount: _categoryData.length,
+                    separatorBuilder: (_, __) => SizedBox(width: 12.w),
+                    itemBuilder: (context, index) {
+                      final category = _categoryData[index];
+                      final isActive = category['label'] == _selectedCategory;
+                      return CategoryPill(
+                        icon: category['icon'] as IconData,
+                        label: category['label'] as String,
+                        isActive: isActive,
+                        onTap: () {
+                          setState(() {
+                            _selectedCategory = category['label'] as String;
+                          });
+                          // TODO: Filter livestreams by category
+                        },
+                      );
+                    },
+                  ),
                 ),
-              ),
+
+                SizedBox(height: 20.h),
+
+                // Content
+                _buildContent(context, theme, livestreamState),
+
+                // Bottom padding for navigation
+                SizedBox(height: 140.h),
+              ],
             ),
-
-            SliverToBoxAdapter(child: SizedBox(height: 20.h)),
-
-            // Content
-            _buildContent(context, theme, livestreamState),
-
-            // Bottom padding for navigation
-            SliverToBoxAdapter(child: SizedBox(height: 140.h)),
-          ],
+          ),
         ),
       ),
     );
@@ -201,7 +204,8 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
   ) {
     // Loading state
     if (livestreamState.isLoading && livestreamState.livestreams.isEmpty) {
-      return SliverFillRemaining(
+      return SizedBox(
+        height: 300.h,
         child: Center(
           child: CircularProgressIndicator(color: theme.colorScheme.primary),
         ),
@@ -210,24 +214,30 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
 
     // Error state
     if (livestreamState.hasError && livestreamState.livestreams.isEmpty) {
-      return SliverFillRemaining(
+      return SizedBox(
+        height: 300.h,
         child: _buildErrorState(context, theme, livestreamState.errorMessage),
       );
     }
 
     // Empty state
     if (livestreamState.livestreams.isEmpty) {
-      return SliverFillRemaining(child: _buildEmptyState(theme));
+      return SizedBox(
+        height: 300.h,
+        child: _buildEmptyState(theme),
+      );
     }
 
     // Livestream Grid - Staggered layout
-    return SliverPadding(
+    return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
-      sliver: SliverMasonryGrid.count(
+      child: MasonryGridView.count(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         crossAxisCount: 2,
         mainAxisSpacing: 16.h,
         crossAxisSpacing: 16.w,
-        childCount:
+        itemCount:
             livestreamState.livestreams.length +
             (livestreamState.hasMore ? 1 : 0),
         itemBuilder: (context, index) {
@@ -250,10 +260,9 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
 
           return GestureDetector(
             onTap: () {
-              Navigator.pushNamed(
-                context,
-                '/livestream-detail',
-                arguments: livestream.id,
+              context.pushNamed(
+                'livestream-detail',
+                pathParameters: {'id': livestream.id},
               );
             },
             child: SizedBox(

@@ -21,27 +21,24 @@ class LivestreamList extends _$LivestreamList {
       state = state.copyWith(isLoading: true, clearFailure: true);
     }
 
-    final getLivestreamsUseCase = ref.read(getLivestreamsUseCaseProvider);
-    final result = await getLivestreamsUseCase(
-      GetLivestreamsParams(
-        page: refresh ? 1 : state.currentPage,
-        limit: 20,
-        status: 'live',
+    final getFeaturedLivestreamsUseCase = ref.read(
+      getFeaturedLivestreamsUseCaseProvider,
+    );
+    final result = await getFeaturedLivestreamsUseCase(
+      GetFeaturedLivestreamsParams(
+        limit: refresh ? 20 : state.livestreams.length + 20,
       ),
     );
     if (!ref.mounted) return;
 
     result.fold(
-      (failure) => state = state.copyWith(
-        isLoading: false,
-        failure: failure,
-      ),
+      (failure) => state = state.copyWith(isLoading: false, failure: failure),
       (livestreams) => state = state.copyWith(
         isLoading: false,
-        livestreams:
-            refresh ? livestreams : [...state.livestreams, ...livestreams],
-        hasMore: livestreams.length >= 20,
-        currentPage: refresh ? 2 : state.currentPage + 1,
+        livestreams: livestreams,
+        hasMore:
+            false, // Active endpoint doesn't support traditional pagination
+        currentPage: 1,
       ),
     );
   }
@@ -50,22 +47,18 @@ class LivestreamList extends _$LivestreamList {
   Future<void> loadFeaturedLivestreams() async {
     state = state.copyWith(isLoading: true, clearFailure: true);
 
-    final getFeaturedLivestreamsUseCase =
-        ref.read(getFeaturedLivestreamsUseCaseProvider);
+    final getFeaturedLivestreamsUseCase = ref.read(
+      getFeaturedLivestreamsUseCaseProvider,
+    );
     final result = await getFeaturedLivestreamsUseCase(
       GetFeaturedLivestreamsParams(limit: 10),
     );
     if (!ref.mounted) return;
 
     result.fold(
-      (failure) => state = state.copyWith(
-        isLoading: false,
-        failure: failure,
-      ),
-      (livestreams) => state = state.copyWith(
-        isLoading: false,
-        livestreams: livestreams,
-      ),
+      (failure) => state = state.copyWith(isLoading: false, failure: failure),
+      (livestreams) =>
+          state = state.copyWith(isLoading: false, livestreams: livestreams),
     );
   }
 }

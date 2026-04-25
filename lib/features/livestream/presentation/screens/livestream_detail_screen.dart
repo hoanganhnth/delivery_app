@@ -26,15 +26,16 @@ class LivestreamDetailScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       body: switch (viewerState) {
-        LivestreamViewerIdle() || LivestreamViewerConnecting() =>
-          const Center(child: CircularProgressIndicator(color: Colors.white)),
+        LivestreamViewerIdle() || LivestreamViewerConnecting() => const Center(
+          child: CircularProgressIndicator(color: Colors.white),
+        ),
         LivestreamViewerError(:final message) => _LivestreamErrorView(
-            message: message,
-            onRetry: () => ref
-                .read(livestreamViewerProvider(livestreamId).notifier)
-                .joinLivestream(),
-            onBack: () => Navigator.pop(context),
-          ),
+          message: message,
+          onRetry: () => ref
+              .read(livestreamViewerProvider(livestreamId).notifier)
+              .joinLivestream(),
+          onBack: () => Navigator.pop(context),
+        ),
         LivestreamViewerWatching(:final channelName, :final remoteUid) =>
           _LivestreamWatchingView(
             livestreamId: livestreamId,
@@ -42,10 +43,10 @@ class LivestreamDetailScreen extends ConsumerWidget {
             remoteUid: remoteUid,
           ),
         LivestreamViewerDisconnected() => _LivestreamErrorView(
-            message: 'Livestream đã kết thúc',
-            onRetry: null,
-            onBack: () => Navigator.pop(context),
-          ),
+          message: 'Livestream đã kết thúc',
+          onRetry: null,
+          onBack: () => Navigator.pop(context),
+        ),
       },
     );
   }
@@ -88,10 +89,7 @@ class _LivestreamErrorView extends StatelessWidget {
           ),
           if (onRetry != null) ...[
             SizedBox(height: 16.h),
-            ElevatedButton(
-              onPressed: onRetry,
-              child: const Text('Thử lại'),
-            ),
+            ElevatedButton(onPressed: onRetry, child: const Text('Thử lại')),
           ],
           const Spacer(),
         ],
@@ -158,8 +156,7 @@ class _LivestreamWatchingViewState
 
       try {
         await ref
-            .read(
-                livestreamInteractionProvider(widget.livestreamId).notifier)
+            .read(livestreamInteractionProvider(widget.livestreamId).notifier)
             .sendComment(comment);
         _scrollToBottom();
       } catch (e) {
@@ -212,9 +209,7 @@ class _LivestreamWatchingViewState
   }
 
   void _showProductSheet() {
-    final detailState = ref.read(
-      livestreamDetailProvider(widget.livestreamId),
-    );
+    final detailState = ref.read(livestreamDetailProvider(widget.livestreamId));
     if (detailState.livestream?.products == null ||
         detailState.livestream!.products!.isEmpty) {
       return;
@@ -226,9 +221,8 @@ class _LivestreamWatchingViewState
       backgroundColor: Colors.transparent,
       enableDrag: true,
       isDismissible: true,
-      builder: (context) => LivestreamProductSheet(
-        products: detailState.livestream!.products!,
-      ),
+      builder: (context) =>
+          LivestreamProductSheet(products: detailState.livestream!.products!),
     );
   }
 
@@ -242,8 +236,9 @@ class _LivestreamWatchingViewState
     );
 
     // Get agora service from provider for video view
-    final agoraService =
-        ref.watch(agoraServiceForViewerProvider(widget.livestreamId));
+    final agoraService = ref.watch(
+      agoraServiceForViewerProvider(widget.livestreamId),
+    );
 
     final livestream = detailState.livestream;
     if (livestream == null) {
