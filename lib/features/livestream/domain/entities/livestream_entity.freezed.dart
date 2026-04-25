@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LivestreamEntity {
 
- num get id; String get title; String get streamerId; String get streamerName; String? get streamerAvatar; String get channelName; String get rtcToken; int get uid; String get description; int get viewerCount; int get likeCount; String get status;// 'live', 'upcoming', 'ended'
+ String get id; String get title; String get streamerId; String get streamerName; String? get streamerAvatar; String get channelName; String get rtcToken; int get uid; String get description; int get viewerCount; int get likeCount; String get status;// 'live', 'upcoming', 'ended'
  String? get thumbnailUrl; String? get coverImageUrl; DateTime get startTime; DateTime? get endTime; List<LivestreamProductEntity>? get products;
 /// Create a copy of LivestreamEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -46,7 +46,7 @@ abstract mixin class $LivestreamEntityCopyWith<$Res>  {
   factory $LivestreamEntityCopyWith(LivestreamEntity value, $Res Function(LivestreamEntity) _then) = _$LivestreamEntityCopyWithImpl;
 @useResult
 $Res call({
- num id, String title, String streamerId, String streamerName, String? streamerAvatar, String channelName, String rtcToken, int uid, String description, int viewerCount, int likeCount, String status, String? thumbnailUrl, String? coverImageUrl, DateTime startTime, DateTime? endTime, List<LivestreamProductEntity>? products
+ String id, String title, String streamerId, String streamerName, String? streamerAvatar, String channelName, String rtcToken, int uid, String description, int viewerCount, int likeCount, String status, String? thumbnailUrl, String? coverImageUrl, DateTime startTime, DateTime? endTime, List<LivestreamProductEntity>? products
 });
 
 
@@ -66,7 +66,7 @@ class _$LivestreamEntityCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? streamerId = null,Object? streamerName = null,Object? streamerAvatar = freezed,Object? channelName = null,Object? rtcToken = null,Object? uid = null,Object? description = null,Object? viewerCount = null,Object? likeCount = null,Object? status = null,Object? thumbnailUrl = freezed,Object? coverImageUrl = freezed,Object? startTime = null,Object? endTime = freezed,Object? products = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as num,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,streamerId: null == streamerId ? _self.streamerId : streamerId // ignore: cast_nullable_to_non_nullable
 as String,streamerName: null == streamerName ? _self.streamerName : streamerName // ignore: cast_nullable_to_non_nullable
 as String,streamerAvatar: freezed == streamerAvatar ? _self.streamerAvatar : streamerAvatar // ignore: cast_nullable_to_non_nullable
@@ -167,7 +167,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( num id,  String title,  String streamerId,  String streamerName,  String? streamerAvatar,  String channelName,  String rtcToken,  int uid,  String description,  int viewerCount,  int likeCount,  String status,  String? thumbnailUrl,  String? coverImageUrl,  DateTime startTime,  DateTime? endTime,  List<LivestreamProductEntity>? products)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String streamerId,  String streamerName,  String? streamerAvatar,  String channelName,  String rtcToken,  int uid,  String description,  int viewerCount,  int likeCount,  String status,  String? thumbnailUrl,  String? coverImageUrl,  DateTime startTime,  DateTime? endTime,  List<LivestreamProductEntity>? products)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LivestreamEntity() when $default != null:
 return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startTime,_that.endTime,_that.products);case _:
@@ -188,7 +188,7 @@ return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.s
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num id,  String title,  String streamerId,  String streamerName,  String? streamerAvatar,  String channelName,  String rtcToken,  int uid,  String description,  int viewerCount,  int likeCount,  String status,  String? thumbnailUrl,  String? coverImageUrl,  DateTime startTime,  DateTime? endTime,  List<LivestreamProductEntity>? products)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String streamerId,  String streamerName,  String? streamerAvatar,  String channelName,  String rtcToken,  int uid,  String description,  int viewerCount,  int likeCount,  String status,  String? thumbnailUrl,  String? coverImageUrl,  DateTime startTime,  DateTime? endTime,  List<LivestreamProductEntity>? products)  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamEntity():
 return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startTime,_that.endTime,_that.products);case _:
@@ -208,7 +208,7 @@ return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.s
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( num id,  String title,  String streamerId,  String streamerName,  String? streamerAvatar,  String channelName,  String rtcToken,  int uid,  String description,  int viewerCount,  int likeCount,  String status,  String? thumbnailUrl,  String? coverImageUrl,  DateTime startTime,  DateTime? endTime,  List<LivestreamProductEntity>? products)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String streamerId,  String streamerName,  String? streamerAvatar,  String channelName,  String rtcToken,  int uid,  String description,  int viewerCount,  int likeCount,  String status,  String? thumbnailUrl,  String? coverImageUrl,  DateTime startTime,  DateTime? endTime,  List<LivestreamProductEntity>? products)?  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamEntity() when $default != null:
 return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startTime,_that.endTime,_that.products);case _:
@@ -226,7 +226,7 @@ class _LivestreamEntity extends LivestreamEntity {
   const _LivestreamEntity({required this.id, required this.title, required this.streamerId, required this.streamerName, this.streamerAvatar, required this.channelName, required this.rtcToken, required this.uid, required this.description, required this.viewerCount, required this.likeCount, required this.status, this.thumbnailUrl, this.coverImageUrl, required this.startTime, this.endTime, final  List<LivestreamProductEntity>? products}): _products = products,super._();
   
 
-@override final  num id;
+@override final  String id;
 @override final  String title;
 @override final  String streamerId;
 @override final  String streamerName;
@@ -283,7 +283,7 @@ abstract mixin class _$LivestreamEntityCopyWith<$Res> implements $LivestreamEnti
   factory _$LivestreamEntityCopyWith(_LivestreamEntity value, $Res Function(_LivestreamEntity) _then) = __$LivestreamEntityCopyWithImpl;
 @override @useResult
 $Res call({
- num id, String title, String streamerId, String streamerName, String? streamerAvatar, String channelName, String rtcToken, int uid, String description, int viewerCount, int likeCount, String status, String? thumbnailUrl, String? coverImageUrl, DateTime startTime, DateTime? endTime, List<LivestreamProductEntity>? products
+ String id, String title, String streamerId, String streamerName, String? streamerAvatar, String channelName, String rtcToken, int uid, String description, int viewerCount, int likeCount, String status, String? thumbnailUrl, String? coverImageUrl, DateTime startTime, DateTime? endTime, List<LivestreamProductEntity>? products
 });
 
 
@@ -303,7 +303,7 @@ class __$LivestreamEntityCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? streamerId = null,Object? streamerName = null,Object? streamerAvatar = freezed,Object? channelName = null,Object? rtcToken = null,Object? uid = null,Object? description = null,Object? viewerCount = null,Object? likeCount = null,Object? status = null,Object? thumbnailUrl = freezed,Object? coverImageUrl = freezed,Object? startTime = null,Object? endTime = freezed,Object? products = freezed,}) {
   return _then(_LivestreamEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as num,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,streamerId: null == streamerId ? _self.streamerId : streamerId // ignore: cast_nullable_to_non_nullable
 as String,streamerName: null == streamerName ? _self.streamerName : streamerName // ignore: cast_nullable_to_non_nullable
 as String,streamerAvatar: freezed == streamerAvatar ? _self.streamerAvatar : streamerAvatar // ignore: cast_nullable_to_non_nullable

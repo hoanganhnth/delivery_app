@@ -206,7 +206,7 @@ GoRouter createAppRouter({
         path: '/livestream-detail/:id',
         name: 'livestream-detail',
         builder: (context, state) {
-          final id = int.parse(state.pathParameters['id']!);
+          final id = state.pathParameters['id']!;
           return LivestreamDetailScreen(livestreamId: id);
         },
       ),

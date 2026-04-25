@@ -19,7 +19,7 @@ class LivestreamViewer extends _$LivestreamViewer {
   StreamSubscription? _errorSubscription;
 
   @override
-  LivestreamViewerState build(num livestreamId) {
+  LivestreamViewerState build(String livestreamId) {
     ref.onDispose(_cleanup);
 
     // Start join flow immediately

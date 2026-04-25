@@ -63,7 +63,7 @@ class _LivestreamApiService implements LivestreamApiService {
   }
 
   @override
-  Future<BaseResponseDto<LivestreamDto>> getLivestreamById(num id) async {
+  Future<BaseResponseDto<LivestreamDto>> getLivestreamById(String id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -132,7 +132,7 @@ class _LivestreamApiService implements LivestreamApiService {
   }
 
   @override
-  Future<BaseResponseDto<JoinLivestreamDto>> joinLivestream(num id) async {
+  Future<BaseResponseDto<JoinLivestreamDto>> joinLivestream(String id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

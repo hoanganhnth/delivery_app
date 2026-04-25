@@ -13,7 +13,7 @@ abstract class LivestreamRepository {
   });
 
   /// Get livestream by ID
-  Future<Either<Failure, LivestreamEntity>> getLivestreamById(num id);
+  Future<Either<Failure, LivestreamEntity>> getLivestreamById(String id);
 
   /// Get featured livestreams for home page
   Future<Either<Failure, List<LivestreamEntity>>> getFeaturedLivestreams({
@@ -22,16 +22,16 @@ abstract class LivestreamRepository {
 
   /// Update viewer count (local only)
   Future<Either<Failure, LivestreamEntity>> updateViewerCount(
-    num livestreamId,
+    String livestreamId,
     int viewerCount,
   );
 
   /// Update like count (local only)
   Future<Either<Failure, LivestreamEntity>> updateLikeCount(
-    num livestreamId,
+    String livestreamId,
     int likeCount,
   );
 
   /// Join livestream - get Agora token
-  Future<Either<Failure, JoinLivestreamDto>> joinLivestream(num id);
+  Future<Either<Failure, JoinLivestreamDto>> joinLivestream(String id);
 }

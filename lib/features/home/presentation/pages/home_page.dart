@@ -125,7 +125,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             _buildRestaurantsList(restaurantsState),
 
             // Bottom padding for nav bar
-            SliverToBoxAdapter(child: SizedBox(height: 100.w)),
+            SliverToBoxAdapter(child: SizedBox(height: 140.w)),
           ],
         ),
       ),

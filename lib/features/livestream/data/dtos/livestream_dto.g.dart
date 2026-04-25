@@ -8,23 +8,24 @@ part of 'livestream_dto.dart';
 
 _LivestreamDto _$LivestreamDtoFromJson(Map<String, dynamic> json) =>
     _LivestreamDto(
-      id: json['id'] as num,
+      id: json['id'] as String,
       title: json['title'] as String,
-      streamerId: json['streamerId'] as String,
-      streamerName: json['streamerName'] as String,
+      sellerId: json['sellerId'] as num?,
+      restaurantId: json['restaurantId'] as num?,
+      streamerName: json['streamerName'] as String?,
       streamerAvatar: json['streamerAvatar'] as String?,
       channelName: json['channelName'] as String,
-      rtcToken: json['rtcToken'] as String,
-      uid: (json['uid'] as num).toInt(),
+      rtcToken: json['rtcToken'] as String?,
+      uid: (json['uid'] as num?)?.toInt(),
       description: json['description'] as String,
-      viewerCount: (json['viewerCount'] as num).toInt(),
-      likeCount: (json['likeCount'] as num).toInt(),
+      viewerCount: (json['viewerCount'] as num?)?.toInt() ?? 0,
+      likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,
       status: json['status'] as String,
       thumbnailUrl: json['thumbnailUrl'] as String?,
       coverImageUrl: json['coverImageUrl'] as String?,
-      startTime: json['startTime'] as String,
-      endTime: json['endTime'] as String?,
-      products: (json['products'] as List<dynamic>?)
+      startedAt: json['startedAt'] as String?,
+      endedAt: json['endedAt'] as String?,
+      pinnedProducts: (json['pinnedProducts'] as List<dynamic>?)
           ?.map((e) => LivestreamProductDto.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
@@ -33,7 +34,8 @@ Map<String, dynamic> _$LivestreamDtoToJson(_LivestreamDto instance) =>
     <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
-      'streamerId': instance.streamerId,
+      'sellerId': instance.sellerId,
+      'restaurantId': instance.restaurantId,
       'streamerName': instance.streamerName,
       'streamerAvatar': instance.streamerAvatar,
       'channelName': instance.channelName,
@@ -45,9 +47,9 @@ Map<String, dynamic> _$LivestreamDtoToJson(_LivestreamDto instance) =>
       'status': instance.status,
       'thumbnailUrl': instance.thumbnailUrl,
       'coverImageUrl': instance.coverImageUrl,
-      'startTime': instance.startTime,
-      'endTime': instance.endTime,
-      'products': instance.products,
+      'startedAt': instance.startedAt,
+      'endedAt': instance.endedAt,
+      'pinnedProducts': instance.pinnedProducts,
     };
 
 _LivestreamProductDto _$LivestreamProductDtoFromJson(

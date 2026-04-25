@@ -9,7 +9,7 @@ abstract class LivestreamFirebaseDataSource {
 
   /// Stream comments from Firebase
   Stream<Either<Exception, List<LivestreamCommentDto>>> streamComments(
-    num livestreamId,
+    String livestreamId,
   );
 
   /// Send like to Firebase
@@ -17,11 +17,11 @@ abstract class LivestreamFirebaseDataSource {
 
   /// Stream likes from Firebase
   Stream<Either<Exception, List<LivestreamLikeDto>>> streamLikes(
-    num livestreamId,
+    String livestreamId,
   );
 
   /// Get like count
-  Future<Either<Exception, int>> getLikeCount(num livestreamId);
+  Future<Either<Exception, int>> getLikeCount(String livestreamId);
 }
 
 /// Firebase datasource implementation
@@ -35,7 +35,7 @@ class LivestreamFirebaseDataSourceImpl implements LivestreamFirebaseDataSource {
     try {
       await _firestore
           .collection('livestreams')
-          .doc(comment.livestreamId.toString())
+          .doc(comment.livestreamId)
           .collection('comments')
           .doc(comment.id)
           .set(comment.toJson());
@@ -48,12 +48,12 @@ class LivestreamFirebaseDataSourceImpl implements LivestreamFirebaseDataSource {
 
   @override
   Stream<Either<Exception, List<LivestreamCommentDto>>> streamComments(
-    num livestreamId,
+    String livestreamId,
   ) {
     try {
       return _firestore
           .collection('livestreams')
-          .doc(livestreamId.toString())
+          .doc(livestreamId)
           .collection('comments')
           .orderBy('timestamp', descending: false)
           .limit(100) // Limit to last 100 comments
@@ -84,11 +84,10 @@ class LivestreamFirebaseDataSourceImpl implements LivestreamFirebaseDataSource {
     try {
       await _firestore
           .collection('livestreams')
-          .doc(like.livestreamId.toString())
+          .doc(like.livestreamId)
           .collection('likes')
           .doc(like.id)
           .set(like.toJson());
-
       return right(unit);
     } catch (e) {
       return left(Exception('Failed to send like: ${e.toString()}'));
@@ -97,12 +96,12 @@ class LivestreamFirebaseDataSourceImpl implements LivestreamFirebaseDataSource {
 
   @override
   Stream<Either<Exception, List<LivestreamLikeDto>>> streamLikes(
-    num livestreamId,
+    String livestreamId,
   ) {
     try {
       return _firestore
           .collection('livestreams')
-          .doc(livestreamId.toString())
+          .doc(livestreamId)
           .collection('likes')
           .orderBy('timestamp', descending: true)
           .limit(50) // Limit to last 50 likes
@@ -129,11 +128,11 @@ class LivestreamFirebaseDataSourceImpl implements LivestreamFirebaseDataSource {
   }
 
   @override
-  Future<Either<Exception, int>> getLikeCount(num livestreamId) async {
+  Future<Either<Exception, int>> getLikeCount(String livestreamId) async {
     try {
       final snapshot = await _firestore
           .collection('livestreams')
-          .doc(livestreamId.toString())
+          .doc(livestreamId)
           .collection('likes')
           .count()
           .get();

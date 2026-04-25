@@ -7,7 +7,7 @@ part 'livestream_comment_entity.freezed.dart';
 abstract class LivestreamCommentEntity with _$LivestreamCommentEntity {
   const factory LivestreamCommentEntity({
     required String id,
-    required num livestreamId,
+    required String livestreamId,
     required String userId,
     required String userName,
     String? userAvatar,
@@ -23,7 +23,7 @@ abstract class LivestreamCommentEntity with _$LivestreamCommentEntity {
 abstract class LivestreamLikeEntity with _$LivestreamLikeEntity {
   const factory LivestreamLikeEntity({
     required String id,
-    required num livestreamId,
+    required String livestreamId,
     required String userId,
     String? userName,
     String? userAvatar,

@@ -15,7 +15,7 @@ import '../widgets/livestream_video_view.dart';
 
 /// Màn hình chi tiết livestream — UI thuần, logic do Riverpod quản lý
 class LivestreamDetailScreen extends ConsumerWidget {
-  final num livestreamId;
+  final String livestreamId;
 
   const LivestreamDetailScreen({super.key, required this.livestreamId});
 
@@ -104,7 +104,7 @@ class _LivestreamErrorView extends StatelessWidget {
 /// This is StatefulWidget because TextEditingController & ScrollController
 /// are ephemeral local state (SKILL anti-pattern rule #129)
 class _LivestreamWatchingView extends ConsumerStatefulWidget {
-  final num livestreamId;
+  final String livestreamId;
   final String channelName;
   final int? remoteUid;
 

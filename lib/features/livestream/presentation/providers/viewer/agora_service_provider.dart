@@ -6,7 +6,7 @@ part 'agora_service_provider.g.dart';
 /// Riverpod-managed AgoraService — auto-disposes with ref.onDispose
 /// Family provider: one instance per livestreamId
 @riverpod
-IAgoraService agoraServiceForViewer(Ref ref, num livestreamId) {
+IAgoraService agoraServiceForViewer(Ref ref, String livestreamId) {
   final service = AgoraService();
 
   // Auto-cleanup when provider is disposed (e.g. screen leaves)

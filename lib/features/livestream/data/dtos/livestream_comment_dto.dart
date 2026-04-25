@@ -9,7 +9,7 @@ part 'livestream_comment_dto.g.dart';
 abstract class LivestreamCommentDto with _$LivestreamCommentDto {
   const factory LivestreamCommentDto({
     required String id,
-    required num livestreamId,
+    required String livestreamId,
     required String userId,
     required String userName,
     String? userAvatar,
@@ -54,7 +54,7 @@ abstract class LivestreamCommentDto with _$LivestreamCommentDto {
 abstract class LivestreamLikeDto with _$LivestreamLikeDto {
   const factory LivestreamLikeDto({
     required String id,
-    required num livestreamId,
+    required String livestreamId,
     required String userId,
     String? userName,
     String? userAvatar,

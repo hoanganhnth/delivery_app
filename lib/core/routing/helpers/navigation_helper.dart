@@ -141,6 +141,11 @@ class NavigationHelper {
     context.push(AppRoutes.cart);
   }
 
+  /// Push orders screen
+  static void pushOrders(BuildContext context) {
+    context.push(AppRoutes.orders);
+  }
+
   /// push restaurants screen
   static void pushRes(BuildContext context) {
     context.push(AppRoutes.restaurants);
@@ -271,6 +276,7 @@ extension NavigationExtension on BuildContext {
   void pushProfile() => NavigationHelper.pushProfile(this);
   void pushSettings() => NavigationHelper.pushSettings(this);
   void pushCart() => NavigationHelper.pushCart(this);
+  void pushOrders() => NavigationHelper.pushOrders(this);
   void pushToRestaurantDetails(String restaurantId) =>
       NavigationHelper.pushRestaurantDetails(this, restaurantId);
   void pushToRestaurants() => NavigationHelper.pushRes(this);

@@ -87,6 +87,9 @@ class ProfilePage extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.history, color: Colors.orange),
             title: Text(S.of(context).orderHistory),
+            onTap: () {
+              context.pushOrders();
+            },
           ),
 
           // Address management
@@ -119,7 +122,7 @@ class ProfilePage extends ConsumerWidget {
               child: ElevatedButton.icon(
                 onPressed: () async {
                   // Just call logout, navigation will be handled by the listener
-                    await ref.read(authProvider.notifier).logout();
+                  await ref.read(authProvider.notifier).logout();
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 icon: const Icon(Icons.logout, color: Colors.white),

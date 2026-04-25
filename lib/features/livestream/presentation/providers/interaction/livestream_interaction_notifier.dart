@@ -14,7 +14,7 @@ class LivestreamInteraction extends _$LivestreamInteraction {
   StreamSubscription? _likesSubscription;
 
   @override
-  LivestreamInteractionState build(num id) {
+  LivestreamInteractionState build(String id) {
     Future.microtask(() => startStreaming(id));
 
     ref.onDispose(() {
@@ -26,12 +26,12 @@ class LivestreamInteraction extends _$LivestreamInteraction {
   }
 
   /// Start streaming interactions
-  void startStreaming(num livestreamId) {
+  void startStreaming(String livestreamId) {
     _startStreamingComments(livestreamId);
     _startStreamingLikes(livestreamId);
   }
 
-  void _startStreamingComments(num livestreamId) {
+  void _startStreamingComments(String livestreamId) {
     _commentsSubscription?.cancel();
 
     final streamCommentsUseCase = ref.read(streamCommentsUseCaseProvider);
@@ -50,7 +50,7 @@ class LivestreamInteraction extends _$LivestreamInteraction {
     });
   }
 
-  void _startStreamingLikes(num livestreamId) {
+  void _startStreamingLikes(String livestreamId) {
     _likesSubscription?.cancel();
 
     final streamLikesUseCase = ref.read(streamLikesUseCaseProvider);

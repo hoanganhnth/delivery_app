@@ -31,9 +31,9 @@ class NavigationUtils {
     ref.read(selectedTabProvider.notifier).setTab(AppTab.cart);
   }
 
-  /// Chuyển đến Orders tab
-  static void goToOrders(WidgetRef ref) {
-    ref.read(selectedTabProvider.notifier).setTab(AppTab.orders);
+  /// Chuyển đến Livestreams tab
+  static void goToLivestreams(WidgetRef ref) {
+    ref.read(selectedTabProvider.notifier).setTab(AppTab.livestreams);
   }
 
   /// Chuyển đến Profile tab

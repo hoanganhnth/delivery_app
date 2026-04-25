@@ -20,7 +20,7 @@ abstract class LivestreamApiService {
 
   @GET('/livestreams/{id}')
   Future<BaseResponseDto<LivestreamDto>> getLivestreamById(
-    @Path('id') num id,
+    @Path('id') String id,
   );
 
   @GET('/livestreams/active')
@@ -30,7 +30,7 @@ abstract class LivestreamApiService {
 
   @POST('/livestreams/{id}/join')
   Future<BaseResponseDto<JoinLivestreamDto>> joinLivestream(
-    @Path('id') num id,
+    @Path('id') String id,
   );
 }
 
@@ -42,13 +42,13 @@ abstract class LivestreamRemoteDataSource {
     String? status,
   });
 
-  Future<BaseResponseDto<LivestreamDto>> getLivestreamById(num id);
+  Future<BaseResponseDto<LivestreamDto>> getLivestreamById(String id);
 
   Future<BaseResponseDto<List<LivestreamDto>>> getFeaturedLivestreams({
     int limit = 5,
   });
 
-  Future<BaseResponseDto<JoinLivestreamDto>> joinLivestream(num id);
+  Future<BaseResponseDto<JoinLivestreamDto>> joinLivestream(String id);
 }
 
 /// Remote datasource implementation
@@ -82,7 +82,7 @@ class LivestreamRemoteDataSourceImpl implements LivestreamRemoteDataSource {
   }
 
   @override
-  Future<BaseResponseDto<LivestreamDto>> getLivestreamById(num id) async {
+  Future<BaseResponseDto<LivestreamDto>> getLivestreamById(String id) async {
     try {
       // AppLogger.d('Getting livestream with id: $id');
       final response = await _apiService.getLivestreamById(id);
@@ -116,7 +116,7 @@ class LivestreamRemoteDataSourceImpl implements LivestreamRemoteDataSource {
   }
 
   @override
-  Future<BaseResponseDto<JoinLivestreamDto>> joinLivestream(num id) async {
+  Future<BaseResponseDto<JoinLivestreamDto>> joinLivestream(String id) async {
     try {
       final response = await _apiService.joinLivestream(id);
       return response;

@@ -1,5 +1,5 @@
 import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
-import 'package:delivery_app/features/orders/orders.dart';
+import 'package:delivery_app/features/livestream/presentation/screens/all_livestreams_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
@@ -17,7 +17,7 @@ class MainScreen extends ConsumerWidget {
     const pages = <Widget>[
       HomePage(),
       CartPage(),
-      OrdersScreen(),
+      AllLivestreamsScreen(),
       ProfilePage(),
     ];
 
@@ -28,7 +28,7 @@ class MainScreen extends ConsumerWidget {
           return 0;
         case AppTab.cart:
           return 1;
-        case AppTab.orders:
+        case AppTab.livestreams:
           return 2;
         case AppTab.profile:
           return 3;
@@ -45,7 +45,7 @@ class MainScreen extends ConsumerWidget {
         case 1:
           return AppTab.cart;
         case 2:
-          return AppTab.orders;
+          return AppTab.livestreams;
         case 3:
           return AppTab.profile;
         default:
@@ -57,7 +57,7 @@ class MainScreen extends ConsumerWidget {
 
     return Scaffold(
       body: IndexedStack(index: currentIndex, children: pages),
-      extendBody: false,
+      extendBody: true,
       bottomNavigationBar: AmberBottomNavBar(
         currentIndex: currentIndex,
         onTap: (index) {

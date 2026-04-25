@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LivestreamCommentEntity {
 
- String get id; num get livestreamId; String get userId; String get userName; String? get userAvatar; String get message; DateTime get timestamp;
+ String get id; String get livestreamId; String get userId; String get userName; String? get userAvatar; String get message; DateTime get timestamp;
 /// Create a copy of LivestreamCommentEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $LivestreamCommentEntityCopyWith<$Res>  {
   factory $LivestreamCommentEntityCopyWith(LivestreamCommentEntity value, $Res Function(LivestreamCommentEntity) _then) = _$LivestreamCommentEntityCopyWithImpl;
 @useResult
 $Res call({
- String id, num livestreamId, String userId, String userName, String? userAvatar, String message, DateTime timestamp
+ String id, String livestreamId, String userId, String userName, String? userAvatar, String message, DateTime timestamp
 });
 
 
@@ -66,7 +66,7 @@ class _$LivestreamCommentEntityCopyWithImpl<$Res>
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,livestreamId: null == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
-as num,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
 as String,userAvatar: freezed == userAvatar ? _self.userAvatar : userAvatar // ignore: cast_nullable_to_non_nullable
 as String?,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  num livestreamId,  String userId,  String userName,  String? userAvatar,  String message,  DateTime timestamp)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String livestreamId,  String userId,  String userName,  String? userAvatar,  String message,  DateTime timestamp)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LivestreamCommentEntity() when $default != null:
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.message,_that.timestamp);case _:
@@ -177,7 +177,7 @@ return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  num livestreamId,  String userId,  String userName,  String? userAvatar,  String message,  DateTime timestamp)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String livestreamId,  String userId,  String userName,  String? userAvatar,  String message,  DateTime timestamp)  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamCommentEntity():
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.message,_that.timestamp);case _:
@@ -197,7 +197,7 @@ return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  num livestreamId,  String userId,  String userName,  String? userAvatar,  String message,  DateTime timestamp)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String livestreamId,  String userId,  String userName,  String? userAvatar,  String message,  DateTime timestamp)?  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamCommentEntity() when $default != null:
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.message,_that.timestamp);case _:
@@ -216,7 +216,7 @@ class _LivestreamCommentEntity extends LivestreamCommentEntity {
   
 
 @override final  String id;
-@override final  num livestreamId;
+@override final  String livestreamId;
 @override final  String userId;
 @override final  String userName;
 @override final  String? userAvatar;
@@ -253,7 +253,7 @@ abstract mixin class _$LivestreamCommentEntityCopyWith<$Res> implements $Livestr
   factory _$LivestreamCommentEntityCopyWith(_LivestreamCommentEntity value, $Res Function(_LivestreamCommentEntity) _then) = __$LivestreamCommentEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String id, num livestreamId, String userId, String userName, String? userAvatar, String message, DateTime timestamp
+ String id, String livestreamId, String userId, String userName, String? userAvatar, String message, DateTime timestamp
 });
 
 
@@ -274,7 +274,7 @@ class __$LivestreamCommentEntityCopyWithImpl<$Res>
   return _then(_LivestreamCommentEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,livestreamId: null == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
-as num,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
 as String,userAvatar: freezed == userAvatar ? _self.userAvatar : userAvatar // ignore: cast_nullable_to_non_nullable
 as String?,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
@@ -289,7 +289,7 @@ as DateTime,
 /// @nodoc
 mixin _$LivestreamLikeEntity {
 
- String get id; num get livestreamId; String get userId; String? get userName; String? get userAvatar; DateTime get timestamp;
+ String get id; String get livestreamId; String get userId; String? get userName; String? get userAvatar; DateTime get timestamp;
 /// Create a copy of LivestreamLikeEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -320,7 +320,7 @@ abstract mixin class $LivestreamLikeEntityCopyWith<$Res>  {
   factory $LivestreamLikeEntityCopyWith(LivestreamLikeEntity value, $Res Function(LivestreamLikeEntity) _then) = _$LivestreamLikeEntityCopyWithImpl;
 @useResult
 $Res call({
- String id, num livestreamId, String userId, String? userName, String? userAvatar, DateTime timestamp
+ String id, String livestreamId, String userId, String? userName, String? userAvatar, DateTime timestamp
 });
 
 
@@ -341,7 +341,7 @@ class _$LivestreamLikeEntityCopyWithImpl<$Res>
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,livestreamId: null == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
-as num,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,userName: freezed == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
 as String?,userAvatar: freezed == userAvatar ? _self.userAvatar : userAvatar // ignore: cast_nullable_to_non_nullable
 as String?,timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
@@ -430,7 +430,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  num livestreamId,  String userId,  String? userName,  String? userAvatar,  DateTime timestamp)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String livestreamId,  String userId,  String? userName,  String? userAvatar,  DateTime timestamp)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LivestreamLikeEntity() when $default != null:
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.timestamp);case _:
@@ -451,7 +451,7 @@ return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  num livestreamId,  String userId,  String? userName,  String? userAvatar,  DateTime timestamp)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String livestreamId,  String userId,  String? userName,  String? userAvatar,  DateTime timestamp)  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamLikeEntity():
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.timestamp);case _:
@@ -471,7 +471,7 @@ return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  num livestreamId,  String userId,  String? userName,  String? userAvatar,  DateTime timestamp)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String livestreamId,  String userId,  String? userName,  String? userAvatar,  DateTime timestamp)?  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamLikeEntity() when $default != null:
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.timestamp);case _:
@@ -490,7 +490,7 @@ class _LivestreamLikeEntity extends LivestreamLikeEntity {
   
 
 @override final  String id;
-@override final  num livestreamId;
+@override final  String livestreamId;
 @override final  String userId;
 @override final  String? userName;
 @override final  String? userAvatar;
@@ -526,7 +526,7 @@ abstract mixin class _$LivestreamLikeEntityCopyWith<$Res> implements $Livestream
   factory _$LivestreamLikeEntityCopyWith(_LivestreamLikeEntity value, $Res Function(_LivestreamLikeEntity) _then) = __$LivestreamLikeEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String id, num livestreamId, String userId, String? userName, String? userAvatar, DateTime timestamp
+ String id, String livestreamId, String userId, String? userName, String? userAvatar, DateTime timestamp
 });
 
 
@@ -547,7 +547,7 @@ class __$LivestreamLikeEntityCopyWithImpl<$Res>
   return _then(_LivestreamLikeEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,livestreamId: null == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
-as num,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,userName: freezed == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
 as String?,userAvatar: freezed == userAvatar ? _self.userAvatar : userAvatar // ignore: cast_nullable_to_non_nullable
 as String?,timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable

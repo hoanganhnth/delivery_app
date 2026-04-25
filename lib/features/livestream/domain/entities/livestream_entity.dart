@@ -6,7 +6,7 @@ part 'livestream_entity.freezed.dart';
 @freezed
 abstract class LivestreamEntity with _$LivestreamEntity {
   const factory LivestreamEntity({
-    required num id,
+    required String id,
     required String title,
     required String streamerId,
     required String streamerName,

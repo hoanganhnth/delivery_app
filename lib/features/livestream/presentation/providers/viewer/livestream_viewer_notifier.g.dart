@@ -28,7 +28,7 @@ final class LivestreamViewerProvider
   /// Screen only needs: ref.watch(livestreamViewerProvider(id))
   LivestreamViewerProvider._({
     required LivestreamViewerFamily super.from,
-    required num super.argument,
+    required String super.argument,
   }) : super(
          retry: null,
          name: r'livestreamViewerProvider',
@@ -70,7 +70,7 @@ final class LivestreamViewerProvider
   }
 }
 
-String _$livestreamViewerHash() => r'3b9fc05e6fa39a391211ec537c695d493612217f';
+String _$livestreamViewerHash() => r'bef549425cf646e30562e662df9f25afcaa733d1';
 
 /// Orchestrates the entire viewer join flow:
 /// Load Detail → Join API → Init Agora → Join Channel
@@ -84,7 +84,7 @@ final class LivestreamViewerFamily extends $Family
           LivestreamViewerState,
           LivestreamViewerState,
           LivestreamViewerState,
-          num
+          String
         > {
   LivestreamViewerFamily._()
     : super(
@@ -100,7 +100,7 @@ final class LivestreamViewerFamily extends $Family
   ///
   /// Screen only needs: ref.watch(livestreamViewerProvider(id))
 
-  LivestreamViewerProvider call(num livestreamId) =>
+  LivestreamViewerProvider call(String livestreamId) =>
       LivestreamViewerProvider._(argument: livestreamId, from: this);
 
   @override
@@ -113,10 +113,10 @@ final class LivestreamViewerFamily extends $Family
 /// Screen only needs: ref.watch(livestreamViewerProvider(id))
 
 abstract class _$LivestreamViewer extends $Notifier<LivestreamViewerState> {
-  late final _$args = ref.$arg as num;
-  num get livestreamId => _$args;
+  late final _$args = ref.$arg as String;
+  String get livestreamId => _$args;
 
-  LivestreamViewerState build(num livestreamId);
+  LivestreamViewerState build(String livestreamId);
   @$mustCallSuper
   @override
   void runBuild() {

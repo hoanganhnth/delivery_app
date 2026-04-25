@@ -67,9 +67,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
           controller: _scrollController,
           slivers: [
             // Custom AppBar
-            SliverToBoxAdapter(
-              child: _buildAppBar(context, theme),
-            ),
+            SliverToBoxAdapter(child: _buildAppBar(context, theme)),
 
             // Editorial Header
             SliverToBoxAdapter(
@@ -118,7 +116,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
             _buildContent(context, theme, livestreamState),
 
             // Bottom padding for navigation
-            SliverToBoxAdapter(child: SizedBox(height: 100.h)),
+            SliverToBoxAdapter(child: SizedBox(height: 140.h)),
           ],
         ),
       ),
@@ -137,7 +135,9 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
               width: 44.w,
               height: 44.w,
               decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                color: theme.colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.5,
+                ),
                 borderRadius: BorderRadius.circular(16.r),
               ),
               child: Icon(
@@ -157,7 +157,9 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
               width: 44.w,
               height: 44.w,
               decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                color: theme.colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.5,
+                ),
                 borderRadius: BorderRadius.circular(16.r),
               ),
               child: Icon(
@@ -201,9 +203,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
     if (livestreamState.isLoading && livestreamState.livestreams.isEmpty) {
       return SliverFillRemaining(
         child: Center(
-          child: CircularProgressIndicator(
-            color: theme.colorScheme.primary,
-          ),
+          child: CircularProgressIndicator(color: theme.colorScheme.primary),
         ),
       );
     }
@@ -217,9 +217,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
 
     // Empty state
     if (livestreamState.livestreams.isEmpty) {
-      return SliverFillRemaining(
-        child: _buildEmptyState(theme),
-      );
+      return SliverFillRemaining(child: _buildEmptyState(theme));
     }
 
     // Livestream Grid - Staggered layout
@@ -229,7 +227,8 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
         crossAxisCount: 2,
         mainAxisSpacing: 16.h,
         crossAxisSpacing: 16.w,
-        childCount: livestreamState.livestreams.length +
+        childCount:
+            livestreamState.livestreams.length +
             (livestreamState.hasMore ? 1 : 0),
         itemBuilder: (context, index) {
           // Loading indicator for pagination
@@ -273,56 +272,64 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
     String? errorMessage,
   ) {
     return Center(
-      child: Padding(
-        padding: EdgeInsets.all(32.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 80.w,
-              height: 80.w,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.errorContainer.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(24.r),
-              ),
-              child: Icon(
-                Icons.wifi_off_rounded,
-                size: 40.sp,
-                color: theme.colorScheme.error,
-              ),
-            ),
-            SizedBox(height: 24.h),
-            Text(
-              'Oops! Something went wrong',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              errorMessage ?? 'Unable to load livestreams',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 24.h),
-            FilledButton.icon(
-              onPressed: () {
-                ref
-                    .read(livestreamListProvider.notifier)
-                    .loadLivestreams(refresh: true);
-              },
-              icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Try Again'),
-              style: FilledButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16.r),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(32.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 80.w,
+                height: 80.w,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.errorContainer.withValues(
+                    alpha: 0.3,
+                  ),
+                  borderRadius: BorderRadius.circular(24.r),
+                ),
+                child: Icon(
+                  Icons.wifi_off_rounded,
+                  size: 40.sp,
+                  color: theme.colorScheme.error,
                 ),
               ),
-            ),
-          ],
+              SizedBox(height: 24.h),
+              Text(
+                'Oops! Something went wrong',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 8.h),
+              Text(
+                errorMessage ?? 'Unable to load livestreams',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 24.h),
+              FilledButton.icon(
+                onPressed: () {
+                  ref
+                      .read(livestreamListProvider.notifier)
+                      .loadLivestreams(refresh: true);
+                },
+                icon: const Icon(Icons.refresh_rounded),
+                label: const Text('Try Again'),
+                style: FilledButton.styleFrom(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24.w,
+                    vertical: 12.h,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -339,7 +346,9 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
               width: 100.w,
               height: 100.w,
               decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                color: theme.colorScheme.primaryContainer.withValues(
+                  alpha: 0.3,
+                ),
                 borderRadius: BorderRadius.circular(32.r),
               ),
               child: Icon(

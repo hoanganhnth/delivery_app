@@ -10,7 +10,7 @@ _LivestreamCommentDto _$LivestreamCommentDtoFromJson(
   Map<String, dynamic> json,
 ) => _LivestreamCommentDto(
   id: json['id'] as String,
-  livestreamId: json['livestreamId'] as num,
+  livestreamId: json['livestreamId'] as String,
   userId: json['userId'] as String,
   userName: json['userName'] as String,
   userAvatar: json['userAvatar'] as String?,
@@ -33,7 +33,7 @@ Map<String, dynamic> _$LivestreamCommentDtoToJson(
 _LivestreamLikeDto _$LivestreamLikeDtoFromJson(Map<String, dynamic> json) =>
     _LivestreamLikeDto(
       id: json['id'] as String,
-      livestreamId: json['livestreamId'] as num,
+      livestreamId: json['livestreamId'] as String,
       userId: json['userId'] as String,
       userName: json['userName'] as String?,
       userAvatar: json['userAvatar'] as String?,

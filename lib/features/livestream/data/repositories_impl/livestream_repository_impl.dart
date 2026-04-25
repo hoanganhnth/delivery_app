@@ -12,7 +12,7 @@ class LivestreamRepositoryImpl implements LivestreamRepository {
   final LivestreamRemoteDataSource remoteDataSource;
 
   // Local cache for livestreams
-  final Map<num, LivestreamEntity> _livestreamCache = {};
+  final Map<String, LivestreamEntity> _livestreamCache = {};
 
   LivestreamRepositoryImpl(this.remoteDataSource);
 
@@ -49,7 +49,7 @@ class LivestreamRepositoryImpl implements LivestreamRepository {
   }
 
   @override
-  Future<Either<Failure, LivestreamEntity>> getLivestreamById(num id) async {
+  Future<Either<Failure, LivestreamEntity>> getLivestreamById(String id) async {
     try {
       final response = await remoteDataSource.getLivestreamById(id);
 
@@ -98,7 +98,7 @@ class LivestreamRepositoryImpl implements LivestreamRepository {
 
   @override
   Future<Either<Failure, LivestreamEntity>> updateViewerCount(
-    num livestreamId,
+    String livestreamId,
     int viewerCount,
   ) async {
     try {
@@ -137,7 +137,7 @@ class LivestreamRepositoryImpl implements LivestreamRepository {
 
   @override
   Future<Either<Failure, LivestreamEntity>> updateLikeCount(
-    num livestreamId,
+    String livestreamId,
     int likeCount,
   ) async {
     try {
@@ -175,7 +175,7 @@ class LivestreamRepositoryImpl implements LivestreamRepository {
   }
 
   @override
-  Future<Either<Failure, JoinLivestreamDto>> joinLivestream(num id) async {
+  Future<Either<Failure, JoinLivestreamDto>> joinLivestream(String id) async {
     try {
       final response = await remoteDataSource.joinLivestream(id);
 

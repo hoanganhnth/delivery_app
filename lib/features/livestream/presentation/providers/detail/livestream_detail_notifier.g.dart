@@ -19,7 +19,7 @@ final class LivestreamDetailProvider
   /// Livestream detail notifier — manages livestream metadata
   LivestreamDetailProvider._({
     required LivestreamDetailFamily super.from,
-    required num super.argument,
+    required String super.argument,
   }) : super(
          retry: null,
          name: r'livestreamDetailProvider',
@@ -61,7 +61,7 @@ final class LivestreamDetailProvider
   }
 }
 
-String _$livestreamDetailHash() => r'a91d2d14490d720bdcc5a41400fe854c01d107b2';
+String _$livestreamDetailHash() => r'b60d5a3915f90324b8728f1f405c0f2f745379d8';
 
 /// Livestream detail notifier — manages livestream metadata
 
@@ -72,7 +72,7 @@ final class LivestreamDetailFamily extends $Family
           LivestreamDetailState,
           LivestreamDetailState,
           LivestreamDetailState,
-          num
+          String
         > {
   LivestreamDetailFamily._()
     : super(
@@ -85,7 +85,7 @@ final class LivestreamDetailFamily extends $Family
 
   /// Livestream detail notifier — manages livestream metadata
 
-  LivestreamDetailProvider call(num id) =>
+  LivestreamDetailProvider call(String id) =>
       LivestreamDetailProvider._(argument: id, from: this);
 
   @override
@@ -95,10 +95,10 @@ final class LivestreamDetailFamily extends $Family
 /// Livestream detail notifier — manages livestream metadata
 
 abstract class _$LivestreamDetail extends $Notifier<LivestreamDetailState> {
-  late final _$args = ref.$arg as num;
-  num get id => _$args;
+  late final _$args = ref.$arg as String;
+  String get id => _$args;
 
-  LivestreamDetailState build(num id);
+  LivestreamDetailState build(String id);
   @$mustCallSuper
   @override
   void runBuild() {

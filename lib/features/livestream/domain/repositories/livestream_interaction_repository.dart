@@ -9,7 +9,7 @@ abstract class LivestreamInteractionRepository {
 
   /// Stream comments from Firebase
   Stream<Either<Failure, List<LivestreamCommentEntity>>> streamComments(
-    num livestreamId,
+    String livestreamId,
   );
 
   /// Send a like to livestream
@@ -17,9 +17,9 @@ abstract class LivestreamInteractionRepository {
 
   /// Stream likes from Firebase
   Stream<Either<Failure, List<LivestreamLikeEntity>>> streamLikes(
-    num livestreamId,
+    String livestreamId,
   );
 
   /// Get total like count
-  Future<Either<Failure, int>> getLikeCount(num livestreamId);
+  Future<Either<Failure, int>> getLikeCount(String livestreamId);
 }

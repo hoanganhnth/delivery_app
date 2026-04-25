@@ -58,8 +58,8 @@ class AmberBottomNavBar extends StatelessWidget {
               onTap: () => onTap(1),
             ),
             _NavItem(
-              icon: Icons.receipt_long_outlined,
-              label: 'Orders',
+              icon: Icons.live_tv,
+              label: 'Live',
               isActive: currentIndex == 2,
               onTap: () => onTap(2),
             ),

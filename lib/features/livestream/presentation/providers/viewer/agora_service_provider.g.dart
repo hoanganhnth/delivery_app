@@ -24,7 +24,7 @@ final class AgoraServiceForViewerProvider
   /// Family provider: one instance per livestreamId
   AgoraServiceForViewerProvider._({
     required AgoraServiceForViewerFamily super.from,
-    required num super.argument,
+    required String super.argument,
   }) : super(
          retry: null,
          name: r'agoraServiceForViewerProvider',
@@ -50,7 +50,7 @@ final class AgoraServiceForViewerProvider
 
   @override
   IAgoraService create(Ref ref) {
-    final argument = this.argument as num;
+    final argument = this.argument as String;
     return agoraServiceForViewer(ref, argument);
   }
 
@@ -74,13 +74,13 @@ final class AgoraServiceForViewerProvider
 }
 
 String _$agoraServiceForViewerHash() =>
-    r'97a2e716991e509a45fbca8a116c58a2fbabfc41';
+    r'0a4fb217ac205498847234f3adab98faa7c72bd1';
 
 /// Riverpod-managed AgoraService — auto-disposes with ref.onDispose
 /// Family provider: one instance per livestreamId
 
 final class AgoraServiceForViewerFamily extends $Family
-    with $FunctionalFamilyOverride<IAgoraService, num> {
+    with $FunctionalFamilyOverride<IAgoraService, String> {
   AgoraServiceForViewerFamily._()
     : super(
         retry: null,
@@ -93,7 +93,7 @@ final class AgoraServiceForViewerFamily extends $Family
   /// Riverpod-managed AgoraService — auto-disposes with ref.onDispose
   /// Family provider: one instance per livestreamId
 
-  AgoraServiceForViewerProvider call(num livestreamId) =>
+  AgoraServiceForViewerProvider call(String livestreamId) =>
       AgoraServiceForViewerProvider._(argument: livestreamId, from: this);
 
   @override

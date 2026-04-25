@@ -20,7 +20,7 @@ final class LivestreamInteractionProvider
   /// Livestream interaction notifier — manages comments and likes via Firebase
   LivestreamInteractionProvider._({
     required LivestreamInteractionFamily super.from,
-    required num super.argument,
+    required String super.argument,
   }) : super(
          retry: null,
          name: r'livestreamInteractionProvider',
@@ -63,7 +63,7 @@ final class LivestreamInteractionProvider
 }
 
 String _$livestreamInteractionHash() =>
-    r'b9f30610321a52ee99176b34610a89cfebb5fc13';
+    r'2a7b9009e9dea3a9b62b932cca5d52d2d653a6f1';
 
 /// Livestream interaction notifier — manages comments and likes via Firebase
 
@@ -74,7 +74,7 @@ final class LivestreamInteractionFamily extends $Family
           LivestreamInteractionState,
           LivestreamInteractionState,
           LivestreamInteractionState,
-          num
+          String
         > {
   LivestreamInteractionFamily._()
     : super(
@@ -87,7 +87,7 @@ final class LivestreamInteractionFamily extends $Family
 
   /// Livestream interaction notifier — manages comments and likes via Firebase
 
-  LivestreamInteractionProvider call(num id) =>
+  LivestreamInteractionProvider call(String id) =>
       LivestreamInteractionProvider._(argument: id, from: this);
 
   @override
@@ -98,10 +98,10 @@ final class LivestreamInteractionFamily extends $Family
 
 abstract class _$LivestreamInteraction
     extends $Notifier<LivestreamInteractionState> {
-  late final _$args = ref.$arg as num;
-  num get id => _$args;
+  late final _$args = ref.$arg as String;
+  String get id => _$args;
 
-  LivestreamInteractionState build(num id);
+  LivestreamInteractionState build(String id);
   @$mustCallSuper
   @override
   void runBuild() {

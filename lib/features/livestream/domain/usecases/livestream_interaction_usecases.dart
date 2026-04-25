@@ -39,7 +39,7 @@ class StreamCommentsUseCase {
 }
 
 class StreamCommentsParams {
-  final num livestreamId;
+  final String livestreamId;
 
   StreamCommentsParams({required this.livestreamId});
 }
@@ -74,7 +74,7 @@ class StreamLikesUseCase {
 }
 
 class StreamLikesParams {
-  final num livestreamId;
+  final String livestreamId;
 
   StreamLikesParams({required this.livestreamId});
 }
@@ -92,7 +92,7 @@ class GetLikeCountUseCase extends UseCase<int, GetLikeCountParams> {
 }
 
 class GetLikeCountParams {
-  final num livestreamId;
+  final String livestreamId;
 
   GetLikeCountParams({required this.livestreamId});
 }

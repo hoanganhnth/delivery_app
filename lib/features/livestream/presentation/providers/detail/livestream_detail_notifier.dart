@@ -13,7 +13,7 @@ class LivestreamDetail extends _$LivestreamDetail {
   StreamSubscription? _likesSubscription;
 
   @override
-  LivestreamDetailState build(num id) {
+  LivestreamDetailState build(String id) {
     ref.onDispose(() {
       _likesSubscription?.cancel();
     });
@@ -22,7 +22,7 @@ class LivestreamDetail extends _$LivestreamDetail {
   }
 
   /// Load livestream detail
-  Future<void> loadLivestreamDetail(num id) async {
+  Future<void> loadLivestreamDetail(String id) async {
     state = state.copyWith(isLoading: true, clearFailure: true);
 
     final getLivestreamByIdUseCase = ref.read(getLivestreamByIdUseCaseProvider);
@@ -51,7 +51,7 @@ class LivestreamDetail extends _$LivestreamDetail {
   }
 
   /// Stream likes from Firebase for count updates
-  void _startStreamingLikes(num livestreamId) {
+  void _startStreamingLikes(String livestreamId) {
     _likesSubscription?.cancel();
 
     final streamLikesUseCase = ref.read(streamLikesUseCaseProvider);

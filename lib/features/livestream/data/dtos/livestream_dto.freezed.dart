@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LivestreamDto {
 
- num get id; String get title; String get streamerId; String get streamerName; String? get streamerAvatar; String get channelName; String get rtcToken; int get uid; String get description; int get viewerCount; int get likeCount; String get status; String? get thumbnailUrl; String? get coverImageUrl; String get startTime; String? get endTime; List<LivestreamProductDto>? get products;
+ String get id; String get title;@JsonKey(name: 'sellerId') num? get sellerId;@JsonKey(name: 'restaurantId') num? get restaurantId; String? get streamerName; String? get streamerAvatar; String get channelName; String? get rtcToken; int? get uid; String get description; int get viewerCount; int get likeCount; String get status; String? get thumbnailUrl; String? get coverImageUrl;@JsonKey(name: 'startedAt') String? get startedAt;@JsonKey(name: 'endedAt') String? get endedAt;@JsonKey(name: 'pinnedProducts') List<LivestreamProductDto>? get pinnedProducts;
 /// Create a copy of LivestreamDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $LivestreamDtoCopyWith<LivestreamDto> get copyWith => _$LivestreamDtoCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LivestreamDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.streamerId, streamerId) || other.streamerId == streamerId)&&(identical(other.streamerName, streamerName) || other.streamerName == streamerName)&&(identical(other.streamerAvatar, streamerAvatar) || other.streamerAvatar == streamerAvatar)&&(identical(other.channelName, channelName) || other.channelName == channelName)&&(identical(other.rtcToken, rtcToken) || other.rtcToken == rtcToken)&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.description, description) || other.description == description)&&(identical(other.viewerCount, viewerCount) || other.viewerCount == viewerCount)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.status, status) || other.status == status)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&const DeepCollectionEquality().equals(other.products, products));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LivestreamDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.sellerId, sellerId) || other.sellerId == sellerId)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.streamerName, streamerName) || other.streamerName == streamerName)&&(identical(other.streamerAvatar, streamerAvatar) || other.streamerAvatar == streamerAvatar)&&(identical(other.channelName, channelName) || other.channelName == channelName)&&(identical(other.rtcToken, rtcToken) || other.rtcToken == rtcToken)&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.description, description) || other.description == description)&&(identical(other.viewerCount, viewerCount) || other.viewerCount == viewerCount)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.status, status) || other.status == status)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.endedAt, endedAt) || other.endedAt == endedAt)&&const DeepCollectionEquality().equals(other.pinnedProducts, pinnedProducts));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,streamerId,streamerName,streamerAvatar,channelName,rtcToken,uid,description,viewerCount,likeCount,status,thumbnailUrl,coverImageUrl,startTime,endTime,const DeepCollectionEquality().hash(products));
+int get hashCode => Object.hash(runtimeType,id,title,sellerId,restaurantId,streamerName,streamerAvatar,channelName,rtcToken,uid,description,viewerCount,likeCount,status,thumbnailUrl,coverImageUrl,startedAt,endedAt,const DeepCollectionEquality().hash(pinnedProducts));
 
 @override
 String toString() {
-  return 'LivestreamDto(id: $id, title: $title, streamerId: $streamerId, streamerName: $streamerName, streamerAvatar: $streamerAvatar, channelName: $channelName, rtcToken: $rtcToken, uid: $uid, description: $description, viewerCount: $viewerCount, likeCount: $likeCount, status: $status, thumbnailUrl: $thumbnailUrl, coverImageUrl: $coverImageUrl, startTime: $startTime, endTime: $endTime, products: $products)';
+  return 'LivestreamDto(id: $id, title: $title, sellerId: $sellerId, restaurantId: $restaurantId, streamerName: $streamerName, streamerAvatar: $streamerAvatar, channelName: $channelName, rtcToken: $rtcToken, uid: $uid, description: $description, viewerCount: $viewerCount, likeCount: $likeCount, status: $status, thumbnailUrl: $thumbnailUrl, coverImageUrl: $coverImageUrl, startedAt: $startedAt, endedAt: $endedAt, pinnedProducts: $pinnedProducts)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $LivestreamDtoCopyWith<$Res>  {
   factory $LivestreamDtoCopyWith(LivestreamDto value, $Res Function(LivestreamDto) _then) = _$LivestreamDtoCopyWithImpl;
 @useResult
 $Res call({
- num id, String title, String streamerId, String streamerName, String? streamerAvatar, String channelName, String rtcToken, int uid, String description, int viewerCount, int likeCount, String status, String? thumbnailUrl, String? coverImageUrl, String startTime, String? endTime, List<LivestreamProductDto>? products
+ String id, String title,@JsonKey(name: 'sellerId') num? sellerId,@JsonKey(name: 'restaurantId') num? restaurantId, String? streamerName, String? streamerAvatar, String channelName, String? rtcToken, int? uid, String description, int viewerCount, int likeCount, String status, String? thumbnailUrl, String? coverImageUrl,@JsonKey(name: 'startedAt') String? startedAt,@JsonKey(name: 'endedAt') String? endedAt,@JsonKey(name: 'pinnedProducts') List<LivestreamProductDto>? pinnedProducts
 });
 
 
@@ -65,25 +65,26 @@ class _$LivestreamDtoCopyWithImpl<$Res>
 
 /// Create a copy of LivestreamDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? streamerId = null,Object? streamerName = null,Object? streamerAvatar = freezed,Object? channelName = null,Object? rtcToken = null,Object? uid = null,Object? description = null,Object? viewerCount = null,Object? likeCount = null,Object? status = null,Object? thumbnailUrl = freezed,Object? coverImageUrl = freezed,Object? startTime = null,Object? endTime = freezed,Object? products = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? sellerId = freezed,Object? restaurantId = freezed,Object? streamerName = freezed,Object? streamerAvatar = freezed,Object? channelName = null,Object? rtcToken = freezed,Object? uid = freezed,Object? description = null,Object? viewerCount = null,Object? likeCount = null,Object? status = null,Object? thumbnailUrl = freezed,Object? coverImageUrl = freezed,Object? startedAt = freezed,Object? endedAt = freezed,Object? pinnedProducts = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as num,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,streamerId: null == streamerId ? _self.streamerId : streamerId // ignore: cast_nullable_to_non_nullable
-as String,streamerName: null == streamerName ? _self.streamerName : streamerName // ignore: cast_nullable_to_non_nullable
-as String,streamerAvatar: freezed == streamerAvatar ? _self.streamerAvatar : streamerAvatar // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,sellerId: freezed == sellerId ? _self.sellerId : sellerId // ignore: cast_nullable_to_non_nullable
+as num?,restaurantId: freezed == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
+as num?,streamerName: freezed == streamerName ? _self.streamerName : streamerName // ignore: cast_nullable_to_non_nullable
+as String?,streamerAvatar: freezed == streamerAvatar ? _self.streamerAvatar : streamerAvatar // ignore: cast_nullable_to_non_nullable
 as String?,channelName: null == channelName ? _self.channelName : channelName // ignore: cast_nullable_to_non_nullable
-as String,rtcToken: null == rtcToken ? _self.rtcToken : rtcToken // ignore: cast_nullable_to_non_nullable
-as String,uid: null == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
-as int,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String,rtcToken: freezed == rtcToken ? _self.rtcToken : rtcToken // ignore: cast_nullable_to_non_nullable
+as String?,uid: freezed == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
+as int?,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,viewerCount: null == viewerCount ? _self.viewerCount : viewerCount // ignore: cast_nullable_to_non_nullable
 as int,likeCount: null == likeCount ? _self.likeCount : likeCount // ignore: cast_nullable_to_non_nullable
 as int,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,thumbnailUrl: freezed == thumbnailUrl ? _self.thumbnailUrl : thumbnailUrl // ignore: cast_nullable_to_non_nullable
 as String?,coverImageUrl: freezed == coverImageUrl ? _self.coverImageUrl : coverImageUrl // ignore: cast_nullable_to_non_nullable
-as String?,startTime: null == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
-as String,endTime: freezed == endTime ? _self.endTime : endTime // ignore: cast_nullable_to_non_nullable
-as String?,products: freezed == products ? _self.products : products // ignore: cast_nullable_to_non_nullable
+as String?,startedAt: freezed == startedAt ? _self.startedAt : startedAt // ignore: cast_nullable_to_non_nullable
+as String?,endedAt: freezed == endedAt ? _self.endedAt : endedAt // ignore: cast_nullable_to_non_nullable
+as String?,pinnedProducts: freezed == pinnedProducts ? _self.pinnedProducts : pinnedProducts // ignore: cast_nullable_to_non_nullable
 as List<LivestreamProductDto>?,
   ));
 }
@@ -169,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( num id,  String title,  String streamerId,  String streamerName,  String? streamerAvatar,  String channelName,  String rtcToken,  int uid,  String description,  int viewerCount,  int likeCount,  String status,  String? thumbnailUrl,  String? coverImageUrl,  String startTime,  String? endTime,  List<LivestreamProductDto>? products)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title, @JsonKey(name: 'sellerId')  num? sellerId, @JsonKey(name: 'restaurantId')  num? restaurantId,  String? streamerName,  String? streamerAvatar,  String channelName,  String? rtcToken,  int? uid,  String description,  int viewerCount,  int likeCount,  String status,  String? thumbnailUrl,  String? coverImageUrl, @JsonKey(name: 'startedAt')  String? startedAt, @JsonKey(name: 'endedAt')  String? endedAt, @JsonKey(name: 'pinnedProducts')  List<LivestreamProductDto>? pinnedProducts)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LivestreamDto() when $default != null:
-return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startTime,_that.endTime,_that.products);case _:
+return $default(_that.id,_that.title,_that.sellerId,_that.restaurantId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startedAt,_that.endedAt,_that.pinnedProducts);case _:
   return orElse();
 
 }
@@ -190,10 +191,10 @@ return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.s
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num id,  String title,  String streamerId,  String streamerName,  String? streamerAvatar,  String channelName,  String rtcToken,  int uid,  String description,  int viewerCount,  int likeCount,  String status,  String? thumbnailUrl,  String? coverImageUrl,  String startTime,  String? endTime,  List<LivestreamProductDto>? products)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title, @JsonKey(name: 'sellerId')  num? sellerId, @JsonKey(name: 'restaurantId')  num? restaurantId,  String? streamerName,  String? streamerAvatar,  String channelName,  String? rtcToken,  int? uid,  String description,  int viewerCount,  int likeCount,  String status,  String? thumbnailUrl,  String? coverImageUrl, @JsonKey(name: 'startedAt')  String? startedAt, @JsonKey(name: 'endedAt')  String? endedAt, @JsonKey(name: 'pinnedProducts')  List<LivestreamProductDto>? pinnedProducts)  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamDto():
-return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startTime,_that.endTime,_that.products);case _:
+return $default(_that.id,_that.title,_that.sellerId,_that.restaurantId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startedAt,_that.endedAt,_that.pinnedProducts);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -210,10 +211,10 @@ return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.s
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( num id,  String title,  String streamerId,  String streamerName,  String? streamerAvatar,  String channelName,  String rtcToken,  int uid,  String description,  int viewerCount,  int likeCount,  String status,  String? thumbnailUrl,  String? coverImageUrl,  String startTime,  String? endTime,  List<LivestreamProductDto>? products)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title, @JsonKey(name: 'sellerId')  num? sellerId, @JsonKey(name: 'restaurantId')  num? restaurantId,  String? streamerName,  String? streamerAvatar,  String channelName,  String? rtcToken,  int? uid,  String description,  int viewerCount,  int likeCount,  String status,  String? thumbnailUrl,  String? coverImageUrl, @JsonKey(name: 'startedAt')  String? startedAt, @JsonKey(name: 'endedAt')  String? endedAt, @JsonKey(name: 'pinnedProducts')  List<LivestreamProductDto>? pinnedProducts)?  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamDto() when $default != null:
-return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startTime,_that.endTime,_that.products);case _:
+return $default(_that.id,_that.title,_that.sellerId,_that.restaurantId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startedAt,_that.endedAt,_that.pinnedProducts);case _:
   return null;
 
 }
@@ -225,30 +226,31 @@ return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.s
 @JsonSerializable()
 
 class _LivestreamDto extends LivestreamDto {
-  const _LivestreamDto({required this.id, required this.title, required this.streamerId, required this.streamerName, this.streamerAvatar, required this.channelName, required this.rtcToken, required this.uid, required this.description, required this.viewerCount, required this.likeCount, required this.status, this.thumbnailUrl, this.coverImageUrl, required this.startTime, this.endTime, final  List<LivestreamProductDto>? products}): _products = products,super._();
+  const _LivestreamDto({required this.id, required this.title, @JsonKey(name: 'sellerId') this.sellerId, @JsonKey(name: 'restaurantId') this.restaurantId, this.streamerName, this.streamerAvatar, required this.channelName, this.rtcToken, this.uid, required this.description, this.viewerCount = 0, this.likeCount = 0, required this.status, this.thumbnailUrl, this.coverImageUrl, @JsonKey(name: 'startedAt') this.startedAt, @JsonKey(name: 'endedAt') this.endedAt, @JsonKey(name: 'pinnedProducts') final  List<LivestreamProductDto>? pinnedProducts}): _pinnedProducts = pinnedProducts,super._();
   factory _LivestreamDto.fromJson(Map<String, dynamic> json) => _$LivestreamDtoFromJson(json);
 
-@override final  num id;
+@override final  String id;
 @override final  String title;
-@override final  String streamerId;
-@override final  String streamerName;
+@override@JsonKey(name: 'sellerId') final  num? sellerId;
+@override@JsonKey(name: 'restaurantId') final  num? restaurantId;
+@override final  String? streamerName;
 @override final  String? streamerAvatar;
 @override final  String channelName;
-@override final  String rtcToken;
-@override final  int uid;
+@override final  String? rtcToken;
+@override final  int? uid;
 @override final  String description;
-@override final  int viewerCount;
-@override final  int likeCount;
+@override@JsonKey() final  int viewerCount;
+@override@JsonKey() final  int likeCount;
 @override final  String status;
 @override final  String? thumbnailUrl;
 @override final  String? coverImageUrl;
-@override final  String startTime;
-@override final  String? endTime;
- final  List<LivestreamProductDto>? _products;
-@override List<LivestreamProductDto>? get products {
-  final value = _products;
+@override@JsonKey(name: 'startedAt') final  String? startedAt;
+@override@JsonKey(name: 'endedAt') final  String? endedAt;
+ final  List<LivestreamProductDto>? _pinnedProducts;
+@override@JsonKey(name: 'pinnedProducts') List<LivestreamProductDto>? get pinnedProducts {
+  final value = _pinnedProducts;
   if (value == null) return null;
-  if (_products is EqualUnmodifiableListView) return _products;
+  if (_pinnedProducts is EqualUnmodifiableListView) return _pinnedProducts;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(value);
 }
@@ -267,16 +269,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LivestreamDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.streamerId, streamerId) || other.streamerId == streamerId)&&(identical(other.streamerName, streamerName) || other.streamerName == streamerName)&&(identical(other.streamerAvatar, streamerAvatar) || other.streamerAvatar == streamerAvatar)&&(identical(other.channelName, channelName) || other.channelName == channelName)&&(identical(other.rtcToken, rtcToken) || other.rtcToken == rtcToken)&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.description, description) || other.description == description)&&(identical(other.viewerCount, viewerCount) || other.viewerCount == viewerCount)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.status, status) || other.status == status)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&const DeepCollectionEquality().equals(other._products, _products));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LivestreamDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.sellerId, sellerId) || other.sellerId == sellerId)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.streamerName, streamerName) || other.streamerName == streamerName)&&(identical(other.streamerAvatar, streamerAvatar) || other.streamerAvatar == streamerAvatar)&&(identical(other.channelName, channelName) || other.channelName == channelName)&&(identical(other.rtcToken, rtcToken) || other.rtcToken == rtcToken)&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.description, description) || other.description == description)&&(identical(other.viewerCount, viewerCount) || other.viewerCount == viewerCount)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.status, status) || other.status == status)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.endedAt, endedAt) || other.endedAt == endedAt)&&const DeepCollectionEquality().equals(other._pinnedProducts, _pinnedProducts));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,streamerId,streamerName,streamerAvatar,channelName,rtcToken,uid,description,viewerCount,likeCount,status,thumbnailUrl,coverImageUrl,startTime,endTime,const DeepCollectionEquality().hash(_products));
+int get hashCode => Object.hash(runtimeType,id,title,sellerId,restaurantId,streamerName,streamerAvatar,channelName,rtcToken,uid,description,viewerCount,likeCount,status,thumbnailUrl,coverImageUrl,startedAt,endedAt,const DeepCollectionEquality().hash(_pinnedProducts));
 
 @override
 String toString() {
-  return 'LivestreamDto(id: $id, title: $title, streamerId: $streamerId, streamerName: $streamerName, streamerAvatar: $streamerAvatar, channelName: $channelName, rtcToken: $rtcToken, uid: $uid, description: $description, viewerCount: $viewerCount, likeCount: $likeCount, status: $status, thumbnailUrl: $thumbnailUrl, coverImageUrl: $coverImageUrl, startTime: $startTime, endTime: $endTime, products: $products)';
+  return 'LivestreamDto(id: $id, title: $title, sellerId: $sellerId, restaurantId: $restaurantId, streamerName: $streamerName, streamerAvatar: $streamerAvatar, channelName: $channelName, rtcToken: $rtcToken, uid: $uid, description: $description, viewerCount: $viewerCount, likeCount: $likeCount, status: $status, thumbnailUrl: $thumbnailUrl, coverImageUrl: $coverImageUrl, startedAt: $startedAt, endedAt: $endedAt, pinnedProducts: $pinnedProducts)';
 }
 
 
@@ -287,7 +289,7 @@ abstract mixin class _$LivestreamDtoCopyWith<$Res> implements $LivestreamDtoCopy
   factory _$LivestreamDtoCopyWith(_LivestreamDto value, $Res Function(_LivestreamDto) _then) = __$LivestreamDtoCopyWithImpl;
 @override @useResult
 $Res call({
- num id, String title, String streamerId, String streamerName, String? streamerAvatar, String channelName, String rtcToken, int uid, String description, int viewerCount, int likeCount, String status, String? thumbnailUrl, String? coverImageUrl, String startTime, String? endTime, List<LivestreamProductDto>? products
+ String id, String title,@JsonKey(name: 'sellerId') num? sellerId,@JsonKey(name: 'restaurantId') num? restaurantId, String? streamerName, String? streamerAvatar, String channelName, String? rtcToken, int? uid, String description, int viewerCount, int likeCount, String status, String? thumbnailUrl, String? coverImageUrl,@JsonKey(name: 'startedAt') String? startedAt,@JsonKey(name: 'endedAt') String? endedAt,@JsonKey(name: 'pinnedProducts') List<LivestreamProductDto>? pinnedProducts
 });
 
 
@@ -304,25 +306,26 @@ class __$LivestreamDtoCopyWithImpl<$Res>
 
 /// Create a copy of LivestreamDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? streamerId = null,Object? streamerName = null,Object? streamerAvatar = freezed,Object? channelName = null,Object? rtcToken = null,Object? uid = null,Object? description = null,Object? viewerCount = null,Object? likeCount = null,Object? status = null,Object? thumbnailUrl = freezed,Object? coverImageUrl = freezed,Object? startTime = null,Object? endTime = freezed,Object? products = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? sellerId = freezed,Object? restaurantId = freezed,Object? streamerName = freezed,Object? streamerAvatar = freezed,Object? channelName = null,Object? rtcToken = freezed,Object? uid = freezed,Object? description = null,Object? viewerCount = null,Object? likeCount = null,Object? status = null,Object? thumbnailUrl = freezed,Object? coverImageUrl = freezed,Object? startedAt = freezed,Object? endedAt = freezed,Object? pinnedProducts = freezed,}) {
   return _then(_LivestreamDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as num,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,streamerId: null == streamerId ? _self.streamerId : streamerId // ignore: cast_nullable_to_non_nullable
-as String,streamerName: null == streamerName ? _self.streamerName : streamerName // ignore: cast_nullable_to_non_nullable
-as String,streamerAvatar: freezed == streamerAvatar ? _self.streamerAvatar : streamerAvatar // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,sellerId: freezed == sellerId ? _self.sellerId : sellerId // ignore: cast_nullable_to_non_nullable
+as num?,restaurantId: freezed == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
+as num?,streamerName: freezed == streamerName ? _self.streamerName : streamerName // ignore: cast_nullable_to_non_nullable
+as String?,streamerAvatar: freezed == streamerAvatar ? _self.streamerAvatar : streamerAvatar // ignore: cast_nullable_to_non_nullable
 as String?,channelName: null == channelName ? _self.channelName : channelName // ignore: cast_nullable_to_non_nullable
-as String,rtcToken: null == rtcToken ? _self.rtcToken : rtcToken // ignore: cast_nullable_to_non_nullable
-as String,uid: null == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
-as int,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String,rtcToken: freezed == rtcToken ? _self.rtcToken : rtcToken // ignore: cast_nullable_to_non_nullable
+as String?,uid: freezed == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
+as int?,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,viewerCount: null == viewerCount ? _self.viewerCount : viewerCount // ignore: cast_nullable_to_non_nullable
 as int,likeCount: null == likeCount ? _self.likeCount : likeCount // ignore: cast_nullable_to_non_nullable
 as int,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,thumbnailUrl: freezed == thumbnailUrl ? _self.thumbnailUrl : thumbnailUrl // ignore: cast_nullable_to_non_nullable
 as String?,coverImageUrl: freezed == coverImageUrl ? _self.coverImageUrl : coverImageUrl // ignore: cast_nullable_to_non_nullable
-as String?,startTime: null == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
-as String,endTime: freezed == endTime ? _self.endTime : endTime // ignore: cast_nullable_to_non_nullable
-as String?,products: freezed == products ? _self._products : products // ignore: cast_nullable_to_non_nullable
+as String?,startedAt: freezed == startedAt ? _self.startedAt : startedAt // ignore: cast_nullable_to_non_nullable
+as String?,endedAt: freezed == endedAt ? _self.endedAt : endedAt // ignore: cast_nullable_to_non_nullable
+as String?,pinnedProducts: freezed == pinnedProducts ? _self._pinnedProducts : pinnedProducts // ignore: cast_nullable_to_non_nullable
 as List<LivestreamProductDto>?,
   ));
 }

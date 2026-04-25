@@ -29,7 +29,7 @@ class LivestreamInteractionRepositoryImpl implements LivestreamInteractionReposi
 
   @override
   Stream<Either<Failure, List<LivestreamCommentEntity>>> streamComments(
-    num livestreamId,
+    String livestreamId,
   ) {
     try {
       return firebaseDataSource.streamComments(livestreamId).map(
@@ -68,7 +68,7 @@ class LivestreamInteractionRepositoryImpl implements LivestreamInteractionReposi
 
   @override
   Stream<Either<Failure, List<LivestreamLikeEntity>>> streamLikes(
-    num livestreamId,
+    String livestreamId,
   ) {
     try {
       return firebaseDataSource.streamLikes(livestreamId).map(
@@ -91,7 +91,7 @@ class LivestreamInteractionRepositoryImpl implements LivestreamInteractionReposi
   }
 
   @override
-  Future<Either<Failure, int>> getLikeCount(num livestreamId) async {
+  Future<Either<Failure, int>> getLikeCount(String livestreamId) async {
     try {
       final result = await firebaseDataSource.getLikeCount(livestreamId);
 

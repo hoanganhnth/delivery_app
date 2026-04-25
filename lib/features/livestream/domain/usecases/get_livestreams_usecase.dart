@@ -45,7 +45,7 @@ class GetLivestreamByIdUseCase extends UseCase<LivestreamEntity, GetLivestreamBy
 }
 
 class GetLivestreamByIdParams {
-  final num id;
+  final String id;
 
   GetLivestreamByIdParams({required this.id});
 }
