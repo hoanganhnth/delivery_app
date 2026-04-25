@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/widgets/live_indicator_badge.dart';
+import 'package:delivery_app/features/livestream/presentation/widgets/live_indicator_badge.dart';
 import '../../domain/entities/livestream_entity.dart';
 
 /// Card hiển thị livestream trong grid view - Editorial Style

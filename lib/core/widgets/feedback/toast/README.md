@@ -16,7 +16,7 @@ dependencies:
 ### 1. Import
 
 ```dart
-import 'package:delivery_app/core/presentation/widgets/toast/toast.dart';
+import 'package:delivery_app/core/widgets/feedback/toast/toast.dart';
 ```
 
 ### 2. Sử dụng cơ bản

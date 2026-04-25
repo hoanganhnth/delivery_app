@@ -1,4 +1,4 @@
-import 'package:delivery_app/core/widgets/glass_app_bar.dart';
+import 'package:delivery_app/core/widgets/amber_widgets.dart';
 import 'package:delivery_app/features/restaurants/presentation/widgets/menu_item_card.dart';
 import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_hero_section.dart';
 import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_info_section.dart';

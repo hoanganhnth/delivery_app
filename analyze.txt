@@ -1,0 +1,42 @@
+Analyzing delivery_app...                                       
+
+  error • The name 'ToastType' is defined in the libraries 'package:delivery_app/core/widgets/feedback/toast/app_toast.dart' and 'package:delivery_app/core/widgets/feedback/toast/toast_provider.dart' • lib/core/widgets/amber_widgets.dart:33:8 • ambiguous_export
+  error • The method 'canPop' isn't defined for the type 'BuildContext' • lib/features/cart/presentation/screens/checkout_screen.dart:52:25 • undefined_method
+  error • The method 'pop' isn't defined for the type 'BuildContext' • lib/features/cart/presentation/screens/checkout_screen.dart:53:23 • undefined_method
+  error • The method 'go' isn't defined for the type 'BuildContext' • lib/features/cart/presentation/screens/checkout_screen.dart:55:23 • undefined_method
+  error • Undefined name 'AppRoutes' • lib/features/cart/presentation/screens/checkout_screen.dart:55:26 • undefined_identifier
+  error • 'AmberSearchBar' isn't a function • lib/features/home/presentation/pages/home_page.dart:65:24 • invocation_of_non_function
+  error • The name 'AmberSearchBar' is defined in the libraries 'package:delivery_app/core/widgets/inputs/amber_search_bar.dart (via package:delivery_app/core/widgets/amber_widgets.dart)' and 'package:delivery_app/features/home/presentation/widgets/amber_search_bar.dart' • lib/features/home/presentation/pages/home_page.dart:65:24 • ambiguous_import
+  error • 'FlashSaleSection' isn't a function • lib/features/home/presentation/pages/home_page.dart:84:24 • invocation_of_non_function
+  error • The name 'FlashSaleSection' is defined in the libraries 'package:delivery_app/core/widgets/sections/flash_sale_section.dart (via package:delivery_app/core/widgets/amber_widgets.dart)' and 'package:delivery_app/features/home/presentation/widgets/flash_sale_section.dart' • lib/features/home/presentation/pages/home_page.dart:84:24 • ambiguous_import
+  error • 'FlashSaleItem' isn't a function • lib/features/home/presentation/pages/home_page.dart:89:21 • invocation_of_non_function
+  error • The name 'FlashSaleItem' is defined in the libraries 'package:delivery_app/core/widgets/sections/flash_sale_section.dart (via package:delivery_app/core/widgets/amber_widgets.dart)' and 'package:delivery_app/features/home/presentation/widgets/flash_sale_section.dart' • lib/features/home/presentation/pages/home_page.dart:89:21 • ambiguous_import
+  error • 'FlashSaleItem' isn't a function • lib/features/home/presentation/pages/home_page.dart:96:21 • invocation_of_non_function
+  error • The name 'FlashSaleItem' is defined in the libraries 'package:delivery_app/core/widgets/sections/flash_sale_section.dart (via package:delivery_app/core/widgets/amber_widgets.dart)' and 'package:delivery_app/features/home/presentation/widgets/flash_sale_section.dart' • lib/features/home/presentation/pages/home_page.dart:96:21 • ambiguous_import
+  error • 'FlashSaleItem' isn't a function • lib/features/home/presentation/pages/home_page.dart:103:21 • invocation_of_non_function
+  error • The name 'FlashSaleItem' is defined in the libraries 'package:delivery_app/core/widgets/sections/flash_sale_section.dart (via package:delivery_app/core/widgets/amber_widgets.dart)' and 'package:delivery_app/features/home/presentation/widgets/flash_sale_section.dart' • lib/features/home/presentation/pages/home_page.dart:103:21 • ambiguous_import
+  error • 'AmberBottomNavBar' isn't a function • lib/features/home/presentation/pages/home_page.dart:142:28 • invocation_of_non_function
+  error • The name 'AmberBottomNavBar' is defined in the libraries 'package:delivery_app/core/widgets/layout/amber_bottom_nav_bar.dart (via package:delivery_app/core/widgets/amber_widgets.dart)' and 'package:delivery_app/features/home/presentation/widgets/amber_bottom_nav_bar.dart' • lib/features/home/presentation/pages/home_page.dart:142:28 • ambiguous_import
+  error • 'CategoryPill' isn't a function • lib/features/home/presentation/pages/home_page.dart:246:24 • invocation_of_non_function
+  error • The name 'CategoryPill' is defined in the libraries 'package:delivery_app/core/widgets/chips/category_pill.dart (via package:delivery_app/core/widgets/amber_widgets.dart)' and 'package:delivery_app/features/home/presentation/widgets/category_pill.dart' • lib/features/home/presentation/pages/home_page.dart:246:24 • ambiguous_import
+   info • The import of 'package:go_router/go_router.dart' is unnecessary because all of the used elements are also provided by the import of 'package:delivery_app/core/routing/routing.dart' • lib/features/splash/presentation/controllers/splash_controller.dart:2:8 • unnecessary_import
+   info • Unnecessary use of string interpolation • lib/generated/l10n.dart:500:7 • unnecessary_string_interpolations
+  error • Target of URI doesn't exist: 'package:delivery_app/core/presentation/screens/splash_screen.dart' • test/core/presentation/screens/splash_screen_test.dart:4:8 • uri_does_not_exist
+  error • Target of URI doesn't exist: 'package:delivery_app/core/presentation/controllers/splash_controller.dart' • test/core/presentation/screens/splash_screen_test.dart:5:8 • uri_does_not_exist
+  error • Classes can only extend other classes • test/core/presentation/screens/splash_screen_test.dart:8:37 • extends_non_class
+  error • Undefined class 'SplashState' • test/core/presentation/screens/splash_screen_test.dart:9:9 • undefined_class
+  error • Undefined class 'SplashState' • test/core/presentation/screens/splash_screen_test.dart:14:3 • undefined_class
+warning • The method doesn't override an inherited method • test/core/presentation/screens/splash_screen_test.dart:14:15 • override_on_non_overriding_member
+  error • The function 'SplashScreen' isn't defined • test/core/presentation/screens/splash_screen_test.dart:23:19 • undefined_function
+  error • The function 'SplashScreen' isn't defined • test/core/presentation/screens/splash_screen_test.dart:42:19 • undefined_function
+  error • Undefined name 'splashControllerProvider' • test/core/presentation/screens/splash_screen_test.dart:56:13 • undefined_identifier
+  error • Undefined name 'SplashState' • test/core/presentation/screens/splash_screen_test.dart:57:43 • undefined_identifier
+  error • The function 'SplashScreen' isn't defined • test/core/presentation/screens/splash_screen_test.dart:61:19 • undefined_function
+  error • Undefined class 'SplashController' • test/core/presentation/screens/splash_screen_test.dart:78:12 • undefined_class
+  error • Undefined name 'splashControllerProvider' • test/core/presentation/screens/splash_screen_test.dart:84:37 • undefined_identifier
+  error • Undefined name 'SplashState' • test/core/presentation/screens/splash_screen_test.dart:92:26 • undefined_identifier
+  error • Undefined name 'SplashState' • test/core/presentation/screens/splash_screen_test.dart:96:26 • undefined_identifier
+  error • Undefined name 'SplashState' • test/core/presentation/screens/splash_screen_test.dart:100:26 • undefined_identifier
+  error • Undefined name 'SplashState' • test/core/presentation/screens/splash_screen_test.dart:104:26 • undefined_identifier
+
+38 issues found. (ran in 5.9s)

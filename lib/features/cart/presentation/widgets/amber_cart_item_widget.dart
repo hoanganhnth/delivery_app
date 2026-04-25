@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Amber Hearth style cart item widget
 /// 
@@ -11,7 +9,7 @@ import 'package:delivery_app/core/theme/theme_extensions.dart';
 /// - Image: 96x96px rounded-2xl
 /// - Quantity control: Vertical pill with shadow-inner
 /// - Hover: shadow-md elevation
-class AmberCartItemWidget extends ConsumerStatefulWidget {
+class AmberCartItemWidget extends StatefulWidget {
   /// Item name
   final String name;
   
@@ -49,10 +47,10 @@ class AmberCartItemWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<AmberCartItemWidget> createState() => _AmberCartItemWidgetState();
+  State<AmberCartItemWidget> createState() => _AmberCartItemWidgetState();
 }
 
-class _AmberCartItemWidgetState extends ConsumerState<AmberCartItemWidget> {
+class _AmberCartItemWidgetState extends State<AmberCartItemWidget> {
   bool _isHovered = false;
 
   @override
@@ -90,33 +88,33 @@ class _AmberCartItemWidgetState extends ConsumerState<AmberCartItemWidget> {
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Container(
                             color: const Color(0xFFF4EEE7),
-                            child: Center(
+                            child: const Center(
                               child: CircularProgressIndicator(
-                                color: ref.colors.primary,
+                                color: Color(0xFFF49D25),
                               ),
                             ),
                           ),
                           errorWidget: (context, url, error) => Container(
                             color: const Color(0xFFF4EEE7),
-                            child: Icon(
+                            child: const Icon(
                               Icons.fastfood,
                               size: 48,
-                              color: ref.colors.secondary,
+                              color: Color(0xFF9C7A49),
                             ),
                           ),
                         )
                       : Container(
                           color: const Color(0xFFF4EEE7),
-                          child: Icon(
+                          child: const Icon(
                             Icons.fastfood,
                             size: 48,
-                            color: ref.colors.secondary,
+                            color: Color(0xFF9C7A49),
                           ),
                         ),
                 ),
               ),
               
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               
               // Item details
               Expanded(
@@ -125,7 +123,7 @@ class _AmberCartItemWidgetState extends ConsumerState<AmberCartItemWidget> {
                   children: [
                     Text(
                       widget.name,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'Plus Jakarta Sans',
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
@@ -136,40 +134,40 @@ class _AmberCartItemWidgetState extends ConsumerState<AmberCartItemWidget> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     if (widget.subtitle != null) ...[
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
                         widget.subtitle!,
                         style: TextStyle(
                           fontFamily: 'Plus Jakarta Sans',
                           fontSize: 12,
                           fontStyle: FontStyle.italic,
-                          color: ref.colors.secondary.withValues(alpha: 0.8),
+                          color: const Color(0xFF9C7A49).withValues(alpha: 0.8),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       widget.price,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'Plus Jakarta Sans',
                         fontSize: 18,
                         fontWeight: FontWeight.w900,
-                        color: ref.colors.primary,
+                        color: Color(0xFFF49D25),
                       ),
                     ),
                   ],
                 ),
               ),
               
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               
               // Quantity control
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: ref.colors.background,
+                  color: const Color(0xFFF8F7F5),
                   borderRadius: BorderRadius.circular(9999),
                   boxShadow: [
                     BoxShadow(
@@ -194,7 +192,7 @@ class _AmberCartItemWidgetState extends ConsumerState<AmberCartItemWidget> {
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Text(
                         widget.quantity.toString(),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: 'Plus Jakarta Sans',
                           fontSize: 14,
                           fontWeight: FontWeight.w900,
@@ -220,7 +218,7 @@ class _AmberCartItemWidgetState extends ConsumerState<AmberCartItemWidget> {
 }
 
 /// Quantity button (+ or -)
-class _QuantityButton extends ConsumerStatefulWidget {
+class _QuantityButton extends StatefulWidget {
   final IconData icon;
   final VoidCallback? onTap;
 
@@ -230,10 +228,10 @@ class _QuantityButton extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<_QuantityButton> createState() => _QuantityButtonState();
+  State<_QuantityButton> createState() => _QuantityButtonState();
 }
 
-class _QuantityButtonState extends ConsumerState<_QuantityButton> {
+class _QuantityButtonState extends State<_QuantityButton> {
   bool _isPressed = false;
 
   @override
@@ -264,7 +262,7 @@ class _QuantityButtonState extends ConsumerState<_QuantityButton> {
         child: Icon(
           widget.icon,
           size: 16,
-          color: ref.colors.secondary,
+          color: const Color(0xFF9C7A49),
         ),
       ),
     );

@@ -1,10 +1,6 @@
 import 'package:delivery_app/core/routing/routing.dart';
-import 'package:delivery_app/core/widgets/glass_app_bar.dart';
-import 'package:delivery_app/features/home/presentation/widgets/amber_bottom_nav_bar.dart';
-import 'package:delivery_app/features/home/presentation/widgets/amber_search_bar.dart';
-import 'package:delivery_app/features/home/presentation/widgets/category_pill.dart';
-import 'package:delivery_app/features/home/presentation/widgets/flash_sale_section.dart';
-import 'package:delivery_app/features/home/presentation/widgets/restaurant_card.dart';
+import 'package:delivery_app/core/widgets/amber_widgets.dart';
+import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_card.dart';
 import 'package:delivery_app/features/livestream/presentation/widgets/livestream_home_section.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';

@@ -2,7 +2,7 @@ import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
 import 'package:delivery_app/features/orders/orders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:delivery_app/features/home/presentation/widgets/amber_bottom_nav_bar.dart';
+import 'package:delivery_app/core/widgets/amber_widgets.dart';
 import 'package:delivery_app/features/cart/presentation/pages/cart_page.dart';
 import 'package:delivery_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:delivery_app/features/main/presentation/providers/navigation_provider.dart';

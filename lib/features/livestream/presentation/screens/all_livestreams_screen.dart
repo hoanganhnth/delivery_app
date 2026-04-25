@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-import '../../../../core/widgets/editorial_header.dart';
-import '../../../../core/widgets/category_pill.dart';
+import 'package:delivery_app/core/widgets/amber_widgets.dart';
 import '../providers/providers.dart';
 import '../widgets/livestream_card_grid.dart';
 

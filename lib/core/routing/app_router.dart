@@ -27,8 +27,8 @@ import 'package:delivery_app/features/livestream/presentation/screens/livestream
 import 'package:delivery_app/features/user_address/presentation/screens/address_list_screen.dart';
 import 'package:delivery_app/features/user_address/presentation/screens/add_edit_address_screen.dart';
 import 'package:delivery_app/features/user_address/domain/entities/user_address_entity.dart';
-import 'package:delivery_app/core/presentation/screens/splash_screen.dart';
-import 'package:delivery_app/core/presentation/screens/error_screens.dart';
+import 'package:delivery_app/features/splash/presentation/screens/splash_screen.dart';
+import 'package:delivery_app/core/widgets/amber_widgets.dart';
 import 'package:delivery_app/core/routing/constants/app_routes.dart';
 import 'package:delivery_app/core/routing/models/app_router_config.dart';
 import 'package:delivery_app/core/routing/models/i_auth_checker.dart';

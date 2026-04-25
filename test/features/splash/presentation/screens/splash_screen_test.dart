@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:delivery_app/core/presentation/screens/splash_screen.dart';
-import 'package:delivery_app/core/presentation/controllers/splash_controller.dart';
+import 'package:delivery_app/features/splash/presentation/screens/splash_screen.dart';
+import 'package:delivery_app/features/splash/presentation/controllers/splash_controller.dart';
 
 // Mock SplashController for testing
 class _MockSplashController extends SplashController {

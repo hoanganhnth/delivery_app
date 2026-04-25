@@ -1,7 +1,6 @@
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'dart:ui';
-import 'package:delivery_app/core/widgets/app_image.dart';
-import 'package:delivery_app/core/widgets/glass_app_bar.dart';
+import 'package:delivery_app/core/widgets/amber_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
