@@ -146,27 +146,27 @@ class _OrderApiService implements OrderApiService {
   }
 
   @override
-  Future<BaseResponseDto<bool>> cancelOrder(int orderId) async {
+  Future<BaseResponseDto<OrderDto>> cancelOrder(int orderId) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<BaseResponseDto<bool>>(
+    final _options = _setStreamType<BaseResponseDto<OrderDto>>(
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/orders/${orderId}',
+            '/orders/${orderId}/cancel',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BaseResponseDto<bool> _value;
+    late BaseResponseDto<OrderDto> _value;
     try {
-      _value = BaseResponseDto<bool>.fromJson(
+      _value = BaseResponseDto<OrderDto>.fromJson(
         _result.data!,
-        (json) => json as bool,
+        (json) => OrderDto.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);

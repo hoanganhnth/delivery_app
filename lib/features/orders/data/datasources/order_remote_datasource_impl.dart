@@ -107,7 +107,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       AppLogger.i('Successfully cancelled order: $orderId');
 
       if (response.isSuccess) {
-        return response.data == true;
+        return true;
       } else {
         throw Exception(response.message);
       }

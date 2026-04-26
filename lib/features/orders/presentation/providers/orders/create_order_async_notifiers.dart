@@ -64,6 +64,9 @@ class CancelOrder extends _$CancelOrder {
       final cancelOrderUseCase = ref.read(cancelOrderUseCaseProvider);
       final result = await cancelOrderUseCase(orderId);
 
+      // Guard: provider may have been disposed while awaiting
+      if (!ref.mounted) return false;
+
       return result.fold(
         (failure) {
           state = AsyncError(Exception(failure.message), StackTrace.current);
@@ -71,7 +74,7 @@ class CancelOrder extends _$CancelOrder {
         },
         (success) {
           state = AsyncData(success);
-          if (success) {
+          if (success && ref.mounted) {
             // Refresh orders list after successful cancellation
             ref.invalidate(ordersListProvider);
           }
@@ -79,7 +82,9 @@ class CancelOrder extends _$CancelOrder {
         },
       );
     } catch (error, stackTrace) {
-      state = AsyncError(error, stackTrace);
+      if (ref.mounted) {
+        state = AsyncError(error, stackTrace);
+      }
       return false;
     }
   }
