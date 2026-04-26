@@ -49,10 +49,7 @@ class _OrderDeliveryTrackingCardState
     final connectionAsync = ref.watch(trackingConnectionProvider);
 
     // ✅ Listen to delivery tracking changes to auto-start shipper tracking
-    ref.listen<DeliveryTrackingState>(deliveryTrackingProvider, (
-      prev,
-      next,
-    ) {
+    ref.listen<DeliveryTrackingState>(deliveryTrackingProvider, (prev, next) {
       // Tự động start shipper tracking khi có delivery data mới
       if (next.currentTracking != null &&
           prev?.currentTracking?.shipperId != next.currentTracking?.shipperId) {
@@ -211,7 +208,8 @@ class _OrderDeliveryTrackingCardState
     final currentTracking = trackingState.currentTracking!;
 
     // Chỉ hiển thị bản đồ khi đã có shipper nhận đơn
-    if (currentTracking.shipperId == null || currentTracking.status == DeliveryStatus.pending) {
+    if (currentTracking.shipperId == null ||
+        currentTracking.status == DeliveryStatus.pending) {
       return _buildFindingShipperCard();
     }
 

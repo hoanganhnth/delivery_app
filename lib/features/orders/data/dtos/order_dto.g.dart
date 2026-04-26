@@ -13,7 +13,7 @@ _OrderDto _$OrderDtoFromJson(Map<String, dynamic> json) => _OrderDto(
   customerPhone: json['customerPhone'] as String,
   deliveryAddress: json['deliveryAddress'] as String,
   paymentMethod: json['paymentMethod'] as String,
-  totalAmount: (json['totalAmount'] as num?)?.toDouble(),
+  totalAmount: (json['totalPrice'] as num?)?.toDouble(),
   notes: json['notes'] as String?,
   items: (json['items'] as List<dynamic>?)
       ?.map((e) => OrderItemDto.fromJson(e as Map<String, dynamic>))

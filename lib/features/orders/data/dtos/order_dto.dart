@@ -14,7 +14,7 @@ abstract class OrderDto with _$OrderDto {
     required String customerPhone,
     required String deliveryAddress,
     required String paymentMethod,
-    double? totalAmount,
+    @JsonKey(name: 'totalPrice') double? totalAmount,
     String? notes,
     List<OrderItemDto>? items,
     DateTime? createdAt,
