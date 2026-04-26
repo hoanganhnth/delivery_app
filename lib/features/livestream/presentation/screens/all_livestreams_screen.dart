@@ -61,10 +61,9 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
     final theme = Theme.of(context);
     final livestreamState = ref.watch(livestreamListProvider);
 
-    return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      body: SafeArea(
-        child: RefreshIndicator(
+    return SafeArea(
+      bottom: false,
+      child: RefreshIndicator(
           onRefresh: () async {
             await ref.read(livestreamListProvider.notifier).loadLivestreams(refresh: true);
           },
@@ -121,7 +120,6 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
               ],
             ),
           ),
-        ),
       ),
     );
   }

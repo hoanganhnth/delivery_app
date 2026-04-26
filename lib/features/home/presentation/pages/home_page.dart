@@ -44,11 +44,10 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     final restaurantsState = ref.watch(restaurantsProvider);
 
-    return Scaffold(
-      backgroundColor: ref.colors.background,
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
+    return SafeArea(
+      bottom: false,
+      child: CustomScrollView(
+        slivers: [
             // Glass App Bar
             SliverToBoxAdapter(child: _buildHeader(context)),
 
@@ -128,8 +127,6 @@ class _HomePageState extends ConsumerState<HomePage> {
             SliverToBoxAdapter(child: SizedBox(height: 140.w)),
           ],
         ),
-      ),
-      extendBody: true,
     );
   }
 

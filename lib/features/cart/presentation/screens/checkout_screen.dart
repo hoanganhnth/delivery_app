@@ -13,6 +13,7 @@ import '../../../orders/presentation/providers/orders/create_order_async_notifie
 import '../../../user_address/presentation/providers/providers.dart';
 import '../providers/providers.dart';
 import '../widgets/widgets.dart';
+import '../../domain/entities/cart_entity.dart';
 
 /// Checkout Screen với giao diện Amber Hearth
 class CheckoutScreen extends ConsumerWidget {
@@ -60,9 +61,8 @@ class CheckoutScreen extends ConsumerWidget {
         ),
       ),
       body: cartAsyncValue.when(
-        loading: () => Center(
-          child: CircularProgressIndicator(color: ref.colors.primary),
-        ),
+        loading: () =>
+            Center(child: CircularProgressIndicator(color: ref.colors.primary)),
         error: (error, stack) => Center(
           child: Padding(
             padding: EdgeInsets.all(24.w),
@@ -153,9 +153,11 @@ class CheckoutScreen extends ConsumerWidget {
                         ),
                         SizedBox(height: 8.w),
                         CheckoutSectionCard(
-                          child: NotesCard(notesController: TextEditingController()),
+                          child: NotesCard(
+                            notesController: TextEditingController(),
+                          ),
                         ),
-                        
+
                         // Bottom padding
                         SizedBox(height: 24.w),
                       ],
@@ -177,16 +179,16 @@ class CheckoutScreen extends ConsumerWidget {
     );
   }
 
-  void _placeOrder(BuildContext context, WidgetRef ref, dynamic cart) {
+  void _placeOrder(BuildContext context, WidgetRef ref, CartEntity cart) {
     final addressState = ref.read(userAddressListProvider);
     final selectedAddress = addressState.defaultAddress;
-    
+
     if (selectedAddress != null && cart.currentRestaurantId != null) {
       final request = CreateOrderRequestDto(
         restaurantId: cart.currentRestaurantId! as int,
         restaurantName: cart.currentRestaurantName ?? '',
-        restaurantAddress: '', // TODO: Get from restaurant data
-        restaurantPhone: '', // TODO: Get from restaurant data
+        restaurantAddress: 'tesst thoi', // TODO: Get from restaurant data
+        restaurantPhone: '0099999999', // TODO: Get from restaurant data
         deliveryAddress: selectedAddress.fullAddress,
         deliveryLat: selectedAddress.latitude,
         deliveryLng: selectedAddress.longitude,
@@ -194,12 +196,16 @@ class CheckoutScreen extends ConsumerWidget {
         customerPhone: selectedAddress.phoneNumber,
         paymentMethod: 'COD',
         notes: '',
-        items: cart.items.map<OrderItemRequest>((item) => OrderItemRequest(
-          menuItemId: item.menuItemId as int,
-          menuItemName: item.menuItemName,
-          quantity: item.quantity,
-          price: item.price,
-        )).toList(),
+        items: cart.items
+            .map<OrderItemRequest>(
+              (item) => OrderItemRequest(
+                menuItemId: item.menuItemId as int,
+                menuItemName: item.menuItemName,
+                quantity: item.quantity,
+                price: item.price,
+              ),
+            )
+            .toList(),
       );
       ref.read(createOrderProvider.notifier).createOrder(request);
     } else {
