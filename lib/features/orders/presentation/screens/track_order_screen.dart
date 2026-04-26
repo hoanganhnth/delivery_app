@@ -469,7 +469,8 @@ class _MainContentCard extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(ResponsiveSize.radiusXl),
               ),
               child: DeliveryTimeline(
-                currentStep: _getCurrentStep(order.status),
+                status: order.status,
+                rawBackendStatus: order.rawBackendStatus,
               ),
             ),
             
@@ -483,18 +484,6 @@ class _MainContentCard extends ConsumerWidget {
     );
   }
 
-  String _getCurrentStep(OrderStatus status) {
-    switch (status) {
-      case OrderStatus.pending:
-        return 'confirming';
-      case OrderStatus.delivering:
-        return 'delivering';
-      case OrderStatus.delivered:
-        return 'delivered';
-      case OrderStatus.cancelled:
-        return 'confirming';
-    }
-  }
 
   double _getProgress(OrderStatus status) {
     switch (status) {

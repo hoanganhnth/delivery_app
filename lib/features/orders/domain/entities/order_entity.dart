@@ -1,42 +1,44 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'order_item_entity.dart';
+import '../../../../core/constants/order_constants.dart';
 
 /// Order status enum
 enum OrderStatus {
-  pending('PENDING'),
-  delivering('DELIVERING'),
-  cancelled('CANCELLED'),
-  delivered('DELIVERED');
+  pending(OrderStatusConstants.pending),
+  delivering(OrderStatusConstants.delivering),
+  cancelled(OrderStatusConstants.cancelled),
+  delivered(OrderStatusConstants.delivered);
 
   const OrderStatus(this.value);
   final String value;
 
+  /// Chuyển đổi từ string thành enum
   static OrderStatus fromString(String value) {
     switch (value.toUpperCase()) {
       // Nhóm "Đang chờ xử lý"
-      case 'PENDING':
-      case 'PENDING_PAYMENT':
-      case 'CONFIRMED':
-      case 'CONFIRMED_BY_RESTAURANT':      
+      case OrderStatusConstants.pending:
+      case OrderStatusConstants.pendingPayment:
+      case OrderStatusConstants.confirmed:
+      case OrderStatusConstants.confirmedByRestaurant:      
         return OrderStatus.pending;
         
       // Nhóm "Đang đi giao"
-      case 'FINDING_SHIPPER':
-      case 'ASSIGNED_TO_SHIPPER':
-      case 'IN_DELIVERY':
-      case 'DELIVERING':
+      case OrderStatusConstants.findingShipper:
+      case OrderStatusConstants.assignedToShipper:
+      case OrderStatusConstants.inDelivery:
+      case OrderStatusConstants.delivering:
         return OrderStatus.delivering;
         
       // Nhóm "Thành công"
-      case 'DELIVERED':
+      case OrderStatusConstants.delivered:
         return OrderStatus.delivered;
         
       // Nhóm "Hủy/Lỗi"
-      case 'CANCELLED':
-      case 'PAYMENT_FAILED':
-      case 'REJECTED_BY_RESTAURANT':
-      case 'SHIPPER_NOT_FOUND':
+      case OrderStatusConstants.cancelled:
+      case OrderStatusConstants.paymentFailed:
+      case OrderStatusConstants.rejectedByRestaurant:
+      case OrderStatusConstants.shipperNotFound:
         return OrderStatus.cancelled;
         
       default:
@@ -75,9 +77,9 @@ enum OrderStatus {
 
 /// Payment method enum
 enum PaymentMethod {
-  cod('COD'),
-  card('CARD'),
-  wallet('WALLET');
+  cod(PaymentMethodConstants.cod),
+  card(PaymentMethodConstants.card),
+  wallet(PaymentMethodConstants.wallet);
 
   const PaymentMethod(this.value);
   final String value;
@@ -85,11 +87,11 @@ enum PaymentMethod {
   /// Chuyển đổi từ string thành enum
   static PaymentMethod fromString(String value) {
     switch (value.toUpperCase()) {
-      case 'COD':
+      case PaymentMethodConstants.cod:
         return PaymentMethod.cod;
-      case 'CARD':
+      case PaymentMethodConstants.card:
         return PaymentMethod.card;
-      case 'WALLET':
+      case PaymentMethodConstants.wallet:
         return PaymentMethod.wallet;
       default:
         return PaymentMethod.cod; // Default fallback
@@ -113,6 +115,7 @@ enum PaymentMethod {
 class OrderEntity extends Equatable {
   final int? id;
   final OrderStatus status;
+  final String? rawBackendStatus; // Trạng thái chi tiết từ backend
   final String customerName;
   final String customerPhone;
   final String deliveryAddress;
@@ -127,6 +130,7 @@ class OrderEntity extends Equatable {
   const OrderEntity({
     this.id,
     required this.status,
+    this.rawBackendStatus,
     required this.customerName,
     required this.customerPhone,
     required this.deliveryAddress,
@@ -194,6 +198,7 @@ class OrderEntity extends Equatable {
   OrderEntity copyWith({
     int? id,
     OrderStatus? status,
+    String? rawBackendStatus,
     String? customerName,
     String? customerPhone,
     String? deliveryAddress,
@@ -208,6 +213,7 @@ class OrderEntity extends Equatable {
     return OrderEntity(
       id: id ?? this.id,
       status: status ?? this.status,
+      rawBackendStatus: rawBackendStatus ?? this.rawBackendStatus,
       customerName: customerName ?? this.customerName,
       customerPhone: customerPhone ?? this.customerPhone,
       deliveryAddress: deliveryAddress ?? this.deliveryAddress,
@@ -240,6 +246,7 @@ class OrderEntity extends Equatable {
   List<Object?> get props => [
     id,
     status,
+    rawBackendStatus,
     customerName,
     customerPhone,
     deliveryAddress,

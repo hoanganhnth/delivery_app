@@ -11,8 +11,8 @@ import '../widgets/order_payment_card.dart';
 import '../widgets/order_action_buttons.dart';
 import '../widgets/order_error_widgets.dart';
 import '../widgets/delivery_timeline.dart';
-import '../widgets/courier_info_card.dart';
 import '../widgets/order_progress_bar.dart';
+import '../widgets/order_delivery_tracking_card.dart';
 import '../../../../generated/l10n.dart';
 
 class OrderDetailScreen extends ConsumerStatefulWidget {
@@ -34,8 +34,6 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
 
   @override
   void dispose() {
-    // ref.invalidate(orderDetailProvider(widget.orderId));
-    // ref.read(shipperLocationProvider.notifier).stopTracking();
     super.dispose();
   }
 
@@ -43,7 +41,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
   Widget build(BuildContext context) {
     final orderDetailState = ref.watch(orderDetailProvider(widget.orderId));
     final colors = ref.colors;
-    
+
     return Scaffold(
       backgroundColor: colors.background,
       appBar: _buildAppBar(colors),
@@ -96,51 +94,41 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
                     // Main Status Card
                     _buildMainStatusCard(order, colors),
                     SizedBox(height: ResponsiveSize.m),
-                    
+
                     // Delivery Timeline
                     if (order.status != OrderStatus.cancelled)
                       _buildTimelineSection(order, colors),
-                    
-                    // Courier Info (only if delivering)
-                    if (order.status == OrderStatus.delivering) ...[
+
+                    // Live Delivery Tracking (pending hoặc delivering)
+                    if (order.canTrackingRealtime) ...[
                       SizedBox(height: ResponsiveSize.m),
-                      CourierInfoCard(
-                        courierName: 'Hoàng Minh Quân', // TODO: Get from order
-                        rating: 4.9,
-                        onCall: () {
-                          // TODO: Call courier
-                        },
-                        onChat: () {
-                          // TODO: Chat with courier
-                        },
-                      ),
+                      OrderDeliveryTrackingCard(order: order),
                     ],
-                    
+
                     SizedBox(height: ResponsiveSize.m),
-                    
+
                     // Order Items
                     _buildOrderItemsSection(order, colors),
-                    
+
                     SizedBox(height: ResponsiveSize.m),
-                    
+
                     // Customer Info
                     OrderCustomerInfoCard(order: order),
-                    
+
                     SizedBox(height: ResponsiveSize.m),
-                    
+
                     // Payment
                     OrderPaymentCard(order: order),
-                    
+
                     SizedBox(height: ResponsiveSize.m),
-                    
+
                     // Actions
                     OrderActionButtons(
                       order: order,
-                      onOrderCanceled: () => ref.invalidate(
-                        orderDetailProvider(widget.orderId),
-                      ),
+                      onOrderCanceled: () =>
+                          ref.invalidate(orderDetailProvider(widget.orderId)),
                     ),
-                    
+
                     SizedBox(height: ResponsiveSize.xl),
                   ],
                 ),
@@ -233,14 +221,12 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
               ),
             ],
           ),
-          
+
           SizedBox(height: ResponsiveSize.l),
-          
+
           // Progress Bar
           if (order.status != OrderStatus.cancelled)
-            OrderProgressBar(
-              progress: _getProgress(order.status),
-            ),
+            OrderProgressBar(progress: _getProgress(order.status)),
         ],
       ),
     );
@@ -261,7 +247,8 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
         ],
       ),
       child: DeliveryTimeline(
-        currentStep: _getCurrentStep(order.status),
+        status: order.status,
+        rawBackendStatus: order.rawBackendStatus,
       ),
     );
   }
@@ -292,38 +279,37 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
                   color: colors.textPrimary,
                 ),
               ),
-              Icon(
-                Icons.expand_more,
-                color: colors.textSecondary,
-              ),
+              Icon(Icons.expand_more, color: colors.textSecondary),
             ],
           ),
           SizedBox(height: ResponsiveSize.m),
           // Items list
-          ...order.items.map((item) => Padding(
-                padding: EdgeInsets.only(bottom: ResponsiveSize.s),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${item.quantity}x ${item.menuItemName}',
-                      style: TextStyle(
-                        fontSize: ResponsiveSize.fontM,
-                        fontWeight: FontWeight.w500,
-                        color: colors.textSecondary,
-                      ),
+          ...order.items.map(
+            (item) => Padding(
+              padding: EdgeInsets.only(bottom: ResponsiveSize.s),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${item.quantity}x ${item.menuItemName}',
+                    style: TextStyle(
+                      fontSize: ResponsiveSize.fontM,
+                      fontWeight: FontWeight.w500,
+                      color: colors.textSecondary,
                     ),
-                    Text(
-                      '\$${(item.price * item.quantity).toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontSize: ResponsiveSize.fontM,
-                        fontWeight: FontWeight.w600,
-                        color: colors.textPrimary,
-                      ),
+                  ),
+                  Text(
+                    '\$${(item.price * item.quantity).toStringAsFixed(2)}',
+                    style: TextStyle(
+                      fontSize: ResponsiveSize.fontM,
+                      fontWeight: FontWeight.w600,
+                      color: colors.textPrimary,
                     ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            ),
+          ),
           Divider(
             height: ResponsiveSize.l,
             color: colors.border.withValues(alpha: 0.3),
@@ -368,18 +354,6 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
     }
   }
 
-  String _getCurrentStep(OrderStatus status) {
-    switch (status) {
-      case OrderStatus.pending:
-        return 'confirming';
-      case OrderStatus.delivering:
-        return 'delivering';
-      case OrderStatus.delivered:
-        return 'delivered';
-      case OrderStatus.cancelled:
-        return 'confirming';
-    }
-  }
 
   double _getProgress(OrderStatus status) {
     switch (status) {

@@ -3,87 +3,138 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
+import '../../domain/entities/order_entity.dart';
 
-/// Delivery Timeline Widget - Vertical stepper với animated progress
+/// Order Timeline Widget - Hiển thị 4 bước cơ bản của đơn hàng
+/// Đây là trạng thái ĐƠN HÀNG (order), không phải delivery tracking
 class DeliveryTimeline extends ConsumerWidget {
-  final String currentStep; // 'confirming', 'preparing', 'delivering', 'delivered'
-  
+  final OrderStatus status;
+  final String? rawBackendStatus; // Để hiển thị subtitle chi tiết hơn
+
   const DeliveryTimeline({
     super.key,
-    required this.currentStep,
+    required this.status,
+    this.rawBackendStatus,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentStepIndex = _getStepIndex(status, rawBackendStatus);
+
     return Column(
       children: [
-        // Step 1: Confirming
+        // Step 1: Chờ nhận đơn
         _TimelineStep(
-          icon: Icons.check_circle,
-          iconFilled: true,
-          title: 'Confirming',
-          subtitle: 'Nhà hàng đã nhận đơn',
-          isCompleted: true,
-          isActive: currentStep == 'confirming',
+          icon: Icons.receipt_long,
+          title: 'Chờ nhận đơn',
+          subtitle: _getSubtitle(0, currentStepIndex),
+          isCompleted: currentStepIndex > 0,
+          isActive: currentStepIndex == 0,
         ),
-        
-        // Step 2: Preparing
+
+        // Step 2: Chờ lấy đơn
         _TimelineStep(
-          icon: Icons.restaurant,
-          iconFilled: true,
-          title: 'Preparing',
-          subtitle: 'Đầu bếp đang chuẩn bị món ăn',
-          isCompleted: _isStepCompleted('preparing'),
-          isActive: currentStep == 'preparing',
+          icon: Icons.store,
+          title: 'Chờ lấy đơn',
+          subtitle: _getSubtitle(1, currentStepIndex),
+          isCompleted: currentStepIndex > 1,
+          isActive: currentStepIndex == 1,
         ),
-        
-        // Step 3: Out for delivery
+
+        // Step 3: Đang giao
         _TimelineStep(
           icon: Icons.delivery_dining,
-          iconFilled: true,
-          title: 'Out for delivery',
-          subtitle: 'Tài xế đang trên đường tới',
-          isCompleted: _isStepCompleted('delivering'),
-          isActive: currentStep == 'delivering',
-          isLarge: true, // Highlight active step
+          title: 'Đang giao',
+          subtitle: _getSubtitle(2, currentStepIndex),
+          isCompleted: currentStepIndex > 2,
+          isActive: currentStepIndex == 2,
+          isLarge: currentStepIndex == 2, // Highlight khi đang active
         ),
-        
-        // Step 4: Delivered
+
+        // Step 4: Thành công
         _TimelineStep(
           icon: Icons.task_alt,
-          iconFilled: false,
-          title: 'Delivered',
+          title: 'Thành công',
           subtitle: 'Chúc bạn ngon miệng!',
-          isCompleted: currentStep == 'delivered',
+          isCompleted: currentStepIndex >= 3,
           isActive: false,
           isLast: true,
         ),
       ],
     );
   }
-  
-  bool _isStepCompleted(String step) {
-    const steps = ['confirming', 'preparing', 'delivering', 'delivered'];
-    final currentIndex = steps.indexOf(currentStep);
-    final stepIndex = steps.indexOf(step);
-    return currentIndex >= stepIndex;
+
+  /// Xác định step hiện tại dựa trên OrderStatus và rawBackendStatus
+  int _getStepIndex(OrderStatus status, String? raw) {
+    // Ưu tiên raw backend status nếu có
+    if (raw != null) {
+      switch (raw.toUpperCase()) {
+        case 'PENDING':
+        case 'PENDING_PAYMENT':
+        case 'CONFIRMED':
+        case 'CONFIRMED_BY_RESTAURANT':
+          return 0; // Chờ nhận đơn
+        case 'FINDING_SHIPPER':
+        case 'ASSIGNED_TO_SHIPPER':
+          return 1; // Chờ lấy đơn
+        case 'IN_DELIVERY':
+        case 'DELIVERING':
+          return 2; // Đang giao
+        case 'DELIVERED':
+          return 3; // Thành công
+        default:
+          break;
+      }
+    }
+
+    // Fallback dùng OrderStatus enum
+    switch (status) {
+      case OrderStatus.pending:
+        return 0;
+      case OrderStatus.delivering:
+        return 2;
+      case OrderStatus.delivered:
+        return 3;
+      case OrderStatus.cancelled:
+        return 0;
+    }
+  }
+
+  /// Lấy subtitle phù hợp cho từng step
+  String _getSubtitle(int stepIndex, int currentStepIndex) {
+    if (stepIndex > currentStepIndex) {
+      // Chưa đến bước này
+      return '';
+    }
+
+    switch (stepIndex) {
+      case 0:
+        if (currentStepIndex == 0) return 'Đang chờ nhà hàng xác nhận';
+        return 'Nhà hàng đã xác nhận';
+      case 1:
+        if (currentStepIndex == 1) return 'Đang tìm tài xế giao hàng';
+        return 'Tài xế đã nhận đơn';
+      case 2:
+        if (currentStepIndex == 2) return 'Tài xế đang trên đường giao';
+        return 'Đã giao thành công';
+      default:
+        return '';
+    }
   }
 }
 
 /// Single Timeline Step
 class _TimelineStep extends ConsumerWidget {
   final IconData icon;
-  final bool iconFilled;
   final String title;
   final String subtitle;
   final bool isCompleted;
   final bool isActive;
   final bool isLarge;
   final bool isLast;
-  
+
   const _TimelineStep({
     required this.icon,
-    required this.iconFilled,
     required this.title,
     required this.subtitle,
     required this.isCompleted,
@@ -97,7 +148,7 @@ class _TimelineStep extends ConsumerWidget {
     final colors = ref.colors;
     final iconSize = isLarge ? 40.w : 32.w;
     final titleSize = isLarge ? ResponsiveSize.fontXl : ResponsiveSize.fontM;
-    
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -109,7 +160,7 @@ class _TimelineStep extends ConsumerWidget {
               width: iconSize,
               height: iconSize,
               decoration: BoxDecoration(
-                color: isCompleted ? colors.primary : colors.border,
+                color: isCompleted || isActive ? colors.primary : colors.border,
                 shape: BoxShape.circle,
                 boxShadow: isActive
                     ? [
@@ -129,7 +180,9 @@ class _TimelineStep extends ConsumerWidget {
               ),
               child: Icon(
                 icon,
-                color: isCompleted ? Colors.white : colors.textSecondary,
+                color: isCompleted || isActive
+                    ? Colors.white
+                    : colors.textSecondary,
                 size: isLarge ? 20.w : 16.w,
               ),
             ),
@@ -162,17 +215,19 @@ class _TimelineStep extends ConsumerWidget {
                     letterSpacing: isActive ? -0.5 : 0,
                   ),
                 ),
-                SizedBox(height: 2.h),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: ResponsiveSize.fontS,
-                    fontWeight: FontWeight.w500,
-                    color: isCompleted
-                        ? colors.textSecondary
-                        : colors.textSecondary.withValues(alpha: 0.5),
+                if (subtitle.isNotEmpty) ...[
+                  SizedBox(height: 2.h),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: ResponsiveSize.fontS,
+                      fontWeight: FontWeight.w500,
+                      color: isCompleted
+                          ? colors.textSecondary
+                          : colors.textSecondary.withValues(alpha: 0.5),
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
           ),

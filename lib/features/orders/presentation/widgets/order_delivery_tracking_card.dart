@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../domain/entities/order_entity.dart';
+import '../../domain/entities/delivery_status.dart';
 import '../providers/providers.dart';
 
 /// Widget hiển thị delivery tracking trong order detail
@@ -200,7 +201,7 @@ class _OrderDeliveryTrackingCardState
 
   /// Build map widget với dữ liệu thật từ deliveryTrackingProvider
   Widget _buildRealMapWidget() {
-    final trackingState = ref.read(deliveryTrackingProvider);
+    final trackingState = ref.watch(deliveryTrackingProvider);
 
     // Kiểm tra có dữ liệu tracking không
     if (trackingState.currentTracking == null) {
@@ -209,11 +210,54 @@ class _OrderDeliveryTrackingCardState
 
     final currentTracking = trackingState.currentTracking!;
 
+    // Chỉ hiển thị bản đồ khi đã có shipper nhận đơn
+    if (currentTracking.shipperId == null || currentTracking.status == DeliveryStatus.pending) {
+      return _buildFindingShipperCard();
+    }
+
     return OptimizedDeliveryTrackingMapWidget(
       deliveryTracking: currentTracking,
       shipper: trackingState
           .shipper, // Sử dụng trực tiếp shipper từ state (cùng entity type)
       useFakeMovement: false, // Sử dụng real data từ providers
+    );
+  }
+
+  /// Widget hiển thị khi đang tìm shipper
+  Widget _buildFindingShipperCard() {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Container(
+        height: 200.w,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.blue.withValues(alpha: 0.05),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.person_search, size: 48, color: Colors.blue[400]),
+              SizedBox(height: 16.w),
+              Text(
+                'Đang tìm tài xế giao hàng',
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600,
+                  color: ref.colors.textPrimary,
+                ),
+              ),
+              SizedBox(height: 8.w),
+              Text(
+                'Bản đồ sẽ hiển thị khi tài xế nhận đơn',
+                style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

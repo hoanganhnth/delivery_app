@@ -22,7 +22,8 @@ abstract class OrderDto with _$OrderDto {
     DateTime? estimatedDeliveryTime,
   }) = _OrderDto;
 
-  factory OrderDto.fromJson(Map<String, dynamic> json) => _$OrderDtoFromJson(json);
+  factory OrderDto.fromJson(Map<String, dynamic> json) =>
+      _$OrderDtoFromJson(json);
 }
 
 extension OrderDtoX on OrderDto {
@@ -30,6 +31,7 @@ extension OrderDtoX on OrderDto {
     return OrderEntity(
       id: id,
       status: OrderStatus.fromString(status),
+      rawBackendStatus: status,
       customerName: customerName,
       customerPhone: customerPhone,
       deliveryAddress: deliveryAddress,
