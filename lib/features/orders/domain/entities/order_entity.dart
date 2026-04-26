@@ -12,17 +12,33 @@ enum OrderStatus {
   const OrderStatus(this.value);
   final String value;
 
-  /// Chuyển đổi từ string thành enum
   static OrderStatus fromString(String value) {
     switch (value.toUpperCase()) {
+      // Nhóm "Đang chờ xử lý"
       case 'PENDING':
+      case 'PENDING_PAYMENT':
+      case 'CONFIRMED':
+      case 'CONFIRMED_BY_RESTAURANT':      
         return OrderStatus.pending;
+        
+      // Nhóm "Đang đi giao"
+      case 'FINDING_SHIPPER':
+      case 'ASSIGNED_TO_SHIPPER':
+      case 'IN_DELIVERY':
       case 'DELIVERING':
         return OrderStatus.delivering;
+        
+      // Nhóm "Thành công"
       case 'DELIVERED':
         return OrderStatus.delivered;
+        
+      // Nhóm "Hủy/Lỗi"
       case 'CANCELLED':
+      case 'PAYMENT_FAILED':
+      case 'REJECTED_BY_RESTAURANT':
+      case 'SHIPPER_NOT_FOUND':
         return OrderStatus.cancelled;
+        
       default:
         return OrderStatus.pending; // Default fallback
     }

@@ -17,6 +17,9 @@ class OrderActionButtons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Keep the provider alive during async operations
+    ref.watch(cancelOrderProvider);
+    
     final theme = Theme.of(context);
 
     // Chỉ hiển thị nút cancel cho đơn hàng pending

@@ -29,7 +29,10 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this); // All, Active, Completed
+    _tabController = TabController(
+      length: 3,
+      vsync: this,
+    ); // All, Active, Completed
     _loadInitialData();
     _setupTabListener();
   }
@@ -72,7 +75,13 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
     setState(() {
       currentStatus = status;
     });
-    ref.read(ordersListProvider.notifier).getUserOrders();
+
+    // Ensure provider update happens after build phase
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        ref.read(ordersListProvider.notifier).getUserOrders();
+      }
+    });
   }
 
   Future<void> _refreshOrders() async {
@@ -88,11 +97,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
   }
 
   void _showCancelOrderDialog(OrderEntity order) {
-    CancelOrderDialog.show(
-      context,
-      order,
-      onSuccess: _refreshOrders,
-    );
+    CancelOrderDialog.show(context, order, onSuccess: _refreshOrders);
   }
 
   void _navigateToRestaurants() {
@@ -104,9 +109,11 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
     if (currentStatus == OrderStatus.pending) {
       // Active tab: show pending + delivering
       return orders
-          .where((order) =>
-              order.status == OrderStatus.pending ||
-              order.status == OrderStatus.delivering)
+          .where(
+            (order) =>
+                order.status == OrderStatus.pending ||
+                order.status == OrderStatus.delivering,
+          )
           .toList();
     }
     // Completed tab
@@ -204,9 +211,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
 
         // Empty state
         if (filteredOrders.isEmpty) {
-          return OrdersEmptyState(
-            onGoToRestaurants: _navigateToRestaurants,
-          );
+          return OrdersEmptyState(onGoToRestaurants: _navigateToRestaurants);
         }
 
         // Orders list

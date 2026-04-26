@@ -65,7 +65,7 @@ class CancelOrder extends _$CancelOrder {
       final result = await cancelOrderUseCase(orderId);
 
       // Guard: provider may have been disposed while awaiting
-      if (!ref.mounted) return false;
+      // if (!ref.mounted) return false;
 
       return result.fold(
         (failure) {

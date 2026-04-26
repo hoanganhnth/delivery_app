@@ -11,7 +11,6 @@ class AppSetup {
   static Future<void> initializeHive() async {
     await Hive.initFlutter();
 
-
     // Open boxes
     await Hive.openBox('biometric_credentials');
   }
@@ -33,7 +32,7 @@ class AppSetup {
       'MAPBOX_ACCESS_TOKEN',
       defaultValue: '', // Remove hardcoded token for security
     );
-    
+
     if (mapboxToken.isNotEmpty) {
       MapboxOptions.setAccessToken(mapboxToken);
     } else {
@@ -49,7 +48,11 @@ class AppSetup {
   }) {
     final overrides = [...getProviderOverrides(), ...?additionalOverrides];
 
-    return ProviderScope(overrides: overrides, child: child);
+    return ProviderScope(
+      overrides: overrides,
+      child: child,
+      retry: (retryCount, error) => null,
+    );
   }
 }
 

@@ -10,11 +10,7 @@ class CancelOrderDialog extends ConsumerWidget {
   final OrderEntity order;
   final VoidCallback? onSuccess;
 
-  const CancelOrderDialog({
-    super.key,
-    required this.order,
-    this.onSuccess,
-  });
+  const CancelOrderDialog({super.key, required this.order, this.onSuccess});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,9 +43,7 @@ class CancelOrderDialog extends ConsumerWidget {
             },
             child: Text(
               S.of(context).confirm,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.error,
-              ),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
           ),
           loading: () => SizedBox(
@@ -74,10 +68,8 @@ class CancelOrderDialog extends ConsumerWidget {
   }) {
     showDialog(
       context: context,
-      builder: (context) => CancelOrderDialog(
-        order: order,
-        onSuccess: onSuccess,
-      ),
+      builder: (context) =>
+          CancelOrderDialog(order: order, onSuccess: onSuccess),
     );
   }
 }
