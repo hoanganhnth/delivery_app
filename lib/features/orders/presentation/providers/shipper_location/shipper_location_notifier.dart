@@ -10,23 +10,30 @@ import 'shipper_location_state.dart';
 part 'shipper_location_notifier.g.dart';
 
 /// Notifier để quản lý shipper location tracking
-@riverpod
+@Riverpod(keepAlive: true)
 class ShipperLocation extends _$ShipperLocation {
   StreamSubscription<ShipperLocationEntity>? _locationSubscription;
 
-  @override
   ShipperLocationState build() {
     AppLogger.i('ShipperLocationNotifier created');
-    
+
+    // Đọc provider ra ngoài trước khi onDispose để tránh lỗi Riverpod cấm dùng ref.read bên trong onDispose
+    final stopTrackingUseCase = ref.read(stopShipperTrackingUseCaseProvider);
+
     ref.onDispose(() {
       AppLogger.i('Disposing shipper location notifier');
+
+      // Chỉ gửi yêu cầu dừng lên backend và huỷ subscription.
       if (state.isTracking) {
-        stopTracking();
+        try {
+          stopTrackingUseCase.call(NoParams());
+        } catch (_) {}
       }
+
       _locationSubscription?.cancel();
       _locationSubscription = null;
     });
-    
+
     return const ShipperLocationState();
   }
 
@@ -142,6 +149,7 @@ class ShipperLocation extends _$ShipperLocation {
         await startTrackingShipper(currentShipperId);
       } else {
         AppLogger.w('No current shipper to refresh tracking for');
+
         state = state.copyWith(
           error: 'Không có shipper nào đang được theo dõi để refresh',
         );

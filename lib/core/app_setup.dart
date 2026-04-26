@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 /// Main app setup with all necessary provider overrides
 /// This ensures that all features use the same Dio instance with proper authentication
 class AppSetup {
@@ -27,17 +29,14 @@ class AppSetup {
 
   // init mapbox
   static Future<void> initializeMapbox() async {
-    // Use environment variable or default token
-    const String mapboxToken = String.fromEnvironment(
-      'MAPBOX_ACCESS_TOKEN',
-      defaultValue: '', // Remove hardcoded token for security
-    );
+    // Use environment variable from dotenv
+    final String mapboxToken = dotenv.env['MAPBOX_ACCESS_TOKEN'] ?? '';
 
     if (mapboxToken.isNotEmpty) {
       MapboxOptions.setAccessToken(mapboxToken);
     } else {
       // Log warning if no token provided
-      debugPrint('Warning: Mapbox access token not provided');
+      debugPrint('Warning: Mapbox access token not provided in .env');
     }
   }
 

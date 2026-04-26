@@ -33,7 +33,6 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
       length: 3,
       vsync: this,
     ); // All, Active, Completed
-    _loadInitialData();
     _setupTabListener();
   }
 
@@ -42,12 +41,6 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
     _tabController.dispose();
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _loadInitialData() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(ordersListProvider.notifier).getUserOrders();
-    });
   }
 
   void _setupTabListener() {
@@ -74,13 +67,6 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
   void _loadOrdersByStatus(OrderStatus? status) {
     setState(() {
       currentStatus = status;
-    });
-
-    // Ensure provider update happens after build phase
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        ref.read(ordersListProvider.notifier).getUserOrders();
-      }
     });
   }
 

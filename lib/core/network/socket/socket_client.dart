@@ -9,7 +9,7 @@ import '../../utils/logger/app_logger.dart';
 class SocketClient {
   final String url;
   final String _name;
-  
+
   WebSocketChannel? _channel;
   final _rawStream = PublishSubject<String>();
   final _connectionStream = BehaviorSubject<bool>.seeded(false);
@@ -57,14 +57,17 @@ class SocketClient {
       // Listen to WebSocket stream
       _channel!.stream.listen(
         (message) {
-          AppLogger.d('$_name [$url] Nhận: $message');
-          
+          if (!message.toString().contains('"ping"') &&
+              !message.toString().contains('"pong"')) {
+            AppLogger.d('$_name [$url] Nhận: $message');
+          }
+
           // First message confirms connection is ready
           if (!isConnected) {
             _setConnectionState(true);
             _connectionCompleter?.complete();
           }
-          
+
           if (!_rawStream.isClosed) {
             _rawStream.add(message);
           }
@@ -72,7 +75,8 @@ class SocketClient {
         onError: (error) {
           AppLogger.e('$_name [$url] Lỗi', error);
           _setConnectionState(false);
-          if (_connectionCompleter != null && !_connectionCompleter!.isCompleted) {
+          if (_connectionCompleter != null &&
+              !_connectionCompleter!.isCompleted) {
             _connectionCompleter!.completeError(error);
           }
           _scheduleReconnect();
@@ -80,8 +84,11 @@ class SocketClient {
         onDone: () {
           AppLogger.w('$_name [$url] Kết nối đóng');
           _setConnectionState(false);
-          if (_connectionCompleter != null && !_connectionCompleter!.isCompleted) {
-            _connectionCompleter!.completeError('Connection closed unexpectedly');
+          if (_connectionCompleter != null &&
+              !_connectionCompleter!.isCompleted) {
+            _connectionCompleter!.completeError(
+              'Connection closed unexpectedly',
+            );
           }
           _scheduleReconnect();
         },
@@ -117,7 +124,9 @@ class SocketClient {
   /// Gửi raw message
   void sendRaw(String message) {
     if (_channel != null && isConnected) {
-      AppLogger.d('$_name [$url] Gửi: $message');
+      if (!message.contains('"ping"') && !message.contains('"pong"')) {
+        AppLogger.d('$_name [$url] Gửi: $message');
+      }
       _channel!.sink.add(message);
     } else {
       AppLogger.w('$_name [$url] Chưa kết nối, không gửi được');
@@ -132,14 +141,14 @@ class SocketClient {
   /// Ngắt kết nối
   Future<void> disconnect() async {
     AppLogger.i('$_name [$url] Disconnecting...');
-    
+
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
     _stopHeartbeat();
-    
+
     await _channel?.sink.close(status.normalClosure);
     _channel = null;
-    
+
     _setConnectionState(false);
     AppLogger.i('$_name [$url] Đã ngắt kết nối');
   }
@@ -147,23 +156,24 @@ class SocketClient {
   /// Dispose toàn bộ resources
   void dispose() {
     if (_isDisposed) return;
-    
+
     AppLogger.d('$_name [$url] Disposing...');
     _isDisposed = true;
-    
+
     _reconnectTimer?.cancel();
     _stopHeartbeat();
     _channel?.sink.close(status.normalClosure);
-    
+
     _rawStream.close();
     _connectionStream.close();
-    
+
     AppLogger.d('$_name [$url] Disposed');
   }
 
   /// Set connection state
   void _setConnectionState(bool connected) {
-    if (!_connectionStream.isClosed && _connectionStream.valueOrNull != connected) {
+    if (!_connectionStream.isClosed &&
+        _connectionStream.valueOrNull != connected) {
       _connectionStream.add(connected);
       AppLogger.d('$_name [$url] Connection state: $connected');
     }
@@ -188,9 +198,13 @@ class SocketClient {
     if (_isDisposed || _reconnectTimer != null) return;
 
     _reconnectAttempts++;
-    final delay = Duration(seconds: (5 * _reconnectAttempts).clamp(5, 60)); // tăng dần tối đa 1 phút
+    final delay = Duration(
+      seconds: (5 * _reconnectAttempts).clamp(5, 60),
+    ); // tăng dần tối đa 1 phút
 
-    AppLogger.i('$_name [$url] Reconnect attempt $_reconnectAttempts in ${delay.inSeconds}s...');
+    AppLogger.i(
+      '$_name [$url] Reconnect attempt $_reconnectAttempts in ${delay.inSeconds}s...',
+    );
     _reconnectTimer = Timer(delay, () async {
       _reconnectTimer = null;
       if (!_isDisposed) {

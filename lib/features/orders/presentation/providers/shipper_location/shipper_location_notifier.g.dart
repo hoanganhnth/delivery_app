@@ -23,7 +23,7 @@ final class ShipperLocationProvider
         argument: null,
         retry: null,
         name: r'shipperLocationProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );

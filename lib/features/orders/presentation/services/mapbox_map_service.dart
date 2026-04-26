@@ -1,4 +1,6 @@
 import 'dart:math' as math;
+import 'dart:ui' as ui;
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import '../../../../core/utils/logger/app_logger.dart';
@@ -28,6 +30,57 @@ class MapboxMapService {
     }
   }
 
+  /// Helper: Vẽ Text/Emoji thành Ảnh để Mapbox hiển thị không bị lỗi font
+  Future<Uint8List> _createMarkerImage(
+    String text, {
+    double size = 80,
+    Color? bgColor,
+  }) async {
+    final pictureRecorder = ui.PictureRecorder();
+    final canvas = Canvas(pictureRecorder);
+    final textPainter = TextPainter(textDirection: TextDirection.ltr);
+
+    // Vẽ phông tròn phía sau
+    final paint = Paint()
+      ..color = bgColor ?? Colors.white
+      ..style = PaintingStyle.fill;
+
+    final shadowPaint = Paint()
+      ..color = Colors.black.withValues(alpha: 0.3)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
+
+    final center = Offset(size / 2, size / 2);
+    final radius = size / 2;
+
+    // Draw shadow
+    canvas.drawCircle(Offset(center.dx, center.dy + 2), radius, shadowPaint);
+    // Draw background
+    canvas.drawCircle(center, radius, paint);
+
+    // Vẽ viền (border)
+    final borderPaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3.0;
+    canvas.drawCircle(center, radius, borderPaint);
+
+    // Vẽ Emoji / chữ
+    textPainter.text = TextSpan(
+      text: text,
+      style: TextStyle(fontSize: size * 0.55),
+    );
+    textPainter.layout();
+    textPainter.paint(
+      canvas,
+      Offset((size - textPainter.width) / 2, (size - textPainter.height) / 2),
+    );
+
+    final p = pictureRecorder.endRecording();
+    final image = await p.toImage(size.toInt(), size.toInt());
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    return byteData!.buffer.asUint8List();
+  }
+
   /// Thêm pickup và delivery markers
   Future<void> addDeliveryMarkers({
     required double pickupLat,
@@ -41,15 +94,18 @@ class MapboxMapService {
     }
 
     try {
+      final pickupBytes = await _createMarkerImage('🏪', bgColor: Colors.green);
+      final deliveryBytes = await _createMarkerImage(
+        '🏠',
+        bgColor: Colors.blue,
+      );
+
       // Thêm pickup marker (nhà hàng)
       await _pointAnnotationManager!.create(
         PointAnnotationOptions(
           geometry: Point(coordinates: Position(pickupLng, pickupLat)),
-          textField: "🏪 Nhà hàng",
-          textSize: 12.0,
-          textColor: Colors.blue.toARGB32(),
-          textHaloColor: Colors.white.toARGB32(),
-          textHaloWidth: 2.0,
+          image: pickupBytes,
+          iconSize: 1.0,
         ),
       );
 
@@ -57,11 +113,8 @@ class MapboxMapService {
       await _pointAnnotationManager!.create(
         PointAnnotationOptions(
           geometry: Point(coordinates: Position(deliveryLng, deliveryLat)),
-          textField: "🏠 Khách hàng",
-          textSize: 12.0,
-          textColor: Colors.red.toARGB32(),
-          textHaloColor: Colors.white.toARGB32(),
-          textHaloWidth: 2.0,
+          image: deliveryBytes,
+          iconSize: 1.0,
         ),
       );
 
@@ -86,20 +139,20 @@ class MapboxMapService {
       }
       // final ByteData bytes = await rootBundle.load(AppAssets.icShipperMap,);
       // final Uint8List list = bytes.buffer.asUint8List();
-      // Tạo shipper marker mới với container đỏ to hơn
+      // Tạo shipper marker mới
+      final shipperBytes = await _createMarkerImage(
+        '🛵',
+        bgColor: Colors.red,
+        size: 90,
+      );
+
       _shipperMarker = await _pointAnnotationManager!.create(
         PointAnnotationOptions(
-          // image: list,
           geometry: Point(
             coordinates: Position(location.longitude, location.latitude),
           ),
-          // iconSize: 0.1,
-          
-          textField: "Shipper", // Container đỏ lớn
-          textSize: 12.0, // Tăng kích thước gấp đôi
-          textColor: Colors.red.toARGB32(), // Màu đỏ
-          textHaloColor: Colors.white.toARGB32(),
-          textHaloWidth: 3.0, // Tăng viền để nổi bật hơn
+          image: shipperBytes,
+          iconSize: 1.0,
         ),
       );
     } catch (e) {
@@ -218,22 +271,39 @@ class MapboxMapService {
   }
 
   /// Lấy camera position ban đầu
+  /// Kiểm tra tọa độ có hợp lệ hay không (không phải 0.0 default)
+  bool _isValidCoordinate(double? lat, double? lng) {
+    if (lat == null || lng == null) return false;
+    if (lat == 0.0 && lng == 0.0) return false;
+    if (lat.abs() > 90 || lng.abs() > 180) return false;
+    return true;
+  }
+
   CameraOptions getInitialCameraPosition({
     double? pickupLat,
     double? pickupLng,
     double? deliveryLat,
     double? deliveryLng,
   }) {
-    if (pickupLat != null &&
-        pickupLng != null &&
-        deliveryLat != null &&
-        deliveryLng != null) {
-      // Center giữa pickup và delivery
-      final centerLat = (pickupLat + deliveryLat) / 2;
-      final centerLng = (pickupLng + deliveryLng) / 2;
+    final hasValidPickup = _isValidCoordinate(pickupLat, pickupLng);
+    final hasValidDelivery = _isValidCoordinate(deliveryLat, deliveryLng);
 
+    if (hasValidPickup && hasValidDelivery) {
+      // Center giữa pickup và delivery
+      final centerLat = (pickupLat! + deliveryLat!) / 2;
+      final centerLng = (pickupLng! + deliveryLng!) / 2;
       return CameraOptions(
         center: Point(coordinates: Position(centerLng, centerLat)),
+        zoom: 14.0,
+      );
+    } else if (hasValidDelivery) {
+      return CameraOptions(
+        center: Point(coordinates: Position(deliveryLng!, deliveryLat!)),
+        zoom: 14.0,
+      );
+    } else if (hasValidPickup) {
+      return CameraOptions(
+        center: Point(coordinates: Position(pickupLng!, pickupLat!)),
         zoom: 14.0,
       );
     }

@@ -292,25 +292,40 @@ class _OptimizedDeliveryTrackingMapWidgetState
       // Khởi tạo map service
       await _mapService.initializeMap(mapboxMap);
 
-      // Thêm markers nếu có delivery tracking
+      // Thêm markers nếu có delivery tracking với tọa độ hợp lệ
       if (widget.deliveryTracking != null) {
-        await _mapService.addDeliveryMarkers(
-          pickupLat: widget.deliveryTracking!.pickupLat,
-          pickupLng: widget.deliveryTracking!.pickupLng,
-          deliveryLat: widget.deliveryTracking!.deliveryLat,
-          deliveryLng: widget.deliveryTracking!.deliveryLng,
-        );
+        final dt = widget.deliveryTracking!;
+        final hasValidPickup = dt.pickupLat != 0.0 || dt.pickupLng != 0.0;
+        final hasValidDelivery = dt.deliveryLat != 0.0 || dt.deliveryLng != 0.0;
 
-        // Fit camera để hiển thị tất cả markers
-        await _mapService.fitBoundsToMarkers(
-          pickupLat: widget.deliveryTracking!.pickupLat,
-          pickupLng: widget.deliveryTracking!.pickupLng,
-          deliveryLat: widget.deliveryTracking!.deliveryLat,
-          deliveryLng: widget.deliveryTracking!.deliveryLng,
-        );
+        if (hasValidPickup || hasValidDelivery) {
+          await _mapService.addDeliveryMarkers(
+            pickupLat: dt.pickupLat,
+            pickupLng: dt.pickupLng,
+            deliveryLat: dt.deliveryLat,
+            deliveryLng: dt.deliveryLng,
+          );
+
+          // Fit camera để hiển thị tất cả markers
+          await _mapService.fitBoundsToMarkers(
+            pickupLat: dt.pickupLat,
+            pickupLng: dt.pickupLng,
+            deliveryLat: dt.deliveryLat,
+            deliveryLng: dt.deliveryLng,
+          );
+        }
 
         // Bắt đầu fake shipper movement
         _startFakeShipperMovement();
+      }
+      
+      // Khắc phục lỗi Race Condition: Khi Riverpod nhả stream state trước khi MapBox khởi tạo xong.
+      // Ép Map vẽ marker tại vị trí hiện tại ngay sau khi init xong
+      if (!widget.useFakeMovement) {
+        final currentLocation = ref.read(shipperLocationProvider).currentLocation;
+        if (currentLocation != null) {
+          await _mapService.updateShipperMarker(currentLocation);
+        }
       }
 
       AppLogger.i('Map initialization completed');
@@ -531,7 +546,10 @@ class _OptimizedDeliveryTrackingMapWidgetState
                 ),
                 Text(
                   '${widget.shipper!.vehicleType.toUpperCase()} • ${widget.shipper!.vehicleNumber}',
-                  style: TextStyle(color: ref.colors.textSecondary, fontSize: 12.sp),
+                  style: TextStyle(
+                    color: ref.colors.textSecondary,
+                    fontSize: 12.sp,
+                  ),
                 ),
               ],
             ),

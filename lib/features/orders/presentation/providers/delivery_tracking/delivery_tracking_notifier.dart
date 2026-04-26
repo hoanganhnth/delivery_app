@@ -233,7 +233,9 @@ class DeliveryTracking extends _$DeliveryTracking {
 
       state = state.copyWith(isLoading: true, clearError: true);
 
-      final getCurrentDeliveryUseCase = ref.read(getCurrentDeliveryUseCaseProvider);
+      final getCurrentDeliveryUseCase = ref.read(
+        getCurrentDeliveryUseCaseProvider,
+      );
       final result = await getCurrentDeliveryUseCase.call(
         GetCurrentDeliveryParams(orderId: orderId),
       );

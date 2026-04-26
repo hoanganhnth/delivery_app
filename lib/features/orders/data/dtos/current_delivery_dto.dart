@@ -11,6 +11,8 @@ class CurrentDeliveryDto {
   final double? pickupLng;
   final double? deliveryLat;
   final double? deliveryLng;
+  final double? shipperCurrentLat;
+  final double? shipperCurrentLng;
   final String? pickupAddress;
   final String? deliveryAddress;
   final String? estimatedTime;
@@ -29,6 +31,8 @@ class CurrentDeliveryDto {
     this.pickupLng,
     this.deliveryLat,
     this.deliveryLng,
+    this.shipperCurrentLat,
+    this.shipperCurrentLng,
     this.pickupAddress,
     this.deliveryAddress,
     this.estimatedTime,
@@ -49,9 +53,11 @@ class CurrentDeliveryDto {
       pickupLng: (json['pickupLng'] as num?)?.toDouble(),
       deliveryLat: (json['deliveryLat'] as num?)?.toDouble(),
       deliveryLng: (json['deliveryLng'] as num?)?.toDouble(),
+      shipperCurrentLat: (json['shipperCurrentLat'] as num?)?.toDouble(),
+      shipperCurrentLng: (json['shipperCurrentLng'] as num?)?.toDouble(),
       pickupAddress: json['pickupAddress'] as String?,
       deliveryAddress: json['deliveryAddress'] as String?,
-      estimatedTime: json['estimatedTime'] as String?,
+      estimatedTime: json['estimatedDeliveryTime'] as String?,
       assignedAt: json['assignedAt'] as String?,
       pickedUpAt: json['pickedUpAt'] as String?,
       deliveredAt: json['deliveredAt'] as String?,
@@ -70,9 +76,11 @@ class CurrentDeliveryDto {
       'pickupLng': pickupLng,
       'deliveryLat': deliveryLat,
       'deliveryLng': deliveryLng,
+      'shipperCurrentLat': shipperCurrentLat,
+      'shipperCurrentLng': shipperCurrentLng,
       'pickupAddress': pickupAddress,
       'deliveryAddress': deliveryAddress,
-      'estimatedTime': estimatedTime,
+      'estimatedDeliveryTime': estimatedTime,
       'assignedAt': assignedAt,
       'pickedUpAt': pickedUpAt,
       'deliveredAt': deliveredAt,
@@ -90,14 +98,21 @@ extension CurrentDeliveryDtoX on CurrentDeliveryDto {
       id: (orderId ?? 0) * 1000, // Mock ID
       orderId: orderId ?? 0,
       shipperId: shipperId,
-      status: DeliveryStatus.fromValueOrDefault(status ?? '', DeliveryStatus.pending),
+      status: DeliveryStatus.fromValueOrDefault(
+        status ?? '',
+        DeliveryStatus.pending,
+      ),
       pickupAddress: pickupAddress ?? 'Địa chỉ lấy hàng',
       pickupLat: pickupLat ?? 0.0,
       pickupLng: pickupLng ?? 0.0,
       deliveryAddress: deliveryAddress ?? 'Địa chỉ giao hàng',
       deliveryLat: deliveryLat ?? 0.0,
       deliveryLng: deliveryLng ?? 0.0,
-      estimatedDeliveryTime: estimatedTime != null ? DateTime.tryParse(estimatedTime!) : null,
+      shipperCurrentLat: shipperCurrentLat,
+      shipperCurrentLng: shipperCurrentLng,
+      estimatedDeliveryTime: estimatedTime != null
+          ? DateTime.tryParse(estimatedTime!)
+          : null,
       notes: notes,
     );
   }
