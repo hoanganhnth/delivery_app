@@ -269,3 +269,51 @@ final class RefreshTokenUseCaseProvider
 
 String _$refreshTokenUseCaseHash() =>
     r'3839dc94e4b98ddbf6567e8122ba3ca86f478c7e';
+
+@ProviderFor(socialLoginUseCase)
+final socialLoginUseCaseProvider = SocialLoginUseCaseProvider._();
+
+final class SocialLoginUseCaseProvider
+    extends
+        $FunctionalProvider<
+          SocialLoginUseCase,
+          SocialLoginUseCase,
+          SocialLoginUseCase
+        >
+    with $Provider<SocialLoginUseCase> {
+  SocialLoginUseCaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'socialLoginUseCaseProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$socialLoginUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<SocialLoginUseCase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  SocialLoginUseCase create(Ref ref) {
+    return socialLoginUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SocialLoginUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SocialLoginUseCase>(value),
+    );
+  }
+}
+
+String _$socialLoginUseCaseHash() =>
+    r'80bd2377770f0a52f2205f00494a1a655e71b7f7';

@@ -64,6 +64,21 @@ class MockAuthRemoteDataSource extends _i1.Mock
           as _i4.Future<_i2.BaseResponseDto<_i5.AuthDataDto>>);
 
   @override
+  _i4.Future<_i2.BaseResponseDto<_i5.AuthDataDto>> socialLogin(
+    Map<String, dynamic>? request,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#socialLogin, [request]),
+            returnValue: _i4.Future<_i2.BaseResponseDto<_i5.AuthDataDto>>.value(
+              _FakeBaseResponseDto_0<_i5.AuthDataDto>(
+                this,
+                Invocation.method(#socialLogin, [request]),
+              ),
+            ),
+          )
+          as _i4.Future<_i2.BaseResponseDto<_i5.AuthDataDto>>);
+
+  @override
   _i4.Future<_i2.BaseResponseDto<bool>> register(
     _i7.RegisterRequestDto? request,
   ) =>

@@ -12,6 +12,8 @@ import 'package:delivery_app/features/auth/domain/repositories/auth_repository.d
     as _i2;
 import 'package:delivery_app/features/auth/domain/usecases/login_usecase.dart'
     as _i7;
+import 'package:delivery_app/features/auth/domain/usecases/social_login_usecase.dart'
+    as _i9;
 import 'package:fpdart/fpdart.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i8;
@@ -49,6 +51,22 @@ class MockAuthRepository extends _i1.Mock implements _i2.AuthRepository {
                   _i8.dummyValue<_i4.Either<_i5.Failure, _i6.AuthEntity>>(
                     this,
                     Invocation.method(#login, [params]),
+                  ),
+                ),
+          )
+          as _i3.Future<_i4.Either<_i5.Failure, _i6.AuthEntity>>);
+
+  @override
+  _i3.Future<_i4.Either<_i5.Failure, _i6.AuthEntity>> socialLogin(
+    _i9.SocialLoginParams? params,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#socialLogin, [params]),
+            returnValue:
+                _i3.Future<_i4.Either<_i5.Failure, _i6.AuthEntity>>.value(
+                  _i8.dummyValue<_i4.Either<_i5.Failure, _i6.AuthEntity>>(
+                    this,
+                    Invocation.method(#socialLogin, [params]),
                   ),
                 ),
           )

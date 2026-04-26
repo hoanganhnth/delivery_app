@@ -1,9 +1,12 @@
+import 'package:delivery_app/core/error/failures.dart';
 import 'package:delivery_app/core/utils/logger/app_logger.dart';
 import 'package:delivery_app/core/usecases/usecase.dart';
 import 'package:delivery_app/features/auth/domain/entities/auth_entity.dart';
 import 'package:delivery_app/features/auth/domain/usecases/login_usecase.dart';
 import 'package:delivery_app/features/auth/domain/usecases/register_usecase.dart';
 import 'package:delivery_app/features/auth/domain/usecases/refresh_token_usecase.dart';
+import 'package:delivery_app/features/auth/domain/usecases/social_login_usecase.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:delivery_app/features/auth/domain/usecases/store_tokens_usecase.dart';
 import 'package:delivery_app/features/auth/domain/usecases/get_tokens_usecase.dart';
 import 'package:delivery_app/features/auth/domain/usecases/clear_tokens_usecase.dart';
@@ -17,6 +20,7 @@ part 'auth_notifier.g.dart';
 @Riverpod(keepAlive: true)
 class AuthNotifier extends _$AuthNotifier {
   late final LoginUseCase _loginUseCase;
+  late final SocialLoginUseCase _socialLoginUseCase;
   late final RegisterUseCase _registerUseCase;
   late final RefreshTokenUseCase _refreshTokenUseCase;
   late final StoreTokensUseCase _storeTokensUseCase;
@@ -26,6 +30,7 @@ class AuthNotifier extends _$AuthNotifier {
   @override
   AuthState build() {
     _loginUseCase = ref.read(loginUseCaseProvider);
+    _socialLoginUseCase = ref.read(socialLoginUseCaseProvider);
     _registerUseCase = ref.read(registerUseCaseProvider);
     _refreshTokenUseCase = ref.read(refreshTokenUseCaseProvider);
     _storeTokensUseCase = ref.read(storeTokensUseCaseProvider);
@@ -85,6 +90,84 @@ class AuthNotifier extends _$AuthNotifier {
         );
       },
     );
+  }
+
+  // Google Sign In
+  Future<void> loginWithGoogle() async {
+    state = state.copyWith(isLoginLoading: true, clearFailure: true);
+
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: ['email'],
+      );
+      
+      final GoogleSignInAccount? account = await googleSignIn.signIn();
+      
+      if (account == null) {
+        // User canceled the sign-in flow
+        state = state.copyWith(isLoginLoading: false);
+        return;
+      }
+      
+      final GoogleSignInAuthentication auth = await account.authentication;
+      final String? idToken = auth.idToken;
+      
+      if (idToken == null) {
+        state = state.copyWith(
+          isLoginLoading: false,
+          isAuthenticated: false,
+          failure: const ServerFailure('Google login failed: Empty ID token'),
+        );
+        return;
+      }
+
+      final params = SocialLoginParams(
+        provider: 'google',
+        token: idToken,
+        role: 'CUSTOMER', // Default role for app users
+        deviceId: 'social-auth', 
+        deviceName: 'Mobile Device',
+        deviceType: 'MOBILE',
+        ipAddress: '127.0.0.1',
+      );
+
+      final result = await _socialLoginUseCase(params);
+
+      result.fold(
+        (failure) {
+          state = state.copyWith(
+            isLoginLoading: false,
+            isAuthenticated: false,
+            failure: failure,
+            clearUser: true,
+          );
+        },
+        (user) async {
+          final storeResult = await _storeTokensUseCase(
+            StoreTokensParams(tokens: user),
+          );
+          storeResult.fold(
+            (failure) => AppLogger.e('AuthNotifier: Failed to store tokens - ${failure.message}'),
+            (_) => AppLogger.d('AuthNotifier: Tokens stored successfully'),
+          );
+
+          state = state.copyWith(
+            isLoginLoading: false,
+            isAuthenticated: true,
+            clearFailure: true,
+            refreshToken: user.refreshToken,
+            accessToken: user.accessToken,
+          );
+        },
+      );
+    } catch (error) {
+      AppLogger.e('Google Sign In Error', error);
+      state = state.copyWith(
+        isLoginLoading: false,
+        isAuthenticated: false,
+        failure: ServerFailure('Google sign-in error: $error'),
+      );
+    }
   }
 
   /// Login with saved tokens (for biometric authentication)

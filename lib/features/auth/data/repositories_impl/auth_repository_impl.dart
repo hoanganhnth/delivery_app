@@ -2,6 +2,7 @@ import 'package:delivery_app/core/network/resources/base_response_dto.dart';
 import 'package:delivery_app/features/auth/data/dtos/auth_response_dto.dart';
 import 'package:delivery_app/features/auth/domain/entities/auth_entity.dart';
 import 'package:delivery_app/features/auth/domain/usecases/login_usecase.dart';
+import 'package:delivery_app/features/auth/domain/usecases/social_login_usecase.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/error_mapper.dart';
 import '../../../../core/error/failures.dart';
@@ -41,6 +42,32 @@ class AuthRepositoryImpl implements AuthRepository {
       return left(mapExceptionToFailure(e));
     } catch (e) {
       // AppLogger.e('Repository: Unexpected error during login', e);
+      return left(const ServerFailure('Unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AuthEntity>> socialLogin(SocialLoginParams params) async {
+    try {
+      final requestJson = {
+        'provider': params.provider,
+        'token': params.token,
+        'role': params.role,
+        'deviceId': params.deviceId,
+        'deviceName': params.deviceName,
+        'deviceType': params.deviceType,
+        'ipAddress': params.ipAddress,
+      };
+      final authResponse = await remoteDataSource.socialLogin(requestJson);
+
+      if (authResponse.isSuccess && authResponse.data != null) {
+        return right(authResponse.data!.toEntity());
+      } else {
+        return left(ServerFailure(authResponse.message));
+      }
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
+    } catch (e) {
       return left(const ServerFailure('Unexpected error occurred'));
     }
   }

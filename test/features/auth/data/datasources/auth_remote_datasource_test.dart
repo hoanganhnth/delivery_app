@@ -39,7 +39,20 @@ class FakeAuthRemoteDataSource implements AuthRemoteDataSource {
     }
 
     if (_shouldReturnSuccess) {
-      return _createSuccessfulLoginResponse(request);
+      return _createSuccessfulLoginResponse(request.email);
+    } else {
+      return _createFailedLoginResponse();
+    }
+  }
+
+  @override
+  Future<AuthResponseDto> socialLogin(Map<String, dynamic> request) async {
+    if (_shouldThrowException) {
+      throw Exception('Network connection failed');
+    }
+
+    if (_shouldReturnSuccess) {
+      return _createSuccessfulLoginResponse(request['email'] ?? 'social@user.com');
     } else {
       return _createFailedLoginResponse();
     }
@@ -90,7 +103,7 @@ class FakeAuthRemoteDataSource implements AuthRemoteDataSource {
   }
 
   // Helper methods for creating test data
-  AuthResponseDto _createSuccessfulLoginResponse(LoginRequestDto request) {
+  AuthResponseDto _createSuccessfulLoginResponse(String email) {
     return AuthResponseDto(
       status: 1,
       message: 'Login successful',
@@ -99,8 +112,8 @@ class FakeAuthRemoteDataSource implements AuthRemoteDataSource {
         refreshToken: 'fake_refresh_token_${DateTime.now().millisecondsSinceEpoch}',
         user: UserDto(
           id: 123,
-          email: request.email,
-          name: 'Test User for ${request.email}',
+          email: email,
+          name: 'Test User for $email',
         ),
       ),
     );

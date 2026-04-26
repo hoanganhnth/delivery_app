@@ -6,6 +6,7 @@ import '../dtos/refresh_token_response_dto.dart';
 
 abstract class AuthRemoteDataSource {
   Future<AuthResponseDto> login(LoginRequestDto request);
+  Future<AuthResponseDto> socialLogin(Map<String, dynamic> request);
   Future<BaseResponseDto<bool>> register(RegisterRequestDto request);
   Future<RefreshTokenResponseDto> refreshToken(String refreshToken);
 }

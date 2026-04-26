@@ -341,6 +341,36 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 const BiometricLoginButton(),
                               ],
                             ),
+                            const SizedBox(height: 24),
+                            
+                            // Google Sign In button
+                            SizedBox(
+                              height: 56,
+                              width: double.infinity,
+                              child: OutlinedButton.icon(
+                                onPressed: authState.isLoginLoading
+                                    ? null
+                                    : () {
+                                        ref.read(authProvider.notifier).loginWithGoogle();
+                                      },
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: ref.colors.secondary,
+                                  side: BorderSide(color: ref.colors.secondary.withValues(alpha: 0.2)),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(28),
+                                  ),
+                                  backgroundColor: Colors.white,
+                                ),
+                                icon: const Icon(Icons.g_mobiledata, size: 32, color: Colors.blue),
+                                label: const Text(
+                                  'Sign in with Google',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ),
                             const SizedBox(height: 32),
                             
                             // Register link

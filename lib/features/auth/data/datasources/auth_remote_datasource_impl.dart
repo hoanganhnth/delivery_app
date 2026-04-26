@@ -8,6 +8,7 @@ import '../dtos/auth_response_dto.dart';
 import '../dtos/login_request_dto.dart';
 import '../dtos/register_request_dto.dart';
 import '../dtos/refresh_token_response_dto.dart';
+import '../dtos/social_login_request_dto.dart';
 import 'auth_remote_datasource.dart';
 
 part 'auth_remote_datasource_impl.g.dart';
@@ -18,6 +19,9 @@ abstract class AuthApiService {
 
   @POST(ApiConstants.login)
   Future<BaseResponseDto<AuthDataDto>> login(@Body() LoginRequestDto request);
+
+  @POST(ApiConstants.socialLogin)
+  Future<BaseResponseDto<AuthDataDto>> socialLogin(@Body() SocialLoginRequestDto request);
 
   @POST(ApiConstants.register)
   Future<BaseResponseDto<bool>> register(@Body() RegisterRequestDto request);
@@ -45,6 +49,23 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error during login', e);
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<AuthResponseDto> socialLogin(Map<String, dynamic> requestJson) async {
+    try {
+      AppLogger.d('Attempting social login via: ${requestJson["provider"]}');
+      final request = SocialLoginRequestDto.fromJson(requestJson);
+      final response = await _apiService.socialLogin(request);
+      AppLogger.i('Social login successful for provider: ${requestJson["provider"]}');
+      return response;
+    } on DioException catch (e) {
+      AppLogger.e('Failed to social login', e);
+      throw DioExceptionHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      AppLogger.e('Unexpected error during social login', e);
       throw Exception('Unexpected error: ${e.toString()}');
     }
   }
