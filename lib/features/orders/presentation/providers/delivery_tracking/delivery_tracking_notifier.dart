@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:delivery_app/core/utils/logger/app_logger.dart';
 import 'package:delivery_app/core/usecases/usecase.dart';
@@ -13,8 +14,19 @@ part 'delivery_tracking_notifier.g.dart';
 /// Notifier để quản lý delivery tracking
 @riverpod
 class DeliveryTracking extends _$DeliveryTracking {
+  /// ✅ Lưu subscription để có thể cancel khi cần
+  StreamSubscription<dynamic>? _deliverySubscription;
+
   @override
   DeliveryTrackingState build() {
+    // ✅ Tự động cancel subscription khi provider bị dispose (người dùng rời khỏi màn hình)
+    ref.onDispose(() {
+      AppLogger.d(
+        'DeliveryTracking provider disposed — cancelling stream subscription',
+      );
+      _deliverySubscription?.cancel();
+      _deliverySubscription = null;
+    });
     return const DeliveryTrackingState();
   }
 
@@ -86,7 +98,10 @@ class DeliveryTracking extends _$DeliveryTracking {
             isTracking: true,
             isConnected: true,
           );
-          deliveryStream.listen(
+
+          // ✅ Cancel subscription cũ trước khi subscribe mới — tránh nhận data cũ lẫk ra
+          _deliverySubscription?.cancel();
+          _deliverySubscription = deliveryStream.listen(
             (delivery) {
               AppLogger.d(
                 'Received delivery tracking: Order ${delivery.orderId}, Shipper ${delivery.shipperId}',
@@ -111,6 +126,7 @@ class DeliveryTracking extends _$DeliveryTracking {
             onDone: () {
               AppLogger.i('Delivery stream closed');
               state = state.copyWith(isTracking: false, isConnected: false);
+              _deliverySubscription = null;
             },
           );
         },
@@ -128,6 +144,10 @@ class DeliveryTracking extends _$DeliveryTracking {
   Future<void> stopTrackingOrder() async {
     try {
       AppLogger.i('Stopping delivery tracking');
+
+      // ✅ Cancel subscription trước khi gọi UseCase
+      await _deliverySubscription?.cancel();
+      _deliverySubscription = null;
 
       final stopTrackingUseCase = ref.read(stopDeliveryTrackingUseCaseProvider);
       final result = await stopTrackingUseCase(NoParams());

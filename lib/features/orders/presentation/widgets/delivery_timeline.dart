@@ -210,8 +210,8 @@ class _TimelineStep extends ConsumerWidget {
                     color: isActive
                         ? colors.primary
                         : isCompleted
-                            ? colors.textPrimary
-                            : colors.textSecondary,
+                        ? colors.textPrimary
+                        : colors.textSecondary,
                     letterSpacing: isActive ? -0.5 : 0,
                   ),
                 ),

@@ -156,6 +156,12 @@ class DeliveryTrackingRepositoryImpl implements DeliveryTrackingRepository {
     }
   }
 
+  /// ✅ Stream chỉ emit events cho đúng orderId — không replay data cũ từ BehaviorSubject
+  @override
+  Stream<DeliveryTrackingEntity> deliveryUpdatesForOrder(int orderId) {
+    return _socketDataSource.deliveryUpdatesForOrder(orderId);
+  }
+
   /// No dispose needed - DataSource handles stream cleanup
   void dispose() {
     stopTracking();

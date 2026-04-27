@@ -6,31 +6,36 @@ import '../entities/delivery_tracking_entity.dart';
 abstract class DeliveryTrackingRepository {
   /// Stream để lắng nghe delivery updates
   Stream<DeliveryTrackingEntity> get deliveryStream;
-  
+
   /// Stream để lắng nghe connection status
   Stream<bool> get connectionStream;
-  
+
   /// Kết nối đến tracking service
   Future<Either<Failure, void>> connect();
-  
+
   /// Ngắt kết nối tracking service
   Future<Either<Failure, void>> disconnect();
-  
+
   /// Bắt đầu theo dõi delivery cho order
   Future<Either<Failure, void>> startTracking(int orderId);
-  
+
   /// Dừng theo dõi delivery
   Future<Either<Failure, void>> stopTracking();
-  
+
   /// Làm mới kết nối
   Future<Either<Failure, void>> refresh();
-  
+
   /// Kiểm tra trạng thái tracking
   bool get isTracking;
-  
+
   /// Kiểm tra trạng thái kết nối
   bool get isConnected;
-  
+
   /// Lấy delivery tracking hiện tại theo orderId
-  Future<Either<Failure, DeliveryTrackingEntity>> getCurrentDelivery(int orderId);
+  Future<Either<Failure, DeliveryTrackingEntity>> getCurrentDelivery(
+    int orderId,
+  );
+
+  /// ✅ Stream chỉ emit events của đúng orderId — không replay data cũ
+  Stream<DeliveryTrackingEntity> deliveryUpdatesForOrder(int orderId);
 }

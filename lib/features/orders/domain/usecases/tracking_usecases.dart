@@ -82,7 +82,10 @@ class TrackDeliveryUseCase extends UseCase<Stream<DeliveryTrackingEntity>, Track
     
     return result.fold(
       (failure) => left(failure),
-      (_) => right(repository.deliveryStream),
+      // ✅ Dùng deliveryUpdatesForOrder thay vì deliveryStream để:
+      // 1. Chỉ nhận events của đúng orderId này (tránh data của order khác)
+      // 2. Không replay data cũ từ BehaviorSubject (skip(1) nếu có cached value)
+      (_) => right(repository.deliveryUpdatesForOrder(params.orderId)),
     );
   }
 }

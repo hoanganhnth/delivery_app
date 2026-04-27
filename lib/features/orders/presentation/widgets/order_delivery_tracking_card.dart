@@ -7,6 +7,7 @@ import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../domain/entities/order_entity.dart';
 import '../../domain/entities/delivery_status.dart';
 import '../providers/providers.dart';
+import 'package:delivery_app/core/utils/logger/app_logger.dart';
 
 /// Widget hiển thị delivery tracking trong order detail
 class OrderDeliveryTrackingCard extends ConsumerStatefulWidget {
@@ -48,9 +49,12 @@ class _OrderDeliveryTrackingCardState
     final trackingState = ref.watch(deliveryTrackingProvider);
     final connectionAsync = ref.watch(trackingConnectionProvider);
 
-    // ✅ Listen to delivery tracking changes to auto-start shipper tracking
+    /// ✅ Lắng nghe delivery stream - khi DELIVERED thì ẩn map và refresh order detail
     ref.listen<DeliveryTrackingState>(deliveryTrackingProvider, (prev, next) {
-      // Tự động start shipper tracking khi có delivery data mới
+      final prevStatus = prev?.currentTracking?.status;
+      final nextStatus = next.currentTracking?.status;
+
+      // Khi shipper mới nhận đơn → bắt đầu track vị trí
       if (next.currentTracking != null &&
           prev?.currentTracking?.shipperId != next.currentTracking?.shipperId) {
         final shipperId = next.currentTracking!.shipperId;
@@ -59,6 +63,18 @@ class _OrderDeliveryTrackingCardState
               .read(shipperLocationProvider.notifier)
               .startTrackingShipper(shipperId);
         }
+      }
+
+      // ✅ Khi giao hàng thành công → refresh order detail và stop tracking
+      if (prevStatus != DeliveryStatus.delivered &&
+          nextStatus == DeliveryStatus.delivered) {
+        AppLogger.i(
+          '✅ Delivery DELIVERED - refreshing order detail and stopping tracking',
+        );
+        if (widget.order.id != null) {
+          ref.invalidate(orderDetailProvider(widget.order.id!));
+        }
+        ref.read(deliveryTrackingProvider.notifier).stopTrackingOrder();
       }
     });
 
@@ -207,6 +223,11 @@ class _OrderDeliveryTrackingCardState
 
     final currentTracking = trackingState.currentTracking!;
 
+    // ✅ Ẩn bản đồ khi đã giao thành công
+    if (currentTracking.status == DeliveryStatus.delivered) {
+      return _buildDeliveredCard();
+    }
+
     // Chỉ hiển thị bản đồ khi đã có shipper nhận đơn
     if (currentTracking.shipperId == null ||
         currentTracking.status == DeliveryStatus.pending) {
@@ -215,9 +236,47 @@ class _OrderDeliveryTrackingCardState
 
     return OptimizedDeliveryTrackingMapWidget(
       deliveryTracking: currentTracking,
-      shipper: trackingState
-          .shipper, // Sử dụng trực tiếp shipper từ state (cùng entity type)
-      useFakeMovement: false, // Sử dụng real data từ providers
+      shipper: trackingState.shipper,
+      useFakeMovement: false,
+    );
+  }
+
+  /// ✅ Widget hiển thị khi đã giao thành công
+  Widget _buildDeliveredCard() {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Container(
+        padding: EdgeInsets.all(24.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.green.withValues(alpha: 0.05),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              Icons.check_circle_rounded,
+              size: 64,
+              color: Colors.green[600],
+            ),
+            SizedBox(height: 12.w),
+            Text(
+              'Giao hàng thành công!',
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.green[700],
+              ),
+            ),
+            SizedBox(height: 4.w),
+            Text(
+              'Đơn hàng của bạn đã được giao đến nơi.',
+              style: TextStyle(fontSize: 13.sp, color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
     );
   }
 

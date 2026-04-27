@@ -354,7 +354,6 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
     }
   }
 
-
   double _getProgress(OrderStatus status) {
     switch (status) {
       case OrderStatus.pending:

@@ -13,14 +13,14 @@ import '../../domain/entities/order_entity.dart';
 /// Track Order Screen - Dark Nav với Map và Real-time Tracking
 class TrackOrderScreen extends ConsumerWidget {
   final num orderId;
-  
+
   const TrackOrderScreen({super.key, required this.orderId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final orderState = ref.watch(orderDetailProvider(orderId));
     final colors = ref.colors;
-    
+
     return Scaffold(
       backgroundColor: colors.background,
       body: orderState.when(
@@ -38,11 +38,7 @@ class TrackOrderScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.error_outline,
-            size: 64.w,
-            color: colors.textSecondary,
-          ),
+          Icon(Icons.error_outline, size: 64.w, color: colors.textSecondary),
           SizedBox(height: ResponsiveSize.m),
           Text(
             'Không tìm thấy đơn hàng',
@@ -62,11 +58,7 @@ class TrackOrderScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.error_outline,
-            size: 64.w,
-            color: colors.error,
-          ),
+          Icon(Icons.error_outline, size: 64.w, color: colors.error),
           SizedBox(height: ResponsiveSize.m),
           Text(
             message,
@@ -95,7 +87,7 @@ class _TrackOrderBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.colors;
-    
+
     return Stack(
       children: [
         // Map Section (Top 40%)
@@ -106,14 +98,14 @@ class _TrackOrderBody extends ConsumerWidget {
           height: 353.h,
           child: _MapSection(order: order),
         ),
-        
+
         // Floating Back Button
         Positioned(
           top: MediaQuery.of(context).padding.top + 8.h,
           left: ResponsiveSize.m,
           child: _FloatingBackButton(colors: colors),
         ),
-        
+
         // Main Content Card (Bottom)
         Positioned(
           top: 320.h,
@@ -136,7 +128,7 @@ class _MapSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.colors;
-    
+
     return Container(
       decoration: BoxDecoration(
         color: colors.cardBackground,
@@ -158,7 +150,7 @@ class _MapSection extends ConsumerWidget {
               gridColor: colors.border.withValues(alpha: 0.3),
             ),
           ),
-          
+
           // Route Simulation
           Center(
             child: Column(
@@ -170,7 +162,7 @@ class _MapSection extends ConsumerWidget {
                   color: colors.primary,
                   label: 'Nhà hàng',
                 ),
-                
+
                 // Route line
                 Container(
                   width: 3.w,
@@ -187,7 +179,7 @@ class _MapSection extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-                
+
                 // Delivery Icon (animated position would go here)
                 _MapMarker(
                   icon: Icons.delivery_dining,
@@ -195,7 +187,7 @@ class _MapSection extends ConsumerWidget {
                   label: 'Shipper',
                   isActive: true,
                 ),
-                
+
                 // Route line to destination
                 Container(
                   width: 3.w,
@@ -205,7 +197,7 @@ class _MapSection extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-                
+
                 // Destination Icon
                 _MapMarker(
                   icon: Icons.location_on,
@@ -215,7 +207,7 @@ class _MapSection extends ConsumerWidget {
               ],
             ),
           ),
-          
+
           // ETA Badge (top right)
           Positioned(
             top: MediaQuery.of(context).padding.top + 8.h,
@@ -239,11 +231,7 @@ class _MapSection extends ConsumerWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.schedule,
-                    size: 16.w,
-                    color: colors.primary,
-                  ),
+                  Icon(Icons.schedule, size: 16.w, color: colors.primary),
                   SizedBox(width: 6.w),
                   Text(
                     '15-20 phút',
@@ -280,7 +268,7 @@ class _MapMarker extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.colors;
-    
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -300,11 +288,7 @@ class _MapMarker extends ConsumerWidget {
                   ]
                 : null,
           ),
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: isActive ? 24.w : 20.w,
-          ),
+          child: Icon(icon, color: Colors.white, size: isActive ? 24.w : 20.w),
         ),
         SizedBox(height: 4.h),
         Text(
@@ -373,11 +357,7 @@ class _FloatingBackButton extends ConsumerWidget {
             ),
           ],
         ),
-        child: Icon(
-          Icons.arrow_back,
-          color: colors.textPrimary,
-          size: 20.w,
-        ),
+        child: Icon(Icons.arrow_back, color: colors.textPrimary, size: 20.w),
       ),
     );
   }
@@ -392,7 +372,7 @@ class _MainContentCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.colors;
-    
+
     return Container(
       decoration: BoxDecoration(
         color: colors.cardBackground,
@@ -430,21 +410,19 @@ class _MainContentCard extends ConsumerWidget {
                 ),
               ),
             ),
-            
+
             SizedBox(height: ResponsiveSize.l),
-            
+
             // Status Header
             _StatusHeader(order: order),
-            
+
             SizedBox(height: ResponsiveSize.l),
-            
+
             // Progress Bar
-            OrderProgressBar(
-              progress: _getProgress(order.status),
-            ),
-            
+            OrderProgressBar(progress: _getProgress(order.status)),
+
             SizedBox(height: ResponsiveSize.xl),
-            
+
             // Courier Info (if delivering)
             if (order.status == OrderStatus.delivering) ...[
               CourierInfoCard(
@@ -460,7 +438,7 @@ class _MainContentCard extends ConsumerWidget {
               ),
               SizedBox(height: ResponsiveSize.l),
             ],
-            
+
             // Timeline
             Container(
               padding: EdgeInsets.all(ResponsiveSize.m),
@@ -473,9 +451,9 @@ class _MainContentCard extends ConsumerWidget {
                 rawBackendStatus: order.rawBackendStatus,
               ),
             ),
-            
+
             SizedBox(height: ResponsiveSize.l),
-            
+
             // Order Details Card
             _OrderDetailsCard(order: order),
           ],
@@ -483,7 +461,6 @@ class _MainContentCard extends ConsumerWidget {
       ),
     );
   }
-
 
   double _getProgress(OrderStatus status) {
     switch (status) {
@@ -508,7 +485,7 @@ class _StatusHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.colors;
-    
+
     return Row(
       children: [
         Expanded(
@@ -596,7 +573,7 @@ class _OrderDetailsCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.colors;
-    
+
     return Container(
       padding: EdgeInsets.all(ResponsiveSize.m),
       decoration: BoxDecoration(
@@ -622,46 +599,44 @@ class _OrderDetailsCard extends ConsumerWidget {
                   color: colors.textPrimary,
                 ),
               ),
-              Icon(
-                Icons.receipt_long,
-                color: colors.textSecondary,
-                size: 20.w,
-              ),
+              Icon(Icons.receipt_long, color: colors.textSecondary, size: 20.w),
             ],
           ),
-          
+
           SizedBox(height: ResponsiveSize.m),
-          
+
           // Items
-          ...order.items.map((item) => Padding(
-            padding: EdgeInsets.only(bottom: ResponsiveSize.s),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    '${item.quantity}x ${item.menuItemName}',
+          ...order.items.map(
+            (item) => Padding(
+              padding: EdgeInsets.only(bottom: ResponsiveSize.s),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      '${item.quantity}x ${item.menuItemName}',
+                      style: TextStyle(
+                        fontSize: ResponsiveSize.fontM,
+                        fontWeight: FontWeight.w500,
+                        color: colors.textSecondary,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Text(
+                    '₫${(item.price * item.quantity).toStringAsFixed(0)}',
                     style: TextStyle(
                       fontSize: ResponsiveSize.fontM,
-                      fontWeight: FontWeight.w500,
-                      color: colors.textSecondary,
+                      fontWeight: FontWeight.w600,
+                      color: colors.textPrimary,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                Text(
-                  '₫${(item.price * item.quantity).toStringAsFixed(0)}',
-                  style: TextStyle(
-                    fontSize: ResponsiveSize.fontM,
-                    fontWeight: FontWeight.w600,
-                    color: colors.textPrimary,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          )),
-          
+          ),
+
           // Divider
           Padding(
             padding: EdgeInsets.symmetric(vertical: ResponsiveSize.s),
@@ -670,7 +645,7 @@ class _OrderDetailsCard extends ConsumerWidget {
               height: 1,
             ),
           ),
-          
+
           // Total
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -693,9 +668,9 @@ class _OrderDetailsCard extends ConsumerWidget {
               ),
             ],
           ),
-          
+
           SizedBox(height: ResponsiveSize.m),
-          
+
           // Delivery Address
           Container(
             padding: EdgeInsets.all(ResponsiveSize.m),
@@ -705,11 +680,7 @@ class _OrderDetailsCard extends ConsumerWidget {
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.location_on,
-                  color: colors.primary,
-                  size: 20.w,
-                ),
+                Icon(Icons.location_on, color: colors.primary, size: 20.w),
                 SizedBox(width: ResponsiveSize.s),
                 Expanded(
                   child: Text(
@@ -731,4 +702,3 @@ class _OrderDetailsCard extends ConsumerWidget {
     );
   }
 }
-
