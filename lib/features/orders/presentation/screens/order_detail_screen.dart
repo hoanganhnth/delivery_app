@@ -13,6 +13,7 @@ import '../widgets/order_error_widgets.dart';
 import '../widgets/delivery_timeline.dart';
 import '../widgets/order_progress_bar.dart';
 import '../widgets/order_delivery_tracking_card.dart';
+import '../providers/delivery_tracking/delivery_tracking_notifier.dart';
 import '../../../../generated/l10n.dart';
 
 class OrderDetailScreen extends ConsumerStatefulWidget {
@@ -39,13 +40,37 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Gọi API load lại ds đơn hàng khi trạng thái thay đổi sang thành công/huỷ
+    // ref.listen(orderDetailProvider(widget.orderId), (previous, next) {
+    //   final prevStatus = previous?.value?.status;
+    //   final nextStatus = next.value?.status;
+
+    //   if (nextStatus != prevStatus &&
+    //      (nextStatus == OrderStatus.delivered || nextStatus == OrderStatus.cancelled)) {
+    //     ref.invalidate(ordersListProvider);
+    //   }
+    // });
+
+    ref.listen(deliveryTrackingProvider, (previous, next) {
+      final prevStatus = previous?.currentTracking?.status;
+      final nextStatus = next.currentTracking?.status;
+
+      // TrackingEntity dùng enum DeliveryStatus
+      if (nextStatus != prevStatus &&
+          (nextStatus?.value == 'delivered' ||
+              nextStatus?.value == 'cancelled')) {
+        ref.invalidate(ordersListProvider);
+      }
+    });
+
     final orderDetailState = ref.watch(orderDetailProvider(widget.orderId));
+    final deliveryTrackingState = ref.watch(deliveryTrackingProvider);
     final colors = ref.colors;
 
     return Scaffold(
       backgroundColor: colors.background,
       appBar: _buildAppBar(colors),
-      body: _buildBody(orderDetailState),
+      body: _buildBody(orderDetailState, deliveryTrackingState),
     );
   }
 
@@ -76,7 +101,10 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
     );
   }
 
-  Widget _buildBody(AsyncValue<OrderEntity?> orderDetailState) {
+  Widget _buildBody(
+    AsyncValue<OrderEntity?> orderDetailState,
+    dynamic deliveryTrackingState,
+  ) {
     final colors = ref.colors;
     return orderDetailState.when(
       data: (order) => order == null
@@ -97,7 +125,11 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
 
                     // Delivery Timeline
                     if (order.status != OrderStatus.cancelled)
-                      _buildTimelineSection(order, colors),
+                      _buildTimelineSection(
+                        order,
+                        colors,
+                        deliveryTrackingState,
+                      ),
 
                     // Live Delivery Tracking (pending hoặc delivering)
                     if (order.canTrackingRealtime) ...[
@@ -232,7 +264,11 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
     );
   }
 
-  Widget _buildTimelineSection(OrderEntity order, AppColors colors) {
+  Widget _buildTimelineSection(
+    OrderEntity order,
+    AppColors colors,
+    dynamic trackingState,
+  ) {
     return Container(
       padding: EdgeInsets.all(ResponsiveSize.l),
       decoration: BoxDecoration(
@@ -248,7 +284,9 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
       ),
       child: DeliveryTimeline(
         status: order.status,
-        rawBackendStatus: order.rawBackendStatus,
+        rawBackendStatus:
+            trackingState?.currentTracking?.status?.value ??
+            order.rawBackendStatus,
       ),
     );
   }

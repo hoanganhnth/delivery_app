@@ -76,9 +76,11 @@ class DeliveryTimeline extends ConsumerWidget {
           return 0; // Chờ nhận đơn
         case 'FINDING_SHIPPER':
         case 'ASSIGNED_TO_SHIPPER':
+        case 'ASSIGNED':
           return 1; // Chờ lấy đơn
         case 'IN_DELIVERY':
         case 'DELIVERING':
+        case 'PICKED_UP':
           return 2; // Đang giao
         case 'DELIVERED':
           return 3; // Thành công
