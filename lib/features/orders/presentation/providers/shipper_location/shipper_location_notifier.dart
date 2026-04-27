@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:delivery_app/core/utils/logger/app_logger.dart';
 import 'package:delivery_app/core/usecases/usecase.dart';
 import '../../../domain/usecases/tracking_usecases.dart';
+import '../../../domain/usecases/get_shipper_location_use_case.dart';
 import '../../../domain/entities/shipper_location_entity.dart';
 import 'shipper_location_providers.dart';
 import 'shipper_location_state.dart';
@@ -51,6 +52,19 @@ class ShipperLocation extends _$ShipperLocation {
       );
 
       final trackShipperUseCase = ref.read(trackShipperLocationUseCaseProvider);
+      final getShipperLocationUseCase = ref.read(getShipperLocationUseCaseProvider);
+
+      // 1. Fetch initial location via REST
+      final initialResult = await getShipperLocationUseCase(shipperId);
+      initialResult.fold(
+        (failure) => AppLogger.w('Fetch initial location failed: ${failure.message}'),
+        (location) {
+          AppLogger.i('Fetched initial location for shipper: $shipperId');
+          state = state.copyWith(currentLocation: location);
+        },
+      );
+
+      // 2. Start real-time stream
       final streamResult = await trackShipperUseCase(
         TrackShipperParams(shipperId: shipperId),
       );

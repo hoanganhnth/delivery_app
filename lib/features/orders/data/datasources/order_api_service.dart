@@ -1,9 +1,9 @@
 import 'package:delivery_app/core/constants/api_constants.dart';
 import 'package:delivery_app/core/network/resources/base_response_dto.dart';
+import 'package:delivery_app/features/orders/data/dtos/order_dto.dart';
+import 'package:delivery_app/features/orders/data/dtos/create_order_request_dto.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import '../dtos/order_dto.dart';
-import '../dtos/create_order_request_dto.dart';
 
 part 'order_api_service.g.dart';
 
@@ -34,7 +34,6 @@ abstract class OrderApiService {
   //   @Body() Map<String, String> status,
   // );
 
-  /// Hủy đơn hàng
   /// Hủy đơn hàng
   @PUT('${ApiConstants.order}/{id}/cancel')
   Future<BaseResponseDto<OrderDto>> cancelOrder(@Path('id') int orderId);

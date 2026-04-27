@@ -3,15 +3,31 @@ import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/utils/logger/app_logger.dart';
 import '../datasources/shipper_location_datasource.dart';
+import '../datasources/shipper_location_remote_datasource.dart';
 import '../../domain/entities/shipper_location_entity.dart';
 import '../../domain/repositories/shipper_location_repository.dart';
 
 /// Repository implementation sử dụng trực tiếp DataSource
 class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
   final ShipperLocationDataSource _dataSource;
+  final ShipperLocationRemoteDataSource _remoteDataSource;
   String? _currentShipperId;
   
-  ShipperLocationRepositoryImpl(this._dataSource);
+  ShipperLocationRepositoryImpl(this._dataSource, this._remoteDataSource);
+  
+  @override
+  Future<Either<Failure, ShipperLocationEntity>> getShipperLocation(int shipperId) async {
+    try {
+      final response = await _remoteDataSource.getShipperLocation(shipperId);
+      if (response.data != null) {
+        return right(response.data!.toEntity());
+      } else {
+        return left(const ServerFailure('Không tìm thấy vị trí shipper'));
+      }
+    } catch (e) {
+      return left(ServerFailure(e.toString()));
+    }
+  }
   
   @override
   Stream<ShipperLocationEntity> get locationStream {

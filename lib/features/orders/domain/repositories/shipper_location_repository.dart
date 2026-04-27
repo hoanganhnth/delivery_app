@@ -9,6 +9,9 @@ abstract class ShipperLocationRepository {
   
   /// Bắt đầu theo dõi vị trí shipper
   Future<Either<Failure, void>> startTrackingShipper(int shipperId);
+
+  /// Lấy vị trí hiện tại của shipper (thông qua REST API)
+  Future<Either<Failure, ShipperLocationEntity>> getShipperLocation(int shipperId);
   
   /// Dừng theo dõi vị trí shipper
   Future<Either<Failure, void>> stopTrackingShipper();

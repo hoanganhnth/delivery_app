@@ -23,4 +23,8 @@ class ApiConstants {
   static const unreadNotifications = "$notifications/unread";
   static const unreadCount = "$notifications/unread-count";
   static const markAllRead = "$notifications/mark-all-read";
+
+  // Tracking
+  static const tracking = "/tracking";
+  static const shipperLocations = "$tracking/shipper-locations";
 }
