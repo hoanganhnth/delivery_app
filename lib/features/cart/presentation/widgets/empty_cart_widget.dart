@@ -1,3 +1,4 @@
+import 'package:delivery_app/core/routing/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -41,7 +42,7 @@ class EmptyCartWidget extends ConsumerWidget {
             ),
             SizedBox(height: 32.w),
             ElevatedButton.icon(
-              onPressed: () => Navigator.of(context).pushReplacementNamed('/restaurants'),
+              onPressed: () => context.pushToRestaurants(),
               icon: Icon(Icons.restaurant_menu),
               label: Text(S.of(context).browseRestaurants),
               style: ElevatedButton.styleFrom(

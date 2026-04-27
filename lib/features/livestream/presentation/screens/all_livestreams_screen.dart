@@ -64,62 +64,64 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
     return SafeArea(
       bottom: false,
       child: RefreshIndicator(
-          onRefresh: () async {
-            await ref.read(livestreamListProvider.notifier).loadLivestreams(refresh: true);
-          },
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Editorial Header
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
-                  child: EditorialHeader(
-                    subtitle: 'LIVE NOW',
-                    title: 'Foodie ',
-                    titleHighlight: 'Live',
-                    description: 'Watch chefs cook in real-time',
-                  ),
+        onRefresh: () async {
+          await ref
+              .read(livestreamListProvider.notifier)
+              .loadLivestreams(refresh: true);
+        },
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          // physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Editorial Header
+              Padding(
+                padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
+                child: EditorialHeader(
+                  subtitle: 'LIVE NOW',
+                  title: 'Foodie ',
+                  titleHighlight: 'Live',
+                  description: 'Watch chefs cook in real-time',
                 ),
+              ),
 
-                // Category Pills - Horizontal scroll
-                SizedBox(
-                  height: 100.h,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    itemCount: _categoryData.length,
-                    separatorBuilder: (_, __) => SizedBox(width: 12.w),
-                    itemBuilder: (context, index) {
-                      final category = _categoryData[index];
-                      final isActive = category['label'] == _selectedCategory;
-                      return CategoryPill(
-                        icon: category['icon'] as IconData,
-                        label: category['label'] as String,
-                        isActive: isActive,
-                        onTap: () {
-                          setState(() {
-                            _selectedCategory = category['label'] as String;
-                          });
-                          // TODO: Filter livestreams by category
-                        },
-                      );
-                    },
-                  ),
+              // Category Pills - Horizontal scroll
+              SizedBox(
+                height: 100.h,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  itemCount: _categoryData.length,
+                  separatorBuilder: (_, __) => SizedBox(width: 12.w),
+                  itemBuilder: (context, index) {
+                    final category = _categoryData[index];
+                    final isActive = category['label'] == _selectedCategory;
+                    return CategoryPill(
+                      icon: category['icon'] as IconData,
+                      label: category['label'] as String,
+                      isActive: isActive,
+                      onTap: () {
+                        setState(() {
+                          _selectedCategory = category['label'] as String;
+                        });
+                        // TODO: Filter livestreams by category
+                      },
+                    );
+                  },
                 ),
+              ),
 
-                SizedBox(height: 20.h),
+              SizedBox(height: 20.h),
 
-                // Content
-                _buildContent(context, theme, livestreamState),
+              // Content
+              _buildContent(context, theme, livestreamState),
 
-                // Bottom padding for navigation
-                SizedBox(height: 140.h),
-              ],
-            ),
+              // Bottom padding for navigation
+              SizedBox(height: 140.h),
+            ],
           ),
+        ),
       ),
     );
   }
@@ -220,10 +222,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
 
     // Empty state
     if (livestreamState.livestreams.isEmpty) {
-      return SizedBox(
-        height: 300.h,
-        child: _buildEmptyState(theme),
-      );
+      return SizedBox(height: 300.h, child: _buildEmptyState(theme));
     }
 
     // Livestream Grid - Staggered layout
@@ -310,7 +309,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
               ),
               SizedBox(height: 8.h),
               Text(
-                errorMessage ?? 'Unable to load livestreams',
+                _getFriendlyErrorMessage(errorMessage),
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -383,5 +382,29 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
         ),
       ),
     );
+  }
+
+  String _getFriendlyErrorMessage(String? error) {
+    if (error == null) return 'Không thể tải danh sách livestream';
+
+    final lowerError = error.toLowerCase();
+
+    if (lowerError.contains('dioexception') ||
+        lowerError.contains('network') ||
+        lowerError.contains('connection')) {
+      return 'Lỗi kết nối mạng. Vui lòng kiểm tra lại internet của bạn.';
+    }
+
+    if (lowerError.contains('serverexception') ||
+        lowerError.contains('500') ||
+        lowerError.contains('bad response')) {
+      return 'Máy chủ đang gặp sự cố. Vui lòng thử lại sau ít phút.';
+    }
+
+    if (lowerError.contains('unauthorized') || lowerError.contains('401')) {
+      return 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
+    }
+
+    return 'Đã có lỗi xảy ra. Vui lòng thử lại.';
   }
 }
