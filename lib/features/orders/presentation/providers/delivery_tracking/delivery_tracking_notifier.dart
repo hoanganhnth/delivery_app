@@ -6,8 +6,10 @@ import '../../../domain/usecases/tracking_usecases.dart';
 import '../../../domain/usecases/get_current_delivery_usecase.dart';
 import 'delivery_tracking_providers.dart';
 import '../shipper_providers.dart';
-
 import 'delivery_tracking_state.dart';
+import '../../../data/services/mapbox_map_service.dart';
+import '../../../domain/entities/delivery_status.dart';
+import '../../../domain/entities/delivery_tracking_entity.dart';
 
 part 'delivery_tracking_notifier.g.dart';
 
@@ -29,31 +31,6 @@ class DeliveryTracking extends _$DeliveryTracking {
     });
     return const DeliveryTrackingState();
   }
-
-  // /// Kết nối đến service thông qua UseCase
-  // Future<void> connect() async {
-  //   try {
-  //     state = state.copyWith(isLoading: true, clearError: true);
-  //     AppLogger.i('Connecting to delivery tracking...');
-
-  //     final result = await _connectUseCase(NoParams());
-
-  //     result.fold(
-  //       (failure) {
-  //         state = state.copyWith(isLoading: false, error: failure.message);
-  //       },
-  //       (_) {
-  //         state = state.copyWith(isLoading: false, isConnected: true);
-  //       },
-  //     );
-  //   } catch (e) {
-  //     AppLogger.e('Failed to connect delivery tracking', e);
-  //     state = state.copyWith(
-  //       isLoading: false,
-  //       error: 'Không thể kết nối dịch vụ theo dõi delivery',
-  //     );
-  //   }
-  // }
 
   /// Bắt đầu theo dõi order - ưu tiên sử dụng getCurrentDelivery trước
   Future<void> startTrackingOrderSafe(
@@ -99,24 +76,28 @@ class DeliveryTracking extends _$DeliveryTracking {
             isConnected: true,
           );
 
-          // ✅ Cancel subscription cũ trước khi subscribe mới — tránh nhận data cũ lẫk ra
+          // ✅ Cancel subscription cũ trước khi subscribe mới — tránh nhận data cũ lọt ra
           _deliverySubscription?.cancel();
           _deliverySubscription = deliveryStream.listen(
             (delivery) {
               AppLogger.d(
-                'Received delivery tracking: Order ${delivery.orderId}, Shipper ${delivery.shipperId}',
+                'Received delivery tracking: Order ${delivery.orderId}, Status ${delivery.status}',
               );
 
               // Cập nhật delivery tracking
+              state = state.copyWith(
+                currentTracking: delivery,
+                clearError: true,
+              );
+
               // Lấy thông tin shipper nếu là shipper ID mới
               if (delivery.shipperId != null &&
                   delivery.shipperId != state.currentShipperId) {
                 _fetchShipperInfoIfNeeded(delivery.shipperId!);
               }
-              state = state.copyWith(
-                currentTracking: delivery,
-                clearError: true,
-              );
+
+              // ✅ Cập nhật route polyline dựa trên vị trí mới
+              _updateRoutePoints(delivery);
             },
             onError: (error) {
               state = state.copyWith(
@@ -161,6 +142,7 @@ class DeliveryTracking extends _$DeliveryTracking {
             isTracking: false,
             clearTracking: true,
             clearError: true,
+            clearPolyline: true,
           );
         },
       );
@@ -277,6 +259,9 @@ class DeliveryTracking extends _$DeliveryTracking {
           if (delivery.shipperId != null) {
             _fetchShipperInfoIfNeeded(delivery.shipperId!);
           }
+
+          // ✅ Cập nhật route polyline ban đầu
+          _updateRoutePoints(delivery);
         },
       );
     } catch (e) {
@@ -289,10 +274,63 @@ class DeliveryTracking extends _$DeliveryTracking {
     }
   }
 
-  /// Get mock shipper info (deprecated - use real API)
-  @Deprecated('Use _fetchShipperInfoIfNeeded instead')
-  dynamic getMockShipper() {
-    AppLogger.w('getMockShipper called - should use _fetchShipperInfoIfNeeded');
-    return null;
+  /// ✅ Cập nhật danh sách toạ độ vẽ đường đi (Polyline) từ Mapbox
+  Future<void> _updateRoutePoints(DeliveryTrackingEntity delivery) async {
+    // Nếu chưa có shipper hoặc đã giao xong thì xóa polyline
+    if (delivery.shipperId == null ||
+        delivery.status == DeliveryStatus.delivered ||
+        delivery.status == DeliveryStatus.cancelled) {
+      if (state.polylinePoints != null) {
+        state = state.copyWith(clearPolyline: true);
+      }
+      return;
+    }
+
+    // Cần có vị trí shipper hiện tại để vẽ route
+    if (delivery.shipperCurrentLat == null ||
+        delivery.shipperCurrentLng == null) {
+      return;
+    }
+
+    try {
+      final origin = [delivery.shipperCurrentLng!, delivery.shipperCurrentLat!];
+      List<double> destination;
+
+      // Xác định điểm đến dựa trên trạng thái
+      if (delivery.status == DeliveryStatus.assigned) {
+        // Đang đi lấy hàng -> Đích là nhà hàng
+        destination = [delivery.pickupLng, delivery.pickupLat];
+      } else {
+        // Đã lấy hàng -> Đích là nhà khách
+        destination = [delivery.deliveryLng, delivery.deliveryLat];
+      }
+
+      // Gọi Mapbox Service qua Provider
+      final mapboxService = ref.read(mapboxMapServiceProvider);
+      final directions = await mapboxService.getDirections(
+        origin: origin,
+        destination: destination,
+      );
+
+      if (directions['routes'] != null &&
+          (directions['routes'] as List).isNotEmpty) {
+        final route = (directions['routes'] as List).first;
+        final geometry = route['geometry'];
+
+        if (geometry != null && geometry['coordinates'] != null) {
+          final List<dynamic> coords = geometry['coordinates'];
+          final polylinePoints = coords
+              .map((c) => [c[0] as double, c[1] as double])
+              .toList()
+              .cast<List<double>>();
+
+          state = state.copyWith(polylinePoints: polylinePoints);
+          AppLogger.d('✅ Updated route polyline: ${polylinePoints.length} points');
+        }
+      }
+    } catch (e) {
+      AppLogger.e('Error updating route points: $e');
+      // Không set error state ở đây để tránh làm phiền người dùng nếu lỗi Mapbox
+    }
   }
 }

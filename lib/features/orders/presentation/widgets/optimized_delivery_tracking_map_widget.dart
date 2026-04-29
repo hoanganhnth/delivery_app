@@ -12,6 +12,7 @@ import '../../domain/entities/shipper_entity.dart';
 import '../../domain/entities/shipper_location_entity.dart';
 import '../services/fake_shipper_movement_service.dart';
 import '../services/mapbox_map_service.dart';
+import '../services/i_map_service.dart';
 import '../providers/providers.dart';
 
 /// Widget tối ưu để hiển thị bản đồ theo dõi delivery với MapBox
@@ -36,7 +37,7 @@ class OptimizedDeliveryTrackingMapWidget extends ConsumerStatefulWidget {
 class _OptimizedDeliveryTrackingMapWidgetState
     extends ConsumerState<OptimizedDeliveryTrackingMapWidget> {
   // Services để tách logic riêng biệt
-  late MapboxMapService _mapService;
+  late IMapService<MapboxMap, CameraOptions> _mapService;
   FakeShipperMovementService? _movementService;
 
   // Map states
@@ -96,6 +97,17 @@ class _OptimizedDeliveryTrackingMapWidgetState
           });
         }
       }
+    }
+
+    // ✅ Lắng nghe và vẽ polyline route
+    final polylinePoints =
+        ref.watch(deliveryTrackingProvider.select((s) => s.polylinePoints));
+    if (_isMapInitialized && polylinePoints != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _mapService.drawRoute(polylinePoints);
+        }
+      });
     }
 
     return _buildAnimatedMapWidget();
@@ -326,6 +338,12 @@ class _OptimizedDeliveryTrackingMapWidgetState
         if (currentLocation != null) {
           await _mapService.updateShipperMarker(currentLocation);
         }
+      }
+
+      // ✅ Vẽ route ban đầu nếu có sẵn
+      final initialPolyline = ref.read(deliveryTrackingProvider).polylinePoints;
+      if (initialPolyline != null) {
+        await _mapService.drawRoute(initialPolyline);
       }
 
       AppLogger.i('Map initialization completed');

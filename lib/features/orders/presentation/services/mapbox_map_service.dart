@@ -5,25 +5,31 @@ import 'package:flutter/material.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import '../../../../core/utils/logger/app_logger.dart';
 import '../../domain/entities/shipper_location_entity.dart';
+import 'i_map_service.dart';
 
 /// Service để quản lý các thao tác với MapBox
-class MapboxMapService {
+class MapboxMapService implements IMapService<MapboxMap, CameraOptions> {
   MapboxMap? _mapboxMap;
   PointAnnotationManager? _pointAnnotationManager;
+  PolylineAnnotationManager? _polylineAnnotationManager;
 
   // Markers
   PointAnnotation? _shipperMarker;
 
+  @override
   bool get isInitialized =>
       _mapboxMap != null && _pointAnnotationManager != null;
 
   /// Khởi tạo map và annotation manager
+  @override
   Future<void> initializeMap(MapboxMap mapboxMap) async {
     try {
       _mapboxMap = mapboxMap;
       _pointAnnotationManager = await _mapboxMap!.annotations
           .createPointAnnotationManager();
-      AppLogger.d('MapBox map initialized successfully');
+      _polylineAnnotationManager = await _mapboxMap!.annotations
+          .createPolylineAnnotationManager();
+      AppLogger.d('MapBox map initialized successfully (Markers & Polylines)');
     } catch (e) {
       AppLogger.e('Error initializing MapBox map', e);
       rethrow;
@@ -82,6 +88,7 @@ class MapboxMapService {
   }
 
   /// Thêm pickup và delivery markers
+  @override
   Future<void> addDeliveryMarkers({
     required double pickupLat,
     required double pickupLng,
@@ -125,6 +132,7 @@ class MapboxMapService {
   }
 
   /// Cập nhật vị trí shipper marker
+  @override
   Future<void> updateShipperMarker(ShipperLocationEntity location) async {
     if (!isInitialized) {
       AppLogger.w('Map not initialized, cannot update shipper marker');
@@ -160,7 +168,40 @@ class MapboxMapService {
     }
   }
 
+  /// Vẽ đường đi (Route) từ danh sách toạ độ
+  @override
+  Future<void> drawRoute(List<List<double>> points) async {
+    if (!isInitialized || _polylineAnnotationManager == null) {
+      AppLogger.w('Map not initialized, cannot draw route');
+      return;
+    }
+
+    try {
+      // Xóa tất cả polyline cũ
+      await _polylineAnnotationManager!.deleteAll();
+
+      if (points.isEmpty) return;
+
+      // Tạo polyline mới
+      await _polylineAnnotationManager!.create(
+        PolylineAnnotationOptions(
+          geometry: LineString(
+            coordinates: points.map((p) => Position(p[0], p[1])).toList(),
+          ),
+          lineColor: Colors.blue.withValues(alpha: 0.8).value,
+          lineWidth: 5.0,
+          lineJoin: LineJoin.ROUND,
+        ),
+      );
+
+      AppLogger.d('Route polyline drawn: ${points.length} points');
+    } catch (e) {
+      AppLogger.e('Error drawing route polyline', e);
+    }
+  }
+
   /// Di chuyển camera đến vị trí cụ thể
+  @override
   Future<void> moveCamera({
     required double latitude,
     required double longitude,
@@ -184,6 +225,7 @@ class MapboxMapService {
   }
 
   /// Fit camera để hiển thị tất cả markers
+  @override
   Future<void> fitBoundsToMarkers({
     required double pickupLat,
     required double pickupLng,
@@ -279,6 +321,7 @@ class MapboxMapService {
     return true;
   }
 
+  @override
   CameraOptions getInitialCameraPosition({
     double? pickupLat,
     double? pickupLng,
@@ -316,9 +359,11 @@ class MapboxMapService {
   }
 
   /// Cleanup khi không cần dùng nữa
+  @override
   void dispose() {
     _mapboxMap = null;
     _pointAnnotationManager = null;
+    _polylineAnnotationManager = null;
     _shipperMarker = null;
     AppLogger.d('MapboxMapService disposed');
   }
