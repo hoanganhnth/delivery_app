@@ -36,7 +36,7 @@ Map<String, dynamic> _$OrderDtoToJson(_OrderDto instance) => <String, dynamic>{
   'customerPhone': instance.customerPhone,
   'deliveryAddress': instance.deliveryAddress,
   'paymentMethod': instance.paymentMethod,
-  'totalAmount': instance.totalAmount,
+  'totalPrice': instance.totalAmount,
   'notes': instance.notes,
   'items': instance.items,
   'createdAt': instance.createdAt?.toIso8601String(),

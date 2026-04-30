@@ -39,7 +39,7 @@ final class CartNotifierProvider
   CartNotifier create() => CartNotifier();
 }
 
-String _$cartNotifierHash() => r'3771b0082cbfa5d8adda9c17b1ed1c13fb4eddb4';
+String _$cartNotifierHash() => r'e77a91e85bf06fd7c7864a6ce1e3109442a05937';
 
 /// Cart notifier for state management using AsyncNotifier
 /// Returns CartEntity directly, AsyncValue handles loading/error states

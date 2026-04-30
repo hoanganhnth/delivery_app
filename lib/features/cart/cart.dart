@@ -20,4 +20,5 @@ export 'presentation/providers/providers.dart'; // Barrel export for all provide
 export 'presentation/screens/cart_screen.dart';
 export 'presentation/screens/checkout_screen.dart';
 export 'presentation/screens/payment_screen.dart';
+export 'presentation/screens/payment_webview_screen.dart';
 export 'presentation/screens/order_confirmation_screen.dart';

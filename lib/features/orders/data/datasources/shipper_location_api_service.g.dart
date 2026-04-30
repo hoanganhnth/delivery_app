@@ -2,11 +2,13 @@
 
 part of 'shipper_location_api_service.dart';
 
+// dart format off
+
 // **************************************************************************
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main
 
 class _ShipperLocationApiService implements ShipperLocationApiService {
   _ShipperLocationApiService(this._dio, {this.baseUrl, this.errorLogger});
@@ -25,25 +27,29 @@ class _ShipperLocationApiService implements ShipperLocationApiService {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<BaseResponseDto<ShipperLocationResponseDto>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/tracking/shipper-locations/${shipperId}',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
+    final _options =
+        _setStreamType<BaseResponseDto<ShipperLocationResponseDto>>(
+          Options(method: 'GET', headers: _headers, extra: _extra)
+              .compose(
+                _dio.options,
+                '/tracking/shipper-locations/${shipperId}',
+                queryParameters: queryParameters,
+                data: _data,
+              )
+              .copyWith(
+                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
+              ),
+        );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
     late BaseResponseDto<ShipperLocationResponseDto> _value;
     try {
       _value = BaseResponseDto<ShipperLocationResponseDto>.fromJson(
         _result.data!,
-        (json) => ShipperLocationResponseDto.fromJson(json as Map<String, dynamic>),
+        (json) =>
+            ShipperLocationResponseDto.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     return _value;
@@ -76,3 +82,5 @@ class _ShipperLocationApiService implements ShipperLocationApiService {
     return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }
+
+// dart format on

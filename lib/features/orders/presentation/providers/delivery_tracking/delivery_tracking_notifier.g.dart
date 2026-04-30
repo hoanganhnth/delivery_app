@@ -44,7 +44,7 @@ final class DeliveryTrackingProvider
   }
 }
 
-String _$deliveryTrackingHash() => r'074a2c8e4bad412734160dbef58fce96f77b1507';
+String _$deliveryTrackingHash() => r'cdc4ab7a0bd7d542cefc85950c05a3f8acfd4edb';
 
 /// Notifier để quản lý delivery tracking
 

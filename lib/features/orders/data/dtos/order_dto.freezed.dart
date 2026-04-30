@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$OrderDto {
 
- int? get id; String get status; String get customerName; String get customerPhone; String get deliveryAddress; String get paymentMethod; double? get totalAmount; String? get notes; List<OrderItemDto>? get items; DateTime? get createdAt; DateTime? get updatedAt; DateTime? get estimatedDeliveryTime;
+ int? get id; String get status; String get customerName; String get customerPhone; String get deliveryAddress; String get paymentMethod;@JsonKey(name: 'totalPrice') double? get totalAmount; String? get notes; List<OrderItemDto>? get items; DateTime? get createdAt; DateTime? get updatedAt; DateTime? get estimatedDeliveryTime;
 /// Create a copy of OrderDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $OrderDtoCopyWith<$Res>  {
   factory $OrderDtoCopyWith(OrderDto value, $Res Function(OrderDto) _then) = _$OrderDtoCopyWithImpl;
 @useResult
 $Res call({
- int? id, String status, String customerName, String customerPhone, String deliveryAddress, String paymentMethod, double? totalAmount, String? notes, List<OrderItemDto>? items, DateTime? createdAt, DateTime? updatedAt, DateTime? estimatedDeliveryTime
+ int? id, String status, String customerName, String customerPhone, String deliveryAddress, String paymentMethod,@JsonKey(name: 'totalPrice') double? totalAmount, String? notes, List<OrderItemDto>? items, DateTime? createdAt, DateTime? updatedAt, DateTime? estimatedDeliveryTime
 });
 
 
@@ -164,7 +164,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String status,  String customerName,  String customerPhone,  String deliveryAddress,  String paymentMethod,  double? totalAmount,  String? notes,  List<OrderItemDto>? items,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? estimatedDeliveryTime)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String status,  String customerName,  String customerPhone,  String deliveryAddress,  String paymentMethod, @JsonKey(name: 'totalPrice')  double? totalAmount,  String? notes,  List<OrderItemDto>? items,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? estimatedDeliveryTime)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _OrderDto() when $default != null:
 return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_that.deliveryAddress,_that.paymentMethod,_that.totalAmount,_that.notes,_that.items,_that.createdAt,_that.updatedAt,_that.estimatedDeliveryTime);case _:
@@ -185,7 +185,7 @@ return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String status,  String customerName,  String customerPhone,  String deliveryAddress,  String paymentMethod,  double? totalAmount,  String? notes,  List<OrderItemDto>? items,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? estimatedDeliveryTime)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String status,  String customerName,  String customerPhone,  String deliveryAddress,  String paymentMethod, @JsonKey(name: 'totalPrice')  double? totalAmount,  String? notes,  List<OrderItemDto>? items,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? estimatedDeliveryTime)  $default,) {final _that = this;
 switch (_that) {
 case _OrderDto():
 return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_that.deliveryAddress,_that.paymentMethod,_that.totalAmount,_that.notes,_that.items,_that.createdAt,_that.updatedAt,_that.estimatedDeliveryTime);case _:
@@ -205,7 +205,7 @@ return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String status,  String customerName,  String customerPhone,  String deliveryAddress,  String paymentMethod,  double? totalAmount,  String? notes,  List<OrderItemDto>? items,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? estimatedDeliveryTime)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String status,  String customerName,  String customerPhone,  String deliveryAddress,  String paymentMethod, @JsonKey(name: 'totalPrice')  double? totalAmount,  String? notes,  List<OrderItemDto>? items,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? estimatedDeliveryTime)?  $default,) {final _that = this;
 switch (_that) {
 case _OrderDto() when $default != null:
 return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_that.deliveryAddress,_that.paymentMethod,_that.totalAmount,_that.notes,_that.items,_that.createdAt,_that.updatedAt,_that.estimatedDeliveryTime);case _:
@@ -220,7 +220,7 @@ return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_th
 @JsonSerializable()
 
 class _OrderDto implements OrderDto {
-  const _OrderDto({this.id, required this.status, required this.customerName, required this.customerPhone, required this.deliveryAddress, required this.paymentMethod, this.totalAmount, this.notes, final  List<OrderItemDto>? items, this.createdAt, this.updatedAt, this.estimatedDeliveryTime}): _items = items;
+  const _OrderDto({this.id, required this.status, required this.customerName, required this.customerPhone, required this.deliveryAddress, required this.paymentMethod, @JsonKey(name: 'totalPrice') this.totalAmount, this.notes, final  List<OrderItemDto>? items, this.createdAt, this.updatedAt, this.estimatedDeliveryTime}): _items = items;
   factory _OrderDto.fromJson(Map<String, dynamic> json) => _$OrderDtoFromJson(json);
 
 @override final  int? id;
@@ -229,7 +229,7 @@ class _OrderDto implements OrderDto {
 @override final  String customerPhone;
 @override final  String deliveryAddress;
 @override final  String paymentMethod;
-@override final  double? totalAmount;
+@override@JsonKey(name: 'totalPrice') final  double? totalAmount;
 @override final  String? notes;
  final  List<OrderItemDto>? _items;
 @override List<OrderItemDto>? get items {
@@ -277,7 +277,7 @@ abstract mixin class _$OrderDtoCopyWith<$Res> implements $OrderDtoCopyWith<$Res>
   factory _$OrderDtoCopyWith(_OrderDto value, $Res Function(_OrderDto) _then) = __$OrderDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, String status, String customerName, String customerPhone, String deliveryAddress, String paymentMethod, double? totalAmount, String? notes, List<OrderItemDto>? items, DateTime? createdAt, DateTime? updatedAt, DateTime? estimatedDeliveryTime
+ int? id, String status, String customerName, String customerPhone, String deliveryAddress, String paymentMethod,@JsonKey(name: 'totalPrice') double? totalAmount, String? notes, List<OrderItemDto>? items, DateTime? createdAt, DateTime? updatedAt, DateTime? estimatedDeliveryTime
 });
 
 

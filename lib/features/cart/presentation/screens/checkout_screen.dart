@@ -1,5 +1,5 @@
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
-import 'package:go_router/go_router.dart';
+import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/features/cart/presentation/widgets/checkout_empty_state.dart';
 import 'package:delivery_app/features/cart/presentation/widgets/checkout_section_card.dart';
@@ -14,14 +14,32 @@ import '../../../user_address/presentation/providers/providers.dart';
 import '../providers/providers.dart';
 import '../widgets/widgets.dart';
 import '../../domain/entities/cart_entity.dart';
+import 'package:delivery_app/features/cart/presentation/providers/payment_provider.dart';
+import 'package:delivery_app/features/cart/data/dtos/payment_order_dto.dart';
+import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
+import 'payment_webview_screen.dart';
 
 /// Checkout Screen với giao diện Amber Hearth
-class CheckoutScreen extends ConsumerWidget {
+class CheckoutScreen extends ConsumerStatefulWidget {
   const CheckoutScreen({super.key});
+
+  @override
+  ConsumerState<CheckoutScreen> createState() => _CheckoutScreenState();
+}
+
+class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
+  PaymentMethod _selectedPaymentMethod = PaymentMethod.cod;
+  final TextEditingController _notesController = TextEditingController();
+
+  @override
+  void dispose() {
+    _notesController.dispose();
+    super.dispose();
+  }
 
   // Amber Hearth design tokens
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final cartAsyncValue = ref.watch(cartProvider);
     final createOrderState = ref.watch(createOrderProvider);
 
@@ -129,8 +147,12 @@ class CheckoutScreen extends ConsumerWidget {
                         SizedBox(height: 8.w),
                         CheckoutSectionCard(
                           child: PaymentMethodCard(
-                            selectedPaymentMethod: PaymentMethod.cod,
-                            onPaymentMethodChanged: (method) {},
+                            selectedPaymentMethod: _selectedPaymentMethod,
+                            onPaymentMethodChanged: (method) {
+                              setState(() {
+                                _selectedPaymentMethod = method;
+                              });
+                            },
                           ),
                         ),
                         SizedBox(height: 16.w),
@@ -154,7 +176,7 @@ class CheckoutScreen extends ConsumerWidget {
                         SizedBox(height: 8.w),
                         CheckoutSectionCard(
                           child: NotesCard(
-                            notesController: TextEditingController(),
+                            notesController: _notesController,
                           ),
                         ),
 
@@ -168,8 +190,9 @@ class CheckoutScreen extends ConsumerWidget {
                 // Bottom Checkout Section
                 CheckoutBottomSection(
                   cart: cart,
-                  isLoading: createOrderState.isLoading,
-                  onPlaceOrder: () => _placeOrder(context, ref, cart),
+                  isLoading: createOrderState.isLoading || ref.watch(paymentProvider).isLoading,
+                  buttonText: _selectedPaymentMethod == PaymentMethod.wallet ? 'Thanh toán' : 'Đặt hàng',
+                  onPlaceOrder: () => _placeOrder(cart),
                 ),
               ],
             ),
@@ -179,9 +202,9 @@ class CheckoutScreen extends ConsumerWidget {
     );
   }
 
-  void _placeOrder(BuildContext context, WidgetRef ref, CartEntity cart) {
+  Future<void> _placeOrder(CartEntity cart) async {
     final addressState = ref.read(userAddressListProvider);
-    final selectedAddress = addressState.defaultAddress;
+    final selectedAddress = addressState.selectedAddress ?? addressState.defaultAddress;
 
     if (selectedAddress != null && cart.currentRestaurantId != null) {
       final request = CreateOrderRequestDto(
@@ -194,8 +217,8 @@ class CheckoutScreen extends ConsumerWidget {
         deliveryLng: selectedAddress.longitude,
         customerName: selectedAddress.recipientName,
         customerPhone: selectedAddress.phoneNumber,
-        paymentMethod: 'COD',
-        notes: '',
+        paymentMethod: _selectedPaymentMethod == PaymentMethod.wallet ? 'ONLINE' : 'COD',
+        notes: _notesController.text,
         items: cart.items
             .map<OrderItemRequest>(
               (item) => OrderItemRequest(
@@ -207,7 +230,49 @@ class CheckoutScreen extends ConsumerWidget {
             )
             .toList(),
       );
-      ref.read(createOrderProvider.notifier).createOrder(request);
+
+      if (_selectedPaymentMethod == PaymentMethod.wallet) {
+        // Xử lý luồng thanh toán ONLINE
+        try {
+          final user = ref.read(profileProvider).user;
+          if (user == null) {
+            ToastUtils.showOrderPlacedError(context, message: 'Lỗi: Không tìm thấy thông tin người dùng.');
+            return;
+          }
+
+          final paymentDto = CreatePaymentDto(
+            entityId: user.id!,
+            entityType: 'CUSTOMER',
+            amount: cart.totalAmount,
+            provider: 'VNPAY', // Cố định VNPay cho luồng này (hoặc có thể FAKE)
+            purpose: 'ORDER_PAYMENT',
+          );
+
+          final paymentOrder = await ref.read(paymentProvider.notifier).createPayment(paymentDto);
+          
+          if (paymentOrder != null && paymentOrder.paymentUrl != null) {
+            if (mounted) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => PaymentWebViewScreen(
+                    paymentUrl: paymentOrder.paymentUrl!,
+                    paymentRef: paymentOrder.paymentRef,
+                    cart: cart,
+                    orderRequest: request,
+                  ),
+                ),
+              );
+            }
+          } else {
+             if (mounted) ToastUtils.showOrderPlacedError(context, message: 'Lỗi: Không lấy được URL thanh toán.');
+          }
+        } catch (e) {
+          if (mounted) ToastUtils.showOrderPlacedError(context, message: e.toString());
+        }
+      } else {
+        // COD - Tạo đơn trực tiếp
+        ref.read(createOrderProvider.notifier).createOrder(request);
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

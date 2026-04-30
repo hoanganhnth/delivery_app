@@ -86,7 +86,7 @@ final class CancelOrderProvider
   CancelOrder create() => CancelOrder();
 }
 
-String _$cancelOrderHash() => r'18f60b725dbfa1214f1fae816666f149b74c861f';
+String _$cancelOrderHash() => r'ec499cc0499486a16babcedb13a40ad96bb0ccd2';
 
 /// AsyncNotifier cho việc hủy đơn hàng
 

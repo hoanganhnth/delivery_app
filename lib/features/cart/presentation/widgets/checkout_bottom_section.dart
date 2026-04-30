@@ -9,12 +9,14 @@ class CheckoutBottomSection extends ConsumerWidget {
   final CartEntity cart;
   final bool isLoading;
   final VoidCallback onPlaceOrder;
+  final String buttonText;
 
   const CheckoutBottomSection({
     super.key,
     required this.cart,
     required this.isLoading,
     required this.onPlaceOrder,
+    this.buttonText = 'Đặt hàng',
   });
 
   @override
@@ -78,7 +80,7 @@ class CheckoutBottomSection extends ConsumerWidget {
                       ),
                     )
                   : Text(
-                      'Đặt hàng',
+                      buttonText,
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,

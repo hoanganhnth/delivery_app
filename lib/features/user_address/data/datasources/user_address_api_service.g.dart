@@ -2,11 +2,13 @@
 
 part of 'user_address_api_service.dart';
 
+// dart format off
+
 // **************************************************************************
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main
 
 class _UserAddressApiService implements UserAddressApiService {
   _UserAddressApiService(this._dio, {this.baseUrl, this.errorLogger});
@@ -54,7 +56,7 @@ class _UserAddressApiService implements UserAddressApiService {
             : List.empty(),
       );
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     return _value;
@@ -86,7 +88,7 @@ class _UserAddressApiService implements UserAddressApiService {
         (json) => UserAddressResponseDto.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     return _value;
@@ -119,7 +121,7 @@ class _UserAddressApiService implements UserAddressApiService {
         (json) => UserAddressResponseDto.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     return _value;
@@ -152,7 +154,7 @@ class _UserAddressApiService implements UserAddressApiService {
         (json) => UserAddressResponseDto.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     return _value;
@@ -179,7 +181,7 @@ class _UserAddressApiService implements UserAddressApiService {
     try {
       _value = BaseResponseDto<void>.fromJson(_result.data!, (json) => () {}());
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     return _value;
@@ -211,7 +213,7 @@ class _UserAddressApiService implements UserAddressApiService {
         (json) => UserAddressResponseDto.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     return _value;
@@ -244,3 +246,5 @@ class _UserAddressApiService implements UserAddressApiService {
     return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }
+
+// dart format on
