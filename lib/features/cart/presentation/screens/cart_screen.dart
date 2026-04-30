@@ -24,6 +24,44 @@ class CartScreen extends ConsumerStatefulWidget {
 class _CartScreenState extends ConsumerState<CartScreen> {
   // Amber Hearth design tokens
   @override
+  void initState() {
+    super.initState();
+    // Đồng bộ giá khi mở cart screen
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _syncPrices();
+    });
+  }
+
+  Future<void> _syncPrices() async {
+    try {
+      final result = await ref.read(cartProvider.notifier).syncPricesWithServer();
+      if (!mounted || !result.hasChanges) return;
+
+      final messages = <String>[];
+      for (final change in result.priceChanges) {
+        final diff = change.priceIncreased ? 'tăng' : 'giảm';
+        messages.add('${change.itemName}: $diff giá');
+      }
+      if (result.unavailableItemIds.isNotEmpty) {
+        messages.add('${result.unavailableItemIds.length} món đã hết hàng (đã xoá)');
+      }
+
+      if (messages.isNotEmpty && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(messages.join('\n')),
+            duration: const Duration(seconds: 4),
+            backgroundColor: const Color(0xFFD97706),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (_) {
+      // Sync fail silently
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final cartAsyncValue = ref.watch(cartProvider);
     final cartNotifier = ref.read(cartProvider.notifier);
