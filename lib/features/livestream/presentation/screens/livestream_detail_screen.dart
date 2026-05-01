@@ -9,6 +9,7 @@ import '../providers/providers.dart';
 import '../widgets/livestream_bottom_controls.dart';
 import '../widgets/livestream_comments_list.dart';
 import '../widgets/livestream_like_animation.dart';
+import '../widgets/livestream_pinned_product_overlay.dart';
 import '../widgets/livestream_product_sheet.dart';
 import '../widgets/livestream_top_bar.dart';
 import '../widgets/livestream_video_view.dart';
@@ -288,6 +289,18 @@ class _LivestreamWatchingViewState
             ],
           ),
         ),
+
+        // Pinned product overlay — appears when host pins a product
+        if (livestream.products != null && livestream.products!.isNotEmpty)
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 140.w,
+            child: LivestreamPinnedProductOverlay(
+              key: ValueKey(livestream.products!.first.id),
+              product: livestream.products!.first,
+            ),
+          ),
 
         // Like animations — isolated with RepaintBoundary
         RepaintBoundary(

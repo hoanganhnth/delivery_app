@@ -26,4 +26,5 @@ export 'presentation/widgets/livestream_card_horizontal.dart';
 export 'presentation/widgets/livestream_card_grid.dart';
 export 'presentation/widgets/livestream_comment_item.dart';
 export 'presentation/widgets/livestream_like_animation.dart';
+export 'presentation/widgets/livestream_pinned_product_overlay.dart';
 export 'presentation/widgets/livestream_product_sheet.dart';

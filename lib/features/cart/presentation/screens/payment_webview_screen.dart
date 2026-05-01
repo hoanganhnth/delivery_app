@@ -50,8 +50,8 @@ class _PaymentWebViewScreenState extends ConsumerState<PaymentWebViewScreen> {
           },
           onNavigationRequest: (NavigationRequest request) {
             // Check if we hit the callback URL (the backend redirect)
-            if (request.url.contains('/api/settlement/payments/vnpay_ipn') || 
-                request.url.contains('/api/settlement/payments/vnpay-callback') ||
+            // VNPay will redirect to vnpay-callback after user interaction
+            if (request.url.contains('vnpay-callback') || 
                 request.url.contains('vnp_ResponseCode')) {
               
               _handlePaymentCallback(request.url);
