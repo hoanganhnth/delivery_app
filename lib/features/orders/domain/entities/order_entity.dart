@@ -126,6 +126,7 @@ class OrderEntity extends Equatable {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final DateTime? estimatedDeliveryTime;
+  final int? shipperId;
 
   const OrderEntity({
     this.id,
@@ -141,6 +142,7 @@ class OrderEntity extends Equatable {
     this.createdAt,
     this.updatedAt,
     this.estimatedDeliveryTime,
+    this.shipperId,
   });
 
   /// Get formatted status text
@@ -209,6 +211,7 @@ class OrderEntity extends Equatable {
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? estimatedDeliveryTime,
+    int? shipperId,
   }) {
     return OrderEntity(
       id: id ?? this.id,
@@ -225,6 +228,7 @@ class OrderEntity extends Equatable {
       updatedAt: updatedAt ?? this.updatedAt,
       estimatedDeliveryTime:
           estimatedDeliveryTime ?? this.estimatedDeliveryTime,
+      shipperId: shipperId ?? this.shipperId,
     );
   }
 
@@ -239,7 +243,7 @@ class OrderEntity extends Equatable {
 
   @override
   String toString() {
-    return 'OrderEntity(id: $id, customerName: $customerName, status: $status, totalAmount: $totalAmount)';
+    return 'OrderEntity(id: $id, customerName: $customerName, status: $status, totalAmount: $totalAmount, shipperId: $shipperId)';
   }
 
   @override
@@ -257,5 +261,6 @@ class OrderEntity extends Equatable {
     createdAt,
     updatedAt,
     estimatedDeliveryTime,
+    shipperId,
   ];
 }

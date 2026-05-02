@@ -126,34 +126,34 @@ class AddressItemWidget extends ConsumerWidget {
                         }
                       },
                       itemBuilder: (context) => [
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'edit',
                           child: Row(
                             children: [
-                              Icon(Icons.edit, size: 18),
-                              SizedBox(width: 8),
+                              const Icon(Icons.edit, size: 18),
+                              const SizedBox(width: 8),
                               Text(S.of(context).editAddress),
                             ],
                           ),
                         ),
                         if (!address.isDefault)
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'set_default',
                             child: Row(
                               children: [
-                                Icon(Icons.star, size: 18),
-                                SizedBox(width: 8),
+                                const Icon(Icons.star, size: 18),
+                                const SizedBox(width: 8),
                                 Text(S.of(context).setAsDefault),
                               ],
                             ),
                           ),
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'delete',
                           child: Row(
                             children: [
-                              Icon(Icons.delete, size: 18, color: Colors.red),
-                              SizedBox(width: 8),
-                              Text(S.of(context).confirmDeleteAddressBtn, style: TextStyle(color: Colors.red)),
+                              const Icon(Icons.delete, size: 18, color: Colors.red),
+                              const SizedBox(width: 8),
+                              Text(S.of(context).confirmDeleteAddressBtn, style: const TextStyle(color: Colors.red)),
                             ],
                           ),
                         ),

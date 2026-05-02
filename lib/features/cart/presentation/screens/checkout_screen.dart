@@ -18,6 +18,10 @@ import '../../domain/entities/cart_entity.dart';
 import 'package:delivery_app/features/cart/presentation/providers/payment_provider.dart';
 import 'package:delivery_app/features/cart/data/dtos/payment_order_dto.dart';
 import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
+import '../../../promotion/presentation/widgets/voucher_bottom_sheet.dart';
+import '../../../promotion/presentation/providers/checkout_calculation_notifier.dart';
+import '../../../promotion/presentation/providers/selected_vouchers_notifier.dart';
+import '../../../promotion/data/dtos/cart_context_request_dto.dart';
 import 'payment_webview_screen.dart';
 
 /// Checkout Screen với giao diện Amber Hearth
@@ -82,6 +86,18 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       if (preview != null) {
         setState(() => _preview = preview);
 
+        // Fetch promotions
+        final userId = ref.read(profileProvider).user?.id;
+        if (userId != null) {
+          final req = CartContextRequestDto(
+            shopId: cart.currentRestaurantId! as int,
+            userId: userId,
+            subTotal: preview.subtotal ?? 0,
+            shippingFee: preview.shippingFee ?? 0,
+          );
+          ref.read(checkoutCalculationProvider.notifier).calculate(req);
+        }
+
         // Hiển thị cảnh báo nếu có món hết hàng
         if (preview.unavailableItemIds != null &&
             preview.unavailableItemIds!.isNotEmpty) {
@@ -122,11 +138,34 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     );
   }
 
+  double _calculateLocalDiscount(List<int> selectedIds) {
+    final calcState = ref.read(checkoutCalculationProvider).value;
+    if (calcState == null) return 0.0;
+    
+    double totalDiscount = 0.0;
+    for (var id in selectedIds) {
+      final voucher = calcState.availableVouchers.where((v) => v.id == id).firstOrNull;
+      if (voucher != null) {
+        if (voucher.rewardType == 'FIXED') {
+          totalDiscount += voucher.discountValue;
+        } else if (voucher.rewardType == 'PERCENTAGE') {
+          totalDiscount += (_preview?.subtotal ?? 0) * voucher.discountValue / 100.0;
+        } else if (voucher.rewardType == 'FREESHIP') {
+          totalDiscount += (_preview?.shippingFee ?? 0);
+        }
+      }
+    }
+    return totalDiscount;
+  }
+
   // Amber Hearth design tokens
   @override
   Widget build(BuildContext context) {
     final cartAsyncValue = ref.watch(cartProvider);
     final createOrderState = ref.watch(createOrderProvider);
+    final calculateState = ref.watch(checkoutCalculationProvider);
+    final selectedVouchers = ref.watch(selectedVouchersProvider);
+    final localDiscount = _calculateLocalDiscount(selectedVouchers);
 
     // Listen to create order state for success/error
     ref.listen<AsyncValue<OrderEntity?>>(createOrderProvider, (prev, next) {
@@ -306,6 +345,58 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                         ),
                         SizedBox(height: 16.w),
 
+                        // Voucher Section
+                        CheckoutSectionHeader(
+                          title: 'Khuyến mãi / Voucher',
+                          icon: Icons.local_offer_outlined,
+                        ),
+                        SizedBox(height: 8.w),
+                        CheckoutSectionCard(
+                          child: Consumer(
+                            builder: (context, ref, child) {
+                              final selectedVouchers = ref.watch(selectedVouchersProvider);
+                              
+                              String text = 'Chọn hoặc nhập mã';
+                              Color textColor = Colors.grey.shade600;
+                              
+                              if (selectedVouchers.isNotEmpty) {
+                                text = 'Đã chọn ${selectedVouchers.length} mã';
+                                textColor = Colors.amber.shade700;
+                              }
+                              
+                              return InkWell(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    builder: (context) => const VoucherBottomSheet(),
+                                  );
+                                },
+                                borderRadius: BorderRadius.circular(12.w),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        text,
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: selectedVouchers.isNotEmpty ? FontWeight.bold : FontWeight.normal,
+                                          color: textColor,
+                                        ),
+                                      ),
+                                      Icon(Icons.arrow_forward_ios, size: 14.w, color: Colors.grey),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 16.w),
+
                         // Notes Section
                         CheckoutSectionHeader(
                           title: 'Ghi chú (không bắt buộc)',
@@ -329,6 +420,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 CheckoutBottomSection(
                   cart: cart,
                   isLoading: _isLoadingPreview ||
+                      calculateState.isLoading ||
                       createOrderState.isLoading ||
                       ref.watch(paymentProvider).isLoading,
                   buttonText: _isLoadingPreview
@@ -337,11 +429,11 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                           ? 'Thanh toán'
                           : 'Đặt hàng'),
                   onPlaceOrder:
-                      _isLoadingPreview ? () {} : () => _placeOrder(cart),
+                      _isLoadingPreview ? () {} : () => _placeOrder(cart, selectedVouchers),
                   serverSubtotal: _preview?.subtotal,
                   serverShippingFee: _preview?.shippingFee,
-                  serverDiscount: _preview?.discountAmount,
-                  serverTotal: _preview?.totalPrice,
+                  serverDiscount: (_preview?.discountAmount ?? 0) + localDiscount,
+                  serverTotal: (_preview?.totalPrice ?? 0) - localDiscount,
                 ),
               ],
             ),
@@ -351,7 +443,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     );
   }
 
-  Future<void> _placeOrder(CartEntity cart) async {
+  Future<void> _placeOrder(CartEntity cart, List<int> voucherIds) async {
     final addressState = ref.read(userAddressListProvider);
     final selectedAddress =
         addressState.selectedAddress ?? addressState.defaultAddress;
@@ -406,6 +498,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       paymentMethod:
           _selectedPaymentMethod == PaymentMethod.wallet ? 'ONLINE' : 'COD',
       notes: _notesController.text,
+      voucherIds: voucherIds,
       items: items,
     );
 

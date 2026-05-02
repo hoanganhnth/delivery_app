@@ -4,7 +4,7 @@ part 'shipper_rating_dto.freezed.dart';
 part 'shipper_rating_dto.g.dart';
 
 @freezed
-class ShipperRatingDto with _$ShipperRatingDto {
+abstract class ShipperRatingDto with _$ShipperRatingDto {
   const factory ShipperRatingDto({
     required int id,
     required int shipperId,

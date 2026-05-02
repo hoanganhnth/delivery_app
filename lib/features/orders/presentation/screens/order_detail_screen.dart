@@ -13,7 +13,6 @@ import '../widgets/order_error_widgets.dart';
 import '../widgets/delivery_timeline.dart';
 import '../widgets/order_progress_bar.dart';
 import '../widgets/order_delivery_tracking_card.dart';
-import '../providers/delivery_tracking/delivery_tracking_notifier.dart';
 import '../../../../generated/l10n.dart';
 
 class OrderDetailScreen extends ConsumerStatefulWidget {

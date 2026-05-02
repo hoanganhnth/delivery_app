@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:delivery_app/core/network/_riverpod/network_providers.dart';
 import 'package:delivery_app/features/cart/data/datasources/payment_api_service.dart';

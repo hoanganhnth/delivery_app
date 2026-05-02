@@ -288,7 +288,7 @@ as int,
 mixin _$CreateOrderRequestDto {
 
  int get restaurantId; String get restaurantName; String get restaurantAddress; String get restaurantPhone; String get deliveryAddress; double? get deliveryLat; double? get deliveryLng; String get customerName; String get customerPhone; String get paymentMethod;// COD or ONLINE
- String? get notes; double? get pickupLat; double? get pickupLng; List<OrderItemRequest> get items;
+ String? get notes; List<int>? get voucherIds; double? get pickupLat; double? get pickupLng; List<OrderItemRequest> get items;
 /// Create a copy of CreateOrderRequestDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -301,16 +301,16 @@ $CreateOrderRequestDtoCopyWith<CreateOrderRequestDto> get copyWith => _$CreateOr
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateOrderRequestDto&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&(identical(other.restaurantAddress, restaurantAddress) || other.restaurantAddress == restaurantAddress)&&(identical(other.restaurantPhone, restaurantPhone) || other.restaurantPhone == restaurantPhone)&&(identical(other.deliveryAddress, deliveryAddress) || other.deliveryAddress == deliveryAddress)&&(identical(other.deliveryLat, deliveryLat) || other.deliveryLat == deliveryLat)&&(identical(other.deliveryLng, deliveryLng) || other.deliveryLng == deliveryLng)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&(identical(other.customerPhone, customerPhone) || other.customerPhone == customerPhone)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.pickupLat, pickupLat) || other.pickupLat == pickupLat)&&(identical(other.pickupLng, pickupLng) || other.pickupLng == pickupLng)&&const DeepCollectionEquality().equals(other.items, items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateOrderRequestDto&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&(identical(other.restaurantAddress, restaurantAddress) || other.restaurantAddress == restaurantAddress)&&(identical(other.restaurantPhone, restaurantPhone) || other.restaurantPhone == restaurantPhone)&&(identical(other.deliveryAddress, deliveryAddress) || other.deliveryAddress == deliveryAddress)&&(identical(other.deliveryLat, deliveryLat) || other.deliveryLat == deliveryLat)&&(identical(other.deliveryLng, deliveryLng) || other.deliveryLng == deliveryLng)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&(identical(other.customerPhone, customerPhone) || other.customerPhone == customerPhone)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.notes, notes) || other.notes == notes)&&const DeepCollectionEquality().equals(other.voucherIds, voucherIds)&&(identical(other.pickupLat, pickupLat) || other.pickupLat == pickupLat)&&(identical(other.pickupLng, pickupLng) || other.pickupLng == pickupLng)&&const DeepCollectionEquality().equals(other.items, items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,restaurantId,restaurantName,restaurantAddress,restaurantPhone,deliveryAddress,deliveryLat,deliveryLng,customerName,customerPhone,paymentMethod,notes,pickupLat,pickupLng,const DeepCollectionEquality().hash(items));
+int get hashCode => Object.hash(runtimeType,restaurantId,restaurantName,restaurantAddress,restaurantPhone,deliveryAddress,deliveryLat,deliveryLng,customerName,customerPhone,paymentMethod,notes,const DeepCollectionEquality().hash(voucherIds),pickupLat,pickupLng,const DeepCollectionEquality().hash(items));
 
 @override
 String toString() {
-  return 'CreateOrderRequestDto(restaurantId: $restaurantId, restaurantName: $restaurantName, restaurantAddress: $restaurantAddress, restaurantPhone: $restaurantPhone, deliveryAddress: $deliveryAddress, deliveryLat: $deliveryLat, deliveryLng: $deliveryLng, customerName: $customerName, customerPhone: $customerPhone, paymentMethod: $paymentMethod, notes: $notes, pickupLat: $pickupLat, pickupLng: $pickupLng, items: $items)';
+  return 'CreateOrderRequestDto(restaurantId: $restaurantId, restaurantName: $restaurantName, restaurantAddress: $restaurantAddress, restaurantPhone: $restaurantPhone, deliveryAddress: $deliveryAddress, deliveryLat: $deliveryLat, deliveryLng: $deliveryLng, customerName: $customerName, customerPhone: $customerPhone, paymentMethod: $paymentMethod, notes: $notes, voucherIds: $voucherIds, pickupLat: $pickupLat, pickupLng: $pickupLng, items: $items)';
 }
 
 
@@ -321,7 +321,7 @@ abstract mixin class $CreateOrderRequestDtoCopyWith<$Res>  {
   factory $CreateOrderRequestDtoCopyWith(CreateOrderRequestDto value, $Res Function(CreateOrderRequestDto) _then) = _$CreateOrderRequestDtoCopyWithImpl;
 @useResult
 $Res call({
- int restaurantId, String restaurantName, String restaurantAddress, String restaurantPhone, String deliveryAddress, double? deliveryLat, double? deliveryLng, String customerName, String customerPhone, String paymentMethod, String? notes, double? pickupLat, double? pickupLng, List<OrderItemRequest> items
+ int restaurantId, String restaurantName, String restaurantAddress, String restaurantPhone, String deliveryAddress, double? deliveryLat, double? deliveryLng, String customerName, String customerPhone, String paymentMethod, String? notes, List<int>? voucherIds, double? pickupLat, double? pickupLng, List<OrderItemRequest> items
 });
 
 
@@ -338,7 +338,7 @@ class _$CreateOrderRequestDtoCopyWithImpl<$Res>
 
 /// Create a copy of CreateOrderRequestDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? restaurantId = null,Object? restaurantName = null,Object? restaurantAddress = null,Object? restaurantPhone = null,Object? deliveryAddress = null,Object? deliveryLat = freezed,Object? deliveryLng = freezed,Object? customerName = null,Object? customerPhone = null,Object? paymentMethod = null,Object? notes = freezed,Object? pickupLat = freezed,Object? pickupLng = freezed,Object? items = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? restaurantId = null,Object? restaurantName = null,Object? restaurantAddress = null,Object? restaurantPhone = null,Object? deliveryAddress = null,Object? deliveryLat = freezed,Object? deliveryLng = freezed,Object? customerName = null,Object? customerPhone = null,Object? paymentMethod = null,Object? notes = freezed,Object? voucherIds = freezed,Object? pickupLat = freezed,Object? pickupLng = freezed,Object? items = null,}) {
   return _then(_self.copyWith(
 restaurantId: null == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
 as int,restaurantName: null == restaurantName ? _self.restaurantName : restaurantName // ignore: cast_nullable_to_non_nullable
@@ -351,7 +351,8 @@ as double?,customerName: null == customerName ? _self.customerName : customerNam
 as String,customerPhone: null == customerPhone ? _self.customerPhone : customerPhone // ignore: cast_nullable_to_non_nullable
 as String,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
 as String,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
-as String?,pickupLat: freezed == pickupLat ? _self.pickupLat : pickupLat // ignore: cast_nullable_to_non_nullable
+as String?,voucherIds: freezed == voucherIds ? _self.voucherIds : voucherIds // ignore: cast_nullable_to_non_nullable
+as List<int>?,pickupLat: freezed == pickupLat ? _self.pickupLat : pickupLat // ignore: cast_nullable_to_non_nullable
 as double?,pickupLng: freezed == pickupLng ? _self.pickupLng : pickupLng // ignore: cast_nullable_to_non_nullable
 as double?,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<OrderItemRequest>,
@@ -439,10 +440,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int restaurantId,  String restaurantName,  String restaurantAddress,  String restaurantPhone,  String deliveryAddress,  double? deliveryLat,  double? deliveryLng,  String customerName,  String customerPhone,  String paymentMethod,  String? notes,  double? pickupLat,  double? pickupLng,  List<OrderItemRequest> items)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int restaurantId,  String restaurantName,  String restaurantAddress,  String restaurantPhone,  String deliveryAddress,  double? deliveryLat,  double? deliveryLng,  String customerName,  String customerPhone,  String paymentMethod,  String? notes,  List<int>? voucherIds,  double? pickupLat,  double? pickupLng,  List<OrderItemRequest> items)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CreateOrderRequestDto() when $default != null:
-return $default(_that.restaurantId,_that.restaurantName,_that.restaurantAddress,_that.restaurantPhone,_that.deliveryAddress,_that.deliveryLat,_that.deliveryLng,_that.customerName,_that.customerPhone,_that.paymentMethod,_that.notes,_that.pickupLat,_that.pickupLng,_that.items);case _:
+return $default(_that.restaurantId,_that.restaurantName,_that.restaurantAddress,_that.restaurantPhone,_that.deliveryAddress,_that.deliveryLat,_that.deliveryLng,_that.customerName,_that.customerPhone,_that.paymentMethod,_that.notes,_that.voucherIds,_that.pickupLat,_that.pickupLng,_that.items);case _:
   return orElse();
 
 }
@@ -460,10 +461,10 @@ return $default(_that.restaurantId,_that.restaurantName,_that.restaurantAddress,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int restaurantId,  String restaurantName,  String restaurantAddress,  String restaurantPhone,  String deliveryAddress,  double? deliveryLat,  double? deliveryLng,  String customerName,  String customerPhone,  String paymentMethod,  String? notes,  double? pickupLat,  double? pickupLng,  List<OrderItemRequest> items)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int restaurantId,  String restaurantName,  String restaurantAddress,  String restaurantPhone,  String deliveryAddress,  double? deliveryLat,  double? deliveryLng,  String customerName,  String customerPhone,  String paymentMethod,  String? notes,  List<int>? voucherIds,  double? pickupLat,  double? pickupLng,  List<OrderItemRequest> items)  $default,) {final _that = this;
 switch (_that) {
 case _CreateOrderRequestDto():
-return $default(_that.restaurantId,_that.restaurantName,_that.restaurantAddress,_that.restaurantPhone,_that.deliveryAddress,_that.deliveryLat,_that.deliveryLng,_that.customerName,_that.customerPhone,_that.paymentMethod,_that.notes,_that.pickupLat,_that.pickupLng,_that.items);case _:
+return $default(_that.restaurantId,_that.restaurantName,_that.restaurantAddress,_that.restaurantPhone,_that.deliveryAddress,_that.deliveryLat,_that.deliveryLng,_that.customerName,_that.customerPhone,_that.paymentMethod,_that.notes,_that.voucherIds,_that.pickupLat,_that.pickupLng,_that.items);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -480,10 +481,10 @@ return $default(_that.restaurantId,_that.restaurantName,_that.restaurantAddress,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int restaurantId,  String restaurantName,  String restaurantAddress,  String restaurantPhone,  String deliveryAddress,  double? deliveryLat,  double? deliveryLng,  String customerName,  String customerPhone,  String paymentMethod,  String? notes,  double? pickupLat,  double? pickupLng,  List<OrderItemRequest> items)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int restaurantId,  String restaurantName,  String restaurantAddress,  String restaurantPhone,  String deliveryAddress,  double? deliveryLat,  double? deliveryLng,  String customerName,  String customerPhone,  String paymentMethod,  String? notes,  List<int>? voucherIds,  double? pickupLat,  double? pickupLng,  List<OrderItemRequest> items)?  $default,) {final _that = this;
 switch (_that) {
 case _CreateOrderRequestDto() when $default != null:
-return $default(_that.restaurantId,_that.restaurantName,_that.restaurantAddress,_that.restaurantPhone,_that.deliveryAddress,_that.deliveryLat,_that.deliveryLng,_that.customerName,_that.customerPhone,_that.paymentMethod,_that.notes,_that.pickupLat,_that.pickupLng,_that.items);case _:
+return $default(_that.restaurantId,_that.restaurantName,_that.restaurantAddress,_that.restaurantPhone,_that.deliveryAddress,_that.deliveryLat,_that.deliveryLng,_that.customerName,_that.customerPhone,_that.paymentMethod,_that.notes,_that.voucherIds,_that.pickupLat,_that.pickupLng,_that.items);case _:
   return null;
 
 }
@@ -495,7 +496,7 @@ return $default(_that.restaurantId,_that.restaurantName,_that.restaurantAddress,
 @JsonSerializable()
 
 class _CreateOrderRequestDto implements CreateOrderRequestDto {
-  const _CreateOrderRequestDto({required this.restaurantId, required this.restaurantName, required this.restaurantAddress, required this.restaurantPhone, required this.deliveryAddress, this.deliveryLat, this.deliveryLng, required this.customerName, required this.customerPhone, required this.paymentMethod, this.notes, this.pickupLat, this.pickupLng, required final  List<OrderItemRequest> items}): _items = items;
+  const _CreateOrderRequestDto({required this.restaurantId, required this.restaurantName, required this.restaurantAddress, required this.restaurantPhone, required this.deliveryAddress, this.deliveryLat, this.deliveryLng, required this.customerName, required this.customerPhone, required this.paymentMethod, this.notes, final  List<int>? voucherIds, this.pickupLat, this.pickupLng, required final  List<OrderItemRequest> items}): _voucherIds = voucherIds,_items = items;
   factory _CreateOrderRequestDto.fromJson(Map<String, dynamic> json) => _$CreateOrderRequestDtoFromJson(json);
 
 @override final  int restaurantId;
@@ -510,6 +511,15 @@ class _CreateOrderRequestDto implements CreateOrderRequestDto {
 @override final  String paymentMethod;
 // COD or ONLINE
 @override final  String? notes;
+ final  List<int>? _voucherIds;
+@override List<int>? get voucherIds {
+  final value = _voucherIds;
+  if (value == null) return null;
+  if (_voucherIds is EqualUnmodifiableListView) return _voucherIds;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 @override final  double? pickupLat;
 @override final  double? pickupLng;
  final  List<OrderItemRequest> _items;
@@ -533,16 +543,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateOrderRequestDto&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&(identical(other.restaurantAddress, restaurantAddress) || other.restaurantAddress == restaurantAddress)&&(identical(other.restaurantPhone, restaurantPhone) || other.restaurantPhone == restaurantPhone)&&(identical(other.deliveryAddress, deliveryAddress) || other.deliveryAddress == deliveryAddress)&&(identical(other.deliveryLat, deliveryLat) || other.deliveryLat == deliveryLat)&&(identical(other.deliveryLng, deliveryLng) || other.deliveryLng == deliveryLng)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&(identical(other.customerPhone, customerPhone) || other.customerPhone == customerPhone)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.pickupLat, pickupLat) || other.pickupLat == pickupLat)&&(identical(other.pickupLng, pickupLng) || other.pickupLng == pickupLng)&&const DeepCollectionEquality().equals(other._items, _items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateOrderRequestDto&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&(identical(other.restaurantAddress, restaurantAddress) || other.restaurantAddress == restaurantAddress)&&(identical(other.restaurantPhone, restaurantPhone) || other.restaurantPhone == restaurantPhone)&&(identical(other.deliveryAddress, deliveryAddress) || other.deliveryAddress == deliveryAddress)&&(identical(other.deliveryLat, deliveryLat) || other.deliveryLat == deliveryLat)&&(identical(other.deliveryLng, deliveryLng) || other.deliveryLng == deliveryLng)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&(identical(other.customerPhone, customerPhone) || other.customerPhone == customerPhone)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.notes, notes) || other.notes == notes)&&const DeepCollectionEquality().equals(other._voucherIds, _voucherIds)&&(identical(other.pickupLat, pickupLat) || other.pickupLat == pickupLat)&&(identical(other.pickupLng, pickupLng) || other.pickupLng == pickupLng)&&const DeepCollectionEquality().equals(other._items, _items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,restaurantId,restaurantName,restaurantAddress,restaurantPhone,deliveryAddress,deliveryLat,deliveryLng,customerName,customerPhone,paymentMethod,notes,pickupLat,pickupLng,const DeepCollectionEquality().hash(_items));
+int get hashCode => Object.hash(runtimeType,restaurantId,restaurantName,restaurantAddress,restaurantPhone,deliveryAddress,deliveryLat,deliveryLng,customerName,customerPhone,paymentMethod,notes,const DeepCollectionEquality().hash(_voucherIds),pickupLat,pickupLng,const DeepCollectionEquality().hash(_items));
 
 @override
 String toString() {
-  return 'CreateOrderRequestDto(restaurantId: $restaurantId, restaurantName: $restaurantName, restaurantAddress: $restaurantAddress, restaurantPhone: $restaurantPhone, deliveryAddress: $deliveryAddress, deliveryLat: $deliveryLat, deliveryLng: $deliveryLng, customerName: $customerName, customerPhone: $customerPhone, paymentMethod: $paymentMethod, notes: $notes, pickupLat: $pickupLat, pickupLng: $pickupLng, items: $items)';
+  return 'CreateOrderRequestDto(restaurantId: $restaurantId, restaurantName: $restaurantName, restaurantAddress: $restaurantAddress, restaurantPhone: $restaurantPhone, deliveryAddress: $deliveryAddress, deliveryLat: $deliveryLat, deliveryLng: $deliveryLng, customerName: $customerName, customerPhone: $customerPhone, paymentMethod: $paymentMethod, notes: $notes, voucherIds: $voucherIds, pickupLat: $pickupLat, pickupLng: $pickupLng, items: $items)';
 }
 
 
@@ -553,7 +563,7 @@ abstract mixin class _$CreateOrderRequestDtoCopyWith<$Res> implements $CreateOrd
   factory _$CreateOrderRequestDtoCopyWith(_CreateOrderRequestDto value, $Res Function(_CreateOrderRequestDto) _then) = __$CreateOrderRequestDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int restaurantId, String restaurantName, String restaurantAddress, String restaurantPhone, String deliveryAddress, double? deliveryLat, double? deliveryLng, String customerName, String customerPhone, String paymentMethod, String? notes, double? pickupLat, double? pickupLng, List<OrderItemRequest> items
+ int restaurantId, String restaurantName, String restaurantAddress, String restaurantPhone, String deliveryAddress, double? deliveryLat, double? deliveryLng, String customerName, String customerPhone, String paymentMethod, String? notes, List<int>? voucherIds, double? pickupLat, double? pickupLng, List<OrderItemRequest> items
 });
 
 
@@ -570,7 +580,7 @@ class __$CreateOrderRequestDtoCopyWithImpl<$Res>
 
 /// Create a copy of CreateOrderRequestDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? restaurantId = null,Object? restaurantName = null,Object? restaurantAddress = null,Object? restaurantPhone = null,Object? deliveryAddress = null,Object? deliveryLat = freezed,Object? deliveryLng = freezed,Object? customerName = null,Object? customerPhone = null,Object? paymentMethod = null,Object? notes = freezed,Object? pickupLat = freezed,Object? pickupLng = freezed,Object? items = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? restaurantId = null,Object? restaurantName = null,Object? restaurantAddress = null,Object? restaurantPhone = null,Object? deliveryAddress = null,Object? deliveryLat = freezed,Object? deliveryLng = freezed,Object? customerName = null,Object? customerPhone = null,Object? paymentMethod = null,Object? notes = freezed,Object? voucherIds = freezed,Object? pickupLat = freezed,Object? pickupLng = freezed,Object? items = null,}) {
   return _then(_CreateOrderRequestDto(
 restaurantId: null == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
 as int,restaurantName: null == restaurantName ? _self.restaurantName : restaurantName // ignore: cast_nullable_to_non_nullable
@@ -583,7 +593,8 @@ as double?,customerName: null == customerName ? _self.customerName : customerNam
 as String,customerPhone: null == customerPhone ? _self.customerPhone : customerPhone // ignore: cast_nullable_to_non_nullable
 as String,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
 as String,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
-as String?,pickupLat: freezed == pickupLat ? _self.pickupLat : pickupLat // ignore: cast_nullable_to_non_nullable
+as String?,voucherIds: freezed == voucherIds ? _self._voucherIds : voucherIds // ignore: cast_nullable_to_non_nullable
+as List<int>?,pickupLat: freezed == pickupLat ? _self.pickupLat : pickupLat // ignore: cast_nullable_to_non_nullable
 as double?,pickupLng: freezed == pickupLng ? _self.pickupLng : pickupLng // ignore: cast_nullable_to_non_nullable
 as double?,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
 as List<OrderItemRequest>,

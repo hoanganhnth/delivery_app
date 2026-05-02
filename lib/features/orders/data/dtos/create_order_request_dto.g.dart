@@ -36,6 +36,9 @@ _CreateOrderRequestDto _$CreateOrderRequestDtoFromJson(
   customerPhone: json['customerPhone'] as String,
   paymentMethod: json['paymentMethod'] as String,
   notes: json['notes'] as String?,
+  voucherIds: (json['voucherIds'] as List<dynamic>?)
+      ?.map((e) => (e as num).toInt())
+      .toList(),
   pickupLat: (json['pickupLat'] as num?)?.toDouble(),
   pickupLng: (json['pickupLng'] as num?)?.toDouble(),
   items: (json['items'] as List<dynamic>)
@@ -57,6 +60,7 @@ Map<String, dynamic> _$CreateOrderRequestDtoToJson(
   'customerPhone': instance.customerPhone,
   'paymentMethod': instance.paymentMethod,
   'notes': instance.notes,
+  'voucherIds': instance.voucherIds,
   'pickupLat': instance.pickupLat,
   'pickupLng': instance.pickupLng,
   'items': instance.items,

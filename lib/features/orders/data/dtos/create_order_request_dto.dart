@@ -30,6 +30,7 @@ abstract class CreateOrderRequestDto with _$CreateOrderRequestDto {
     required String customerPhone,
     required String paymentMethod, // COD or ONLINE
     String? notes,
+    List<int>? voucherIds,
     double? pickupLat,
     double? pickupLng,
     required List<OrderItemRequest> items,

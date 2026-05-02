@@ -1,7 +1,6 @@
 import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
 import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_card.dart';
-import 'package:delivery_app/features/livestream/presentation/widgets/livestream_home_section.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +15,6 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  int _selectedNavIndex = 0;
   int _selectedCategoryIndex = 0;
 
   // Amber Hearth design tokens
@@ -353,22 +351,6 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  void _handleNavigation(int index, BuildContext context) {
-    switch (index) {
-      case 0:
-        // Already on home
-        break;
-      case 1:
-        context.pushToRestaurants();
-        break;
-      case 2:
-        context.pushCart();
-        break;
-      case 3:
-        context.pushProfile();
-        break;
-    }
-  }
 }
 
 /// Model for category items
