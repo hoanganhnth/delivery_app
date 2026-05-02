@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
+import 'package:delivery_app/generated/l10n.dart';
 import '../../domain/entities/user_address_entity.dart';
 
 class AddressItemWidget extends ConsumerWidget {
@@ -83,7 +84,7 @@ class AddressItemWidget extends ConsumerWidget {
                                     borderRadius: BorderRadius.circular(4.r),
                                   ),
                                   child: Text(
-                                    'Mặc định',
+                                    S.of(context).setAsDefault.split(' ').first, // 'Mặc định'
                                     style: TextStyle(
                                       fontSize: 10.sp,
                                       color: Colors.white,
@@ -131,7 +132,7 @@ class AddressItemWidget extends ConsumerWidget {
                             children: [
                               Icon(Icons.edit, size: 18),
                               SizedBox(width: 8),
-                              Text('Chỉnh sửa'),
+                              Text(S.of(context).editAddress),
                             ],
                           ),
                         ),
@@ -142,7 +143,7 @@ class AddressItemWidget extends ConsumerWidget {
                               children: [
                                 Icon(Icons.star, size: 18),
                                 SizedBox(width: 8),
-                                Text('Đặt làm mặc định'),
+                                Text(S.of(context).setAsDefault),
                               ],
                             ),
                           ),
@@ -152,7 +153,7 @@ class AddressItemWidget extends ConsumerWidget {
                             children: [
                               Icon(Icons.delete, size: 18, color: Colors.red),
                               SizedBox(width: 8),
-                              Text('Xóa', style: TextStyle(color: Colors.red)),
+                              Text(S.of(context).confirmDeleteAddressBtn, style: TextStyle(color: Colors.red)),
                             ],
                           ),
                         ),
@@ -178,7 +179,7 @@ class AddressItemWidget extends ConsumerWidget {
                       Icon(Icons.gps_fixed, size: 14.sp, color: Colors.green),
                       SizedBox(width: 4.w),
                       Text(
-                        'Đã định vị',
+                        S.of(context).coordinates, // Temporary use this
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: Colors.green,

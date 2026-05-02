@@ -6,6 +6,7 @@ import 'package:delivery_app/features/profile/presentation/providers/profile_not
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
 import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
+import 'package:delivery_app/generated/l10n.dart';
 import '../../../location/presentation/providers/location_providers.dart';
 import '../../domain/entities/user_address_entity.dart';
 import '../../data/dtos/user_address_request_dto.dart';
@@ -358,8 +359,8 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
             border: Border.all(color: ref.colors.border),
           ),
           child: CheckboxListTile(
-            title: const Text('Đặt làm địa chỉ mặc định'),
-            subtitle: const Text('Địa chỉ này sẽ được chọn tự động khi đặt hàng'),
+            title: Text(S.of(context).setAsDefaultTitle),
+            subtitle: Text(S.of(context).setAsDefaultSubtitle),
             value: _isDefault,
             onChanged: (value) {
               setState(() {
@@ -747,7 +748,7 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Không thể lấy vị trí: $error'),
+                content: Text('${S.of(context).fetchLocationError}: $error'),
                 backgroundColor: Colors.red,
               ),
             );
@@ -758,7 +759,7 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Lỗi: $e'),
+            content: Text('${S.of(context).errorPrefix}: $e'),
             backgroundColor: Colors.red,
           ),
         );

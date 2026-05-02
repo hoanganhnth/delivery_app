@@ -119,4 +119,29 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       throw Exception('Unexpected error: ${e.toString()}');
     }
   }
+
+  @override
+  Future<bool> rateShipper(int shipperId, int orderId, int rating, String? comment) async {
+    try {
+      AppLogger.d('Rating shipper $shipperId for order $orderId');
+      final response = await _apiService.rateShipper(shipperId, {
+        'orderId': orderId,
+        'rating': rating,
+        'comment': comment,
+      });
+      AppLogger.i('Successfully rated shipper: $shipperId');
+
+      if (response.isSuccess) {
+        return true;
+      } else {
+        throw Exception(response.message);
+      }
+    } on DioException catch (e) {
+      AppLogger.e('Failed to rate shipper: $shipperId', e);
+      throw DioExceptionHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      AppLogger.e('Unexpected error rating shipper', e);
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
+  }
 }

@@ -123,5 +123,64 @@
     
     "order": "Order",
     "estimatedDelivery": "Estimated delivery",
-    "top_restaurants": "Nhà hàng nổi bật"
+    "top_restaurants": "Featured Restaurants",
+    
+    "editAddress": "Edit",
+    "setAsDefault": "Set as Default",
+    "confirmDeleteAddress": "Confirm Delete",
+    "confirmDeleteAddressMessage": "Are you sure you want to delete address \"{addressLabel}\"?",
+    "@confirmDeleteAddressMessage": {
+        "placeholders": {
+            "addressLabel": {
+                "type": "String"
+            }
+        }
+    },
+    "cancelDelete": "Cancel",
+    "confirmDeleteAddressBtn": "Delete",
+    "setAsDefaultTitle": "Set as default address",
+    "setAsDefaultSubtitle": "This address will be automatically selected when ordering",
+    "fetchLocationSuccess": "Address fetched from current location",
+    "coordinates": "Coordinates",
+    "fetchLocationError": "Cannot fetch location",
+    "errorPrefix": "Error",
+    "myAddresses": "My Addresses",
+    "addAddress": "Add Address",
+    "noAddressFound": "No address found",
+    "noAddressFoundSubtitle": "Add a delivery address to order faster",
+    "addFirstAddress": "Add first address",
+    "cancelOrderBtn": "Cancel Order",
+    "rateShipperBtn": "Rate Shipper",
+    "confirmCancelOrderTitle": "Confirm Order Cancellation",
+    "confirmCancelOrderSubtitle": "Are you sure you want to cancel this order?\n\nThis action cannot be undone.",
+    "noBtn": "No",
+    "cancelOrderActionBtn": "Cancel Order",
+    "cancelOrderSuccess": "Order cancelled successfully",
+    "cancelOrderError": "Error cancelling order",
+    "goBackBtn": "Go Back",
+    "thanksForRating": "Thank you for your rating!",
+    "ratingError": "An error occurred",
+    "rateShipperTitle": "Rate Shipper",
+    "ratingHint": "Your comment (optional)",
+    "submitRatingBtn": "Submit Rating",
+    "endBtn": "End",
+    "conversationEnded": "Conversation ended",
+    "newConversationStarted": "New conversation started",
+    "endConversationBtn": "End Conversation",
+    "startNewConversationBtn": "Start New Conversation",
+    "outOfStockItems": "Items out of stock",
+    "gotItBtn": "Got it",
+    "pleaseSelectAddress": "Please select a delivery address",
+    "vnpayPaymentTitle": "VNPay Payment",
+    "cancelPaymentWarningTitle": "Cancel payment?",
+    "cancelPaymentWarningSubtitle": "Are you sure you want to cancel the payment process?",
+    "yesBtn": "Yes",
+    "addedToCartLivestream": "Added {productName} to cart",
+    "@addedToCartLivestream": {
+        "placeholders": {
+            "productName": {
+                "type": "String"
+            }
+        }
+    }
 }

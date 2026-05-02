@@ -24,7 +24,15 @@ class ApiConstants {
   static const unreadCount = "$notifications/unread-count";
   static const markAllRead = "$notifications/mark-all-read";
 
+  // Firebase FCM Token
+  static const firebaseRegisterToken = "/firebase/register-token";
+  static const firebaseUnregisterToken = "/firebase/unregister-token";
+
   // Tracking
   static const tracking = "/tracking";
   static const shipperLocations = "$tracking/shipper-locations";
+
+  // Shippers
+  static const shippers = "/shippers";
+  static const rateShipper = "$shippers/{shipperId}/ratings";
 }

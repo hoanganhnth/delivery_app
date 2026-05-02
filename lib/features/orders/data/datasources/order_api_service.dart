@@ -57,4 +57,11 @@ abstract class OrderApiService {
   //   @Query('page') int page,
   //   @Query('limit') int limit,
   // );
+
+  /// Đánh giá shipper
+  @POST(ApiConstants.rateShipper)
+  Future<BaseResponseDto<dynamic>> rateShipper(
+    @Path('shipperId') int shipperId,
+    @Body() Map<String, dynamic> request,
+  );
 }

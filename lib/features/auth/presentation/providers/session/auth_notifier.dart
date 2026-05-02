@@ -13,6 +13,7 @@ import 'package:delivery_app/features/auth/domain/usecases/clear_tokens_usecase.
 import 'package:delivery_app/features/auth/presentation/providers/session/auth_state.dart';
 import 'package:delivery_app/features/auth/presentation/providers/di/auth_di_providers.dart';
 import 'package:delivery_app/features/auth/presentation/providers/di/storage_di_providers.dart';
+import 'package:delivery_app/core/services/app_initializer/_riverpod/app_initializer_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_notifier.g.dart';
@@ -250,6 +251,13 @@ class AuthNotifier extends _$AuthNotifier {
 
   // Logout method
   Future<void> logout() async {
+    // Run all centralized cleanup tasks (e.g. FCM unregister, clear profile cache)
+    try {
+      await ref.read(appInitializerServiceProvider).cleanup();
+    } catch (e) {
+      AppLogger.e('AuthNotifier: Cleanup failed - $e');
+    }
+
     // Clear stored tokens
     final clearResult = await _clearTokensUseCase(NoParams());
     clearResult.fold(

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/order_entity.dart';
 import '../providers/providers.dart';
+import 'shipper_rating_bottom_sheet.dart';
 
 /// Widget hiển thị các nút hành động cho đơn hàng
 class OrderActionButtons extends ConsumerWidget {
@@ -40,21 +41,52 @@ class OrderActionButtons extends ConsumerWidget {
               ),
             ),
             SizedBox(height: 12.w),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: () => _showCancelDialog(context, ref),
-                icon: const Icon(Icons.cancel_outlined),
-                label: const Text('Hủy đơn hàng'),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.red,
-                  side: const BorderSide(color: Colors.red),
-                  padding: EdgeInsets.symmetric(vertical: 12.w),
+            if (order.status == OrderStatus.pending)
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () => _showCancelDialog(context, ref),
+                  icon: const Icon(Icons.cancel_outlined),
+                  label: const Text('Hủy đơn hàng'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.red,
+                    side: const BorderSide(color: Colors.red),
+                    padding: EdgeInsets.symmetric(vertical: 12.w),
+                  ),
                 ),
               ),
-            ),
+            if (order.status == OrderStatus.delivered && order.shipperId != null)
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () => _showRatingBottomSheet(context),
+                  icon: const Icon(Icons.star_outline),
+                  label: const Text('Đánh giá Shipper'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amber,
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(vertical: 12.w),
+                  ),
+                ),
+              ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showRatingBottomSheet(BuildContext context) {
+    if (order.shipperId == null || order.id == null) return;
+    
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => ShipperRatingBottomSheet(
+        orderId: order.id!,
+        shipperId: order.shipperId!,
       ),
     );
   }

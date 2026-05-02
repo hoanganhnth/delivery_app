@@ -4,6 +4,7 @@ import 'package:delivery_app/features/profile/presentation/providers/profile_not
 import 'package:delivery_app/core/utils/logger/app_logger.dart';
 import 'package:delivery_app/core/services/app_initializer/i_app_initializer_service.dart';
 import 'package:delivery_app/core/services/app_initializer/app_initializer_service.dart';
+import 'package:delivery_app/core/services/push_notification_service.dart';
 
 part 'app_initializer_provider.g.dart';
 
@@ -13,6 +14,7 @@ part 'app_initializer_provider.g.dart';
 IAppInitializerService appInitializerService(Ref ref) {
   final authNotifier = ref.read(authProvider.notifier);
   final profileNotifier = ref.read(profileProvider.notifier);
+  final pushService = ref.read(pushNotificationServiceProvider);
 
   return AppInitializerService(
     initTasks: [
@@ -29,6 +31,13 @@ IAppInitializerService appInitializerService(Ref ref) {
     ],
     cleanupTasks: [
       () async => profileNotifier.clearProfileCache(),
+      () async {
+        try {
+          await pushService.unregisterToken();
+        } catch (e) {
+          AppLogger.w('FCM unregister failed during cleanup: $e');
+        }
+      },
     ],
   );
 }

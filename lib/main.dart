@@ -6,6 +6,7 @@ import 'package:delivery_app/core/theme/theme.dart';
 import 'package:delivery_app/core/storage/adapter/hive_registry.dart';
 import 'package:delivery_app/firebase_options.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:delivery_app/core/services/push_notification_service.dart';
 import 'features/auth/presentation/providers/di/storage_di_providers.dart';
 import 'features/auth/presentation/providers/di/auth_network_providers.dart' as auth_net;
 import 'package:delivery_app/core/network/_riverpod/authenticated_network_providers.dart' as core_net;
@@ -47,6 +49,9 @@ Future<void> main() async {
       
       // ✅ Khởi tạo Mapbox
       AppSetup.initializeMapbox();
+
+      // ✅ Đăng ký FCM background message handler
+      FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
       
       // Bắt lỗi Flutter framework
       FlutterError.onError = (FlutterErrorDetails details) {
@@ -90,6 +95,28 @@ class MainApp extends ConsumerStatefulWidget {
 }
 
 class _MainAppState extends ConsumerState<MainApp> {
+  bool _fcmInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initFCM();
+  }
+
+  Future<void> _initFCM() async {
+    if (_fcmInitialized) return;
+    _fcmInitialized = true;
+    // Delay to allow providers to be ready
+    await Future.delayed(const Duration(seconds: 1));
+    if (!mounted) return;
+    try {
+      final pushService = ref.read(pushNotificationServiceProvider);
+      await pushService.initialize();
+    } catch (e) {
+      debugPrint('⚠️ FCM init error (will retry on auth): $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);

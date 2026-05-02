@@ -6,6 +6,7 @@ import 'package:delivery_app/core/utils/screen_util_extensions.dart';
 import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
+import 'package:delivery_app/generated/l10n.dart';
 import '../../domain/entities/user_address_entity.dart';
 import '../providers/providers.dart';
 import '../widgets/address_card.dart';
@@ -104,7 +105,7 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
             backgroundColor: colors.primary,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                'Địa chỉ của tôi',
+                S.of(context).myAddresses,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: ResponsiveSize.fontXl,
@@ -179,9 +180,9 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
         onPressed: () => _navigateToAddAddress(),
         backgroundColor: colors.primary,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text(
-          'Thêm địa chỉ',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+        label: Text(
+          S.of(context).addAddress,
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
       ),
     );
@@ -211,7 +212,7 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
             ),
             SizedBox(height: ResponsiveSize.l),
             Text(
-              'Chưa có địa chỉ nào',
+              S.of(context).noAddressFound,
               style: TextStyle(
                 fontSize: ResponsiveSize.fontXl,
                 fontWeight: FontWeight.bold,
@@ -220,7 +221,7 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
             ),
             SizedBox(height: ResponsiveSize.s),
             Text(
-              'Thêm địa chỉ giao hàng để đặt món\nnhanh chóng hơn',
+              S.of(context).noAddressFoundSubtitle,
               style: TextStyle(
                 fontSize: ResponsiveSize.fontM,
                 color: colors.textSecondary,
@@ -242,9 +243,9 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
                 ),
               ),
               icon: const Icon(Icons.add),
-              label: const Text(
-                'Thêm địa chỉ đầu tiên',
-                style: TextStyle(fontWeight: FontWeight.w600),
+              label: Text(
+                S.of(context).addFirstAddress,
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
           ],
@@ -285,14 +286,14 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
           children: [
             Icon(Icons.warning_amber_rounded, color: colors.error),
             SizedBox(width: ResponsiveSize.s),
-            const Text('Xác nhận xóa'),
+            Text(S.of(context).confirmDeleteAddress),
           ],
         ),
-        content: Text('Bạn có chắc muốn xóa địa chỉ "${address.label}"?'),
+        content: Text(S.of(context).confirmDeleteAddressMessage(address.label)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Hủy'),
+            child: Text(S.of(context).cancelDelete),
           ),
           ElevatedButton(
             onPressed: () {
@@ -305,7 +306,7 @@ class _AddressListScreenState extends ConsumerState<AddressListScreen>
               backgroundColor: colors.error,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Xóa'),
+            child: Text(S.of(context).confirmDeleteAddressBtn),
           ),
         ],
       ),

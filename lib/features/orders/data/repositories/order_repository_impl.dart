@@ -85,4 +85,16 @@ class OrderRepositoryImpl implements OrderRepository {
       return left(ServerFailure('Unexpected error: ${e.toString()}'));
     }
   }
+
+  @override
+  Future<Either<Failure, bool>> rateShipper(int shipperId, int orderId, int rating, String? comment) async {
+    try {
+      final success = await _remoteDataSource.rateShipper(shipperId, orderId, rating, comment);
+      return right(success);
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
+    } catch (e) {
+      return left(ServerFailure('Unexpected error: ${e.toString()}'));
+    }
+  }
 }

@@ -17,4 +17,7 @@ abstract class OrderRemoteDataSource {
 
   /// Hủy đơn hàng
   Future<bool> cancelOrder(int orderId);
+
+  /// Đánh giá shipper
+  Future<bool> rateShipper(int shipperId, int orderId, int rating, String? comment);
 }
