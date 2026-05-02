@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/utils/logger/app_logger.dart';
+import '../../../profile/presentation/providers/profile_notifier.dart';
 import '../../domain/entities/livestream_comment_entity.dart';
 import '../providers/providers.dart';
 import '../widgets/livestream_bottom_controls.dart';
@@ -144,13 +145,13 @@ class _LivestreamWatchingViewState
     _commentDebounce = Timer(const Duration(milliseconds: 300), () async {
       _commentController.clear();
 
-      // TODO: Get current user info from auth provider
+      final user = ref.read(profileProvider).user;
       final comment = LivestreamCommentEntity(
         id: const Uuid().v4(),
         livestreamId: widget.livestreamId,
-        userId: 'user123',
-        userName: 'User Name',
-        userAvatar: null,
+        userId: user?.id?.toString() ?? 'anonymous',
+        userName: user?.displayName ?? 'Ẩn danh',
+        userAvatar: user?.avatarUrl,
         message: message,
         timestamp: DateTime.now(),
       );
@@ -169,12 +170,13 @@ class _LivestreamWatchingViewState
   void _sendLike() {
     _triggerLikeAnimation();
 
+    final user = ref.read(profileProvider).user;
     final like = LivestreamLikeEntity(
       id: const Uuid().v4(),
       livestreamId: widget.livestreamId,
-      userId: 'user123',
-      userName: 'User Name',
-      userAvatar: null,
+      userId: user?.id?.toString() ?? 'anonymous',
+      userName: user?.displayName,
+      userAvatar: user?.avatarUrl,
       timestamp: DateTime.now(),
     );
 
