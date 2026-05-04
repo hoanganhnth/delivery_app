@@ -57,12 +57,12 @@ class CancelOrder extends _$CancelOrder {
   }
 
   /// Hủy đơn hàng
-  Future<bool> cancelOrder(int orderId) async {
+  Future<bool> cancelOrder(int orderId, {String? reason}) async {
     state = const AsyncLoading();
 
     try {
       final cancelOrderUseCase = ref.read(cancelOrderUseCaseProvider);
-      final result = await cancelOrderUseCase(orderId);
+      final result = await cancelOrderUseCase(orderId, reason);
 
       // Guard: provider may have been disposed while awaiting
       // if (!ref.mounted) return false;

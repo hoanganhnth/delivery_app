@@ -27,6 +27,15 @@ _OrderDto _$OrderDtoFromJson(Map<String, dynamic> json) => _OrderDto(
   estimatedDeliveryTime: json['estimatedDeliveryTime'] == null
       ? null
       : DateTime.parse(json['estimatedDeliveryTime'] as String),
+  cancelReason: json['cancelReason'] as String?,
+  restaurantId: (json['restaurantId'] as num?)?.toInt(),
+  restaurantName: json['restaurantName'] as String?,
+  restaurantAddress: json['restaurantAddress'] as String?,
+  restaurantPhone: json['restaurantPhone'] as String?,
+  restaurantLat: (json['restaurantLat'] as num?)?.toDouble(),
+  restaurantLng: (json['restaurantLng'] as num?)?.toDouble(),
+  pickupLat: (json['pickupLat'] as num?)?.toDouble(),
+  pickupLng: (json['pickupLng'] as num?)?.toDouble(),
 );
 
 Map<String, dynamic> _$OrderDtoToJson(_OrderDto instance) => <String, dynamic>{
@@ -42,4 +51,13 @@ Map<String, dynamic> _$OrderDtoToJson(_OrderDto instance) => <String, dynamic>{
   'createdAt': instance.createdAt?.toIso8601String(),
   'updatedAt': instance.updatedAt?.toIso8601String(),
   'estimatedDeliveryTime': instance.estimatedDeliveryTime?.toIso8601String(),
+  'cancelReason': instance.cancelReason,
+  'restaurantId': instance.restaurantId,
+  'restaurantName': instance.restaurantName,
+  'restaurantAddress': instance.restaurantAddress,
+  'restaurantPhone': instance.restaurantPhone,
+  'restaurantLat': instance.restaurantLat,
+  'restaurantLng': instance.restaurantLng,
+  'pickupLat': instance.pickupLat,
+  'pickupLng': instance.pickupLng,
 };

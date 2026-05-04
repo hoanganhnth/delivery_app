@@ -145,3 +145,56 @@ final class PromotionRepositoryProvider
 
 String _$promotionRepositoryHash() =>
     r'5baba46ecfdc83208b8a26a6c72a502b39556c7e';
+
+@ProviderFor(CollectVoucherNotifier)
+final collectVoucherProvider = CollectVoucherNotifierProvider._();
+
+final class CollectVoucherNotifierProvider
+    extends $NotifierProvider<CollectVoucherNotifier, AsyncValue<void>> {
+  CollectVoucherNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'collectVoucherProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$collectVoucherNotifierHash();
+
+  @$internal
+  @override
+  CollectVoucherNotifier create() => CollectVoucherNotifier();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AsyncValue<void> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AsyncValue<void>>(value),
+    );
+  }
+}
+
+String _$collectVoucherNotifierHash() =>
+    r'b2a453effe34528b6f2cfbeaaf8c87a1d0b3d8b5';
+
+abstract class _$CollectVoucherNotifier extends $Notifier<AsyncValue<void>> {
+  AsyncValue<void> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, AsyncValue<void>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, AsyncValue<void>>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

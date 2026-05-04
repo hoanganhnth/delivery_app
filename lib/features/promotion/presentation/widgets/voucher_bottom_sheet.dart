@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../data/dtos/calculate_response_dto.dart';
 import '../providers/checkout_calculation_notifier.dart';
 import '../providers/selected_vouchers_notifier.dart';
+import '../providers/promotion_providers.dart';
 
 class VoucherBottomSheet extends ConsumerWidget {
   const VoucherBottomSheet({super.key});
@@ -23,6 +24,7 @@ class VoucherBottomSheet extends ConsumerWidget {
       child: Column(
         children: [
           _buildHeader(context),
+          const _VoucherInputWidget(),
           Expanded(
             child: calculateState.when(
               loading: () => const Center(child: CircularProgressIndicator(color: Colors.amber)),
@@ -245,5 +247,61 @@ class VoucherBottomSheet extends ConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+class _VoucherInputWidget extends StatefulWidget {
+  const _VoucherInputWidget();
+
+  @override
+  State<_VoucherInputWidget> createState() => _VoucherInputWidgetState();
+}
+
+class _VoucherInputWidgetState extends State<_VoucherInputWidget> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(16.w),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                hintText: 'Nhập mã giảm giá',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.w),
+                ),
+                contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
+              ),
+            ),
+          ),
+          SizedBox(width: 12.w),
+          ElevatedButton(
+            onPressed: () {
+              // Handle voucher application
+              if (_controller.text.isNotEmpty) {
+                // Implement voucher validation logic
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.amber.shade700,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.w),
+              ),
+            ),
+            child: const Text('Áp dụng', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }

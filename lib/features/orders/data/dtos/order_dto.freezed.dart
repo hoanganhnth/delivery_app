@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$OrderDto {
 
- int? get id; String get status; String get customerName; String get customerPhone; String get deliveryAddress; String get paymentMethod;@JsonKey(name: 'totalPrice') double? get totalAmount; String? get notes; List<OrderItemDto>? get items; DateTime? get createdAt; DateTime? get updatedAt; DateTime? get estimatedDeliveryTime;
+ int? get id; String get status; String get customerName; String get customerPhone; String get deliveryAddress; String get paymentMethod;@JsonKey(name: 'totalPrice') double? get totalAmount; String? get notes; List<OrderItemDto>? get items; DateTime? get createdAt; DateTime? get updatedAt; DateTime? get estimatedDeliveryTime; String? get cancelReason; int? get restaurantId; String? get restaurantName; String? get restaurantAddress; String? get restaurantPhone; double? get restaurantLat; double? get restaurantLng; double? get pickupLat; double? get pickupLng;
 /// Create a copy of OrderDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $OrderDtoCopyWith<OrderDto> get copyWith => _$OrderDtoCopyWithImpl<OrderDto>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is OrderDto&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&(identical(other.customerPhone, customerPhone) || other.customerPhone == customerPhone)&&(identical(other.deliveryAddress, deliveryAddress) || other.deliveryAddress == deliveryAddress)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.notes, notes) || other.notes == notes)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.estimatedDeliveryTime, estimatedDeliveryTime) || other.estimatedDeliveryTime == estimatedDeliveryTime));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OrderDto&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&(identical(other.customerPhone, customerPhone) || other.customerPhone == customerPhone)&&(identical(other.deliveryAddress, deliveryAddress) || other.deliveryAddress == deliveryAddress)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.notes, notes) || other.notes == notes)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.estimatedDeliveryTime, estimatedDeliveryTime) || other.estimatedDeliveryTime == estimatedDeliveryTime)&&(identical(other.cancelReason, cancelReason) || other.cancelReason == cancelReason)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&(identical(other.restaurantAddress, restaurantAddress) || other.restaurantAddress == restaurantAddress)&&(identical(other.restaurantPhone, restaurantPhone) || other.restaurantPhone == restaurantPhone)&&(identical(other.restaurantLat, restaurantLat) || other.restaurantLat == restaurantLat)&&(identical(other.restaurantLng, restaurantLng) || other.restaurantLng == restaurantLng)&&(identical(other.pickupLat, pickupLat) || other.pickupLat == pickupLat)&&(identical(other.pickupLng, pickupLng) || other.pickupLng == pickupLng));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,customerName,customerPhone,deliveryAddress,paymentMethod,totalAmount,notes,const DeepCollectionEquality().hash(items),createdAt,updatedAt,estimatedDeliveryTime);
+int get hashCode => Object.hashAll([runtimeType,id,status,customerName,customerPhone,deliveryAddress,paymentMethod,totalAmount,notes,const DeepCollectionEquality().hash(items),createdAt,updatedAt,estimatedDeliveryTime,cancelReason,restaurantId,restaurantName,restaurantAddress,restaurantPhone,restaurantLat,restaurantLng,pickupLat,pickupLng]);
 
 @override
 String toString() {
-  return 'OrderDto(id: $id, status: $status, customerName: $customerName, customerPhone: $customerPhone, deliveryAddress: $deliveryAddress, paymentMethod: $paymentMethod, totalAmount: $totalAmount, notes: $notes, items: $items, createdAt: $createdAt, updatedAt: $updatedAt, estimatedDeliveryTime: $estimatedDeliveryTime)';
+  return 'OrderDto(id: $id, status: $status, customerName: $customerName, customerPhone: $customerPhone, deliveryAddress: $deliveryAddress, paymentMethod: $paymentMethod, totalAmount: $totalAmount, notes: $notes, items: $items, createdAt: $createdAt, updatedAt: $updatedAt, estimatedDeliveryTime: $estimatedDeliveryTime, cancelReason: $cancelReason, restaurantId: $restaurantId, restaurantName: $restaurantName, restaurantAddress: $restaurantAddress, restaurantPhone: $restaurantPhone, restaurantLat: $restaurantLat, restaurantLng: $restaurantLng, pickupLat: $pickupLat, pickupLng: $pickupLng)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $OrderDtoCopyWith<$Res>  {
   factory $OrderDtoCopyWith(OrderDto value, $Res Function(OrderDto) _then) = _$OrderDtoCopyWithImpl;
 @useResult
 $Res call({
- int? id, String status, String customerName, String customerPhone, String deliveryAddress, String paymentMethod,@JsonKey(name: 'totalPrice') double? totalAmount, String? notes, List<OrderItemDto>? items, DateTime? createdAt, DateTime? updatedAt, DateTime? estimatedDeliveryTime
+ int? id, String status, String customerName, String customerPhone, String deliveryAddress, String paymentMethod,@JsonKey(name: 'totalPrice') double? totalAmount, String? notes, List<OrderItemDto>? items, DateTime? createdAt, DateTime? updatedAt, DateTime? estimatedDeliveryTime, String? cancelReason, int? restaurantId, String? restaurantName, String? restaurantAddress, String? restaurantPhone, double? restaurantLat, double? restaurantLng, double? pickupLat, double? pickupLng
 });
 
 
@@ -65,7 +65,7 @@ class _$OrderDtoCopyWithImpl<$Res>
 
 /// Create a copy of OrderDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? status = null,Object? customerName = null,Object? customerPhone = null,Object? deliveryAddress = null,Object? paymentMethod = null,Object? totalAmount = freezed,Object? notes = freezed,Object? items = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? estimatedDeliveryTime = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? status = null,Object? customerName = null,Object? customerPhone = null,Object? deliveryAddress = null,Object? paymentMethod = null,Object? totalAmount = freezed,Object? notes = freezed,Object? items = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? estimatedDeliveryTime = freezed,Object? cancelReason = freezed,Object? restaurantId = freezed,Object? restaurantName = freezed,Object? restaurantAddress = freezed,Object? restaurantPhone = freezed,Object? restaurantLat = freezed,Object? restaurantLng = freezed,Object? pickupLat = freezed,Object? pickupLng = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -79,7 +79,16 @@ as String?,items: freezed == items ? _self.items : items // ignore: cast_nullabl
 as List<OrderItemDto>?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,estimatedDeliveryTime: freezed == estimatedDeliveryTime ? _self.estimatedDeliveryTime : estimatedDeliveryTime // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,cancelReason: freezed == cancelReason ? _self.cancelReason : cancelReason // ignore: cast_nullable_to_non_nullable
+as String?,restaurantId: freezed == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
+as int?,restaurantName: freezed == restaurantName ? _self.restaurantName : restaurantName // ignore: cast_nullable_to_non_nullable
+as String?,restaurantAddress: freezed == restaurantAddress ? _self.restaurantAddress : restaurantAddress // ignore: cast_nullable_to_non_nullable
+as String?,restaurantPhone: freezed == restaurantPhone ? _self.restaurantPhone : restaurantPhone // ignore: cast_nullable_to_non_nullable
+as String?,restaurantLat: freezed == restaurantLat ? _self.restaurantLat : restaurantLat // ignore: cast_nullable_to_non_nullable
+as double?,restaurantLng: freezed == restaurantLng ? _self.restaurantLng : restaurantLng // ignore: cast_nullable_to_non_nullable
+as double?,pickupLat: freezed == pickupLat ? _self.pickupLat : pickupLat // ignore: cast_nullable_to_non_nullable
+as double?,pickupLng: freezed == pickupLng ? _self.pickupLng : pickupLng // ignore: cast_nullable_to_non_nullable
+as double?,
   ));
 }
 
@@ -164,10 +173,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String status,  String customerName,  String customerPhone,  String deliveryAddress,  String paymentMethod, @JsonKey(name: 'totalPrice')  double? totalAmount,  String? notes,  List<OrderItemDto>? items,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? estimatedDeliveryTime)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String status,  String customerName,  String customerPhone,  String deliveryAddress,  String paymentMethod, @JsonKey(name: 'totalPrice')  double? totalAmount,  String? notes,  List<OrderItemDto>? items,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? estimatedDeliveryTime,  String? cancelReason,  int? restaurantId,  String? restaurantName,  String? restaurantAddress,  String? restaurantPhone,  double? restaurantLat,  double? restaurantLng,  double? pickupLat,  double? pickupLng)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _OrderDto() when $default != null:
-return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_that.deliveryAddress,_that.paymentMethod,_that.totalAmount,_that.notes,_that.items,_that.createdAt,_that.updatedAt,_that.estimatedDeliveryTime);case _:
+return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_that.deliveryAddress,_that.paymentMethod,_that.totalAmount,_that.notes,_that.items,_that.createdAt,_that.updatedAt,_that.estimatedDeliveryTime,_that.cancelReason,_that.restaurantId,_that.restaurantName,_that.restaurantAddress,_that.restaurantPhone,_that.restaurantLat,_that.restaurantLng,_that.pickupLat,_that.pickupLng);case _:
   return orElse();
 
 }
@@ -185,10 +194,10 @@ return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String status,  String customerName,  String customerPhone,  String deliveryAddress,  String paymentMethod, @JsonKey(name: 'totalPrice')  double? totalAmount,  String? notes,  List<OrderItemDto>? items,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? estimatedDeliveryTime)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String status,  String customerName,  String customerPhone,  String deliveryAddress,  String paymentMethod, @JsonKey(name: 'totalPrice')  double? totalAmount,  String? notes,  List<OrderItemDto>? items,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? estimatedDeliveryTime,  String? cancelReason,  int? restaurantId,  String? restaurantName,  String? restaurantAddress,  String? restaurantPhone,  double? restaurantLat,  double? restaurantLng,  double? pickupLat,  double? pickupLng)  $default,) {final _that = this;
 switch (_that) {
 case _OrderDto():
-return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_that.deliveryAddress,_that.paymentMethod,_that.totalAmount,_that.notes,_that.items,_that.createdAt,_that.updatedAt,_that.estimatedDeliveryTime);case _:
+return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_that.deliveryAddress,_that.paymentMethod,_that.totalAmount,_that.notes,_that.items,_that.createdAt,_that.updatedAt,_that.estimatedDeliveryTime,_that.cancelReason,_that.restaurantId,_that.restaurantName,_that.restaurantAddress,_that.restaurantPhone,_that.restaurantLat,_that.restaurantLng,_that.pickupLat,_that.pickupLng);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -205,10 +214,10 @@ return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String status,  String customerName,  String customerPhone,  String deliveryAddress,  String paymentMethod, @JsonKey(name: 'totalPrice')  double? totalAmount,  String? notes,  List<OrderItemDto>? items,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? estimatedDeliveryTime)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String status,  String customerName,  String customerPhone,  String deliveryAddress,  String paymentMethod, @JsonKey(name: 'totalPrice')  double? totalAmount,  String? notes,  List<OrderItemDto>? items,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? estimatedDeliveryTime,  String? cancelReason,  int? restaurantId,  String? restaurantName,  String? restaurantAddress,  String? restaurantPhone,  double? restaurantLat,  double? restaurantLng,  double? pickupLat,  double? pickupLng)?  $default,) {final _that = this;
 switch (_that) {
 case _OrderDto() when $default != null:
-return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_that.deliveryAddress,_that.paymentMethod,_that.totalAmount,_that.notes,_that.items,_that.createdAt,_that.updatedAt,_that.estimatedDeliveryTime);case _:
+return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_that.deliveryAddress,_that.paymentMethod,_that.totalAmount,_that.notes,_that.items,_that.createdAt,_that.updatedAt,_that.estimatedDeliveryTime,_that.cancelReason,_that.restaurantId,_that.restaurantName,_that.restaurantAddress,_that.restaurantPhone,_that.restaurantLat,_that.restaurantLng,_that.pickupLat,_that.pickupLng);case _:
   return null;
 
 }
@@ -220,7 +229,7 @@ return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_th
 @JsonSerializable()
 
 class _OrderDto implements OrderDto {
-  const _OrderDto({this.id, required this.status, required this.customerName, required this.customerPhone, required this.deliveryAddress, required this.paymentMethod, @JsonKey(name: 'totalPrice') this.totalAmount, this.notes, final  List<OrderItemDto>? items, this.createdAt, this.updatedAt, this.estimatedDeliveryTime}): _items = items;
+  const _OrderDto({this.id, required this.status, required this.customerName, required this.customerPhone, required this.deliveryAddress, required this.paymentMethod, @JsonKey(name: 'totalPrice') this.totalAmount, this.notes, final  List<OrderItemDto>? items, this.createdAt, this.updatedAt, this.estimatedDeliveryTime, this.cancelReason, this.restaurantId, this.restaurantName, this.restaurantAddress, this.restaurantPhone, this.restaurantLat, this.restaurantLng, this.pickupLat, this.pickupLng}): _items = items;
   factory _OrderDto.fromJson(Map<String, dynamic> json) => _$OrderDtoFromJson(json);
 
 @override final  int? id;
@@ -243,6 +252,15 @@ class _OrderDto implements OrderDto {
 @override final  DateTime? createdAt;
 @override final  DateTime? updatedAt;
 @override final  DateTime? estimatedDeliveryTime;
+@override final  String? cancelReason;
+@override final  int? restaurantId;
+@override final  String? restaurantName;
+@override final  String? restaurantAddress;
+@override final  String? restaurantPhone;
+@override final  double? restaurantLat;
+@override final  double? restaurantLng;
+@override final  double? pickupLat;
+@override final  double? pickupLng;
 
 /// Create a copy of OrderDto
 /// with the given fields replaced by the non-null parameter values.
@@ -257,16 +275,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OrderDto&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&(identical(other.customerPhone, customerPhone) || other.customerPhone == customerPhone)&&(identical(other.deliveryAddress, deliveryAddress) || other.deliveryAddress == deliveryAddress)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.notes, notes) || other.notes == notes)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.estimatedDeliveryTime, estimatedDeliveryTime) || other.estimatedDeliveryTime == estimatedDeliveryTime));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OrderDto&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&(identical(other.customerPhone, customerPhone) || other.customerPhone == customerPhone)&&(identical(other.deliveryAddress, deliveryAddress) || other.deliveryAddress == deliveryAddress)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.notes, notes) || other.notes == notes)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.estimatedDeliveryTime, estimatedDeliveryTime) || other.estimatedDeliveryTime == estimatedDeliveryTime)&&(identical(other.cancelReason, cancelReason) || other.cancelReason == cancelReason)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&(identical(other.restaurantAddress, restaurantAddress) || other.restaurantAddress == restaurantAddress)&&(identical(other.restaurantPhone, restaurantPhone) || other.restaurantPhone == restaurantPhone)&&(identical(other.restaurantLat, restaurantLat) || other.restaurantLat == restaurantLat)&&(identical(other.restaurantLng, restaurantLng) || other.restaurantLng == restaurantLng)&&(identical(other.pickupLat, pickupLat) || other.pickupLat == pickupLat)&&(identical(other.pickupLng, pickupLng) || other.pickupLng == pickupLng));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,customerName,customerPhone,deliveryAddress,paymentMethod,totalAmount,notes,const DeepCollectionEquality().hash(_items),createdAt,updatedAt,estimatedDeliveryTime);
+int get hashCode => Object.hashAll([runtimeType,id,status,customerName,customerPhone,deliveryAddress,paymentMethod,totalAmount,notes,const DeepCollectionEquality().hash(_items),createdAt,updatedAt,estimatedDeliveryTime,cancelReason,restaurantId,restaurantName,restaurantAddress,restaurantPhone,restaurantLat,restaurantLng,pickupLat,pickupLng]);
 
 @override
 String toString() {
-  return 'OrderDto(id: $id, status: $status, customerName: $customerName, customerPhone: $customerPhone, deliveryAddress: $deliveryAddress, paymentMethod: $paymentMethod, totalAmount: $totalAmount, notes: $notes, items: $items, createdAt: $createdAt, updatedAt: $updatedAt, estimatedDeliveryTime: $estimatedDeliveryTime)';
+  return 'OrderDto(id: $id, status: $status, customerName: $customerName, customerPhone: $customerPhone, deliveryAddress: $deliveryAddress, paymentMethod: $paymentMethod, totalAmount: $totalAmount, notes: $notes, items: $items, createdAt: $createdAt, updatedAt: $updatedAt, estimatedDeliveryTime: $estimatedDeliveryTime, cancelReason: $cancelReason, restaurantId: $restaurantId, restaurantName: $restaurantName, restaurantAddress: $restaurantAddress, restaurantPhone: $restaurantPhone, restaurantLat: $restaurantLat, restaurantLng: $restaurantLng, pickupLat: $pickupLat, pickupLng: $pickupLng)';
 }
 
 
@@ -277,7 +295,7 @@ abstract mixin class _$OrderDtoCopyWith<$Res> implements $OrderDtoCopyWith<$Res>
   factory _$OrderDtoCopyWith(_OrderDto value, $Res Function(_OrderDto) _then) = __$OrderDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, String status, String customerName, String customerPhone, String deliveryAddress, String paymentMethod,@JsonKey(name: 'totalPrice') double? totalAmount, String? notes, List<OrderItemDto>? items, DateTime? createdAt, DateTime? updatedAt, DateTime? estimatedDeliveryTime
+ int? id, String status, String customerName, String customerPhone, String deliveryAddress, String paymentMethod,@JsonKey(name: 'totalPrice') double? totalAmount, String? notes, List<OrderItemDto>? items, DateTime? createdAt, DateTime? updatedAt, DateTime? estimatedDeliveryTime, String? cancelReason, int? restaurantId, String? restaurantName, String? restaurantAddress, String? restaurantPhone, double? restaurantLat, double? restaurantLng, double? pickupLat, double? pickupLng
 });
 
 
@@ -294,7 +312,7 @@ class __$OrderDtoCopyWithImpl<$Res>
 
 /// Create a copy of OrderDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? status = null,Object? customerName = null,Object? customerPhone = null,Object? deliveryAddress = null,Object? paymentMethod = null,Object? totalAmount = freezed,Object? notes = freezed,Object? items = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? estimatedDeliveryTime = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? status = null,Object? customerName = null,Object? customerPhone = null,Object? deliveryAddress = null,Object? paymentMethod = null,Object? totalAmount = freezed,Object? notes = freezed,Object? items = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? estimatedDeliveryTime = freezed,Object? cancelReason = freezed,Object? restaurantId = freezed,Object? restaurantName = freezed,Object? restaurantAddress = freezed,Object? restaurantPhone = freezed,Object? restaurantLat = freezed,Object? restaurantLng = freezed,Object? pickupLat = freezed,Object? pickupLng = freezed,}) {
   return _then(_OrderDto(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -308,7 +326,16 @@ as String?,items: freezed == items ? _self._items : items // ignore: cast_nullab
 as List<OrderItemDto>?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,estimatedDeliveryTime: freezed == estimatedDeliveryTime ? _self.estimatedDeliveryTime : estimatedDeliveryTime // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,cancelReason: freezed == cancelReason ? _self.cancelReason : cancelReason // ignore: cast_nullable_to_non_nullable
+as String?,restaurantId: freezed == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
+as int?,restaurantName: freezed == restaurantName ? _self.restaurantName : restaurantName // ignore: cast_nullable_to_non_nullable
+as String?,restaurantAddress: freezed == restaurantAddress ? _self.restaurantAddress : restaurantAddress // ignore: cast_nullable_to_non_nullable
+as String?,restaurantPhone: freezed == restaurantPhone ? _self.restaurantPhone : restaurantPhone // ignore: cast_nullable_to_non_nullable
+as String?,restaurantLat: freezed == restaurantLat ? _self.restaurantLat : restaurantLat // ignore: cast_nullable_to_non_nullable
+as double?,restaurantLng: freezed == restaurantLng ? _self.restaurantLng : restaurantLng // ignore: cast_nullable_to_non_nullable
+as double?,pickupLat: freezed == pickupLat ? _self.pickupLat : pickupLat // ignore: cast_nullable_to_non_nullable
+as double?,pickupLng: freezed == pickupLng ? _self.pickupLng : pickupLng // ignore: cast_nullable_to_non_nullable
+as double?,
   ));
 }
 

@@ -20,6 +20,15 @@ abstract class OrderDto with _$OrderDto {
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? estimatedDeliveryTime,
+    String? cancelReason,
+    int? restaurantId,
+    String? restaurantName,
+    String? restaurantAddress,
+    String? restaurantPhone,
+    double? restaurantLat,
+    double? restaurantLng,
+    double? pickupLat,
+    double? pickupLng,
   }) = _OrderDto;
 
   factory OrderDto.fromJson(Map<String, dynamic> json) =>
@@ -42,6 +51,15 @@ extension OrderDtoX on OrderDto {
       createdAt: createdAt,
       updatedAt: updatedAt,
       estimatedDeliveryTime: estimatedDeliveryTime,
+      cancelReason: cancelReason,
+      restaurantId: restaurantId,
+      restaurantName: restaurantName,
+      restaurantAddress: restaurantAddress,
+      restaurantPhone: restaurantPhone,
+      restaurantLat: restaurantLat,
+      restaurantLng: restaurantLng,
+      pickupLat: pickupLat,
+      pickupLng: pickupLng,
     );
   }
 }
@@ -61,6 +79,15 @@ extension OrderEntityX on OrderEntity {
       createdAt: createdAt,
       updatedAt: updatedAt,
       estimatedDeliveryTime: estimatedDeliveryTime,
+      cancelReason: cancelReason,
+      restaurantId: restaurantId,
+      restaurantName: restaurantName,
+      restaurantAddress: restaurantAddress,
+      restaurantPhone: restaurantPhone,
+      restaurantLat: restaurantLat,
+      restaurantLng: restaurantLng,
+      pickupLat: pickupLat,
+      pickupLng: pickupLng,
     );
   }
 }

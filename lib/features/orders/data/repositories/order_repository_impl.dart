@@ -75,9 +75,9 @@ class OrderRepositoryImpl implements OrderRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> cancelOrder(int orderId) async {
+  Future<Either<Failure, bool>> cancelOrder(int orderId, {String? reason}) async {
     try {
-      final success = await _remoteDataSource.cancelOrder(orderId);
+      final success = await _remoteDataSource.cancelOrder(orderId, reason: reason);
       return right(success);
     } on Exception catch (e) {
       return left(mapExceptionToFailure(e));

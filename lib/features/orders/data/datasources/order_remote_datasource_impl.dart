@@ -100,10 +100,10 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
   }
 
   @override
-  Future<bool> cancelOrder(int orderId) async {
+  Future<bool> cancelOrder(int orderId, {String? reason}) async {
     try {
-      AppLogger.d('Cancelling order: $orderId');
-      final response = await _apiService.cancelOrder(orderId);
+      AppLogger.d('Cancelling order: $orderId with reason: $reason');
+      final response = await _apiService.cancelOrder(orderId, {'reason': reason});
       AppLogger.i('Successfully cancelled order: $orderId');
 
       if (response.isSuccess) {

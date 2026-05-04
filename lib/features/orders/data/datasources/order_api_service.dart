@@ -43,7 +43,10 @@ abstract class OrderApiService {
 
   /// Hủy đơn hàng
   @PUT('${ApiConstants.order}/{id}/cancel')
-  Future<BaseResponseDto<OrderDto>> cancelOrder(@Path('id') int orderId);
+  Future<BaseResponseDto<OrderDto>> cancelOrder(
+    @Path('id') int orderId,
+    @Body() Map<String, dynamic> request,
+  );
 
   // /// Lấy danh sách đơn hàng theo trạng thái
   // @GET('/orders')

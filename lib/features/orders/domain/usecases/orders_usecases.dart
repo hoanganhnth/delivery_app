@@ -88,11 +88,11 @@ class CancelOrderUseCase {
 
   CancelOrderUseCase(this.repository);
 
-  Future<Either<Failure, bool>> call(int orderId) async {
+  Future<Either<Failure, bool>> call(int orderId, String? reason) async {
     if (orderId <= 0) {
       return left(const ValidationFailure('Order ID must be greater than 0'));
     }
     
-    return await repository.cancelOrder(orderId);
+    return await repository.cancelOrder(orderId, reason: reason);
   }
 }

@@ -31,3 +31,24 @@ PromotionRepository promotionRepository(Ref ref) {
   final dataSource = ref.watch(promotionDataSourceProvider);
   return PromotionRepositoryImpl(dataSource);
 }
+
+@riverpod
+class CollectVoucherNotifier extends _$CollectVoucherNotifier {
+  @override
+  AsyncValue<void> build() {
+    return const AsyncValue.data(null);
+  }
+
+  Future<bool> collect(String code) async {
+    state = const AsyncValue.loading();
+    try {
+      final repository = ref.read(promotionRepositoryProvider);
+      await repository.collectVoucher(code);
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
+  }
+}

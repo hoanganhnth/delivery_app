@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/order_entity.dart';
 import '../providers/providers.dart';
 import 'shipper_rating_bottom_sheet.dart';
+import 'restaurant_rating_bottom_sheet.dart';
+import 'cancel_order_bottom_sheet.dart';
 
 /// Widget hiển thị các nút hành động cho đơn hàng
 class OrderActionButtons extends ConsumerWidget {
@@ -23,8 +25,8 @@ class OrderActionButtons extends ConsumerWidget {
     
     final theme = Theme.of(context);
 
-    // Chỉ hiển thị nút cancel cho đơn hàng pending
-    if (order.status != OrderStatus.pending) {
+    // Chỉ hiển thị nút cancel nếu có thể huỷ
+    if (!order.canCancel && order.status != OrderStatus.delivered) {
       return const SizedBox.shrink();
     }
 
@@ -41,11 +43,11 @@ class OrderActionButtons extends ConsumerWidget {
               ),
             ),
             SizedBox(height: 12.w),
-            if (order.status == OrderStatus.pending)
+            if (order.canCancel)
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  onPressed: () => _showCancelDialog(context, ref),
+                  onPressed: () => _handleCancelAction(context, ref),
                   icon: const Icon(Icons.cancel_outlined),
                   label: const Text('Hủy đơn hàng'),
                   style: OutlinedButton.styleFrom(
@@ -55,7 +57,7 @@ class OrderActionButtons extends ConsumerWidget {
                   ),
                 ),
               ),
-            if (order.status == OrderStatus.delivered && order.shipperId != null)
+              if (order.status == OrderStatus.delivered && order.shipperId != null)
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
@@ -66,6 +68,23 @@ class OrderActionButtons extends ConsumerWidget {
                     backgroundColor: Colors.amber,
                     foregroundColor: Colors.white,
                     padding: EdgeInsets.symmetric(vertical: 12.w),
+                  ),
+                ),
+              ),
+            if (order.status == OrderStatus.delivered)
+              Padding(
+                padding: EdgeInsets.only(top: 8.w),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () => _showRestaurantRatingBottomSheet(context),
+                    icon: const Icon(Icons.restaurant_menu),
+                    label: const Text('Đánh giá Quán ăn'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepOrange,
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(vertical: 12.w),
+                    ),
                   ),
                 ),
               ),
@@ -91,34 +110,29 @@ class OrderActionButtons extends ConsumerWidget {
     );
   }
 
-  void _showCancelDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+  void _showRestaurantRatingBottomSheet(BuildContext context) {
+    if (order.restaurantId == null || order.id == null) return;
+    
+    showModalBottomSheet(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Xác nhận hủy đơn'),
-        content: const Text(
-          'Bạn có chắc chắn muốn hủy đơn hàng này không?\n\n'
-          'Hành động này không thể hoàn tác.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Không'),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(dialogContext).pop();
-              await _cancelOrder(context, ref);
-            },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Hủy đơn'),
-          ),
-        ],
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => RestaurantRatingBottomSheet(
+        order: order,
       ),
     );
   }
 
-  Future<void> _cancelOrder(BuildContext context, WidgetRef ref) async {
+  Future<void> _handleCancelAction(BuildContext context, WidgetRef ref) async {
+    final reason = await CancelOrderBottomSheet.show(context);
+    if (reason != null && context.mounted) {
+      await _cancelOrder(context, ref, reason);
+    }
+  }
+
+  Future<void> _cancelOrder(BuildContext context, WidgetRef ref, String reason) async {
     try {
       // Hiển thị loading
       showDialog(
@@ -134,7 +148,7 @@ class OrderActionButtons extends ConsumerWidget {
 
       final result = await ref
           .read(cancelOrderProvider.notifier)
-          .cancelOrder(orderId);
+          .cancelOrder(orderId, reason: reason);
 
       if (context.mounted) {
         Navigator.of(context).pop(); // Đóng loading dialog

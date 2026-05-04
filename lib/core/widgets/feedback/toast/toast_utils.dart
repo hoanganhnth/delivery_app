@@ -39,6 +39,16 @@ class ToastUtils {
     }
   }
 
+  /// Hiển thị toast thành công chung
+  static void showSuccess(BuildContext context, {required String title, required String message}) {
+    AppToast.showSuccess(context: context, title: title, message: message);
+  }
+
+  /// Hiển thị toast lỗi chung
+  static void showError(BuildContext context, {required String title, required String message}) {
+    AppToast.showError(context: context, title: title, message: message);
+  }
+
   /// Toast cho đăng nhập thành công
   static void showLoginSuccess(BuildContext context, {String? userName}) {
     final message = userName != null

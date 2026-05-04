@@ -127,6 +127,15 @@ class OrderEntity extends Equatable {
   final DateTime? updatedAt;
   final DateTime? estimatedDeliveryTime;
   final int? shipperId;
+  final String? cancelReason;
+  final int? restaurantId;
+  final String? restaurantName;
+  final String? restaurantAddress;
+  final String? restaurantPhone;
+  final double? restaurantLat;
+  final double? restaurantLng;
+  final double? pickupLat;
+  final double? pickupLng;
 
   const OrderEntity({
     this.id,
@@ -143,6 +152,15 @@ class OrderEntity extends Equatable {
     this.updatedAt,
     this.estimatedDeliveryTime,
     this.shipperId,
+    this.cancelReason,
+    this.restaurantId,
+    this.restaurantName,
+    this.restaurantAddress,
+    this.restaurantPhone,
+    this.restaurantLat,
+    this.restaurantLng,
+    this.pickupLat,
+    this.pickupLng,
   });
 
   /// Get formatted status text
@@ -179,7 +197,15 @@ class OrderEntity extends Equatable {
       status != OrderStatus.delivered;
 
   /// Check if order can be cancelled
-  bool get canCancel => status == OrderStatus.pending;
+  bool get canCancel {
+    if (status == OrderStatus.pending) return true;
+    if (status == OrderStatus.delivering) {
+      // Allow cancellation if still finding shipper or just assigned
+      return rawBackendStatus == OrderStatusConstants.findingShipper ||
+             rawBackendStatus == OrderStatusConstants.assignedToShipper;
+    }
+    return false;
+  }
 
   /// Get total items count
   int get totalItems => items.fold(0, (sum, item) => sum + item.quantity);
@@ -212,6 +238,15 @@ class OrderEntity extends Equatable {
     DateTime? updatedAt,
     DateTime? estimatedDeliveryTime,
     int? shipperId,
+    String? cancelReason,
+    int? restaurantId,
+    String? restaurantName,
+    String? restaurantAddress,
+    String? restaurantPhone,
+    double? restaurantLat,
+    double? restaurantLng,
+    double? pickupLat,
+    double? pickupLng,
   }) {
     return OrderEntity(
       id: id ?? this.id,
@@ -229,6 +264,15 @@ class OrderEntity extends Equatable {
       estimatedDeliveryTime:
           estimatedDeliveryTime ?? this.estimatedDeliveryTime,
       shipperId: shipperId ?? this.shipperId,
+      cancelReason: cancelReason ?? this.cancelReason,
+      restaurantId: restaurantId ?? this.restaurantId,
+      restaurantName: restaurantName ?? this.restaurantName,
+      restaurantAddress: restaurantAddress ?? this.restaurantAddress,
+      restaurantPhone: restaurantPhone ?? this.restaurantPhone,
+      restaurantLat: restaurantLat ?? this.restaurantLat,
+      restaurantLng: restaurantLng ?? this.restaurantLng,
+      pickupLat: pickupLat ?? this.pickupLat,
+      pickupLng: pickupLng ?? this.pickupLng,
     );
   }
 
@@ -262,5 +306,14 @@ class OrderEntity extends Equatable {
     updatedAt,
     estimatedDeliveryTime,
     shipperId,
+    cancelReason,
+    restaurantId,
+    restaurantName,
+    restaurantAddress,
+    restaurantPhone,
+    restaurantLat,
+    restaurantLng,
+    pickupLat,
+    pickupLng,
   ];
 }

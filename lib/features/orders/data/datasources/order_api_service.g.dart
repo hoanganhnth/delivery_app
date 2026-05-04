@@ -181,11 +181,15 @@ class _OrderApiService implements OrderApiService {
   }
 
   @override
-  Future<BaseResponseDto<OrderDto>> cancelOrder(int orderId) async {
+  Future<BaseResponseDto<OrderDto>> cancelOrder(
+    int orderId,
+    Map<String, dynamic> request,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
+    _data.addAll(request);
     final _options = _setStreamType<BaseResponseDto<OrderDto>>(
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(

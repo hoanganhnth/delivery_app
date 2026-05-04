@@ -15,7 +15,7 @@ abstract class OrderRepository {
   Future<Either<Failure, OrderEntity>> createOrder(CreateOrderRequestDto request);
 
   /// Hủy đơn hàng
-  Future<Either<Failure, bool>> cancelOrder(int orderId);
+  Future<Either<Failure, bool>> cancelOrder(int orderId, {String? reason});
 
   /// Đánh giá shipper
   Future<Either<Failure, bool>> rateShipper(int shipperId, int orderId, int rating, String? comment);
