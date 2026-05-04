@@ -113,6 +113,8 @@ class _OrderCardState extends ConsumerState<OrderCard> {
                             fontWeight: FontWeight.w600,
                             color: colors.textSecondary,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(height: ResponsiveSize.m),
                         // Footer: Price + Action
@@ -121,14 +123,19 @@ class _OrderCardState extends ConsumerState<OrderCard> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             // Price
-                            Text(
-                              '\$${widget.order.totalAmount.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                fontSize: ResponsiveSize.fontL,
-                                fontWeight: FontWeight.w900,
-                                color: colors.textPrimary,
+                            Expanded(
+                              child: Text(
+                                '\$${widget.order.totalAmount.toStringAsFixed(2)}',
+                                style: TextStyle(
+                                  fontSize: ResponsiveSize.fontL,
+                                  fontWeight: FontWeight.w900,
+                                  color: colors.textPrimary,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
+                            SizedBox(width: ResponsiveSize.s),
                             // Action
                             _buildActionButton(colors, isActive, isCancelled),
                           ],

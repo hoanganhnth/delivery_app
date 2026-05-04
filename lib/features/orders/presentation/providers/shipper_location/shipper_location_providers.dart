@@ -1,7 +1,8 @@
+import 'package:delivery_app/core/network/_riverpod/authenticated_network_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/network/socket/socket_client.dart';
 import 'package:delivery_app/core/network/_riverpod/network_providers.dart';
-import 'package:delivery_app/features/orders/data/datasources/shipper_location_socket_datasource.dart' 
+import 'package:delivery_app/features/orders/data/datasources/shipper_location_socket_datasource.dart'
     as shipper_socket_ds;
 import 'package:delivery_app/features/orders/data/datasources/shipper_location_datasource.dart';
 import 'package:delivery_app/features/orders/data/datasources/shipper_location_remote_datasource.dart';
@@ -19,21 +20,27 @@ final shipperLocationSocketClientProvider = Provider<SocketClient>((ref) {
   return SocketClient(url, name: 'ShipperLocation');
 });
 
-/// DataSource Provider - Di chuyển từ core về feature  
-final shipperLocationSocketDataSourceProvider = Provider<ShipperLocationDataSource>((ref) {
-  final socketClient = ref.watch(shipperLocationSocketClientProvider);
-  return shipper_socket_ds.ShipperLocationSocketDataSource(socket: socketClient);
-});
+/// DataSource Provider - Di chuyển từ core về feature
+final shipperLocationSocketDataSourceProvider =
+    Provider<ShipperLocationDataSource>((ref) {
+      final socketClient = ref.watch(shipperLocationSocketClientProvider);
+      return shipper_socket_ds.ShipperLocationSocketDataSource(
+        socket: socketClient,
+      );
+    });
 
 /// Remote DataSource Provider (REST API)
-final shipperLocationRemoteDataSourceProvider = Provider<ShipperLocationRemoteDataSource>((ref) {
-  final dioClient = ref.watch(dioProvider);
-  final apiService = ShipperLocationApiService(dioClient);
-  return ShipperLocationRemoteDataSourceImpl(apiService);
-});
+final shipperLocationRemoteDataSourceProvider =
+    Provider<ShipperLocationRemoteDataSource>((ref) {
+      final dioClient = ref.watch(authenticatedDioProvider);
+      final apiService = ShipperLocationApiService(dioClient);
+      return ShipperLocationRemoteDataSourceImpl(apiService);
+    });
 
 /// Stream provider cho entities
-final shipperLocationStreamProvider = StreamProvider<ShipperLocationEntity>((ref) {
+final shipperLocationStreamProvider = StreamProvider<ShipperLocationEntity>((
+  ref,
+) {
   final dataSource = ref.watch(shipperLocationSocketDataSourceProvider);
   // Direct stream - no need to expand
   return dataSource.locationStream;
@@ -46,7 +53,9 @@ final shipperLocationConnectionProvider = StreamProvider<bool>((ref) {
 });
 
 /// Repository Provider - Di chuyển từ core về feature
-final shipperLocationRepositoryProvider = Provider<ShipperLocationRepository>((ref) {
+final shipperLocationRepositoryProvider = Provider<ShipperLocationRepository>((
+  ref,
+) {
   final socketDataSource = ref.watch(shipperLocationSocketDataSourceProvider);
   final remoteDataSource = ref.watch(shipperLocationRemoteDataSourceProvider);
   return ShipperLocationRepositoryImpl(socketDataSource, remoteDataSource);
@@ -58,17 +67,22 @@ final shipperLocationRepositoryProvider = Provider<ShipperLocationRepository>((r
 //   return StartShipperTrackingUseCase(repository);
 // });
 
-final stopShipperTrackingUseCaseProvider = Provider<StopShipperTrackingUseCase>((ref) {
-  final repository = ref.watch(shipperLocationRepositoryProvider);
-  return StopShipperTrackingUseCase(repository);
-});
+final stopShipperTrackingUseCaseProvider = Provider<StopShipperTrackingUseCase>(
+  (ref) {
+    final repository = ref.watch(shipperLocationRepositoryProvider);
+    return StopShipperTrackingUseCase(repository);
+  },
+);
 
-final trackShipperLocationUseCaseProvider = Provider<TrackShipperLocationUseCase>((ref) {
-  final repository = ref.watch(shipperLocationRepositoryProvider);
-  return TrackShipperLocationUseCase(repository);
-});
+final trackShipperLocationUseCaseProvider =
+    Provider<TrackShipperLocationUseCase>((ref) {
+      final repository = ref.watch(shipperLocationRepositoryProvider);
+      return TrackShipperLocationUseCase(repository);
+    });
 
-final getShipperLocationUseCaseProvider = Provider<GetShipperLocationUseCase>((ref) {
+final getShipperLocationUseCaseProvider = Provider<GetShipperLocationUseCase>((
+  ref,
+) {
   final repository = ref.watch(shipperLocationRepositoryProvider);
   return GetShipperLocationUseCase(repository);
 });
@@ -77,5 +91,5 @@ final getShipperLocationUseCaseProvider = Provider<GetShipperLocationUseCase>((r
 
 // We can just keep a dummy one so we don't break UI components while migrating
 final isShipperLocationConnectedProvider = Provider<bool>((ref) {
-  return false; 
+  return false;
 });

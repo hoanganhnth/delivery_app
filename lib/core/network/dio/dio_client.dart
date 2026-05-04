@@ -9,10 +9,11 @@ import 'interceptors/error_interceptor.dart';
 class DioClient {
   final Future<String?> Function()? getToken;
   final Future<String?> Function()? onRefreshToken;
+  final void Function()? onUnauthorized;
 
   late final Dio dio;
 
-  DioClient({this.getToken, this.onRefreshToken}) {
+  DioClient({this.getToken, this.onRefreshToken, this.onUnauthorized}) {
     final baseOptions = BaseOptions(
       baseUrl: Platform.isAndroid ? ApiConstants.api : ApiConstants.apiIos,
       connectTimeout: const Duration(seconds: 10),
@@ -27,6 +28,7 @@ class DioClient {
       ResponseInterceptor(),
       ErrorInterceptor(
         onRefreshToken: onRefreshToken,
+        onUnauthorized: onUnauthorized,
         baseOptions: baseOptions,
       ),
     ]);

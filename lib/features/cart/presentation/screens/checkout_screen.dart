@@ -35,14 +35,10 @@ class CheckoutScreen extends ConsumerStatefulWidget {
 class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   PaymentMethod _selectedPaymentMethod = PaymentMethod.cod;
   final TextEditingController _notesController = TextEditingController();
-  bool _isLoadingPreview = true;
-  bool _previewFailed = false;
-  CheckoutPreviewResponse? _preview;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _loadCheckoutPreview());
   }
 
   @override
@@ -57,12 +53,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     if (cart == null || cart.isEmpty) return;
 
     final addressState = ref.read(userAddressListProvider);
-    final selectedAddress = addressState.selectedAddress ?? addressState.defaultAddress;
-
-    setState(() {
-      _isLoadingPreview = true;
-      _previewFailed = false;
-    });
+    final selectedAddress =
+        addressState.selectedAddress ?? addressState.defaultAddress;
 
     try {
       final request = CheckoutPreviewRequest(
@@ -70,44 +62,18 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         deliveryLat: selectedAddress?.latitude,
         deliveryLng: selectedAddress?.longitude,
         items: cart.items
-            .map((item) => CheckoutPreviewItemRequest(
-                  menuItemId: item.menuItemId as int,
-                  quantity: item.quantity,
-                ))
+            .map(
+              (item) => CheckoutPreviewItemRequest(
+                menuItemId: item.menuItemId as int,
+                quantity: item.quantity,
+              ),
+            )
             .toList(),
       );
 
-      final preview = await ref
-          .read(checkoutPreviewProvider.notifier)
-          .loadPreview(request);
-
-      if (!mounted) return;
-
-      if (preview != null) {
-        setState(() => _preview = preview);
-
-        // Fetch promotions
-        final userId = ref.read(profileProvider).user?.id;
-        if (userId != null) {
-          final req = CartContextRequestDto(
-            shopId: cart.currentRestaurantId! as int,
-            userId: userId,
-            subTotal: preview.subtotal ?? 0,
-            shippingFee: preview.shippingFee ?? 0,
-          );
-          ref.read(checkoutCalculationProvider.notifier).calculate(req);
-        }
-
-        // Hiển thị cảnh báo nếu có món hết hàng
-        if (preview.unavailableItemIds != null &&
-            preview.unavailableItemIds!.isNotEmpty) {
-          _showUnavailableItemsDialog(preview.unavailableItemIds!);
-        }
-      }
+      await ref.read(checkoutPreviewProvider.notifier).loadPreview(request);
     } catch (_) {
-      if (mounted) setState(() => _previewFailed = true);
-    } finally {
-      if (mounted) setState(() => _isLoadingPreview = false);
+      // Errors are handled by watching the provider state
     }
   }
 
@@ -138,20 +104,26 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     );
   }
 
-  double _calculateLocalDiscount(List<int> selectedIds) {
+  double _calculateLocalDiscount(
+    List<int> selectedIds,
+    CheckoutPreviewResponse? preview,
+  ) {
     final calcState = ref.read(checkoutCalculationProvider).value;
     if (calcState == null) return 0.0;
-    
+
     double totalDiscount = 0.0;
     for (var id in selectedIds) {
-      final voucher = calcState.availableVouchers.where((v) => v.id == id).firstOrNull;
+      final voucher = calcState.availableVouchers
+          .where((v) => v.id == id)
+          .firstOrNull;
       if (voucher != null) {
         if (voucher.rewardType == 'FIXED') {
           totalDiscount += voucher.discountValue;
         } else if (voucher.rewardType == 'PERCENTAGE') {
-          totalDiscount += (_preview?.subtotal ?? 0) * voucher.discountValue / 100.0;
+          totalDiscount +=
+              (preview?.subtotal ?? 0) * voucher.discountValue / 100.0;
         } else if (voucher.rewardType == 'FREESHIP') {
-          totalDiscount += (_preview?.shippingFee ?? 0);
+          totalDiscount += (preview?.shippingFee ?? 0);
         }
       }
     }
@@ -165,7 +137,13 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     final createOrderState = ref.watch(createOrderProvider);
     final calculateState = ref.watch(checkoutCalculationProvider);
     final selectedVouchers = ref.watch(selectedVouchersProvider);
-    final localDiscount = _calculateLocalDiscount(selectedVouchers);
+    final previewState = ref.watch(checkoutPreviewProvider);
+
+    final previewData = previewState.value;
+    final localDiscount = _calculateLocalDiscount(
+      selectedVouchers,
+      previewData,
+    );
 
     // Listen to create order state for success/error
     ref.listen<AsyncValue<OrderEntity?>>(createOrderProvider, (prev, next) {
@@ -179,6 +157,37 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         },
         error: (error, stackTrace) {
           ToastUtils.showOrderPlacedError(context, message: error.toString());
+        },
+      );
+    });
+
+    // Listen to preview state for promotions and warnings
+    ref.listen<AsyncValue<CheckoutPreviewResponse?>>(checkoutPreviewProvider, (
+      prev,
+      next,
+    ) {
+      next.whenOrNull(
+        data: (preview) {
+          if (preview != null) {
+            // Fetch promotions
+            final cart = ref.read(cartProvider).value;
+            final userId = ref.read(profileProvider).user?.id;
+            if (cart != null && userId != null) {
+              final req = CartContextRequestDto(
+                shopId: cart.currentRestaurantId! as int,
+                userId: userId,
+                subTotal: preview.subtotal ?? 0,
+                shippingFee: preview.shippingFee ?? 0,
+              );
+              ref.read(checkoutCalculationProvider.notifier).calculate(req);
+            }
+
+            // Hiển thị cảnh báo nếu có món hết hàng
+            if (preview.unavailableItemIds != null &&
+                preview.unavailableItemIds!.isNotEmpty) {
+              _showUnavailableItemsDialog(preview.unavailableItemIds!);
+            }
+          }
         },
       );
     });
@@ -234,11 +243,13 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             child: Column(
               children: [
                 // Banner trạng thái
-                if (_isLoadingPreview)
+                if (previewState.isLoading)
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(
-                        horizontal: 16.w, vertical: 10.w),
+                      horizontal: 16.w,
+                      vertical: 10.w,
+                    ),
                     color: Colors.amber.shade50,
                     child: Row(
                       children: [
@@ -246,42 +257,53 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                           width: 16.w,
                           height: 16.w,
                           child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.amber.shade700),
+                            strokeWidth: 2,
+                            color: Colors.amber.shade700,
+                          ),
                         ),
                         SizedBox(width: 10.w),
                         Text(
                           'Đang tính toán giá...',
                           style: TextStyle(
-                              fontSize: 13.sp,
-                              color: Colors.amber.shade900),
+                            fontSize: 13.sp,
+                            color: Colors.amber.shade900,
+                          ),
                         ),
                       ],
                     ),
                   ),
-                if (_previewFailed)
+                if (previewState.hasError)
                   GestureDetector(
                     onTap: _loadCheckoutPreview,
                     child: Container(
                       width: double.infinity,
                       padding: EdgeInsets.symmetric(
-                          horizontal: 16.w, vertical: 10.w),
+                        horizontal: 16.w,
+                        vertical: 10.w,
+                      ),
                       color: Colors.red.shade50,
                       child: Row(
                         children: [
-                          Icon(Icons.warning_amber_rounded,
-                              size: 18.w, color: Colors.red.shade700),
+                          Icon(
+                            Icons.warning_amber_rounded,
+                            size: 18.w,
+                            color: Colors.red.shade700,
+                          ),
                           SizedBox(width: 10.w),
                           Expanded(
                             child: Text(
                               'Không thể lấy giá từ server. Nhấn để thử lại.',
                               style: TextStyle(
-                                  fontSize: 13.sp,
-                                  color: Colors.red.shade900),
+                                fontSize: 13.sp,
+                                color: Colors.red.shade900,
+                              ),
                             ),
                           ),
-                          Icon(Icons.refresh,
-                              size: 18.w, color: Colors.red.shade700),
+                          Icon(
+                            Icons.refresh,
+                            size: 18.w,
+                            color: Colors.red.shade700,
+                          ),
                         ],
                       ),
                     ),
@@ -341,7 +363,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                         ),
                         SizedBox(height: 8.w),
                         CheckoutSectionCard(
-                          child: OrderSummaryCard(cart: cart),
+                          child: OrderSummaryCard(cart: cart, preview: previewData),
                         ),
                         SizedBox(height: 16.w),
 
@@ -354,40 +376,54 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                         CheckoutSectionCard(
                           child: Consumer(
                             builder: (context, ref, child) {
-                              final selectedVouchers = ref.watch(selectedVouchersProvider);
-                              
+                              final selectedVouchers = ref.watch(
+                                selectedVouchersProvider,
+                              );
+
                               String text = 'Chọn hoặc nhập mã';
                               Color textColor = Colors.grey.shade600;
-                              
+
                               if (selectedVouchers.isNotEmpty) {
                                 text = 'Đã chọn ${selectedVouchers.length} mã';
                                 textColor = Colors.amber.shade700;
                               }
-                              
+
                               return InkWell(
                                 onTap: () {
                                   showModalBottomSheet(
                                     context: context,
                                     isScrollControlled: true,
                                     backgroundColor: Colors.transparent,
-                                    builder: (context) => const VoucherBottomSheet(),
+                                    builder: (context) =>
+                                        const VoucherBottomSheet(),
                                   );
                                 },
                                 borderRadius: BorderRadius.circular(12.w),
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16.w,
+                                    vertical: 12.w,
+                                  ),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         text,
                                         style: TextStyle(
                                           fontSize: 14.sp,
-                                          fontWeight: selectedVouchers.isNotEmpty ? FontWeight.bold : FontWeight.normal,
+                                          fontWeight:
+                                              selectedVouchers.isNotEmpty
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
                                           color: textColor,
                                         ),
                                       ),
-                                      Icon(Icons.arrow_forward_ios, size: 14.w, color: Colors.grey),
+                                      Icon(
+                                        Icons.arrow_forward_ios,
+                                        size: 14.w,
+                                        color: Colors.grey,
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -404,9 +440,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                         ),
                         SizedBox(height: 8.w),
                         CheckoutSectionCard(
-                          child: NotesCard(
-                            notesController: _notesController,
-                          ),
+                          child: NotesCard(notesController: _notesController),
                         ),
 
                         // Bottom padding
@@ -419,21 +453,26 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 // Bottom Checkout Section — hiển thị giá từ server
                 CheckoutBottomSection(
                   cart: cart,
-                  isLoading: _isLoadingPreview ||
+                  isLoading:
+                      previewState.isLoading ||
                       calculateState.isLoading ||
                       createOrderState.isLoading ||
                       ref.watch(paymentProvider).isLoading,
-                  buttonText: _isLoadingPreview
+                  buttonText: previewState.isLoading
                       ? 'Đang tính giá...'
                       : (_selectedPaymentMethod == PaymentMethod.wallet
-                          ? 'Thanh toán'
-                          : 'Đặt hàng'),
-                  onPlaceOrder:
-                      _isLoadingPreview ? () {} : () => _placeOrder(cart, selectedVouchers),
-                  serverSubtotal: _preview?.subtotal,
-                  serverShippingFee: _preview?.shippingFee,
-                  serverDiscount: (_preview?.discountAmount ?? 0) + localDiscount,
-                  serverTotal: (_preview?.totalPrice ?? 0) - localDiscount,
+                            ? 'Thanh toán'
+                            : 'Đặt hàng'),
+                  onPlaceOrder: previewState.isLoading
+                      ? () {}
+                      : () => _placeOrder(cart, selectedVouchers),
+                  serverSubtotal: previewData?.subtotal ?? cart.totalAmount,
+                  serverShippingFee: previewData?.shippingFee,
+                  serverDiscount:
+                      (previewData?.discountAmount ?? 0) + localDiscount,
+                  serverTotal: previewData?.totalPrice != null
+                      ? (previewData!.totalPrice! - localDiscount)
+                      : (cart.totalAmount - localDiscount),
                 ),
               ],
             ),
@@ -463,31 +502,33 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     }
 
     // Sử dụng giá từ server preview nếu có, fallback giá local
-    final items = _preview?.items != null
-        ? _preview!.items!
-            .map<OrderItemRequest>(
-              (item) => OrderItemRequest(
-                menuItemId: item.menuItemId!,
-                menuItemName: item.menuItemName ?? '',
-                quantity: item.quantity ?? 1,
-                price: item.unitPrice ?? 0,
-              ),
-            )
-            .toList()
+    final preview = ref.read(checkoutPreviewProvider).value;
+    final items = preview?.items != null
+        ? preview!.items!
+              .map<OrderItemRequest>(
+                (item) => OrderItemRequest(
+                  menuItemId: item.menuItemId!,
+                  menuItemName: item.menuItemName ?? '',
+                  quantity: item.quantity ?? 1,
+                  price: item.unitPrice ?? 0,
+                ),
+              )
+              .toList()
         : cart.items
-            .map<OrderItemRequest>(
-              (item) => OrderItemRequest(
-                menuItemId: item.menuItemId as int,
-                menuItemName: item.menuItemName,
-                quantity: item.quantity,
-                price: item.price,
-              ),
-            )
-            .toList();
+              .map<OrderItemRequest>(
+                (item) => OrderItemRequest(
+                  menuItemId: item.menuItemId as int,
+                  menuItemName: item.menuItemName,
+                  quantity: item.quantity,
+                  price: item.price,
+                ),
+              )
+              .toList();
 
     final request = CreateOrderRequestDto(
       restaurantId: cart.currentRestaurantId! as int,
-      restaurantName: _preview?.restaurantName ?? cart.currentRestaurantName ?? '',
+      restaurantName:
+          preview?.restaurantName ?? cart.currentRestaurantName ?? '',
       restaurantAddress: 'server-validated', // Server sẽ lấy từ DB
       restaurantPhone: '0000000000', // Server sẽ lấy từ DB
       deliveryAddress: selectedAddress.fullAddress,
@@ -495,8 +536,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       deliveryLng: selectedAddress.longitude,
       customerName: selectedAddress.recipientName,
       customerPhone: selectedAddress.phoneNumber,
-      paymentMethod:
-          _selectedPaymentMethod == PaymentMethod.wallet ? 'ONLINE' : 'COD',
+      paymentMethod: _selectedPaymentMethod == PaymentMethod.wallet
+          ? 'ONLINE'
+          : 'COD',
       notes: _notesController.text,
       voucherIds: voucherIds,
       items: items,
@@ -507,13 +549,15 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       try {
         final user = ref.read(profileProvider).user;
         if (user == null) {
-          ToastUtils.showOrderPlacedError(context,
-              message: 'Lỗi: Không tìm thấy thông tin người dùng.');
+          ToastUtils.showOrderPlacedError(
+            context,
+            message: 'Lỗi: Không tìm thấy thông tin người dùng.',
+          );
           return;
         }
 
         // Dùng totalPrice từ server preview
-        final amount = _preview?.totalPrice ?? cart.totalAmount;
+        final amount = preview?.totalPrice ?? cart.totalAmount;
 
         final paymentDto = CreatePaymentDto(
           entityId: user.id!,
@@ -523,8 +567,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           purpose: 'ORDER_PAYMENT',
         );
 
-        final paymentOrder =
-            await ref.read(paymentProvider.notifier).createPayment(paymentDto);
+        final paymentOrder = await ref
+            .read(paymentProvider.notifier)
+            .createPayment(paymentDto);
 
         if (paymentOrder != null && paymentOrder.paymentUrl != null) {
           if (mounted) {
@@ -541,8 +586,10 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           }
         } else {
           if (mounted) {
-            ToastUtils.showOrderPlacedError(context,
-                message: 'Lỗi: Không lấy được URL thanh toán.');
+            ToastUtils.showOrderPlacedError(
+              context,
+              message: 'Lỗi: Không lấy được URL thanh toán.',
+            );
           }
         }
       } catch (e) {

@@ -27,6 +27,9 @@ Dio authAwareDio(Ref ref) {
         return null;
       }
     },
+    onUnauthorized: () {
+      authNotifier.logout();
+    },
   );
   return dioClient.dio;
 }

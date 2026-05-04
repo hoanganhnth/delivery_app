@@ -19,10 +19,13 @@ class SelectedAddressCard extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<SelectedAddressCard> createState() => _SelectedAddressCardState();
+  ConsumerState<SelectedAddressCard> createState() =>
+      _SelectedAddressCardState();
 }
 
 class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
+  num? _lastAddressId;
+
   @override
   void initState() {
     super.initState();
@@ -42,8 +45,17 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
   @override
   Widget build(BuildContext context) {
     final addressState = ref.watch(userAddressListProvider);
-    final selectedAddress = addressState.selectedAddress ?? 
+    final selectedAddress =
+        addressState.selectedAddress ??
         addressState.addresses.where((addr) => addr.isDefault).firstOrNull;
+
+    // Notify parent ONLY when address actually changes
+    if (selectedAddress != null && selectedAddress.id != _lastAddressId) {
+      _lastAddressId = selectedAddress.id;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.onAddressSelected?.call(selectedAddress);
+      });
+    }
 
     return Card(
       elevation: 2,
@@ -61,7 +73,10 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
     );
   }
 
-  Widget _buildSelectedAddress(BuildContext context, UserAddressEntity address) {
+  Widget _buildSelectedAddress(
+    BuildContext context,
+    UserAddressEntity address,
+  ) {
     // Tự động fill vào address controller nếu có
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.addressController != null) {
@@ -70,7 +85,6 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
           widget.addressController!.text = fullAddress;
         }
       }
-      widget.onAddressSelected?.call(address);
     });
 
     return Column(
@@ -79,11 +93,7 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
         // Header với icon và action
         Row(
           children: [
-            Icon(
-              Icons.location_on,
-              color: ref.colors.primary,
-              size: 20,
-            ),
+            Icon(Icons.location_on, color: ref.colors.primary, size: 20),
             SizedBox(width: 8.w),
             Expanded(
               child: Text(
@@ -104,16 +114,12 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
               ),
             ),
             SizedBox(width: 4.w),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 14,
-              color: ref.colors.primary,
-            ),
+            Icon(Icons.arrow_forward_ios, size: 14, color: ref.colors.primary),
           ],
         ),
-        
+
         SizedBox(height: 12.w),
-        
+
         // Address info
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,7 +143,7 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
               ),
               SizedBox(width: 8.w),
             ],
-            
+
             // Address label
             Container(
               padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.w),
@@ -157,9 +163,9 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
             ),
           ],
         ),
-        
+
         SizedBox(height: 8.w),
-        
+
         // Recipient name and phone
         Text(
           '${address.recipientName} | ${address.phoneNumber}',
@@ -169,9 +175,9 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        
+
         SizedBox(height: 4.w),
-        
+
         // Full address
         Text(
           _buildFullAddressString(address),
@@ -221,11 +227,7 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
                 ],
               ),
             ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: ref.colors.primary,
-            ),
+            Icon(Icons.arrow_forward_ios, size: 16, color: ref.colors.primary),
           ],
         ),
       ],
@@ -234,7 +236,7 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
 
   String _buildFullAddressString(UserAddressEntity address) {
     final parts = <String>[];
-    
+
     if (address.addressLine.isNotEmpty) {
       parts.add(address.addressLine);
     }
@@ -247,7 +249,7 @@ class _SelectedAddressCardState extends ConsumerState<SelectedAddressCard> {
     if (address.city.isNotEmpty) {
       parts.add(address.city);
     }
-    
+
     return parts.join(', ');
   }
 

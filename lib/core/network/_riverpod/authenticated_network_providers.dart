@@ -37,10 +37,12 @@ Dio authenticatedDio(Ref ref) {
 Dio createAuthenticatedDio({
   required Future<String?> Function() getToken,
   required Future<String?> Function() onRefreshToken,
+  void Function()? onUnauthorized,
 }) {
   final dioClient = DioClient(
     getToken: getToken,
     onRefreshToken: onRefreshToken,
+    onUnauthorized: onUnauthorized,
   );
   return dioClient.dio;
 }

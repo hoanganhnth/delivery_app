@@ -14,7 +14,7 @@ import '../../../domain/entities/delivery_tracking_entity.dart';
 part 'delivery_tracking_notifier.g.dart';
 
 /// Notifier để quản lý delivery tracking
-@riverpod
+@Riverpod(keepAlive: true)
 class DeliveryTracking extends _$DeliveryTracking {
   /// ✅ Lưu subscription để có thể cancel khi cần
   StreamSubscription<dynamic>? _deliverySubscription;
@@ -67,19 +67,28 @@ class DeliveryTracking extends _$DeliveryTracking {
 
       result.fold(
         (failure) {
-          state = state.copyWith(isTracking: false, error: failure.message);
+          if (ref.mounted) {
+            state = state.copyWith(isTracking: false, error: failure.message);
+          }
         },
         (deliveryStream) {
-          state = state.copyWith(
-            isLoading: false,
-            isTracking: true,
-            isConnected: true,
-          );
+          if (ref.mounted) {
+            state = state.copyWith(
+              isLoading: false,
+              isTracking: true,
+              isConnected: true,
+            );
+          }
 
           // ✅ Cancel subscription cũ trước khi subscribe mới — tránh nhận data cũ lọt ra
           _deliverySubscription?.cancel();
           _deliverySubscription = deliveryStream.listen(
             (delivery) {
+              if (!ref.mounted) return;
+
+              final previousStatus = state.currentTracking?.status;
+              final statusChanged = previousStatus != delivery.status;
+
               AppLogger.d(
                 'Received delivery tracking: Order ${delivery.orderId}, Status ${delivery.status}',
               );
@@ -96,17 +105,25 @@ class DeliveryTracking extends _$DeliveryTracking {
                 _fetchShipperInfoIfNeeded(delivery.shipperId!);
               }
 
-              // ✅ Cập nhật route polyline dựa trên vị trí mới
-              _updateRoutePoints(delivery);
+              // ✅ Cập nhật route polyline nếu:
+              // 1. Trạng thái thay đổi (đổi điểm đích)
+              // 2. Hoặc chưa có polyline
+              if (statusChanged || state.polylinePoints == null) {
+                _updateRoutePoints(delivery);
+              }
             },
             onError: (error) {
-              state = state.copyWith(
-                error: 'Lỗi nhận dữ liệu delivery: ${error.toString()}',
-              );
+              if (ref.mounted) {
+                state = state.copyWith(
+                  error: 'Lỗi nhận dữ liệu delivery: ${error.toString()}',
+                );
+              }
             },
             onDone: () {
               AppLogger.i('Delivery stream closed');
-              state = state.copyWith(isTracking: false, isConnected: false);
+              if (ref.mounted) {
+                state = state.copyWith(isTracking: false, isConnected: false);
+              }
               _deliverySubscription = null;
             },
           );
@@ -135,15 +152,19 @@ class DeliveryTracking extends _$DeliveryTracking {
 
       result.fold(
         (failure) {
-          state = state.copyWith(error: failure.message);
+          if (ref.mounted) {
+            state = state.copyWith(error: failure.message);
+          }
         },
         (_) {
-          state = state.copyWith(
-            isTracking: false,
-            clearTracking: true,
-            clearError: true,
-            clearPolyline: true,
-          );
+          if (ref.mounted) {
+            state = state.copyWith(
+              isTracking: false,
+              clearTracking: true,
+              clearError: true,
+              clearPolyline: true,
+            );
+          }
         },
       );
     } catch (e) {
@@ -163,10 +184,14 @@ class DeliveryTracking extends _$DeliveryTracking {
 
       result.fold(
         (failure) {
-          state = state.copyWith(isLoading: false, error: failure.message);
+          if (ref.mounted) {
+            state = state.copyWith(isLoading: false, error: failure.message);
+          }
         },
         (_) {
-          state = state.copyWith(isLoading: false);
+          if (ref.mounted) {
+            state = state.copyWith(isLoading: false);
+          }
         },
       );
     } catch (e) {
@@ -201,17 +226,21 @@ class DeliveryTracking extends _$DeliveryTracking {
       result.fold(
         (failure) {
           AppLogger.e('Failed to fetch shipper info: ${failure.message}');
-          state = state.copyWith(
-            isLoadingShipper: false,
-            error: 'Không thể lấy thông tin shipper: ${failure.message}',
-          );
+          if (ref.mounted) {
+            state = state.copyWith(
+              isLoadingShipper: false,
+              error: 'Không thể lấy thông tin shipper: ${failure.message}',
+            );
+          }
         },
         (shipper) {
-          state = state.copyWith(
-            shipper: shipper,
-            isLoadingShipper: false,
-            clearError: true,
-          );
+          if (ref.mounted) {
+            state = state.copyWith(
+              shipper: shipper,
+              isLoadingShipper: false,
+              clearError: true,
+            );
+          }
         },
       );
     } catch (e) {
@@ -245,32 +274,38 @@ class DeliveryTracking extends _$DeliveryTracking {
       result.fold(
         (failure) {
           AppLogger.e('Failed to get current delivery: ${failure.message}');
-          state = state.copyWith(isLoading: false, error: failure.message);
+          if (ref.mounted) {
+            state = state.copyWith(isLoading: false, error: failure.message);
+          }
         },
         (delivery) {
           AppLogger.i('Successfully got current delivery for order: $orderId');
-          state = state.copyWith(
-            isLoading: false,
-            currentTracking: delivery,
-            clearError: true,
-          );
+          if (ref.mounted) {
+            state = state.copyWith(
+              isLoading: false,
+              currentTracking: delivery,
+              clearError: true,
+            );
 
-          // Tự động lấy thông tin shipper nếu cần
-          if (delivery.shipperId != null) {
-            _fetchShipperInfoIfNeeded(delivery.shipperId!);
+            // Tự động lấy thông tin shipper nếu cần
+            if (delivery.shipperId != null) {
+              _fetchShipperInfoIfNeeded(delivery.shipperId!);
+            }
+
+            // ✅ Cập nhật route polyline ban đầu
+            _updateRoutePoints(delivery);
           }
-
-          // ✅ Cập nhật route polyline ban đầu
-          _updateRoutePoints(delivery);
         },
       );
     } catch (e) {
       AppLogger.e('Unexpected error getting current delivery', e);
-      state = state.copyWith(
-        isLoading: false,
-        error:
-            'Lỗi không mong muốn khi lấy thông tin delivery: ${e.toString()}',
-      );
+      if (ref.mounted) {
+        state = state.copyWith(
+          isLoading: false,
+          error:
+              'Lỗi không mong muốn khi lấy thông tin delivery: ${e.toString()}',
+        );
+      }
     }
   }
 
@@ -324,8 +359,12 @@ class DeliveryTracking extends _$DeliveryTracking {
               .toList()
               .cast<List<double>>();
 
-          state = state.copyWith(polylinePoints: polylinePoints);
-          AppLogger.d('✅ Updated route polyline: ${polylinePoints.length} points');
+          if (ref.mounted) {
+            state = state.copyWith(polylinePoints: polylinePoints);
+            AppLogger.d(
+              '✅ Updated route polyline: ${polylinePoints.length} points',
+            );
+          }
         }
       }
     } catch (e) {

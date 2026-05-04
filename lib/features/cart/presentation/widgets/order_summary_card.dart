@@ -3,14 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../cart/domain/entities/cart_entity.dart';
+import '../../../orders/data/dtos/checkout_preview_dto.dart';
 
 /// Widget tóm tắt đơn hàng trong checkout
 class OrderSummaryCard extends ConsumerWidget {
   final CartEntity cart;
+  final CheckoutPreviewResponse? preview;
 
   const OrderSummaryCard({
     super.key,
     required this.cart,
+    this.preview,
   });
 
   @override
@@ -23,37 +26,69 @@ class OrderSummaryCard extends ConsumerWidget {
         child: Column(
           children: [
             // Order items
-            ...cart.items.map(
-              (item) => Padding(
-                padding: EdgeInsets.only(bottom: 8.w),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 4.w,
-                      height: 4.w,
-                      decoration: BoxDecoration(
-                        color: ref.colors.textSecondary,
-                        shape: BoxShape.circle,
+            ...(preview?.items != null
+                ? preview!.items!.map(
+                    (item) => Padding(
+                      padding: EdgeInsets.only(bottom: 8.w),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 4.w,
+                            height: 4.w,
+                            decoration: BoxDecoration(
+                              color: ref.colors.textSecondary,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          SizedBox(width: 8.w),
+                          Expanded(
+                            child: Text(
+                              '${item.quantity}x ${item.menuItemName}',
+                              style: TextStyle(color: ref.colors.textPrimary),
+                            ),
+                          ),
+                          Text(
+                            '${((item.unitPrice ?? 0) * (item.quantity ?? 1)).toStringAsFixed(0)}₫',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: ref.colors.textPrimary,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(width: 8.w),
-                    Expanded(
-                      child: Text(
-                        '${item.quantity}x ${item.menuItemName}',
-                        style: TextStyle(color: ref.colors.textPrimary),
+                  )
+                : cart.items.map(
+                    (item) => Padding(
+                      padding: EdgeInsets.only(bottom: 8.w),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 4.w,
+                            height: 4.w,
+                            decoration: BoxDecoration(
+                              color: ref.colors.textSecondary,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          SizedBox(width: 8.w),
+                          Expanded(
+                            child: Text(
+                              '${item.quantity}x ${item.menuItemName}',
+                              style: TextStyle(color: ref.colors.textPrimary),
+                            ),
+                          ),
+                          Text(
+                            '${(item.price * item.quantity).toStringAsFixed(0)}₫',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: ref.colors.textPrimary,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Text(
-                      '${(item.price * item.quantity).toStringAsFixed(0)}₫',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: ref.colors.textPrimary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                  )),
             
             const Divider(),
             
@@ -66,7 +101,7 @@ class OrderSummaryCard extends ConsumerWidget {
                   style: TextStyle(color: ref.colors.textSecondary),
                 ),
                 Text(
-                  '${cart.totalAmount.toStringAsFixed(0)}₫',
+                  '${(preview?.subtotal ?? cart.totalAmount).toStringAsFixed(0)}₫',
                   style: TextStyle(color: ref.colors.textPrimary),
                 ),
               ],
@@ -82,7 +117,7 @@ class OrderSummaryCard extends ConsumerWidget {
                   style: TextStyle(color: ref.colors.textSecondary),
                 ),
                 Text(
-                  '${0}₫',
+                  '${(preview?.shippingFee ?? 0).toStringAsFixed(0)}₫',
                   style: TextStyle(color: ref.colors.textPrimary),
                 ),
               ],
@@ -103,7 +138,7 @@ class OrderSummaryCard extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  '${cart.totalAmount.toStringAsFixed(0)}₫',
+                  '${(preview?.totalPrice ?? cart.totalAmount).toStringAsFixed(0)}₫',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,

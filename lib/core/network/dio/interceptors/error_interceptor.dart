@@ -5,13 +5,14 @@
 
 class ErrorInterceptor extends QueuedInterceptor {
   final Future<String?> Function()? onRefreshToken;
+  final void Function()? onUnauthorized;
   final BaseOptions? baseOptions;
 
   // Token refresh state management
   bool _isRefreshing = false;
   final _requestQueue = <Completer<String?>>[];
 
-  ErrorInterceptor({this.onRefreshToken, this.baseOptions});
+  ErrorInterceptor({this.onRefreshToken, this.onUnauthorized, this.baseOptions});
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
@@ -106,6 +107,8 @@ class ErrorInterceptor extends QueuedInterceptor {
         }
         _requestQueue.clear();
         
+        onUnauthorized?.call();
+        
         return handler.reject(DioException(
           requestOptions: err.requestOptions,
           error: UnauthorizedException("Unauthorized - refresh exception: $e"),
@@ -117,6 +120,10 @@ class ErrorInterceptor extends QueuedInterceptor {
     }
 
     // Not 401 or no refresh callback
+    if (err.response?.statusCode == 401) {
+      onUnauthorized?.call();
+    }
+    
     return handler.reject(DioException(
       requestOptions: err.requestOptions,
       error: ServerException("Server error: ${err.message}"),

@@ -73,6 +73,7 @@ class _OrderDeliveryTrackingCardState
         );
         if (widget.order.id != null) {
           ref.invalidate(orderDetailProvider(widget.order.id!));
+          ref.invalidate(deliveryTrackingProvider);
         }
         ref.read(deliveryTrackingProvider.notifier).stopTrackingOrder();
       }
