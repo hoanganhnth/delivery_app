@@ -11,12 +11,14 @@ class OrderCard extends ConsumerStatefulWidget {
   final OrderEntity order;
   final VoidCallback? onTap;
   final VoidCallback? onCancel;
+  final VoidCallback? onReorder;
 
   const OrderCard({
     super.key,
     required this.order,
     this.onTap,
     this.onCancel,
+    this.onReorder,
   });
 
   @override
@@ -184,35 +186,52 @@ class _OrderCardState extends ConsumerState<OrderCard> {
     String text;
     IconData icon;
     Color color;
+    VoidCallback? actionOnTap;
 
     if (isActive) {
       text = 'Track Order';
       icon = Icons.near_me;
       color = colors.primary;
-    } else if (isCancelled) {
+      actionOnTap = null; // Whole card tap handles this via widget.onTap
+    } else if (isCancelled || !isActive) {
+      // For cancelled or completed, show Reorder
       text = 'Reorder';
       icon = Icons.refresh;
-      color = colors.textSecondary;
+      color = colors.primary; // Reorder should be primary color
+      actionOnTap = widget.onReorder;
     } else {
       text = 'View Details';
       icon = Icons.chevron_right;
       color = colors.textSecondary;
+      actionOnTap = null;
     }
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: ResponsiveSize.fontS,
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
+    return GestureDetector(
+      onTap: actionOnTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+        decoration: actionOnTap != null 
+          ? BoxDecoration(
+              color: colors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(ResponsiveSize.radiusM),
+            )
+          : null,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: ResponsiveSize.fontS,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+            SizedBox(width: 2.w),
+            Icon(icon, color: color, size: 18.w),
+          ],
         ),
-        SizedBox(width: 2.w),
-        Icon(icon, color: color, size: 18.w),
-      ],
+      ),
     );
   }
 

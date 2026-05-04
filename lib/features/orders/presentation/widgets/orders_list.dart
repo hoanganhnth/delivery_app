@@ -10,6 +10,7 @@ class OrdersList extends StatelessWidget {
   final ScrollController? scrollController;
   final Function(int orderId) onOrderTap;
   final Function(OrderEntity order)? onOrderCancel;
+  final Function(OrderEntity order)? onOrderReorder;
 
   const OrdersList({
     super.key,
@@ -18,6 +19,7 @@ class OrdersList extends StatelessWidget {
     required this.onOrderTap,
     this.scrollController,
     this.onOrderCancel,
+    this.onOrderReorder,
   });
 
   @override
@@ -44,6 +46,7 @@ class OrdersList extends StatelessWidget {
           onCancel: order.status == OrderStatus.pending
               ? () => onOrderCancel?.call(order)
               : null,
+          onReorder: () => onOrderReorder?.call(order),
         );
       },
     );

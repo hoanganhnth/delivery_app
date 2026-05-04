@@ -207,6 +207,11 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
           scrollController: _scrollController,
           onOrderTap: _navigateToOrderDetail,
           onOrderCancel: _showCancelOrderDialog,
+          onOrderReorder: (order) {
+            if (order.restaurantId != null) {
+              context.pushToRestaurantDetails(order.restaurantId.toString());
+            }
+          },
         );
       },
     );

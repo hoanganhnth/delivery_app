@@ -52,7 +52,7 @@ class _RestaurantRatingBottomSheetState
         ToastUtils.showSuccess(
           context,
           title: 'Đánh giá',
-          message: 'Cảm ơn bạn đã đánh giá nhà hàng!',
+          message: 'Cảm ơn bạn đã đánh giá! Đánh giá sẽ được hiển thị sau khi được kiểm duyệt.',
         );
         Navigator.pop(context, true); // Return true indicating success
       }
