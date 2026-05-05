@@ -23,7 +23,7 @@ final class DeliveryTrackingProvider
         argument: null,
         retry: null,
         name: r'deliveryTrackingProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -44,7 +44,7 @@ final class DeliveryTrackingProvider
   }
 }
 
-String _$deliveryTrackingHash() => r'cdc4ab7a0bd7d542cefc85950c05a3f8acfd4edb';
+String _$deliveryTrackingHash() => r'2ac9b375bd2bb04b2fdc38612496c3f10b35eac6';
 
 /// Notifier để quản lý delivery tracking
 

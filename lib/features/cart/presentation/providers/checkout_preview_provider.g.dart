@@ -54,7 +54,7 @@ final class CheckoutOrderApiServiceProvider
 }
 
 String _$checkoutOrderApiServiceHash() =>
-    r'79f90c4babe279357671bd042c8ac369800e8fbb';
+    r'65f27fdb5bdeb895526a8028747b576f238febe9';
 
 /// ✅ Checkout Preview Provider
 /// Gọi server để tính giá chính xác trước khi đặt hàng.
@@ -78,7 +78,7 @@ final class CheckoutPreviewNotifierProvider
         argument: null,
         retry: null,
         name: r'checkoutPreviewProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -92,7 +92,7 @@ final class CheckoutPreviewNotifierProvider
 }
 
 String _$checkoutPreviewNotifierHash() =>
-    r'50c98de0639a33edaa47947d95588d3bcccf7d7f';
+    r'6e3701719430d514249239f1627c69430e3da0ca';
 
 /// ✅ Checkout Preview Provider
 /// Gọi server để tính giá chính xác trước khi đặt hàng.
