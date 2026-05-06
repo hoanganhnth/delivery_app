@@ -6,9 +6,9 @@ part of 'social_login_request_dto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-SocialLoginRequestDto _$SocialLoginRequestDtoFromJson(
+_SocialLoginRequestDto _$SocialLoginRequestDtoFromJson(
   Map<String, dynamic> json,
-) => SocialLoginRequestDto(
+) => _SocialLoginRequestDto(
   provider: json['provider'] as String,
   token: json['token'] as String,
   role: json['role'] as String?,
@@ -19,7 +19,7 @@ SocialLoginRequestDto _$SocialLoginRequestDtoFromJson(
 );
 
 Map<String, dynamic> _$SocialLoginRequestDtoToJson(
-  SocialLoginRequestDto instance,
+  _SocialLoginRequestDto instance,
 ) => <String, dynamic>{
   'provider': instance.provider,
   'token': instance.token,

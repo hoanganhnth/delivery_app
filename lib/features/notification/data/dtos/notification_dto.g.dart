@@ -6,8 +6,8 @@ part of 'notification_dto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-NotificationDto _$NotificationDtoFromJson(Map<String, dynamic> json) =>
-    NotificationDto(
+_NotificationDto _$NotificationDtoFromJson(Map<String, dynamic> json) =>
+    _NotificationDto(
       id: (json['id'] as num?)?.toInt(),
       userId: (json['userId'] as num?)?.toInt(),
       title: json['title'] as String?,
@@ -25,7 +25,7 @@ NotificationDto _$NotificationDtoFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updatedAt'] as String?,
     );
 
-Map<String, dynamic> _$NotificationDtoToJson(NotificationDto instance) =>
+Map<String, dynamic> _$NotificationDtoToJson(_NotificationDto instance) =>
     <String, dynamic>{
       'id': instance.id,
       'userId': instance.userId,
