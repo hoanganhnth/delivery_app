@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:delivery_app/core/error/error_mapper.dart';
 import '../../../domain/entities/order_entity.dart';
 import 'order_providers.dart';
 
@@ -13,7 +14,7 @@ class OrderDetail extends _$OrderDetail {
     final result = await getOrderByIdUseCase(orderId);
     
     return result.fold(
-      (failure) => throw Exception(failure.message),
+      (failure) => throw failure, // Riverpod will catch this and set state to AsyncError(failure)
       (order) => order,
     );
   }
@@ -26,11 +27,11 @@ class OrderDetail extends _$OrderDetail {
     try {
       final result = await getOrderByIdUseCase(orderId);
       result.fold(
-        (failure) => state = AsyncError(Exception(failure.message), StackTrace.current),
+        (failure) => state = AsyncError(failure, StackTrace.current),
         (order) => state = AsyncData(order),
       );
     } catch (e, st) {
-      state = AsyncError(e, st);
+      state = AsyncError(mapExceptionToFailure(e), st);
     }
   }
 

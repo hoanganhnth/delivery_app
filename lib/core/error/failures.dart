@@ -1,44 +1,16 @@
-abstract class Failure {
-  final String message;
-  const Failure(this.message);
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Failure && other.message == message;
-  }
+part 'failures.freezed.dart';
 
-  @override
-  int get hashCode => message.hashCode;
-
-  @override
-  String toString() => 'Failure(message: $message)';
-}
-
-class ServerFailure extends Failure {
-  const ServerFailure([super.message = "Server Failure"]);
-}
-
-class UnauthorizedFailure extends Failure {
-  const UnauthorizedFailure([super.message = "Unauthorized"]);
-}
-
-class ValidationFailure extends Failure {
-  const ValidationFailure([super.message = "Validation Error"]);
-}
-
-class NetworkFailure extends Failure {
-  const NetworkFailure([super.message = "Network Error"]);
-}
-
-class CacheFailure extends Failure {
-  const CacheFailure([super.message = "Cache Error"]);
-}
-
-class LocationFailure extends Failure {
-  const LocationFailure([super.message = "Location Error"]);
-}
-
-class BiometricFailure extends Failure {
-  const BiometricFailure([super.message = "Biometric Authentication Error"]);
+@freezed
+sealed class Failure with _$Failure {
+  const factory Failure.server([@Default('Server Failure') String message]) = ServerFailure;
+  const factory Failure.unauthorized([@Default('Unauthorized') String message]) = UnauthorizedFailure;
+  const factory Failure.validation([@Default('Validation Error') String message]) = ValidationFailure;
+  const factory Failure.network([@Default('Network Error') String message]) = NetworkFailure;
+  const factory Failure.cache([@Default('Cache Error') String message]) = CacheFailure;
+  const factory Failure.location([@Default('Location Error') String message]) = LocationFailure;
+  const factory Failure.biometric([@Default('Biometric Authentication Error') String message]) = BiometricFailure;
+  const factory Failure.notFound([@Default('Resource Not Found') String message]) = NotFoundFailure;
+  const factory Failure.unexpected([@Default('Unexpected Error') String message]) = UnexpectedFailure;
 }

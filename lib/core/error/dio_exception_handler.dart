@@ -8,48 +8,62 @@ class DioExceptionHandler {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return const NetworkFailure('Connection timeout');
+        return const Failure.network('Connection timeout');
 
       case DioExceptionType.badResponse:
         final statusCode = exception.response?.statusCode;
         final message = exception.response?.data?['message'];
+        
         if (message is String) {
-          return ServerFailure(message);
+          if (statusCode == 401) return Failure.unauthorized(message);
+          if (statusCode == 404) return Failure.notFound(message);
+          return Failure.server(message);
         }
+
         if (statusCode != null) {
           switch (statusCode) {
             case 400:
-              return ServerFailure('Bad request: $message');
+              return Failure.validation('Bad request ($statusCode)');
             case 401:
-              return const ServerFailure('Unauthorized');
+              return const Failure.unauthorized();
             case 403:
-              return const ServerFailure('Forbidden');
+              return const Failure.unauthorized('Forbidden access');
             case 404:
-              return const ServerFailure('Not found');
+              return const Failure.notFound();
             case 500:
-              return const ServerFailure('Internal server error');
+              return const Failure.server('Internal server error');
             default:
-              return ServerFailure('Server error ($statusCode): $message');
+              return Failure.server('Server error ($statusCode)');
           }
         }
-        return ServerFailure('Server error: $message');
+        return const Failure.server();
 
       case DioExceptionType.cancel:
-        return const NetworkFailure('Request cancelled');
+        return const Failure.network('Request cancelled');
 
       case DioExceptionType.connectionError:
-        return const NetworkFailure('No internet connection');
+        return const Failure.network('No internet connection');
 
       case DioExceptionType.badCertificate:
-        return const NetworkFailure('Certificate error');
+        return const Failure.network('Certificate error');
 
       case DioExceptionType.unknown:
-        return const NetworkFailure('Unknown network error');
+        return const Failure.network('Unknown network error');
     }
   }
 
-  static Exception mapDioExceptionToException(DioException e) {
+  static AppException mapDioExceptionToException(DioException e) {
     final failure = handleException(e);
-    return ServerException(failure.message);
+    return failure.when(
+      server: (msg) => AppException.server(msg),
+      unauthorized: (msg) => AppException.unauthorized(msg),
+      validation: (msg) => AppException.validation(msg),
+      network: (msg) => AppException.network(msg),
+      cache: (msg) => AppException.cache(msg),
+      location: (msg) => AppException.server(msg), // Fallback
+      biometric: (msg) => AppException.server(msg), // Fallback
+      notFound: (msg) => AppException.server(msg), // Fallback
+      unexpected: (msg) => AppException.server(msg),
+    );
   }
 }
