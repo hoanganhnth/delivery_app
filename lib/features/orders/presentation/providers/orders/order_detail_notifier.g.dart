@@ -53,7 +53,7 @@ final class OrderDetailProvider
   }
 }
 
-String _$orderDetailHash() => r'126b351a6cb0860827d0a6b677c0ed8f50330555';
+String _$orderDetailHash() => r'e20418d54c8f0315d077dcc61c55b056c688876f';
 
 /// Notifier cho chi tiết order
 

@@ -37,7 +37,7 @@ class AuthNotifier extends _$AuthNotifier {
     _storeTokensUseCase = ref.read(storeTokensUseCaseProvider);
     _getTokensUseCase = ref.read(getTokensUseCaseProvider);
     _clearTokensUseCase = ref.read(clearTokensUseCaseProvider);
-    return const AuthState();
+    return const AuthState.initial();
   }
 
   // Login method
@@ -49,7 +49,7 @@ class AuthNotifier extends _$AuthNotifier {
     String? deviceType,
     String? ipAddress,
   }) async {
-    state = state.copyWith(isLoginLoading: true, clearFailure: true);
+    state = const AuthState.unauthenticated(isLoginLoading: true);
 
     final params = LoginParams(
       email: email,
@@ -61,14 +61,11 @@ class AuthNotifier extends _$AuthNotifier {
     );
     final result = await _loginUseCase(params);
 
-    result.fold(
-      (failure) {
-        state = state.copyWith(
-          isLoginLoading: false,
-          isAuthenticated: false,
-          failure: failure,
-          clearUser: true,
-        );
+    if (!ref.mounted) return;
+
+    await result.fold(
+      (failure) async {
+        state = AuthState.unauthenticated(failure: failure);
       },
       (user) async {
         // Store tokens locally
@@ -82,10 +79,8 @@ class AuthNotifier extends _$AuthNotifier {
           (_) => AppLogger.d('AuthNotifier: Tokens stored successfully'),
         );
 
-        state = state.copyWith(
-          isLoginLoading: false,
-          isAuthenticated: true,
-          clearFailure: true,
+        if (!ref.mounted) return;
+        state = AuthState.authenticated(
           refreshToken: user.refreshToken,
           accessToken: user.accessToken,
         );
@@ -95,30 +90,32 @@ class AuthNotifier extends _$AuthNotifier {
 
   // Google Sign In
   Future<void> loginWithGoogle() async {
-    state = state.copyWith(isLoginLoading: true, clearFailure: true);
+    state = const AuthState.unauthenticated(isLoginLoading: true);
 
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn(
         scopes: ['email'],
       );
-      
+
       final GoogleSignInAccount? account = await googleSignIn.signIn();
-      
+
       if (account == null) {
         // User canceled the sign-in flow
-        state = state.copyWith(isLoginLoading: false);
+        if (ref.mounted) {
+          state = const AuthState.unauthenticated();
+        }
         return;
       }
-      
+
       final GoogleSignInAuthentication auth = await account.authentication;
       final String? idToken = auth.idToken;
-      
+
       if (idToken == null) {
-        state = state.copyWith(
-          isLoginLoading: false,
-          isAuthenticated: false,
-          failure: const ServerFailure('Google login failed: Empty ID token'),
-        );
+        if (ref.mounted) {
+          state = const AuthState.unauthenticated(
+            failure: ServerFailure('Google login failed: Empty ID token'),
+          );
+        }
         return;
       }
 
@@ -126,36 +123,31 @@ class AuthNotifier extends _$AuthNotifier {
         provider: 'google',
         token: idToken,
         role: 'CUSTOMER', // Default role for app users
-        deviceId: 'social-auth', 
+        deviceId: 'social-auth',
         deviceName: 'Mobile Device',
         deviceType: 'MOBILE',
         ipAddress: '127.0.0.1',
       );
 
       final result = await _socialLoginUseCase(params);
+      if (!ref.mounted) return;
 
-      result.fold(
-        (failure) {
-          state = state.copyWith(
-            isLoginLoading: false,
-            isAuthenticated: false,
-            failure: failure,
-            clearUser: true,
-          );
+      await result.fold(
+        (failure) async {
+          state = AuthState.unauthenticated(failure: failure);
         },
         (user) async {
           final storeResult = await _storeTokensUseCase(
             StoreTokensParams(tokens: user),
           );
           storeResult.fold(
-            (failure) => AppLogger.e('AuthNotifier: Failed to store tokens - ${failure.message}'),
+            (failure) => AppLogger.e(
+                'AuthNotifier: Failed to store tokens - ${failure.message}'),
             (_) => AppLogger.d('AuthNotifier: Tokens stored successfully'),
           );
 
-          state = state.copyWith(
-            isLoginLoading: false,
-            isAuthenticated: true,
-            clearFailure: true,
+          if (!ref.mounted) return;
+          state = AuthState.authenticated(
             refreshToken: user.refreshToken,
             accessToken: user.accessToken,
           );
@@ -163,11 +155,11 @@ class AuthNotifier extends _$AuthNotifier {
       );
     } catch (error) {
       AppLogger.e('Google Sign In Error', error);
-      state = state.copyWith(
-        isLoginLoading: false,
-        isAuthenticated: false,
-        failure: ServerFailure('Google sign-in error: $error'),
-      );
+      if (ref.mounted) {
+        state = AuthState.unauthenticated(
+          failure: ServerFailure('Google sign-in error: $error'),
+        );
+      }
     }
   }
 
@@ -177,7 +169,7 @@ class AuthNotifier extends _$AuthNotifier {
     required String refreshToken,
   }) async {
     AppLogger.d('AuthNotifier: Logging in with saved tokens');
-    state = state.copyWith(isLoginLoading: true, clearFailure: true);
+    state = const AuthState.unauthenticated(isLoginLoading: true);
 
     // Store tokens locally
     final storeResult = await _storeTokensUseCase(
@@ -189,23 +181,18 @@ class AuthNotifier extends _$AuthNotifier {
       ),
     );
 
+    if (!ref.mounted) return;
+
     storeResult.fold(
       (failure) {
         AppLogger.e(
           'AuthNotifier: Failed to store tokens - ${failure.message}',
         );
-        state = state.copyWith(
-          isLoginLoading: false,
-          isAuthenticated: false,
-          failure: failure,
-        );
+        state = AuthState.unauthenticated(failure: failure);
       },
       (_) {
         AppLogger.i('AuthNotifier: Logged in with tokens successfully');
-        state = state.copyWith(
-          isLoginLoading: false,
-          isAuthenticated: true,
-          clearFailure: true,
+        state = AuthState.authenticated(
           refreshToken: refreshToken,
           accessToken: accessToken,
         );
@@ -224,7 +211,7 @@ class AuthNotifier extends _$AuthNotifier {
     String? deviceType,
     String? ipAddress,
   }) async {
-    state = state.copyWith(isRegisterLoading: true, clearFailure: true);
+    state = const AuthState.unauthenticated(isRegisterLoading: true);
 
     final params = RegisterParams(
       name: name,
@@ -234,16 +221,18 @@ class AuthNotifier extends _$AuthNotifier {
     );
     final result = await _registerUseCase(params);
 
+    if (!ref.mounted) return;
+
     result.fold(
       (failure) {
-        state = state.copyWith(isRegisterLoading: false, failure: failure);
+        state = AuthState.unauthenticated(failure: failure);
       },
       (success) {
         // Register successful, now login to get tokens
         if (success) {
           login(email: email, password: password);
         } else {
-          state = state.copyWith(isRegisterLoading: false);
+          state = const AuthState.unauthenticated();
         }
       },
     );
@@ -267,32 +256,30 @@ class AuthNotifier extends _$AuthNotifier {
       (_) => AppLogger.d('AuthNotifier: Tokens cleared successfully'),
     );
 
-    state = state.copyWith(
-      isAuthenticated: false,
-      clearUser: true,
-      clearFailure: true,
-    );
+    if (ref.mounted) {
+      state = const AuthState.unauthenticated();
+    }
   }
 
   // Check if user is logged in
   Future<AuthState> checkAuthStatus() async {
     final tokensResult = await _getTokensUseCase(NoParams());
 
-    // fold trả về giá trị gì thì return luôn giá trị đó
+    if (!ref.mounted) return state;
+
     return tokensResult.fold(
       (failure) {
-        state = state.copyWith(isAuthenticated: false, clearUser: true);
+        state = const AuthState.unauthenticated();
         return state;
       },
       (tokens) {
         if (tokens != null) {
-          state = state.copyWith(
-            isAuthenticated: true,
+          state = AuthState.authenticated(
             accessToken: tokens.accessToken,
             refreshToken: tokens.refreshToken,
           );
         } else {
-          state = state.copyWith(isAuthenticated: false, clearUser: true);
+          state = const AuthState.unauthenticated();
         }
         return state;
       },
@@ -300,28 +287,34 @@ class AuthNotifier extends _$AuthNotifier {
   }
 
   // refreshToken
-  Future refreshToken() async {
-    if (state.refreshToken == null || state.refreshToken!.isEmpty) {
+  Future<String?> refreshToken() async {
+    final currentRefresh = state.refreshToken;
+    final currentAccess = state.accessToken;
+
+    if (currentRefresh == null || currentRefresh.isEmpty) {
       AppLogger.e('AuthNotifier: No refresh token available');
-      state = state.copyWith(isAuthenticated: false, clearUser: true);
-      return;
+      state = const AuthState.unauthenticated();
+      return null;
     }
 
-    state = state.copyWith(isRefreshLoading: true, clearFailure: true);
+    state = AuthState.authenticated(
+      accessToken: currentAccess ?? '',
+      refreshToken: currentRefresh,
+      isRefreshLoading: true,
+    );
+    
     AppLogger.d('AuthNotifier: Refreshing token');
 
-    final params = RefreshTokenParams(refreshToken: state.refreshToken!);
+    final params = RefreshTokenParams(refreshToken: currentRefresh);
     final result = await _refreshTokenUseCase(params);
 
-    await result.fold(
-      (failure) {
+    if (!ref.mounted) return null;
+
+    return await result.fold(
+      (failure) async {
         AppLogger.e('AuthNotifier: Token refresh failed - ${failure.message}');
-        state = state.copyWith(
-          isRefreshLoading: false,
-          isAuthenticated: false,
-          failure: failure,
-          clearUser: true,
-        );
+        state = AuthState.unauthenticated(failure: failure);
+        return null;
       },
       (newTokens) async {
         AppLogger.i('AuthNotifier: Token refresh successful');
@@ -331,6 +324,8 @@ class AuthNotifier extends _$AuthNotifier {
           StoreTokensParams(tokens: newTokens),
         );
 
+        if (!ref.mounted) return null;
+
         storeResult.fold(
           (failure) => AppLogger.e(
             'AuthNotifier: Failed to store new tokens - ${failure.message}',
@@ -338,16 +333,14 @@ class AuthNotifier extends _$AuthNotifier {
           (_) => AppLogger.d('AuthNotifier: New tokens stored successfully'),
         );
 
-        state = state.copyWith(
-          isRefreshLoading: false,
-          isAuthenticated: true,
-          clearFailure: true,
+        state = AuthState.authenticated(
           accessToken: newTokens.accessToken,
           refreshToken: newTokens.refreshToken,
         );
+        
+        return newTokens.accessToken;
       },
     );
-    return state.accessToken;
   }
 
   // Get access token from state
