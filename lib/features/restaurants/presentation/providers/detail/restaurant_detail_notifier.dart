@@ -28,13 +28,15 @@ class RestaurantDetailNotifier extends _$RestaurantDetailNotifier {
     //   return;
     // }
 
-    state = state.copyWith(isLoading: true, clearFailure: true);
+    state = state.copyWith(isLoading: true, failure: null);
 
     AppLogger.d('RestaurantDetailNotifier: Loading restaurant detail for ID: $restaurantId');
 
     // Load restaurant details first
     final restaurantResult = await _getRestaurantByIdUseCase.call(restaurantId);
     
+    if (!ref.mounted) return;
+
     restaurantResult.fold(
       (failure) {
         AppLogger.e('RestaurantDetailNotifier: Failed to load restaurant - ${failure.message}');
@@ -46,6 +48,9 @@ class RestaurantDetailNotifier extends _$RestaurantDetailNotifier {
         
         // Load menu items
         final menuResult = await _getMenuItemsUseCase.call(restaurantId);
+        
+        if (!ref.mounted) return;
+
         menuResult.fold(
           (failure) {
             AppLogger.e('RestaurantDetailNotifier: Failed to load menu items - ${failure.message}');
@@ -72,12 +77,14 @@ class RestaurantDetailNotifier extends _$RestaurantDetailNotifier {
     //   return;
     // }
 
-    state = state.copyWith(isMenuLoading: true, clearFailure: true);
+    state = state.copyWith(isMenuLoading: true, failure: null);
 
     AppLogger.d('RestaurantDetailNotifier: Loading menu items for restaurant: $restaurantId');
 
     final result = await _getMenuItemsUseCase.call(restaurantId);
     
+    if (!ref.mounted) return;
+
     result.fold(
       (failure) {
         AppLogger.e('RestaurantDetailNotifier: Failed to load menu items - ${failure.message}');
@@ -98,9 +105,9 @@ class RestaurantDetailNotifier extends _$RestaurantDetailNotifier {
   void clearRestaurantDetail() {
     AppLogger.d('RestaurantDetailNotifier: Clearing restaurant detail');
     state = state.copyWith(
-      clearRestaurant: true,
-      clearMenuItems: true,
-      clearFailure: true,
+      restaurant: null,
+      menuItems: const [],
+      failure: null,
     );
   }
 

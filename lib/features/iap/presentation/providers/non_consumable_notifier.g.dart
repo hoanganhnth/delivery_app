@@ -34,7 +34,7 @@ final class NonConsumableNotifierProvider
 }
 
 String _$nonConsumableNotifierHash() =>
-    r'614f73a91ff9ee3a7e31f118c96304509736decf';
+    r'3a915946d24a727b481cbf36519aa67a2a70aa84';
 
 abstract class _$NonConsumableNotifier
     extends $AsyncNotifier<NonConsumableState> {

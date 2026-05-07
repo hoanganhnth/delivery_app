@@ -44,7 +44,7 @@ final class ShipperLocationProvider
   }
 }
 
-String _$shipperLocationHash() => r'b17477b33798de096b50110bc4df0f39178e561b';
+String _$shipperLocationHash() => r'3f767ab1b98ad99ccfff2263f41aa2c448221109';
 
 /// Notifier để quản lý shipper location tracking
 

@@ -1,41 +1,21 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:delivery_app/core/error/failures.dart';
 import 'package:delivery_app/features/iap/domain/entities/non_consumable_entity.dart';
 
+part 'non_consumable_state.freezed.dart';
+
 /// State for non-consumable IAP (unlockable features)
-class NonConsumableState {
-  final bool isLoading;
-  final List<NonConsumableEntity> products;
-  final List<FeatureType> unlockedFeatures;
-  final Failure? failure;
-  final String? successMessage;
+@freezed
+sealed class NonConsumableState with _$NonConsumableState {
+  const NonConsumableState._();
 
-  const NonConsumableState({
-    this.isLoading = false,
-    this.products = const [],
-    this.unlockedFeatures = const [],
-    this.failure,
-    this.successMessage,
-  });
-
-  NonConsumableState copyWith({
-    bool? isLoading,
-    List<NonConsumableEntity>? products,
-    List<FeatureType>? unlockedFeatures,
+  const factory NonConsumableState({
+    @Default(false) bool isLoading,
+    @Default([]) List<NonConsumableEntity> products,
+    @Default([]) List<FeatureType> unlockedFeatures,
     Failure? failure,
     String? successMessage,
-    bool clearFailure = false,
-    bool clearSuccessMessage = false,
-  }) {
-    return NonConsumableState(
-      isLoading: isLoading ?? this.isLoading,
-      products: products ?? this.products,
-      unlockedFeatures: unlockedFeatures ?? this.unlockedFeatures,
-      failure: clearFailure ? null : (failure ?? this.failure),
-      successMessage: clearSuccessMessage
-          ? null
-          : (successMessage ?? this.successMessage),
-    );
-  }
+  }) = _NonConsumableState;
 
   /// Check if a specific feature is unlocked
   bool isUnlocked(FeatureType featureType) {

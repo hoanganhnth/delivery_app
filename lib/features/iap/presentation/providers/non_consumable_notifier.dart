@@ -71,7 +71,7 @@ class NonConsumableNotifier extends _$NonConsumableNotifier {
   Future<void> loadProducts() async {
     final currentState = state.value ?? const NonConsumableState();
     state = AsyncValue.data(
-      currentState.copyWith(isLoading: true, clearFailure: true),
+      currentState.copyWith(isLoading: true, failure: null),
     );
 
     final result = await _getNonConsumableProductsUseCase();
@@ -115,7 +115,7 @@ class NonConsumableNotifier extends _$NonConsumableNotifier {
     final currentState = state.value ?? const NonConsumableState();
     state = AsyncValue.data(
       currentState.copyWith(
-          isLoading: true, clearFailure: true, clearSuccessMessage: true),
+          isLoading: true, failure: null, successMessage: null),
     );
 
     final result = await _purchaseNonConsumableUseCase(featureType);
@@ -167,12 +167,12 @@ class NonConsumableNotifier extends _$NonConsumableNotifier {
   /// Clear error message
   void clearError() {
     final currentState = state.value ?? const NonConsumableState();
-    state = AsyncValue.data(currentState.copyWith(clearFailure: true));
+    state = AsyncValue.data(currentState.copyWith(failure: null));
   }
 
   /// Clear success message
   void clearSuccessMessage() {
     final currentState = state.value ?? const NonConsumableState();
-    state = AsyncValue.data(currentState.copyWith(clearSuccessMessage: true));
+    state = AsyncValue.data(currentState.copyWith(successMessage: null));
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:delivery_app/core/error/failures.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:delivery_app/core/utils/logger/app_logger.dart';
 import 'package:delivery_app/core/usecases/usecase.dart';
@@ -58,7 +59,7 @@ class DeliveryTracking extends _$DeliveryTracking {
     try {
       AppLogger.i('Starting tracking for order $orderId');
 
-      state = state.copyWith(isTracking: true, clearError: true);
+      state = state.copyWith(isTracking: true, failure: null);
 
       final startTrackingUseCase = ref.read(trackDeliveryUseCaseProvider);
       final result = await startTrackingUseCase(
@@ -68,7 +69,7 @@ class DeliveryTracking extends _$DeliveryTracking {
       result.fold(
         (failure) {
           if (ref.mounted) {
-            state = state.copyWith(isTracking: false, error: failure.message);
+            state = state.copyWith(isTracking: false, failure: failure);
           }
         },
         (deliveryStream) {
@@ -96,7 +97,7 @@ class DeliveryTracking extends _$DeliveryTracking {
               // Cập nhật delivery tracking
               state = state.copyWith(
                 currentTracking: delivery,
-                clearError: true,
+                failure: null,
               );
 
               // Lấy thông tin shipper nếu là shipper ID mới
@@ -115,7 +116,7 @@ class DeliveryTracking extends _$DeliveryTracking {
             onError: (error) {
               if (ref.mounted) {
                 state = state.copyWith(
-                  error: 'Lỗi nhận dữ liệu delivery: ${error.toString()}',
+                  failure: ServerFailure('Lỗi nhận dữ liệu delivery: ${error.toString()}'),
                 );
               }
             },
@@ -133,7 +134,7 @@ class DeliveryTracking extends _$DeliveryTracking {
       AppLogger.e('Failed to start tracking order $orderId', e);
       state = state.copyWith(
         isTracking: false,
-        error: 'Không thể bắt đầu theo dõi order: ${e.toString()}',
+        failure: ServerFailure('Không thể bắt đầu theo dõi order: ${e.toString()}'),
       );
     }
   }
@@ -153,23 +154,23 @@ class DeliveryTracking extends _$DeliveryTracking {
       result.fold(
         (failure) {
           if (ref.mounted) {
-            state = state.copyWith(error: failure.message);
+            state = state.copyWith(failure: failure);
           }
         },
         (_) {
           if (ref.mounted) {
             state = state.copyWith(
               isTracking: false,
-              clearTracking: true,
-              clearError: true,
-              clearPolyline: true,
+              currentTracking: null,
+              failure: null,
+              polylinePoints: null,
             );
           }
         },
       );
     } catch (e) {
       AppLogger.e('Error stopping delivery tracking', e);
-      state = state.copyWith(error: 'Lỗi khi dừng theo dõi delivery');
+      state = state.copyWith(failure: const ServerFailure('Lỗi khi dừng theo dõi delivery'));
     }
   }
 
@@ -177,7 +178,7 @@ class DeliveryTracking extends _$DeliveryTracking {
   Future<void> refresh() async {
     try {
       AppLogger.i('Refreshing delivery tracking connection');
-      state = state.copyWith(isLoading: true, clearError: true);
+      state = state.copyWith(isLoading: true, failure: null);
 
       final refreshUseCase = ref.read(refreshDeliveryTrackingUseCaseProvider);
       final result = await refreshUseCase(NoParams());
@@ -185,7 +186,7 @@ class DeliveryTracking extends _$DeliveryTracking {
       result.fold(
         (failure) {
           if (ref.mounted) {
-            state = state.copyWith(isLoading: false, error: failure.message);
+            state = state.copyWith(isLoading: false, failure: failure);
           }
         },
         (_) {
@@ -198,7 +199,7 @@ class DeliveryTracking extends _$DeliveryTracking {
       AppLogger.e('Failed to refresh delivery tracking', e);
       state = state.copyWith(
         isLoading: false,
-        error: 'Không thể làm mới kết nối',
+        failure: const ServerFailure('Không thể làm mới kết nối'),
       );
     }
   }
@@ -229,7 +230,7 @@ class DeliveryTracking extends _$DeliveryTracking {
           if (ref.mounted) {
             state = state.copyWith(
               isLoadingShipper: false,
-              error: 'Không thể lấy thông tin shipper: ${failure.message}',
+              failure: failure,
             );
           }
         },
@@ -238,7 +239,7 @@ class DeliveryTracking extends _$DeliveryTracking {
             state = state.copyWith(
               shipper: shipper,
               isLoadingShipper: false,
-              clearError: true,
+              failure: null,
             );
           }
         },
@@ -247,14 +248,14 @@ class DeliveryTracking extends _$DeliveryTracking {
       AppLogger.e('Unexpected error fetching shipper info', e);
       state = state.copyWith(
         isLoadingShipper: false,
-        error: 'Lỗi không mong muốn khi lấy thông tin shipper',
+        failure: const ServerFailure('Lỗi không mong muốn khi lấy thông tin shipper'),
       );
     }
   }
 
   /// Clear error
   void clearError() {
-    state = state.copyWith(clearError: true);
+    state = state.copyWith(failure: null);
   }
 
   /// Lấy delivery tracking hiện tại qua REST API
@@ -262,7 +263,7 @@ class DeliveryTracking extends _$DeliveryTracking {
     try {
       AppLogger.i('Getting current delivery for order: $orderId');
 
-      state = state.copyWith(isLoading: true, clearError: true);
+      state = state.copyWith(isLoading: true, failure: null);
 
       final getCurrentDeliveryUseCase = ref.read(
         getCurrentDeliveryUseCaseProvider,
@@ -275,7 +276,7 @@ class DeliveryTracking extends _$DeliveryTracking {
         (failure) {
           AppLogger.e('Failed to get current delivery: ${failure.message}');
           if (ref.mounted) {
-            state = state.copyWith(isLoading: false, error: failure.message);
+            state = state.copyWith(isLoading: false, failure: failure);
           }
         },
         (delivery) {
@@ -284,7 +285,7 @@ class DeliveryTracking extends _$DeliveryTracking {
             state = state.copyWith(
               isLoading: false,
               currentTracking: delivery,
-              clearError: true,
+              failure: null,
             );
 
             // Tự động lấy thông tin shipper nếu cần
@@ -302,8 +303,7 @@ class DeliveryTracking extends _$DeliveryTracking {
       if (ref.mounted) {
         state = state.copyWith(
           isLoading: false,
-          error:
-              'Lỗi không mong muốn khi lấy thông tin delivery: ${e.toString()}',
+          failure: ServerFailure('Lỗi không mong muốn khi lấy thông tin delivery: ${e.toString()}'),
         );
       }
     }
@@ -316,7 +316,7 @@ class DeliveryTracking extends _$DeliveryTracking {
         delivery.status == DeliveryStatus.delivered ||
         delivery.status == DeliveryStatus.cancelled) {
       if (state.polylinePoints != null) {
-        state = state.copyWith(clearPolyline: true);
+        state = state.copyWith(polylinePoints: null);
       }
       return;
     }

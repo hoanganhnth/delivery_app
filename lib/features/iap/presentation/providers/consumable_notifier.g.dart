@@ -34,7 +34,7 @@ final class ConsumableNotifierProvider
 }
 
 String _$consumableNotifierHash() =>
-    r'69599dee5f0afb7bc8350ecb48a4b8cfecde7b11';
+    r'11e47d90224f8479cd0274b35d8bd3f7e823d6bb';
 
 abstract class _$ConsumableNotifier extends $AsyncNotifier<ConsumableState> {
   FutureOr<ConsumableState> build();

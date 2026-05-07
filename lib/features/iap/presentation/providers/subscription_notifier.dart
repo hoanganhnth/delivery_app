@@ -49,9 +49,11 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
 
   /// Load available subscription tiers
   Future<void> loadSubscriptionTiers() async {
-    state = state.copyWith(isLoading: true, clearFailure: true);
+    state = state.copyWith(isLoading: true, failure: null);
 
     final result = await _getSubscriptionTiersUseCase();
+
+    if (!ref.mounted) return;
 
     result.fold(
       (failure) => state = state.copyWith(
@@ -68,6 +70,8 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
   /// Load active subscription
   Future<void> loadActiveSubscription() async {
     final result = await _getActiveSubscriptionUseCase();
+
+    if (!ref.mounted) return;
 
     result.fold(
       (failure) => state = state.copyWith(failure: failure),
@@ -87,9 +91,11 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
       return;
     }
 
-    state = state.copyWith(isLoading: true, clearFailure: true, clearSuccess: true);
+    state = state.copyWith(isLoading: true, failure: null, successMessage: null);
 
     final result = await _purchaseSubscriptionUseCase(tier);
+
+    if (!ref.mounted) return;
 
     result.fold(
       (failure) => state = state.copyWith(
@@ -111,9 +117,11 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
 
   /// Restore previous purchases
   Future<void> restorePurchases() async {
-    state = state.copyWith(isLoading: true, clearFailure: true, clearSuccess: true);
+    state = state.copyWith(isLoading: true, failure: null, successMessage: null);
 
     final result = await _restorePurchasesUseCase();
+
+    if (!ref.mounted) return;
 
     result.fold(
       (failure) => state = state.copyWith(
@@ -139,23 +147,23 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
     // In real app, this would call API to cancel subscription
     // For now, just clear local state
     state = state.copyWith(
-      clearActiveSubscription: true,
+      activeSubscription: null,
       successMessage: 'Subscription canceled',
     );
   }
 
   /// Clear success/error messages
   void clearMessages() {
-    state = state.copyWith(clearFailure: true, clearSuccess: true);
+    state = state.copyWith(failure: null, successMessage: null);
   }
 
   /// Clear success message only
   void clearSuccessMessage() {
-    state = state.copyWith(clearSuccess: true);
+    state = state.copyWith(successMessage: null);
   }
 
   /// Clear error/failure only
   void clearError() {
-    state = state.copyWith(clearFailure: true);
+    state = state.copyWith(failure: null);
   }
 }

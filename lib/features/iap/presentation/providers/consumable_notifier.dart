@@ -74,7 +74,7 @@ class ConsumableNotifier extends _$ConsumableNotifier {
   Future<void> loadProducts() async {
     final currentState = state.value ?? const ConsumableState();
     state = AsyncValue.data(
-      currentState.copyWith(isLoading: true, clearFailure: true),
+      currentState.copyWith(isLoading: true, failure: null),
     );
 
     final result = await _getConsumableProductsUseCase();
@@ -118,7 +118,7 @@ class ConsumableNotifier extends _$ConsumableNotifier {
     final currentState = state.value ?? const ConsumableState();
     state = AsyncValue.data(
       currentState.copyWith(
-          isLoading: true, clearFailure: true, clearSuccessMessage: true),
+          isLoading: true, failure: null, successMessage: null),
     );
 
     final result = await _purchaseConsumableUseCase(product.product.id);
@@ -173,7 +173,7 @@ class ConsumableNotifier extends _$ConsumableNotifier {
     final currentState = state.value ?? const ConsumableState();
     state = AsyncValue.data(
       currentState.copyWith(
-          isLoading: true, clearFailure: true, clearSuccessMessage: true),
+          isLoading: true, failure: null, successMessage: null),
     );
 
     final result = await _deductCreditsUseCase(amount);
@@ -201,12 +201,12 @@ class ConsumableNotifier extends _$ConsumableNotifier {
   /// Clear error message
   void clearError() {
     final currentState = state.value ?? const ConsumableState();
-    state = AsyncValue.data(currentState.copyWith(clearFailure: true));
+    state = AsyncValue.data(currentState.copyWith(failure: null));
   }
 
   /// Clear success message
   void clearSuccessMessage() {
     final currentState = state.value ?? const ConsumableState();
-    state = AsyncValue.data(currentState.copyWith(clearSuccessMessage: true));
+    state = AsyncValue.data(currentState.copyWith(successMessage: null));
   }
 }

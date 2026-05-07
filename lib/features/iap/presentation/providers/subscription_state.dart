@@ -1,48 +1,23 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:delivery_app/core/error/failures.dart';
 import 'package:delivery_app/features/iap/domain/entities/purchase_entity.dart';
 import 'package:delivery_app/features/iap/domain/entities/subscription_entity.dart';
 
+part 'subscription_state.freezed.dart';
+
 /// State for subscription management
-class SubscriptionState {
-  final bool isLoading;
-  final List<SubscriptionEntity> availableTiers;
-  final SubscriptionEntity? activeSubscription;
-  final PurchaseEntity? currentPurchase;
-  final Failure? failure;
-  final String? successMessage;
+@freezed
+sealed class SubscriptionState with _$SubscriptionState {
+  const SubscriptionState._();
 
-  const SubscriptionState({
-    this.isLoading = false,
-    this.availableTiers = const [],
-    this.activeSubscription,
-    this.currentPurchase,
-    this.failure,
-    this.successMessage,
-  });
-
-  SubscriptionState copyWith({
-    bool? isLoading,
-    List<SubscriptionEntity>? availableTiers,
+  const factory SubscriptionState({
+    @Default(false) bool isLoading,
+    @Default([]) List<SubscriptionEntity> availableTiers,
     SubscriptionEntity? activeSubscription,
     PurchaseEntity? currentPurchase,
     Failure? failure,
     String? successMessage,
-    bool clearFailure = false,
-    bool clearSuccess = false,
-    bool clearActiveSubscription = false,
-  }) {
-    return SubscriptionState(
-      isLoading: isLoading ?? this.isLoading,
-      availableTiers: availableTiers ?? this.availableTiers,
-      activeSubscription: clearActiveSubscription
-          ? null
-          : (activeSubscription ?? this.activeSubscription),
-      currentPurchase: currentPurchase ?? this.currentPurchase,
-      failure: clearFailure ? null : (failure ?? this.failure),
-      successMessage:
-          clearSuccess ? null : (successMessage ?? this.successMessage),
-    );
-  }
+  }) = _SubscriptionState;
 
   bool get hasActiveSubscription => activeSubscription != null;
 

@@ -31,7 +31,7 @@ class RestaurantsNotifier extends _$RestaurantsNotifier {
     int page = 1,
     int limit = 20,
   }) async {
-    state = state.copyWith(isLoading: true, clearFailure: true);
+    state = state.copyWith(isLoading: true, failure: null);
 
     AppLogger.d('RestaurantsNotifier: Loading restaurants (page: $page, limit: $limit)');
 
@@ -45,6 +45,8 @@ class RestaurantsNotifier extends _$RestaurantsNotifier {
 
     final result = await _getRestaurantsUseCase.call(params);
     
+    if (!ref.mounted) return;
+
     result.fold(
       (failure) {
         AppLogger.e('RestaurantsNotifier: Failed to load restaurants - ${failure.message}');
@@ -72,7 +74,7 @@ class RestaurantsNotifier extends _$RestaurantsNotifier {
       return;
     }
 
-    state = state.copyWith(isSearchLoading: true, clearFailure: true);
+    state = state.copyWith(isSearchLoading: true, failure: null);
 
     AppLogger.d('RestaurantsNotifier: Searching restaurants with query: "$query"');
 
@@ -84,6 +86,8 @@ class RestaurantsNotifier extends _$RestaurantsNotifier {
 
     final result = await _searchRestaurantsUseCase.call(params);
     
+    if (!ref.mounted) return;
+
     result.fold(
       (failure) {
         AppLogger.e('RestaurantsNotifier: Failed to search restaurants - ${failure.message}');
@@ -107,7 +111,7 @@ class RestaurantsNotifier extends _$RestaurantsNotifier {
     double? radius,
     String? category,
   }) async {
-    state = state.copyWith(isNearbyLoading: true, clearFailure: true);
+    state = state.copyWith(isNearbyLoading: true, failure: null);
 
     AppLogger.d('RestaurantsNotifier: Loading nearby restaurants at ($latitude, $longitude)');
 
@@ -119,6 +123,8 @@ class RestaurantsNotifier extends _$RestaurantsNotifier {
 
     final result = await _getRestaurantsNearByUseCase.call(params);
     
+    if (!ref.mounted) return;
+
     result.fold(
       (failure) {
         AppLogger.e('RestaurantsNotifier: Failed to load nearby restaurants - ${failure.message}');
@@ -137,7 +143,7 @@ class RestaurantsNotifier extends _$RestaurantsNotifier {
 
   /// Load featured restaurants (first few restaurants)
   Future<void> loadFeaturedRestaurants() async {
-    state = state.copyWith(isFeaturedLoading: true, clearFailure: true);
+    state = state.copyWith(isFeaturedLoading: true, failure: null);
 
     AppLogger.d('RestaurantsNotifier: Loading featured restaurants');
 
@@ -148,6 +154,8 @@ class RestaurantsNotifier extends _$RestaurantsNotifier {
 
     final result = await _getRestaurantsUseCase.call(params);
     
+    if (!ref.mounted) return;
+
     result.fold(
       (failure) {
         AppLogger.e('RestaurantsNotifier: Failed to load featured restaurants - ${failure.message}');
@@ -167,7 +175,7 @@ class RestaurantsNotifier extends _$RestaurantsNotifier {
   /// Clear restaurants list
   void clearRestaurants() {
     AppLogger.d('RestaurantsNotifier: Clearing restaurants');
-    state = state.copyWith(clearRestaurants: true, clearFailure: true);
+    state = state.copyWith(restaurants: const [], failure: null);
   }
 
   /// Refresh restaurants (reload current data)

@@ -124,8 +124,8 @@ class _OrderDeliveryTrackingCardState
                 SizedBox(height: 16.w),
 
                 // Error message
-                if (trackingState.error != null)
-                  _buildErrorMessage(trackingState.error!),
+                if (trackingState.failure != null)
+                  _buildErrorMessage(trackingState.failure!.message),
 
                 // TODO: Add back when DTOs are ready
                 // Shipper info when available

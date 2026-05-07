@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'package:delivery_app/core/error/failures.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:delivery_app/core/utils/logger/app_logger.dart';
 import 'package:delivery_app/core/usecases/usecase.dart';
 import '../../../domain/usecases/tracking_usecases.dart';
-import '../../../domain/usecases/get_shipper_location_use_case.dart';
 import '../../../domain/entities/shipper_location_entity.dart';
 import 'shipper_location_providers.dart';
 import 'shipper_location_state.dart';
@@ -15,6 +15,7 @@ part 'shipper_location_notifier.g.dart';
 class ShipperLocation extends _$ShipperLocation {
   StreamSubscription<ShipperLocationEntity>? _locationSubscription;
 
+  @override
   ShipperLocationState build() {
     AppLogger.i('ShipperLocationNotifier created');
 
@@ -47,8 +48,8 @@ class ShipperLocation extends _$ShipperLocation {
       state = state.copyWith(
         isLoading: true,
         trackingShipperId: shipperId,
-        clearError: true,
-        clearLocation: true,
+        failure: null,
+        currentLocation: null,
       );
 
       final trackShipperUseCase = ref.read(trackShipperLocationUseCaseProvider);
@@ -56,6 +57,9 @@ class ShipperLocation extends _$ShipperLocation {
 
       // 1. Fetch initial location via REST
       final initialResult = await getShipperLocationUseCase(shipperId);
+      
+      if (!ref.mounted) return;
+      
       initialResult.fold(
         (failure) => AppLogger.w('Fetch initial location failed: ${failure.message}'),
         (location) {
@@ -69,12 +73,14 @@ class ShipperLocation extends _$ShipperLocation {
         TrackShipperParams(shipperId: shipperId),
       );
 
+      if (!ref.mounted) return;
+
       streamResult.fold(
         (failure) {
           state = state.copyWith(
             isLoading: false,
             isTracking: false,
-            error: failure.message,
+            failure: failure,
           );
         },
         (locationStream) {
@@ -87,19 +93,22 @@ class ShipperLocation extends _$ShipperLocation {
           // Listen to location updates
           _locationSubscription = locationStream.listen(
             (location) {
+              if (!ref.mounted) return;
               state = state.copyWith(
                 currentLocation: location,
-                clearError: true,
+                failure: null,
               );
             },
             onError: (error) {
               AppLogger.e('Error in shipper location stream', error);
+              if (!ref.mounted) return;
               state = state.copyWith(
-                error: 'Lỗi nhận dữ liệu vị trí shipper: ${error.toString()}',
+                failure: Failure.server('Lỗi nhận dữ liệu vị trí shipper: ${error.toString()}'),
               );
             },
             onDone: () {
               AppLogger.i('Shipper location stream closed');
+              if (!ref.mounted) return;
               state = state.copyWith(isTracking: false, isConnected: false);
             },
           );
@@ -107,10 +116,11 @@ class ShipperLocation extends _$ShipperLocation {
       );
     } catch (e) {
       AppLogger.e('Failed to start shipper tracking: $shipperId', e);
+      if (!ref.mounted) return;
       state = state.copyWith(
         isLoading: false,
         isTracking: false,
-        error: 'Không thể bắt đầu theo dõi shipper: ${e.toString()}',
+        failure: Failure.server('Không thể bắt đầu theo dõi shipper: ${e.toString()}'),
       );
     }
   }
@@ -127,29 +137,32 @@ class ShipperLocation extends _$ShipperLocation {
       final stopTrackingUseCase = ref.read(stopShipperTrackingUseCaseProvider);
       final result = await stopTrackingUseCase(NoParams());
 
+      if (!ref.mounted) return;
+
       result.fold(
         (failure) {
-          state = state.copyWith(error: failure.message);
+          state = state.copyWith(failure: failure);
         },
         (_) {
           state = state.copyWith(
             isTracking: false,
             isConnected: false,
             trackingShipperId: null,
-            clearLocation: true,
-            clearError: true,
+            currentLocation: null,
+            failure: null,
           );
         },
       );
     } catch (e) {
       AppLogger.e('Error stopping shipper tracking', e);
-      state = state.copyWith(error: 'Lỗi khi dừng theo dõi shipper');
+      if (!ref.mounted) return;
+      state = state.copyWith(failure: const Failure.server('Lỗi khi dừng theo dõi shipper'));
     }
   }
 
   /// Clear error
   void clearError() {
-    state = state.copyWith(clearError: true);
+    state = state.copyWith(failure: null);
   }
 
   /// Refresh tracking (restart with current shipper)
@@ -159,20 +172,21 @@ class ShipperLocation extends _$ShipperLocation {
 
       final currentShipperId = state.trackingShipperId;
       if (currentShipperId != null) {
-        state = state.copyWith(isLoading: true, clearError: true);
+        state = state.copyWith(isLoading: true, failure: null);
         await startTrackingShipper(currentShipperId);
       } else {
         AppLogger.w('No current shipper to refresh tracking for');
 
         state = state.copyWith(
-          error: 'Không có shipper nào đang được theo dõi để refresh',
+          failure: const Failure.server('Không có shipper nào đang được theo dõi để refresh'),
         );
       }
     } catch (e) {
       AppLogger.e('Failed to refresh shipper tracking', e);
+      if (!ref.mounted) return;
       state = state.copyWith(
         isLoading: false,
-        error: 'Không thể làm mới tracking shipper',
+        failure: const Failure.server('Không thể làm mới tracking shipper'),
       );
     }
   }

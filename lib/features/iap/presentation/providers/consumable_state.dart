@@ -1,45 +1,21 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:delivery_app/core/error/failures.dart';
 import 'package:delivery_app/features/iap/domain/entities/consumable_entity.dart';
 
-/// State for consumable IAP
-class ConsumableState {
-  final bool isLoading;
-  final List<ConsumableEntity> products;
-  final int creditsBalance;
-  final List<ConsumableEntity> userVouchers;
-  final Failure? failure;
-  final String? successMessage;
+part 'consumable_state.freezed.dart';
 
-  const ConsumableState({
-    this.isLoading = false,
-    this.products = const [],
-    this.creditsBalance = 0,
-    this.userVouchers = const [],
-    this.failure,
-    this.successMessage,
-  });
+@freezed
+sealed class ConsumableState with _$ConsumableState {
+  const ConsumableState._();
 
-  ConsumableState copyWith({
-    bool? isLoading,
-    List<ConsumableEntity>? products,
-    int? creditsBalance,
-    List<ConsumableEntity>? userVouchers,
+  const factory ConsumableState({
+    @Default(false) bool isLoading,
+    @Default([]) List<ConsumableEntity> products,
+    @Default(0) int creditsBalance,
+    @Default([]) List<ConsumableEntity> userVouchers,
     Failure? failure,
     String? successMessage,
-    bool clearFailure = false,
-    bool clearSuccessMessage = false,
-  }) {
-    return ConsumableState(
-      isLoading: isLoading ?? this.isLoading,
-      products: products ?? this.products,
-      creditsBalance: creditsBalance ?? this.creditsBalance,
-      userVouchers: userVouchers ?? this.userVouchers,
-      failure: clearFailure ? null : (failure ?? this.failure),
-      successMessage: clearSuccessMessage
-          ? null
-          : (successMessage ?? this.successMessage),
-    );
-  }
+  }) = _ConsumableState;
 
   /// Get credit products only
   List<ConsumableEntity> get creditProducts => products
