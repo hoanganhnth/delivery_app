@@ -27,16 +27,13 @@ class _LivestreamCardGridState extends State<LivestreamCardGrid> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOut,
-        transform: Matrix4.identity()
-          ..scale(_isHovered ? 1.03 : 1.0),
+        transform: Matrix4.identity()..scale(_isHovered ? 1.03 : 1.0),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24.r),
@@ -54,10 +51,12 @@ class _LivestreamCardGridState extends State<LivestreamCardGrid> {
               fit: StackFit.expand,
               children: [
                 // Thumbnail
-                _buildThumbnail(),
+                LivestreamThumbnail(
+                  imageUrl: widget.livestream.thumbnailUrl ?? widget.livestream.coverImageUrl ?? '',
+                ),
 
                 // Gradient overlay
-                _buildGradientOverlay(),
+                const LivestreamGradientOverlay(),
 
                 // LIVE badge
                 if (widget.livestream.isLive)
@@ -71,7 +70,7 @@ class _LivestreamCardGridState extends State<LivestreamCardGrid> {
                 Positioned(
                   top: 12.w,
                   right: 12.w,
-                  child: _buildViewerBadge(theme),
+                  child: LivestreamViewerBadge(viewerCount: widget.livestream.viewerCount),
                 ),
 
                 // Bottom info
@@ -79,7 +78,7 @@ class _LivestreamCardGridState extends State<LivestreamCardGrid> {
                   left: 0,
                   right: 0,
                   bottom: 0,
-                  child: _buildBottomInfo(theme),
+                  child: LivestreamBottomInfo(livestream: widget.livestream),
                 ),
               ],
             ),
@@ -88,11 +87,17 @@ class _LivestreamCardGridState extends State<LivestreamCardGrid> {
       ),
     );
   }
+}
 
-  Widget _buildThumbnail() {
+class LivestreamThumbnail extends StatelessWidget {
+  final String imageUrl;
+
+  const LivestreamThumbnail({super.key, required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: widget.livestream.thumbnailUrl ?? 
-                widget.livestream.coverImageUrl ?? '',
+      imageUrl: imageUrl,
       fit: BoxFit.cover,
       placeholder: (context, url) => Container(
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -116,8 +121,13 @@ class _LivestreamCardGridState extends State<LivestreamCardGrid> {
       ),
     );
   }
+}
 
-  Widget _buildGradientOverlay() {
+class LivestreamGradientOverlay extends StatelessWidget {
+  const LivestreamGradientOverlay({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -133,8 +143,24 @@ class _LivestreamCardGridState extends State<LivestreamCardGrid> {
       ),
     );
   }
+}
 
-  Widget _buildViewerBadge(ThemeData theme) {
+class LivestreamViewerBadge extends StatelessWidget {
+  final int viewerCount;
+
+  const LivestreamViewerBadge({super.key, required this.viewerCount});
+
+  String _formatCount(int count) {
+    if (count >= 1000000) {
+      return '${(count / 1000000).toStringAsFixed(1)}M';
+    } else if (count >= 1000) {
+      return '${(count / 1000).toStringAsFixed(1)}K';
+    }
+    return count.toString();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
@@ -151,7 +177,7 @@ class _LivestreamCardGridState extends State<LivestreamCardGrid> {
           ),
           SizedBox(width: 4.w),
           Text(
-            _formatCount(widget.livestream.viewerCount),
+            _formatCount(viewerCount),
             style: TextStyle(
               color: Colors.white,
               fontSize: 11.sp,
@@ -162,8 +188,25 @@ class _LivestreamCardGridState extends State<LivestreamCardGrid> {
       ),
     );
   }
+}
 
-  Widget _buildBottomInfo(ThemeData theme) {
+class LivestreamBottomInfo extends StatelessWidget {
+  final LivestreamEntity livestream;
+
+  const LivestreamBottomInfo({super.key, required this.livestream});
+
+  String _formatCount(int count) {
+    if (count >= 1000000) {
+      return '${(count / 1000000).toStringAsFixed(1)}M';
+    } else if (count >= 1000) {
+      return '${(count / 1000).toStringAsFixed(1)}K';
+    }
+    return count.toString();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       padding: EdgeInsets.all(12.w),
       child: Column(
@@ -172,7 +215,7 @@ class _LivestreamCardGridState extends State<LivestreamCardGrid> {
         children: [
           // Title
           Text(
-            widget.livestream.title,
+            livestream.title,
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w600,
@@ -198,20 +241,20 @@ class _LivestreamCardGridState extends State<LivestreamCardGrid> {
                   ),
                 ),
                 child: ClipOval(
-                  child: widget.livestream.streamerAvatar != null
+                  child: livestream.streamerAvatar != null
                       ? CachedNetworkImage(
-                          imageUrl: widget.livestream.streamerAvatar!,
+                          imageUrl: livestream.streamerAvatar!,
                           fit: BoxFit.cover,
-                          errorWidget: (_, __, ___) => _buildDefaultAvatar(),
+                          errorWidget: (_, __, ___) => const LivestreamDefaultAvatar(),
                         )
-                      : _buildDefaultAvatar(),
+                      : const LivestreamDefaultAvatar(),
                 ),
               ),
               SizedBox(width: 8.w),
               // Name
               Expanded(
                 child: Text(
-                  widget.livestream.streamerName,
+                  livestream.streamerName,
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.9),
                     fontSize: 12.sp,
@@ -229,7 +272,7 @@ class _LivestreamCardGridState extends State<LivestreamCardGrid> {
               ),
               SizedBox(width: 4.w),
               Text(
-                _formatCount(widget.livestream.likeCount),
+                _formatCount(livestream.likeCount),
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.9),
                   fontSize: 11.sp,
@@ -242,8 +285,13 @@ class _LivestreamCardGridState extends State<LivestreamCardGrid> {
       ),
     );
   }
+}
 
-  Widget _buildDefaultAvatar() {
+class LivestreamDefaultAvatar extends StatelessWidget {
+  const LivestreamDefaultAvatar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).colorScheme.primaryContainer,
       child: Icon(
@@ -252,14 +300,5 @@ class _LivestreamCardGridState extends State<LivestreamCardGrid> {
         color: Theme.of(context).colorScheme.onPrimaryContainer,
       ),
     );
-  }
-
-  String _formatCount(int count) {
-    if (count >= 1000000) {
-      return '${(count / 1000000).toStringAsFixed(1)}M';
-    } else if (count >= 1000) {
-      return '${(count / 1000).toStringAsFixed(1)}K';
-    }
-    return count.toString();
   }
 }

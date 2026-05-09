@@ -7,11 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../domain/entities/order_entity.dart';
 import '../providers/providers.dart';
-import '../widgets/orders_tab_bar.dart';
-import '../widgets/orders_list.dart' as orders_widget;
-import '../widgets/orders_empty_state.dart';
-import '../widgets/orders_error_state.dart';
-import '../widgets/cancel_order_dialog.dart';
+import '../widgets/shared/orders_tab_bar.dart';
+import '../widgets/shared/orders_list.dart' as orders_widget;
+import '../widgets/shared/orders_empty_state.dart';
+import '../widgets/shared/orders_error_state.dart';
+import '../widgets/order_detail/cancel_order_dialog.dart';
 
 class OrdersScreen extends ConsumerStatefulWidget {
   const OrdersScreen({super.key});
@@ -113,7 +113,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: _buildAppBar(colors),
+      appBar: OrdersAppBar(colors: colors),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -157,7 +157,15 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
           Expanded(
             child: RefreshIndicator(
               onRefresh: _refreshOrders,
-              child: _buildBody(ordersState),
+              child: OrdersBody(
+                ordersState: ordersState,
+                getFilteredOrders: _getFilteredOrders,
+                onGoToRestaurants: _navigateToRestaurants,
+                scrollController: _scrollController,
+                onOrderTap: _navigateToOrderDetail,
+                onOrderCancel: _showCancelOrderDialog,
+                onRetry: _retryLoadOrders,
+              ),
             ),
           ),
         ],
@@ -165,7 +173,15 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
     );
   }
 
-  PreferredSizeWidget _buildAppBar(AppColors colors) {
+}
+
+class OrdersAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final AppColors colors;
+
+  const OrdersAppBar({super.key, required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: colors.background,
       elevation: 0,
@@ -184,29 +200,54 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
     );
   }
 
-  Widget _buildBody(AsyncValue<List<OrderEntity>> ordersState) {
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class OrdersBody extends StatelessWidget {
+  final AsyncValue<List<OrderEntity>> ordersState;
+  final List<OrderEntity> Function(List<OrderEntity>) getFilteredOrders;
+  final VoidCallback onGoToRestaurants;
+  final ScrollController scrollController;
+  final void Function(int) onOrderTap;
+  final void Function(OrderEntity) onOrderCancel;
+  final VoidCallback onRetry;
+
+  const OrdersBody({
+    super.key,
+    required this.ordersState,
+    required this.getFilteredOrders,
+    required this.onGoToRestaurants,
+    required this.scrollController,
+    required this.onOrderTap,
+    required this.onOrderCancel,
+    required this.onRetry,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return ordersState.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => OrdersErrorState(
         errorMessage: error.toString(),
-        onRetry: _retryLoadOrders,
+        onRetry: onRetry,
       ),
       data: (orders) {
         // Get filtered orders
-        final filteredOrders = _getFilteredOrders(orders);
+        final filteredOrders = getFilteredOrders(orders);
 
         // Empty state
         if (filteredOrders.isEmpty) {
-          return OrdersEmptyState(onGoToRestaurants: _navigateToRestaurants);
+          return OrdersEmptyState(onGoToRestaurants: onGoToRestaurants);
         }
 
         // Orders list
         return orders_widget.OrdersList(
           orders: filteredOrders,
           isLoading: false,
-          scrollController: _scrollController,
-          onOrderTap: _navigateToOrderDetail,
-          onOrderCancel: _showCancelOrderDialog,
+          scrollController: scrollController,
+          onOrderTap: onOrderTap,
+          onOrderCancel: onOrderCancel,
           onOrderReorder: (order) {
             if (order.restaurantId != null) {
               context.pushToRestaurantDetails(order.restaurantId.toString());
@@ -216,4 +257,5 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
       },
     );
   }
+
 }

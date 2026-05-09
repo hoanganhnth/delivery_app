@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/providers.dart';
-import '../widgets/order_customer_info_card.dart';
-import '../widgets/order_payment_card.dart';
-import '../widgets/order_action_buttons.dart';
-import '../widgets/order_error_widgets.dart';
-import '../widgets/delivery_timeline.dart';
-import '../widgets/order_progress_bar.dart';
-import '../widgets/order_delivery_tracking_card.dart';
+import '../widgets/order_detail/order_customer_info_card.dart';
+import '../widgets/order_detail/order_payment_card.dart';
+import '../widgets/shared/order_action_buttons.dart';
+import '../widgets/shared/order_error_widgets.dart';
+import '../widgets/track_order/delivery_timeline.dart';
+import '../widgets/shared/order_progress_bar.dart';
+import '../widgets/track_order/order_delivery_tracking_card.dart';
 import '../../../../generated/l10n.dart';
 
 class OrderDetailScreen extends ConsumerStatefulWidget {
@@ -28,52 +28,38 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
   @override
   void initState() {
     super.initState();
-    // AsyncNotifier will auto-load when called with orderId parameter
-    // No need to manually call getOrderById
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Gọi API load lại ds đơn hàng khi trạng thái thay đổi sang thành công/huỷ
-    // ref.listen(orderDetailProvider(widget.orderId), (previous, next) {
-    //   final prevStatus = previous?.value?.status;
-    //   final nextStatus = next.value?.status;
-
-    //   if (nextStatus != prevStatus &&
-    //      (nextStatus == OrderStatus.delivered || nextStatus == OrderStatus.cancelled)) {
-    //     ref.invalidate(ordersListProvider);
-    //   }
-    // });
-
     ref.listen(deliveryTrackingProvider, (previous, next) {
       final prevStatus = previous?.currentTracking?.status;
       final nextStatus = next.currentTracking?.status;
 
-      // TrackingEntity dùng enum DeliveryStatus
       if (nextStatus != prevStatus &&
-          (nextStatus?.value == 'delivered' ||
-              nextStatus?.value == 'cancelled')) {
+          (nextStatus?.value == 'delivered' || nextStatus?.value == 'cancelled')) {
         ref.invalidate(ordersListProvider);
       }
     });
 
-    final orderDetailState = ref.watch(orderDetailProvider(widget.orderId));
-    final deliveryTrackingState = ref.watch(deliveryTrackingProvider);
     final colors = ref.colors;
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: _buildAppBar(colors),
-      body: _buildBody(orderDetailState, deliveryTrackingState),
+      appBar: OrderDetailAppBar(orderId: widget.orderId, colors: colors),
+      body: OrderDetailBody(orderId: widget.orderId),
     );
   }
+}
 
-  PreferredSizeWidget _buildAppBar(AppColors colors) {
+class OrderDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final num orderId;
+  final AppColors colors;
+
+  const OrderDetailAppBar({super.key, required this.orderId, required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: colors.background,
       elevation: 0,
@@ -82,7 +68,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
         onPressed: () => Navigator.of(context).pop(),
       ),
       title: Text(
-        '${S.of(context).order} #${widget.orderId}',
+        '${S.of(context).order} #$orderId',
         style: TextStyle(
           fontSize: ResponsiveSize.fontL,
           fontWeight: FontWeight.bold,
@@ -100,17 +86,25 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
     );
   }
 
-  Widget _buildBody(
-    AsyncValue<OrderEntity?> orderDetailState,
-    dynamic deliveryTrackingState,
-  ) {
-    final colors = ref.colors;
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class OrderDetailBody extends ConsumerWidget {
+  final num orderId;
+
+  const OrderDetailBody({super.key, required this.orderId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final orderDetailState = ref.watch(orderDetailProvider(orderId));
+    
     return orderDetailState.when(
       data: (order) => order == null
           ? const OrderNotFoundWidget()
           : RefreshIndicator(
               onRefresh: () async {
-                ref.invalidate(orderDetailProvider(widget.orderId));
+                ref.invalidate(orderDetailProvider(orderId));
               },
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -119,16 +113,12 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Main Status Card
-                    _buildMainStatusCard(order, colors),
+                    OrderMainStatusCard(order: order),
                     SizedBox(height: ResponsiveSize.m),
 
                     // Delivery Timeline
                     if (order.status != OrderStatus.cancelled)
-                      _buildTimelineSection(
-                        order,
-                        colors,
-                        deliveryTrackingState,
-                      ),
+                      OrderTimelineSection(order: order),
 
                     // Live Delivery Tracking (pending hoặc delivering)
                     if (order.canTrackingRealtime) ...[
@@ -139,7 +129,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
                     SizedBox(height: ResponsiveSize.m),
 
                     // Order Items
-                    _buildOrderItemsSection(order, colors),
+                    OrderItemsSection(order: order),
 
                     SizedBox(height: ResponsiveSize.m),
 
@@ -156,8 +146,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
                     // Actions
                     OrderActionButtons(
                       order: order,
-                      onOrderCanceled: () =>
-                          ref.invalidate(orderDetailProvider(widget.orderId)),
+                      onOrderCanceled: () => ref.invalidate(orderDetailProvider(orderId)),
                     ),
 
                     SizedBox(height: ResponsiveSize.xl),
@@ -168,12 +157,47 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => OrderErrorWidget(
         message: error.toString(),
-        onRetry: () => ref.invalidate(orderDetailProvider(widget.orderId)),
+        onRetry: () => ref.invalidate(orderDetailProvider(orderId)),
       ),
     );
   }
+}
 
-  Widget _buildMainStatusCard(OrderEntity order, AppColors colors) {
+class OrderMainStatusCard extends ConsumerWidget {
+  final OrderEntity order;
+
+  const OrderMainStatusCard({super.key, required this.order});
+
+  String _getStatusTitle(OrderStatus status) {
+    switch (status) {
+      case OrderStatus.pending:
+        return 'Đang chờ xác nhận';
+      case OrderStatus.delivering:
+        return 'Đơn hàng đang được giao';
+      case OrderStatus.delivered:
+        return 'Đã giao thành công';
+      case OrderStatus.cancelled:
+        return 'Đơn hàng đã hủy';
+    }
+  }
+
+  double _getProgress(OrderStatus status) {
+    switch (status) {
+      case OrderStatus.pending:
+        return 0.33;
+      case OrderStatus.delivering:
+        return 0.66;
+      case OrderStatus.delivered:
+        return 1.0;
+      case OrderStatus.cancelled:
+        return 0.0;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
+    
     return Container(
       padding: EdgeInsets.all(ResponsiveSize.l),
       decoration: BoxDecoration(
@@ -219,7 +243,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
                           ),
                           SizedBox(width: 4.w),
                           Text(
-                            'Dự kiến 15-20 phút',
+                            'Dự kiến 15-20 phút', // Consider moving to constants or i18n
                             style: TextStyle(
                               fontSize: ResponsiveSize.fontL,
                               fontWeight: FontWeight.w600,
@@ -262,12 +286,18 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
       ),
     );
   }
+}
 
-  Widget _buildTimelineSection(
-    OrderEntity order,
-    AppColors colors,
-    dynamic trackingState,
-  ) {
+class OrderTimelineSection extends ConsumerWidget {
+  final OrderEntity order;
+
+  const OrderTimelineSection({super.key, required this.order});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
+    final trackingState = ref.watch(deliveryTrackingProvider);
+    
     return Container(
       padding: EdgeInsets.all(ResponsiveSize.l),
       decoration: BoxDecoration(
@@ -283,14 +313,21 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
       ),
       child: DeliveryTimeline(
         status: order.status,
-        rawBackendStatus:
-            trackingState?.currentTracking?.status?.value ??
-            order.rawBackendStatus,
+        rawBackendStatus: trackingState.currentTracking?.status?.value ?? order.rawBackendStatus,
       ),
     );
   }
+}
 
-  Widget _buildOrderItemsSection(OrderEntity order, AppColors colors) {
+class OrderItemsSection extends ConsumerWidget {
+  final OrderEntity order;
+
+  const OrderItemsSection({super.key, required this.order});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.colors;
+    
     return Container(
       padding: EdgeInsets.all(ResponsiveSize.m + 4.w),
       decoration: BoxDecoration(
@@ -309,7 +346,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Chi tiết đơn hàng',
+                'Chi tiết đơn hàng', // Consider moving to constants or i18n
                 style: TextStyle(
                   fontSize: ResponsiveSize.fontL,
                   fontWeight: FontWeight.w900,
@@ -356,7 +393,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Tổng cộng',
+                'Tổng cộng', // Consider moving to constants or i18n
                 style: TextStyle(
                   fontSize: ResponsiveSize.fontL,
                   fontWeight: FontWeight.w900,
@@ -376,31 +413,5 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
         ],
       ),
     );
-  }
-
-  String _getStatusTitle(OrderStatus status) {
-    switch (status) {
-      case OrderStatus.pending:
-        return 'Đang chờ xác nhận';
-      case OrderStatus.delivering:
-        return 'Đơn hàng đang được giao';
-      case OrderStatus.delivered:
-        return 'Đã giao thành công';
-      case OrderStatus.cancelled:
-        return 'Đơn hàng đã hủy';
-    }
-  }
-
-  double _getProgress(OrderStatus status) {
-    switch (status) {
-      case OrderStatus.pending:
-        return 0.33;
-      case OrderStatus.delivering:
-        return 0.66;
-      case OrderStatus.delivered:
-        return 1.0;
-      case OrderStatus.cancelled:
-        return 0.0;
-    }
   }
 }

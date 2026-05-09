@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/core/theme/app_colors.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
-import '../widgets/delivery_timeline.dart';
-import '../widgets/courier_info_card.dart';
-import '../widgets/order_progress_bar.dart';
+import '../widgets/track_order/delivery_timeline.dart';
+import '../widgets/order_detail/courier_info_card.dart';
+import '../widgets/shared/order_progress_bar.dart';
 import '../providers/providers.dart';
 import '../../domain/entities/order_entity.dart';
 
@@ -25,15 +25,27 @@ class TrackOrderScreen extends ConsumerWidget {
       backgroundColor: colors.background,
       body: orderState.when(
         data: (order) => order == null
-            ? _buildOrderNotFound(colors)
+            ? TrackOrderNotFound(colors: colors)
             : _TrackOrderBody(order: order),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => _buildError(colors, error.toString(), ref),
+        error: (error, _) => TrackOrderError(
+          colors: colors,
+          message: error.toString(),
+          orderId: orderId,
+        ),
       ),
     );
   }
 
-  Widget _buildOrderNotFound(AppColors colors) {
+}
+
+class TrackOrderNotFound extends StatelessWidget {
+  final AppColors colors;
+
+  const TrackOrderNotFound({super.key, required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -52,8 +64,22 @@ class TrackOrderScreen extends ConsumerWidget {
       ),
     );
   }
+}
 
-  Widget _buildError(AppColors colors, String message, WidgetRef ref) {
+class TrackOrderError extends ConsumerWidget {
+  final AppColors colors;
+  final String message;
+  final num orderId;
+
+  const TrackOrderError({
+    super.key,
+    required this.colors,
+    required this.message,
+    required this.orderId,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -1,10 +1,11 @@
+import 'package:delivery_app/features/cart/presentation/providers/di/cart_di_providers.dart';
+import 'package:delivery_app/features/cart/presentation/providers/state/cart_notifier.dart';
 import 'package:delivery_app/features/restaurants/domain/entities/menu_item_entity.dart';
+import 'package:delivery_app/generated/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
-import '../../../../generated/l10n.dart';
-import '../../../cart/presentation/providers/providers.dart';
 
 class MenuItemCard extends ConsumerWidget {
   final MenuItemEntity menuItem;

@@ -99,6 +99,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirmDeleteAddressBtn": MessageLookupByLibrary.simpleMessage("Xóa"),
     "confirmDeleteAddressMessage": m1,
     "confirmed": MessageLookupByLibrary.simpleMessage("Đã xác nhận"),
+    "connected": MessageLookupByLibrary.simpleMessage("Kết nối"),
+    "connecting": MessageLookupByLibrary.simpleMessage("Đang kết nối..."),
     "continueShopping": MessageLookupByLibrary.simpleMessage(
       "Tiếp tục mua sắm",
     ),
@@ -108,11 +110,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "coordinates": MessageLookupByLibrary.simpleMessage("Tọa độ"),
     "deliverFood": MessageLookupByLibrary.simpleMessage("DeliverFood"),
     "delivered": MessageLookupByLibrary.simpleMessage("Đã giao"),
+    "deliveredSuccess": MessageLookupByLibrary.simpleMessage(
+      "Giao hàng thành công!",
+    ),
+    "deliveredSuccessMessage": MessageLookupByLibrary.simpleMessage(
+      "Đơn hàng của bạn đã được giao đến nơi.",
+    ),
     "delivering": MessageLookupByLibrary.simpleMessage("Đang giao"),
     "deliveryFee": MessageLookupByLibrary.simpleMessage("Phí giao hàng"),
     "differentRestaurantError": MessageLookupByLibrary.simpleMessage(
       "Bạn đã có món từ nhà hàng khác trong giỏ hàng. Vui lòng xóa giỏ hàng hiện tại để thêm món từ nhà hàng này.",
     ),
+    "disconnected": MessageLookupByLibrary.simpleMessage("Mất kết nối"),
     "editAddress": MessageLookupByLibrary.simpleMessage("Chỉnh sửa"),
     "endBtn": MessageLookupByLibrary.simpleMessage("Kết thúc"),
     "endConversationBtn": MessageLookupByLibrary.simpleMessage(
@@ -131,6 +140,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "fetchLocationSuccess": MessageLookupByLibrary.simpleMessage(
       "Đã lấy địa chỉ từ vị trí hiện tại",
     ),
+    "findingDriver": MessageLookupByLibrary.simpleMessage(
+      "Đang tìm tài xế giao hàng",
+    ),
     "freeDelivery": MessageLookupByLibrary.simpleMessage("Miễn Phí Giao Hàng"),
     "goBackBtn": MessageLookupByLibrary.simpleMessage("Quay lại"),
     "gotItBtn": MessageLookupByLibrary.simpleMessage("Đã hiểu"),
@@ -148,6 +160,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading": MessageLookupByLibrary.simpleMessage("Đang tải..."),
     "login": MessageLookupByLibrary.simpleMessage("Đăng nhập"),
     "logout": MessageLookupByLibrary.simpleMessage("Đăng xuất"),
+    "mapWillShowWhenDriverAccepts": MessageLookupByLibrary.simpleMessage(
+      "Bản đồ sẽ hiển thị khi tài xế nhận đơn",
+    ),
     "menu": MessageLookupByLibrary.simpleMessage("Thực Đơn"),
     "mexican": MessageLookupByLibrary.simpleMessage("Món Mexico"),
     "min": MessageLookupByLibrary.simpleMessage("phút"),
@@ -169,6 +184,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "noOrdersMessage": MessageLookupByLibrary.simpleMessage(
       "Bạn chưa đặt đơn hàng nào. Hãy khám phá các nhà hàng và đặt đơn hàng đầu tiên!",
     ),
+    "noTrackingInfo": MessageLookupByLibrary.simpleMessage(
+      "Chưa có thông tin theo dõi",
+    ),
     "order": MessageLookupByLibrary.simpleMessage("Đơn hàng"),
     "orderCancelled": MessageLookupByLibrary.simpleMessage(
       "Đơn hàng đã được hủy thành công",
@@ -178,6 +196,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "orders": MessageLookupByLibrary.simpleMessage("Đơn Hàng"),
     "outOfStock": MessageLookupByLibrary.simpleMessage("Hết hàng"),
     "outOfStockItems": MessageLookupByLibrary.simpleMessage("Có món hết hàng"),
+    "paymentInfo": MessageLookupByLibrary.simpleMessage("Thông tin thanh toán"),
+    "paymentMethodText": MessageLookupByLibrary.simpleMessage(
+      "Phương thức thanh toán",
+    ),
     "pending": MessageLookupByLibrary.simpleMessage("Chờ xác nhận"),
     "pizza": MessageLookupByLibrary.simpleMessage("Pizza"),
     "pleaseSelectAddress": MessageLookupByLibrary.simpleMessage(
@@ -217,6 +239,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Đặt làm địa chỉ mặc định",
     ),
     "settings": MessageLookupByLibrary.simpleMessage("Cài Đặt"),
+    "shipperNotStarted": MessageLookupByLibrary.simpleMessage(
+      "Shipper chưa bắt đầu giao hàng cho đơn này",
+    ),
     "shoppingCart": MessageLookupByLibrary.simpleMessage("Giỏ Hàng"),
     "showOrderDetails": MessageLookupByLibrary.simpleMessage(
       "Hiện Chi Tiết Đơn Hàng",
@@ -237,6 +262,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "top_restaurants": MessageLookupByLibrary.simpleMessage("Nhà hàng nổi bật"),
     "total": MessageLookupByLibrary.simpleMessage("Tổng cộng"),
+    "trackDelivery": MessageLookupByLibrary.simpleMessage("Theo dõi giao hàng"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Thử Lại"),
     "unavailable": MessageLookupByLibrary.simpleMessage("Không có sẵn"),
     "update": MessageLookupByLibrary.simpleMessage("Cập nhật"),
@@ -248,6 +274,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "yourCartIsEmpty": MessageLookupByLibrary.simpleMessage(
       "Giỏ hàng của bạn trống",
     ),
+    "yourCourier": MessageLookupByLibrary.simpleMessage("TÀI XẾ CỦA BẠN"),
     "yourOrders": MessageLookupByLibrary.simpleMessage("Đơn Hàng Của Bạn"),
   };
 }

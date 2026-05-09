@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
@@ -14,8 +15,7 @@ class AllLivestreamsScreen extends ConsumerStatefulWidget {
   const AllLivestreamsScreen({super.key});
 
   @override
-  ConsumerState<AllLivestreamsScreen> createState() =>
-      _AllLivestreamsScreenState();
+  ConsumerState<AllLivestreamsScreen> createState() => _AllLivestreamsScreenState();
 }
 
 class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
@@ -41,8 +41,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent * 0.8) {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
       final state = ref.read(livestreamListProvider);
       if (!state.isLoading && state.hasMore) {
         ref.read(livestreamListProvider.notifier).loadLivestreams();
@@ -58,16 +57,11 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final livestreamState = ref.watch(livestreamListProvider);
-
     return SafeArea(
       bottom: false,
       child: RefreshIndicator(
         onRefresh: () async {
-          await ref
-              .read(livestreamListProvider.notifier)
-              .loadLivestreams(refresh: true);
+          await ref.read(livestreamListProvider.notifier).loadLivestreams(refresh: true);
         },
         child: CustomScrollView(
           controller: _scrollController,
@@ -76,7 +70,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
-                child: EditorialHeader(
+                child: const EditorialHeader(
                   subtitle: 'LIVE NOW',
                   title: 'Foodie ',
                   titleHighlight: 'Live',
@@ -118,7 +112,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
             ),
 
             // Content
-            _buildContent(context, theme, livestreamState),
+            const LivestreamContent(),
 
             // Bottom padding for navigation
             SliverToBoxAdapter(
@@ -129,8 +123,14 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
       ),
     );
   }
+}
 
-  Widget _buildAppBar(BuildContext context, ThemeData theme) {
+class LivestreamAppBar extends StatelessWidget {
+  const LivestreamAppBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
       child: Row(
@@ -200,12 +200,16 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
       ),
     );
   }
+}
 
-  Widget _buildContent(
-    BuildContext context,
-    ThemeData theme,
-    dynamic livestreamState,
-  ) {
+class LivestreamContent extends ConsumerWidget {
+  const LivestreamContent({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final livestreamState = ref.watch(livestreamListProvider);
+
     // Loading state
     if (livestreamState.isLoading && livestreamState.livestreams.isEmpty) {
       return SliverToBoxAdapter(
@@ -223,7 +227,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
       return SliverToBoxAdapter(
         child: SizedBox(
           height: 300.h,
-          child: _buildErrorState(context, theme, livestreamState.errorMessage),
+          child: LivestreamErrorState(errorMessage: livestreamState.errorMessage),
         ),
       );
     }
@@ -231,7 +235,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
     // Empty state
     if (livestreamState.livestreams.isEmpty) {
       return SliverToBoxAdapter(
-        child: SizedBox(height: 300.h, child: _buildEmptyState(theme)),
+        child: SizedBox(height: 300.h, child: const LivestreamEmptyState()),
       );
     }
 
@@ -242,9 +246,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
         crossAxisCount: 2,
         mainAxisSpacing: 16.h,
         crossAxisSpacing: 16.w,
-        childCount:
-            livestreamState.livestreams.length +
-            (livestreamState.hasMore ? 1 : 0),
+        childCount: livestreamState.livestreams.length + (livestreamState.hasMore ? 1 : 0),
         itemBuilder: (context, index) {
           // Loading indicator for pagination
           if (index >= livestreamState.livestreams.length) {
@@ -279,12 +281,40 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
       ),
     );
   }
+}
 
-  Widget _buildErrorState(
-    BuildContext context,
-    ThemeData theme,
-    String? errorMessage,
-  ) {
+class LivestreamErrorState extends ConsumerWidget {
+  final String? errorMessage;
+  
+  const LivestreamErrorState({super.key, this.errorMessage});
+
+  String _getFriendlyErrorMessage(String? error) {
+    if (error == null) return 'Không thể tải danh sách livestream';
+
+    final lowerError = error.toLowerCase();
+
+    if (lowerError.contains('dioexception') ||
+        lowerError.contains('network') ||
+        lowerError.contains('connection')) {
+      return 'Lỗi kết nối mạng. Vui lòng kiểm tra lại internet của bạn.';
+    }
+
+    if (lowerError.contains('serverexception') ||
+        lowerError.contains('500') ||
+        lowerError.contains('bad response')) {
+      return 'Máy chủ đang gặp sự cố. Vui lòng thử lại sau ít phút.';
+    }
+
+    if (lowerError.contains('unauthorized') || lowerError.contains('401')) {
+      return 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
+    }
+
+    return 'Đã có lỗi xảy ra. Vui lòng thử lại.';
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     return Center(
       child: SingleChildScrollView(
         child: Padding(
@@ -326,9 +356,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
               SizedBox(height: 24.h),
               FilledButton.icon(
                 onPressed: () {
-                  ref
-                      .read(livestreamListProvider.notifier)
-                      .loadLivestreams(refresh: true);
+                  ref.read(livestreamListProvider.notifier).loadLivestreams(refresh: true);
                 },
                 icon: const Icon(Icons.refresh_rounded),
                 label: const Text('Try Again'),
@@ -348,8 +376,14 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
       ),
     );
   }
+}
 
-  Widget _buildEmptyState(ThemeData theme) {
+class LivestreamEmptyState extends StatelessWidget {
+  const LivestreamEmptyState({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Center(
       child: Padding(
         padding: EdgeInsets.all(32.w),
@@ -390,29 +424,5 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
         ),
       ),
     );
-  }
-
-  String _getFriendlyErrorMessage(String? error) {
-    if (error == null) return 'Không thể tải danh sách livestream';
-
-    final lowerError = error.toLowerCase();
-
-    if (lowerError.contains('dioexception') ||
-        lowerError.contains('network') ||
-        lowerError.contains('connection')) {
-      return 'Lỗi kết nối mạng. Vui lòng kiểm tra lại internet của bạn.';
-    }
-
-    if (lowerError.contains('serverexception') ||
-        lowerError.contains('500') ||
-        lowerError.contains('bad response')) {
-      return 'Máy chủ đang gặp sự cố. Vui lòng thử lại sau ít phút.';
-    }
-
-    if (lowerError.contains('unauthorized') || lowerError.contains('401')) {
-      return 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
-    }
-
-    return 'Đã có lỗi xảy ra. Vui lòng thử lại.';
   }
 }

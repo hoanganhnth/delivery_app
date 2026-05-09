@@ -103,6 +103,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirmDeleteAddressBtn": MessageLookupByLibrary.simpleMessage("Delete"),
     "confirmDeleteAddressMessage": m1,
     "confirmed": MessageLookupByLibrary.simpleMessage("Confirmed"),
+    "connected": MessageLookupByLibrary.simpleMessage("Connected"),
+    "connecting": MessageLookupByLibrary.simpleMessage("Connecting..."),
     "continueShopping": MessageLookupByLibrary.simpleMessage(
       "Continue Shopping",
     ),
@@ -112,11 +114,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "coordinates": MessageLookupByLibrary.simpleMessage("Coordinates"),
     "deliverFood": MessageLookupByLibrary.simpleMessage("DeliverFood"),
     "delivered": MessageLookupByLibrary.simpleMessage("Delivered"),
+    "deliveredSuccess": MessageLookupByLibrary.simpleMessage(
+      "Delivery Successful!",
+    ),
+    "deliveredSuccessMessage": MessageLookupByLibrary.simpleMessage(
+      "Your order has been delivered to your destination.",
+    ),
     "delivering": MessageLookupByLibrary.simpleMessage("Delivering"),
     "deliveryFee": MessageLookupByLibrary.simpleMessage("Delivery Fee"),
     "differentRestaurantError": MessageLookupByLibrary.simpleMessage(
       "You already have items from another restaurant in your cart. Please clear your current cart to add items from this restaurant.",
     ),
+    "disconnected": MessageLookupByLibrary.simpleMessage("Disconnected"),
     "editAddress": MessageLookupByLibrary.simpleMessage("Edit"),
     "endBtn": MessageLookupByLibrary.simpleMessage("End"),
     "endConversationBtn": MessageLookupByLibrary.simpleMessage(
@@ -137,6 +146,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "fetchLocationSuccess": MessageLookupByLibrary.simpleMessage(
       "Address fetched from current location",
     ),
+    "findingDriver": MessageLookupByLibrary.simpleMessage(
+      "Finding Delivery Driver",
+    ),
     "freeDelivery": MessageLookupByLibrary.simpleMessage("Free Delivery"),
     "goBackBtn": MessageLookupByLibrary.simpleMessage("Go Back"),
     "gotItBtn": MessageLookupByLibrary.simpleMessage("Got it"),
@@ -154,6 +166,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "login": MessageLookupByLibrary.simpleMessage("Login"),
     "logout": MessageLookupByLibrary.simpleMessage("Logout"),
+    "mapWillShowWhenDriverAccepts": MessageLookupByLibrary.simpleMessage(
+      "Map will appear when a driver accepts the order",
+    ),
     "menu": MessageLookupByLibrary.simpleMessage("Menu"),
     "mexican": MessageLookupByLibrary.simpleMessage("Mexican"),
     "min": MessageLookupByLibrary.simpleMessage("min"),
@@ -171,6 +186,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "noOrdersMessage": MessageLookupByLibrary.simpleMessage(
       "You haven\'t placed any orders yet. Start exploring restaurants and place your first order!",
     ),
+    "noTrackingInfo": MessageLookupByLibrary.simpleMessage(
+      "No Tracking Information",
+    ),
     "order": MessageLookupByLibrary.simpleMessage("Order"),
     "orderCancelled": MessageLookupByLibrary.simpleMessage(
       "Order cancelled successfully",
@@ -182,6 +200,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "outOfStockItems": MessageLookupByLibrary.simpleMessage(
       "Items out of stock",
     ),
+    "paymentInfo": MessageLookupByLibrary.simpleMessage("Payment Information"),
+    "paymentMethodText": MessageLookupByLibrary.simpleMessage("Payment Method"),
     "pending": MessageLookupByLibrary.simpleMessage("Pending"),
     "pizza": MessageLookupByLibrary.simpleMessage("Pizza"),
     "pleaseSelectAddress": MessageLookupByLibrary.simpleMessage(
@@ -219,6 +239,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Set as default address",
     ),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+    "shipperNotStarted": MessageLookupByLibrary.simpleMessage(
+      "The shipper has not started delivering this order",
+    ),
     "shoppingCart": MessageLookupByLibrary.simpleMessage("Shopping Cart"),
     "showOrderDetails": MessageLookupByLibrary.simpleMessage(
       "Show Order Details",
@@ -241,6 +264,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Featured Restaurants",
     ),
     "total": MessageLookupByLibrary.simpleMessage("Total"),
+    "trackDelivery": MessageLookupByLibrary.simpleMessage("Track Delivery"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
     "unavailable": MessageLookupByLibrary.simpleMessage("Unavailable"),
     "update": MessageLookupByLibrary.simpleMessage("Update"),
@@ -250,6 +274,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "yourCartIsEmpty": MessageLookupByLibrary.simpleMessage(
       "Your cart is empty",
     ),
+    "yourCourier": MessageLookupByLibrary.simpleMessage("YOUR COURIER"),
     "yourOrders": MessageLookupByLibrary.simpleMessage("Your Orders"),
   };
 }

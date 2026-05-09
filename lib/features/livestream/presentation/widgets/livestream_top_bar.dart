@@ -27,16 +27,6 @@ class LivestreamTopBar extends StatelessWidget {
     return count.toString();
   }
 
-  Widget _buildDefaultAvatar(BuildContext context) {
-    return Container(
-      color: Theme.of(context).colorScheme.primaryContainer,
-      child: Icon(
-        Icons.person_rounded,
-        size: 20.sp,
-        color: Theme.of(context).colorScheme.onPrimaryContainer,
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,9 +100,9 @@ class LivestreamTopBar extends StatelessWidget {
                               ? Image.network(
                                   livestream.streamerAvatar!,
                                   fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => _buildDefaultAvatar(context),
+                                  errorBuilder: (_, __, ___) => const LivestreamTopBarDefaultAvatar(),
                                 )
-                              : _buildDefaultAvatar(context),
+                              : const LivestreamTopBarDefaultAvatar(),
                         ),
                       ),
                       SizedBox(width: 10.w),
@@ -179,6 +169,22 @@ class LivestreamTopBar extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class LivestreamTopBarDefaultAvatar extends StatelessWidget {
+  const LivestreamTopBarDefaultAvatar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Theme.of(context).colorScheme.primaryContainer,
+      child: Icon(
+        Icons.person_rounded,
+        size: 20.sp,
+        color: Theme.of(context).colorScheme.onPrimaryContainer,
       ),
     );
   }

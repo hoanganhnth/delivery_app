@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../domain/entities/order_entity.dart';
-import '../../domain/entities/order_item_entity.dart';
+import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
+import 'package:delivery_app/features/orders/domain/entities/order_item_entity.dart';
 
 /// Widget hiển thị danh sách sản phẩm trong đơn hàng
 class OrderItemsCard extends StatelessWidget {
@@ -44,7 +44,7 @@ class OrderItemsCard extends StatelessWidget {
               final item = entry.value;
               return Column(
                 children: [
-                  _buildOrderItem(context, item),
+                  OrderItemRow(item: item),
                   if (index < order.items.length - 1)
                     Divider(height: 20.w),
                 ],
@@ -56,7 +56,15 @@ class OrderItemsCard extends StatelessWidget {
     );
   }
 
-  Widget _buildOrderItem(BuildContext context, OrderItemEntity item) {
+}
+
+class OrderItemRow extends StatelessWidget {
+  final OrderItemEntity item;
+
+  const OrderItemRow({super.key, required this.item});
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     
     return Row(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import '../providers/providers.dart';
 import '../widgets/livestream_card_horizontal.dart';
 
@@ -55,7 +56,7 @@ class _LivestreamHomeSectionState extends ConsumerState<LivestreamHomeSection> {
               GestureDetector(
                 onTap: () {
                   // Navigate to all livestreams screen
-                  Navigator.pushNamed(context, '/livestreams');
+                  context.pushNamed('livestreams');
                 },
                 child: Text(
                   'Xem tất cả',
@@ -99,10 +100,9 @@ class _LivestreamHomeSectionState extends ConsumerState<LivestreamHomeSection> {
                           child: GestureDetector(
                             onTap: () {
                               // Navigate to livestream detail
-                              Navigator.pushNamed(
-                                context,
-                                '/livestream-detail',
-                                arguments: livestream.id,
+                              context.pushNamed(
+                                'livestream-detail',
+                                pathParameters: {'id': livestream.id},
                               );
                             },
                             child: LivestreamCardHorizontal(livestream: livestream),

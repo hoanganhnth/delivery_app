@@ -5,15 +5,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
-import '../../../../core/utils/logger/app_logger.dart';
-import '../../domain/entities/delivery_tracking_entity.dart';
-import '../../domain/entities/delivery_status.dart';
-import '../../domain/entities/shipper_entity.dart';
-import '../../domain/entities/shipper_location_entity.dart';
-import '../services/fake_shipper_movement_service.dart';
-import '../services/mapbox_map_service.dart';
-import '../services/i_map_service.dart';
-import '../providers/providers.dart';
+import 'package:delivery_app/core/utils/logger/app_logger.dart';
+import 'package:delivery_app/features/orders/domain/entities/delivery_tracking_entity.dart';
+import 'package:delivery_app/features/orders/domain/entities/delivery_status.dart';
+import 'package:delivery_app/features/orders/domain/entities/shipper_entity.dart';
+import 'package:delivery_app/features/orders/domain/entities/shipper_location_entity.dart';
+import '../../services/fake_shipper_movement_service.dart';
+import '../../services/mapbox_map_service.dart';
+import '../../services/i_map_service.dart';
+import 'package:delivery_app/features/orders/presentation/providers/providers.dart';
 
 /// Widget tối ưu để hiển thị bản đồ theo dõi delivery với MapBox
 /// Sử dụng shipperLocationProvider thay vì fake movement

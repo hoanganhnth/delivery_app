@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../domain/entities/order_entity.dart';
+import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
 
 /// Widget hiển thị thông tin khách hàng
 class OrderCustomerInfoCard extends StatelessWidget {
@@ -38,33 +38,29 @@ class OrderCustomerInfoCard extends StatelessWidget {
               ],
             ),
             SizedBox(height: 12.w),
-            _buildInfoRow(
-              context,
-              Icons.person_outline,
-              'Tên khách hàng',
-              order.customerName,
+            OrderCustomerInfoRow(
+              icon: Icons.person_outline,
+              label: 'Tên khách hàng',
+              value: order.customerName,
             ),
             SizedBox(height: 8.w),
-            _buildInfoRow(
-              context,
-              Icons.phone,
-              'Số điện thoại',
-              order.customerPhone,
+            OrderCustomerInfoRow(
+              icon: Icons.phone,
+              label: 'Số điện thoại',
+              value: order.customerPhone,
             ),
             SizedBox(height: 8.w),
-            _buildInfoRow(
-              context,
-              Icons.location_on,
-              'Địa chỉ giao hàng',
-              order.deliveryAddress,
+            OrderCustomerInfoRow(
+              icon: Icons.location_on,
+              label: 'Địa chỉ giao hàng',
+              value: order.deliveryAddress,
             ),
             if (order.notes != null && order.notes!.isNotEmpty) ...[
               SizedBox(height: 8.w),
-              _buildInfoRow(
-                context,
-                Icons.note,
-                'Ghi chú',
-                order.notes!,
+              OrderCustomerInfoRow(
+                icon: Icons.note,
+                label: 'Ghi chú',
+                value: order.notes!,
               ),
             ],
           ],
@@ -73,12 +69,22 @@ class OrderCustomerInfoCard extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(
-    BuildContext context,
-    IconData icon,
-    String label,
-    String value,
-  ) {
+}
+
+class OrderCustomerInfoRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const OrderCustomerInfoRow({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     
     return Row(
@@ -113,3 +119,4 @@ class OrderCustomerInfoCard extends StatelessWidget {
     );
   }
 }
+

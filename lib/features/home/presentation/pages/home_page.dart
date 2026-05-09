@@ -1,6 +1,6 @@
 import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
-import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_card.dart';
+import 'package:delivery_app/features/restaurants/presentation/widgets/shared/restaurant_card.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

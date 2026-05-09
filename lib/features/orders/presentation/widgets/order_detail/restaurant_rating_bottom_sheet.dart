@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/network/_riverpod/authenticated_network_providers.dart';
-import '../../../../core/theme/theme_extensions.dart';
-import '../../../../core/widgets/amber_widgets.dart';
-import '../../../profile/presentation/providers/profile_notifier.dart';
-import '../../domain/entities/order_entity.dart';
+import 'package:delivery_app/core/network/_riverpod/authenticated_network_providers.dart';
+import 'package:delivery_app/core/theme/theme_extensions.dart';
+import 'package:delivery_app/core/widgets/amber_widgets.dart';
+import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
+import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
 
 class RestaurantRatingBottomSheet extends ConsumerStatefulWidget {
   final OrderEntity order;

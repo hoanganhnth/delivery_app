@@ -1,9 +1,9 @@
 import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
 import 'package:delivery_app/features/cart/presentation/widgets/amber_cart_item_widget.dart';
-import 'package:delivery_app/features/cart/presentation/widgets/restaurant_header_card.dart';
 import 'package:delivery_app/features/cart/presentation/widgets/cart_order_summary.dart';
 import 'package:delivery_app/features/cart/presentation/widgets/cart_checkout_button.dart';
+import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_detail/restaurant_header_card.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/features/cart/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +34,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
   Future<void> _syncPrices() async {
     try {
-      final result = await ref.read(cartProvider.notifier).syncPricesWithServer();
+      final result = await ref
+          .read(cartProvider.notifier)
+          .syncPricesWithServer();
       if (!mounted || !result.hasChanges) return;
 
       final messages = <String>[];
@@ -43,7 +45,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         messages.add('${change.itemName}: $diff giá');
       }
       if (result.unavailableItemIds.isNotEmpty) {
-        messages.add('${result.unavailableItemIds.length} món đã hết hàng (đã xoá)');
+        messages.add(
+          '${result.unavailableItemIds.length} món đã hết hàng (đã xoá)',
+        );
       }
 
       if (messages.isNotEmpty && mounted) {

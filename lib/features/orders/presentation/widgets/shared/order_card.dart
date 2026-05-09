@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/app_colors.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
-import '../../domain/entities/order_entity.dart';
+import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
 
 /// Order Card - Editorial style với image, status badge, và hover effects
 class OrderCard extends ConsumerStatefulWidget {
@@ -75,7 +75,7 @@ class _OrderCardState extends ConsumerState<OrderCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Restaurant Image
-                  _buildOrderImage(colors, isCancelled),
+                  OrderCardImage(colors: colors, isCancelled: isCancelled),
                   SizedBox(width: ResponsiveSize.m),
                   // Order Info
                   Expanded(
@@ -137,7 +137,12 @@ class _OrderCardState extends ConsumerState<OrderCard> {
                             ),
                             SizedBox(width: ResponsiveSize.s),
                             // Action
-                            _buildActionButton(colors, isActive, isCancelled),
+                            OrderCardActionButton(
+                              colors: colors,
+                              isActive: isActive,
+                              isCancelled: isCancelled,
+                              onReorder: widget.onReorder,
+                            ),
                           ],
                         ),
                       ],
@@ -152,31 +157,7 @@ class _OrderCardState extends ConsumerState<OrderCard> {
     );
   }
 
-  Widget _buildOrderImage(AppColors colors, bool isCancelled) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 500),
-      width: 96.w,
-      height: 96.w,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
-        color: colors.primary.withValues(alpha: 0.1),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
-        child: _buildPlaceholderImage(colors), // Always use placeholder for now
-      ),
-    );
-  }
 
-  Widget _buildPlaceholderImage(AppColors colors) {
-    return Center(
-      child: Icon(
-        Icons.restaurant,
-        color: colors.primary,
-        size: 40.w,
-      ),
-    );
-  }
 
   String _getRestaurantName() {
     // Get restaurant name from first item if available
@@ -186,60 +167,6 @@ class _OrderCardState extends ConsumerState<OrderCard> {
       return '$firstWord Restaurant';
     }
     return 'Restaurant #${widget.order.id ?? 0}';
-  }
-
-  Widget _buildActionButton(
-      AppColors colors, bool isActive, bool isCancelled) {
-    String text;
-    IconData icon;
-    Color color;
-    VoidCallback? actionOnTap;
-
-    if (isActive) {
-      text = 'Track Order';
-      icon = Icons.near_me;
-      color = colors.primary;
-      actionOnTap = null; // Whole card tap handles this via widget.onTap
-    } else if (isCancelled || !isActive) {
-      // For cancelled or completed, show Reorder
-      text = 'Reorder';
-      icon = Icons.refresh;
-      color = colors.primary; // Reorder should be primary color
-      actionOnTap = widget.onReorder;
-    } else {
-      text = 'View Details';
-      icon = Icons.chevron_right;
-      color = colors.textSecondary;
-      actionOnTap = null;
-    }
-
-    return GestureDetector(
-      onTap: actionOnTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-        decoration: actionOnTap != null 
-          ? BoxDecoration(
-              color: colors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(ResponsiveSize.radiusM),
-            )
-          : null,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: ResponsiveSize.fontS,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
-            SizedBox(width: 2.w),
-            Icon(icon, color: color, size: 18.w),
-          ],
-        ),
-      ),
-    );
   }
 
   String _formatDate(DateTime? dateTime) {
@@ -326,3 +253,114 @@ class _OrderStatusBadge extends ConsumerWidget {
     );
   }
 }
+
+class OrderCardImage extends StatelessWidget {
+  final AppColors colors;
+  final bool isCancelled;
+
+  const OrderCardImage({super.key, required this.colors, required this.isCancelled});
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      width: 96.w,
+      height: 96.w,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
+        color: colors.primary.withValues(alpha: 0.1),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
+        child: OrderCardPlaceholderImage(colors: colors), // Always use placeholder for now
+      ),
+    );
+  }
+}
+
+class OrderCardPlaceholderImage extends StatelessWidget {
+  final AppColors colors;
+
+  const OrderCardPlaceholderImage({super.key, required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Icon(
+        Icons.restaurant,
+        color: colors.primary,
+        size: 40.w,
+      ),
+    );
+  }
+}
+
+class OrderCardActionButton extends StatelessWidget {
+  final AppColors colors;
+  final bool isActive;
+  final bool isCancelled;
+  final VoidCallback? onReorder;
+
+  const OrderCardActionButton({
+    super.key,
+    required this.colors,
+    required this.isActive,
+    required this.isCancelled,
+    this.onReorder,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    String text;
+    IconData icon;
+    Color color;
+    VoidCallback? actionOnTap;
+
+    if (isActive) {
+      text = 'Track Order';
+      icon = Icons.near_me;
+      color = colors.primary;
+      actionOnTap = null; // Whole card tap handles this via widget.onTap
+    } else if (isCancelled || !isActive) {
+      // For cancelled or completed, show Reorder
+      text = 'Reorder';
+      icon = Icons.refresh;
+      color = colors.primary; // Reorder should be primary color
+      actionOnTap = onReorder;
+    } else {
+      text = 'View Details';
+      icon = Icons.chevron_right;
+      color = colors.textSecondary;
+      actionOnTap = null;
+    }
+
+    return GestureDetector(
+      onTap: actionOnTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+        decoration: actionOnTap != null 
+          ? BoxDecoration(
+              color: colors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(ResponsiveSize.radiusM),
+            )
+          : null,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: ResponsiveSize.fontS,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+            SizedBox(width: 2.w),
+            Icon(icon, color: color, size: 18.w),
+          ],
+        ),
+      ),
+    );
+  }
+}
+

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../domain/entities/order_entity.dart';
-import '../../../../generated/l10n.dart';
+import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
+import 'package:delivery_app/generated/l10n.dart';
 
 /// Widget để lọc đơn hàng theo trạng thái
 class OrderStatusFilter extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../domain/entities/order_entity.dart';
+import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
 
 /// Widget hiển thị trạng thái đơn hàng
 class OrderStatusCard extends StatelessWidget {

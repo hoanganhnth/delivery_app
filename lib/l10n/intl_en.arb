@@ -7,7 +7,6 @@
     "test": "test",
     "test2": "test2",
     "test3": "test3",
-    
     "deliverFood": "DeliverFood",
     "shoppingCart": "Shopping Cart",
     "clearCart": "Clear Cart",
@@ -104,10 +103,9 @@
     "clearCurrentCart": "Clear Current Cart",
     "outOfStock": "Out of Stock",
     "unavailable": "Unavailable",
-    
     "all": "All",
     "pending": "Pending",
-    "confirmed": "Confirmed", 
+    "confirmed": "Confirmed",
     "preparing": "Preparing",
     "delivering": "Delivering",
     "delivered": "Delivered",
@@ -120,11 +118,9 @@
     "confirm": "Confirm",
     "orderCancelled": "Order cancelled successfully",
     "cancelOrderFailed": "Failed to cancel order",
-    
     "order": "Order",
     "estimatedDelivery": "Estimated delivery",
     "top_restaurants": "Featured Restaurants",
-    
     "editAddress": "Edit",
     "setAsDefault": "Set as Default",
     "confirmDeleteAddress": "Confirm Delete",
@@ -182,5 +178,18 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "paymentInfo": "Payment Information",
+    "paymentMethodText": "Payment Method",
+    "trackDelivery": "Track Delivery",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "connecting": "Connecting...",
+    "deliveredSuccess": "Delivery Successful!",
+    "deliveredSuccessMessage": "Your order has been delivered to your destination.",
+    "findingDriver": "Finding Delivery Driver",
+    "mapWillShowWhenDriverAccepts": "Map will appear when a driver accepts the order",
+    "noTrackingInfo": "No Tracking Information",
+    "shipperNotStarted": "The shipper has not started delivering this order",
+    "yourCourier": "YOUR COURIER"
 }

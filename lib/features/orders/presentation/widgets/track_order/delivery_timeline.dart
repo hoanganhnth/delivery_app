@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
-import '../../domain/entities/order_entity.dart';
+import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
+import 'package:delivery_app/generated/l10n.dart';
 
 /// Order Timeline Widget - Hiển thị 4 bước cơ bản của đơn hàng
 /// Đây là trạng thái ĐƠN HÀNG (order), không phải delivery tracking
@@ -27,7 +28,7 @@ class DeliveryTimeline extends ConsumerWidget {
         _TimelineStep(
           icon: Icons.receipt_long,
           title: 'Chờ nhận đơn',
-          subtitle: _getSubtitle(0, currentStepIndex),
+          subtitle: _getSubtitle(context, 0, currentStepIndex),
           isCompleted: currentStepIndex > 0,
           isActive: currentStepIndex == 0,
         ),
@@ -36,7 +37,7 @@ class DeliveryTimeline extends ConsumerWidget {
         _TimelineStep(
           icon: Icons.store,
           title: 'Chờ lấy đơn',
-          subtitle: _getSubtitle(1, currentStepIndex),
+          subtitle: _getSubtitle(context, 1, currentStepIndex),
           isCompleted: currentStepIndex > 1,
           isActive: currentStepIndex == 1,
         ),
@@ -45,7 +46,7 @@ class DeliveryTimeline extends ConsumerWidget {
         _TimelineStep(
           icon: Icons.delivery_dining,
           title: 'Đang giao',
-          subtitle: _getSubtitle(2, currentStepIndex),
+          subtitle: _getSubtitle(context, 2, currentStepIndex),
           isCompleted: currentStepIndex > 2,
           isActive: currentStepIndex == 2,
           isLarge: currentStepIndex == 2, // Highlight khi đang active
@@ -103,7 +104,7 @@ class DeliveryTimeline extends ConsumerWidget {
   }
 
   /// Lấy subtitle phù hợp cho từng step
-  String _getSubtitle(int stepIndex, int currentStepIndex) {
+  String _getSubtitle(BuildContext context, int stepIndex, int currentStepIndex) {
     if (stepIndex > currentStepIndex) {
       // Chưa đến bước này
       return '';
@@ -114,7 +115,7 @@ class DeliveryTimeline extends ConsumerWidget {
         if (currentStepIndex == 0) return 'Đang chờ nhà hàng xác nhận';
         return 'Nhà hàng đã xác nhận';
       case 1:
-        if (currentStepIndex == 1) return 'Đang tìm tài xế giao hàng';
+        if (currentStepIndex == 1) return S.of(context).findingDriver;
         return 'Tài xế đã nhận đơn';
       case 2:
         if (currentStepIndex == 2) return 'Tài xế đang trên đường giao';

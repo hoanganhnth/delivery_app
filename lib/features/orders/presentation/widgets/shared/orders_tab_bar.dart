@@ -4,7 +4,7 @@ import 'package:delivery_app/core/utils/screen_util_extensions.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../generated/l10n.dart';
+import 'package:delivery_app/generated/l10n.dart';
 
 /// Filter TabBar - Editorial rounded-full pills
 class OrdersTabBar extends ConsumerWidget {
@@ -28,28 +28,28 @@ class OrdersTabBar extends ConsumerWidget {
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
-              _buildTabChip(
-                context,
-                colors,
-                S.of(context).all,
-                0,
-                tabController.index == 0,
+              OrderTabChip(
+                colors: colors,
+                label: S.of(context).all,
+                index: 0,
+                isSelected: tabController.index == 0,
+                tabController: tabController,
               ),
               SizedBox(width: ResponsiveSize.s),
-              _buildTabChip(
-                context,
-                colors,
-                'Active',
-                1,
-                tabController.index == 1,
+              OrderTabChip(
+                colors: colors,
+                label: 'Active',
+                index: 1,
+                isSelected: tabController.index == 1,
+                tabController: tabController,
               ),
               SizedBox(width: ResponsiveSize.s),
-              _buildTabChip(
-                context,
-                colors,
-                'Completed',
-                2,
-                tabController.index == 2,
+              OrderTabChip(
+                colors: colors,
+                label: 'Completed',
+                index: 2,
+                isSelected: tabController.index == 2,
+                tabController: tabController,
               ),
             ],
           ),
@@ -58,13 +58,26 @@ class OrdersTabBar extends ConsumerWidget {
     );
   }
 
-  Widget _buildTabChip(
-    BuildContext context,
-    AppColors colors,
-    String label,
-    int index,
-    bool isSelected,
-  ) {
+}
+
+class OrderTabChip extends StatelessWidget {
+  final AppColors colors;
+  final String label;
+  final int index;
+  final bool isSelected;
+  final TabController tabController;
+
+  const OrderTabChip({
+    super.key,
+    required this.colors,
+    required this.label,
+    required this.index,
+    required this.isSelected,
+    required this.tabController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => tabController.animateTo(index),
       child: AnimatedContainer(
@@ -100,3 +113,4 @@ class OrdersTabBar extends ConsumerWidget {
     );
   }
 }
+

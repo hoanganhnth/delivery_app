@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../domain/entities/order_entity.dart';
-import '../widgets/order_card.dart';
+import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
+import 'order_card.dart';
 
 /// Widget hiển thị danh sách orders
 class OrdersList extends StatelessWidget {

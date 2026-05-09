@@ -1,9 +1,9 @@
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
-import 'package:delivery_app/features/restaurants/presentation/widgets/menu_item_card.dart';
-import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_hero_section.dart';
-import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_info_section.dart';
-import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_menu_header.dart';
-import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_cart_button.dart';
+import 'package:delivery_app/features/restaurants/presentation/widgets/menu/menu_item_card.dart';
+import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_detail/restaurant_hero_section.dart';
+import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_detail/restaurant_info_section.dart';
+import 'package:delivery_app/features/restaurants/presentation/widgets/menu/restaurant_menu_header.dart';
+import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_detail/restaurant_cart_button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

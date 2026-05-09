@@ -4,6 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/core/theme/app_colors.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
+import 'package:delivery_app/generated/l10n.dart';
+import 'courier_photo.dart';
+import 'courier_action_button.dart';
 
 /// Courier Info Card - Driver info với photo, rating, và action buttons
 class CourierInfoCard extends ConsumerWidget {
@@ -42,7 +45,7 @@ class CourierInfoCard extends ConsumerWidget {
       child: Row(
         children: [
           // Courier Photo
-          _buildCourierPhoto(colors),
+          CourierPhoto(colors: colors, courierPhoto: courierPhoto),
           SizedBox(width: ResponsiveSize.m),
           // Courier Info
           Expanded(
@@ -50,7 +53,7 @@ class CourierInfoCard extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'YOUR COURIER',
+                  S.of(context).yourCourier.toUpperCase(),
                   style: TextStyle(
                     fontSize: 10.sp,
                     fontWeight: FontWeight.bold,
@@ -92,17 +95,17 @@ class CourierInfoCard extends ConsumerWidget {
           // Action Buttons
           Row(
             children: [
-              _buildActionButton(
-                colors,
-                Icons.chat_bubble_outline,
-                onChat,
+              CourierActionButton(
+                colors: colors,
+                icon: Icons.chat_bubble_outline,
+                onTap: onChat,
                 isPrimary: false,
               ),
               SizedBox(width: ResponsiveSize.s),
-              _buildActionButton(
-                colors,
-                Icons.call,
-                onCall,
+              CourierActionButton(
+                colors: colors,
+                icon: Icons.call,
+                onTap: onCall,
                 isPrimary: true,
               ),
             ],
@@ -112,88 +115,6 @@ class CourierInfoCard extends ConsumerWidget {
     );
   }
   
-  Widget _buildCourierPhoto(AppColors colors) {
-    return Stack(
-      children: [
-        Container(
-          width: 56.w,
-          height: 56.w,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
-            color: colors.primary.withValues(alpha: 0.1),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
-            child: courierPhoto != null && courierPhoto!.isNotEmpty
-                ? Image.network(
-                    courierPhoto!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, __, ___) => _buildPlaceholder(colors),
-                  )
-                : _buildPlaceholder(colors),
-          ),
-        ),
-        // Verified badge
-        Positioned(
-          bottom: -2,
-          right: -2,
-          child: Container(
-            padding: EdgeInsets.all(2.w),
-            decoration: BoxDecoration(
-              color: colors.primary,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Icon(
-              Icons.verified,
-              color: Colors.white,
-              size: 10.w,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-  
-  Widget _buildPlaceholder(AppColors colors) {
-    return Center(
-      child: Icon(
-        Icons.person,
-        color: colors.primary,
-        size: 28.w,
-      ),
-    );
-  }
-  
-  Widget _buildActionButton(
-    AppColors colors,
-    IconData icon,
-    VoidCallback onTap, {
-    bool isPrimary = false,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 48.w,
-        height: 48.w,
-        decoration: BoxDecoration(
-          color: isPrimary ? colors.primary : Colors.white,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: isPrimary
-                  ? colors.primary.withValues(alpha: 0.3)
-                  : colors.shadow.withValues(alpha: 0.1),
-              blurRadius: isPrimary ? 8 : 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Icon(
-          icon,
-          color: isPrimary ? Colors.white : colors.primary,
-          size: 20.w,
-        ),
-      ),
-    );
-  }
 }
+
+

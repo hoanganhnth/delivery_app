@@ -1063,6 +1063,131 @@ class S {
       args: [productName],
     );
   }
+
+  /// `Payment Information`
+  String get paymentInfo {
+    return Intl.message(
+      'Payment Information',
+      name: 'paymentInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment Method`
+  String get paymentMethodText {
+    return Intl.message(
+      'Payment Method',
+      name: 'paymentMethodText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Track Delivery`
+  String get trackDelivery {
+    return Intl.message(
+      'Track Delivery',
+      name: 'trackDelivery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connected`
+  String get connected {
+    return Intl.message('Connected', name: 'connected', desc: '', args: []);
+  }
+
+  /// `Disconnected`
+  String get disconnected {
+    return Intl.message(
+      'Disconnected',
+      name: 'disconnected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connecting...`
+  String get connecting {
+    return Intl.message(
+      'Connecting...',
+      name: 'connecting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delivery Successful!`
+  String get deliveredSuccess {
+    return Intl.message(
+      'Delivery Successful!',
+      name: 'deliveredSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your order has been delivered to your destination.`
+  String get deliveredSuccessMessage {
+    return Intl.message(
+      'Your order has been delivered to your destination.',
+      name: 'deliveredSuccessMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Finding Delivery Driver`
+  String get findingDriver {
+    return Intl.message(
+      'Finding Delivery Driver',
+      name: 'findingDriver',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Map will appear when a driver accepts the order`
+  String get mapWillShowWhenDriverAccepts {
+    return Intl.message(
+      'Map will appear when a driver accepts the order',
+      name: 'mapWillShowWhenDriverAccepts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Tracking Information`
+  String get noTrackingInfo {
+    return Intl.message(
+      'No Tracking Information',
+      name: 'noTrackingInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The shipper has not started delivering this order`
+  String get shipperNotStarted {
+    return Intl.message(
+      'The shipper has not started delivering this order',
+      name: 'shipperNotStarted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `YOUR COURIER`
+  String get yourCourier {
+    return Intl.message(
+      'YOUR COURIER',
+      name: 'yourCourier',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
