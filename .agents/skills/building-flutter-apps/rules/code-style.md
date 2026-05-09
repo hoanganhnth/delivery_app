@@ -59,6 +59,16 @@ part 'file.g.dart';
 part 'file.freezed.dart';
 ```
 
+## Localization
+
+- Toàn bộ text hiển thị trên UI phải được khai báo trong `intl_en.arb` và `intl_vi.arb`.
+- Naming keys: Dùng camelCase và prefix theo module (ví dụ: `authLoginButton`, `iapCurrentPlan`).
+- Chạy `fvm dart run intl_utils:generate` sau khi thêm keys.
+
+## State Classes (Freezed)
+
+- Bắt buộc sử dụng `sealed class` thay vì `abstract class` cho các Freezed states và models để đảm bảo tính an toàn qua exhaustive pattern matching (bắt buộc phải handle tất cả các cases khi dùng `.when()` hoặc `.map()`).
+
 ## Comments
 
 ```dart

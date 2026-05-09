@@ -58,6 +58,7 @@ Future<void> loadItems() async {
 // UI listens and shows error
 ref.listen(featureNotifierProvider, (prev, next) {
   if (next.failure != null) {
+    // Luôn ưu tiên dùng S.of(context) (l10n) để hiển thị thông báo lỗi thân thiện thay vì message từ Exception
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(next.failure!.message)),
     );

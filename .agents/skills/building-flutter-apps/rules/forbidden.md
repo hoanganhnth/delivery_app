@@ -125,3 +125,38 @@ state.items.add(item);
 // ✅ copyWith
 state = state.copyWith(items: [...state.items, item]);
 ```
+
+### Hardcoded UI Strings
+```dart
+// ❌ Hardcoded strings
+Text('Đăng nhập')
+
+// ✅ Use Localization (intl)
+Text(S.of(context).login)
+```
+
+### UI Helper Methods (`_buildXxx`)
+```dart
+// ❌ UI Helper methods (Reduces performance, breaks const optimization)
+class MyScreen extends StatelessWidget {
+  Widget _buildHeader() {
+    return Container(...);
+  }
+}
+
+// ✅ Standalone Widgets
+class HeaderWidget extends StatelessWidget {
+  const HeaderWidget({super.key});
+  
+  @override
+  Widget build(BuildContext context) {
+    return Container(...);
+  }
+}
+```
+
+### God Widgets / Monolithic Files
+```dart
+// ❌ File with 500+ lines containing all screen components
+// ✅ Split into modular components in lib/features/.../presentation/widgets/
+```
