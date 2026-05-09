@@ -47,8 +47,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "addToCart": MessageLookupByLibrary.simpleMessage("Thêm vào Giỏ"),
     "addedToCartLivestream": m0,
     "all": MessageLookupByLibrary.simpleMessage("Tất cả"),
+    "alreadyHaveAccount": MessageLookupByLibrary.simpleMessage(
+      "Đã có tài khoản? ",
+    ),
     "anonymous": MessageLookupByLibrary.simpleMessage("Ẩn danh"),
     "appTitle": MessageLookupByLibrary.simpleMessage("Ứng dụng Giao Hàng"),
+    "backToLogin": MessageLookupByLibrary.simpleMessage("Quay lại đăng nhập"),
     "browseRestaurants": MessageLookupByLibrary.simpleMessage("Duyệt Nhà Hàng"),
     "cancel": MessageLookupByLibrary.simpleMessage("Hủy"),
     "cancelDelete": MessageLookupByLibrary.simpleMessage("Hủy"),
@@ -99,6 +103,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "confirmDeleteAddressBtn": MessageLookupByLibrary.simpleMessage("Xóa"),
     "confirmDeleteAddressMessage": m1,
+    "confirmPassword": MessageLookupByLibrary.simpleMessage(
+      "XÁC NHẬN MẬT KHẨU",
+    ),
+    "confirmYourPassword": MessageLookupByLibrary.simpleMessage(
+      "Vui lòng xác nhận mật khẩu",
+    ),
     "confirmed": MessageLookupByLibrary.simpleMessage("Đã xác nhận"),
     "connected": MessageLookupByLibrary.simpleMessage("Kết nối"),
     "connecting": MessageLookupByLibrary.simpleMessage("Đang kết nối..."),
@@ -109,6 +119,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Đã kết thúc hội thoại",
     ),
     "coordinates": MessageLookupByLibrary.simpleMessage("Tọa độ"),
+    "createAccount": MessageLookupByLibrary.simpleMessage("Tạo tài khoản"),
+    "createAccountBtn": MessageLookupByLibrary.simpleMessage("TẠO TÀI KHOẢN"),
     "deliverFood": MessageLookupByLibrary.simpleMessage("DeliverFood"),
     "delivered": MessageLookupByLibrary.simpleMessage("Đã giao"),
     "deliveredSuccess": MessageLookupByLibrary.simpleMessage(
@@ -123,10 +135,19 @@ class MessageLookup extends MessageLookupByLibrary {
       "Bạn đã có món từ nhà hàng khác trong giỏ hàng. Vui lòng xóa giỏ hàng hiện tại để thêm món từ nhà hàng này.",
     ),
     "disconnected": MessageLookupByLibrary.simpleMessage("Mất kết nối"),
+    "dontHaveAccount": MessageLookupByLibrary.simpleMessage(
+      "Chưa có tài khoản? ",
+    ),
     "editAddress": MessageLookupByLibrary.simpleMessage("Chỉnh sửa"),
+    "emailAddress": MessageLookupByLibrary.simpleMessage("ĐỊA CHỈ EMAIL"),
+    "emailHint": MessageLookupByLibrary.simpleMessage("chef@amberhearth.com"),
     "endBtn": MessageLookupByLibrary.simpleMessage("Kết thúc"),
     "endConversationBtn": MessageLookupByLibrary.simpleMessage(
       "Kết thúc hội thoại",
+    ),
+    "enterEmail": MessageLookupByLibrary.simpleMessage("Vui lòng nhập email"),
+    "enterPassword": MessageLookupByLibrary.simpleMessage(
+      "Vui lòng nhập mật khẩu",
     ),
     "error": MessageLookupByLibrary.simpleMessage("Lỗi"),
     "errorPrefix": MessageLookupByLibrary.simpleMessage("Lỗi"),
@@ -144,7 +165,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "findingDriver": MessageLookupByLibrary.simpleMessage(
       "Đang tìm tài xế giao hàng",
     ),
+    "forgotPassword": MessageLookupByLibrary.simpleMessage("Quên mật khẩu?"),
     "freeDelivery": MessageLookupByLibrary.simpleMessage("Miễn Phí Giao Hàng"),
+    "fullName": MessageLookupByLibrary.simpleMessage("HỌ VÀ TÊN"),
+    "fullNameHint": MessageLookupByLibrary.simpleMessage("Nguyễn Văn A"),
     "goBackBtn": MessageLookupByLibrary.simpleMessage("Quay lại"),
     "gotItBtn": MessageLookupByLibrary.simpleMessage("Đã hiểu"),
     "helloWorld": MessageLookupByLibrary.simpleMessage("Xin chào"),
@@ -154,10 +178,14 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "home": MessageLookupByLibrary.simpleMessage("Trang Chủ"),
     "indian": MessageLookupByLibrary.simpleMessage("Món Ấn Độ"),
+    "invalidEmail": MessageLookupByLibrary.simpleMessage(
+      "Vui lòng nhập email hợp lệ",
+    ),
     "italian": MessageLookupByLibrary.simpleMessage("Món Ý"),
     "items": m2,
     "itemsFrom": m3,
     "japanese": MessageLookupByLibrary.simpleMessage("Món Nhật"),
+    "joinTheHearth": MessageLookupByLibrary.simpleMessage("THAM GIA HEARTH"),
     "livestreamEnded": MessageLookupByLibrary.simpleMessage(
       "Livestream đã kết thúc",
     ),
@@ -166,6 +194,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "loading": MessageLookupByLibrary.simpleMessage("Đang tải..."),
     "login": MessageLookupByLibrary.simpleMessage("Đăng nhập"),
+    "loginSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Hãy tận hưởng khoảnh khắc. Đăng nhập vào căn bếp của bạn.",
+    ),
+    "loginSuccess": MessageLookupByLibrary.simpleMessage(
+      "Đăng nhập thành công!",
+    ),
     "logout": MessageLookupByLibrary.simpleMessage("Đăng xuất"),
     "mapWillShowWhenDriverAccepts": MessageLookupByLibrary.simpleMessage(
       "Bản đồ sẽ hiển thị khi tài xế nhận đơn",
@@ -203,6 +237,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "orders": MessageLookupByLibrary.simpleMessage("Đơn Hàng"),
     "outOfStock": MessageLookupByLibrary.simpleMessage("Hết hàng"),
     "outOfStockItems": MessageLookupByLibrary.simpleMessage("Có món hết hàng"),
+    "password": MessageLookupByLibrary.simpleMessage("MẬT KHẨU"),
+    "passwordHelper": MessageLookupByLibrary.simpleMessage(
+      "Phải có ít nhất 8 ký tự với sự kết hợp của các biểu tượng.",
+    ),
+    "passwordHint": MessageLookupByLibrary.simpleMessage("••••••••"),
+    "passwordMinLength": MessageLookupByLibrary.simpleMessage(
+      "Mật khẩu phải có ít nhất 6 ký tự",
+    ),
+    "passwordsDoNotMatch": MessageLookupByLibrary.simpleMessage(
+      "Mật khẩu không khớp",
+    ),
     "paymentInfo": MessageLookupByLibrary.simpleMessage("Thông tin thanh toán"),
     "paymentMethodText": MessageLookupByLibrary.simpleMessage(
       "Phương thức thanh toán",
@@ -216,6 +261,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "popularNearYou": MessageLookupByLibrary.simpleMessage("Phổ Biến Gần Bạn"),
     "preparing": MessageLookupByLibrary.simpleMessage("Đang chuẩn bị"),
     "price": m4,
+    "privacyPolicy": MessageLookupByLibrary.simpleMessage("Chính sách Bảo mật"),
     "proceedToCheckout": MessageLookupByLibrary.simpleMessage(
       "Tiến hành thanh toán",
     ),
@@ -229,6 +275,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "ratingError": MessageLookupByLibrary.simpleMessage("Có lỗi xảy ra"),
     "ratingHint": MessageLookupByLibrary.simpleMessage(
       "Nhận xét của bạn (không bắt buộc)",
+    ),
+    "register": MessageLookupByLibrary.simpleMessage("Đăng ký"),
+    "registerFailed": MessageLookupByLibrary.simpleMessage(
+      "Đăng ký thất bại. Vui lòng thử lại sau.",
+    ),
+    "registerSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Bước vào thế giới trải nghiệm ẩm thực tinh hoa. Đăng ký để bắt đầu hành trình của bạn với Amber Hearth.",
+    ),
+    "registerSuccess": MessageLookupByLibrary.simpleMessage(
+      "Đăng ký thành công!",
     ),
     "remove": MessageLookupByLibrary.simpleMessage("Xóa"),
     "restaurants": MessageLookupByLibrary.simpleMessage("Nhà Hàng"),
@@ -254,6 +310,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "showOrderDetails": MessageLookupByLibrary.simpleMessage(
       "Hiện Chi Tiết Đơn Hàng",
     ),
+    "signIn": MessageLookupByLibrary.simpleMessage("ĐĂNG NHẬP"),
+    "signInWithGoogle": MessageLookupByLibrary.simpleMessage(
+      "Đăng nhập với Google",
+    ),
     "signOut": MessageLookupByLibrary.simpleMessage("Đăng Xuất"),
     "startNewConversationBtn": MessageLookupByLibrary.simpleMessage(
       "Bắt đầu hội thoại mới",
@@ -261,6 +321,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "submitRatingBtn": MessageLookupByLibrary.simpleMessage("Gửi đánh giá"),
     "subtotal": MessageLookupByLibrary.simpleMessage("Tạm tính"),
     "tax": MessageLookupByLibrary.simpleMessage("Thuế"),
+    "termsAnd": MessageLookupByLibrary.simpleMessage(" và "),
+    "termsDot": MessageLookupByLibrary.simpleMessage(" của Amber Hearth."),
+    "termsOfService": MessageLookupByLibrary.simpleMessage(
+      "Điều khoản Dịch vụ",
+    ),
+    "termsPrefix": MessageLookupByLibrary.simpleMessage(
+      "Bằng cách tạo tài khoản, bạn đồng ý với ",
+    ),
     "test": MessageLookupByLibrary.simpleMessage("test"),
     "test2": MessageLookupByLibrary.simpleMessage("test2"),
     "test3": MessageLookupByLibrary.simpleMessage("test3"),
@@ -273,11 +341,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "trackDelivery": MessageLookupByLibrary.simpleMessage("Theo dõi giao hàng"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Thử Lại"),
     "unavailable": MessageLookupByLibrary.simpleMessage("Không có sẵn"),
+    "unexpectedError": MessageLookupByLibrary.simpleMessage(
+      "Đã xảy ra lỗi không xác định",
+    ),
     "update": MessageLookupByLibrary.simpleMessage("Cập nhật"),
     "viewAll": MessageLookupByLibrary.simpleMessage("Xem Tất Cả"),
     "vnpayPaymentTitle": MessageLookupByLibrary.simpleMessage(
       "Thanh toán VNPay",
     ),
+    "welcomeBack": MessageLookupByLibrary.simpleMessage("Chào mừng trở lại"),
     "yesBtn": MessageLookupByLibrary.simpleMessage("Có"),
     "yourCartIsEmpty": MessageLookupByLibrary.simpleMessage(
       "Giỏ hàng của bạn trống",

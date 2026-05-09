@@ -1218,6 +1218,331 @@ class S {
   String get pinnedUppercase {
     return Intl.message('PINNED', name: 'pinnedUppercase', desc: '', args: []);
   }
+
+  /// `Login successful!`
+  String get loginSuccess {
+    return Intl.message(
+      'Login successful!',
+      name: 'loginSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Welcome Back`
+  String get welcomeBack {
+    return Intl.message(
+      'Welcome Back',
+      name: 'welcomeBack',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Savor the moment. Sign in to your kitchen.`
+  String get loginSubtitle {
+    return Intl.message(
+      'Savor the moment. Sign in to your kitchen.',
+      name: 'loginSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `EMAIL ADDRESS`
+  String get emailAddress {
+    return Intl.message(
+      'EMAIL ADDRESS',
+      name: 'emailAddress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `chef@amberhearth.com`
+  String get emailHint {
+    return Intl.message(
+      'chef@amberhearth.com',
+      name: 'emailHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter your email`
+  String get enterEmail {
+    return Intl.message(
+      'Please enter your email',
+      name: 'enterEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a valid email`
+  String get invalidEmail {
+    return Intl.message(
+      'Please enter a valid email',
+      name: 'invalidEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PASSWORD`
+  String get password {
+    return Intl.message('PASSWORD', name: 'password', desc: '', args: []);
+  }
+
+  /// `••••••••`
+  String get passwordHint {
+    return Intl.message('••••••••', name: 'passwordHint', desc: '', args: []);
+  }
+
+  /// `Please enter your password`
+  String get enterPassword {
+    return Intl.message(
+      'Please enter your password',
+      name: 'enterPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password must be at least 6 characters`
+  String get passwordMinLength {
+    return Intl.message(
+      'Password must be at least 6 characters',
+      name: 'passwordMinLength',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Forgot Password?`
+  String get forgotPassword {
+    return Intl.message(
+      'Forgot Password?',
+      name: 'forgotPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SIGN IN`
+  String get signIn {
+    return Intl.message('SIGN IN', name: 'signIn', desc: '', args: []);
+  }
+
+  /// `Sign in with Google`
+  String get signInWithGoogle {
+    return Intl.message(
+      'Sign in with Google',
+      name: 'signInWithGoogle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Don't have an account? `
+  String get dontHaveAccount {
+    return Intl.message(
+      'Don\'t have an account? ',
+      name: 'dontHaveAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Register`
+  String get register {
+    return Intl.message('Register', name: 'register', desc: '', args: []);
+  }
+
+  /// `JOIN THE HEARTH`
+  String get joinTheHearth {
+    return Intl.message(
+      'JOIN THE HEARTH',
+      name: 'joinTheHearth',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create Account`
+  String get createAccount {
+    return Intl.message(
+      'Create Account',
+      name: 'createAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Step into a world of curated culinary experiences. Register to start your journey with Amber Hearth.`
+  String get registerSubtitle {
+    return Intl.message(
+      'Step into a world of curated culinary experiences. Register to start your journey with Amber Hearth.',
+      name: 'registerSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FULL NAME`
+  String get fullName {
+    return Intl.message('FULL NAME', name: 'fullName', desc: '', args: []);
+  }
+
+  /// `Johnathan Doe`
+  String get fullNameHint {
+    return Intl.message(
+      'Johnathan Doe',
+      name: 'fullNameHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Must be at least 8 characters with a mix of symbols.`
+  String get passwordHelper {
+    return Intl.message(
+      'Must be at least 8 characters with a mix of symbols.',
+      name: 'passwordHelper',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `CONFIRM PASSWORD`
+  String get confirmPassword {
+    return Intl.message(
+      'CONFIRM PASSWORD',
+      name: 'confirmPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please confirm your password`
+  String get confirmYourPassword {
+    return Intl.message(
+      'Please confirm your password',
+      name: 'confirmYourPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Passwords do not match`
+  String get passwordsDoNotMatch {
+    return Intl.message(
+      'Passwords do not match',
+      name: 'passwordsDoNotMatch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `CREATE ACCOUNT`
+  String get createAccountBtn {
+    return Intl.message(
+      'CREATE ACCOUNT',
+      name: 'createAccountBtn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already have an account? `
+  String get alreadyHaveAccount {
+    return Intl.message(
+      'Already have an account? ',
+      name: 'alreadyHaveAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Back to Login`
+  String get backToLogin {
+    return Intl.message(
+      'Back to Login',
+      name: 'backToLogin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `By creating an account, you agree to Amber Hearth's `
+  String get termsPrefix {
+    return Intl.message(
+      'By creating an account, you agree to Amber Hearth\'s ',
+      name: 'termsPrefix',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Terms of Service`
+  String get termsOfService {
+    return Intl.message(
+      'Terms of Service',
+      name: 'termsOfService',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ` and `
+  String get termsAnd {
+    return Intl.message(' and ', name: 'termsAnd', desc: '', args: []);
+  }
+
+  /// `Privacy Policy`
+  String get privacyPolicy {
+    return Intl.message(
+      'Privacy Policy',
+      name: 'privacyPolicy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `.`
+  String get termsDot {
+    return Intl.message('.', name: 'termsDot', desc: '', args: []);
+  }
+
+  /// `Registration successful!`
+  String get registerSuccess {
+    return Intl.message(
+      'Registration successful!',
+      name: 'registerSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Registration failed. Please try again later.`
+  String get registerFailed {
+    return Intl.message(
+      'Registration failed. Please try again later.',
+      name: 'registerFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An unexpected error occurred`
+  String get unexpectedError {
+    return Intl.message(
+      'An unexpected error occurred',
+      name: 'unexpectedError',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

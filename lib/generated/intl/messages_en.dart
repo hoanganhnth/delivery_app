@@ -47,8 +47,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "addToCart": MessageLookupByLibrary.simpleMessage("Add to Cart"),
     "addedToCartLivestream": m0,
     "all": MessageLookupByLibrary.simpleMessage("All"),
+    "alreadyHaveAccount": MessageLookupByLibrary.simpleMessage(
+      "Already have an account? ",
+    ),
     "anonymous": MessageLookupByLibrary.simpleMessage("Anonymous"),
     "appTitle": MessageLookupByLibrary.simpleMessage("Delivery App"),
+    "backToLogin": MessageLookupByLibrary.simpleMessage("Back to Login"),
     "browseRestaurants": MessageLookupByLibrary.simpleMessage(
       "Browse Restaurants",
     ),
@@ -103,6 +107,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "confirmDeleteAddressBtn": MessageLookupByLibrary.simpleMessage("Delete"),
     "confirmDeleteAddressMessage": m1,
+    "confirmPassword": MessageLookupByLibrary.simpleMessage("CONFIRM PASSWORD"),
+    "confirmYourPassword": MessageLookupByLibrary.simpleMessage(
+      "Please confirm your password",
+    ),
     "confirmed": MessageLookupByLibrary.simpleMessage("Confirmed"),
     "connected": MessageLookupByLibrary.simpleMessage("Connected"),
     "connecting": MessageLookupByLibrary.simpleMessage("Connecting..."),
@@ -113,6 +121,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Conversation ended",
     ),
     "coordinates": MessageLookupByLibrary.simpleMessage("Coordinates"),
+    "createAccount": MessageLookupByLibrary.simpleMessage("Create Account"),
+    "createAccountBtn": MessageLookupByLibrary.simpleMessage("CREATE ACCOUNT"),
     "deliverFood": MessageLookupByLibrary.simpleMessage("DeliverFood"),
     "delivered": MessageLookupByLibrary.simpleMessage("Delivered"),
     "deliveredSuccess": MessageLookupByLibrary.simpleMessage(
@@ -127,10 +137,21 @@ class MessageLookup extends MessageLookupByLibrary {
       "You already have items from another restaurant in your cart. Please clear your current cart to add items from this restaurant.",
     ),
     "disconnected": MessageLookupByLibrary.simpleMessage("Disconnected"),
+    "dontHaveAccount": MessageLookupByLibrary.simpleMessage(
+      "Don\'t have an account? ",
+    ),
     "editAddress": MessageLookupByLibrary.simpleMessage("Edit"),
+    "emailAddress": MessageLookupByLibrary.simpleMessage("EMAIL ADDRESS"),
+    "emailHint": MessageLookupByLibrary.simpleMessage("chef@amberhearth.com"),
     "endBtn": MessageLookupByLibrary.simpleMessage("End"),
     "endConversationBtn": MessageLookupByLibrary.simpleMessage(
       "End Conversation",
+    ),
+    "enterEmail": MessageLookupByLibrary.simpleMessage(
+      "Please enter your email",
+    ),
+    "enterPassword": MessageLookupByLibrary.simpleMessage(
+      "Please enter your password",
     ),
     "error": MessageLookupByLibrary.simpleMessage("Error"),
     "errorPrefix": MessageLookupByLibrary.simpleMessage("Error"),
@@ -150,7 +171,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "findingDriver": MessageLookupByLibrary.simpleMessage(
       "Finding Delivery Driver",
     ),
+    "forgotPassword": MessageLookupByLibrary.simpleMessage("Forgot Password?"),
     "freeDelivery": MessageLookupByLibrary.simpleMessage("Free Delivery"),
+    "fullName": MessageLookupByLibrary.simpleMessage("FULL NAME"),
+    "fullNameHint": MessageLookupByLibrary.simpleMessage("Johnathan Doe"),
     "goBackBtn": MessageLookupByLibrary.simpleMessage("Go Back"),
     "gotItBtn": MessageLookupByLibrary.simpleMessage("Got it"),
     "helloWorld": MessageLookupByLibrary.simpleMessage("Hello World"),
@@ -160,10 +184,14 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "home": MessageLookupByLibrary.simpleMessage("Home"),
     "indian": MessageLookupByLibrary.simpleMessage("Indian"),
+    "invalidEmail": MessageLookupByLibrary.simpleMessage(
+      "Please enter a valid email",
+    ),
     "italian": MessageLookupByLibrary.simpleMessage("Italian"),
     "items": m2,
     "itemsFrom": m3,
     "japanese": MessageLookupByLibrary.simpleMessage("Japanese"),
+    "joinTheHearth": MessageLookupByLibrary.simpleMessage("JOIN THE HEARTH"),
     "livestreamEnded": MessageLookupByLibrary.simpleMessage(
       "Livestream has ended",
     ),
@@ -172,6 +200,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "login": MessageLookupByLibrary.simpleMessage("Login"),
+    "loginSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Savor the moment. Sign in to your kitchen.",
+    ),
+    "loginSuccess": MessageLookupByLibrary.simpleMessage("Login successful!"),
     "logout": MessageLookupByLibrary.simpleMessage("Logout"),
     "mapWillShowWhenDriverAccepts": MessageLookupByLibrary.simpleMessage(
       "Map will appear when a driver accepts the order",
@@ -207,6 +239,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "outOfStockItems": MessageLookupByLibrary.simpleMessage(
       "Items out of stock",
     ),
+    "password": MessageLookupByLibrary.simpleMessage("PASSWORD"),
+    "passwordHelper": MessageLookupByLibrary.simpleMessage(
+      "Must be at least 8 characters with a mix of symbols.",
+    ),
+    "passwordHint": MessageLookupByLibrary.simpleMessage("••••••••"),
+    "passwordMinLength": MessageLookupByLibrary.simpleMessage(
+      "Password must be at least 6 characters",
+    ),
+    "passwordsDoNotMatch": MessageLookupByLibrary.simpleMessage(
+      "Passwords do not match",
+    ),
     "paymentInfo": MessageLookupByLibrary.simpleMessage("Payment Information"),
     "paymentMethodText": MessageLookupByLibrary.simpleMessage("Payment Method"),
     "pending": MessageLookupByLibrary.simpleMessage("Pending"),
@@ -218,6 +261,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "popularNearYou": MessageLookupByLibrary.simpleMessage("Popular Near You"),
     "preparing": MessageLookupByLibrary.simpleMessage("Preparing"),
     "price": m4,
+    "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
     "proceedToCheckout": MessageLookupByLibrary.simpleMessage(
       "Proceed to Checkout",
     ),
@@ -229,6 +273,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "ratingError": MessageLookupByLibrary.simpleMessage("An error occurred"),
     "ratingHint": MessageLookupByLibrary.simpleMessage(
       "Your comment (optional)",
+    ),
+    "register": MessageLookupByLibrary.simpleMessage("Register"),
+    "registerFailed": MessageLookupByLibrary.simpleMessage(
+      "Registration failed. Please try again later.",
+    ),
+    "registerSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Step into a world of curated culinary experiences. Register to start your journey with Amber Hearth.",
+    ),
+    "registerSuccess": MessageLookupByLibrary.simpleMessage(
+      "Registration successful!",
     ),
     "remove": MessageLookupByLibrary.simpleMessage("Remove"),
     "restaurants": MessageLookupByLibrary.simpleMessage("Restaurants"),
@@ -254,6 +308,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "showOrderDetails": MessageLookupByLibrary.simpleMessage(
       "Show Order Details",
     ),
+    "signIn": MessageLookupByLibrary.simpleMessage("SIGN IN"),
+    "signInWithGoogle": MessageLookupByLibrary.simpleMessage(
+      "Sign in with Google",
+    ),
     "signOut": MessageLookupByLibrary.simpleMessage("Sign Out"),
     "startNewConversationBtn": MessageLookupByLibrary.simpleMessage(
       "Start New Conversation",
@@ -261,6 +319,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "submitRatingBtn": MessageLookupByLibrary.simpleMessage("Submit Rating"),
     "subtotal": MessageLookupByLibrary.simpleMessage("Subtotal"),
     "tax": MessageLookupByLibrary.simpleMessage("Tax"),
+    "termsAnd": MessageLookupByLibrary.simpleMessage(" and "),
+    "termsDot": MessageLookupByLibrary.simpleMessage("."),
+    "termsOfService": MessageLookupByLibrary.simpleMessage("Terms of Service"),
+    "termsPrefix": MessageLookupByLibrary.simpleMessage(
+      "By creating an account, you agree to Amber Hearth\'s ",
+    ),
     "test": MessageLookupByLibrary.simpleMessage("test"),
     "test2": MessageLookupByLibrary.simpleMessage("test2"),
     "test3": MessageLookupByLibrary.simpleMessage("test3"),
@@ -275,9 +339,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "trackDelivery": MessageLookupByLibrary.simpleMessage("Track Delivery"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
     "unavailable": MessageLookupByLibrary.simpleMessage("Unavailable"),
+    "unexpectedError": MessageLookupByLibrary.simpleMessage(
+      "An unexpected error occurred",
+    ),
     "update": MessageLookupByLibrary.simpleMessage("Update"),
     "viewAll": MessageLookupByLibrary.simpleMessage("View All"),
     "vnpayPaymentTitle": MessageLookupByLibrary.simpleMessage("VNPay Payment"),
+    "welcomeBack": MessageLookupByLibrary.simpleMessage("Welcome Back"),
     "yesBtn": MessageLookupByLibrary.simpleMessage("Yes"),
     "yourCartIsEmpty": MessageLookupByLibrary.simpleMessage(
       "Your cart is empty",
