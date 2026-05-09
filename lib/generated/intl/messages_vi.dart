@@ -46,6 +46,73 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "addToCart": MessageLookupByLibrary.simpleMessage("Thêm vào Giỏ"),
     "addedToCartLivestream": m0,
+    "addressAdd": MessageLookupByLibrary.simpleMessage("Thêm địa chỉ"),
+    "addressAddTitle": MessageLookupByLibrary.simpleMessage("Thêm địa chỉ mới"),
+    "addressAutoFillLocation": MessageLookupByLibrary.simpleMessage(
+      "Tự động điền địa chỉ từ GPS",
+    ),
+    "addressCity": MessageLookupByLibrary.simpleMessage("Tỉnh/Thành phố"),
+    "addressCityHint": MessageLookupByLibrary.simpleMessage(
+      "Nhập tỉnh/thành phố",
+    ),
+    "addressDelete": MessageLookupByLibrary.simpleMessage("Xóa"),
+    "addressDetails": MessageLookupByLibrary.simpleMessage("Chi tiết địa chỉ"),
+    "addressDistrict": MessageLookupByLibrary.simpleMessage("Quận/Huyện"),
+    "addressDistrictHint": MessageLookupByLibrary.simpleMessage(
+      "Nhập quận/huyện",
+    ),
+    "addressEditTitle": MessageLookupByLibrary.simpleMessage("Sửa địa chỉ"),
+    "addressGetCurrentLocation": MessageLookupByLibrary.simpleMessage(
+      "Lấy vị trí hiện tại",
+    ),
+    "addressGettingLocation": MessageLookupByLibrary.simpleMessage(
+      "Đang lấy vị trí...",
+    ),
+    "addressHome": MessageLookupByLibrary.simpleMessage("Nhà riêng"),
+    "addressInfo": MessageLookupByLibrary.simpleMessage("Thông tin địa chỉ"),
+    "addressLabel": MessageLookupByLibrary.simpleMessage("Nhãn địa chỉ"),
+    "addressLabelHint": MessageLookupByLibrary.simpleMessage(
+      "Ví dụ: Nhà riêng, Công ty...",
+    ),
+    "addressLabelRequired": MessageLookupByLibrary.simpleMessage(
+      "Vui lòng nhập nhãn địa chỉ",
+    ),
+    "addressLine": MessageLookupByLibrary.simpleMessage("Địa chỉ chi tiết"),
+    "addressLineHint": MessageLookupByLibrary.simpleMessage(
+      "Số nhà, tên đường...",
+    ),
+    "addressLineRequired": MessageLookupByLibrary.simpleMessage(
+      "Vui lòng nhập địa chỉ chi tiết",
+    ),
+    "addressOther": MessageLookupByLibrary.simpleMessage("Khác"),
+    "addressPhone": MessageLookupByLibrary.simpleMessage("Số điện thoại"),
+    "addressPhoneHint": MessageLookupByLibrary.simpleMessage(
+      "Nhập số điện thoại người nhận",
+    ),
+    "addressPhoneInvalid": MessageLookupByLibrary.simpleMessage(
+      "Số điện thoại không hợp lệ",
+    ),
+    "addressPhoneRequired": MessageLookupByLibrary.simpleMessage(
+      "Vui lòng nhập số điện thoại",
+    ),
+    "addressPostalCode": MessageLookupByLibrary.simpleMessage("Mã bưu điện"),
+    "addressPostalCodeHint": MessageLookupByLibrary.simpleMessage("Tùy chọn"),
+    "addressRecipientHint": MessageLookupByLibrary.simpleMessage(
+      "Nhập tên người nhận hàng",
+    ),
+    "addressRecipientName": MessageLookupByLibrary.simpleMessage(
+      "Tên người nhận",
+    ),
+    "addressRecipientRequired": MessageLookupByLibrary.simpleMessage(
+      "Vui lòng nhập tên người nhận",
+    ),
+    "addressRequiredField": MessageLookupByLibrary.simpleMessage("Bắt buộc"),
+    "addressSave": MessageLookupByLibrary.simpleMessage("Lưu thay đổi"),
+    "addressSchool": MessageLookupByLibrary.simpleMessage("Trường học"),
+    "addressType": MessageLookupByLibrary.simpleMessage("Loại địa chỉ"),
+    "addressWard": MessageLookupByLibrary.simpleMessage("Phường/Xã"),
+    "addressWardHint": MessageLookupByLibrary.simpleMessage("Nhập phường/xã"),
+    "addressWork": MessageLookupByLibrary.simpleMessage("Công ty"),
     "all": MessageLookupByLibrary.simpleMessage("Tất cả"),
     "alreadyHaveAccount": MessageLookupByLibrary.simpleMessage(
       "Đã có tài khoản? ",
@@ -266,6 +333,50 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tiến hành thanh toán",
     ),
     "profile": MessageLookupByLibrary.simpleMessage("Hồ Sơ"),
+    "profileChangePassword": MessageLookupByLibrary.simpleMessage(
+      "Đổi mật khẩu",
+    ),
+    "profileChangePasswordDesc": MessageLookupByLibrary.simpleMessage(
+      "Cập nhật mật khẩu định kỳ",
+    ),
+    "profileCustomerSupport": MessageLookupByLibrary.simpleMessage(
+      "Hỗ trợ khách hàng",
+    ),
+    "profileCustomerSupportDesc": MessageLookupByLibrary.simpleMessage(
+      "Chat với CSKH 24/7",
+    ),
+    "profileEditProfile": MessageLookupByLibrary.simpleMessage(
+      "Chỉnh sửa hồ sơ",
+    ),
+    "profileEditProfileDesc": MessageLookupByLibrary.simpleMessage(
+      "Cập nhật thông tin cá nhân",
+    ),
+    "profileHelpFAQ": MessageLookupByLibrary.simpleMessage("Trợ giúp & FAQ"),
+    "profileHelpFAQDesc": MessageLookupByLibrary.simpleMessage(
+      "Câu hỏi thường gặp",
+    ),
+    "profileLogout": MessageLookupByLibrary.simpleMessage("Đăng xuất"),
+    "profileMyAddresses": MessageLookupByLibrary.simpleMessage(
+      "Địa chỉ của tôi",
+    ),
+    "profileMyAddressesDesc": MessageLookupByLibrary.simpleMessage(
+      "Quản lý địa chỉ giao hàng",
+    ),
+    "profilePaymentMethods": MessageLookupByLibrary.simpleMessage(
+      "Phương thức thanh toán",
+    ),
+    "profilePaymentMethodsDesc": MessageLookupByLibrary.simpleMessage(
+      "Thêm hoặc xóa thẻ",
+    ),
+    "profileSecurity": MessageLookupByLibrary.simpleMessage("Bảo mật"),
+    "profileSupport": MessageLookupByLibrary.simpleMessage("Hỗ trợ"),
+    "profileTermsPolicies": MessageLookupByLibrary.simpleMessage(
+      "Điều khoản & Chính sách",
+    ),
+    "profileTermsPoliciesDesc": MessageLookupByLibrary.simpleMessage(
+      "Quy định sử dụng",
+    ),
+    "profileTitle": MessageLookupByLibrary.simpleMessage("Tài khoản"),
     "quantity": MessageLookupByLibrary.simpleMessage("SL"),
     "rateShipperBtn": MessageLookupByLibrary.simpleMessage("Đánh giá Shipper"),
     "rateShipperTitle": MessageLookupByLibrary.simpleMessage(
@@ -303,6 +414,82 @@ class MessageLookup extends MessageLookupByLibrary {
       "Đặt làm địa chỉ mặc định",
     ),
     "settings": MessageLookupByLibrary.simpleMessage("Cài Đặt"),
+    "settingsAbout": MessageLookupByLibrary.simpleMessage("Thông tin"),
+    "settingsAboutApp": MessageLookupByLibrary.simpleMessage("Về ứng dụng"),
+    "settingsAboutAppDesc": MessageLookupByLibrary.simpleMessage(
+      "Phiên bản 1.0.0",
+    ),
+    "settingsAppearance": MessageLookupByLibrary.simpleMessage("Giao diện"),
+    "settingsClearCache": MessageLookupByLibrary.simpleMessage("Xóa cache"),
+    "settingsClearCacheDesc": MessageLookupByLibrary.simpleMessage(
+      "Giải phóng bộ nhớ",
+    ),
+    "settingsCookieTracking": MessageLookupByLibrary.simpleMessage(
+      "Cookie & Tracking",
+    ),
+    "settingsCookieTrackingDesc": MessageLookupByLibrary.simpleMessage(
+      "Quản lý preferences",
+    ),
+    "settingsDangerZone": MessageLookupByLibrary.simpleMessage(
+      "Vùng nguy hiểm",
+    ),
+    "settingsDarkMode": MessageLookupByLibrary.simpleMessage("Chế độ tối"),
+    "settingsDarkModeDesc": MessageLookupByLibrary.simpleMessage(
+      "Bảo vệ mắt trong đêm",
+    ),
+    "settingsDeleteAccount": MessageLookupByLibrary.simpleMessage(
+      "Xóa tài khoản",
+    ),
+    "settingsDeleteAccountDesc": MessageLookupByLibrary.simpleMessage(
+      "Xóa vĩnh viễn tất cả dữ liệu",
+    ),
+    "settingsLanguage": MessageLookupByLibrary.simpleMessage("Ngôn ngữ"),
+    "settingsLanguageTitle": MessageLookupByLibrary.simpleMessage(
+      "Chọn ngôn ngữ",
+    ),
+    "settingsNotifications": MessageLookupByLibrary.simpleMessage("Thông báo"),
+    "settingsOrderUpdates": MessageLookupByLibrary.simpleMessage(
+      "Cập nhật đơn hàng",
+    ),
+    "settingsOrderUpdatesDesc": MessageLookupByLibrary.simpleMessage(
+      "Trạng thái giao hàng real-time",
+    ),
+    "settingsPrivacy": MessageLookupByLibrary.simpleMessage("Quyền riêng tư"),
+    "settingsPrivacyPolicy": MessageLookupByLibrary.simpleMessage(
+      "Chính sách bảo mật",
+    ),
+    "settingsPrivacyPolicyDesc": MessageLookupByLibrary.simpleMessage(
+      "Cách chúng tôi bảo vệ dữ liệu",
+    ),
+    "settingsPromotions": MessageLookupByLibrary.simpleMessage("Khuyến mãi"),
+    "settingsPromotionsDesc": MessageLookupByLibrary.simpleMessage(
+      "Ưu đãi và deal hấp dẫn",
+    ),
+    "settingsPushNotifications": MessageLookupByLibrary.simpleMessage(
+      "Thông báo đẩy",
+    ),
+    "settingsPushNotificationsDesc": MessageLookupByLibrary.simpleMessage(
+      "Nhận thông báo từ ứng dụng",
+    ),
+    "settingsRateApp": MessageLookupByLibrary.simpleMessage(
+      "Đánh giá ứng dụng",
+    ),
+    "settingsRateAppDesc": MessageLookupByLibrary.simpleMessage(
+      "Chia sẻ trải nghiệm của bạn",
+    ),
+    "settingsShareApp": MessageLookupByLibrary.simpleMessage(
+      "Chia sẻ ứng dụng",
+    ),
+    "settingsShareAppDesc": MessageLookupByLibrary.simpleMessage(
+      "Giới thiệu bạn bè",
+    ),
+    "settingsTermsOfUse": MessageLookupByLibrary.simpleMessage(
+      "Điều khoản sử dụng",
+    ),
+    "settingsTermsOfUseDesc": MessageLookupByLibrary.simpleMessage(
+      "Quy định và điều kiện",
+    ),
+    "settingsTitle": MessageLookupByLibrary.simpleMessage("Cài đặt"),
     "shipperNotStarted": MessageLookupByLibrary.simpleMessage(
       "Shipper chưa bắt đầu giao hàng cho đơn này",
     ),

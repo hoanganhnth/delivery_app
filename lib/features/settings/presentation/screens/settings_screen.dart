@@ -4,6 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/core/theme/theme_provider.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
+import 'package:delivery_app/generated/l10n.dart';
+
+import '../widgets/settings_switch_tile.dart';
+import '../widgets/settings_navigation_tile.dart';
+import '../widgets/settings_dialogs.dart';
 
 /// Settings Screen - Editorial style với grouped sections
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -23,6 +28,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget build(BuildContext context) {
     final colors = ref.colors;
     final isDarkMode = ref.watch(isDarkThemeProvider);
+    final s = S.of(context);
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -35,7 +41,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             backgroundColor: colors.primary,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                'Cài đặt',
+                s.settingsTitle,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: ResponsiveSize.fontXl,
@@ -66,38 +72,35 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Notifications Section
-                  _buildSectionTitle('Thông báo'),
+                  _buildSectionTitle(s.settingsNotifications),
                   SizedBox(height: ResponsiveSize.s),
                   _buildSettingsCard(
                     children: [
-                      _buildSwitchTile(
+                      SettingsSwitchTile(
                         icon: Icons.notifications_outlined,
-                        title: 'Thông báo đẩy',
-                        subtitle: 'Nhận thông báo từ ứng dụng',
+                        title: s.settingsPushNotifications,
+                        subtitle: s.settingsPushNotificationsDesc,
                         value: _notificationsEnabled,
-                        onChanged: (value) {
-                          setState(() => _notificationsEnabled = value);
-                        },
+                        onChanged: (value) => setState(() => _notificationsEnabled = value),
+                        colors: colors,
                       ),
                       _buildDivider(),
-                      _buildSwitchTile(
+                      SettingsSwitchTile(
                         icon: Icons.delivery_dining_outlined,
-                        title: 'Cập nhật đơn hàng',
-                        subtitle: 'Trạng thái giao hàng real-time',
+                        title: s.settingsOrderUpdates,
+                        subtitle: s.settingsOrderUpdatesDesc,
                         value: _orderUpdates,
-                        onChanged: (value) {
-                          setState(() => _orderUpdates = value);
-                        },
+                        onChanged: (value) => setState(() => _orderUpdates = value),
+                        colors: colors,
                       ),
                       _buildDivider(),
-                      _buildSwitchTile(
+                      SettingsSwitchTile(
                         icon: Icons.local_offer_outlined,
-                        title: 'Khuyến mãi',
-                        subtitle: 'Ưu đãi và deal hấp dẫn',
+                        title: s.settingsPromotions,
+                        subtitle: s.settingsPromotionsDesc,
                         value: _promotions,
-                        onChanged: (value) {
-                          setState(() => _promotions = value);
-                        },
+                        onChanged: (value) => setState(() => _promotions = value),
+                        colors: colors,
                       ),
                     ],
                   ),
@@ -105,25 +108,30 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   SizedBox(height: ResponsiveSize.l),
 
                   // Appearance Section
-                  _buildSectionTitle('Giao diện'),
+                  _buildSectionTitle(s.settingsAppearance),
                   SizedBox(height: ResponsiveSize.s),
                   _buildSettingsCard(
                     children: [
-                      _buildSwitchTile(
+                      SettingsSwitchTile(
                         icon: Icons.dark_mode_outlined,
-                        title: 'Chế độ tối',
-                        subtitle: 'Bảo vệ mắt trong đêm',
+                        title: s.settingsDarkMode,
+                        subtitle: s.settingsDarkModeDesc,
                         value: isDarkMode,
-                        onChanged: (value) {
-                          ref.read(themeProvider.notifier).toggleTheme();
-                        },
+                        onChanged: (_) => ref.read(themeProvider.notifier).toggleTheme(),
+                        colors: colors,
                       ),
                       _buildDivider(),
-                      _buildNavigationTile(
+                      SettingsNavigationTile(
                         icon: Icons.language_outlined,
-                        title: 'Ngôn ngữ',
+                        title: s.settingsLanguage,
                         subtitle: _selectedLanguage,
-                        onTap: () => _showLanguageSheet(),
+                        onTap: () => SettingsDialogs.showLanguageSheet(
+                          context,
+                          colors,
+                          _selectedLanguage,
+                          (lang) => setState(() => _selectedLanguage = lang),
+                        ),
+                        colors: colors,
                       ),
                     ],
                   ),
@@ -131,29 +139,32 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   SizedBox(height: ResponsiveSize.l),
 
                   // Privacy Section
-                  _buildSectionTitle('Quyền riêng tư'),
+                  _buildSectionTitle(s.settingsPrivacy),
                   SizedBox(height: ResponsiveSize.s),
                   _buildSettingsCard(
                     children: [
-                      _buildNavigationTile(
+                      SettingsNavigationTile(
                         icon: Icons.privacy_tip_outlined,
-                        title: 'Chính sách bảo mật',
-                        subtitle: 'Cách chúng tôi bảo vệ dữ liệu',
+                        title: s.settingsPrivacyPolicy,
+                        subtitle: s.settingsPrivacyPolicyDesc,
                         onTap: () {},
+                        colors: colors,
                       ),
                       _buildDivider(),
-                      _buildNavigationTile(
+                      SettingsNavigationTile(
                         icon: Icons.description_outlined,
-                        title: 'Điều khoản sử dụng',
-                        subtitle: 'Quy định và điều kiện',
+                        title: s.settingsTermsOfUse,
+                        subtitle: s.settingsTermsOfUseDesc,
                         onTap: () {},
+                        colors: colors,
                       ),
                       _buildDivider(),
-                      _buildNavigationTile(
+                      SettingsNavigationTile(
                         icon: Icons.cookie_outlined,
-                        title: 'Cookie & Tracking',
-                        subtitle: 'Quản lý preferences',
+                        title: s.settingsCookieTracking,
+                        subtitle: s.settingsCookieTrackingDesc,
                         onTap: () {},
+                        colors: colors,
                       ),
                     ],
                   ),
@@ -161,29 +172,32 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   SizedBox(height: ResponsiveSize.l),
 
                   // About Section
-                  _buildSectionTitle('Thông tin'),
+                  _buildSectionTitle(s.settingsAbout),
                   SizedBox(height: ResponsiveSize.s),
                   _buildSettingsCard(
                     children: [
-                      _buildNavigationTile(
+                      SettingsNavigationTile(
                         icon: Icons.info_outline,
-                        title: 'Về ứng dụng',
-                        subtitle: 'Phiên bản 1.0.0',
-                        onTap: () => _showAboutDialog(),
+                        title: s.settingsAboutApp,
+                        subtitle: s.settingsAboutAppDesc,
+                        onTap: () => SettingsDialogs.showAboutDialog(context, colors),
+                        colors: colors,
                       ),
                       _buildDivider(),
-                      _buildNavigationTile(
+                      SettingsNavigationTile(
                         icon: Icons.star_outline,
-                        title: 'Đánh giá ứng dụng',
-                        subtitle: 'Chia sẻ trải nghiệm của bạn',
+                        title: s.settingsRateApp,
+                        subtitle: s.settingsRateAppDesc,
                         onTap: () {},
+                        colors: colors,
                       ),
                       _buildDivider(),
-                      _buildNavigationTile(
+                      SettingsNavigationTile(
                         icon: Icons.share_outlined,
-                        title: 'Chia sẻ ứng dụng',
-                        subtitle: 'Giới thiệu bạn bè',
+                        title: s.settingsShareApp,
+                        subtitle: s.settingsShareAppDesc,
                         onTap: () {},
+                        colors: colors,
                       ),
                     ],
                   ),
@@ -191,26 +205,28 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   SizedBox(height: ResponsiveSize.l),
 
                   // Danger Zone
-                  _buildSectionTitle('Vùng nguy hiểm'),
+                  _buildSectionTitle(s.settingsDangerZone),
                   SizedBox(height: ResponsiveSize.s),
                   _buildSettingsCard(
                     borderColor: colors.error.withValues(alpha: 0.3),
                     children: [
-                      _buildNavigationTile(
+                      SettingsNavigationTile(
                         icon: Icons.cleaning_services_outlined,
-                        title: 'Xóa cache',
-                        subtitle: 'Giải phóng bộ nhớ',
+                        title: s.settingsClearCache,
+                        subtitle: s.settingsClearCacheDesc,
                         iconColor: colors.warning,
-                        onTap: () => _showClearCacheDialog(),
+                        onTap: () => SettingsDialogs.showClearCacheDialog(context, colors),
+                        colors: colors,
                       ),
                       _buildDivider(),
-                      _buildNavigationTile(
+                      SettingsNavigationTile(
                         icon: Icons.delete_forever_outlined,
-                        title: 'Xóa tài khoản',
-                        subtitle: 'Xóa vĩnh viễn tất cả dữ liệu',
+                        title: s.settingsDeleteAccount,
+                        subtitle: s.settingsDeleteAccountDesc,
                         iconColor: colors.error,
                         textColor: colors.error,
-                        onTap: () => _showDeleteAccountDialog(),
+                        onTap: () => SettingsDialogs.showDeleteAccountDialog(context, colors),
+                        colors: colors,
                       ),
                     ],
                   ),
@@ -259,277 +275,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _buildSwitchTile({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required bool value,
-    required ValueChanged<bool> onChanged,
-  }) {
-    final colors = ref.colors;
-    return Padding(
-      padding: EdgeInsets.all(ResponsiveSize.m),
-      child: Row(
-        children: [
-          _buildIconBox(icon, colors.primary),
-          SizedBox(width: ResponsiveSize.m),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: ResponsiveSize.fontM,
-                    fontWeight: FontWeight.w600,
-                    color: colors.textPrimary,
-                  ),
-                ),
-                SizedBox(height: 2.h),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: ResponsiveSize.fontS,
-                    color: colors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Switch.adaptive(
-            value: value,
-            onChanged: onChanged,
-            activeColor: colors.primary,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNavigationTile({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-    Color? iconColor,
-    Color? textColor,
-  }) {
-    final colors = ref.colors;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
-      child: Padding(
-        padding: EdgeInsets.all(ResponsiveSize.m),
-        child: Row(
-          children: [
-            _buildIconBox(icon, iconColor ?? colors.primary),
-            SizedBox(width: ResponsiveSize.m),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: ResponsiveSize.fontM,
-                      fontWeight: FontWeight.w600,
-                      color: textColor ?? colors.textPrimary,
-                    ),
-                  ),
-                  SizedBox(height: 2.h),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: ResponsiveSize.fontS,
-                      color: colors.textSecondary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(
-              Icons.chevron_right,
-              color: colors.textSecondary,
-              size: 24.w,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildIconBox(IconData icon, Color color) {
-    return Container(
-      width: 44.w,
-      height: 44.w,
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(ResponsiveSize.radiusM),
-      ),
-      child: Icon(icon, color: color, size: 22.w),
-    );
-  }
-
   Widget _buildDivider() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ResponsiveSize.m),
       child: Divider(height: 1, color: ref.colors.divider),
     );
   }
-
-  void _showLanguageSheet() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: ref.colors.cardBackground,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(ResponsiveSize.radiusXl),
-        ),
-      ),
-      builder: (context) => Padding(
-        padding: EdgeInsets.all(ResponsiveSize.m),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 40.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: ref.colors.divider,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-            SizedBox(height: ResponsiveSize.m),
-            Text(
-              'Chọn ngôn ngữ',
-              style: TextStyle(
-                fontSize: ResponsiveSize.fontXl,
-                fontWeight: FontWeight.bold,
-                color: ref.colors.textPrimary,
-              ),
-            ),
-            SizedBox(height: ResponsiveSize.m),
-            _buildLanguageOption('Tiếng Việt', '🇻🇳'),
-            _buildLanguageOption('English', '🇺🇸'),
-            _buildLanguageOption('日本語', '🇯🇵'),
-            SizedBox(height: ResponsiveSize.m),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLanguageOption(String language, String flag) {
-    final isSelected = _selectedLanguage == language;
-    return ListTile(
-      leading: Text(flag, style: TextStyle(fontSize: 24.sp)),
-      title: Text(
-        language,
-        style: TextStyle(
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          color: ref.colors.textPrimary,
-        ),
-      ),
-      trailing: isSelected
-          ? Icon(Icons.check_circle, color: ref.colors.primary)
-          : null,
-      onTap: () {
-        setState(() => _selectedLanguage = language);
-        Navigator.pop(context);
-      },
-    );
-  }
-
-  void _showAboutDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AboutDialog(
-        applicationName: 'Delivery App',
-        applicationVersion: '1.0.0',
-        applicationIcon: Container(
-          width: 64.w,
-          height: 64.w,
-          decoration: BoxDecoration(
-            color: ref.colors.primary,
-            borderRadius: BorderRadius.circular(ResponsiveSize.radiusM),
-          ),
-          child: Icon(
-            Icons.delivery_dining,
-            color: Colors.white,
-            size: 32.w,
-          ),
-        ),
-        children: [
-          Text(
-            'Ứng dụng giao đồ ăn nhanh chóng và tiện lợi.',
-            style: TextStyle(color: ref.colors.textSecondary),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showClearCacheDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Xóa cache?'),
-        content: const Text(
-          'Điều này sẽ xóa tất cả dữ liệu cache. Bạn có thể cần đăng nhập lại.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Hủy'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Đã xóa cache thành công')),
-              );
-            },
-            child: Text(
-              'Xóa',
-              style: TextStyle(color: ref.colors.warning),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showDeleteAccountDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          'Xóa tài khoản?',
-          style: TextStyle(color: ref.colors.error),
-        ),
-        content: const Text(
-          'Hành động này không thể hoàn tác. Tất cả dữ liệu của bạn sẽ bị xóa vĩnh viễn.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Hủy'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // TODO: Implement delete account
-            },
-            child: Text(
-              'Xóa vĩnh viễn',
-              style: TextStyle(color: ref.colors.error),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
+

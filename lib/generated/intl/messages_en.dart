@@ -46,6 +46,75 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "addToCart": MessageLookupByLibrary.simpleMessage("Add to Cart"),
     "addedToCartLivestream": m0,
+    "addressAdd": MessageLookupByLibrary.simpleMessage("Add Address"),
+    "addressAddTitle": MessageLookupByLibrary.simpleMessage("Add New Address"),
+    "addressAutoFillLocation": MessageLookupByLibrary.simpleMessage(
+      "Auto fill from GPS",
+    ),
+    "addressCity": MessageLookupByLibrary.simpleMessage("City/Province"),
+    "addressCityHint": MessageLookupByLibrary.simpleMessage(
+      "Enter city/province",
+    ),
+    "addressDelete": MessageLookupByLibrary.simpleMessage("Delete"),
+    "addressDetails": MessageLookupByLibrary.simpleMessage("Address Details"),
+    "addressDistrict": MessageLookupByLibrary.simpleMessage("District"),
+    "addressDistrictHint": MessageLookupByLibrary.simpleMessage(
+      "Enter district",
+    ),
+    "addressEditTitle": MessageLookupByLibrary.simpleMessage("Edit Address"),
+    "addressGetCurrentLocation": MessageLookupByLibrary.simpleMessage(
+      "Get Current Location",
+    ),
+    "addressGettingLocation": MessageLookupByLibrary.simpleMessage(
+      "Getting location...",
+    ),
+    "addressHome": MessageLookupByLibrary.simpleMessage("Home"),
+    "addressInfo": MessageLookupByLibrary.simpleMessage("Address Info"),
+    "addressLabel": MessageLookupByLibrary.simpleMessage("Address Label"),
+    "addressLabelHint": MessageLookupByLibrary.simpleMessage(
+      "e.g., Home, Work...",
+    ),
+    "addressLabelRequired": MessageLookupByLibrary.simpleMessage(
+      "Please enter address label",
+    ),
+    "addressLine": MessageLookupByLibrary.simpleMessage("Detailed Address"),
+    "addressLineHint": MessageLookupByLibrary.simpleMessage(
+      "House number, street name...",
+    ),
+    "addressLineRequired": MessageLookupByLibrary.simpleMessage(
+      "Please enter detailed address",
+    ),
+    "addressOther": MessageLookupByLibrary.simpleMessage("Other"),
+    "addressPhone": MessageLookupByLibrary.simpleMessage("Phone Number"),
+    "addressPhoneHint": MessageLookupByLibrary.simpleMessage(
+      "Enter phone number",
+    ),
+    "addressPhoneInvalid": MessageLookupByLibrary.simpleMessage(
+      "Invalid phone number",
+    ),
+    "addressPhoneRequired": MessageLookupByLibrary.simpleMessage(
+      "Please enter phone number",
+    ),
+    "addressPostalCode": MessageLookupByLibrary.simpleMessage("Postal Code"),
+    "addressPostalCodeHint": MessageLookupByLibrary.simpleMessage("Optional"),
+    "addressRecipientHint": MessageLookupByLibrary.simpleMessage(
+      "Enter recipient name",
+    ),
+    "addressRecipientName": MessageLookupByLibrary.simpleMessage(
+      "Recipient Name",
+    ),
+    "addressRecipientRequired": MessageLookupByLibrary.simpleMessage(
+      "Please enter recipient name",
+    ),
+    "addressRequiredField": MessageLookupByLibrary.simpleMessage("Required"),
+    "addressSave": MessageLookupByLibrary.simpleMessage("Save Changes"),
+    "addressSchool": MessageLookupByLibrary.simpleMessage("School"),
+    "addressType": MessageLookupByLibrary.simpleMessage("Address Type"),
+    "addressWard": MessageLookupByLibrary.simpleMessage("Ward/Commune"),
+    "addressWardHint": MessageLookupByLibrary.simpleMessage(
+      "Enter ward/commune",
+    ),
+    "addressWork": MessageLookupByLibrary.simpleMessage("Work"),
     "all": MessageLookupByLibrary.simpleMessage("All"),
     "alreadyHaveAccount": MessageLookupByLibrary.simpleMessage(
       "Already have an account? ",
@@ -266,6 +335,46 @@ class MessageLookup extends MessageLookupByLibrary {
       "Proceed to Checkout",
     ),
     "profile": MessageLookupByLibrary.simpleMessage("Profile"),
+    "profileChangePassword": MessageLookupByLibrary.simpleMessage(
+      "Change Password",
+    ),
+    "profileChangePasswordDesc": MessageLookupByLibrary.simpleMessage(
+      "Update password regularly",
+    ),
+    "profileCustomerSupport": MessageLookupByLibrary.simpleMessage(
+      "Customer Support",
+    ),
+    "profileCustomerSupportDesc": MessageLookupByLibrary.simpleMessage(
+      "Chat with CS 24/7",
+    ),
+    "profileEditProfile": MessageLookupByLibrary.simpleMessage("Edit Profile"),
+    "profileEditProfileDesc": MessageLookupByLibrary.simpleMessage(
+      "Update personal info",
+    ),
+    "profileHelpFAQ": MessageLookupByLibrary.simpleMessage("Help & FAQ"),
+    "profileHelpFAQDesc": MessageLookupByLibrary.simpleMessage(
+      "Frequently asked questions",
+    ),
+    "profileLogout": MessageLookupByLibrary.simpleMessage("Log Out"),
+    "profileMyAddresses": MessageLookupByLibrary.simpleMessage("My Addresses"),
+    "profileMyAddressesDesc": MessageLookupByLibrary.simpleMessage(
+      "Manage delivery addresses",
+    ),
+    "profilePaymentMethods": MessageLookupByLibrary.simpleMessage(
+      "Payment Methods",
+    ),
+    "profilePaymentMethodsDesc": MessageLookupByLibrary.simpleMessage(
+      "Add or remove cards",
+    ),
+    "profileSecurity": MessageLookupByLibrary.simpleMessage("Security"),
+    "profileSupport": MessageLookupByLibrary.simpleMessage("Support"),
+    "profileTermsPolicies": MessageLookupByLibrary.simpleMessage(
+      "Terms & Policies",
+    ),
+    "profileTermsPoliciesDesc": MessageLookupByLibrary.simpleMessage(
+      "Usage rules",
+    ),
+    "profileTitle": MessageLookupByLibrary.simpleMessage("Account"),
     "quantity": MessageLookupByLibrary.simpleMessage("Qty"),
     "rateShipperBtn": MessageLookupByLibrary.simpleMessage("Rate Shipper"),
     "rateShipperTitle": MessageLookupByLibrary.simpleMessage("Rate Shipper"),
@@ -301,6 +410,76 @@ class MessageLookup extends MessageLookupByLibrary {
       "Set as default address",
     ),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+    "settingsAbout": MessageLookupByLibrary.simpleMessage("About"),
+    "settingsAboutApp": MessageLookupByLibrary.simpleMessage("About App"),
+    "settingsAboutAppDesc": MessageLookupByLibrary.simpleMessage(
+      "Version 1.0.0",
+    ),
+    "settingsAppearance": MessageLookupByLibrary.simpleMessage("Appearance"),
+    "settingsClearCache": MessageLookupByLibrary.simpleMessage("Clear Cache"),
+    "settingsClearCacheDesc": MessageLookupByLibrary.simpleMessage(
+      "Free up memory",
+    ),
+    "settingsCookieTracking": MessageLookupByLibrary.simpleMessage(
+      "Cookie & Tracking",
+    ),
+    "settingsCookieTrackingDesc": MessageLookupByLibrary.simpleMessage(
+      "Manage preferences",
+    ),
+    "settingsDangerZone": MessageLookupByLibrary.simpleMessage("Danger Zone"),
+    "settingsDarkMode": MessageLookupByLibrary.simpleMessage("Dark Mode"),
+    "settingsDarkModeDesc": MessageLookupByLibrary.simpleMessage(
+      "Protect eyes at night",
+    ),
+    "settingsDeleteAccount": MessageLookupByLibrary.simpleMessage(
+      "Delete Account",
+    ),
+    "settingsDeleteAccountDesc": MessageLookupByLibrary.simpleMessage(
+      "Permanently delete all data",
+    ),
+    "settingsLanguage": MessageLookupByLibrary.simpleMessage("Language"),
+    "settingsLanguageTitle": MessageLookupByLibrary.simpleMessage(
+      "Choose Language",
+    ),
+    "settingsNotifications": MessageLookupByLibrary.simpleMessage(
+      "Notifications",
+    ),
+    "settingsOrderUpdates": MessageLookupByLibrary.simpleMessage(
+      "Order Updates",
+    ),
+    "settingsOrderUpdatesDesc": MessageLookupByLibrary.simpleMessage(
+      "Real-time delivery status",
+    ),
+    "settingsPrivacy": MessageLookupByLibrary.simpleMessage("Privacy"),
+    "settingsPrivacyPolicy": MessageLookupByLibrary.simpleMessage(
+      "Privacy Policy",
+    ),
+    "settingsPrivacyPolicyDesc": MessageLookupByLibrary.simpleMessage(
+      "How we protect data",
+    ),
+    "settingsPromotions": MessageLookupByLibrary.simpleMessage("Promotions"),
+    "settingsPromotionsDesc": MessageLookupByLibrary.simpleMessage(
+      "Deals and offers",
+    ),
+    "settingsPushNotifications": MessageLookupByLibrary.simpleMessage(
+      "Push Notifications",
+    ),
+    "settingsPushNotificationsDesc": MessageLookupByLibrary.simpleMessage(
+      "Receive app notifications",
+    ),
+    "settingsRateApp": MessageLookupByLibrary.simpleMessage("Rate App"),
+    "settingsRateAppDesc": MessageLookupByLibrary.simpleMessage(
+      "Share your experience",
+    ),
+    "settingsShareApp": MessageLookupByLibrary.simpleMessage("Share App"),
+    "settingsShareAppDesc": MessageLookupByLibrary.simpleMessage(
+      "Refer friends",
+    ),
+    "settingsTermsOfUse": MessageLookupByLibrary.simpleMessage("Terms of Use"),
+    "settingsTermsOfUseDesc": MessageLookupByLibrary.simpleMessage(
+      "Rules and conditions",
+    ),
+    "settingsTitle": MessageLookupByLibrary.simpleMessage("Settings"),
     "shipperNotStarted": MessageLookupByLibrary.simpleMessage(
       "The shipper has not started delivering this order",
     ),

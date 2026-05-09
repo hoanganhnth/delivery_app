@@ -1543,6 +1543,816 @@ class S {
       args: [],
     );
   }
+
+  /// `Account`
+  String get profileTitle {
+    return Intl.message('Account', name: 'profileTitle', desc: '', args: []);
+  }
+
+  /// `Edit Profile`
+  String get profileEditProfile {
+    return Intl.message(
+      'Edit Profile',
+      name: 'profileEditProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update personal info`
+  String get profileEditProfileDesc {
+    return Intl.message(
+      'Update personal info',
+      name: 'profileEditProfileDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Addresses`
+  String get profileMyAddresses {
+    return Intl.message(
+      'My Addresses',
+      name: 'profileMyAddresses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Manage delivery addresses`
+  String get profileMyAddressesDesc {
+    return Intl.message(
+      'Manage delivery addresses',
+      name: 'profileMyAddressesDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment Methods`
+  String get profilePaymentMethods {
+    return Intl.message(
+      'Payment Methods',
+      name: 'profilePaymentMethods',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add or remove cards`
+  String get profilePaymentMethodsDesc {
+    return Intl.message(
+      'Add or remove cards',
+      name: 'profilePaymentMethodsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Security`
+  String get profileSecurity {
+    return Intl.message(
+      'Security',
+      name: 'profileSecurity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change Password`
+  String get profileChangePassword {
+    return Intl.message(
+      'Change Password',
+      name: 'profileChangePassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update password regularly`
+  String get profileChangePasswordDesc {
+    return Intl.message(
+      'Update password regularly',
+      name: 'profileChangePasswordDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Support`
+  String get profileSupport {
+    return Intl.message('Support', name: 'profileSupport', desc: '', args: []);
+  }
+
+  /// `Customer Support`
+  String get profileCustomerSupport {
+    return Intl.message(
+      'Customer Support',
+      name: 'profileCustomerSupport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chat with CS 24/7`
+  String get profileCustomerSupportDesc {
+    return Intl.message(
+      'Chat with CS 24/7',
+      name: 'profileCustomerSupportDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Help & FAQ`
+  String get profileHelpFAQ {
+    return Intl.message(
+      'Help & FAQ',
+      name: 'profileHelpFAQ',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Frequently asked questions`
+  String get profileHelpFAQDesc {
+    return Intl.message(
+      'Frequently asked questions',
+      name: 'profileHelpFAQDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Terms & Policies`
+  String get profileTermsPolicies {
+    return Intl.message(
+      'Terms & Policies',
+      name: 'profileTermsPolicies',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Usage rules`
+  String get profileTermsPoliciesDesc {
+    return Intl.message(
+      'Usage rules',
+      name: 'profileTermsPoliciesDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Log Out`
+  String get profileLogout {
+    return Intl.message('Log Out', name: 'profileLogout', desc: '', args: []);
+  }
+
+  /// `Settings`
+  String get settingsTitle {
+    return Intl.message('Settings', name: 'settingsTitle', desc: '', args: []);
+  }
+
+  /// `Notifications`
+  String get settingsNotifications {
+    return Intl.message(
+      'Notifications',
+      name: 'settingsNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Push Notifications`
+  String get settingsPushNotifications {
+    return Intl.message(
+      'Push Notifications',
+      name: 'settingsPushNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Receive app notifications`
+  String get settingsPushNotificationsDesc {
+    return Intl.message(
+      'Receive app notifications',
+      name: 'settingsPushNotificationsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Order Updates`
+  String get settingsOrderUpdates {
+    return Intl.message(
+      'Order Updates',
+      name: 'settingsOrderUpdates',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Real-time delivery status`
+  String get settingsOrderUpdatesDesc {
+    return Intl.message(
+      'Real-time delivery status',
+      name: 'settingsOrderUpdatesDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Promotions`
+  String get settingsPromotions {
+    return Intl.message(
+      'Promotions',
+      name: 'settingsPromotions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Deals and offers`
+  String get settingsPromotionsDesc {
+    return Intl.message(
+      'Deals and offers',
+      name: 'settingsPromotionsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Appearance`
+  String get settingsAppearance {
+    return Intl.message(
+      'Appearance',
+      name: 'settingsAppearance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dark Mode`
+  String get settingsDarkMode {
+    return Intl.message(
+      'Dark Mode',
+      name: 'settingsDarkMode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Protect eyes at night`
+  String get settingsDarkModeDesc {
+    return Intl.message(
+      'Protect eyes at night',
+      name: 'settingsDarkModeDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Language`
+  String get settingsLanguage {
+    return Intl.message(
+      'Language',
+      name: 'settingsLanguage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Privacy`
+  String get settingsPrivacy {
+    return Intl.message('Privacy', name: 'settingsPrivacy', desc: '', args: []);
+  }
+
+  /// `Privacy Policy`
+  String get settingsPrivacyPolicy {
+    return Intl.message(
+      'Privacy Policy',
+      name: 'settingsPrivacyPolicy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How we protect data`
+  String get settingsPrivacyPolicyDesc {
+    return Intl.message(
+      'How we protect data',
+      name: 'settingsPrivacyPolicyDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Terms of Use`
+  String get settingsTermsOfUse {
+    return Intl.message(
+      'Terms of Use',
+      name: 'settingsTermsOfUse',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rules and conditions`
+  String get settingsTermsOfUseDesc {
+    return Intl.message(
+      'Rules and conditions',
+      name: 'settingsTermsOfUseDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cookie & Tracking`
+  String get settingsCookieTracking {
+    return Intl.message(
+      'Cookie & Tracking',
+      name: 'settingsCookieTracking',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Manage preferences`
+  String get settingsCookieTrackingDesc {
+    return Intl.message(
+      'Manage preferences',
+      name: 'settingsCookieTrackingDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `About`
+  String get settingsAbout {
+    return Intl.message('About', name: 'settingsAbout', desc: '', args: []);
+  }
+
+  /// `About App`
+  String get settingsAboutApp {
+    return Intl.message(
+      'About App',
+      name: 'settingsAboutApp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Version 1.0.0`
+  String get settingsAboutAppDesc {
+    return Intl.message(
+      'Version 1.0.0',
+      name: 'settingsAboutAppDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rate App`
+  String get settingsRateApp {
+    return Intl.message(
+      'Rate App',
+      name: 'settingsRateApp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Share your experience`
+  String get settingsRateAppDesc {
+    return Intl.message(
+      'Share your experience',
+      name: 'settingsRateAppDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Share App`
+  String get settingsShareApp {
+    return Intl.message(
+      'Share App',
+      name: 'settingsShareApp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refer friends`
+  String get settingsShareAppDesc {
+    return Intl.message(
+      'Refer friends',
+      name: 'settingsShareAppDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Danger Zone`
+  String get settingsDangerZone {
+    return Intl.message(
+      'Danger Zone',
+      name: 'settingsDangerZone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear Cache`
+  String get settingsClearCache {
+    return Intl.message(
+      'Clear Cache',
+      name: 'settingsClearCache',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Free up memory`
+  String get settingsClearCacheDesc {
+    return Intl.message(
+      'Free up memory',
+      name: 'settingsClearCacheDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete Account`
+  String get settingsDeleteAccount {
+    return Intl.message(
+      'Delete Account',
+      name: 'settingsDeleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Permanently delete all data`
+  String get settingsDeleteAccountDesc {
+    return Intl.message(
+      'Permanently delete all data',
+      name: 'settingsDeleteAccountDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose Language`
+  String get settingsLanguageTitle {
+    return Intl.message(
+      'Choose Language',
+      name: 'settingsLanguageTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Address`
+  String get addressEditTitle {
+    return Intl.message(
+      'Edit Address',
+      name: 'addressEditTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add New Address`
+  String get addressAddTitle {
+    return Intl.message(
+      'Add New Address',
+      name: 'addressAddTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Address Type`
+  String get addressType {
+    return Intl.message(
+      'Address Type',
+      name: 'addressType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Home`
+  String get addressHome {
+    return Intl.message('Home', name: 'addressHome', desc: '', args: []);
+  }
+
+  /// `Work`
+  String get addressWork {
+    return Intl.message('Work', name: 'addressWork', desc: '', args: []);
+  }
+
+  /// `School`
+  String get addressSchool {
+    return Intl.message('School', name: 'addressSchool', desc: '', args: []);
+  }
+
+  /// `Other`
+  String get addressOther {
+    return Intl.message('Other', name: 'addressOther', desc: '', args: []);
+  }
+
+  /// `Address Info`
+  String get addressInfo {
+    return Intl.message(
+      'Address Info',
+      name: 'addressInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Address Label`
+  String get addressLabel {
+    return Intl.message(
+      'Address Label',
+      name: 'addressLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g., Home, Work...`
+  String get addressLabelHint {
+    return Intl.message(
+      'e.g., Home, Work...',
+      name: 'addressLabelHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter address label`
+  String get addressLabelRequired {
+    return Intl.message(
+      'Please enter address label',
+      name: 'addressLabelRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recipient Name`
+  String get addressRecipientName {
+    return Intl.message(
+      'Recipient Name',
+      name: 'addressRecipientName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter recipient name`
+  String get addressRecipientHint {
+    return Intl.message(
+      'Enter recipient name',
+      name: 'addressRecipientHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter recipient name`
+  String get addressRecipientRequired {
+    return Intl.message(
+      'Please enter recipient name',
+      name: 'addressRecipientRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Phone Number`
+  String get addressPhone {
+    return Intl.message(
+      'Phone Number',
+      name: 'addressPhone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter phone number`
+  String get addressPhoneHint {
+    return Intl.message(
+      'Enter phone number',
+      name: 'addressPhoneHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter phone number`
+  String get addressPhoneRequired {
+    return Intl.message(
+      'Please enter phone number',
+      name: 'addressPhoneRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid phone number`
+  String get addressPhoneInvalid {
+    return Intl.message(
+      'Invalid phone number',
+      name: 'addressPhoneInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Address Details`
+  String get addressDetails {
+    return Intl.message(
+      'Address Details',
+      name: 'addressDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Detailed Address`
+  String get addressLine {
+    return Intl.message(
+      'Detailed Address',
+      name: 'addressLine',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `House number, street name...`
+  String get addressLineHint {
+    return Intl.message(
+      'House number, street name...',
+      name: 'addressLineHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter detailed address`
+  String get addressLineRequired {
+    return Intl.message(
+      'Please enter detailed address',
+      name: 'addressLineRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ward/Commune`
+  String get addressWard {
+    return Intl.message(
+      'Ward/Commune',
+      name: 'addressWard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter ward/commune`
+  String get addressWardHint {
+    return Intl.message(
+      'Enter ward/commune',
+      name: 'addressWardHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `District`
+  String get addressDistrict {
+    return Intl.message(
+      'District',
+      name: 'addressDistrict',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter district`
+  String get addressDistrictHint {
+    return Intl.message(
+      'Enter district',
+      name: 'addressDistrictHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `City/Province`
+  String get addressCity {
+    return Intl.message(
+      'City/Province',
+      name: 'addressCity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter city/province`
+  String get addressCityHint {
+    return Intl.message(
+      'Enter city/province',
+      name: 'addressCityHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Postal Code`
+  String get addressPostalCode {
+    return Intl.message(
+      'Postal Code',
+      name: 'addressPostalCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Optional`
+  String get addressPostalCodeHint {
+    return Intl.message(
+      'Optional',
+      name: 'addressPostalCodeHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Required`
+  String get addressRequiredField {
+    return Intl.message(
+      'Required',
+      name: 'addressRequiredField',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save Changes`
+  String get addressSave {
+    return Intl.message(
+      'Save Changes',
+      name: 'addressSave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Address`
+  String get addressAdd {
+    return Intl.message('Add Address', name: 'addressAdd', desc: '', args: []);
+  }
+
+  /// `Delete`
+  String get addressDelete {
+    return Intl.message('Delete', name: 'addressDelete', desc: '', args: []);
+  }
+
+  /// `Get Current Location`
+  String get addressGetCurrentLocation {
+    return Intl.message(
+      'Get Current Location',
+      name: 'addressGetCurrentLocation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Auto fill from GPS`
+  String get addressAutoFillLocation {
+    return Intl.message(
+      'Auto fill from GPS',
+      name: 'addressAutoFillLocation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Getting location...`
+  String get addressGettingLocation {
+    return Intl.message(
+      'Getting location...',
+      name: 'addressGettingLocation',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

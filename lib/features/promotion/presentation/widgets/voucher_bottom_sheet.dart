@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../data/dtos/calculate_response_dto.dart';
 import '../providers/checkout_calculation_notifier.dart';
 import '../providers/selected_vouchers_notifier.dart';
-import '../providers/promotion_providers.dart';
 
 class VoucherBottomSheet extends ConsumerWidget {
   const VoucherBottomSheet({super.key});
@@ -221,9 +220,9 @@ class VoucherBottomSheet extends ConsumerWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
           ),
         ],
       ),

@@ -1,5 +1,4 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:go_router/go_router.dart';
 import 'package:delivery_app/features/auth/presentation/providers/providers.dart';
 import 'package:delivery_app/core/utils/logger/app_logger.dart';
 import 'package:delivery_app/core/routing/routing.dart';

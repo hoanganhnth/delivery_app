@@ -329,7 +329,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
                                       ? (isDark
                                           ? Colors.grey.shade800
                                           : Colors.grey.shade200)
-                                      : color.withOpacity(0.3),
+                                      : color.withValues(alpha: 0.3),
                                 ),
                               ),
                               child: InkWell(
@@ -350,7 +350,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
                                         width: 44,
                                         height: 44,
                                         decoration: BoxDecoration(
-                                          color: color.withOpacity(0.1),
+                                          color: color.withValues(alpha: 0.1),
                                           borderRadius:
                                               BorderRadius.circular(12),
                                         ),
