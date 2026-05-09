@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/theme_extensions.dart';
+import 'package:delivery_app/generated/l10n.dart';
 
 /// Widget form địa chỉ giao hàng trong checkout
 class DeliveryAddressCard extends ConsumerWidget {
@@ -14,6 +15,7 @@ class DeliveryAddressCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -25,12 +27,11 @@ class DeliveryAddressCard extends ConsumerWidget {
               controller: addressController,
               maxLines: 3,
               decoration: InputDecoration(
-                labelText: 'Địa chỉ giao hàng',
-                hintText:
-                    'Nhập địa chỉ chi tiết: số nhà, đường, phường, quận...',
+                labelText: s.checkoutDeliveryAddress,
+                hintText: s.checkoutAddressHint,
                 prefixIcon: Padding(
                   padding: EdgeInsets.only(bottom: 40.w),
-                  child: Icon(Icons.location_on_outlined),
+                  child: const Icon(Icons.location_on_outlined),
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -38,7 +39,7 @@ class DeliveryAddressCard extends ConsumerWidget {
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Vui lòng nhập địa chỉ giao hàng';
+                  return s.checkoutAddressRequired;
                 }
                 return null;
               },
@@ -48,9 +49,9 @@ class DeliveryAddressCard extends ConsumerWidget {
               onTap: () {
                 // TODO: Open map to select location
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                  SnackBar(
                     content: Text(
-                      'Tính năng chọn vị trí trên bản đồ sẽ được cập nhật sớm',
+                      s.checkoutMapFeatureSoon,
                     ),
                   ),
                 );
@@ -67,7 +68,7 @@ class DeliveryAddressCard extends ConsumerWidget {
                     Icon(Icons.map, color: ref.colors.primary),
                     SizedBox(width: 8.w),
                     Text(
-                      'Chọn vị trí trên bản đồ',
+                      s.checkoutSelectOnMap,
                       style: TextStyle(
                         color: ref.colors.primary,
                         fontWeight: FontWeight.w500,

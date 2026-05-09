@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../cart/domain/entities/cart_entity.dart';
 import '../../../orders/data/dtos/checkout_preview_dto.dart';
+import 'package:delivery_app/generated/l10n.dart';
 
 /// Widget tóm tắt đơn hàng trong checkout
 class OrderSummaryCard extends ConsumerWidget {
@@ -18,6 +19,7 @@ class OrderSummaryCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -97,7 +99,7 @@ class OrderSummaryCard extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Tạm tính',
+                  s.checkoutSubtotal,
                   style: TextStyle(color: ref.colors.textSecondary),
                 ),
                 Text(
@@ -113,7 +115,7 @@ class OrderSummaryCard extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Phí giao hàng',
+                  s.checkoutShippingFee,
                   style: TextStyle(color: ref.colors.textSecondary),
                 ),
                 Text(
@@ -130,7 +132,7 @@ class OrderSummaryCard extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Tổng cộng',
+                  s.checkoutTotal,
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,

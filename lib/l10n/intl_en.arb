@@ -318,5 +318,88 @@
     "addressDelete": "Delete",
     "addressGetCurrentLocation": "Get Current Location",
     "addressAutoFillLocation": "Auto fill from GPS",
-    "addressGettingLocation": "Getting location..."
+    "addressGettingLocation": "Getting location...",
+    "supportChatTitle": "Customer Support",
+    "supportStatusActive": "Active",
+    "supportEndConversation": "End Conversation",
+    "supportEndConfirmationTitle": "End Conversation",
+    "supportEndConfirmationDesc": "Are you sure you want to end this conversation? You can start a new one at any time.",
+    "supportCancel": "Cancel",
+    "supportEnd": "End",
+    "supportConversationEnded": "Conversation ended",
+    "supportNewConversation": "Start new conversation",
+    "supportNewConversationStarted": "Started new conversation",
+    "supportConversationEndedBanner": "Conversation has ended",
+    "supportCreateNew": "Create new",
+    "supportErrorTitle": "An error occurred",
+    "supportRetry": "Retry",
+    "supportWelcome": "Welcome!",
+    "supportWelcomeDesc": "Send a message to start a conversation with the support team",
+    "supportFooterClosed": "Conversation ended. Press menu to create a new one.",
+    "supportAttachmentError": "Cannot select attachment",
+    "supportVideoSizeError": "Video must not exceed 10MB",
+    "notificationTitle": "Notifications",
+    "notificationMarkAllRead": "Mark all as read",
+    "notificationEmptyTitle": "No notifications",
+    "notificationEmptyDesc": "Notifications will appear here",
+    "notificationTimeJustNow": "Just now",
+    "notificationTimeMinutes": "{minutes} minutes ago",
+    "@notificationTimeMinutes": {
+        "placeholders": {
+            "minutes": {}
+        }
+    },
+    "notificationTimeHours": "{hours} hours ago",
+    "@notificationTimeHours": {
+        "placeholders": {
+            "hours": {}
+        }
+    },
+    "notificationTimeDays": "{days} days ago",
+    "@notificationTimeDays": {
+        "placeholders": {
+            "days": {}
+        }
+    },
+    "checkoutTitle": "Checkout",
+    "checkoutLoadingPrice": "Calculating price...",
+    "checkoutErrorPrice": "Cannot get price from server. Tap to retry.",
+    "checkoutAddressTitle": "Delivery Address",
+    "checkoutPaymentMethodTitle": "Payment Method",
+    "checkoutOrderDetailsTitle": "Order Details",
+    "checkoutPromoTitle": "Promotion / Voucher",
+    "checkoutNotesTitle": "Notes (optional)",
+    "checkoutSelectPromo": "Select or enter code",
+    "checkoutSelectedPromo": "Selected {count} codes",
+    "@checkoutSelectedPromo": {
+        "placeholders": {
+            "count": {}
+        }
+    },
+    "checkoutAddressRequired": "Please select a delivery address",
+    "checkoutUnavailableItemsTitle": "Items unavailable",
+    "checkoutUnavailableItemsDesc": "{count} items in your cart are out of stock or unavailable. Please remove them before placing order.",
+    "@checkoutUnavailableItemsDesc": {
+        "placeholders": {
+            "count": {}
+        }
+    },
+    "checkoutUnderstood": "Understood",
+    "checkoutPayBtn": "Pay",
+    "checkoutOrderBtn": "Place Order",
+    "supportAttachmentTitle": "Attachment",
+    "supportAttachImage": "Image",
+    "supportAttachVideo": "Video",
+    "supportAttachFile": "File",
+    "supportChatHint": "Type a message...",
+    "supportDateToday": "Today",
+    "supportDateYesterday": "Yesterday",
+    "checkoutSubtotal": "Subtotal",
+    "checkoutShippingFee": "Shipping Fee",
+    "checkoutDiscount": "Discount",
+    "checkoutTotal": "Total",
+    "checkoutAddressHint": "Enter detailed address...",
+    "checkoutMapFeatureSoon": "Map feature will be updated soon",
+    "checkoutSelectOnMap": "Select on map",
+    "checkoutDeliveryAddress": "Delivery Address"
 }

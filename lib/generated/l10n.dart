@@ -2353,6 +2353,541 @@ class S {
       args: [],
     );
   }
+
+  /// `Customer Support`
+  String get supportChatTitle {
+    return Intl.message(
+      'Customer Support',
+      name: 'supportChatTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active`
+  String get supportStatusActive {
+    return Intl.message(
+      'Active',
+      name: 'supportStatusActive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `End Conversation`
+  String get supportEndConversation {
+    return Intl.message(
+      'End Conversation',
+      name: 'supportEndConversation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `End Conversation`
+  String get supportEndConfirmationTitle {
+    return Intl.message(
+      'End Conversation',
+      name: 'supportEndConfirmationTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to end this conversation? You can start a new one at any time.`
+  String get supportEndConfirmationDesc {
+    return Intl.message(
+      'Are you sure you want to end this conversation? You can start a new one at any time.',
+      name: 'supportEndConfirmationDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get supportCancel {
+    return Intl.message('Cancel', name: 'supportCancel', desc: '', args: []);
+  }
+
+  /// `End`
+  String get supportEnd {
+    return Intl.message('End', name: 'supportEnd', desc: '', args: []);
+  }
+
+  /// `Conversation ended`
+  String get supportConversationEnded {
+    return Intl.message(
+      'Conversation ended',
+      name: 'supportConversationEnded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start new conversation`
+  String get supportNewConversation {
+    return Intl.message(
+      'Start new conversation',
+      name: 'supportNewConversation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Started new conversation`
+  String get supportNewConversationStarted {
+    return Intl.message(
+      'Started new conversation',
+      name: 'supportNewConversationStarted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Conversation has ended`
+  String get supportConversationEndedBanner {
+    return Intl.message(
+      'Conversation has ended',
+      name: 'supportConversationEndedBanner',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create new`
+  String get supportCreateNew {
+    return Intl.message(
+      'Create new',
+      name: 'supportCreateNew',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An error occurred`
+  String get supportErrorTitle {
+    return Intl.message(
+      'An error occurred',
+      name: 'supportErrorTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Retry`
+  String get supportRetry {
+    return Intl.message('Retry', name: 'supportRetry', desc: '', args: []);
+  }
+
+  /// `Welcome!`
+  String get supportWelcome {
+    return Intl.message('Welcome!', name: 'supportWelcome', desc: '', args: []);
+  }
+
+  /// `Send a message to start a conversation with the support team`
+  String get supportWelcomeDesc {
+    return Intl.message(
+      'Send a message to start a conversation with the support team',
+      name: 'supportWelcomeDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Conversation ended. Press menu to create a new one.`
+  String get supportFooterClosed {
+    return Intl.message(
+      'Conversation ended. Press menu to create a new one.',
+      name: 'supportFooterClosed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cannot select attachment`
+  String get supportAttachmentError {
+    return Intl.message(
+      'Cannot select attachment',
+      name: 'supportAttachmentError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Video must not exceed 10MB`
+  String get supportVideoSizeError {
+    return Intl.message(
+      'Video must not exceed 10MB',
+      name: 'supportVideoSizeError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notifications`
+  String get notificationTitle {
+    return Intl.message(
+      'Notifications',
+      name: 'notificationTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mark all as read`
+  String get notificationMarkAllRead {
+    return Intl.message(
+      'Mark all as read',
+      name: 'notificationMarkAllRead',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No notifications`
+  String get notificationEmptyTitle {
+    return Intl.message(
+      'No notifications',
+      name: 'notificationEmptyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notifications will appear here`
+  String get notificationEmptyDesc {
+    return Intl.message(
+      'Notifications will appear here',
+      name: 'notificationEmptyDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Just now`
+  String get notificationTimeJustNow {
+    return Intl.message(
+      'Just now',
+      name: 'notificationTimeJustNow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{minutes} minutes ago`
+  String notificationTimeMinutes(Object minutes) {
+    return Intl.message(
+      '$minutes minutes ago',
+      name: 'notificationTimeMinutes',
+      desc: '',
+      args: [minutes],
+    );
+  }
+
+  /// `{hours} hours ago`
+  String notificationTimeHours(Object hours) {
+    return Intl.message(
+      '$hours hours ago',
+      name: 'notificationTimeHours',
+      desc: '',
+      args: [hours],
+    );
+  }
+
+  /// `{days} days ago`
+  String notificationTimeDays(Object days) {
+    return Intl.message(
+      '$days days ago',
+      name: 'notificationTimeDays',
+      desc: '',
+      args: [days],
+    );
+  }
+
+  /// `Checkout`
+  String get checkoutTitle {
+    return Intl.message('Checkout', name: 'checkoutTitle', desc: '', args: []);
+  }
+
+  /// `Calculating price...`
+  String get checkoutLoadingPrice {
+    return Intl.message(
+      'Calculating price...',
+      name: 'checkoutLoadingPrice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cannot get price from server. Tap to retry.`
+  String get checkoutErrorPrice {
+    return Intl.message(
+      'Cannot get price from server. Tap to retry.',
+      name: 'checkoutErrorPrice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delivery Address`
+  String get checkoutAddressTitle {
+    return Intl.message(
+      'Delivery Address',
+      name: 'checkoutAddressTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment Method`
+  String get checkoutPaymentMethodTitle {
+    return Intl.message(
+      'Payment Method',
+      name: 'checkoutPaymentMethodTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Order Details`
+  String get checkoutOrderDetailsTitle {
+    return Intl.message(
+      'Order Details',
+      name: 'checkoutOrderDetailsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Promotion / Voucher`
+  String get checkoutPromoTitle {
+    return Intl.message(
+      'Promotion / Voucher',
+      name: 'checkoutPromoTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notes (optional)`
+  String get checkoutNotesTitle {
+    return Intl.message(
+      'Notes (optional)',
+      name: 'checkoutNotesTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select or enter code`
+  String get checkoutSelectPromo {
+    return Intl.message(
+      'Select or enter code',
+      name: 'checkoutSelectPromo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Selected {count} codes`
+  String checkoutSelectedPromo(Object count) {
+    return Intl.message(
+      'Selected $count codes',
+      name: 'checkoutSelectedPromo',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Please select a delivery address`
+  String get checkoutAddressRequired {
+    return Intl.message(
+      'Please select a delivery address',
+      name: 'checkoutAddressRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Items unavailable`
+  String get checkoutUnavailableItemsTitle {
+    return Intl.message(
+      'Items unavailable',
+      name: 'checkoutUnavailableItemsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} items in your cart are out of stock or unavailable. Please remove them before placing order.`
+  String checkoutUnavailableItemsDesc(Object count) {
+    return Intl.message(
+      '$count items in your cart are out of stock or unavailable. Please remove them before placing order.',
+      name: 'checkoutUnavailableItemsDesc',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Understood`
+  String get checkoutUnderstood {
+    return Intl.message(
+      'Understood',
+      name: 'checkoutUnderstood',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pay`
+  String get checkoutPayBtn {
+    return Intl.message('Pay', name: 'checkoutPayBtn', desc: '', args: []);
+  }
+
+  /// `Place Order`
+  String get checkoutOrderBtn {
+    return Intl.message(
+      'Place Order',
+      name: 'checkoutOrderBtn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Attachment`
+  String get supportAttachmentTitle {
+    return Intl.message(
+      'Attachment',
+      name: 'supportAttachmentTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Image`
+  String get supportAttachImage {
+    return Intl.message(
+      'Image',
+      name: 'supportAttachImage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Video`
+  String get supportAttachVideo {
+    return Intl.message(
+      'Video',
+      name: 'supportAttachVideo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `File`
+  String get supportAttachFile {
+    return Intl.message('File', name: 'supportAttachFile', desc: '', args: []);
+  }
+
+  /// `Type a message...`
+  String get supportChatHint {
+    return Intl.message(
+      'Type a message...',
+      name: 'supportChatHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Today`
+  String get supportDateToday {
+    return Intl.message('Today', name: 'supportDateToday', desc: '', args: []);
+  }
+
+  /// `Yesterday`
+  String get supportDateYesterday {
+    return Intl.message(
+      'Yesterday',
+      name: 'supportDateYesterday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subtotal`
+  String get checkoutSubtotal {
+    return Intl.message(
+      'Subtotal',
+      name: 'checkoutSubtotal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shipping Fee`
+  String get checkoutShippingFee {
+    return Intl.message(
+      'Shipping Fee',
+      name: 'checkoutShippingFee',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Discount`
+  String get checkoutDiscount {
+    return Intl.message(
+      'Discount',
+      name: 'checkoutDiscount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total`
+  String get checkoutTotal {
+    return Intl.message('Total', name: 'checkoutTotal', desc: '', args: []);
+  }
+
+  /// `Enter detailed address...`
+  String get checkoutAddressHint {
+    return Intl.message(
+      'Enter detailed address...',
+      name: 'checkoutAddressHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Map feature will be updated soon`
+  String get checkoutMapFeatureSoon {
+    return Intl.message(
+      'Map feature will be updated soon',
+      name: 'checkoutMapFeatureSoon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select on map`
+  String get checkoutSelectOnMap {
+    return Intl.message(
+      'Select on map',
+      name: 'checkoutSelectOnMap',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delivery Address`
+  String get checkoutDeliveryAddress {
+    return Intl.message(
+      'Delivery Address',
+      name: 'checkoutDeliveryAddress',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

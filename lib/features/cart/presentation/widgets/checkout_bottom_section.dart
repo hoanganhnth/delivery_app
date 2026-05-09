@@ -3,13 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../cart/domain/entities/cart_entity.dart';
+import 'package:delivery_app/generated/l10n.dart';
 
 /// Widget phần thanh toán ở cuối trang checkout
 class CheckoutBottomSection extends ConsumerWidget {
   final CartEntity cart;
   final bool isLoading;
   final VoidCallback onPlaceOrder;
-  final String buttonText;
+  final String? buttonText;
 
   /// Server-calculated prices (nếu có sẽ hiển thị breakdown)
   final double? serverSubtotal;
@@ -22,7 +23,7 @@ class CheckoutBottomSection extends ConsumerWidget {
     required this.cart,
     required this.isLoading,
     required this.onPlaceOrder,
-    this.buttonText = 'Đặt hàng',
+    this.buttonText,
     this.serverSubtotal,
     this.serverShippingFee,
     this.serverDiscount,
@@ -31,6 +32,7 @@ class CheckoutBottomSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
     final hasServerPrices = serverTotal != null;
     final displayTotal = hasServerPrices ? serverTotal! : cart.totalAmount;
 
@@ -51,12 +53,12 @@ class CheckoutBottomSection extends ConsumerWidget {
         children: [
           // Breakdown chi tiết khi có dữ liệu từ server
           if (hasServerPrices) ...[
-            _buildPriceRow(ref, 'Tiền hàng', serverSubtotal ?? 0),
+            _buildPriceRow(ref, s.checkoutSubtotal, serverSubtotal ?? 0),
             SizedBox(height: 4.w),
-            _buildPriceRow(ref, 'Phí giao hàng', serverShippingFee ?? 0),
+            _buildPriceRow(ref, s.checkoutShippingFee, serverShippingFee ?? 0),
             if (serverDiscount != null && serverDiscount! > 0) ...[
               SizedBox(height: 4.w),
-              _buildPriceRow(ref, 'Giảm giá', -serverDiscount!, isDiscount: true),
+              _buildPriceRow(ref, s.checkoutDiscount, -serverDiscount!, isDiscount: true),
             ],
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8.w),
@@ -67,7 +69,7 @@ class CheckoutBottomSection extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Tổng thanh toán',
+                s.checkoutTotal,
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
@@ -107,7 +109,7 @@ class CheckoutBottomSection extends ConsumerWidget {
                       ),
                     )
                   : Text(
-                      buttonText,
+                      buttonText ?? s.checkoutOrderBtn,
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,

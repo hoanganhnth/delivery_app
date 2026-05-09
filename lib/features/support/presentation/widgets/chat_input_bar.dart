@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:delivery_app/generated/l10n.dart';
 
 /// Chat Input Bar - Stitch Editorial Style
 /// Features:
@@ -13,7 +14,7 @@ class ChatInputBar extends StatefulWidget {
   final VoidCallback? onAttachVideo;
   final VoidCallback? onAttachFile;
   final bool enabled;
-  final String hintText;
+  final String? hintText;
 
   const ChatInputBar({
     super.key,
@@ -22,7 +23,7 @@ class ChatInputBar extends StatefulWidget {
     this.onAttachVideo,
     this.onAttachFile,
     this.enabled = true,
-    this.hintText = 'Nhập tin nhắn...',
+    this.hintText,
   });
 
   @override
@@ -69,6 +70,8 @@ class _ChatInputBarState extends State<ChatInputBar> {
   void _showAttachmentMenu() {
     final theme = Theme.of(context);
 
+    final s = S.of(context);
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -96,7 +99,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
 
               // Title
               Text(
-                'Đính kèm',
+                s.supportAttachmentTitle,
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
@@ -112,7 +115,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
                   if (widget.onAttachImage != null)
                     _buildAttachOption(
                       icon: Icons.image_rounded,
-                      label: 'Ảnh',
+                      label: s.supportAttachImage,
                       color: Colors.blue,
                       onTap: () {
                         Navigator.pop(context);
@@ -122,7 +125,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
                   if (widget.onAttachVideo != null)
                     _buildAttachOption(
                       icon: Icons.videocam_rounded,
-                      label: 'Video',
+                      label: s.supportAttachVideo,
                       color: Colors.purple,
                       onTap: () {
                         Navigator.pop(context);
@@ -132,7 +135,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
                   if (widget.onAttachFile != null)
                     _buildAttachOption(
                       icon: Icons.attach_file_rounded,
-                      label: 'Tệp',
+                      label: s.supportAttachFile,
                       color: Colors.orange,
                       onTap: () {
                         Navigator.pop(context);
@@ -255,7 +258,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
                     color: theme.colorScheme.onSurface,
                   ),
                   decoration: InputDecoration(
-                    hintText: widget.hintText,
+                    hintText: widget.hintText ?? S.of(context).supportChatHint,
                     hintStyle: TextStyle(
                       fontSize: 15.sp,
                       color: theme.colorScheme.onSurfaceVariant

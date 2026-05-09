@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
+import 'package:delivery_app/generated/l10n.dart';
 import '../../../orders/domain/entities/order_entity.dart';
 import '../../../orders/data/dtos/create_order_request_dto.dart';
 import '../../../orders/data/dtos/checkout_preview_dto.dart';
@@ -78,6 +79,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   }
 
   void _showUnavailableItemsDialog(List<int> unavailableIds) {
+    final s = S.of(context);
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -86,18 +88,17 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           children: [
             Icon(Icons.warning_amber_rounded, color: Colors.red, size: 24.w),
             SizedBox(width: 8.w),
-            const Text('Có món hết hàng'),
+            Text(s.checkoutUnavailableItemsTitle),
           ],
         ),
         content: Text(
-          '${unavailableIds.length} món trong giỏ hàng đã hết hàng hoặc không còn khả dụng. '
-          'Vui lòng xoá những món này trước khi đặt hàng.',
+          s.checkoutUnavailableItemsDesc(unavailableIds.length),
           style: TextStyle(fontSize: 14.sp),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Đã hiểu'),
+            child: Text(s.checkoutUnderstood),
           ),
         ],
       ),
@@ -138,6 +139,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     final calculateState = ref.watch(checkoutCalculationProvider);
     final selectedVouchers = ref.watch(selectedVouchersProvider);
     final previewState = ref.watch(checkoutPreviewProvider);
+    final s = S.of(context);
 
     final previewData = previewState.value;
     final localDiscount = _calculateLocalDiscount(
@@ -195,7 +197,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     return Scaffold(
       backgroundColor: ref.colors.background,
       appBar: GlassAppBar(
-        titleText: 'Thanh toán',
+        titleText: s.checkoutTitle,
         leading: GlassActionButton(
           icon: Icons.close,
           onPressed: () {
@@ -263,7 +265,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                         ),
                         SizedBox(width: 10.w),
                         Text(
-                          'Đang tính toán giá...',
+                          s.checkoutLoadingPrice,
                           style: TextStyle(
                             fontSize: 13.sp,
                             color: Colors.amber.shade900,
@@ -292,7 +294,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                           SizedBox(width: 10.w),
                           Expanded(
                             child: Text(
-                              'Không thể lấy giá từ server. Nhấn để thử lại.',
+                              s.checkoutErrorPrice,
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 color: Colors.red.shade900,
@@ -323,7 +325,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
                         // Delivery Address Section
                         CheckoutSectionHeader(
-                          title: 'Địa chỉ giao hàng',
+                          title: s.checkoutDeliveryAddress,
                           icon: Icons.location_on_outlined,
                         ),
                         SizedBox(height: 8.w),
@@ -340,7 +342,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
                         // Payment Method Section
                         CheckoutSectionHeader(
-                          title: 'Phương thức thanh toán',
+                          title: s.checkoutPaymentMethodTitle,
                           icon: Icons.payment_outlined,
                         ),
                         SizedBox(height: 8.w),
@@ -358,7 +360,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
                         // Order Items Summary
                         CheckoutSectionHeader(
-                          title: 'Chi tiết đơn hàng',
+                          title: s.checkoutOrderDetailsTitle,
                           icon: Icons.receipt_long_outlined,
                         ),
                         SizedBox(height: 8.w),
@@ -369,7 +371,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
                         // Voucher Section
                         CheckoutSectionHeader(
-                          title: 'Khuyến mãi / Voucher',
+                          title: s.checkoutPromoTitle,
                           icon: Icons.local_offer_outlined,
                         ),
                         SizedBox(height: 8.w),
@@ -380,11 +382,11 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                                 selectedVouchersProvider,
                               );
 
-                              String text = 'Chọn hoặc nhập mã';
+                              String text = s.checkoutSelectPromo;
                               Color textColor = Colors.grey.shade600;
 
                               if (selectedVouchers.isNotEmpty) {
-                                text = 'Đã chọn ${selectedVouchers.length} mã';
+                                text = s.checkoutSelectedPromo(selectedVouchers.length);
                                 textColor = Colors.amber.shade700;
                               }
 
@@ -435,7 +437,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
                         // Notes Section
                         CheckoutSectionHeader(
-                          title: 'Ghi chú (không bắt buộc)',
+                          title: s.checkoutNotesTitle,
                           icon: Icons.note_outlined,
                         ),
                         SizedBox(height: 8.w),
@@ -459,10 +461,10 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                       createOrderState.isLoading ||
                       ref.watch(paymentProvider).isLoading,
                   buttonText: previewState.isLoading
-                      ? 'Đang tính giá...'
+                      ? s.checkoutLoadingPrice
                       : (_selectedPaymentMethod == PaymentMethod.wallet
-                            ? 'Thanh toán'
-                            : 'Đặt hàng'),
+                            ? s.checkoutPayBtn
+                            : s.checkoutOrderBtn),
                   onPlaceOrder: previewState.isLoading
                       ? () {}
                       : () => _placeOrder(cart, selectedVouchers),
@@ -483,6 +485,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   }
 
   Future<void> _placeOrder(CartEntity cart, List<int> voucherIds) async {
+    final s = S.of(context);
     final addressState = ref.read(userAddressListProvider);
     final selectedAddress =
         addressState.selectedAddress ?? addressState.defaultAddress;
@@ -490,7 +493,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     if (selectedAddress == null || cart.currentRestaurantId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Vui lòng chọn địa chỉ giao hàng'),
+          content: Text(s.checkoutAddressRequired),
           backgroundColor: const Color(0xFFBA1A1A),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(

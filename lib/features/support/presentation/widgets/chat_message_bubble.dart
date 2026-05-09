@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:delivery_app/generated/l10n.dart';
 import '../../domain/entities/chat_message_entity.dart';
 
 /// Chat Message Bubble - Stitch Editorial Style
@@ -331,7 +332,7 @@ class ChatDateDivider extends StatelessWidget {
           borderRadius: BorderRadius.circular(100),
         ),
         child: Text(
-          _formatDate(date),
+          _formatDate(context, date),
           style: TextStyle(
             fontSize: 12.sp,
             fontWeight: FontWeight.w500,
@@ -342,16 +343,17 @@ class ChatDateDivider extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime date) {
+  String _formatDate(BuildContext context, DateTime date) {
+    final s = S.of(context);
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
     final messageDate = DateTime(date.year, date.month, date.day);
 
     if (messageDate == today) {
-      return 'Hôm nay';
+      return s.supportDateToday;
     } else if (messageDate == yesterday) {
-      return 'Hôm qua';
+      return s.supportDateYesterday;
     } else {
       return '${date.day}/${date.month}/${date.year}';
     }

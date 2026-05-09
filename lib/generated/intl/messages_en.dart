@@ -22,16 +22,27 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(productName) => "Added ${productName} to cart";
 
-  static String m1(addressLabel) =>
+  static String m1(count) => "Selected ${count} codes";
+
+  static String m2(count) =>
+      "${count} items in your cart are out of stock or unavailable. Please remove them before placing order.";
+
+  static String m3(addressLabel) =>
       "Are you sure you want to delete address \"${addressLabel}\"?";
 
-  static String m2(count) => "${count} items";
+  static String m4(count) => "${count} items";
 
-  static String m3(restaurantName) => "Items from ${restaurantName}";
+  static String m5(restaurantName) => "Items from ${restaurantName}";
 
-  static String m4(price) => "\$${price}";
+  static String m6(days) => "${days} days ago";
 
-  static String m5(rating) => "${rating}";
+  static String m7(hours) => "${hours} hours ago";
+
+  static String m8(minutes) => "${minutes} minutes ago";
+
+  static String m9(price) => "\$${price}";
+
+  static String m10(rating) => "${rating}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -154,6 +165,58 @@ class MessageLookup extends MessageLookupByLibrary {
     "cannotAddItem": MessageLookupByLibrary.simpleMessage("Cannot add item"),
     "cart": MessageLookupByLibrary.simpleMessage("Cart"),
     "categories": MessageLookupByLibrary.simpleMessage("Categories"),
+    "checkoutAddressHint": MessageLookupByLibrary.simpleMessage(
+      "Enter detailed address...",
+    ),
+    "checkoutAddressRequired": MessageLookupByLibrary.simpleMessage(
+      "Please select a delivery address",
+    ),
+    "checkoutAddressTitle": MessageLookupByLibrary.simpleMessage(
+      "Delivery Address",
+    ),
+    "checkoutDeliveryAddress": MessageLookupByLibrary.simpleMessage(
+      "Delivery Address",
+    ),
+    "checkoutDiscount": MessageLookupByLibrary.simpleMessage("Discount"),
+    "checkoutErrorPrice": MessageLookupByLibrary.simpleMessage(
+      "Cannot get price from server. Tap to retry.",
+    ),
+    "checkoutLoadingPrice": MessageLookupByLibrary.simpleMessage(
+      "Calculating price...",
+    ),
+    "checkoutMapFeatureSoon": MessageLookupByLibrary.simpleMessage(
+      "Map feature will be updated soon",
+    ),
+    "checkoutNotesTitle": MessageLookupByLibrary.simpleMessage(
+      "Notes (optional)",
+    ),
+    "checkoutOrderBtn": MessageLookupByLibrary.simpleMessage("Place Order"),
+    "checkoutOrderDetailsTitle": MessageLookupByLibrary.simpleMessage(
+      "Order Details",
+    ),
+    "checkoutPayBtn": MessageLookupByLibrary.simpleMessage("Pay"),
+    "checkoutPaymentMethodTitle": MessageLookupByLibrary.simpleMessage(
+      "Payment Method",
+    ),
+    "checkoutPromoTitle": MessageLookupByLibrary.simpleMessage(
+      "Promotion / Voucher",
+    ),
+    "checkoutSelectOnMap": MessageLookupByLibrary.simpleMessage(
+      "Select on map",
+    ),
+    "checkoutSelectPromo": MessageLookupByLibrary.simpleMessage(
+      "Select or enter code",
+    ),
+    "checkoutSelectedPromo": m1,
+    "checkoutShippingFee": MessageLookupByLibrary.simpleMessage("Shipping Fee"),
+    "checkoutSubtotal": MessageLookupByLibrary.simpleMessage("Subtotal"),
+    "checkoutTitle": MessageLookupByLibrary.simpleMessage("Checkout"),
+    "checkoutTotal": MessageLookupByLibrary.simpleMessage("Total"),
+    "checkoutUnavailableItemsDesc": m2,
+    "checkoutUnavailableItemsTitle": MessageLookupByLibrary.simpleMessage(
+      "Items unavailable",
+    ),
+    "checkoutUnderstood": MessageLookupByLibrary.simpleMessage("Understood"),
     "chinese": MessageLookupByLibrary.simpleMessage("Chinese"),
     "clear": MessageLookupByLibrary.simpleMessage("Clear"),
     "clearCart": MessageLookupByLibrary.simpleMessage("Clear Cart"),
@@ -175,7 +238,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Confirm Delete",
     ),
     "confirmDeleteAddressBtn": MessageLookupByLibrary.simpleMessage("Delete"),
-    "confirmDeleteAddressMessage": m1,
+    "confirmDeleteAddressMessage": m3,
     "confirmPassword": MessageLookupByLibrary.simpleMessage("CONFIRM PASSWORD"),
     "confirmYourPassword": MessageLookupByLibrary.simpleMessage(
       "Please confirm your password",
@@ -257,8 +320,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Please enter a valid email",
     ),
     "italian": MessageLookupByLibrary.simpleMessage("Italian"),
-    "items": m2,
-    "itemsFrom": m3,
+    "items": m4,
+    "itemsFrom": m5,
     "japanese": MessageLookupByLibrary.simpleMessage("Japanese"),
     "joinTheHearth": MessageLookupByLibrary.simpleMessage("JOIN THE HEARTH"),
     "livestreamEnded": MessageLookupByLibrary.simpleMessage(
@@ -297,6 +360,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "noTrackingInfo": MessageLookupByLibrary.simpleMessage(
       "No Tracking Information",
     ),
+    "notificationEmptyDesc": MessageLookupByLibrary.simpleMessage(
+      "Notifications will appear here",
+    ),
+    "notificationEmptyTitle": MessageLookupByLibrary.simpleMessage(
+      "No notifications",
+    ),
+    "notificationMarkAllRead": MessageLookupByLibrary.simpleMessage(
+      "Mark all as read",
+    ),
+    "notificationTimeDays": m6,
+    "notificationTimeHours": m7,
+    "notificationTimeJustNow": MessageLookupByLibrary.simpleMessage("Just now"),
+    "notificationTimeMinutes": m8,
+    "notificationTitle": MessageLookupByLibrary.simpleMessage("Notifications"),
     "order": MessageLookupByLibrary.simpleMessage("Order"),
     "orderCancelled": MessageLookupByLibrary.simpleMessage(
       "Order cancelled successfully",
@@ -329,7 +406,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "popularNearYou": MessageLookupByLibrary.simpleMessage("Popular Near You"),
     "preparing": MessageLookupByLibrary.simpleMessage("Preparing"),
-    "price": m4,
+    "price": m9,
     "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
     "proceedToCheckout": MessageLookupByLibrary.simpleMessage(
       "Proceed to Checkout",
@@ -378,7 +455,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "quantity": MessageLookupByLibrary.simpleMessage("Qty"),
     "rateShipperBtn": MessageLookupByLibrary.simpleMessage("Rate Shipper"),
     "rateShipperTitle": MessageLookupByLibrary.simpleMessage("Rate Shipper"),
-    "rating": m5,
+    "rating": m10,
     "ratingError": MessageLookupByLibrary.simpleMessage("An error occurred"),
     "ratingHint": MessageLookupByLibrary.simpleMessage(
       "Your comment (optional)",
@@ -497,6 +574,62 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "submitRatingBtn": MessageLookupByLibrary.simpleMessage("Submit Rating"),
     "subtotal": MessageLookupByLibrary.simpleMessage("Subtotal"),
+    "supportAttachFile": MessageLookupByLibrary.simpleMessage("File"),
+    "supportAttachImage": MessageLookupByLibrary.simpleMessage("Image"),
+    "supportAttachVideo": MessageLookupByLibrary.simpleMessage("Video"),
+    "supportAttachmentError": MessageLookupByLibrary.simpleMessage(
+      "Cannot select attachment",
+    ),
+    "supportAttachmentTitle": MessageLookupByLibrary.simpleMessage(
+      "Attachment",
+    ),
+    "supportCancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "supportChatHint": MessageLookupByLibrary.simpleMessage(
+      "Type a message...",
+    ),
+    "supportChatTitle": MessageLookupByLibrary.simpleMessage(
+      "Customer Support",
+    ),
+    "supportConversationEnded": MessageLookupByLibrary.simpleMessage(
+      "Conversation ended",
+    ),
+    "supportConversationEndedBanner": MessageLookupByLibrary.simpleMessage(
+      "Conversation has ended",
+    ),
+    "supportCreateNew": MessageLookupByLibrary.simpleMessage("Create new"),
+    "supportDateToday": MessageLookupByLibrary.simpleMessage("Today"),
+    "supportDateYesterday": MessageLookupByLibrary.simpleMessage("Yesterday"),
+    "supportEnd": MessageLookupByLibrary.simpleMessage("End"),
+    "supportEndConfirmationDesc": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to end this conversation? You can start a new one at any time.",
+    ),
+    "supportEndConfirmationTitle": MessageLookupByLibrary.simpleMessage(
+      "End Conversation",
+    ),
+    "supportEndConversation": MessageLookupByLibrary.simpleMessage(
+      "End Conversation",
+    ),
+    "supportErrorTitle": MessageLookupByLibrary.simpleMessage(
+      "An error occurred",
+    ),
+    "supportFooterClosed": MessageLookupByLibrary.simpleMessage(
+      "Conversation ended. Press menu to create a new one.",
+    ),
+    "supportNewConversation": MessageLookupByLibrary.simpleMessage(
+      "Start new conversation",
+    ),
+    "supportNewConversationStarted": MessageLookupByLibrary.simpleMessage(
+      "Started new conversation",
+    ),
+    "supportRetry": MessageLookupByLibrary.simpleMessage("Retry"),
+    "supportStatusActive": MessageLookupByLibrary.simpleMessage("Active"),
+    "supportVideoSizeError": MessageLookupByLibrary.simpleMessage(
+      "Video must not exceed 10MB",
+    ),
+    "supportWelcome": MessageLookupByLibrary.simpleMessage("Welcome!"),
+    "supportWelcomeDesc": MessageLookupByLibrary.simpleMessage(
+      "Send a message to start a conversation with the support team",
+    ),
     "tax": MessageLookupByLibrary.simpleMessage("Tax"),
     "termsAnd": MessageLookupByLibrary.simpleMessage(" and "),
     "termsDot": MessageLookupByLibrary.simpleMessage("."),
