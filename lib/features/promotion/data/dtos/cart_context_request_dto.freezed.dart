@@ -118,10 +118,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _CartContextRequestDto():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -180,10 +177,7 @@ return $default(_that.shopId,_that.userId,_that.subTotal,_that.shippingFee);case
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int shopId,  int userId,  double subTotal,  double shippingFee)  $default,) {final _that = this;
 switch (_that) {
 case _CartContextRequestDto():
-return $default(_that.shopId,_that.userId,_that.subTotal,_that.shippingFee);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.shopId,_that.userId,_that.subTotal,_that.shippingFee);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

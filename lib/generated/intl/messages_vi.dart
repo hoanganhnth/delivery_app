@@ -47,6 +47,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "addToCart": MessageLookupByLibrary.simpleMessage("Thêm vào Giỏ"),
     "addedToCartLivestream": m0,
     "all": MessageLookupByLibrary.simpleMessage("Tất cả"),
+    "anonymous": MessageLookupByLibrary.simpleMessage("Ẩn danh"),
     "appTitle": MessageLookupByLibrary.simpleMessage("Ứng dụng Giao Hàng"),
     "browseRestaurants": MessageLookupByLibrary.simpleMessage("Duyệt Nhà Hàng"),
     "cancel": MessageLookupByLibrary.simpleMessage("Hủy"),
@@ -157,6 +158,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "items": m2,
     "itemsFrom": m3,
     "japanese": MessageLookupByLibrary.simpleMessage("Món Nhật"),
+    "livestreamEnded": MessageLookupByLibrary.simpleMessage(
+      "Livestream đã kết thúc",
+    ),
+    "livestreamOngoing": MessageLookupByLibrary.simpleMessage(
+      "Livestream đang diễn ra",
+    ),
     "loading": MessageLookupByLibrary.simpleMessage("Đang tải..."),
     "login": MessageLookupByLibrary.simpleMessage("Đăng nhập"),
     "logout": MessageLookupByLibrary.simpleMessage("Đăng xuất"),
@@ -201,6 +208,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Phương thức thanh toán",
     ),
     "pending": MessageLookupByLibrary.simpleMessage("Chờ xác nhận"),
+    "pinnedUppercase": MessageLookupByLibrary.simpleMessage("ĐANG GHIM"),
     "pizza": MessageLookupByLibrary.simpleMessage("Pizza"),
     "pleaseSelectAddress": MessageLookupByLibrary.simpleMessage(
       "Vui lòng chọn địa chỉ giao hàng",

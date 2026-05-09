@@ -47,6 +47,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "addToCart": MessageLookupByLibrary.simpleMessage("Add to Cart"),
     "addedToCartLivestream": m0,
     "all": MessageLookupByLibrary.simpleMessage("All"),
+    "anonymous": MessageLookupByLibrary.simpleMessage("Anonymous"),
     "appTitle": MessageLookupByLibrary.simpleMessage("Delivery App"),
     "browseRestaurants": MessageLookupByLibrary.simpleMessage(
       "Browse Restaurants",
@@ -163,6 +164,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "items": m2,
     "itemsFrom": m3,
     "japanese": MessageLookupByLibrary.simpleMessage("Japanese"),
+    "livestreamEnded": MessageLookupByLibrary.simpleMessage(
+      "Livestream has ended",
+    ),
+    "livestreamOngoing": MessageLookupByLibrary.simpleMessage(
+      "Ongoing Livestream",
+    ),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "login": MessageLookupByLibrary.simpleMessage("Login"),
     "logout": MessageLookupByLibrary.simpleMessage("Logout"),
@@ -203,6 +210,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "paymentInfo": MessageLookupByLibrary.simpleMessage("Payment Information"),
     "paymentMethodText": MessageLookupByLibrary.simpleMessage("Payment Method"),
     "pending": MessageLookupByLibrary.simpleMessage("Pending"),
+    "pinnedUppercase": MessageLookupByLibrary.simpleMessage("PINNED"),
     "pizza": MessageLookupByLibrary.simpleMessage("Pizza"),
     "pleaseSelectAddress": MessageLookupByLibrary.simpleMessage(
       "Please select a delivery address",

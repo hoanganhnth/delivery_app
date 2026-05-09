@@ -117,10 +117,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _ShipperRatingRequestDto():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -179,10 +176,7 @@ return $default(_that.orderId,_that.rating,_that.comment);case _:
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int orderId,  int rating,  String? comment)  $default,) {final _that = this;
 switch (_that) {
 case _ShipperRatingRequestDto():
-return $default(_that.orderId,_that.rating,_that.comment);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.orderId,_that.rating,_that.comment);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

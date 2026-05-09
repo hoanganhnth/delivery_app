@@ -129,10 +129,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _LivestreamEntity():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -191,10 +188,7 @@ return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.s
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String streamerId,  String streamerName,  String? streamerAvatar,  String channelName,  String rtcToken,  int uid,  String description,  int viewerCount,  int likeCount,  String status,  String? thumbnailUrl,  String? coverImageUrl,  DateTime startTime,  DateTime? endTime,  List<LivestreamProductEntity>? products)  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamEntity():
-return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startTime,_that.endTime,_that.products);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.id,_that.title,_that.streamerId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startTime,_that.endTime,_that.products);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -435,10 +429,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _LivestreamProductEntity():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -497,10 +488,7 @@ return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num id,  String name,  double price,  String image,  num restaurantId,  String restaurantName,  double? discountPrice,  String? description,  int? stockQuantity)  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamProductEntity():
-return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_that.restaurantName,_that.discountPrice,_that.description,_that.stockQuantity);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_that.restaurantName,_that.discountPrice,_that.description,_that.stockQuantity);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

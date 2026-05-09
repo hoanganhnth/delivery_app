@@ -1188,6 +1188,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Ongoing Livestream`
+  String get livestreamOngoing {
+    return Intl.message(
+      'Ongoing Livestream',
+      name: 'livestreamOngoing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Livestream has ended`
+  String get livestreamEnded {
+    return Intl.message(
+      'Livestream has ended',
+      name: 'livestreamEnded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Anonymous`
+  String get anonymous {
+    return Intl.message('Anonymous', name: 'anonymous', desc: '', args: []);
+  }
+
+  /// `PINNED`
+  String get pinnedUppercase {
+    return Intl.message('PINNED', name: 'pinnedUppercase', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

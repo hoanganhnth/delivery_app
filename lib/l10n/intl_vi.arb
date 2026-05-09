@@ -148,5 +148,9 @@
     "mapWillShowWhenDriverAccepts": "Bản đồ sẽ hiển thị khi tài xế nhận đơn",
     "noTrackingInfo": "Chưa có thông tin theo dõi",
     "shipperNotStarted": "Shipper chưa bắt đầu giao hàng cho đơn này",
-    "yourCourier": "TÀI XẾ CỦA BẠN"
+    "yourCourier": "TÀI XẾ CỦA BẠN",
+    "livestreamOngoing": "Livestream đang diễn ra",
+    "livestreamEnded": "Livestream đã kết thúc",
+    "anonymous": "Ẩn danh",
+    "pinnedUppercase": "ĐANG GHIM"
 }

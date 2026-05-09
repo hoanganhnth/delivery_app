@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../cart/domain/entities/cart_item_entity.dart';
 import '../../../cart/presentation/providers/providers.dart';
+import '../../../../generated/l10n.dart';
 import '../../domain/entities/livestream_entity.dart';
 
 /// Floating pinned product overlay that appears above the livestream video
@@ -76,7 +77,7 @@ class _LivestreamPinnedProductOverlayState
       setState(() => _addedToCart = true);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Đã thêm ${product.name} vào giỏ hàng'),
+          content: Text(S.of(context).addedToCartLivestream(product.name)),
           duration: const Duration(seconds: 2),
           backgroundColor: Colors.green,
           behavior: SnackBarBehavior.floating,
@@ -169,7 +170,7 @@ class _LivestreamPinnedProductOverlayState
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
-                        'ĐANG GHIM',
+                        S.of(context).pinnedUppercase,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 9.sp,

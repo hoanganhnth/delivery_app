@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/utils/logger/app_logger.dart';
+import '../../../../generated/l10n.dart';
 import '../../../profile/presentation/providers/profile_notifier.dart';
 import '../../domain/entities/livestream_comment_entity.dart';
 import '../providers/providers.dart';
@@ -45,7 +46,7 @@ class LivestreamDetailScreen extends ConsumerWidget {
             remoteUid: remoteUid,
           ),
         LivestreamViewerDisconnected() => _LivestreamErrorView(
-          message: 'Livestream đã kết thúc',
+          message: S.of(context).livestreamEnded,
           onRetry: null,
           onBack: () => Navigator.pop(context),
         ),
@@ -91,7 +92,7 @@ class _LivestreamErrorView extends StatelessWidget {
           ),
           if (onRetry != null) ...[
             SizedBox(height: 16.h),
-            ElevatedButton(onPressed: onRetry, child: const Text('Thử lại')),
+            ElevatedButton(onPressed: onRetry, child: Text(S.of(context).retry)),
           ],
           const Spacer(),
         ],
@@ -150,7 +151,7 @@ class _LivestreamWatchingViewState
         id: const Uuid().v4(),
         livestreamId: widget.livestreamId,
         userId: user?.id?.toString() ?? 'anonymous',
-        userName: user?.displayName ?? 'Ẩn danh',
+        userName: user?.displayName ?? S.of(context).anonymous,
         userAvatar: user?.avatarUrl,
         message: message,
         timestamp: DateTime.now(),

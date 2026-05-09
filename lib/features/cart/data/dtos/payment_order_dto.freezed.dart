@@ -121,10 +121,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _CreatePaymentDto():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -183,10 +180,7 @@ return $default(_that.entityId,_that.entityType,_that.amount,_that.provider,_tha
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int entityId,  String entityType,  double amount,  String provider,  String purpose,  String? returnUrl,  String? ipAddress)  $default,) {final _that = this;
 switch (_that) {
 case _CreatePaymentDto():
-return $default(_that.entityId,_that.entityType,_that.amount,_that.provider,_that.purpose,_that.returnUrl,_that.ipAddress);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.entityId,_that.entityType,_that.amount,_that.provider,_that.purpose,_that.returnUrl,_that.ipAddress);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -409,10 +403,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _PaymentOrderDto():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -471,10 +462,7 @@ return $default(_that.id,_that.paymentRef,_that.entityId,_that.entityType,_that.
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String paymentRef,  int entityId,  String entityType,  String provider,  double amount,  String currency,  String purpose,  String status,  String? paymentUrl,  String? providerTransactionId,  int? settlementTransactionId,  String? createdAt,  String? expiredAt)  $default,) {final _that = this;
 switch (_that) {
 case _PaymentOrderDto():
-return $default(_that.id,_that.paymentRef,_that.entityId,_that.entityType,_that.provider,_that.amount,_that.currency,_that.purpose,_that.status,_that.paymentUrl,_that.providerTransactionId,_that.settlementTransactionId,_that.createdAt,_that.expiredAt);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.id,_that.paymentRef,_that.entityId,_that.entityType,_that.provider,_that.amount,_that.currency,_that.purpose,_that.status,_that.paymentUrl,_that.providerTransactionId,_that.settlementTransactionId,_that.createdAt,_that.expiredAt);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

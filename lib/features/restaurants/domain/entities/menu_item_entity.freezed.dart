@@ -121,10 +121,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _MenuItemEntity():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -183,10 +180,7 @@ return $default(_that.id,_that.restaurantId,_that.name,_that.description,_that.p
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num? id,  num? restaurantId,  String name,  String description,  double price,  String? image, @MenuItemStatusConverter()  MenuItemStatus status)  $default,) {final _that = this;
 switch (_that) {
 case _MenuItemEntity():
-return $default(_that.id,_that.restaurantId,_that.name,_that.description,_that.price,_that.image,_that.status);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.id,_that.restaurantId,_that.name,_that.description,_that.price,_that.image,_that.status);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

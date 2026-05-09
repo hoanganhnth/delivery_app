@@ -147,10 +147,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _DeliveryTrackingState():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -209,10 +206,7 @@ return $default(_that.isConnected,_that.isTracking,_that.currentTracking,_that.s
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isConnected,  bool isTracking,  DeliveryTrackingEntity? currentTracking,  ShipperEntity? shipper,  int? currentShipperId,  bool isLoadingShipper,  List<List<double>>? polylinePoints,  Failure? failure,  bool isLoading)  $default,) {final _that = this;
 switch (_that) {
 case _DeliveryTrackingState():
-return $default(_that.isConnected,_that.isTracking,_that.currentTracking,_that.shipper,_that.currentShipperId,_that.isLoadingShipper,_that.polylinePoints,_that.failure,_that.isLoading);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.isConnected,_that.isTracking,_that.currentTracking,_that.shipper,_that.currentShipperId,_that.isLoadingShipper,_that.polylinePoints,_that.failure,_that.isLoading);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

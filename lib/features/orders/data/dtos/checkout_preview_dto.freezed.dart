@@ -116,10 +116,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _CheckoutPreviewItemRequest():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -178,10 +175,7 @@ return $default(_that.menuItemId,_that.quantity);case _:
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int menuItemId,  int quantity)  $default,) {final _that = this;
 switch (_that) {
 case _CheckoutPreviewItemRequest():
-return $default(_that.menuItemId,_that.quantity);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.menuItemId,_that.quantity);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -385,10 +379,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _CheckoutPreviewRequest():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -447,10 +438,7 @@ return $default(_that.restaurantId,_that.deliveryLat,_that.deliveryLng,_that.cou
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int restaurantId,  double? deliveryLat,  double? deliveryLng,  String? couponCode,  List<CheckoutPreviewItemRequest> items)  $default,) {final _that = this;
 switch (_that) {
 case _CheckoutPreviewRequest():
-return $default(_that.restaurantId,_that.deliveryLat,_that.deliveryLng,_that.couponCode,_that.items);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.restaurantId,_that.deliveryLat,_that.deliveryLng,_that.couponCode,_that.items);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -667,10 +655,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _PreviewItemDetail():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -729,10 +714,7 @@ return $default(_that.menuItemId,_that.menuItemName,_that.imageUrl,_that.unitPri
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? menuItemId,  String? menuItemName,  String? imageUrl,  double? unitPrice,  int? quantity,  double? lineTotal)  $default,) {final _that = this;
 switch (_that) {
 case _PreviewItemDetail():
-return $default(_that.menuItemId,_that.menuItemName,_that.imageUrl,_that.unitPrice,_that.quantity,_that.lineTotal);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.menuItemId,_that.menuItemName,_that.imageUrl,_that.unitPrice,_that.quantity,_that.lineTotal);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -943,10 +925,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _PriceChangeInfo():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -1005,10 +984,7 @@ return $default(_that.menuItemId,_that.menuItemName,_that.oldPrice,_that.newPric
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? menuItemId,  String? menuItemName,  double? oldPrice,  double? newPrice)  $default,) {final _that = this;
 switch (_that) {
 case _PriceChangeInfo():
-return $default(_that.menuItemId,_that.menuItemName,_that.oldPrice,_that.newPrice);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.menuItemId,_that.menuItemName,_that.oldPrice,_that.newPrice);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -1222,10 +1198,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _CheckoutPreviewResponse():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -1284,10 +1257,7 @@ return $default(_that.restaurantId,_that.restaurantName,_that.items,_that.subtot
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? restaurantId,  String? restaurantName,  List<PreviewItemDetail>? items,  double? subtotal,  double? shippingFee,  double? discountAmount,  double? totalPrice,  String? couponCode,  String? couponMessage,  List<PriceChangeInfo>? priceChanges,  List<int>? unavailableItemIds)  $default,) {final _that = this;
 switch (_that) {
 case _CheckoutPreviewResponse():
-return $default(_that.restaurantId,_that.restaurantName,_that.items,_that.subtotal,_that.shippingFee,_that.discountAmount,_that.totalPrice,_that.couponCode,_that.couponMessage,_that.priceChanges,_that.unavailableItemIds);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.restaurantId,_that.restaurantName,_that.items,_that.subtotal,_that.shippingFee,_that.discountAmount,_that.totalPrice,_that.couponCode,_that.couponMessage,_that.priceChanges,_that.unavailableItemIds);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

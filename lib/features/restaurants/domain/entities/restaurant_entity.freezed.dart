@@ -129,10 +129,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _RestaurantEntity():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -191,10 +188,7 @@ return $default(_that.id,_that.name,_that.description,_that.address,_that.phone,
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num id,  String name,  String? description,  String address,  String? phone,  String? image,  double? rating,  int? reviewCount,  double? deliveryFee,  int? deliveryTime,  bool? isOpen,  String? closingHour,  String? openingHour,  String? category,  double? addressLat,  double? addressLng,  double? distance)  $default,) {final _that = this;
 switch (_that) {
 case _RestaurantEntity():
-return $default(_that.id,_that.name,_that.description,_that.address,_that.phone,_that.image,_that.rating,_that.reviewCount,_that.deliveryFee,_that.deliveryTime,_that.isOpen,_that.closingHour,_that.openingHour,_that.category,_that.addressLat,_that.addressLng,_that.distance);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.id,_that.name,_that.description,_that.address,_that.phone,_that.image,_that.rating,_that.reviewCount,_that.deliveryFee,_that.deliveryTime,_that.isOpen,_that.closingHour,_that.openingHour,_that.category,_that.addressLat,_that.addressLng,_that.distance);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

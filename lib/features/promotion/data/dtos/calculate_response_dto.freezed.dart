@@ -120,10 +120,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _CalculateResponseDto():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -182,10 +179,7 @@ return $default(_that.availableVouchers,_that.unavailableVouchers,_that.finalSub
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<VoucherInfoDto> availableVouchers,  List<UnavailableVoucherInfoDto> unavailableVouchers,  double finalSubTotal,  double finalShippingFee,  double totalDiscount,  double totalAmount)  $default,) {final _that = this;
 switch (_that) {
 case _CalculateResponseDto():
-return $default(_that.availableVouchers,_that.unavailableVouchers,_that.finalSubTotal,_that.finalShippingFee,_that.totalDiscount,_that.totalAmount);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.availableVouchers,_that.unavailableVouchers,_that.finalSubTotal,_that.finalShippingFee,_that.totalDiscount,_that.totalAmount);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -410,10 +404,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _VoucherInfoDto():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -472,10 +463,7 @@ return $default(_that.id,_that.code,_that.name,_that.rewardType,_that.discountVa
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String code,  String name,  String rewardType,  double discountValue,  int? voucherGroupId)  $default,) {final _that = this;
 switch (_that) {
 case _VoucherInfoDto():
-return $default(_that.id,_that.code,_that.name,_that.rewardType,_that.discountValue,_that.voucherGroupId);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.id,_that.code,_that.name,_that.rewardType,_that.discountValue,_that.voucherGroupId);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -686,10 +674,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _UnavailableVoucherInfoDto():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -748,10 +733,7 @@ return $default(_that.id,_that.code,_that.name,_that.reason);case _:
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String code,  String name,  String reason)  $default,) {final _that = this;
 switch (_that) {
 case _UnavailableVoucherInfoDto():
-return $default(_that.id,_that.code,_that.name,_that.reason);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.id,_that.code,_that.name,_that.reason);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

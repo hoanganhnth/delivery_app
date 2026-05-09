@@ -120,10 +120,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _GetRestaurantsRequestDto():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -182,10 +179,7 @@ return $default(_that.latitude,_that.longitude,_that.category,_that.searchQuery,
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? latitude,  double? longitude,  String? category,  String? searchQuery,  int? page,  int? limit)  $default,) {final _that = this;
 switch (_that) {
 case _GetRestaurantsRequestDto():
-return $default(_that.latitude,_that.longitude,_that.category,_that.searchQuery,_that.page,_that.limit);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.latitude,_that.longitude,_that.category,_that.searchQuery,_that.page,_that.limit);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

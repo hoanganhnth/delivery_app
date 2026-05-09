@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../generated/l10n.dart';
 import '../providers/providers.dart';
 import '../widgets/livestream_card_horizontal.dart';
 
@@ -45,7 +46,7 @@ class _LivestreamHomeSectionState extends ConsumerState<LivestreamHomeSection> {
                   Icon(Icons.live_tv, color: Colors.red, size: 24),
                   SizedBox(width: 8.w),
                   Text(
-                    'Livestream đang diễn ra',
+                    S.of(context).livestreamOngoing,
                     style: TextStyle(
                       fontSize: 20.sp,
                       fontWeight: FontWeight.bold,
@@ -59,7 +60,7 @@ class _LivestreamHomeSectionState extends ConsumerState<LivestreamHomeSection> {
                   context.pushNamed('livestreams');
                 },
                 child: Text(
-                  'Xem tất cả',
+                  S.of(context).viewAll,
                   style: TextStyle(
                     color: Colors.orange,
                     fontWeight: FontWeight.w500,

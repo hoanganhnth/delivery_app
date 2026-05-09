@@ -129,10 +129,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _SubscriptionState():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -191,10 +188,7 @@ return $default(_that.isLoading,_that.availableTiers,_that.activeSubscription,_t
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  List<SubscriptionEntity> availableTiers,  SubscriptionEntity? activeSubscription,  PurchaseEntity? currentPurchase,  Failure? failure,  String? successMessage)  $default,) {final _that = this;
 switch (_that) {
 case _SubscriptionState():
-return $default(_that.isLoading,_that.availableTiers,_that.activeSubscription,_that.currentPurchase,_that.failure,_that.successMessage);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.isLoading,_that.availableTiers,_that.activeSubscription,_that.currentPurchase,_that.failure,_that.successMessage);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

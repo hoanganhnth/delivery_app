@@ -125,10 +125,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _ConsumableDto():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -187,10 +184,7 @@ return $default(_that.productId,_that.title,_that.description,_that.price,_that.
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String productId,  String title,  String description,  String price,  String currencyCode,  double rawPrice,  String consumableType,  double value,  String? code,  DateTime? expiryDate,  bool isAvailable)  $default,) {final _that = this;
 switch (_that) {
 case _ConsumableDto():
-return $default(_that.productId,_that.title,_that.description,_that.price,_that.currencyCode,_that.rawPrice,_that.consumableType,_that.value,_that.code,_that.expiryDate,_that.isAvailable);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.productId,_that.title,_that.description,_that.price,_that.currencyCode,_that.rawPrice,_that.consumableType,_that.value,_that.code,_that.expiryDate,_that.isAvailable);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -410,10 +404,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _UserCreditsDto():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -472,10 +463,7 @@ return $default(_that.balance,_that.lastUpdated,_that.recentTransactions);case _
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int balance,  DateTime lastUpdated,  List<CreditTransactionDto> recentTransactions)  $default,) {final _that = this;
 switch (_that) {
 case _UserCreditsDto():
-return $default(_that.balance,_that.lastUpdated,_that.recentTransactions);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.balance,_that.lastUpdated,_that.recentTransactions);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -689,10 +677,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _CreditTransactionDto():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -751,10 +736,7 @@ return $default(_that.id,_that.amount,_that.type,_that.timestamp,_that.descripti
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  int amount,  String type,  DateTime timestamp,  String? description,  String? orderId)  $default,) {final _that = this;
 switch (_that) {
 case _CreditTransactionDto():
-return $default(_that.id,_that.amount,_that.type,_that.timestamp,_that.description,_that.orderId);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.id,_that.amount,_that.type,_that.timestamp,_that.description,_that.orderId);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

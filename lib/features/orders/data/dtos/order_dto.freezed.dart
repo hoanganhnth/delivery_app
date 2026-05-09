@@ -135,10 +135,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _OrderDto():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -197,10 +194,7 @@ return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_th
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String status,  String customerName,  String customerPhone,  String deliveryAddress,  String paymentMethod, @JsonKey(name: 'totalPrice')  double? totalAmount,  String? notes,  List<OrderItemDto>? items,  DateTime? createdAt,  DateTime? updatedAt,  DateTime? estimatedDeliveryTime,  String? cancelReason,  int? restaurantId,  String? restaurantName,  String? restaurantAddress,  String? restaurantPhone,  double? restaurantLat,  double? restaurantLng,  double? pickupLat,  double? pickupLng)  $default,) {final _that = this;
 switch (_that) {
 case _OrderDto():
-return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_that.deliveryAddress,_that.paymentMethod,_that.totalAmount,_that.notes,_that.items,_that.createdAt,_that.updatedAt,_that.estimatedDeliveryTime,_that.cancelReason,_that.restaurantId,_that.restaurantName,_that.restaurantAddress,_that.restaurantPhone,_that.restaurantLat,_that.restaurantLng,_that.pickupLat,_that.pickupLng);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.id,_that.status,_that.customerName,_that.customerPhone,_that.deliveryAddress,_that.paymentMethod,_that.totalAmount,_that.notes,_that.items,_that.createdAt,_that.updatedAt,_that.estimatedDeliveryTime,_that.cancelReason,_that.restaurantId,_that.restaurantName,_that.restaurantAddress,_that.restaurantPhone,_that.restaurantLat,_that.restaurantLng,_that.pickupLat,_that.pickupLng);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

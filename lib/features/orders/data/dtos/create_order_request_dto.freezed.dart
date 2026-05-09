@@ -118,10 +118,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _OrderItemRequest():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -180,10 +177,7 @@ return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity);
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int menuItemId,  String menuItemName,  double price,  int quantity)  $default,) {final _that = this;
 switch (_that) {
 case _OrderItemRequest():
-return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -402,10 +396,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _CreateOrderRequestDto():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -464,10 +455,7 @@ return $default(_that.restaurantId,_that.restaurantName,_that.restaurantAddress,
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int restaurantId,  String restaurantName,  String restaurantAddress,  String restaurantPhone,  String deliveryAddress,  double? deliveryLat,  double? deliveryLng,  String customerName,  String customerPhone,  String paymentMethod,  String? notes,  List<int>? voucherIds,  double? pickupLat,  double? pickupLng,  List<OrderItemRequest> items)  $default,) {final _that = this;
 switch (_that) {
 case _CreateOrderRequestDto():
-return $default(_that.restaurantId,_that.restaurantName,_that.restaurantAddress,_that.restaurantPhone,_that.deliveryAddress,_that.deliveryLat,_that.deliveryLng,_that.customerName,_that.customerPhone,_that.paymentMethod,_that.notes,_that.voucherIds,_that.pickupLat,_that.pickupLng,_that.items);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.restaurantId,_that.restaurantName,_that.restaurantAddress,_that.restaurantPhone,_that.deliveryAddress,_that.deliveryLat,_that.deliveryLng,_that.customerName,_that.customerPhone,_that.paymentMethod,_that.notes,_that.voucherIds,_that.pickupLat,_that.pickupLng,_that.items);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

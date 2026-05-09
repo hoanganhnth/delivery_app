@@ -129,10 +129,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _AuthDataDto():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -191,10 +188,7 @@ return $default(_that.accessToken,_that.refreshToken,_that.user);case _:
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String accessToken,  String refreshToken,  UserDto? user)  $default,) {final _that = this;
 switch (_that) {
 case _AuthDataDto():
-return $default(_that.accessToken,_that.refreshToken,_that.user);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.accessToken,_that.refreshToken,_that.user);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -411,10 +405,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _UserDto():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -473,10 +464,7 @@ return $default(_that.id,_that.email,_that.name,_that.createdAt);case _:
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String email,  String? name,  DateTime? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _UserDto():
-return $default(_that.id,_that.email,_that.name,_that.createdAt);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.id,_that.email,_that.name,_that.createdAt);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

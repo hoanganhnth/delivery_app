@@ -191,5 +191,9 @@
     "mapWillShowWhenDriverAccepts": "Map will appear when a driver accepts the order",
     "noTrackingInfo": "No Tracking Information",
     "shipperNotStarted": "The shipper has not started delivering this order",
-    "yourCourier": "YOUR COURIER"
+    "yourCourier": "YOUR COURIER",
+    "livestreamOngoing": "Ongoing Livestream",
+    "livestreamEnded": "Livestream has ended",
+    "anonymous": "Anonymous",
+    "pinnedUppercase": "PINNED"
 }

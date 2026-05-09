@@ -114,10 +114,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _CartEntity():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -176,10 +173,7 @@ return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantNam
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<CartItemEntity> items,  num? currentRestaurantId,  String? currentRestaurantName)  $default,) {final _that = this;
 switch (_that) {
 case _CartEntity():
-return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantName);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantName);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
