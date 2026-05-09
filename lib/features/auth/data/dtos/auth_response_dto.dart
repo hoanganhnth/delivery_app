@@ -6,7 +6,7 @@ part 'auth_response_dto.freezed.dart';
 part 'auth_response_dto.g.dart';
 
 @freezed
-abstract class AuthDataDto with _$AuthDataDto {
+sealed class AuthDataDto with _$AuthDataDto {
   const factory AuthDataDto({
     required String accessToken,
     required String refreshToken,
@@ -27,7 +27,7 @@ extension AuthDataDtoExtension on AuthDataDto {
 typedef AuthResponseDto = BaseResponseDto<AuthDataDto>;
 
 @freezed
-abstract class UserDto with _$UserDto {
+sealed class UserDto with _$UserDto {
   const factory UserDto({
     required int id,
     required String email,

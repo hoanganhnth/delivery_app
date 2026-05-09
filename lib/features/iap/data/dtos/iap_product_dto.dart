@@ -6,7 +6,7 @@ part 'iap_product_dto.freezed.dart';
 part 'iap_product_dto.g.dart';
 
 @freezed
-abstract class IapProductDto with _$IapProductDto {
+sealed class IapProductDto with _$IapProductDto {
   const IapProductDto._();
 
   const factory IapProductDto({

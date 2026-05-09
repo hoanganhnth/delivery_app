@@ -4,7 +4,7 @@ part 'restaurant_rating_request_dto.freezed.dart';
 part 'restaurant_rating_request_dto.g.dart';
 
 @freezed
-abstract class RestaurantRatingRequestDto with _$RestaurantRatingRequestDto {
+sealed class RestaurantRatingRequestDto with _$RestaurantRatingRequestDto {
   const factory RestaurantRatingRequestDto({
     required int orderId,
     required int rating,

@@ -5,7 +5,7 @@ part 'user_profile_dto.freezed.dart';
 part 'user_profile_dto.g.dart';
 
 @freezed
-abstract class UserProfileDto with _$UserProfileDto {
+sealed class UserProfileDto with _$UserProfileDto {
   const factory UserProfileDto({
     int? id,
     required int authId,

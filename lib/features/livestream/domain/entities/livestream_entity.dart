@@ -4,7 +4,7 @@ part 'livestream_entity.freezed.dart';
 
 /// Livestream entity representing a live streaming session
 @freezed
-abstract class LivestreamEntity with _$LivestreamEntity {
+sealed class LivestreamEntity with _$LivestreamEntity {
   const factory LivestreamEntity({
     required String id,
     required String title,
@@ -34,7 +34,7 @@ abstract class LivestreamEntity with _$LivestreamEntity {
 
 /// Livestream product entity
 @freezed
-abstract class LivestreamProductEntity with _$LivestreamProductEntity {
+sealed class LivestreamProductEntity with _$LivestreamProductEntity {
   const factory LivestreamProductEntity({
     required num id,
     required String name,

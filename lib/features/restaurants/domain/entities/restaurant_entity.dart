@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'restaurant_entity.freezed.dart';
 
 @freezed
-abstract class RestaurantEntity with _$RestaurantEntity {
+sealed class RestaurantEntity with _$RestaurantEntity {
   const factory RestaurantEntity({
     required num id,
     required String name,

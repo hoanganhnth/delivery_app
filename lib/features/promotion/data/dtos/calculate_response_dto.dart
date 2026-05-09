@@ -4,7 +4,7 @@ part 'calculate_response_dto.freezed.dart';
 part 'calculate_response_dto.g.dart';
 
 @freezed
-abstract class CalculateResponseDto with _$CalculateResponseDto {
+sealed class CalculateResponseDto with _$CalculateResponseDto {
   const factory CalculateResponseDto({
     @Default([]) List<VoucherInfoDto> availableVouchers,
     @Default([]) List<UnavailableVoucherInfoDto> unavailableVouchers,
@@ -19,7 +19,7 @@ abstract class CalculateResponseDto with _$CalculateResponseDto {
 }
 
 @freezed
-abstract class VoucherInfoDto with _$VoucherInfoDto {
+sealed class VoucherInfoDto with _$VoucherInfoDto {
   const factory VoucherInfoDto({
     required int id,
     required String code,
@@ -34,7 +34,7 @@ abstract class VoucherInfoDto with _$VoucherInfoDto {
 }
 
 @freezed
-abstract class UnavailableVoucherInfoDto with _$UnavailableVoucherInfoDto {
+sealed class UnavailableVoucherInfoDto with _$UnavailableVoucherInfoDto {
   const factory UnavailableVoucherInfoDto({
     required int id,
     required String code,

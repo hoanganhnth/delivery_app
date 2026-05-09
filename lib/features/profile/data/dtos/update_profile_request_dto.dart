@@ -5,7 +5,7 @@ part 'update_profile_request_dto.freezed.dart';
 part 'update_profile_request_dto.g.dart';
 
 @freezed
-abstract class UpdateProfileRequestDto with _$UpdateProfileRequestDto {
+sealed class UpdateProfileRequestDto with _$UpdateProfileRequestDto {
   const factory UpdateProfileRequestDto({
  String? fullName,
     String? phone,

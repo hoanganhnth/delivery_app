@@ -7,7 +7,7 @@ part 'purchase_dto.freezed.dart';
 part 'purchase_dto.g.dart';
 
 @freezed
-abstract class PurchaseDto with _$PurchaseDto {
+sealed class PurchaseDto with _$PurchaseDto {
   const PurchaseDto._();
 
   const factory PurchaseDto({

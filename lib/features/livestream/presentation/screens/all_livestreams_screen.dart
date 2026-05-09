@@ -69,14 +69,12 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
               .read(livestreamListProvider.notifier)
               .loadLivestreams(refresh: true);
         },
-        child: SingleChildScrollView(
+        child: CustomScrollView(
           controller: _scrollController,
-          // physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Editorial Header
-              Padding(
+          slivers: [
+            // Editorial Header
+            SliverToBoxAdapter(
+              child: Padding(
                 padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
                 child: EditorialHeader(
                   subtitle: 'LIVE NOW',
@@ -85,9 +83,11 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
                   description: 'Watch chefs cook in real-time',
                 ),
               ),
+            ),
 
-              // Category Pills - Horizontal scroll
-              SizedBox(
+            // Category Pills - Horizontal scroll
+            SliverToBoxAdapter(
+              child: SizedBox(
                 height: 100.h,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
@@ -111,16 +111,20 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
                   },
                 ),
               ),
+            ),
 
-              SizedBox(height: 20.h),
+            SliverToBoxAdapter(
+              child: SizedBox(height: 20.h),
+            ),
 
-              // Content
-              _buildContent(context, theme, livestreamState),
+            // Content
+            _buildContent(context, theme, livestreamState),
 
-              // Bottom padding for navigation
-              SizedBox(height: 140.h),
-            ],
-          ),
+            // Bottom padding for navigation
+            SliverToBoxAdapter(
+              child: SizedBox(height: 140.h),
+            ),
+          ],
         ),
       ),
     );
@@ -204,37 +208,41 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
   ) {
     // Loading state
     if (livestreamState.isLoading && livestreamState.livestreams.isEmpty) {
-      return SizedBox(
-        height: 300.h,
-        child: Center(
-          child: CircularProgressIndicator(color: theme.colorScheme.primary),
+      return SliverToBoxAdapter(
+        child: SizedBox(
+          height: 300.h,
+          child: Center(
+            child: CircularProgressIndicator(color: theme.colorScheme.primary),
+          ),
         ),
       );
     }
 
     // Error state
     if (livestreamState.hasError && livestreamState.livestreams.isEmpty) {
-      return SizedBox(
-        height: 300.h,
-        child: _buildErrorState(context, theme, livestreamState.errorMessage),
+      return SliverToBoxAdapter(
+        child: SizedBox(
+          height: 300.h,
+          child: _buildErrorState(context, theme, livestreamState.errorMessage),
+        ),
       );
     }
 
     // Empty state
     if (livestreamState.livestreams.isEmpty) {
-      return SizedBox(height: 300.h, child: _buildEmptyState(theme));
+      return SliverToBoxAdapter(
+        child: SizedBox(height: 300.h, child: _buildEmptyState(theme)),
+      );
     }
 
     // Livestream Grid - Staggered layout
-    return Padding(
+    return SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: MasonryGridView.count(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
+      sliver: SliverMasonryGrid.count(
         crossAxisCount: 2,
         mainAxisSpacing: 16.h,
         crossAxisSpacing: 16.w,
-        itemCount:
+        childCount:
             livestreamState.livestreams.length +
             (livestreamState.hasMore ? 1 : 0),
         itemBuilder: (context, index) {

@@ -6,7 +6,7 @@ part 'refresh_token_response_dto.freezed.dart';
 part 'refresh_token_response_dto.g.dart';
 
 @freezed
-abstract class RefreshTokenDataDto with _$RefreshTokenDataDto {
+sealed class RefreshTokenDataDto with _$RefreshTokenDataDto {
   const factory RefreshTokenDataDto({
     required String accessToken,
     String? refreshToken,

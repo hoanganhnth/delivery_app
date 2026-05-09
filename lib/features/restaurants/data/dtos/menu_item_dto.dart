@@ -5,7 +5,7 @@ part 'menu_item_dto.freezed.dart';
 part 'menu_item_dto.g.dart';
 
 @freezed
-abstract class MenuItemDto with _$MenuItemDto {
+sealed class MenuItemDto with _$MenuItemDto {
   const factory MenuItemDto({
     num? id,
     num? restaurantId,

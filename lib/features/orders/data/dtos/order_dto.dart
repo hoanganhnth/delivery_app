@@ -6,7 +6,7 @@ part 'order_dto.freezed.dart';
 part 'order_dto.g.dart';
 
 @freezed
-abstract class OrderDto with _$OrderDto {
+sealed class OrderDto with _$OrderDto {
   const factory OrderDto({
     int? id,
     required String status,

@@ -6,7 +6,7 @@ part 'checkout_preview_dto.g.dart';
 // ─── Request ───
 
 @freezed
-abstract class CheckoutPreviewItemRequest with _$CheckoutPreviewItemRequest {
+sealed class CheckoutPreviewItemRequest with _$CheckoutPreviewItemRequest {
   const factory CheckoutPreviewItemRequest({
     required int menuItemId,
     required int quantity,
@@ -17,7 +17,7 @@ abstract class CheckoutPreviewItemRequest with _$CheckoutPreviewItemRequest {
 }
 
 @freezed
-abstract class CheckoutPreviewRequest with _$CheckoutPreviewRequest {
+sealed class CheckoutPreviewRequest with _$CheckoutPreviewRequest {
   const factory CheckoutPreviewRequest({
     required int restaurantId,
     double? deliveryLat,
@@ -33,7 +33,7 @@ abstract class CheckoutPreviewRequest with _$CheckoutPreviewRequest {
 // ─── Response ───
 
 @freezed
-abstract class PreviewItemDetail with _$PreviewItemDetail {
+sealed class PreviewItemDetail with _$PreviewItemDetail {
   const factory PreviewItemDetail({
     int? menuItemId,
     String? menuItemName,
@@ -48,7 +48,7 @@ abstract class PreviewItemDetail with _$PreviewItemDetail {
 }
 
 @freezed
-abstract class PriceChangeInfo with _$PriceChangeInfo {
+sealed class PriceChangeInfo with _$PriceChangeInfo {
   const factory PriceChangeInfo({
     int? menuItemId,
     String? menuItemName,
@@ -61,7 +61,7 @@ abstract class PriceChangeInfo with _$PriceChangeInfo {
 }
 
 @freezed
-abstract class CheckoutPreviewResponse with _$CheckoutPreviewResponse {
+sealed class CheckoutPreviewResponse with _$CheckoutPreviewResponse {
   const factory CheckoutPreviewResponse({
     int? restaurantId,
     String? restaurantName,

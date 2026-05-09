@@ -6,7 +6,7 @@ part 'biometric_credentials_model.g.dart';
 
 /// Model for storing biometric credentials in local storage
 @freezed
-abstract class BiometricCredentialsModel with _$BiometricCredentialsModel {
+sealed class BiometricCredentialsModel with _$BiometricCredentialsModel {
   const BiometricCredentialsModel._();
 
   const factory BiometricCredentialsModel({

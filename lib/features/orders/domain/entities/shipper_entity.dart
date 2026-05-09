@@ -5,7 +5,7 @@ part 'shipper_entity.g.dart';
 
 /// Entity cho thông tin shipper
 @freezed
-abstract class ShipperEntity with _$ShipperEntity {
+sealed class ShipperEntity with _$ShipperEntity {
   const factory ShipperEntity({
     required int id,
     required String name,

@@ -6,7 +6,7 @@ part 'livestream_dto.g.dart';
 
 /// Livestream DTO for API communication
 @freezed
-abstract class LivestreamDto with _$LivestreamDto {
+sealed class LivestreamDto with _$LivestreamDto {
   const factory LivestreamDto({
     String? id,
     String? title,
@@ -61,7 +61,7 @@ abstract class LivestreamDto with _$LivestreamDto {
 
 /// Livestream product DTO
 @freezed
-abstract class LivestreamProductDto with _$LivestreamProductDto {
+sealed class LivestreamProductDto with _$LivestreamProductDto {
   const factory LivestreamProductDto({
     num? id,
     String? name,

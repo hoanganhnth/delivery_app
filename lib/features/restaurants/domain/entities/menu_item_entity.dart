@@ -5,7 +5,7 @@ part 'menu_item_entity.freezed.dart';
 part 'menu_item_entity.g.dart';
 
 @freezed
-abstract class MenuItemEntity with _$MenuItemEntity {
+sealed class MenuItemEntity with _$MenuItemEntity {
   const factory MenuItemEntity({
     num? id,
     num? restaurantId,

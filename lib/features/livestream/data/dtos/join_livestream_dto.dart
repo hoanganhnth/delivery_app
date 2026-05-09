@@ -6,7 +6,7 @@ part 'join_livestream_dto.g.dart';
 /// DTO for join livestream API response
 /// Maps to JoinLivestreamResponse from backend
 @freezed
-abstract class JoinLivestreamDto with _$JoinLivestreamDto {
+sealed class JoinLivestreamDto with _$JoinLivestreamDto {
   const factory JoinLivestreamDto({
     required String livestreamId,
     required String channelName,

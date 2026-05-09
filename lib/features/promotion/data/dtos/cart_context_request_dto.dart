@@ -4,7 +4,7 @@ part 'cart_context_request_dto.freezed.dart';
 part 'cart_context_request_dto.g.dart';
 
 @freezed
-abstract class CartContextRequestDto with _$CartContextRequestDto {
+sealed class CartContextRequestDto with _$CartContextRequestDto {
   const factory CartContextRequestDto({
     required int shopId,
     required int userId,

@@ -4,7 +4,7 @@ part 'get_restaurants_request_dto.freezed.dart';
 part 'get_restaurants_request_dto.g.dart';
 
 @freezed
-abstract class GetRestaurantsRequestDto with _$GetRestaurantsRequestDto {
+sealed class GetRestaurantsRequestDto with _$GetRestaurantsRequestDto {
   const factory GetRestaurantsRequestDto({
     double? latitude,
     double? longitude,

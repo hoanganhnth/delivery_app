@@ -5,7 +5,7 @@ part 'user_address_response_dto.freezed.dart';
 part 'user_address_response_dto.g.dart';
 
 @freezed
-abstract class UserAddressResponseDto with _$UserAddressResponseDto {
+sealed class UserAddressResponseDto with _$UserAddressResponseDto {
   const factory UserAddressResponseDto({
     int? id,
     required int userId,

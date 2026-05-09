@@ -5,7 +5,7 @@ part 'cart_entity.freezed.dart';
 
 /// Cart entity representing the entire shopping cart
 @freezed
-abstract class CartEntity with _$CartEntity {
+sealed class CartEntity with _$CartEntity {
   const factory CartEntity({
     required List<CartItemEntity> items,
     required num? currentRestaurantId,

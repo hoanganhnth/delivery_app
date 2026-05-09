@@ -4,7 +4,7 @@ part 'register_request_dto.freezed.dart';
 part 'register_request_dto.g.dart';
 
 @freezed
-abstract class RegisterRequestDto with _$RegisterRequestDto {
+sealed class RegisterRequestDto with _$RegisterRequestDto {
   const factory RegisterRequestDto({
     required String email,
     required String password,

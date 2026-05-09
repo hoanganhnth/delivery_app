@@ -6,7 +6,7 @@ part 'non_consumable_dto.freezed.dart';
 part 'non_consumable_dto.g.dart';
 
 @freezed
-abstract class NonConsumableDto with _$NonConsumableDto {
+sealed class NonConsumableDto with _$NonConsumableDto {
   const factory NonConsumableDto({
     required String productId,
     required String title,
@@ -89,7 +89,7 @@ abstract class NonConsumableDto with _$NonConsumableDto {
 
 /// Unlocked features storage DTO
 @freezed
-abstract class UnlockedFeaturesDto with _$UnlockedFeaturesDto {
+sealed class UnlockedFeaturesDto with _$UnlockedFeaturesDto {
   const factory UnlockedFeaturesDto({
     required List<String> featureIds,
     required DateTime lastUpdated,

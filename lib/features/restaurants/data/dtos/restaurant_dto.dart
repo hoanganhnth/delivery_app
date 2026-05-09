@@ -5,7 +5,7 @@ part 'restaurant_dto.freezed.dart';
 part 'restaurant_dto.g.dart';
 
 @freezed
-abstract class RestaurantDto with _$RestaurantDto {
+sealed class RestaurantDto with _$RestaurantDto {
   const factory RestaurantDto({
     required num id,
     required String name,

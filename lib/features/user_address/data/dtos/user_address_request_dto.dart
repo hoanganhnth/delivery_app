@@ -4,7 +4,7 @@ part 'user_address_request_dto.freezed.dart';
 part 'user_address_request_dto.g.dart';
 
 @freezed
-abstract class UserAddressRequestDto with _$UserAddressRequestDto {
+sealed class UserAddressRequestDto with _$UserAddressRequestDto {
   const factory UserAddressRequestDto({
     required String label,
     required String recipientName,

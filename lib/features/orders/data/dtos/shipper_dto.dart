@@ -6,7 +6,7 @@ part 'shipper_dto.g.dart';
 
 /// DTO cho thông tin shipper từ API
 @freezed
-abstract class ShipperDto with _$ShipperDto {
+sealed class ShipperDto with _$ShipperDto {
   const factory ShipperDto({
     required int id,
     String? name,
@@ -48,7 +48,7 @@ extension ShipperDtoX on ShipperDto {
 
 /// Request DTO cho lấy shipper trong khu vực
 @freezed
-abstract class GetShippersInAreaRequestDto with _$GetShippersInAreaRequestDto {
+sealed class GetShippersInAreaRequestDto with _$GetShippersInAreaRequestDto {
   const factory GetShippersInAreaRequestDto({
     required double latitude,
     required double longitude,

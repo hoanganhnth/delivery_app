@@ -4,7 +4,7 @@ part 'create_order_request_dto.freezed.dart';
 part 'create_order_request_dto.g.dart';
 
 @freezed
-abstract class OrderItemRequest with _$OrderItemRequest {
+sealed class OrderItemRequest with _$OrderItemRequest {
   const factory OrderItemRequest({
     required int menuItemId,
     required String menuItemName,
@@ -17,7 +17,7 @@ abstract class OrderItemRequest with _$OrderItemRequest {
 }
 
 @freezed
-abstract class CreateOrderRequestDto with _$CreateOrderRequestDto {
+sealed class CreateOrderRequestDto with _$CreateOrderRequestDto {
   const factory CreateOrderRequestDto({
     required int restaurantId,
     required String restaurantName,

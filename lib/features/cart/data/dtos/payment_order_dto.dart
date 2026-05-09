@@ -5,7 +5,7 @@ part 'payment_order_dto.g.dart';
 
 /// DTO for creating a payment order
 @freezed
-abstract class CreatePaymentDto with _$CreatePaymentDto {
+sealed class CreatePaymentDto with _$CreatePaymentDto {
   const factory CreatePaymentDto({
     required int entityId,
     @Default('CUSTOMER') String entityType,
@@ -22,7 +22,7 @@ abstract class CreatePaymentDto with _$CreatePaymentDto {
 
 /// DTO for payment order response
 @freezed
-abstract class PaymentOrderDto with _$PaymentOrderDto {
+sealed class PaymentOrderDto with _$PaymentOrderDto {
   const factory PaymentOrderDto({
     required int id,
     required String paymentRef,

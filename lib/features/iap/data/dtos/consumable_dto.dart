@@ -6,7 +6,7 @@ part 'consumable_dto.freezed.dart';
 part 'consumable_dto.g.dart';
 
 @freezed
-abstract class ConsumableDto with _$ConsumableDto {
+sealed class ConsumableDto with _$ConsumableDto {
   const factory ConsumableDto({
     required String productId,
     required String title,
@@ -81,7 +81,7 @@ abstract class ConsumableDto with _$ConsumableDto {
 
 /// User credits balance DTO
 @freezed
-abstract class UserCreditsDto with _$UserCreditsDto {
+sealed class UserCreditsDto with _$UserCreditsDto {
   const factory UserCreditsDto({
     required int balance,
     required DateTime lastUpdated,
@@ -94,7 +94,7 @@ abstract class UserCreditsDto with _$UserCreditsDto {
 
 /// Credit transaction DTO
 @freezed
-abstract class CreditTransactionDto with _$CreditTransactionDto {
+sealed class CreditTransactionDto with _$CreditTransactionDto {
   const factory CreditTransactionDto({
     required String id,
     required int amount,

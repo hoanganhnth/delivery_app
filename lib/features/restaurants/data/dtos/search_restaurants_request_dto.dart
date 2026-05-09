@@ -4,7 +4,7 @@ part 'search_restaurants_request_dto.freezed.dart';
 part 'search_restaurants_request_dto.g.dart';
 
 @freezed
-abstract class SearchRestaurantsRequestDto with _$SearchRestaurantsRequestDto {
+sealed class SearchRestaurantsRequestDto with _$SearchRestaurantsRequestDto {
   const factory SearchRestaurantsRequestDto({
     required String query,
     double? latitude,

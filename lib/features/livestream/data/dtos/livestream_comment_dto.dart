@@ -6,7 +6,7 @@ part 'livestream_comment_dto.g.dart';
 
 /// Livestream comment DTO for Firebase communication
 @freezed
-abstract class LivestreamCommentDto with _$LivestreamCommentDto {
+sealed class LivestreamCommentDto with _$LivestreamCommentDto {
   const factory LivestreamCommentDto({
     required String id,
     required String livestreamId,
@@ -51,7 +51,7 @@ abstract class LivestreamCommentDto with _$LivestreamCommentDto {
 
 /// Livestream like DTO for Firebase communication
 @freezed
-abstract class LivestreamLikeDto with _$LivestreamLikeDto {
+sealed class LivestreamLikeDto with _$LivestreamLikeDto {
   const factory LivestreamLikeDto({
     required String id,
     required String livestreamId,

@@ -7,7 +7,7 @@ part 'cart_item_dto.g.dart';
 /// Cart item DTO for local storage with Hive
 @freezed
 @HiveType(typeId: 0)
-abstract class CartItemDto with _$CartItemDto {
+sealed class CartItemDto with _$CartItemDto {
   const factory CartItemDto({
     @HiveField(0) required num menuItemId,
     @HiveField(1) required String menuItemName,
