@@ -188,7 +188,7 @@ class MapboxMapService implements IMapService<MapboxMap, CameraOptions> {
           geometry: LineString(
             coordinates: points.map((p) => Position(p[0], p[1])).toList(),
           ),
-          lineColor: Colors.blue.withValues(alpha: 0.8).value,
+          lineColor: Colors.blue.withValues(alpha: 0.8).toARGB32(),
           lineWidth: 5.0,
           lineJoin: LineJoin.ROUND,
         ),

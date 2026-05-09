@@ -1,7 +1,6 @@
 import 'package:delivery_app/core/network/_riverpod/authenticated_network_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/network/socket/socket_client.dart';
-import 'package:delivery_app/core/network/_riverpod/network_providers.dart';
 import 'package:delivery_app/features/orders/data/datasources/shipper_location_socket_datasource.dart'
     as shipper_socket_ds;
 import 'package:delivery_app/features/orders/data/datasources/shipper_location_datasource.dart';

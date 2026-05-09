@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
-import 'package:delivery_app/core/theme/app_colors.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
 import 'package:delivery_app/generated/l10n.dart';
 import 'courier_photo.dart';

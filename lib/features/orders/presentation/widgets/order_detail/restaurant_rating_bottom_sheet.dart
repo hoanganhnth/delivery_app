@@ -30,8 +30,9 @@ class _RestaurantRatingBottomSheetState
     final customerId = ref.read(profileProvider).user?.id;
     if (customerId == null ||
         widget.order.restaurantId == null ||
-        widget.order.id == null)
+        widget.order.id == null) {
       return;
+    }
 
     setState(() {
       _isSubmitting = true;

@@ -313,7 +313,7 @@ class OrderTimelineSection extends ConsumerWidget {
       ),
       child: DeliveryTimeline(
         status: order.status,
-        rawBackendStatus: trackingState.currentTracking?.status?.value ?? order.rawBackendStatus,
+        rawBackendStatus: trackingState.currentTracking?.status.value ?? order.rawBackendStatus,
       ),
     );
   }
