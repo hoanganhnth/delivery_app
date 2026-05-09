@@ -2,35 +2,34 @@ import 'dart:io';
 
 import 'package:delivery_app/core/constants/api_constants.dart';
 import 'package:dio/dio.dart';
-import 'interceptors/request_interceptor.dart';
-import 'interceptors/response_interceptor.dart';
-import 'interceptors/error_interceptor.dart';
+import 'interceptors/auth_interceptor.dart';
+import 'interceptors/logging_interceptor.dart';
+import 'token_storage.dart';
 
 class DioClient {
-  final Future<String?> Function()? getToken;
-  final Future<String?> Function()? onRefreshToken;
+  final TokenStorage? tokenStorage;
   final void Function()? onUnauthorized;
 
   late final Dio dio;
 
-  DioClient({this.getToken, this.onRefreshToken, this.onUnauthorized}) {
+  DioClient({this.tokenStorage, this.onUnauthorized}) {
     final baseOptions = BaseOptions(
       baseUrl: Platform.isAndroid ? ApiConstants.api : ApiConstants.apiIos,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
+      connectTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 15),
+      sendTimeout: const Duration(seconds: 30),
       contentType: "application/json",
     );
 
     dio = Dio(baseOptions);
 
     dio.interceptors.addAll([
-      RequestInterceptor(getToken: getToken),
-      ResponseInterceptor(),
-      ErrorInterceptor(
-        onRefreshToken: onRefreshToken,
+      AuthInterceptor(
+        dio: dio,
+        tokenStorage: tokenStorage,
         onUnauthorized: onUnauthorized,
-        baseOptions: baseOptions,
       ),
+      LoggingInterceptor(),
     ]);
   }
 }
