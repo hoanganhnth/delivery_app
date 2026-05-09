@@ -2888,6 +2888,601 @@ class S {
       args: [],
     );
   }
+
+  /// `All`
+  String get livestreamFilterAll {
+    return Intl.message('All', name: 'livestreamFilterAll', desc: '', args: []);
+  }
+
+  /// `Street Food`
+  String get livestreamFilterStreetFood {
+    return Intl.message(
+      'Street Food',
+      name: 'livestreamFilterStreetFood',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fine Dining`
+  String get livestreamFilterFineDining {
+    return Intl.message(
+      'Fine Dining',
+      name: 'livestreamFilterFineDining',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Baking`
+  String get livestreamFilterBaking {
+    return Intl.message(
+      'Baking',
+      name: 'livestreamFilterBaking',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Desserts`
+  String get livestreamFilterDesserts {
+    return Intl.message(
+      'Desserts',
+      name: 'livestreamFilterDesserts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Drinks`
+  String get livestreamFilterDrinks {
+    return Intl.message(
+      'Drinks',
+      name: 'livestreamFilterDrinks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `LIVE NOW`
+  String get livestreamLiveNow {
+    return Intl.message(
+      'LIVE NOW',
+      name: 'livestreamLiveNow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cannot load livestreams`
+  String get livestreamErrorLoad {
+    return Intl.message(
+      'Cannot load livestreams',
+      name: 'livestreamErrorLoad',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Network error. Please check your internet connection.`
+  String get livestreamErrorNetwork {
+    return Intl.message(
+      'Network error. Please check your internet connection.',
+      name: 'livestreamErrorNetwork',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Server is encountering an issue. Please try again later.`
+  String get livestreamErrorServer {
+    return Intl.message(
+      'Server is encountering an issue. Please try again later.',
+      name: 'livestreamErrorServer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Session expired. Please log in again.`
+  String get livestreamErrorAuth {
+    return Intl.message(
+      'Session expired. Please log in again.',
+      name: 'livestreamErrorAuth',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An error occurred. Please try again.`
+  String get livestreamErrorGeneric {
+    return Intl.message(
+      'An error occurred. Please try again.',
+      name: 'livestreamErrorGeneric',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Oops! Something went wrong`
+  String get livestreamErrorOops {
+    return Intl.message(
+      'Oops! Something went wrong',
+      name: 'livestreamErrorOops',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Try Again`
+  String get livestreamTryAgain {
+    return Intl.message(
+      'Try Again',
+      name: 'livestreamTryAgain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Livestreams Yet`
+  String get livestreamEmptyTitle {
+    return Intl.message(
+      'No Livestreams Yet',
+      name: 'livestreamEmptyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Check back later for live sessions`
+  String get livestreamEmptyDesc {
+    return Intl.message(
+      'Check back later for live sessions',
+      name: 'livestreamEmptyDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connecting to livestream...`
+  String get livestreamConnecting {
+    return Intl.message(
+      'Connecting to livestream...',
+      name: 'livestreamConnecting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Initializing...`
+  String get livestreamInitializing {
+    return Intl.message(
+      'Initializing...',
+      name: 'livestreamInitializing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Waiting for streamer...`
+  String get livestreamWaitingStreamer {
+    return Intl.message(
+      'Waiting for streamer...',
+      name: 'livestreamWaitingStreamer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Write a comment...`
+  String get livestreamWriteComment {
+    return Intl.message(
+      'Write a comment...',
+      name: 'livestreamWriteComment',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Premium Store`
+  String get iapStoreTitle {
+    return Intl.message(
+      'Premium Store',
+      name: 'iapStoreTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subscribe`
+  String get iapStoreTabSubscribe {
+    return Intl.message(
+      'Subscribe',
+      name: 'iapStoreTabSubscribe',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Credits`
+  String get iapStoreTabCredits {
+    return Intl.message(
+      'Credits',
+      name: 'iapStoreTabCredits',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Features`
+  String get iapStoreTabFeatures {
+    return Intl.message(
+      'Features',
+      name: 'iapStoreTabFeatures',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose a category`
+  String get iapStoreChooseCategory {
+    return Intl.message(
+      'Choose a category',
+      name: 'iapStoreChooseCategory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subscriptions`
+  String get iapStoreSubscriptions {
+    return Intl.message(
+      'Subscriptions',
+      name: 'iapStoreSubscriptions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Premium plans`
+  String get iapStorePremiumPlans {
+    return Intl.message(
+      'Premium plans',
+      name: 'iapStorePremiumPlans',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Buy delivery credits`
+  String get iapStoreBuyCredits {
+    return Intl.message(
+      'Buy delivery credits',
+      name: 'iapStoreBuyCredits',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unlock forever`
+  String get iapStoreUnlockForever {
+    return Intl.message(
+      'Unlock forever',
+      name: 'iapStoreUnlockForever',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All Store`
+  String get iapStoreAllStore {
+    return Intl.message(
+      'All Store',
+      name: 'iapStoreAllStore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Browse everything`
+  String get iapStoreBrowseAll {
+    return Intl.message(
+      'Browse everything',
+      name: 'iapStoreBrowseAll',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Credits & Vouchers`
+  String get iapCreditsVouchersTitle {
+    return Intl.message(
+      'Credits & Vouchers',
+      name: 'iapCreditsVouchersTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Retry`
+  String get iapRetry {
+    return Intl.message('Retry', name: 'iapRetry', desc: '', args: []);
+  }
+
+  /// `Delivery Credits`
+  String get iapDeliveryCredits {
+    return Intl.message(
+      'Delivery Credits',
+      name: 'iapDeliveryCredits',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vouchers`
+  String get iapVouchers {
+    return Intl.message('Vouchers', name: 'iapVouchers', desc: '', args: []);
+  }
+
+  /// `Gift Cards`
+  String get iapGiftCards {
+    return Intl.message('Gift Cards', name: 'iapGiftCards', desc: '', args: []);
+  }
+
+  /// `My Vouchers`
+  String get iapMyVouchers {
+    return Intl.message(
+      'My Vouchers',
+      name: 'iapMyVouchers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Credits Balance`
+  String get iapCreditsBalance {
+    return Intl.message(
+      'Credits Balance',
+      name: 'iapCreditsBalance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Buy`
+  String get iapBuy {
+    return Intl.message('Buy', name: 'iapBuy', desc: '', args: []);
+  }
+
+  /// `Code`
+  String get iapCode {
+    return Intl.message('Code', name: 'iapCode', desc: '', args: []);
+  }
+
+  /// `Expired`
+  String get iapExpired {
+    return Intl.message('Expired', name: 'iapExpired', desc: '', args: []);
+  }
+
+  /// `Expires: {date}`
+  String iapExpires(Object date) {
+    return Intl.message(
+      'Expires: $date',
+      name: 'iapExpires',
+      desc: '',
+      args: [date],
+    );
+  }
+
+  /// `OFF`
+  String get iapOff {
+    return Intl.message('OFF', name: 'iapOff', desc: '', args: []);
+  }
+
+  /// `Unlock Features`
+  String get iapUnlockFeaturesTitle {
+    return Intl.message(
+      'Unlock Features',
+      name: 'iapUnlockFeaturesTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `⭐ Popular Features`
+  String get iapPopularFeatures {
+    return Intl.message(
+      '⭐ Popular Features',
+      name: 'iapPopularFeatures',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `👑 Premium Features`
+  String get iapPremiumFeatures {
+    return Intl.message(
+      '👑 Premium Features',
+      name: 'iapPremiumFeatures',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `🎯 All Features`
+  String get iapAllFeatures {
+    return Intl.message(
+      '🎯 All Features',
+      name: 'iapAllFeatures',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unlocked Features`
+  String get iapUnlockedFeatures {
+    return Intl.message(
+      'Unlocked Features',
+      name: 'iapUnlockedFeatures',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `🎉 All features unlocked!`
+  String get iapAllFeaturesUnlocked {
+    return Intl.message(
+      '🎉 All features unlocked!',
+      name: 'iapAllFeaturesUnlocked',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} features remaining`
+  String iapFeaturesRemaining(Object count) {
+    return Intl.message(
+      '$count features remaining',
+      name: 'iapFeaturesRemaining',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `UNLOCKED`
+  String get iapUnlocked {
+    return Intl.message('UNLOCKED', name: 'iapUnlocked', desc: '', args: []);
+  }
+
+  /// `Unlocked on {date}`
+  String iapUnlockedOn(Object date) {
+    return Intl.message(
+      'Unlocked on $date',
+      name: 'iapUnlockedOn',
+      desc: '',
+      args: [date],
+    );
+  }
+
+  /// `Unlock`
+  String get iapUnlock {
+    return Intl.message('Unlock', name: 'iapUnlock', desc: '', args: []);
+  }
+
+  /// `Choose Your Plan`
+  String get iapChoosePlan {
+    return Intl.message(
+      'Choose Your Plan',
+      name: 'iapChoosePlan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restore Purchases`
+  String get iapRestorePurchases {
+    return Intl.message(
+      'Restore Purchases',
+      name: 'iapRestorePurchases',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current Plan`
+  String get iapCurrentPlan {
+    return Intl.message(
+      'Current Plan',
+      name: 'iapCurrentPlan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `CURRENT`
+  String get iapCurrent {
+    return Intl.message('CURRENT', name: 'iapCurrent', desc: '', args: []);
+  }
+
+  /// `All Restaurants`
+  String get restaurantsAllTitle {
+    return Intl.message(
+      'All Restaurants',
+      name: 'restaurantsAllTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All`
+  String get restaurantsFilterAll {
+    return Intl.message(
+      'All',
+      name: 'restaurantsFilterAll',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fast Delivery`
+  String get restaurantsFilterFastDelivery {
+    return Intl.message(
+      'Fast Delivery',
+      name: 'restaurantsFilterFastDelivery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Promotions`
+  String get restaurantsFilterPromo {
+    return Intl.message(
+      'Promotions',
+      name: 'restaurantsFilterPromo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Top Rated`
+  String get restaurantsFilterTopRated {
+    return Intl.message(
+      'Top Rated',
+      name: 'restaurantsFilterTopRated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nearby`
+  String get restaurantsFilterNearby {
+    return Intl.message(
+      'Nearby',
+      name: 'restaurantsFilterNearby',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Free`
+  String get restaurantsFreeDelivery {
+    return Intl.message(
+      'Free',
+      name: 'restaurantsFreeDelivery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error: {message}`
+  String restaurantsError(Object message) {
+    return Intl.message(
+      'Error: $message',
+      name: 'restaurantsError',
+      desc: '',
+      args: [message],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

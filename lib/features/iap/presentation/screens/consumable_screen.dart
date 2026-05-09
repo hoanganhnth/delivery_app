@@ -1,7 +1,9 @@
 import 'package:delivery_app/core/theme/theme_extensions.dart';
-import 'package:delivery_app/features/iap/domain/entities/consumable_entity.dart';
 import 'package:delivery_app/features/iap/presentation/providers/consumable_notifier.dart';
 import 'package:delivery_app/features/iap/presentation/providers/consumable_state.dart';
+import 'package:delivery_app/features/iap/presentation/widgets/consumable_card.dart';
+import 'package:delivery_app/features/iap/presentation/widgets/user_voucher_card.dart';
+import 'package:delivery_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,10 +14,11 @@ class ConsumableScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final stateAsync = ref.watch(consumableProvider);
+    final s = S.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Credits & Vouchers'),
+        title: Text(s.iapCreditsVouchersTitle),
         backgroundColor: ref.colors.primary,
         foregroundColor: ref.colors.onPrimary,
       ),
@@ -31,7 +34,7 @@ class ConsumableScreen extends ConsumerWidget {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => ref.refresh(consumableProvider),
-                child: const Text('Retry'),
+                child: Text(s.iapRetry),
               ),
             ],
           ),
@@ -46,6 +49,8 @@ class ConsumableScreen extends ConsumerWidget {
     WidgetRef ref,
     ConsumableState state,
   ) {
+    final s = S.of(context);
+
     // Show success message
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (state.successMessage != null) {
@@ -82,49 +87,45 @@ class ConsumableScreen extends ConsumerWidget {
 
           // Credits Products Section
           if (state.creditProducts.isNotEmpty) ...[
-            _buildSectionHeader(context, '🚗 Delivery Credits'),
+            _buildSectionHeader(context, '🚗 ${s.iapDeliveryCredits}'),
             const SizedBox(height: 12),
-            ...state.creditProducts.map((product) => _buildConsumableCard(
-                  context,
-                  ref,
-                  product,
-                  state.isLoading,
+            ...state.creditProducts.map((product) => ConsumableCard(
+                  product: product,
+                  isLoading: state.isLoading,
+                  onBuy: () => ref.read(consumableProvider.notifier).purchaseConsumable(product),
                 )),
             const SizedBox(height: 24),
           ],
 
           // Voucher Products Section
           if (state.voucherProducts.isNotEmpty) ...[
-            _buildSectionHeader(context, '🏷️ Vouchers'),
+            _buildSectionHeader(context, '🏷️ ${s.iapVouchers}'),
             const SizedBox(height: 12),
-            ...state.voucherProducts.map((product) => _buildConsumableCard(
-                  context,
-                  ref,
-                  product,
-                  state.isLoading,
+            ...state.voucherProducts.map((product) => ConsumableCard(
+                  product: product,
+                  isLoading: state.isLoading,
+                  onBuy: () => ref.read(consumableProvider.notifier).purchaseConsumable(product),
                 )),
             const SizedBox(height: 24),
           ],
 
           // Gift Card Products Section
           if (state.giftCardProducts.isNotEmpty) ...[
-            _buildSectionHeader(context, '🎁 Gift Cards'),
+            _buildSectionHeader(context, '🎁 ${s.iapGiftCards}'),
             const SizedBox(height: 12),
-            ...state.giftCardProducts.map((product) => _buildConsumableCard(
-                  context,
-                  ref,
-                  product,
-                  state.isLoading,
+            ...state.giftCardProducts.map((product) => ConsumableCard(
+                  product: product,
+                  isLoading: state.isLoading,
+                  onBuy: () => ref.read(consumableProvider.notifier).purchaseConsumable(product),
                 )),
             const SizedBox(height: 24),
           ],
 
           // User Vouchers Section
           if (state.userVouchers.isNotEmpty) ...[
-            _buildSectionHeader(context, '📦 My Vouchers'),
+            _buildSectionHeader(context, '📦 ${s.iapMyVouchers}'),
             const SizedBox(height: 12),
-            ...state.userVouchers.map(
-                (voucher) => _buildUserVoucherCard(context, ref, voucher)),
+            ...state.userVouchers.map((voucher) => UserVoucherCard(voucher: voucher)),
           ],
         ],
       ),
@@ -132,6 +133,7 @@ class ConsumableScreen extends ConsumerWidget {
   }
 
   Widget _buildCreditsBalanceCard(BuildContext context, WidgetRef ref, ConsumableState state) {
+    final s = S.of(context);
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -157,7 +159,7 @@ class ConsumableScreen extends ConsumerWidget {
                     color: Colors.white, size: 32),
                 const SizedBox(width: 12),
                 Text(
-                  'Credits Balance',
+                  s.iapCreditsBalance,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -174,7 +176,7 @@ class ConsumableScreen extends ConsumerWidget {
               ),
             ),
             Text(
-              'Delivery Credits',
+              s.iapDeliveryCredits,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Colors.white70,
               ),
@@ -192,198 +194,5 @@ class ConsumableScreen extends ConsumerWidget {
         fontWeight: FontWeight.bold,
       ),
     );
-  }
-
-  Widget _buildConsumableCard(
-    BuildContext context,
-    WidgetRef ref,
-    ConsumableEntity product,
-    bool isLoading,
-  ) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            // Product Icon
-            Container(
-              width: 56,
-              height: 56,
-              decoration: BoxDecoration(
-                color: ref.colors.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                child: Text(
-                  product.type.icon,
-                  style: const TextStyle(fontSize: 28),
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-
-            // Product Info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.product.title,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    product.product.description,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: ref.colors.textSecondary,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '+${product.value.toInt()} ${product.type.displayName}',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: ref.colors.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Price & Buy Button
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  product.product.price,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: ref.colors.primary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: isLoading
-                      ? null
-                      : () => ref
-                          .read(consumableProvider.notifier)
-                          .purchaseConsumable(product),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ref.colors.primary,
-                    foregroundColor: ref.colors.onPrimary,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: isLoading
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        )
-                      : const Text('Buy'),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildUserVoucherCard(
-    BuildContext context,
-    WidgetRef ref,
-    ConsumableEntity voucher,
-  ) {
-    final isExpired = voucher.isExpired;
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: isExpired ? Colors.grey[200] : null,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            // Voucher Icon
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: isExpired
-                    ? Colors.grey[400]
-                    : ref.colors.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Center(
-                child: Text(
-                  voucher.type.icon,
-                  style: const TextStyle(fontSize: 24),
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-
-            // Voucher Info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    voucher.product.title,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: isExpired ? Colors.grey : null,
-                    ),
-                  ),
-                  if (voucher.code != null)
-                    Text(
-                      'Code: ${voucher.code}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: ref.colors.textSecondary,
-                      ),
-                    ),
-                  if (voucher.expiryDate != null)
-                    Text(
-                      isExpired
-                          ? 'Expired'
-                          : 'Expires: ${_formatDate(voucher.expiryDate!)}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: isExpired ? Colors.red : ref.colors.textSecondary,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-
-            // Value
-            Text(
-              voucher.type == ConsumableType.discountVoucher
-                  ? '${voucher.value.toInt()}% OFF'
-                  : '-\$${voucher.value.toStringAsFixed(2)}',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: isExpired ? Colors.grey : ref.colors.primary,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
   }
 }

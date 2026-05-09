@@ -1,6 +1,7 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:delivery_app/generated/l10n.dart';
 import '../services/agora_service.dart';
 
 class LivestreamVideoView extends StatelessWidget {
@@ -15,6 +16,8 @@ class LivestreamVideoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
+    
     if (!agoraService.isInitialized || !agoraService.isJoined) {
       return Container(
         color: Colors.black,
@@ -26,8 +29,8 @@ class LivestreamVideoView extends StatelessWidget {
               SizedBox(height: 16.w),
               Text(
                 agoraService.isInitialized 
-                  ? 'Đang kết nối livestream...' 
-                  : 'Đang khởi tạo...',
+                  ? s.livestreamConnecting 
+                  : s.livestreamInitializing,
                 style: TextStyle(color: Colors.white70, fontSize: 14.sp),
               ),
             ],
@@ -47,7 +50,7 @@ class LivestreamVideoView extends StatelessWidget {
               const CircularProgressIndicator(color: Colors.white),
               SizedBox(height: 16.w),
               Text(
-                'Đang chờ streamer...',
+                s.livestreamWaitingStreamer,
                 style: TextStyle(color: Colors.white70, fontSize: 14.sp),
               ),
             ],

@@ -1,10 +1,10 @@
 import 'package:delivery_app/core/routing/routing.dart';
+import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_list_card.dart';
+import 'package:delivery_app/generated/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:delivery_app/core/theme/theme_extensions.dart';
-import '../../domain/entities/restaurant_entity.dart';
 import '../providers/providers.dart';
 
 class AllRestaurantsScreen extends ConsumerStatefulWidget {
@@ -28,26 +28,27 @@ class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
   @override
   Widget build(BuildContext context) {
     final restaurantsState = ref.watch(restaurantsProvider);
+    final s = S.of(context);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange,
         title: Text(
-          'Tất cả nhà hàng',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          s.restaurantsAllTitle,
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
           onPressed: () => context.pop(),
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
         ),
         actions: [
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.search, color: Colors.white),
+            icon: const Icon(Icons.search, color: Colors.white),
           ),
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.filter_list, color: Colors.white),
+            icon: const Icon(Icons.filter_list, color: Colors.white),
           ),
         ],
       ),
@@ -60,15 +61,15 @@ class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                _buildFilterChip('Tất cả', true),
+                _buildFilterChip(s.restaurantsFilterAll, true),
                 SizedBox(width: 8.w),
-                _buildFilterChip('Giao nhanh', false),
+                _buildFilterChip(s.restaurantsFilterFastDelivery, false),
                 SizedBox(width: 8.w),
-                _buildFilterChip('Khuyến mãi', false),
+                _buildFilterChip(s.restaurantsFilterPromo, false),
                 SizedBox(width: 8.w),
-                _buildFilterChip('Đánh giá cao', false),
+                _buildFilterChip(s.restaurantsFilterTopRated, false),
                 SizedBox(width: 8.w),
-                _buildFilterChip('Gần tôi', false),
+                _buildFilterChip(s.restaurantsFilterNearby, false),
               ],
             ),
           ),
@@ -78,12 +79,12 @@ class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
           // Restaurants list
           Expanded(
             child: restaurantsState.isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : restaurantsState.hasError
                 ? Center(
                     child: Text(
-                      'Lỗi: ${restaurantsState.errorMessage}',
-                      style: TextStyle(color: Colors.red),
+                      s.restaurantsError(restaurantsState.errorMessage ?? ''),
+                      style: const TextStyle(color: Colors.red),
                     ),
                   )
                 : ListView.builder(
@@ -119,169 +120,6 @@ class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(color: isSelected ? Colors.orange : Colors.grey[300]!),
-      ),
-    );
-  }
-}
-
-class RestaurantListCard extends ConsumerWidget {
-  final RestaurantEntity restaurant;
-
-  const RestaurantListCard({super.key, required this.restaurant});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Card(
-      elevation: 2,
-      margin: EdgeInsets.only(bottom: 16.w),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Restaurant image
-          Container(
-            height: 160.w,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(12),
-              ),
-              image: restaurant.image != null
-                  ? DecorationImage(
-                      image: NetworkImage(restaurant.image!),
-                      fit: BoxFit.cover,
-                      onError: (error, stackTrace) {},
-                    )
-                  : null,
-              color: restaurant.image == null ? Colors.grey[300] : null,
-            ),
-            child: Stack(
-              children: [
-                if (restaurant.image == null)
-                  Center(
-                    child: Icon(Icons.restaurant, size: 60, color: Colors.grey),
-                  ),
-
-                // Discount badge
-                Positioned(
-                  top: 8.w,
-                  left: 8.w,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8.w,
-                      vertical: 4.w,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      'GIẢM 30%',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Favorite button
-                Positioned(
-                  top: 8.w,
-                  right: 8.w,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.favorite_border),
-                      iconSize: 20,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Restaurant info
-          Padding(
-            padding: EdgeInsets.all(12.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  restaurant.name,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.sp,
-                  ),
-                ),
-                SizedBox(height: 4.w),
-                if (restaurant.description != null)
-                  Text(
-                    restaurant.description!,
-                    style: TextStyle(color: ref.colors.textSecondary, fontSize: 14.sp),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                SizedBox(height: 8.w),
-                Row(
-                  children: [
-                    Icon(Icons.location_on, size: 14, color: ref.colors.textSecondary),
-                    SizedBox(width: 4.w),
-                    Expanded(
-                      child: Text(
-                        restaurant.address,
-                        style: TextStyle(color: ref.colors.textSecondary, fontSize: 12.sp),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8.w),
-                Row(
-                  children: [
-                    Icon(Icons.star, size: 14, color: Colors.orange[700]),
-                    SizedBox(width: 2.w),
-                    Text(
-                      '4.5',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      '(200+)',
-                      style: TextStyle(fontSize: 12.sp, color: Colors.grey),
-                    ),
-                    const Spacer(),
-                    Icon(Icons.access_time, size: 14, color: ref.colors.textSecondary),
-                    SizedBox(width: 2.w),
-                    Text(
-                      '20-30 phút',
-                      style: TextStyle(fontSize: 12.sp, color: Colors.grey),
-                    ),
-                    SizedBox(width: 12.w),
-                    Icon(
-                      Icons.delivery_dining,
-                      size: 14,
-                      color: ref.colors.textSecondary,
-                    ),
-                    SizedBox(width: 2.w),
-                    Text(
-                      'Miễn phí',
-                      style: TextStyle(fontSize: 12.sp, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

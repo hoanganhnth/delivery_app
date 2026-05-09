@@ -1,7 +1,8 @@
-import 'package:delivery_app/core/theme/theme_extensions.dart';
-import 'package:delivery_app/features/iap/domain/entities/subscription_entity.dart';
 import 'package:delivery_app/features/iap/presentation/providers/subscription_notifier.dart';
 import 'package:delivery_app/features/iap/presentation/providers/subscription_state.dart';
+import 'package:delivery_app/features/iap/presentation/widgets/active_subscription_card.dart';
+import 'package:delivery_app/features/iap/presentation/widgets/tier_card.dart';
+import 'package:delivery_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,6 +24,8 @@ class SubscriptionScreen extends ConsumerWidget {
     SubscriptionState state,
     TextTheme textTheme,
   ) {
+    final s = S.of(context);
+
     // Show success/error messages
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (state.successMessage != null) {
@@ -55,26 +58,28 @@ class SubscriptionScreen extends ConsumerWidget {
         children: [
           // Current Subscription Card
           if (state.activeSubscription != null)
-            _buildActiveSubscriptionCard(context, ref, state.activeSubscription!, textTheme),
+            ActiveSubscriptionCard(
+              subscription: state.activeSubscription!,
+              textTheme: textTheme,
+            ),
 
           const SizedBox(height: 24),
 
           // Subscription Tiers
           Text(
-            'Choose Your Plan',
+            s.iapChoosePlan,
             style: textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 16),
 
-          ...state.availableTiers.map((subscription) => _buildTierCard(
-                context,
-                ref,
-                subscription,
-                state.isLoading,
-                state.activeSubscription?.tier == subscription.tier,
-                textTheme,
+          ...state.availableTiers.map((subscription) => TierCard(
+                subscription: subscription,
+                isLoading: state.isLoading,
+                isCurrentTier: state.activeSubscription?.tier == subscription.tier,
+                textTheme: textTheme,
+                onSubscribe: () => ref.read(subscriptionProvider.notifier).purchaseSubscription(subscription.tier),
               )),
 
           const SizedBox(height: 24),
@@ -88,191 +93,10 @@ class SubscriptionScreen extends ConsumerWidget {
                       .read(subscriptionProvider.notifier)
                       .restorePurchases(),
               icon: const Icon(Icons.restore),
-              label: const Text('Restore Purchases'),
+              label: Text(s.iapRestorePurchases),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildActiveSubscriptionCard(
-    BuildContext context,
-    WidgetRef ref,
-    SubscriptionEntity subscription,
-    TextTheme textTheme,
-  ) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            colors: [
-              ref.colors.primary,
-              ref.colors.primary.withValues(alpha: 0.8),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.star, color: Colors.white, size: 28),
-                const SizedBox(width: 8),
-                Text(
-                  'Current Plan',
-                  style: textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              subscription.tier.displayName,
-              style: textTheme.headlineSmall?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            if (subscription.expiryDate != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Text(
-                  'Expires: ${subscription.expiryDate}',
-                  style: textTheme.bodyMedium?.copyWith(
-                    color: Colors.white70,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTierCard(
-    BuildContext context,
-    WidgetRef ref,
-    SubscriptionEntity subscription,
-    bool isLoading,
-    bool isCurrentTier,
-    TextTheme textTheme,
-  ) {
-    final tier = subscription.tier;
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: isCurrentTier
-            ? BorderSide(color: ref.colors.primary, width: 2)
-            : BorderSide.none,
-      ),
-      elevation: isCurrentTier ? 8 : 2,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        tier.displayName,
-                        style: textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        subscription.product.price,
-                        style: textTheme.titleMedium?.copyWith(
-                          color: ref.colors.primary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                if (isCurrentTier)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: ref.colors.primary,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Text(
-                      'CURRENT',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            ...tier.benefits.map((benefit) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.check_circle,
-                        color: ref.colors.primary,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(child: Text(benefit)),
-                    ],
-                  ),
-                )),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: isLoading || isCurrentTier
-                    ? null
-                    : () => ref
-                        .read(subscriptionProvider.notifier)
-                        .purchaseSubscription(tier),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: ref.colors.primary,
-                  foregroundColor: ref.colors.onPrimary,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: isLoading
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      )
-                    : Text(isCurrentTier ? 'Current Plan' : 'Subscribe'),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -30,19 +30,27 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m3(addressLabel) =>
       "Bạn có chắc muốn xóa địa chỉ \"${addressLabel}\"?";
 
-  static String m4(count) => "${count} món";
+  static String m4(date) => "Hết hạn: ${date}";
 
-  static String m5(restaurantName) => "Món ăn từ ${restaurantName}";
+  static String m5(count) => "Còn lại ${count} tính năng";
 
-  static String m6(days) => "${days} ngày trước";
+  static String m6(date) => "Mở khoá lúc ${date}";
 
-  static String m7(hours) => "${hours} giờ trước";
+  static String m7(count) => "${count} món";
 
-  static String m8(minutes) => "${minutes} phút trước";
+  static String m8(restaurantName) => "Món ăn từ ${restaurantName}";
 
-  static String m9(price) => "\$${price}";
+  static String m9(days) => "${days} ngày trước";
 
-  static String m10(rating) => "${rating}";
+  static String m10(hours) => "${hours} giờ trước";
+
+  static String m11(minutes) => "${minutes} phút trước";
+
+  static String m12(price) => "\$${price}";
+
+  static String m13(rating) => "${rating}";
+
+  static String m14(message) => "Lỗi: ${message}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -309,20 +317,129 @@ class MessageLookup extends MessageLookupByLibrary {
       "Ẩn Chi Tiết Đơn Hàng",
     ),
     "home": MessageLookupByLibrary.simpleMessage("Trang Chủ"),
+    "iapAllFeatures": MessageLookupByLibrary.simpleMessage("🎯 Tất cả"),
+    "iapAllFeaturesUnlocked": MessageLookupByLibrary.simpleMessage(
+      "🎉 Đã mở khoá toàn bộ!",
+    ),
+    "iapBuy": MessageLookupByLibrary.simpleMessage("Mua"),
+    "iapChoosePlan": MessageLookupByLibrary.simpleMessage("Chọn gói cước"),
+    "iapCode": MessageLookupByLibrary.simpleMessage("Mã"),
+    "iapCreditsBalance": MessageLookupByLibrary.simpleMessage("Số dư tín dụng"),
+    "iapCreditsVouchersTitle": MessageLookupByLibrary.simpleMessage(
+      "Tín dụng & Voucher",
+    ),
+    "iapCurrent": MessageLookupByLibrary.simpleMessage("HIỆN TẠI"),
+    "iapCurrentPlan": MessageLookupByLibrary.simpleMessage("Gói hiện tại"),
+    "iapDeliveryCredits": MessageLookupByLibrary.simpleMessage(
+      "Tín dụng giao hàng",
+    ),
+    "iapExpired": MessageLookupByLibrary.simpleMessage("Đã hết hạn"),
+    "iapExpires": m4,
+    "iapFeaturesRemaining": m5,
+    "iapGiftCards": MessageLookupByLibrary.simpleMessage("Thẻ quà tặng"),
+    "iapMyVouchers": MessageLookupByLibrary.simpleMessage("Voucher của tôi"),
+    "iapOff": MessageLookupByLibrary.simpleMessage("GIẢM"),
+    "iapPopularFeatures": MessageLookupByLibrary.simpleMessage("⭐ Phổ biến"),
+    "iapPremiumFeatures": MessageLookupByLibrary.simpleMessage("👑 Cao cấp"),
+    "iapRestorePurchases": MessageLookupByLibrary.simpleMessage(
+      "Khôi phục thanh toán",
+    ),
+    "iapRetry": MessageLookupByLibrary.simpleMessage("Thử lại"),
+    "iapStoreAllStore": MessageLookupByLibrary.simpleMessage("Tất cả"),
+    "iapStoreBrowseAll": MessageLookupByLibrary.simpleMessage(
+      "Khám phá mọi thứ",
+    ),
+    "iapStoreBuyCredits": MessageLookupByLibrary.simpleMessage(
+      "Mua tín dụng giao hàng",
+    ),
+    "iapStoreChooseCategory": MessageLookupByLibrary.simpleMessage(
+      "Chọn danh mục",
+    ),
+    "iapStorePremiumPlans": MessageLookupByLibrary.simpleMessage(
+      "Các gói cao cấp",
+    ),
+    "iapStoreSubscriptions": MessageLookupByLibrary.simpleMessage("Gói cước"),
+    "iapStoreTabCredits": MessageLookupByLibrary.simpleMessage("Tín dụng"),
+    "iapStoreTabFeatures": MessageLookupByLibrary.simpleMessage("Tính năng"),
+    "iapStoreTabSubscribe": MessageLookupByLibrary.simpleMessage("Gói cước"),
+    "iapStoreTitle": MessageLookupByLibrary.simpleMessage("Cửa hàng Premium"),
+    "iapStoreUnlockForever": MessageLookupByLibrary.simpleMessage(
+      "Mở khoá vĩnh viễn",
+    ),
+    "iapUnlock": MessageLookupByLibrary.simpleMessage("Mở khoá"),
+    "iapUnlockFeaturesTitle": MessageLookupByLibrary.simpleMessage(
+      "Mở khoá Tính năng",
+    ),
+    "iapUnlocked": MessageLookupByLibrary.simpleMessage("ĐÃ MỞ"),
+    "iapUnlockedFeatures": MessageLookupByLibrary.simpleMessage("Đã mở khoá"),
+    "iapUnlockedOn": m6,
+    "iapVouchers": MessageLookupByLibrary.simpleMessage("Voucher"),
     "indian": MessageLookupByLibrary.simpleMessage("Món Ấn Độ"),
     "invalidEmail": MessageLookupByLibrary.simpleMessage(
       "Vui lòng nhập email hợp lệ",
     ),
     "italian": MessageLookupByLibrary.simpleMessage("Món Ý"),
-    "items": m4,
-    "itemsFrom": m5,
+    "items": m7,
+    "itemsFrom": m8,
     "japanese": MessageLookupByLibrary.simpleMessage("Món Nhật"),
     "joinTheHearth": MessageLookupByLibrary.simpleMessage("THAM GIA HEARTH"),
+    "livestreamConnecting": MessageLookupByLibrary.simpleMessage(
+      "Đang kết nối livestream...",
+    ),
+    "livestreamEmptyDesc": MessageLookupByLibrary.simpleMessage(
+      "Vui lòng quay lại sau để xem các phiên nấu ăn trực tiếp",
+    ),
+    "livestreamEmptyTitle": MessageLookupByLibrary.simpleMessage(
+      "Chưa có Livestream nào",
+    ),
     "livestreamEnded": MessageLookupByLibrary.simpleMessage(
       "Livestream đã kết thúc",
     ),
+    "livestreamErrorAuth": MessageLookupByLibrary.simpleMessage(
+      "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
+    ),
+    "livestreamErrorGeneric": MessageLookupByLibrary.simpleMessage(
+      "Đã có lỗi xảy ra. Vui lòng thử lại.",
+    ),
+    "livestreamErrorLoad": MessageLookupByLibrary.simpleMessage(
+      "Không thể tải danh sách livestream",
+    ),
+    "livestreamErrorNetwork": MessageLookupByLibrary.simpleMessage(
+      "Lỗi kết nối mạng. Vui lòng kiểm tra lại internet của bạn.",
+    ),
+    "livestreamErrorOops": MessageLookupByLibrary.simpleMessage(
+      "Ối! Có lỗi xảy ra",
+    ),
+    "livestreamErrorServer": MessageLookupByLibrary.simpleMessage(
+      "Máy chủ đang gặp sự cố. Vui lòng thử lại sau ít phút.",
+    ),
+    "livestreamFilterAll": MessageLookupByLibrary.simpleMessage("Tất cả"),
+    "livestreamFilterBaking": MessageLookupByLibrary.simpleMessage("Làm bánh"),
+    "livestreamFilterDesserts": MessageLookupByLibrary.simpleMessage(
+      "Tráng miệng",
+    ),
+    "livestreamFilterDrinks": MessageLookupByLibrary.simpleMessage("Đồ uống"),
+    "livestreamFilterFineDining": MessageLookupByLibrary.simpleMessage(
+      "Nhà hàng sang trọng",
+    ),
+    "livestreamFilterStreetFood": MessageLookupByLibrary.simpleMessage(
+      "Ẩm thực đường phố",
+    ),
+    "livestreamInitializing": MessageLookupByLibrary.simpleMessage(
+      "Đang khởi tạo...",
+    ),
+    "livestreamLiveNow": MessageLookupByLibrary.simpleMessage(
+      "ĐANG PHÁT TRỰC TIẾP",
+    ),
     "livestreamOngoing": MessageLookupByLibrary.simpleMessage(
       "Livestream đang diễn ra",
+    ),
+    "livestreamTryAgain": MessageLookupByLibrary.simpleMessage("Thử lại"),
+    "livestreamWaitingStreamer": MessageLookupByLibrary.simpleMessage(
+      "Đang chờ streamer...",
+    ),
+    "livestreamWriteComment": MessageLookupByLibrary.simpleMessage(
+      "Viết bình luận...",
     ),
     "loading": MessageLookupByLibrary.simpleMessage("Đang tải..."),
     "login": MessageLookupByLibrary.simpleMessage("Đăng nhập"),
@@ -369,10 +486,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "notificationMarkAllRead": MessageLookupByLibrary.simpleMessage(
       "Đọc tất cả",
     ),
-    "notificationTimeDays": m6,
-    "notificationTimeHours": m7,
+    "notificationTimeDays": m9,
+    "notificationTimeHours": m10,
     "notificationTimeJustNow": MessageLookupByLibrary.simpleMessage("Vừa xong"),
-    "notificationTimeMinutes": m8,
+    "notificationTimeMinutes": m11,
     "notificationTitle": MessageLookupByLibrary.simpleMessage("Thông báo"),
     "order": MessageLookupByLibrary.simpleMessage("Đơn hàng"),
     "orderCancelled": MessageLookupByLibrary.simpleMessage(
@@ -406,7 +523,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "popularNearYou": MessageLookupByLibrary.simpleMessage("Phổ Biến Gần Bạn"),
     "preparing": MessageLookupByLibrary.simpleMessage("Đang chuẩn bị"),
-    "price": m9,
+    "price": m12,
     "privacyPolicy": MessageLookupByLibrary.simpleMessage("Chính sách Bảo mật"),
     "proceedToCheckout": MessageLookupByLibrary.simpleMessage(
       "Tiến hành thanh toán",
@@ -461,7 +578,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "rateShipperTitle": MessageLookupByLibrary.simpleMessage(
       "Đánh giá Shipper",
     ),
-    "rating": m10,
+    "rating": m13,
     "ratingError": MessageLookupByLibrary.simpleMessage("Có lỗi xảy ra"),
     "ratingHint": MessageLookupByLibrary.simpleMessage(
       "Nhận xét của bạn (không bắt buộc)",
@@ -478,6 +595,22 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "remove": MessageLookupByLibrary.simpleMessage("Xóa"),
     "restaurants": MessageLookupByLibrary.simpleMessage("Nhà Hàng"),
+    "restaurantsAllTitle": MessageLookupByLibrary.simpleMessage(
+      "Tất cả nhà hàng",
+    ),
+    "restaurantsError": m14,
+    "restaurantsFilterAll": MessageLookupByLibrary.simpleMessage("Tất cả"),
+    "restaurantsFilterFastDelivery": MessageLookupByLibrary.simpleMessage(
+      "Giao nhanh",
+    ),
+    "restaurantsFilterNearby": MessageLookupByLibrary.simpleMessage("Gần tôi"),
+    "restaurantsFilterPromo": MessageLookupByLibrary.simpleMessage(
+      "Khuyến mãi",
+    ),
+    "restaurantsFilterTopRated": MessageLookupByLibrary.simpleMessage(
+      "Đánh giá cao",
+    ),
+    "restaurantsFreeDelivery": MessageLookupByLibrary.simpleMessage("Miễn phí"),
     "retry": MessageLookupByLibrary.simpleMessage("Thử lại"),
     "reviews": MessageLookupByLibrary.simpleMessage("Đánh Giá"),
     "searchHint": MessageLookupByLibrary.simpleMessage("Tìm kiếm món ăn..."),

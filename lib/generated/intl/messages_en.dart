@@ -30,19 +30,27 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m3(addressLabel) =>
       "Are you sure you want to delete address \"${addressLabel}\"?";
 
-  static String m4(count) => "${count} items";
+  static String m4(date) => "Expires: ${date}";
 
-  static String m5(restaurantName) => "Items from ${restaurantName}";
+  static String m5(count) => "${count} features remaining";
 
-  static String m6(days) => "${days} days ago";
+  static String m6(date) => "Unlocked on ${date}";
 
-  static String m7(hours) => "${hours} hours ago";
+  static String m7(count) => "${count} items";
 
-  static String m8(minutes) => "${minutes} minutes ago";
+  static String m8(restaurantName) => "Items from ${restaurantName}";
 
-  static String m9(price) => "\$${price}";
+  static String m9(days) => "${days} days ago";
 
-  static String m10(rating) => "${rating}";
+  static String m10(hours) => "${hours} hours ago";
+
+  static String m11(minutes) => "${minutes} minutes ago";
+
+  static String m12(price) => "\$${price}";
+
+  static String m13(rating) => "${rating}";
+
+  static String m14(message) => "Error: ${message}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -315,20 +323,137 @@ class MessageLookup extends MessageLookupByLibrary {
       "Hide Order Details",
     ),
     "home": MessageLookupByLibrary.simpleMessage("Home"),
+    "iapAllFeatures": MessageLookupByLibrary.simpleMessage("🎯 All Features"),
+    "iapAllFeaturesUnlocked": MessageLookupByLibrary.simpleMessage(
+      "🎉 All features unlocked!",
+    ),
+    "iapBuy": MessageLookupByLibrary.simpleMessage("Buy"),
+    "iapChoosePlan": MessageLookupByLibrary.simpleMessage("Choose Your Plan"),
+    "iapCode": MessageLookupByLibrary.simpleMessage("Code"),
+    "iapCreditsBalance": MessageLookupByLibrary.simpleMessage(
+      "Credits Balance",
+    ),
+    "iapCreditsVouchersTitle": MessageLookupByLibrary.simpleMessage(
+      "Credits & Vouchers",
+    ),
+    "iapCurrent": MessageLookupByLibrary.simpleMessage("CURRENT"),
+    "iapCurrentPlan": MessageLookupByLibrary.simpleMessage("Current Plan"),
+    "iapDeliveryCredits": MessageLookupByLibrary.simpleMessage(
+      "Delivery Credits",
+    ),
+    "iapExpired": MessageLookupByLibrary.simpleMessage("Expired"),
+    "iapExpires": m4,
+    "iapFeaturesRemaining": m5,
+    "iapGiftCards": MessageLookupByLibrary.simpleMessage("Gift Cards"),
+    "iapMyVouchers": MessageLookupByLibrary.simpleMessage("My Vouchers"),
+    "iapOff": MessageLookupByLibrary.simpleMessage("OFF"),
+    "iapPopularFeatures": MessageLookupByLibrary.simpleMessage(
+      "⭐ Popular Features",
+    ),
+    "iapPremiumFeatures": MessageLookupByLibrary.simpleMessage(
+      "👑 Premium Features",
+    ),
+    "iapRestorePurchases": MessageLookupByLibrary.simpleMessage(
+      "Restore Purchases",
+    ),
+    "iapRetry": MessageLookupByLibrary.simpleMessage("Retry"),
+    "iapStoreAllStore": MessageLookupByLibrary.simpleMessage("All Store"),
+    "iapStoreBrowseAll": MessageLookupByLibrary.simpleMessage(
+      "Browse everything",
+    ),
+    "iapStoreBuyCredits": MessageLookupByLibrary.simpleMessage(
+      "Buy delivery credits",
+    ),
+    "iapStoreChooseCategory": MessageLookupByLibrary.simpleMessage(
+      "Choose a category",
+    ),
+    "iapStorePremiumPlans": MessageLookupByLibrary.simpleMessage(
+      "Premium plans",
+    ),
+    "iapStoreSubscriptions": MessageLookupByLibrary.simpleMessage(
+      "Subscriptions",
+    ),
+    "iapStoreTabCredits": MessageLookupByLibrary.simpleMessage("Credits"),
+    "iapStoreTabFeatures": MessageLookupByLibrary.simpleMessage("Features"),
+    "iapStoreTabSubscribe": MessageLookupByLibrary.simpleMessage("Subscribe"),
+    "iapStoreTitle": MessageLookupByLibrary.simpleMessage("Premium Store"),
+    "iapStoreUnlockForever": MessageLookupByLibrary.simpleMessage(
+      "Unlock forever",
+    ),
+    "iapUnlock": MessageLookupByLibrary.simpleMessage("Unlock"),
+    "iapUnlockFeaturesTitle": MessageLookupByLibrary.simpleMessage(
+      "Unlock Features",
+    ),
+    "iapUnlocked": MessageLookupByLibrary.simpleMessage("UNLOCKED"),
+    "iapUnlockedFeatures": MessageLookupByLibrary.simpleMessage(
+      "Unlocked Features",
+    ),
+    "iapUnlockedOn": m6,
+    "iapVouchers": MessageLookupByLibrary.simpleMessage("Vouchers"),
     "indian": MessageLookupByLibrary.simpleMessage("Indian"),
     "invalidEmail": MessageLookupByLibrary.simpleMessage(
       "Please enter a valid email",
     ),
     "italian": MessageLookupByLibrary.simpleMessage("Italian"),
-    "items": m4,
-    "itemsFrom": m5,
+    "items": m7,
+    "itemsFrom": m8,
     "japanese": MessageLookupByLibrary.simpleMessage("Japanese"),
     "joinTheHearth": MessageLookupByLibrary.simpleMessage("JOIN THE HEARTH"),
+    "livestreamConnecting": MessageLookupByLibrary.simpleMessage(
+      "Connecting to livestream...",
+    ),
+    "livestreamEmptyDesc": MessageLookupByLibrary.simpleMessage(
+      "Check back later for live sessions",
+    ),
+    "livestreamEmptyTitle": MessageLookupByLibrary.simpleMessage(
+      "No Livestreams Yet",
+    ),
     "livestreamEnded": MessageLookupByLibrary.simpleMessage(
       "Livestream has ended",
     ),
+    "livestreamErrorAuth": MessageLookupByLibrary.simpleMessage(
+      "Session expired. Please log in again.",
+    ),
+    "livestreamErrorGeneric": MessageLookupByLibrary.simpleMessage(
+      "An error occurred. Please try again.",
+    ),
+    "livestreamErrorLoad": MessageLookupByLibrary.simpleMessage(
+      "Cannot load livestreams",
+    ),
+    "livestreamErrorNetwork": MessageLookupByLibrary.simpleMessage(
+      "Network error. Please check your internet connection.",
+    ),
+    "livestreamErrorOops": MessageLookupByLibrary.simpleMessage(
+      "Oops! Something went wrong",
+    ),
+    "livestreamErrorServer": MessageLookupByLibrary.simpleMessage(
+      "Server is encountering an issue. Please try again later.",
+    ),
+    "livestreamFilterAll": MessageLookupByLibrary.simpleMessage("All"),
+    "livestreamFilterBaking": MessageLookupByLibrary.simpleMessage("Baking"),
+    "livestreamFilterDesserts": MessageLookupByLibrary.simpleMessage(
+      "Desserts",
+    ),
+    "livestreamFilterDrinks": MessageLookupByLibrary.simpleMessage("Drinks"),
+    "livestreamFilterFineDining": MessageLookupByLibrary.simpleMessage(
+      "Fine Dining",
+    ),
+    "livestreamFilterStreetFood": MessageLookupByLibrary.simpleMessage(
+      "Street Food",
+    ),
+    "livestreamInitializing": MessageLookupByLibrary.simpleMessage(
+      "Initializing...",
+    ),
+    "livestreamLiveNow": MessageLookupByLibrary.simpleMessage("LIVE NOW"),
     "livestreamOngoing": MessageLookupByLibrary.simpleMessage(
       "Ongoing Livestream",
+    ),
+    "livestreamTryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
+    "livestreamWaitingStreamer": MessageLookupByLibrary.simpleMessage(
+      "Waiting for streamer...",
+    ),
+    "livestreamWriteComment": MessageLookupByLibrary.simpleMessage(
+      "Write a comment...",
     ),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "login": MessageLookupByLibrary.simpleMessage("Login"),
@@ -369,10 +494,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "notificationMarkAllRead": MessageLookupByLibrary.simpleMessage(
       "Mark all as read",
     ),
-    "notificationTimeDays": m6,
-    "notificationTimeHours": m7,
+    "notificationTimeDays": m9,
+    "notificationTimeHours": m10,
     "notificationTimeJustNow": MessageLookupByLibrary.simpleMessage("Just now"),
-    "notificationTimeMinutes": m8,
+    "notificationTimeMinutes": m11,
     "notificationTitle": MessageLookupByLibrary.simpleMessage("Notifications"),
     "order": MessageLookupByLibrary.simpleMessage("Order"),
     "orderCancelled": MessageLookupByLibrary.simpleMessage(
@@ -406,7 +531,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "popularNearYou": MessageLookupByLibrary.simpleMessage("Popular Near You"),
     "preparing": MessageLookupByLibrary.simpleMessage("Preparing"),
-    "price": m9,
+    "price": m12,
     "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
     "proceedToCheckout": MessageLookupByLibrary.simpleMessage(
       "Proceed to Checkout",
@@ -455,7 +580,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "quantity": MessageLookupByLibrary.simpleMessage("Qty"),
     "rateShipperBtn": MessageLookupByLibrary.simpleMessage("Rate Shipper"),
     "rateShipperTitle": MessageLookupByLibrary.simpleMessage("Rate Shipper"),
-    "rating": m10,
+    "rating": m13,
     "ratingError": MessageLookupByLibrary.simpleMessage("An error occurred"),
     "ratingHint": MessageLookupByLibrary.simpleMessage(
       "Your comment (optional)",
@@ -472,6 +597,22 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "remove": MessageLookupByLibrary.simpleMessage("Remove"),
     "restaurants": MessageLookupByLibrary.simpleMessage("Restaurants"),
+    "restaurantsAllTitle": MessageLookupByLibrary.simpleMessage(
+      "All Restaurants",
+    ),
+    "restaurantsError": m14,
+    "restaurantsFilterAll": MessageLookupByLibrary.simpleMessage("All"),
+    "restaurantsFilterFastDelivery": MessageLookupByLibrary.simpleMessage(
+      "Fast Delivery",
+    ),
+    "restaurantsFilterNearby": MessageLookupByLibrary.simpleMessage("Nearby"),
+    "restaurantsFilterPromo": MessageLookupByLibrary.simpleMessage(
+      "Promotions",
+    ),
+    "restaurantsFilterTopRated": MessageLookupByLibrary.simpleMessage(
+      "Top Rated",
+    ),
+    "restaurantsFreeDelivery": MessageLookupByLibrary.simpleMessage("Free"),
     "retry": MessageLookupByLibrary.simpleMessage("Retry"),
     "reviews": MessageLookupByLibrary.simpleMessage("Reviews"),
     "searchHint": MessageLookupByLibrary.simpleMessage("Search for dishes..."),

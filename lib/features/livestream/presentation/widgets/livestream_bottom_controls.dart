@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:delivery_app/generated/l10n.dart';
 import '../../domain/entities/livestream_entity.dart';
 
 class LivestreamBottomControls extends StatelessWidget {
@@ -64,7 +65,7 @@ class LivestreamBottomControls extends StatelessWidget {
                             fontSize: 14.sp,
                           ),
                           decoration: InputDecoration(
-                            hintText: 'Viết bình luận...',
+                            hintText: S.of(context).livestreamWriteComment,
                             hintStyle: TextStyle(
                               color: Colors.white.withValues(alpha: 0.5),
                               fontSize: 14.sp,

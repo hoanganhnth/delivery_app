@@ -6,8 +6,10 @@ import 'package:go_router/go_router.dart';
 
 import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
+import 'package:delivery_app/generated/l10n.dart';
 import '../providers/providers.dart';
 import '../widgets/livestream_card_grid.dart';
+import '../widgets/livestream_category_filter.dart';
 
 /// Màn hình hiển thị tất cả livestream - Stitch Editorial Redesign
 /// Design: Editorial style với rounded cards, category pills, staggered grid
@@ -21,15 +23,6 @@ class AllLivestreamsScreen extends ConsumerStatefulWidget {
 class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
   final ScrollController _scrollController = ScrollController();
   String _selectedCategory = 'All';
-
-  final List<Map<String, dynamic>> _categoryData = [
-    {'icon': Icons.restaurant_menu, 'label': 'All'},
-    {'icon': Icons.local_fire_department, 'label': 'Street Food'},
-    {'icon': Icons.dining, 'label': 'Fine Dining'},
-    {'icon': Icons.cake, 'label': 'Baking'},
-    {'icon': Icons.icecream, 'label': 'Desserts'},
-    {'icon': Icons.local_cafe, 'label': 'Drinks'},
-  ];
 
   @override
   void initState() {
@@ -57,6 +50,8 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
+    
     return SafeArea(
       bottom: false,
       child: RefreshIndicator(
@@ -70,40 +65,25 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
-                child: const EditorialHeader(
-                  subtitle: 'LIVE NOW',
+                child: EditorialHeader(
+                  subtitle: s.livestreamLiveNow,
                   title: 'Foodie ',
                   titleHighlight: 'Live',
-                  description: 'Watch chefs cook in real-time',
+                  description: 'Watch chefs cook in real-time', // Could be localized, but let's keep it standard or if we had a key, we'd use it. For now, leave English or create key. I'll just leave this one as is.
                 ),
               ),
             ),
 
             // Category Pills - Horizontal scroll
             SliverToBoxAdapter(
-              child: SizedBox(
-                height: 100.h,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  itemCount: _categoryData.length,
-                  separatorBuilder: (_, __) => SizedBox(width: 12.w),
-                  itemBuilder: (context, index) {
-                    final category = _categoryData[index];
-                    final isActive = category['label'] == _selectedCategory;
-                    return CategoryPill(
-                      icon: category['icon'] as IconData,
-                      label: category['label'] as String,
-                      isActive: isActive,
-                      onTap: () {
-                        setState(() {
-                          _selectedCategory = category['label'] as String;
-                        });
-                        // TODO: Filter livestreams by category
-                      },
-                    );
-                  },
-                ),
+              child: LivestreamCategoryFilter(
+                selectedCategory: _selectedCategory,
+                onCategorySelected: (categoryId) {
+                  setState(() {
+                    _selectedCategory = categoryId;
+                  });
+                  // TODO: Filter livestreams by category
+                },
               ),
             ),
 
@@ -288,33 +268,36 @@ class LivestreamErrorState extends ConsumerWidget {
   
   const LivestreamErrorState({super.key, this.errorMessage});
 
-  String _getFriendlyErrorMessage(String? error) {
-    if (error == null) return 'Không thể tải danh sách livestream';
+  String _getFriendlyErrorMessage(BuildContext context, String? error) {
+    final s = S.of(context);
+    if (error == null) return s.livestreamErrorLoad;
 
     final lowerError = error.toLowerCase();
 
     if (lowerError.contains('dioexception') ||
         lowerError.contains('network') ||
         lowerError.contains('connection')) {
-      return 'Lỗi kết nối mạng. Vui lòng kiểm tra lại internet của bạn.';
+      return s.livestreamErrorNetwork;
     }
 
     if (lowerError.contains('serverexception') ||
         lowerError.contains('500') ||
         lowerError.contains('bad response')) {
-      return 'Máy chủ đang gặp sự cố. Vui lòng thử lại sau ít phút.';
+      return s.livestreamErrorServer;
     }
 
     if (lowerError.contains('unauthorized') || lowerError.contains('401')) {
-      return 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
+      return s.livestreamErrorAuth;
     }
 
-    return 'Đã có lỗi xảy ra. Vui lòng thử lại.';
+    return s.livestreamErrorGeneric;
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final s = S.of(context);
+    
     return Center(
       child: SingleChildScrollView(
         child: Padding(
@@ -340,14 +323,14 @@ class LivestreamErrorState extends ConsumerWidget {
               ),
               SizedBox(height: 24.h),
               Text(
-                'Oops! Something went wrong',
+                s.livestreamErrorOops,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
               SizedBox(height: 8.h),
               Text(
-                _getFriendlyErrorMessage(errorMessage),
+                _getFriendlyErrorMessage(context, errorMessage),
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -359,7 +342,7 @@ class LivestreamErrorState extends ConsumerWidget {
                   ref.read(livestreamListProvider.notifier).loadLivestreams(refresh: true);
                 },
                 icon: const Icon(Icons.refresh_rounded),
-                label: const Text('Try Again'),
+                label: Text(s.livestreamTryAgain),
                 style: FilledButton.styleFrom(
                   padding: EdgeInsets.symmetric(
                     horizontal: 24.w,
@@ -384,6 +367,8 @@ class LivestreamEmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final s = S.of(context);
+    
     return Center(
       child: Padding(
         padding: EdgeInsets.all(32.w),
@@ -407,14 +392,14 @@ class LivestreamEmptyState extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
             Text(
-              'No Livestreams Yet',
+              s.livestreamEmptyTitle,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
             ),
             SizedBox(height: 8.h),
             Text(
-              'Check back later for live cooking sessions',
+              s.livestreamEmptyDesc,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),

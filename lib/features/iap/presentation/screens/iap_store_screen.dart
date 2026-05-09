@@ -2,6 +2,7 @@ import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/features/iap/presentation/screens/consumable_screen.dart';
 import 'package:delivery_app/features/iap/presentation/screens/non_consumable_screen.dart';
 import 'package:delivery_app/features/iap/presentation/screens/subscription_screen.dart';
+import 'package:delivery_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,11 +12,13 @@ class IapStoreScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Premium Store'),
+          title: Text(s.iapStoreTitle),
           backgroundColor: ref.colors.primary,
           foregroundColor: ref.colors.onPrimary,
           elevation: 0,
@@ -24,18 +27,18 @@ class IapStoreScreen extends ConsumerWidget {
             indicatorWeight: 3,
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white70,
-            tabs: const [
+            tabs: [
               Tab(
-                icon: Icon(Icons.card_membership),
-                text: 'Subscribe',
+                icon: const Icon(Icons.card_membership),
+                text: s.iapStoreTabSubscribe,
               ),
               Tab(
-                icon: Icon(Icons.monetization_on),
-                text: 'Credits',
+                icon: const Icon(Icons.monetization_on),
+                text: s.iapStoreTabCredits,
               ),
               Tab(
-                icon: Icon(Icons.lock_open),
-                text: 'Features',
+                icon: const Icon(Icons.lock_open),
+                text: s.iapStoreTabFeatures,
               ),
             ],
           ),
@@ -85,9 +88,11 @@ class IapMenuScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Premium Store'),
+        title: Text(s.iapStoreTitle),
         backgroundColor: ref.colors.primary,
         foregroundColor: ref.colors.onPrimary,
       ),
@@ -97,7 +102,7 @@ class IapMenuScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Choose a category',
+              s.iapStoreChooseCategory,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -112,8 +117,8 @@ class IapMenuScreen extends ConsumerWidget {
                   _buildMenuCard(
                     context,
                     ref,
-                    title: 'Subscriptions',
-                    subtitle: 'Premium plans',
+                    title: s.iapStoreSubscriptions,
+                    subtitle: s.iapStorePremiumPlans,
                     icon: Icons.card_membership,
                     color: Colors.blue,
                     onTap: () => Navigator.push(
@@ -126,8 +131,8 @@ class IapMenuScreen extends ConsumerWidget {
                   _buildMenuCard(
                     context,
                     ref,
-                    title: 'Credits',
-                    subtitle: 'Buy delivery credits',
+                    title: s.iapStoreTabCredits,
+                    subtitle: s.iapStoreBuyCredits,
                     icon: Icons.monetization_on,
                     color: Colors.green,
                     onTap: () => Navigator.push(
@@ -140,8 +145,8 @@ class IapMenuScreen extends ConsumerWidget {
                   _buildMenuCard(
                     context,
                     ref,
-                    title: 'Features',
-                    subtitle: 'Unlock forever',
+                    title: s.iapStoreTabFeatures,
+                    subtitle: s.iapStoreUnlockForever,
                     icon: Icons.lock_open,
                     color: Colors.purple,
                     onTap: () => Navigator.push(
@@ -154,8 +159,8 @@ class IapMenuScreen extends ConsumerWidget {
                   _buildMenuCard(
                     context,
                     ref,
-                    title: 'All Store',
-                    subtitle: 'Browse everything',
+                    title: s.iapStoreAllStore,
+                    subtitle: s.iapStoreBrowseAll,
                     icon: Icons.store,
                     color: Colors.orange,
                     onTap: () => Navigator.push(
