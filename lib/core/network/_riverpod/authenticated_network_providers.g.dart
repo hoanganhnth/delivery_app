@@ -10,74 +10,17 @@ part of 'authenticated_network_providers.dart';
 // ignore_for_file: type=lint, type=warning
 /// Provider for authenticated Dio instance
 /// This should be overridden by features that need authentication
-///
-/// Usage example:
-/// ```dart
-/// // In auth module, override this provider
-/// @riverpod
-/// Dio authenticatedDio(Ref ref) {
-///   final dioClient = DioClient(
-///     getToken: () async {
-///       final authState = ref.read(authProvider);
-///       return authState.user?.accessToken;
-///     },
-///     onRefreshToken: () async {
-///       final authNotifier = ref.read(authProvider.notifier);
-///       return await authNotifier.refreshToken();
-///     },
-///   );
-///   return dioClient.dio;
-/// }
-/// ```
 
 @ProviderFor(authenticatedDio)
 final authenticatedDioProvider = AuthenticatedDioProvider._();
 
 /// Provider for authenticated Dio instance
 /// This should be overridden by features that need authentication
-///
-/// Usage example:
-/// ```dart
-/// // In auth module, override this provider
-/// @riverpod
-/// Dio authenticatedDio(Ref ref) {
-///   final dioClient = DioClient(
-///     getToken: () async {
-///       final authState = ref.read(authProvider);
-///       return authState.user?.accessToken;
-///     },
-///     onRefreshToken: () async {
-///       final authNotifier = ref.read(authProvider.notifier);
-///       return await authNotifier.refreshToken();
-///     },
-///   );
-///   return dioClient.dio;
-/// }
-/// ```
 
 final class AuthenticatedDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
     with $Provider<Dio> {
   /// Provider for authenticated Dio instance
   /// This should be overridden by features that need authentication
-  ///
-  /// Usage example:
-  /// ```dart
-  /// // In auth module, override this provider
-  /// @riverpod
-  /// Dio authenticatedDio(Ref ref) {
-  ///   final dioClient = DioClient(
-  ///     getToken: () async {
-  ///       final authState = ref.read(authProvider);
-  ///       return authState.user?.accessToken;
-  ///     },
-  ///     onRefreshToken: () async {
-  ///       final authNotifier = ref.read(authProvider.notifier);
-  ///       return await authNotifier.refreshToken();
-  ///     },
-  ///   );
-  ///   return dioClient.dio;
-  /// }
-  /// ```
   AuthenticatedDioProvider._()
     : super(
         from: null,

@@ -72,6 +72,7 @@ sealed class LivestreamProductDto with _$LivestreamProductDto {
     double? discountPrice,
     String? description,
     int? stockQuantity,
+    @Default(false) bool isPinned,
   }) = _LivestreamProductDto;
 
   const LivestreamProductDto._();
@@ -91,6 +92,7 @@ sealed class LivestreamProductDto with _$LivestreamProductDto {
       discountPrice: discountPrice,
       description: description,
       stockQuantity: stockQuantity,
+      isPinned: isPinned,
     );
   }
 }

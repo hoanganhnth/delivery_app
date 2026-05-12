@@ -323,7 +323,7 @@ as List<LivestreamProductEntity>?,
 /// @nodoc
 mixin _$LivestreamProductEntity {
 
- num get id; String get name; double get price; String get image; num get restaurantId; String get restaurantName; double? get discountPrice; String? get description; int? get stockQuantity;
+ num get id; String get name; double get price; String get image; num get restaurantId; String get restaurantName; double? get discountPrice; String? get description; int? get stockQuantity; bool get isPinned;
 /// Create a copy of LivestreamProductEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -334,16 +334,16 @@ $LivestreamProductEntityCopyWith<LivestreamProductEntity> get copyWith => _$Live
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LivestreamProductEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.price, price) || other.price == price)&&(identical(other.image, image) || other.image == image)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&(identical(other.discountPrice, discountPrice) || other.discountPrice == discountPrice)&&(identical(other.description, description) || other.description == description)&&(identical(other.stockQuantity, stockQuantity) || other.stockQuantity == stockQuantity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LivestreamProductEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.price, price) || other.price == price)&&(identical(other.image, image) || other.image == image)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&(identical(other.discountPrice, discountPrice) || other.discountPrice == discountPrice)&&(identical(other.description, description) || other.description == description)&&(identical(other.stockQuantity, stockQuantity) || other.stockQuantity == stockQuantity)&&(identical(other.isPinned, isPinned) || other.isPinned == isPinned));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,price,image,restaurantId,restaurantName,discountPrice,description,stockQuantity);
+int get hashCode => Object.hash(runtimeType,id,name,price,image,restaurantId,restaurantName,discountPrice,description,stockQuantity,isPinned);
 
 @override
 String toString() {
-  return 'LivestreamProductEntity(id: $id, name: $name, price: $price, image: $image, restaurantId: $restaurantId, restaurantName: $restaurantName, discountPrice: $discountPrice, description: $description, stockQuantity: $stockQuantity)';
+  return 'LivestreamProductEntity(id: $id, name: $name, price: $price, image: $image, restaurantId: $restaurantId, restaurantName: $restaurantName, discountPrice: $discountPrice, description: $description, stockQuantity: $stockQuantity, isPinned: $isPinned)';
 }
 
 
@@ -354,7 +354,7 @@ abstract mixin class $LivestreamProductEntityCopyWith<$Res>  {
   factory $LivestreamProductEntityCopyWith(LivestreamProductEntity value, $Res Function(LivestreamProductEntity) _then) = _$LivestreamProductEntityCopyWithImpl;
 @useResult
 $Res call({
- num id, String name, double price, String image, num restaurantId, String restaurantName, double? discountPrice, String? description, int? stockQuantity
+ num id, String name, double price, String image, num restaurantId, String restaurantName, double? discountPrice, String? description, int? stockQuantity, bool isPinned
 });
 
 
@@ -371,7 +371,7 @@ class _$LivestreamProductEntityCopyWithImpl<$Res>
 
 /// Create a copy of LivestreamProductEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? price = null,Object? image = null,Object? restaurantId = null,Object? restaurantName = null,Object? discountPrice = freezed,Object? description = freezed,Object? stockQuantity = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? price = null,Object? image = null,Object? restaurantId = null,Object? restaurantName = null,Object? discountPrice = freezed,Object? description = freezed,Object? stockQuantity = freezed,Object? isPinned = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as num,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -382,7 +382,8 @@ as num,restaurantName: null == restaurantName ? _self.restaurantName : restauran
 as String,discountPrice: freezed == discountPrice ? _self.discountPrice : discountPrice // ignore: cast_nullable_to_non_nullable
 as double?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,stockQuantity: freezed == stockQuantity ? _self.stockQuantity : stockQuantity // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,isPinned: null == isPinned ? _self.isPinned : isPinned // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -464,10 +465,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( num id,  String name,  double price,  String image,  num restaurantId,  String restaurantName,  double? discountPrice,  String? description,  int? stockQuantity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( num id,  String name,  double price,  String image,  num restaurantId,  String restaurantName,  double? discountPrice,  String? description,  int? stockQuantity,  bool isPinned)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LivestreamProductEntity() when $default != null:
-return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_that.restaurantName,_that.discountPrice,_that.description,_that.stockQuantity);case _:
+return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_that.restaurantName,_that.discountPrice,_that.description,_that.stockQuantity,_that.isPinned);case _:
   return orElse();
 
 }
@@ -485,10 +486,10 @@ return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num id,  String name,  double price,  String image,  num restaurantId,  String restaurantName,  double? discountPrice,  String? description,  int? stockQuantity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num id,  String name,  double price,  String image,  num restaurantId,  String restaurantName,  double? discountPrice,  String? description,  int? stockQuantity,  bool isPinned)  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamProductEntity():
-return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_that.restaurantName,_that.discountPrice,_that.description,_that.stockQuantity);}
+return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_that.restaurantName,_that.discountPrice,_that.description,_that.stockQuantity,_that.isPinned);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -502,10 +503,10 @@ return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( num id,  String name,  double price,  String image,  num restaurantId,  String restaurantName,  double? discountPrice,  String? description,  int? stockQuantity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( num id,  String name,  double price,  String image,  num restaurantId,  String restaurantName,  double? discountPrice,  String? description,  int? stockQuantity,  bool isPinned)?  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamProductEntity() when $default != null:
-return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_that.restaurantName,_that.discountPrice,_that.description,_that.stockQuantity);case _:
+return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_that.restaurantName,_that.discountPrice,_that.description,_that.stockQuantity,_that.isPinned);case _:
   return null;
 
 }
@@ -517,7 +518,7 @@ return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_
 
 
 class _LivestreamProductEntity extends LivestreamProductEntity {
-  const _LivestreamProductEntity({required this.id, required this.name, required this.price, required this.image, required this.restaurantId, required this.restaurantName, this.discountPrice, this.description, this.stockQuantity}): super._();
+  const _LivestreamProductEntity({required this.id, required this.name, required this.price, required this.image, required this.restaurantId, required this.restaurantName, this.discountPrice, this.description, this.stockQuantity, this.isPinned = false}): super._();
   
 
 @override final  num id;
@@ -529,6 +530,7 @@ class _LivestreamProductEntity extends LivestreamProductEntity {
 @override final  double? discountPrice;
 @override final  String? description;
 @override final  int? stockQuantity;
+@override@JsonKey() final  bool isPinned;
 
 /// Create a copy of LivestreamProductEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -540,16 +542,16 @@ _$LivestreamProductEntityCopyWith<_LivestreamProductEntity> get copyWith => __$L
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LivestreamProductEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.price, price) || other.price == price)&&(identical(other.image, image) || other.image == image)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&(identical(other.discountPrice, discountPrice) || other.discountPrice == discountPrice)&&(identical(other.description, description) || other.description == description)&&(identical(other.stockQuantity, stockQuantity) || other.stockQuantity == stockQuantity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LivestreamProductEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.price, price) || other.price == price)&&(identical(other.image, image) || other.image == image)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&(identical(other.discountPrice, discountPrice) || other.discountPrice == discountPrice)&&(identical(other.description, description) || other.description == description)&&(identical(other.stockQuantity, stockQuantity) || other.stockQuantity == stockQuantity)&&(identical(other.isPinned, isPinned) || other.isPinned == isPinned));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,price,image,restaurantId,restaurantName,discountPrice,description,stockQuantity);
+int get hashCode => Object.hash(runtimeType,id,name,price,image,restaurantId,restaurantName,discountPrice,description,stockQuantity,isPinned);
 
 @override
 String toString() {
-  return 'LivestreamProductEntity(id: $id, name: $name, price: $price, image: $image, restaurantId: $restaurantId, restaurantName: $restaurantName, discountPrice: $discountPrice, description: $description, stockQuantity: $stockQuantity)';
+  return 'LivestreamProductEntity(id: $id, name: $name, price: $price, image: $image, restaurantId: $restaurantId, restaurantName: $restaurantName, discountPrice: $discountPrice, description: $description, stockQuantity: $stockQuantity, isPinned: $isPinned)';
 }
 
 
@@ -560,7 +562,7 @@ abstract mixin class _$LivestreamProductEntityCopyWith<$Res> implements $Livestr
   factory _$LivestreamProductEntityCopyWith(_LivestreamProductEntity value, $Res Function(_LivestreamProductEntity) _then) = __$LivestreamProductEntityCopyWithImpl;
 @override @useResult
 $Res call({
- num id, String name, double price, String image, num restaurantId, String restaurantName, double? discountPrice, String? description, int? stockQuantity
+ num id, String name, double price, String image, num restaurantId, String restaurantName, double? discountPrice, String? description, int? stockQuantity, bool isPinned
 });
 
 
@@ -577,7 +579,7 @@ class __$LivestreamProductEntityCopyWithImpl<$Res>
 
 /// Create a copy of LivestreamProductEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? price = null,Object? image = null,Object? restaurantId = null,Object? restaurantName = null,Object? discountPrice = freezed,Object? description = freezed,Object? stockQuantity = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? price = null,Object? image = null,Object? restaurantId = null,Object? restaurantName = null,Object? discountPrice = freezed,Object? description = freezed,Object? stockQuantity = freezed,Object? isPinned = null,}) {
   return _then(_LivestreamProductEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as num,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -588,7 +590,8 @@ as num,restaurantName: null == restaurantName ? _self.restaurantName : restauran
 as String,discountPrice: freezed == discountPrice ? _self.discountPrice : discountPrice // ignore: cast_nullable_to_non_nullable
 as double?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,stockQuantity: freezed == stockQuantity ? _self.stockQuantity : stockQuantity // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,isPinned: null == isPinned ? _self.isPinned : isPinned // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

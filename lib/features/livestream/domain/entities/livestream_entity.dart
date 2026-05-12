@@ -45,6 +45,7 @@ sealed class LivestreamProductEntity with _$LivestreamProductEntity {
     double? discountPrice,
     String? description,
     int? stockQuantity,
+    @Default(false) bool isPinned,
   }) = _LivestreamProductEntity;
 
   const LivestreamProductEntity._();

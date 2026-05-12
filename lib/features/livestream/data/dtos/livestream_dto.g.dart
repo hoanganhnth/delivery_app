@@ -64,6 +64,7 @@ _LivestreamProductDto _$LivestreamProductDtoFromJson(
   discountPrice: (json['discountPrice'] as num?)?.toDouble(),
   description: json['description'] as String?,
   stockQuantity: (json['stockQuantity'] as num?)?.toInt(),
+  isPinned: json['isPinned'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$LivestreamProductDtoToJson(
@@ -78,4 +79,5 @@ Map<String, dynamic> _$LivestreamProductDtoToJson(
   'discountPrice': instance.discountPrice,
   'description': instance.description,
   'stockQuantity': instance.stockQuantity,
+  'isPinned': instance.isPinned,
 };

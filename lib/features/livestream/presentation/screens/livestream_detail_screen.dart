@@ -294,14 +294,14 @@ class _LivestreamWatchingViewState
         ),
 
         // Pinned product overlay — appears when host pins a product
-        if (livestream.products != null && livestream.products!.isNotEmpty)
+        if (livestream.products != null && livestream.products!.any((p) => p.isPinned))
           Positioned(
             left: 0,
             right: 0,
             bottom: 140.w,
             child: LivestreamPinnedProductOverlay(
-              key: ValueKey(livestream.products!.first.id),
-              product: livestream.products!.first,
+              key: ValueKey(livestream.products!.firstWhere((p) => p.isPinned).id),
+              product: livestream.products!.firstWhere((p) => p.isPinned),
             ),
           ),
 
