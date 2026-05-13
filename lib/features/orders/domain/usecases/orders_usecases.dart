@@ -10,8 +10,8 @@ class GetUserOrdersUseCase {
 
   GetUserOrdersUseCase(this.repository);
 
-  Future<Either<Failure, List<OrderEntity>>> call() async {
-    return await repository.getUserOrders();
+  Future<Either<Failure, List<OrderEntity>>> call({int page = 0, int size = 20}) async {
+    return await repository.getUserOrders(page: page, size: size);
   }
 }
 

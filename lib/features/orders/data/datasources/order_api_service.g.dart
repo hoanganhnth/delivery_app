@@ -20,12 +20,15 @@ class _OrderApiService implements OrderApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<BaseResponseDto<List<OrderDto>>> getUserOrders() async {
+  Future<BaseResponseDto<PageDto<OrderDto>>> getUserOrders(
+    int page,
+    int size,
+  ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'page': page, r'size': size};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<BaseResponseDto<List<OrderDto>>>(
+    final _options = _setStreamType<BaseResponseDto<PageDto<OrderDto>>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -36,17 +39,14 @@ class _OrderApiService implements OrderApiService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BaseResponseDto<List<OrderDto>> _value;
+    late BaseResponseDto<PageDto<OrderDto>> _value;
     try {
-      _value = BaseResponseDto<List<OrderDto>>.fromJson(
+      _value = BaseResponseDto<PageDto<OrderDto>>.fromJson(
         _result.data!,
-        (json) => json is List<dynamic>
-            ? json
-                  .map<OrderDto>(
-                    (i) => OrderDto.fromJson(i as Map<String, dynamic>),
-                  )
-                  .toList()
-            : List.empty(),
+        (json) => PageDto<OrderDto>.fromJson(
+          json as Map<String, dynamic>,
+          (json) => OrderDto.fromJson(json as Map<String, dynamic>),
+        ),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, _result);

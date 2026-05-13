@@ -34,6 +34,15 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
       vsync: this,
     ); // All, Active, Completed
     _setupTabListener();
+    _setupScrollListener();
+  }
+
+  void _setupScrollListener() {
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+        ref.read(ordersListProvider.notifier).loadMoreOrders();
+      }
+    });
   }
 
   @override

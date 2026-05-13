@@ -8,18 +8,20 @@ import '../../../../core/error/dio_exception_handler.dart';
 import '../../../../core/network/resources/base_response_dto.dart';
 import '../../../../core/utils/logger/app_logger.dart';
 
+import 'package:delivery_app/core/network/resources/page_dto.dart';
+
 class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
   final OrderApiService _apiService;
 
   OrderRemoteDataSourceImpl(this._apiService);
 
   @override
-  Future<List<OrderDto>> getUserOrders() async {
+  Future<PageDto<OrderDto>> getUserOrders(int page, int size) async {
     try {
-      AppLogger.d('Getting user orders');
-      final response = await _apiService.getUserOrders();
+      AppLogger.d('Getting user orders page $page size $size');
+      final response = await _apiService.getUserOrders(page, size);
       AppLogger.i(
-        'Successfully retrieved ${response.data?.length ?? 0} orders',
+        'Successfully retrieved ${response.data?.content.length ?? 0} orders',
       );
 
       if (response.isSuccess && response.data != null) {

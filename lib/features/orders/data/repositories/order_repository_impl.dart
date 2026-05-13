@@ -18,10 +18,12 @@ class OrderRepositoryImpl implements OrderRepository {
   OrderRepositoryImpl(this._remoteDataSource, this._mockOrderService);
 
   @override
-  Future<Either<Failure, List<OrderEntity>>> getUserOrders() async {
+  Future<Either<Failure, List<OrderEntity>>> getUserOrders({int page = 0, int size = 20}) async {
     try {
-      final dtos = await _remoteDataSource.getUserOrders();
-      return right(dtos.map((dto) => dto.toEntity()).toList());
+      final pageDto = await _remoteDataSource.getUserOrders(page, size);
+      final dtos = pageDto.content;
+      final entities = dtos.map((dto) => dto.toEntity()).toList();
+      return Right(entities);
     } on Exception {
       AppLogger.w('API failed, using mock data');
       // Fallback to mock data when API fails

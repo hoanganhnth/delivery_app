@@ -3,6 +3,7 @@ import 'package:delivery_app/core/network/resources/base_response_dto.dart';
 import 'package:delivery_app/features/orders/data/dtos/order_dto.dart';
 import 'package:delivery_app/features/orders/data/dtos/create_order_request_dto.dart';
 import 'package:delivery_app/features/orders/data/dtos/checkout_preview_dto.dart';
+import 'package:delivery_app/core/network/resources/page_dto.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -14,7 +15,10 @@ abstract class OrderApiService {
 
   /// Lấy danh sách đơn hàng của người dùng
   @GET(ApiConstants.getOrdersByUser)
-  Future<BaseResponseDto<List<OrderDto>>> getUserOrders();
+  Future<BaseResponseDto<PageDto<OrderDto>>> getUserOrders(
+    @Query('page') int page,
+    @Query('size') int size,
+  );
 
   /// Lấy chi tiết đơn hàng theo ID
   @GET('${ApiConstants.order}/{id}')
