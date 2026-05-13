@@ -9,13 +9,13 @@ part of 'livestream_comment_dto.dart';
 _LivestreamCommentDto _$LivestreamCommentDtoFromJson(
   Map<String, dynamic> json,
 ) => _LivestreamCommentDto(
-  id: json['id'] as String,
-  livestreamId: json['livestreamId'] as String,
-  userId: json['userId'] as String,
-  userName: json['userName'] as String,
+  id: json['id'] as String?,
+  livestreamId: json['livestreamId'] as String?,
+  userId: json['userId'] as String?,
+  userName: json['userName'] as String?,
   userAvatar: json['userAvatar'] as String?,
-  message: json['message'] as String,
-  timestamp: (json['timestamp'] as num).toInt(),
+  message: json['message'] as String?,
+  timestamp: _timestampFromJson(json['timestamp']),
 );
 
 Map<String, dynamic> _$LivestreamCommentDtoToJson(
@@ -27,17 +27,17 @@ Map<String, dynamic> _$LivestreamCommentDtoToJson(
   'userName': instance.userName,
   'userAvatar': instance.userAvatar,
   'message': instance.message,
-  'timestamp': instance.timestamp,
+  'timestamp': _timestampToJson(instance.timestamp),
 };
 
 _LivestreamLikeDto _$LivestreamLikeDtoFromJson(Map<String, dynamic> json) =>
     _LivestreamLikeDto(
-      id: json['id'] as String,
-      livestreamId: json['livestreamId'] as String,
-      userId: json['userId'] as String,
+      id: json['id'] as String?,
+      livestreamId: json['livestreamId'] as String?,
+      userId: json['userId'] as String?,
       userName: json['userName'] as String?,
       userAvatar: json['userAvatar'] as String?,
-      timestamp: (json['timestamp'] as num).toInt(),
+      timestamp: _timestampFromJson(json['timestamp']),
     );
 
 Map<String, dynamic> _$LivestreamLikeDtoToJson(_LivestreamLikeDto instance) =>
@@ -47,5 +47,5 @@ Map<String, dynamic> _$LivestreamLikeDtoToJson(_LivestreamLikeDto instance) =>
       'userId': instance.userId,
       'userName': instance.userName,
       'userAvatar': instance.userAvatar,
-      'timestamp': instance.timestamp,
+      'timestamp': _timestampToJson(instance.timestamp),
     };

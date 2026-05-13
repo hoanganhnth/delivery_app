@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LivestreamDto {
 
- String? get id; String? get title;@JsonKey(name: 'sellerId') num? get sellerId;@JsonKey(name: 'restaurantId') num? get restaurantId; String? get streamerName; String? get streamerAvatar; String? get channelName; String? get rtcToken; int? get uid; String? get description; int get viewerCount; int get likeCount; String? get status; String? get thumbnailUrl; String? get coverImageUrl;@JsonKey(name: 'startedAt') String? get startedAt;@JsonKey(name: 'endedAt') String? get endedAt;@JsonKey(name: 'pinnedProducts') List<LivestreamProductDto>? get pinnedProducts;
+ String? get id; String? get title;@JsonKey(name: 'sellerId') num? get sellerId;@JsonKey(name: 'restaurantId') num? get restaurantId; String? get streamerName; String? get streamerAvatar; String? get channelName; String? get rtcToken; int? get uid; String? get description; int get viewerCount; int get likeCount; String? get status; String? get thumbnailUrl; String? get coverImageUrl;@JsonKey(name: 'startedAt') String? get startedAt;@JsonKey(name: 'endedAt') String? get endedAt;@JsonKey(name: 'pinnedProducts') List<LivestreamProductDto>? get products;
 /// Create a copy of LivestreamDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $LivestreamDtoCopyWith<LivestreamDto> get copyWith => _$LivestreamDtoCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LivestreamDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.sellerId, sellerId) || other.sellerId == sellerId)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.streamerName, streamerName) || other.streamerName == streamerName)&&(identical(other.streamerAvatar, streamerAvatar) || other.streamerAvatar == streamerAvatar)&&(identical(other.channelName, channelName) || other.channelName == channelName)&&(identical(other.rtcToken, rtcToken) || other.rtcToken == rtcToken)&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.description, description) || other.description == description)&&(identical(other.viewerCount, viewerCount) || other.viewerCount == viewerCount)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.status, status) || other.status == status)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.endedAt, endedAt) || other.endedAt == endedAt)&&const DeepCollectionEquality().equals(other.pinnedProducts, pinnedProducts));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LivestreamDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.sellerId, sellerId) || other.sellerId == sellerId)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.streamerName, streamerName) || other.streamerName == streamerName)&&(identical(other.streamerAvatar, streamerAvatar) || other.streamerAvatar == streamerAvatar)&&(identical(other.channelName, channelName) || other.channelName == channelName)&&(identical(other.rtcToken, rtcToken) || other.rtcToken == rtcToken)&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.description, description) || other.description == description)&&(identical(other.viewerCount, viewerCount) || other.viewerCount == viewerCount)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.status, status) || other.status == status)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.endedAt, endedAt) || other.endedAt == endedAt)&&const DeepCollectionEquality().equals(other.products, products));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,sellerId,restaurantId,streamerName,streamerAvatar,channelName,rtcToken,uid,description,viewerCount,likeCount,status,thumbnailUrl,coverImageUrl,startedAt,endedAt,const DeepCollectionEquality().hash(pinnedProducts));
+int get hashCode => Object.hash(runtimeType,id,title,sellerId,restaurantId,streamerName,streamerAvatar,channelName,rtcToken,uid,description,viewerCount,likeCount,status,thumbnailUrl,coverImageUrl,startedAt,endedAt,const DeepCollectionEquality().hash(products));
 
 @override
 String toString() {
-  return 'LivestreamDto(id: $id, title: $title, sellerId: $sellerId, restaurantId: $restaurantId, streamerName: $streamerName, streamerAvatar: $streamerAvatar, channelName: $channelName, rtcToken: $rtcToken, uid: $uid, description: $description, viewerCount: $viewerCount, likeCount: $likeCount, status: $status, thumbnailUrl: $thumbnailUrl, coverImageUrl: $coverImageUrl, startedAt: $startedAt, endedAt: $endedAt, pinnedProducts: $pinnedProducts)';
+  return 'LivestreamDto(id: $id, title: $title, sellerId: $sellerId, restaurantId: $restaurantId, streamerName: $streamerName, streamerAvatar: $streamerAvatar, channelName: $channelName, rtcToken: $rtcToken, uid: $uid, description: $description, viewerCount: $viewerCount, likeCount: $likeCount, status: $status, thumbnailUrl: $thumbnailUrl, coverImageUrl: $coverImageUrl, startedAt: $startedAt, endedAt: $endedAt, products: $products)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $LivestreamDtoCopyWith<$Res>  {
   factory $LivestreamDtoCopyWith(LivestreamDto value, $Res Function(LivestreamDto) _then) = _$LivestreamDtoCopyWithImpl;
 @useResult
 $Res call({
- String? id, String? title,@JsonKey(name: 'sellerId') num? sellerId,@JsonKey(name: 'restaurantId') num? restaurantId, String? streamerName, String? streamerAvatar, String? channelName, String? rtcToken, int? uid, String? description, int viewerCount, int likeCount, String? status, String? thumbnailUrl, String? coverImageUrl,@JsonKey(name: 'startedAt') String? startedAt,@JsonKey(name: 'endedAt') String? endedAt,@JsonKey(name: 'pinnedProducts') List<LivestreamProductDto>? pinnedProducts
+ String? id, String? title,@JsonKey(name: 'sellerId') num? sellerId,@JsonKey(name: 'restaurantId') num? restaurantId, String? streamerName, String? streamerAvatar, String? channelName, String? rtcToken, int? uid, String? description, int viewerCount, int likeCount, String? status, String? thumbnailUrl, String? coverImageUrl,@JsonKey(name: 'startedAt') String? startedAt,@JsonKey(name: 'endedAt') String? endedAt,@JsonKey(name: 'pinnedProducts') List<LivestreamProductDto>? products
 });
 
 
@@ -65,7 +65,7 @@ class _$LivestreamDtoCopyWithImpl<$Res>
 
 /// Create a copy of LivestreamDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? title = freezed,Object? sellerId = freezed,Object? restaurantId = freezed,Object? streamerName = freezed,Object? streamerAvatar = freezed,Object? channelName = freezed,Object? rtcToken = freezed,Object? uid = freezed,Object? description = freezed,Object? viewerCount = null,Object? likeCount = null,Object? status = freezed,Object? thumbnailUrl = freezed,Object? coverImageUrl = freezed,Object? startedAt = freezed,Object? endedAt = freezed,Object? pinnedProducts = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? title = freezed,Object? sellerId = freezed,Object? restaurantId = freezed,Object? streamerName = freezed,Object? streamerAvatar = freezed,Object? channelName = freezed,Object? rtcToken = freezed,Object? uid = freezed,Object? description = freezed,Object? viewerCount = null,Object? likeCount = null,Object? status = freezed,Object? thumbnailUrl = freezed,Object? coverImageUrl = freezed,Object? startedAt = freezed,Object? endedAt = freezed,Object? products = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -84,7 +84,7 @@ as String?,thumbnailUrl: freezed == thumbnailUrl ? _self.thumbnailUrl : thumbnai
 as String?,coverImageUrl: freezed == coverImageUrl ? _self.coverImageUrl : coverImageUrl // ignore: cast_nullable_to_non_nullable
 as String?,startedAt: freezed == startedAt ? _self.startedAt : startedAt // ignore: cast_nullable_to_non_nullable
 as String?,endedAt: freezed == endedAt ? _self.endedAt : endedAt // ignore: cast_nullable_to_non_nullable
-as String?,pinnedProducts: freezed == pinnedProducts ? _self.pinnedProducts : pinnedProducts // ignore: cast_nullable_to_non_nullable
+as String?,products: freezed == products ? _self.products : products // ignore: cast_nullable_to_non_nullable
 as List<LivestreamProductDto>?,
   ));
 }
@@ -167,10 +167,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String? title, @JsonKey(name: 'sellerId')  num? sellerId, @JsonKey(name: 'restaurantId')  num? restaurantId,  String? streamerName,  String? streamerAvatar,  String? channelName,  String? rtcToken,  int? uid,  String? description,  int viewerCount,  int likeCount,  String? status,  String? thumbnailUrl,  String? coverImageUrl, @JsonKey(name: 'startedAt')  String? startedAt, @JsonKey(name: 'endedAt')  String? endedAt, @JsonKey(name: 'pinnedProducts')  List<LivestreamProductDto>? pinnedProducts)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String? title, @JsonKey(name: 'sellerId')  num? sellerId, @JsonKey(name: 'restaurantId')  num? restaurantId,  String? streamerName,  String? streamerAvatar,  String? channelName,  String? rtcToken,  int? uid,  String? description,  int viewerCount,  int likeCount,  String? status,  String? thumbnailUrl,  String? coverImageUrl, @JsonKey(name: 'startedAt')  String? startedAt, @JsonKey(name: 'endedAt')  String? endedAt, @JsonKey(name: 'pinnedProducts')  List<LivestreamProductDto>? products)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LivestreamDto() when $default != null:
-return $default(_that.id,_that.title,_that.sellerId,_that.restaurantId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startedAt,_that.endedAt,_that.pinnedProducts);case _:
+return $default(_that.id,_that.title,_that.sellerId,_that.restaurantId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startedAt,_that.endedAt,_that.products);case _:
   return orElse();
 
 }
@@ -188,10 +188,10 @@ return $default(_that.id,_that.title,_that.sellerId,_that.restaurantId,_that.str
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String? title, @JsonKey(name: 'sellerId')  num? sellerId, @JsonKey(name: 'restaurantId')  num? restaurantId,  String? streamerName,  String? streamerAvatar,  String? channelName,  String? rtcToken,  int? uid,  String? description,  int viewerCount,  int likeCount,  String? status,  String? thumbnailUrl,  String? coverImageUrl, @JsonKey(name: 'startedAt')  String? startedAt, @JsonKey(name: 'endedAt')  String? endedAt, @JsonKey(name: 'pinnedProducts')  List<LivestreamProductDto>? pinnedProducts)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String? title, @JsonKey(name: 'sellerId')  num? sellerId, @JsonKey(name: 'restaurantId')  num? restaurantId,  String? streamerName,  String? streamerAvatar,  String? channelName,  String? rtcToken,  int? uid,  String? description,  int viewerCount,  int likeCount,  String? status,  String? thumbnailUrl,  String? coverImageUrl, @JsonKey(name: 'startedAt')  String? startedAt, @JsonKey(name: 'endedAt')  String? endedAt, @JsonKey(name: 'pinnedProducts')  List<LivestreamProductDto>? products)  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamDto():
-return $default(_that.id,_that.title,_that.sellerId,_that.restaurantId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startedAt,_that.endedAt,_that.pinnedProducts);}
+return $default(_that.id,_that.title,_that.sellerId,_that.restaurantId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startedAt,_that.endedAt,_that.products);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -205,10 +205,10 @@ return $default(_that.id,_that.title,_that.sellerId,_that.restaurantId,_that.str
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String? title, @JsonKey(name: 'sellerId')  num? sellerId, @JsonKey(name: 'restaurantId')  num? restaurantId,  String? streamerName,  String? streamerAvatar,  String? channelName,  String? rtcToken,  int? uid,  String? description,  int viewerCount,  int likeCount,  String? status,  String? thumbnailUrl,  String? coverImageUrl, @JsonKey(name: 'startedAt')  String? startedAt, @JsonKey(name: 'endedAt')  String? endedAt, @JsonKey(name: 'pinnedProducts')  List<LivestreamProductDto>? pinnedProducts)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String? title, @JsonKey(name: 'sellerId')  num? sellerId, @JsonKey(name: 'restaurantId')  num? restaurantId,  String? streamerName,  String? streamerAvatar,  String? channelName,  String? rtcToken,  int? uid,  String? description,  int viewerCount,  int likeCount,  String? status,  String? thumbnailUrl,  String? coverImageUrl, @JsonKey(name: 'startedAt')  String? startedAt, @JsonKey(name: 'endedAt')  String? endedAt, @JsonKey(name: 'pinnedProducts')  List<LivestreamProductDto>? products)?  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamDto() when $default != null:
-return $default(_that.id,_that.title,_that.sellerId,_that.restaurantId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startedAt,_that.endedAt,_that.pinnedProducts);case _:
+return $default(_that.id,_that.title,_that.sellerId,_that.restaurantId,_that.streamerName,_that.streamerAvatar,_that.channelName,_that.rtcToken,_that.uid,_that.description,_that.viewerCount,_that.likeCount,_that.status,_that.thumbnailUrl,_that.coverImageUrl,_that.startedAt,_that.endedAt,_that.products);case _:
   return null;
 
 }
@@ -220,7 +220,7 @@ return $default(_that.id,_that.title,_that.sellerId,_that.restaurantId,_that.str
 @JsonSerializable()
 
 class _LivestreamDto extends LivestreamDto {
-  const _LivestreamDto({this.id, this.title, @JsonKey(name: 'sellerId') this.sellerId, @JsonKey(name: 'restaurantId') this.restaurantId, this.streamerName, this.streamerAvatar, this.channelName, this.rtcToken, this.uid, this.description, this.viewerCount = 0, this.likeCount = 0, this.status, this.thumbnailUrl, this.coverImageUrl, @JsonKey(name: 'startedAt') this.startedAt, @JsonKey(name: 'endedAt') this.endedAt, @JsonKey(name: 'pinnedProducts') final  List<LivestreamProductDto>? pinnedProducts}): _pinnedProducts = pinnedProducts,super._();
+  const _LivestreamDto({this.id, this.title, @JsonKey(name: 'sellerId') this.sellerId, @JsonKey(name: 'restaurantId') this.restaurantId, this.streamerName, this.streamerAvatar, this.channelName, this.rtcToken, this.uid, this.description, this.viewerCount = 0, this.likeCount = 0, this.status, this.thumbnailUrl, this.coverImageUrl, @JsonKey(name: 'startedAt') this.startedAt, @JsonKey(name: 'endedAt') this.endedAt, @JsonKey(name: 'pinnedProducts') final  List<LivestreamProductDto>? products}): _products = products,super._();
   factory _LivestreamDto.fromJson(Map<String, dynamic> json) => _$LivestreamDtoFromJson(json);
 
 @override final  String? id;
@@ -240,11 +240,11 @@ class _LivestreamDto extends LivestreamDto {
 @override final  String? coverImageUrl;
 @override@JsonKey(name: 'startedAt') final  String? startedAt;
 @override@JsonKey(name: 'endedAt') final  String? endedAt;
- final  List<LivestreamProductDto>? _pinnedProducts;
-@override@JsonKey(name: 'pinnedProducts') List<LivestreamProductDto>? get pinnedProducts {
-  final value = _pinnedProducts;
+ final  List<LivestreamProductDto>? _products;
+@override@JsonKey(name: 'pinnedProducts') List<LivestreamProductDto>? get products {
+  final value = _products;
   if (value == null) return null;
-  if (_pinnedProducts is EqualUnmodifiableListView) return _pinnedProducts;
+  if (_products is EqualUnmodifiableListView) return _products;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(value);
 }
@@ -263,16 +263,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LivestreamDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.sellerId, sellerId) || other.sellerId == sellerId)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.streamerName, streamerName) || other.streamerName == streamerName)&&(identical(other.streamerAvatar, streamerAvatar) || other.streamerAvatar == streamerAvatar)&&(identical(other.channelName, channelName) || other.channelName == channelName)&&(identical(other.rtcToken, rtcToken) || other.rtcToken == rtcToken)&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.description, description) || other.description == description)&&(identical(other.viewerCount, viewerCount) || other.viewerCount == viewerCount)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.status, status) || other.status == status)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.endedAt, endedAt) || other.endedAt == endedAt)&&const DeepCollectionEquality().equals(other._pinnedProducts, _pinnedProducts));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LivestreamDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.sellerId, sellerId) || other.sellerId == sellerId)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.streamerName, streamerName) || other.streamerName == streamerName)&&(identical(other.streamerAvatar, streamerAvatar) || other.streamerAvatar == streamerAvatar)&&(identical(other.channelName, channelName) || other.channelName == channelName)&&(identical(other.rtcToken, rtcToken) || other.rtcToken == rtcToken)&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.description, description) || other.description == description)&&(identical(other.viewerCount, viewerCount) || other.viewerCount == viewerCount)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.status, status) || other.status == status)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.endedAt, endedAt) || other.endedAt == endedAt)&&const DeepCollectionEquality().equals(other._products, _products));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,sellerId,restaurantId,streamerName,streamerAvatar,channelName,rtcToken,uid,description,viewerCount,likeCount,status,thumbnailUrl,coverImageUrl,startedAt,endedAt,const DeepCollectionEquality().hash(_pinnedProducts));
+int get hashCode => Object.hash(runtimeType,id,title,sellerId,restaurantId,streamerName,streamerAvatar,channelName,rtcToken,uid,description,viewerCount,likeCount,status,thumbnailUrl,coverImageUrl,startedAt,endedAt,const DeepCollectionEquality().hash(_products));
 
 @override
 String toString() {
-  return 'LivestreamDto(id: $id, title: $title, sellerId: $sellerId, restaurantId: $restaurantId, streamerName: $streamerName, streamerAvatar: $streamerAvatar, channelName: $channelName, rtcToken: $rtcToken, uid: $uid, description: $description, viewerCount: $viewerCount, likeCount: $likeCount, status: $status, thumbnailUrl: $thumbnailUrl, coverImageUrl: $coverImageUrl, startedAt: $startedAt, endedAt: $endedAt, pinnedProducts: $pinnedProducts)';
+  return 'LivestreamDto(id: $id, title: $title, sellerId: $sellerId, restaurantId: $restaurantId, streamerName: $streamerName, streamerAvatar: $streamerAvatar, channelName: $channelName, rtcToken: $rtcToken, uid: $uid, description: $description, viewerCount: $viewerCount, likeCount: $likeCount, status: $status, thumbnailUrl: $thumbnailUrl, coverImageUrl: $coverImageUrl, startedAt: $startedAt, endedAt: $endedAt, products: $products)';
 }
 
 
@@ -283,7 +283,7 @@ abstract mixin class _$LivestreamDtoCopyWith<$Res> implements $LivestreamDtoCopy
   factory _$LivestreamDtoCopyWith(_LivestreamDto value, $Res Function(_LivestreamDto) _then) = __$LivestreamDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String? id, String? title,@JsonKey(name: 'sellerId') num? sellerId,@JsonKey(name: 'restaurantId') num? restaurantId, String? streamerName, String? streamerAvatar, String? channelName, String? rtcToken, int? uid, String? description, int viewerCount, int likeCount, String? status, String? thumbnailUrl, String? coverImageUrl,@JsonKey(name: 'startedAt') String? startedAt,@JsonKey(name: 'endedAt') String? endedAt,@JsonKey(name: 'pinnedProducts') List<LivestreamProductDto>? pinnedProducts
+ String? id, String? title,@JsonKey(name: 'sellerId') num? sellerId,@JsonKey(name: 'restaurantId') num? restaurantId, String? streamerName, String? streamerAvatar, String? channelName, String? rtcToken, int? uid, String? description, int viewerCount, int likeCount, String? status, String? thumbnailUrl, String? coverImageUrl,@JsonKey(name: 'startedAt') String? startedAt,@JsonKey(name: 'endedAt') String? endedAt,@JsonKey(name: 'pinnedProducts') List<LivestreamProductDto>? products
 });
 
 
@@ -300,7 +300,7 @@ class __$LivestreamDtoCopyWithImpl<$Res>
 
 /// Create a copy of LivestreamDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? title = freezed,Object? sellerId = freezed,Object? restaurantId = freezed,Object? streamerName = freezed,Object? streamerAvatar = freezed,Object? channelName = freezed,Object? rtcToken = freezed,Object? uid = freezed,Object? description = freezed,Object? viewerCount = null,Object? likeCount = null,Object? status = freezed,Object? thumbnailUrl = freezed,Object? coverImageUrl = freezed,Object? startedAt = freezed,Object? endedAt = freezed,Object? pinnedProducts = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? title = freezed,Object? sellerId = freezed,Object? restaurantId = freezed,Object? streamerName = freezed,Object? streamerAvatar = freezed,Object? channelName = freezed,Object? rtcToken = freezed,Object? uid = freezed,Object? description = freezed,Object? viewerCount = null,Object? likeCount = null,Object? status = freezed,Object? thumbnailUrl = freezed,Object? coverImageUrl = freezed,Object? startedAt = freezed,Object? endedAt = freezed,Object? products = freezed,}) {
   return _then(_LivestreamDto(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -319,7 +319,7 @@ as String?,thumbnailUrl: freezed == thumbnailUrl ? _self.thumbnailUrl : thumbnai
 as String?,coverImageUrl: freezed == coverImageUrl ? _self.coverImageUrl : coverImageUrl // ignore: cast_nullable_to_non_nullable
 as String?,startedAt: freezed == startedAt ? _self.startedAt : startedAt // ignore: cast_nullable_to_non_nullable
 as String?,endedAt: freezed == endedAt ? _self.endedAt : endedAt // ignore: cast_nullable_to_non_nullable
-as String?,pinnedProducts: freezed == pinnedProducts ? _self._pinnedProducts : pinnedProducts // ignore: cast_nullable_to_non_nullable
+as String?,products: freezed == products ? _self._products : products // ignore: cast_nullable_to_non_nullable
 as List<LivestreamProductDto>?,
   ));
 }
@@ -331,7 +331,7 @@ as List<LivestreamProductDto>?,
 /// @nodoc
 mixin _$LivestreamProductDto {
 
- num? get id; String? get name; double? get price; String? get image; num? get restaurantId; String? get restaurantName; double? get discountPrice; String? get description; int? get stockQuantity; bool get isPinned;
+@JsonKey(name: 'productId') num? get id;@JsonKey(name: 'productName') String? get name;@JsonKey(name: 'priceAtLive') double? get price;@JsonKey(name: 'productImage') String? get image; num? get restaurantId; String? get restaurantName; double? get discountPrice; String? get description; int? get stockQuantity; bool get isPinned;
 /// Create a copy of LivestreamProductDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -364,7 +364,7 @@ abstract mixin class $LivestreamProductDtoCopyWith<$Res>  {
   factory $LivestreamProductDtoCopyWith(LivestreamProductDto value, $Res Function(LivestreamProductDto) _then) = _$LivestreamProductDtoCopyWithImpl;
 @useResult
 $Res call({
- num? id, String? name, double? price, String? image, num? restaurantId, String? restaurantName, double? discountPrice, String? description, int? stockQuantity, bool isPinned
+@JsonKey(name: 'productId') num? id,@JsonKey(name: 'productName') String? name,@JsonKey(name: 'priceAtLive') double? price,@JsonKey(name: 'productImage') String? image, num? restaurantId, String? restaurantName, double? discountPrice, String? description, int? stockQuantity, bool isPinned
 });
 
 
@@ -475,7 +475,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( num? id,  String? name,  double? price,  String? image,  num? restaurantId,  String? restaurantName,  double? discountPrice,  String? description,  int? stockQuantity,  bool isPinned)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'productId')  num? id, @JsonKey(name: 'productName')  String? name, @JsonKey(name: 'priceAtLive')  double? price, @JsonKey(name: 'productImage')  String? image,  num? restaurantId,  String? restaurantName,  double? discountPrice,  String? description,  int? stockQuantity,  bool isPinned)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LivestreamProductDto() when $default != null:
 return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_that.restaurantName,_that.discountPrice,_that.description,_that.stockQuantity,_that.isPinned);case _:
@@ -496,7 +496,7 @@ return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num? id,  String? name,  double? price,  String? image,  num? restaurantId,  String? restaurantName,  double? discountPrice,  String? description,  int? stockQuantity,  bool isPinned)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'productId')  num? id, @JsonKey(name: 'productName')  String? name, @JsonKey(name: 'priceAtLive')  double? price, @JsonKey(name: 'productImage')  String? image,  num? restaurantId,  String? restaurantName,  double? discountPrice,  String? description,  int? stockQuantity,  bool isPinned)  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamProductDto():
 return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_that.restaurantName,_that.discountPrice,_that.description,_that.stockQuantity,_that.isPinned);}
@@ -513,7 +513,7 @@ return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( num? id,  String? name,  double? price,  String? image,  num? restaurantId,  String? restaurantName,  double? discountPrice,  String? description,  int? stockQuantity,  bool isPinned)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'productId')  num? id, @JsonKey(name: 'productName')  String? name, @JsonKey(name: 'priceAtLive')  double? price, @JsonKey(name: 'productImage')  String? image,  num? restaurantId,  String? restaurantName,  double? discountPrice,  String? description,  int? stockQuantity,  bool isPinned)?  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamProductDto() when $default != null:
 return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_that.restaurantName,_that.discountPrice,_that.description,_that.stockQuantity,_that.isPinned);case _:
@@ -528,13 +528,13 @@ return $default(_that.id,_that.name,_that.price,_that.image,_that.restaurantId,_
 @JsonSerializable()
 
 class _LivestreamProductDto extends LivestreamProductDto {
-  const _LivestreamProductDto({this.id, this.name, this.price, this.image, this.restaurantId, this.restaurantName, this.discountPrice, this.description, this.stockQuantity, this.isPinned = false}): super._();
+  const _LivestreamProductDto({@JsonKey(name: 'productId') this.id, @JsonKey(name: 'productName') this.name, @JsonKey(name: 'priceAtLive') this.price, @JsonKey(name: 'productImage') this.image, this.restaurantId, this.restaurantName, this.discountPrice, this.description, this.stockQuantity, this.isPinned = false}): super._();
   factory _LivestreamProductDto.fromJson(Map<String, dynamic> json) => _$LivestreamProductDtoFromJson(json);
 
-@override final  num? id;
-@override final  String? name;
-@override final  double? price;
-@override final  String? image;
+@override@JsonKey(name: 'productId') final  num? id;
+@override@JsonKey(name: 'productName') final  String? name;
+@override@JsonKey(name: 'priceAtLive') final  double? price;
+@override@JsonKey(name: 'productImage') final  String? image;
 @override final  num? restaurantId;
 @override final  String? restaurantName;
 @override final  double? discountPrice;
@@ -575,7 +575,7 @@ abstract mixin class _$LivestreamProductDtoCopyWith<$Res> implements $Livestream
   factory _$LivestreamProductDtoCopyWith(_LivestreamProductDto value, $Res Function(_LivestreamProductDto) _then) = __$LivestreamProductDtoCopyWithImpl;
 @override @useResult
 $Res call({
- num? id, String? name, double? price, String? image, num? restaurantId, String? restaurantName, double? discountPrice, String? description, int? stockQuantity, bool isPinned
+@JsonKey(name: 'productId') num? id,@JsonKey(name: 'productName') String? name,@JsonKey(name: 'priceAtLive') double? price,@JsonKey(name: 'productImage') String? image, num? restaurantId, String? restaurantName, double? discountPrice, String? description, int? stockQuantity, bool isPinned
 });
 
 

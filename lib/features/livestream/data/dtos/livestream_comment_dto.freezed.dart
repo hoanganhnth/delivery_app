@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LivestreamCommentDto {
 
- String get id; String get livestreamId; String get userId; String get userName; String? get userAvatar; String get message; int get timestamp;
+ String? get id; String? get livestreamId; String? get userId; String? get userName; String? get userAvatar; String? get message;@JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) int? get timestamp;
 /// Create a copy of LivestreamCommentDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $LivestreamCommentDtoCopyWith<$Res>  {
   factory $LivestreamCommentDtoCopyWith(LivestreamCommentDto value, $Res Function(LivestreamCommentDto) _then) = _$LivestreamCommentDtoCopyWithImpl;
 @useResult
 $Res call({
- String id, String livestreamId, String userId, String userName, String? userAvatar, String message, int timestamp
+ String? id, String? livestreamId, String? userId, String? userName, String? userAvatar, String? message,@JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) int? timestamp
 });
 
 
@@ -65,16 +65,16 @@ class _$LivestreamCommentDtoCopyWithImpl<$Res>
 
 /// Create a copy of LivestreamCommentDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? livestreamId = null,Object? userId = null,Object? userName = null,Object? userAvatar = freezed,Object? message = null,Object? timestamp = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? livestreamId = freezed,Object? userId = freezed,Object? userName = freezed,Object? userAvatar = freezed,Object? message = freezed,Object? timestamp = freezed,}) {
   return _then(_self.copyWith(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,livestreamId: null == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
-as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String,userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
-as String,userAvatar: freezed == userAvatar ? _self.userAvatar : userAvatar // ignore: cast_nullable_to_non_nullable
-as String?,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
-as int,
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,livestreamId: freezed == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
+as String?,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String?,userName: freezed == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
+as String?,userAvatar: freezed == userAvatar ? _self.userAvatar : userAvatar // ignore: cast_nullable_to_non_nullable
+as String?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String?,timestamp: freezed == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String livestreamId,  String userId,  String userName,  String? userAvatar,  String message,  int timestamp)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String? livestreamId,  String? userId,  String? userName,  String? userAvatar,  String? message, @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson)  int? timestamp)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LivestreamCommentDto() when $default != null:
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.message,_that.timestamp);case _:
@@ -177,7 +177,7 @@ return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String livestreamId,  String userId,  String userName,  String? userAvatar,  String message,  int timestamp)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String? livestreamId,  String? userId,  String? userName,  String? userAvatar,  String? message, @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson)  int? timestamp)  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamCommentDto():
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.message,_that.timestamp);}
@@ -194,7 +194,7 @@ return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String livestreamId,  String userId,  String userName,  String? userAvatar,  String message,  int timestamp)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String? livestreamId,  String? userId,  String? userName,  String? userAvatar,  String? message, @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson)  int? timestamp)?  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamCommentDto() when $default != null:
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.message,_that.timestamp);case _:
@@ -209,16 +209,16 @@ return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.us
 @JsonSerializable()
 
 class _LivestreamCommentDto extends LivestreamCommentDto {
-  const _LivestreamCommentDto({required this.id, required this.livestreamId, required this.userId, required this.userName, this.userAvatar, required this.message, required this.timestamp}): super._();
+  const _LivestreamCommentDto({this.id, this.livestreamId, this.userId, this.userName, this.userAvatar, this.message, @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) this.timestamp}): super._();
   factory _LivestreamCommentDto.fromJson(Map<String, dynamic> json) => _$LivestreamCommentDtoFromJson(json);
 
-@override final  String id;
-@override final  String livestreamId;
-@override final  String userId;
-@override final  String userName;
+@override final  String? id;
+@override final  String? livestreamId;
+@override final  String? userId;
+@override final  String? userName;
 @override final  String? userAvatar;
-@override final  String message;
-@override final  int timestamp;
+@override final  String? message;
+@override@JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) final  int? timestamp;
 
 /// Create a copy of LivestreamCommentDto
 /// with the given fields replaced by the non-null parameter values.
@@ -253,7 +253,7 @@ abstract mixin class _$LivestreamCommentDtoCopyWith<$Res> implements $Livestream
   factory _$LivestreamCommentDtoCopyWith(_LivestreamCommentDto value, $Res Function(_LivestreamCommentDto) _then) = __$LivestreamCommentDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String livestreamId, String userId, String userName, String? userAvatar, String message, int timestamp
+ String? id, String? livestreamId, String? userId, String? userName, String? userAvatar, String? message,@JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) int? timestamp
 });
 
 
@@ -270,16 +270,16 @@ class __$LivestreamCommentDtoCopyWithImpl<$Res>
 
 /// Create a copy of LivestreamCommentDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? livestreamId = null,Object? userId = null,Object? userName = null,Object? userAvatar = freezed,Object? message = null,Object? timestamp = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? livestreamId = freezed,Object? userId = freezed,Object? userName = freezed,Object? userAvatar = freezed,Object? message = freezed,Object? timestamp = freezed,}) {
   return _then(_LivestreamCommentDto(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,livestreamId: null == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
-as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String,userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
-as String,userAvatar: freezed == userAvatar ? _self.userAvatar : userAvatar // ignore: cast_nullable_to_non_nullable
-as String?,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
-as int,
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,livestreamId: freezed == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
+as String?,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String?,userName: freezed == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
+as String?,userAvatar: freezed == userAvatar ? _self.userAvatar : userAvatar // ignore: cast_nullable_to_non_nullable
+as String?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String?,timestamp: freezed == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -290,7 +290,7 @@ as int,
 /// @nodoc
 mixin _$LivestreamLikeDto {
 
- String get id; String get livestreamId; String get userId; String? get userName; String? get userAvatar; int get timestamp;
+ String? get id; String? get livestreamId; String? get userId; String? get userName; String? get userAvatar;@JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) int? get timestamp;
 /// Create a copy of LivestreamLikeDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -323,7 +323,7 @@ abstract mixin class $LivestreamLikeDtoCopyWith<$Res>  {
   factory $LivestreamLikeDtoCopyWith(LivestreamLikeDto value, $Res Function(LivestreamLikeDto) _then) = _$LivestreamLikeDtoCopyWithImpl;
 @useResult
 $Res call({
- String id, String livestreamId, String userId, String? userName, String? userAvatar, int timestamp
+ String? id, String? livestreamId, String? userId, String? userName, String? userAvatar,@JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) int? timestamp
 });
 
 
@@ -340,15 +340,15 @@ class _$LivestreamLikeDtoCopyWithImpl<$Res>
 
 /// Create a copy of LivestreamLikeDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? livestreamId = null,Object? userId = null,Object? userName = freezed,Object? userAvatar = freezed,Object? timestamp = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? livestreamId = freezed,Object? userId = freezed,Object? userName = freezed,Object? userAvatar = freezed,Object? timestamp = freezed,}) {
   return _then(_self.copyWith(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,livestreamId: null == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
-as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String,userName: freezed == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,livestreamId: freezed == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
+as String?,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String?,userName: freezed == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
 as String?,userAvatar: freezed == userAvatar ? _self.userAvatar : userAvatar // ignore: cast_nullable_to_non_nullable
-as String?,timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
-as int,
+as String?,timestamp: freezed == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -430,7 +430,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String livestreamId,  String userId,  String? userName,  String? userAvatar,  int timestamp)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String? livestreamId,  String? userId,  String? userName,  String? userAvatar, @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson)  int? timestamp)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LivestreamLikeDto() when $default != null:
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.timestamp);case _:
@@ -451,7 +451,7 @@ return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String livestreamId,  String userId,  String? userName,  String? userAvatar,  int timestamp)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String? livestreamId,  String? userId,  String? userName,  String? userAvatar, @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson)  int? timestamp)  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamLikeDto():
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.timestamp);}
@@ -468,7 +468,7 @@ return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String livestreamId,  String userId,  String? userName,  String? userAvatar,  int timestamp)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String? livestreamId,  String? userId,  String? userName,  String? userAvatar, @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson)  int? timestamp)?  $default,) {final _that = this;
 switch (_that) {
 case _LivestreamLikeDto() when $default != null:
 return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.userAvatar,_that.timestamp);case _:
@@ -483,15 +483,15 @@ return $default(_that.id,_that.livestreamId,_that.userId,_that.userName,_that.us
 @JsonSerializable()
 
 class _LivestreamLikeDto extends LivestreamLikeDto {
-  const _LivestreamLikeDto({required this.id, required this.livestreamId, required this.userId, this.userName, this.userAvatar, required this.timestamp}): super._();
+  const _LivestreamLikeDto({this.id, this.livestreamId, this.userId, this.userName, this.userAvatar, @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) this.timestamp}): super._();
   factory _LivestreamLikeDto.fromJson(Map<String, dynamic> json) => _$LivestreamLikeDtoFromJson(json);
 
-@override final  String id;
-@override final  String livestreamId;
-@override final  String userId;
+@override final  String? id;
+@override final  String? livestreamId;
+@override final  String? userId;
 @override final  String? userName;
 @override final  String? userAvatar;
-@override final  int timestamp;
+@override@JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) final  int? timestamp;
 
 /// Create a copy of LivestreamLikeDto
 /// with the given fields replaced by the non-null parameter values.
@@ -526,7 +526,7 @@ abstract mixin class _$LivestreamLikeDtoCopyWith<$Res> implements $LivestreamLik
   factory _$LivestreamLikeDtoCopyWith(_LivestreamLikeDto value, $Res Function(_LivestreamLikeDto) _then) = __$LivestreamLikeDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String livestreamId, String userId, String? userName, String? userAvatar, int timestamp
+ String? id, String? livestreamId, String? userId, String? userName, String? userAvatar,@JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) int? timestamp
 });
 
 
@@ -543,15 +543,15 @@ class __$LivestreamLikeDtoCopyWithImpl<$Res>
 
 /// Create a copy of LivestreamLikeDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? livestreamId = null,Object? userId = null,Object? userName = freezed,Object? userAvatar = freezed,Object? timestamp = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? livestreamId = freezed,Object? userId = freezed,Object? userName = freezed,Object? userAvatar = freezed,Object? timestamp = freezed,}) {
   return _then(_LivestreamLikeDto(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,livestreamId: null == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
-as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String,userName: freezed == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,livestreamId: freezed == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
+as String?,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String?,userName: freezed == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
 as String?,userAvatar: freezed == userAvatar ? _self.userAvatar : userAvatar // ignore: cast_nullable_to_non_nullable
-as String?,timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
-as int,
+as String?,timestamp: freezed == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

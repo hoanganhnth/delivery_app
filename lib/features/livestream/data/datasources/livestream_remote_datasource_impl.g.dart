@@ -95,6 +95,49 @@ class _LivestreamApiService implements LivestreamApiService {
   }
 
   @override
+  Future<BaseResponseDto<List<LivestreamProductDto>>> getLivestreamProducts(
+    String id,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options =
+        _setStreamType<BaseResponseDto<List<LivestreamProductDto>>>(
+          Options(method: 'GET', headers: _headers, extra: _extra)
+              .compose(
+                _dio.options,
+                '/livestreams/${id}/products',
+                queryParameters: queryParameters,
+                data: _data,
+              )
+              .copyWith(
+                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
+              ),
+        );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late BaseResponseDto<List<LivestreamProductDto>> _value;
+    try {
+      _value = BaseResponseDto<List<LivestreamProductDto>>.fromJson(
+        _result.data!,
+        (json) => json is List<dynamic>
+            ? json
+                  .map<LivestreamProductDto>(
+                    (i) => LivestreamProductDto.fromJson(
+                      i as Map<String, dynamic>,
+                    ),
+                  )
+                  .toList()
+            : List.empty(),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<BaseResponseDto<List<LivestreamDto>>> getFeaturedLivestreams({
     int? limit,
   }) async {

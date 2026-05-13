@@ -92,7 +92,10 @@ class _LivestreamErrorView extends StatelessWidget {
           ),
           if (onRetry != null) ...[
             SizedBox(height: 16.h),
-            ElevatedButton(onPressed: onRetry, child: Text(S.of(context).retry)),
+            ElevatedButton(
+              onPressed: onRetry,
+              child: Text(S.of(context).retry),
+            ),
           ],
           const Spacer(),
         ],
@@ -294,13 +297,16 @@ class _LivestreamWatchingViewState
         ),
 
         // Pinned product overlay — appears when host pins a product
-        if (livestream.products != null && livestream.products!.any((p) => p.isPinned))
+        if (livestream.products != null &&
+            livestream.products!.any((p) => p.isPinned))
           Positioned(
             left: 0,
             right: 0,
             bottom: 140.w,
             child: LivestreamPinnedProductOverlay(
-              key: ValueKey(livestream.products!.firstWhere((p) => p.isPinned).id),
+              key: ValueKey(
+                livestream.products!.firstWhere((p) => p.isPinned).id,
+              ),
               product: livestream.products!.firstWhere((p) => p.isPinned),
             ),
           ),

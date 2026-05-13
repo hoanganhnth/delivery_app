@@ -1,20 +1,34 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../domain/entities/livestream_comment_entity.dart';
 
 part 'livestream_comment_dto.freezed.dart';
 part 'livestream_comment_dto.g.dart';
 
+int? _timestampFromJson(dynamic value) {
+  if (value == null) return null;
+  if (value is Timestamp) return value.millisecondsSinceEpoch;
+  if (value is int) return value;
+  if (value is String) return int.tryParse(value);
+  return null;
+}
+
+dynamic _timestampToJson(int? value) {
+  if (value == null) return null;
+  return Timestamp.fromMillisecondsSinceEpoch(value);
+}
+
 /// Livestream comment DTO for Firebase communication
 @freezed
 sealed class LivestreamCommentDto with _$LivestreamCommentDto {
   const factory LivestreamCommentDto({
-    required String id,
-    required String livestreamId,
-    required String userId,
-    required String userName,
+    String? id,
+    String? livestreamId,
+    String? userId,
+    String? userName,
     String? userAvatar,
-    required String message,
-    required int timestamp,
+    String? message,
+    @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) int? timestamp,
   }) = _LivestreamCommentDto;
 
   const LivestreamCommentDto._();
@@ -25,13 +39,15 @@ sealed class LivestreamCommentDto with _$LivestreamCommentDto {
   /// Convert DTO to Entity
   LivestreamCommentEntity toEntity() {
     return LivestreamCommentEntity(
-      id: id,
-      livestreamId: livestreamId,
-      userId: userId,
-      userName: userName,
+      id: id ?? '',
+      livestreamId: livestreamId ?? '',
+      userId: userId ?? '',
+      userName: userName ?? 'Unknown',
       userAvatar: userAvatar,
-      message: message,
-      timestamp: DateTime.fromMillisecondsSinceEpoch(timestamp),
+      message: message ?? '',
+      timestamp: timestamp != null 
+          ? DateTime.fromMillisecondsSinceEpoch(timestamp!)
+          : DateTime.now(),
     );
   }
 
@@ -53,12 +69,12 @@ sealed class LivestreamCommentDto with _$LivestreamCommentDto {
 @freezed
 sealed class LivestreamLikeDto with _$LivestreamLikeDto {
   const factory LivestreamLikeDto({
-    required String id,
-    required String livestreamId,
-    required String userId,
+    String? id,
+    String? livestreamId,
+    String? userId,
     String? userName,
     String? userAvatar,
-    required int timestamp,
+    @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) int? timestamp,
   }) = _LivestreamLikeDto;
 
   const LivestreamLikeDto._();
@@ -69,12 +85,14 @@ sealed class LivestreamLikeDto with _$LivestreamLikeDto {
   /// Convert DTO to Entity
   LivestreamLikeEntity toEntity() {
     return LivestreamLikeEntity(
-      id: id,
-      livestreamId: livestreamId,
-      userId: userId,
-      userName: userName,
+      id: id ?? '',
+      livestreamId: livestreamId ?? '',
+      userId: userId ?? '',
+      userName: userName ?? 'Unknown',
       userAvatar: userAvatar,
-      timestamp: DateTime.fromMillisecondsSinceEpoch(timestamp),
+      timestamp: timestamp != null 
+          ? DateTime.fromMillisecondsSinceEpoch(timestamp!)
+          : DateTime.now(),
     );
   }
 

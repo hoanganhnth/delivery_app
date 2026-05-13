@@ -36,7 +36,7 @@ final class OrdersListProvider
   OrdersList create() => OrdersList();
 }
 
-String _$ordersListHash() => r'2d500549456c80865a8dae3d6ec30c6810e9b0cd';
+String _$ordersListHash() => r'ad6f494ff153a2849a3e9f694ceb59c6a0f20135';
 
 /// Notifier cho danh sách orders
 

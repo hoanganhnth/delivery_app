@@ -30,13 +30,15 @@ class LivestreamRepositoryImpl implements LivestreamRepository {
       );
 
       if (response.isSuccess && response.data != null) {
-        final livestreams = response.data!.map((dto) => dto.toEntity()).toList();
-        
+        final livestreams = response.data!
+            .map((dto) => dto.toEntity())
+            .toList();
+
         // Cache livestreams
         for (var livestream in livestreams) {
           _livestreamCache[livestream.id] = livestream;
         }
-        
+
         return right(livestreams);
       } else {
         return left(ServerFailure(response.message));
@@ -55,11 +57,31 @@ class LivestreamRepositoryImpl implements LivestreamRepository {
 
       if (response.isSuccess && response.data != null) {
         final livestream = response.data!.toEntity();
-        
+
         // Update cache
         _livestreamCache[id] = livestream;
-        
+
         return right(livestream);
+      } else {
+        return left(ServerFailure(response.message));
+      }
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
+    } catch (e) {
+      return left(const ServerFailure('Unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<LivestreamProductEntity>>> getLivestreamProducts(
+    String id,
+  ) async {
+    try {
+      final response = await remoteDataSource.getLivestreamProducts(id);
+
+      if (response.isSuccess && response.data != null) {
+        final products = response.data!.map((dto) => dto.toEntity()).toList();
+        return right(products);
       } else {
         return left(ServerFailure(response.message));
       }
@@ -75,16 +97,20 @@ class LivestreamRepositoryImpl implements LivestreamRepository {
     int limit = 5,
   }) async {
     try {
-      final response = await remoteDataSource.getFeaturedLivestreams(limit: limit);
+      final response = await remoteDataSource.getFeaturedLivestreams(
+        limit: limit,
+      );
 
       if (response.isSuccess && response.data != null) {
-        final livestreams = response.data!.map((dto) => dto.toEntity()).toList();
-        
+        final livestreams = response.data!
+            .map((dto) => dto.toEntity())
+            .toList();
+
         // Cache livestreams
         for (var livestream in livestreams) {
           _livestreamCache[livestream.id] = livestream;
         }
-        
+
         return right(livestreams);
       } else {
         return left(ServerFailure(response.message));
@@ -124,11 +150,11 @@ class LivestreamRepositoryImpl implements LivestreamRepository {
           endTime: livestream.endTime,
           products: livestream.products,
         );
-        
+
         _livestreamCache[livestreamId] = updated;
         return right(updated);
       }
-      
+
       return left(const CacheFailure('Livestream not found in cache'));
     } catch (e) {
       return left(const ServerFailure('Unexpected error occurred'));
@@ -163,11 +189,11 @@ class LivestreamRepositoryImpl implements LivestreamRepository {
           endTime: livestream.endTime,
           products: livestream.products,
         );
-        
+
         _livestreamCache[livestreamId] = updated;
         return right(updated);
       }
-      
+
       return left(const CacheFailure('Livestream not found in cache'));
     } catch (e) {
       return left(const ServerFailure('Unexpected error occurred'));

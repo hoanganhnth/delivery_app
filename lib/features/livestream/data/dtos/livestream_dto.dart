@@ -25,7 +25,7 @@ sealed class LivestreamDto with _$LivestreamDto {
     String? coverImageUrl,
     @JsonKey(name: 'startedAt') String? startedAt,
     @JsonKey(name: 'endedAt') String? endedAt,
-    @JsonKey(name: 'pinnedProducts') List<LivestreamProductDto>? pinnedProducts,
+    @JsonKey(name: 'pinnedProducts') List<LivestreamProductDto>? products,
   }) = _LivestreamDto;
 
   const LivestreamDto._();
@@ -54,7 +54,7 @@ sealed class LivestreamDto with _$LivestreamDto {
           ? DateTime.tryParse(startedAt!) ?? DateTime.now()
           : DateTime.now(),
       endTime: endedAt != null ? DateTime.tryParse(endedAt!) : null,
-      products: pinnedProducts?.map((p) => p.toEntity()).toList(),
+      products: products?.map((p) => p.toEntity()).toList(),
     );
   }
 }
@@ -63,10 +63,10 @@ sealed class LivestreamDto with _$LivestreamDto {
 @freezed
 sealed class LivestreamProductDto with _$LivestreamProductDto {
   const factory LivestreamProductDto({
-    num? id,
-    String? name,
-    double? price,
-    String? image,
+    @JsonKey(name: 'productId') num? id,
+    @JsonKey(name: 'productName') String? name,
+    @JsonKey(name: 'priceAtLive') double? price,
+    @JsonKey(name: 'productImage') String? image,
     num? restaurantId,
     String? restaurantName,
     double? discountPrice,

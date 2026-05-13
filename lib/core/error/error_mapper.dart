@@ -1,8 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dio/dio.dart';
+import 'dio_exception_handler.dart';
 import 'exceptions.dart';
 import 'failures.dart';
 
 Failure mapExceptionToFailure(Object e) {
+  if (e is DioException) {
+    if (e.error is AppException) {
+      return mapExceptionToFailure(e.error!);
+    }
+    return DioExceptionHandler.handleException(e);
+  }
+
   if (e is UnauthorizedException) {
     return Failure.unauthorized(e.message);
   }

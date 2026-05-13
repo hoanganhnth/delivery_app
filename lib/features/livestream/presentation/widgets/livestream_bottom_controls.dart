@@ -71,11 +71,18 @@ class LivestreamBottomControls extends StatelessWidget {
                               fontSize: 14.sp,
                             ),
                             border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                            disabledBorder: InputBorder.none,
                             contentPadding: EdgeInsets.zero,
+                            filled: false,
+                            isDense: true,
                           ),
                           onSubmitted: (_) => onSendComment(),
                         ),
                       ),
+                      SizedBox(width: 8.w),
                       GestureDetector(
                         onTap: onSendComment,
                         child: Icon(

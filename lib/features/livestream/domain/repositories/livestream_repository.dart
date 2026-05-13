@@ -15,6 +15,9 @@ abstract class LivestreamRepository {
   /// Get livestream by ID
   Future<Either<Failure, LivestreamEntity>> getLivestreamById(String id);
 
+  /// Get livestream products
+  Future<Either<Failure, List<LivestreamProductEntity>>> getLivestreamProducts(String id);
+
   /// Get featured livestreams for home page
   Future<Either<Failure, List<LivestreamEntity>>> getFeaturedLivestreams({
     int limit = 5,

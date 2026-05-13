@@ -23,6 +23,11 @@ abstract class LivestreamApiService {
     @Path('id') String id,
   );
 
+  @GET('/livestreams/{id}/products')
+  Future<BaseResponseDto<List<LivestreamProductDto>>> getLivestreamProducts(
+    @Path('id') String id,
+  );
+
   @GET('/livestreams/active')
   Future<BaseResponseDto<List<LivestreamDto>>> getFeaturedLivestreams({
     @Query('limit') int? limit,
@@ -43,6 +48,8 @@ abstract class LivestreamRemoteDataSource {
   });
 
   Future<BaseResponseDto<LivestreamDto>> getLivestreamById(String id);
+
+  Future<BaseResponseDto<List<LivestreamProductDto>>> getLivestreamProducts(String id);
 
   Future<BaseResponseDto<List<LivestreamDto>>> getFeaturedLivestreams({
     int limit = 5,
@@ -93,6 +100,18 @@ class LivestreamRemoteDataSourceImpl implements LivestreamRemoteDataSource {
       rethrow;
     } catch (e) {
       // AppLogger.e('Unexpected error getting livestream', e);
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<BaseResponseDto<List<LivestreamProductDto>>> getLivestreamProducts(String id) async {
+    try {
+      final response = await _apiService.getLivestreamProducts(id);
+      return response;
+    } on DioException catch (_) {
+      rethrow;
+    } catch (e) {
       throw Exception('Unexpected error: ${e.toString()}');
     }
   }

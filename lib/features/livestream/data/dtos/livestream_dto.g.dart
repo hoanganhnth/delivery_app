@@ -25,7 +25,7 @@ _LivestreamDto _$LivestreamDtoFromJson(Map<String, dynamic> json) =>
       coverImageUrl: json['coverImageUrl'] as String?,
       startedAt: json['startedAt'] as String?,
       endedAt: json['endedAt'] as String?,
-      pinnedProducts: (json['pinnedProducts'] as List<dynamic>?)
+      products: (json['pinnedProducts'] as List<dynamic>?)
           ?.map((e) => LivestreamProductDto.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
@@ -49,16 +49,16 @@ Map<String, dynamic> _$LivestreamDtoToJson(_LivestreamDto instance) =>
       'coverImageUrl': instance.coverImageUrl,
       'startedAt': instance.startedAt,
       'endedAt': instance.endedAt,
-      'pinnedProducts': instance.pinnedProducts,
+      'pinnedProducts': instance.products,
     };
 
 _LivestreamProductDto _$LivestreamProductDtoFromJson(
   Map<String, dynamic> json,
 ) => _LivestreamProductDto(
-  id: json['id'] as num?,
-  name: json['name'] as String?,
-  price: (json['price'] as num?)?.toDouble(),
-  image: json['image'] as String?,
+  id: json['productId'] as num?,
+  name: json['productName'] as String?,
+  price: (json['priceAtLive'] as num?)?.toDouble(),
+  image: json['productImage'] as String?,
   restaurantId: json['restaurantId'] as num?,
   restaurantName: json['restaurantName'] as String?,
   discountPrice: (json['discountPrice'] as num?)?.toDouble(),
@@ -70,10 +70,10 @@ _LivestreamProductDto _$LivestreamProductDtoFromJson(
 Map<String, dynamic> _$LivestreamProductDtoToJson(
   _LivestreamProductDto instance,
 ) => <String, dynamic>{
-  'id': instance.id,
-  'name': instance.name,
-  'price': instance.price,
-  'image': instance.image,
+  'productId': instance.id,
+  'productName': instance.name,
+  'priceAtLive': instance.price,
+  'productImage': instance.image,
   'restaurantId': instance.restaurantId,
   'restaurantName': instance.restaurantName,
   'discountPrice': instance.discountPrice,

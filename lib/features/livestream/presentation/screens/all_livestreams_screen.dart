@@ -60,6 +60,7 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
         },
         child: CustomScrollView(
           controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             // Editorial Header
             SliverToBoxAdapter(
@@ -105,11 +106,11 @@ class _AllLivestreamsScreenState extends ConsumerState<AllLivestreamsScreen> {
   }
 }
 
-class LivestreamAppBar extends StatelessWidget {
+class LivestreamAppBar extends ConsumerWidget {
   const LivestreamAppBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
@@ -151,6 +152,28 @@ class LivestreamAppBar extends StatelessWidget {
               ),
               child: Icon(
                 Icons.search_rounded,
+                size: 22.sp,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+          ),
+          SizedBox(width: 12.w),
+          // Refresh button
+          GestureDetector(
+            onTap: () {
+              ref.read(livestreamListProvider.notifier).loadLivestreams(refresh: true);
+            },
+            child: Container(
+              width: 44.w,
+              height: 44.w,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.5,
+                ),
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              child: Icon(
+                Icons.refresh_rounded,
                 size: 22.sp,
                 color: theme.colorScheme.onSurface,
               ),
