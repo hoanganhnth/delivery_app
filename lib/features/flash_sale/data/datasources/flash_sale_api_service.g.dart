@@ -20,36 +20,31 @@ class _FlashSaleApiService implements FlashSaleApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<BaseResponseDto<List<FlashSaleCampaignDto>>>
-  getActiveCampaigns() async {
+  Future<BaseResponseDto<List<FlashSaleCampaign>>> getActiveCampaigns() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options =
-        _setStreamType<BaseResponseDto<List<FlashSaleCampaignDto>>>(
-          Options(method: 'GET', headers: _headers, extra: _extra)
-              .compose(
-                _dio.options,
-                '/flashsales/public/campaigns',
-                queryParameters: queryParameters,
-                data: _data,
-              )
-              .copyWith(
-                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
-              ),
-        );
+    final _options = _setStreamType<BaseResponseDto<List<FlashSaleCampaign>>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/flashsales/public/campaigns',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BaseResponseDto<List<FlashSaleCampaignDto>> _value;
+    late BaseResponseDto<List<FlashSaleCampaign>> _value;
     try {
-      _value = BaseResponseDto<List<FlashSaleCampaignDto>>.fromJson(
+      _value = BaseResponseDto<List<FlashSaleCampaign>>.fromJson(
         _result.data!,
         (json) => json is List<dynamic>
             ? json
-                  .map<FlashSaleCampaignDto>(
-                    (i) => FlashSaleCampaignDto.fromJson(
-                      i as Map<String, dynamic>,
-                    ),
+                  .map<FlashSaleCampaign>(
+                    (i) =>
+                        FlashSaleCampaign.fromJson(i as Map<String, dynamic>),
                   )
                   .toList()
             : List.empty(),
@@ -62,14 +57,14 @@ class _FlashSaleApiService implements FlashSaleApiService {
   }
 
   @override
-  Future<BaseResponseDto<List<FlashSaleItemDto>>> getCampaignItems(
+  Future<BaseResponseDto<List<FlashSaleItem>>> getCampaignItems(
     int campaignId,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<BaseResponseDto<List<FlashSaleItemDto>>>(
+    final _options = _setStreamType<BaseResponseDto<List<FlashSaleItem>>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -80,14 +75,14 @@ class _FlashSaleApiService implements FlashSaleApiService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BaseResponseDto<List<FlashSaleItemDto>> _value;
+    late BaseResponseDto<List<FlashSaleItem>> _value;
     try {
-      _value = BaseResponseDto<List<FlashSaleItemDto>>.fromJson(
+      _value = BaseResponseDto<List<FlashSaleItem>>.fromJson(
         _result.data!,
         (json) => json is List<dynamic>
             ? json
-                  .map<FlashSaleItemDto>(
-                    (i) => FlashSaleItemDto.fromJson(i as Map<String, dynamic>),
+                  .map<FlashSaleItem>(
+                    (i) => FlashSaleItem.fromJson(i as Map<String, dynamic>),
                   )
                   .toList()
             : List.empty(),

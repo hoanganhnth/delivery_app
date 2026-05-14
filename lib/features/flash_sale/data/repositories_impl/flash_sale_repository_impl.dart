@@ -6,10 +6,9 @@ import '../../domain/entities/flash_sale_campaign_entity.dart';
 import '../../domain/entities/flash_sale_item_entity.dart';
 import '../../domain/repositories/flash_sale_repository.dart';
 import '../datasources/flash_sale_api_service.dart';
-import '../dtos/flash_sale_campaign_dto.dart';
-import '../dtos/flash_sale_item_dto.dart';
+import '../models/flash_sale_model.dart';
 
-/// Repository implementation — chuyển đổi DTO → Entity
+/// Repository implementation — chuyển đổi Model → Entity
 class FlashSaleRepositoryImpl implements FlashSaleRepository {
   final FlashSaleApiService _apiService;
 
@@ -23,7 +22,7 @@ class FlashSaleRepositoryImpl implements FlashSaleRepository {
 
       if (response.isSuccess && response.data != null) {
         final entities =
-            response.data!.map((dto) => dto.toEntity()).toList();
+            response.data!.map((model) => model.toEntity()).toList();
         return right(entities);
       } else {
         return left(ServerFailure(response.message));
@@ -41,7 +40,7 @@ class FlashSaleRepositoryImpl implements FlashSaleRepository {
 
       if (response.isSuccess && response.data != null) {
         final entities =
-            response.data!.map((dto) => dto.toEntity()).toList();
+            response.data!.map((model) => model.toEntity()).toList();
         return right(entities);
       } else {
         return left(ServerFailure(response.message));
@@ -53,10 +52,10 @@ class FlashSaleRepositoryImpl implements FlashSaleRepository {
 }
 
 // ================================
-// DTO → Entity Mapping Extensions
+// Model → Entity Mapping Extensions
 // ================================
 
-extension FlashSaleCampaignDtoX on FlashSaleCampaignDto {
+extension FlashSaleCampaignX on FlashSaleCampaign {
   FlashSaleCampaignEntity toEntity() {
     return FlashSaleCampaignEntity(
       id: id,
@@ -68,7 +67,7 @@ extension FlashSaleCampaignDtoX on FlashSaleCampaignDto {
   }
 }
 
-extension FlashSaleItemDtoX on FlashSaleItemDto {
+extension FlashSaleItemX on FlashSaleItem {
   FlashSaleItemEntity toEntity() {
     return FlashSaleItemEntity(
       id: id,

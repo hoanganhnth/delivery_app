@@ -1,15 +1,33 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'flash_sale_item_dto.dart';
+part of 'flash_sale_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_FlashSaleItemDto _$FlashSaleItemDtoFromJson(Map<String, dynamic> json) =>
-    _FlashSaleItemDto(
+_FlashSaleCampaign _$FlashSaleCampaignFromJson(Map<String, dynamic> json) =>
+    _FlashSaleCampaign(
       id: (json['id'] as num).toInt(),
-      campaign: FlashSaleCampaignDto.fromJson(
+      name: json['name'] as String,
+      isRecurring: json['isRecurring'] as bool,
+      startTime: json['startTime'] as String,
+      endTime: json['endTime'] as String,
+    );
+
+Map<String, dynamic> _$FlashSaleCampaignToJson(_FlashSaleCampaign instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'isRecurring': instance.isRecurring,
+      'startTime': instance.startTime,
+      'endTime': instance.endTime,
+    };
+
+_FlashSaleItem _$FlashSaleItemFromJson(Map<String, dynamic> json) =>
+    _FlashSaleItem(
+      id: (json['id'] as num).toInt(),
+      campaign: FlashSaleCampaign.fromJson(
         json['campaign'] as Map<String, dynamic>,
       ),
       restaurantId: (json['restaurantId'] as num).toInt(),
@@ -22,7 +40,7 @@ _FlashSaleItemDto _$FlashSaleItemDtoFromJson(Map<String, dynamic> json) =>
       status: json['status'] as String,
     );
 
-Map<String, dynamic> _$FlashSaleItemDtoToJson(_FlashSaleItemDto instance) =>
+Map<String, dynamic> _$FlashSaleItemToJson(_FlashSaleItem instance) =>
     <String, dynamic>{
       'id': instance.id,
       'campaign': instance.campaign,
