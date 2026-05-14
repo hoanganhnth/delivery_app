@@ -61,7 +61,7 @@ final class LivestreamDetailProvider
   }
 }
 
-String _$livestreamDetailHash() => r'2a7c76d8f74c7ccbab9b114df7c1425d5e9eb2ce';
+String _$livestreamDetailHash() => r'811c6e584a4e344e2015d0247366de7d2dd40158';
 
 /// Livestream detail notifier — manages livestream metadata
 

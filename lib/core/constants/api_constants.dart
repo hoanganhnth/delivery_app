@@ -35,4 +35,9 @@ class ApiConstants {
   // Shippers
   static const shippers = "/shippers";
   static const rateShipper = "$shippers/{shipperId}/ratings";
+
+  // Flash Sale
+  static const flashSale = "/flashsales";
+  static const getActiveCampaigns = "$flashSale/public/campaigns";
+  static const getCampaignItems = "$flashSale/public/campaigns/{id}/items";
 }

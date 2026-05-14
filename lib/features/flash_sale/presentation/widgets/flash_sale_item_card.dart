@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:delivery_app/features/flash_sale/data/models/flash_sale_model.dart';
-import 'package:delivery_app/core/utils/currency_formatter.dart';
+import 'package:intl/intl.dart';
+import '../../domain/entities/flash_sale_item_entity.dart';
 
 class FlashSaleItemCard extends StatelessWidget {
-  final FlashSaleItem item;
+  final FlashSaleItemEntity item;
   final VoidCallback onTap;
 
   const FlashSaleItemCard({
-    Key? key,
+    super.key,
     required this.item,
     required this.onTap,
-  }) : super(key: key);
+  });
+
+  String _formatPrice(double price) {
+    final formatter = NumberFormat('#,###', 'vi_VN');
+    return '${formatter.format(price)}đ';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +39,11 @@ class FlashSaleItemCard extends StatelessWidget {
                   height: 140,
                   decoration: BoxDecoration(
                     color: Colors.grey.shade100,
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(8)),
                     image: const DecorationImage(
-                      image: NetworkImage('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300'),
+                      image: NetworkImage(
+                          'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -46,7 +53,8 @@ class FlashSaleItemCard extends StatelessWidget {
                   top: 0,
                   left: 0,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                     decoration: const BoxDecoration(
                       color: Color(0xFFFFD166),
                       borderRadius: BorderRadius.only(
@@ -55,7 +63,7 @@ class FlashSaleItemCard extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      '-${((1 - item.flashSalePrice / item.originalPrice) * 100).round()}%',
+                      '-${item.discountPercent}%',
                       style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -69,14 +77,16 @@ class FlashSaleItemCard extends StatelessWidget {
                   Positioned.fill(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.5),
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+                        color: Colors.black.withValues(alpha: 0.5),
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(8)),
                       ),
                       child: Center(
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.7),
+                            color: Colors.black.withValues(alpha: 0.7),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: const Text(
@@ -93,7 +103,7 @@ class FlashSaleItemCard extends StatelessWidget {
                   ),
               ],
             ),
-            
+
             // Info
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -111,7 +121,7 @@ class FlashSaleItemCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    CurrencyFormatter.format(item.flashSalePrice),
+                    _formatPrice(item.flashSalePrice),
                     style: const TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.bold,
@@ -119,7 +129,7 @@ class FlashSaleItemCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    CurrencyFormatter.format(item.originalPrice),
+                    _formatPrice(item.originalPrice),
                     style: TextStyle(
                       color: Colors.grey.shade500,
                       decoration: TextDecoration.lineThrough,
@@ -139,7 +149,7 @@ class FlashSaleItemCard extends StatelessWidget {
                         ),
                       ),
                       FractionallySizedBox(
-                        widthFactor: item.progress.clamp(0.0, 1.0),
+                        widthFactor: item.progress,
                         child: Container(
                           height: 14,
                           decoration: BoxDecoration(
@@ -153,7 +163,9 @@ class FlashSaleItemCard extends StatelessWidget {
                       Positioned.fill(
                         child: Center(
                           child: Text(
-                            item.isSoldOut ? 'Đã bán hết' : 'Đã bán ${item.soldQuantity}',
+                            item.isSoldOut
+                                ? 'Đã bán hết'
+                                : 'Đã bán ${item.soldQuantity}',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 9,

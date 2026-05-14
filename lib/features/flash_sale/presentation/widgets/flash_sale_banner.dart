@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:delivery_app/features/flash_sale/presentation/providers/flash_sale_provider.dart';
-import 'package:delivery_app/features/flash_sale/presentation/widgets/countdown_timer.dart';
-import 'package:delivery_app/features/flash_sale/presentation/widgets/flash_sale_item_card.dart';
+import '../providers/flash_sale_provider.dart';
+import 'countdown_timer.dart';
+import 'flash_sale_item_card.dart';
 import 'package:delivery_app/core/routing/routing.dart';
 
 class FlashSaleBanner extends ConsumerWidget {
-  const FlashSaleBanner({Key? key}) : super(key: key);
+  const FlashSaleBanner({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -45,7 +45,7 @@ class FlashSaleBanner extends ConsumerWidget {
                     CountdownTimer(
                       endTime: DateTime.parse(currentCampaign.endTime),
                       onFinished: () {
-                        ref.refresh(activeCampaignsProvider);
+                        ref.invalidate(activeCampaignsProvider);
                       },
                     ),
                     const Spacer(),
@@ -58,20 +58,23 @@ class FlashSaleBanner extends ConsumerWidget {
                       ),
                       child: const Row(
                         children: [
-                          Text('Xem thêm', style: TextStyle(color: Colors.black54, fontSize: 13)),
-                          Icon(Icons.chevron_right, color: Colors.black54, size: 16),
+                          Text('Xem thêm',
+                              style: TextStyle(
+                                  color: Colors.black54, fontSize: 13)),
+                          Icon(Icons.chevron_right,
+                              color: Colors.black54, size: 16),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
-              
+
               // Items List
               itemsAsync.when(
                 data: (items) {
                   if (items.isEmpty) return const SizedBox.shrink();
-                  
+
                   return SizedBox(
                     height: 250,
                     child: ListView.builder(
@@ -84,7 +87,9 @@ class FlashSaleBanner extends ConsumerWidget {
                           item: item,
                           onTap: () {
                             // Navigate to Restaurant menu
-                            ref.read(routerProvider).push('/restaurant/${item.restaurantId}');
+                            ref
+                                .read(routerProvider)
+                                .push('/restaurant/${item.restaurantId}');
                           },
                         );
                       },
@@ -93,7 +98,8 @@ class FlashSaleBanner extends ConsumerWidget {
                 },
                 loading: () => const SizedBox(
                   height: 250,
-                  child: Center(child: CircularProgressIndicator(color: Colors.orange)),
+                  child: Center(
+                      child: CircularProgressIndicator(color: Colors.orange)),
                 ),
                 error: (error, stack) => const SizedBox.shrink(),
               ),

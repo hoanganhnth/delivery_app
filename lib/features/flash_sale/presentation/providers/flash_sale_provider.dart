@@ -1,21 +1,36 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:delivery_app/core/network/providers/api_provider.dart';
-import 'package:delivery_app/features/flash_sale/data/models/flash_sale_model.dart';
-import 'package:delivery_app/features/flash_sale/data/repositories/flash_sale_repository.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../../../core/usecases/usecase.dart';
+import '../../domain/entities/flash_sale_campaign_entity.dart';
+import '../../domain/entities/flash_sale_item_entity.dart';
+import '../../domain/usecases/flash_sale_usecases.dart';
+import 'di/flash_sale_di_providers.dart';
 
-final flashSaleRepositoryProvider = Provider<FlashSaleRepository>((ref) {
-  final apiClient = ref.watch(apiClientProvider);
-  return FlashSaleRepository(apiClient);
-});
+part 'flash_sale_provider.g.dart';
 
-// Lấy danh sách các campaign đang active
-final activeCampaignsProvider = FutureProvider<List<FlashSaleCampaign>>((ref) async {
-  final repo = ref.watch(flashSaleRepositoryProvider);
-  return repo.getActiveCampaigns();
-});
+/// Lấy danh sách các campaign đang active
+@riverpod
+Future<List<FlashSaleCampaignEntity>> activeCampaigns(Ref ref) async {
+  final useCase = ref.watch(getActiveCampaignsUseCaseProvider);
+  final result = await useCase(const NoParams());
 
-// Lấy danh sách các món ăn trong 1 campaign
-final campaignItemsProvider = FutureProvider.family<List<FlashSaleItem>, int>((ref, campaignId) async {
-  final repo = ref.watch(flashSaleRepositoryProvider);
-  return repo.getCampaignItems(campaignId);
-});
+  return result.fold(
+    (failure) => throw failure,
+    (campaigns) => campaigns,
+  );
+}
+
+/// Lấy danh sách các món ăn trong 1 campaign
+@riverpod
+Future<List<FlashSaleItemEntity>> campaignItems(
+  Ref ref,
+  int campaignId,
+) async {
+  final useCase = ref.watch(getCampaignItemsUseCaseProvider);
+  final result =
+      await useCase(GetCampaignItemsParams(campaignId: campaignId));
+
+  return result.fold(
+    (failure) => throw failure,
+    (items) => items,
+  );
+}
