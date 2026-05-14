@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../../restaurants/presentation/providers/providers.dart';
+import 'package:delivery_app/features/flash_sale/presentation/widgets/flash_sale_banner.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -67,44 +68,8 @@ class _HomePageState extends ConsumerState<HomePage> {
             SliverToBoxAdapter(child: _buildCategoriesSection()),
 
             // Flash Sale Section
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.w),
-                child: FlashSaleSection(
-                  hours: 5,
-                  minutes: 32,
-                  seconds: 15,
-                  items: [
-                    FlashSaleItem(
-                      name: 'Combo Burger Deluxe',
-                      imageUrl:
-                          'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400',
-                      originalPrice: '129.000đ',
-                      salePrice: '79.000đ',
-                      discountBadge: '-40%',
-                    ),
-                    FlashSaleItem(
-                      name: 'Pizza 4 Cheese',
-                      imageUrl:
-                          'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400',
-                      originalPrice: '199.000đ',
-                      salePrice: '99.000đ',
-                      discountBadge: '-50%',
-                    ),
-                    FlashSaleItem(
-                      name: 'Sushi Combo',
-                      imageUrl:
-                          'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400',
-                      originalPrice: '249.000đ',
-                      salePrice: '149.000đ',
-                      discountBadge: '-40%',
-                    ),
-                  ],
-                  onShopNow: () {
-                    // TODO: Navigate to flash sale page
-                  },
-                ),
-              ),
+            const SliverToBoxAdapter(
+              child: FlashSaleBanner(),
             ),
 
             // Featured livestreams section
