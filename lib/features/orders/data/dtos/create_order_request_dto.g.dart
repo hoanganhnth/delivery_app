@@ -12,6 +12,7 @@ _OrderItemRequest _$OrderItemRequestFromJson(Map<String, dynamic> json) =>
       menuItemName: json['menuItemName'] as String,
       price: (json['price'] as num).toDouble(),
       quantity: (json['quantity'] as num).toInt(),
+      flashSaleItemId: (json['flashSaleItemId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$OrderItemRequestToJson(_OrderItemRequest instance) =>
@@ -20,6 +21,7 @@ Map<String, dynamic> _$OrderItemRequestToJson(_OrderItemRequest instance) =>
       'menuItemName': instance.menuItemName,
       'price': instance.price,
       'quantity': instance.quantity,
+      'flashSaleItemId': instance.flashSaleItemId,
     };
 
 _CreateOrderRequestDto _$CreateOrderRequestDtoFromJson(

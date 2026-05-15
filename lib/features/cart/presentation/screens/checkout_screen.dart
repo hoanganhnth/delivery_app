@@ -509,12 +509,19 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     final items = preview?.items != null
         ? preview!.items!
               .map<OrderItemRequest>(
-                (item) => OrderItemRequest(
-                  menuItemId: item.menuItemId!,
-                  menuItemName: item.menuItemName ?? '',
-                  quantity: item.quantity ?? 1,
-                  price: item.unitPrice ?? 0,
-                ),
+                (item) {
+                  // Match with cart item to get flashSaleItemId
+                  final cartItem = cart.items
+                      .where((c) => c.menuItemId == item.menuItemId)
+                      .firstOrNull;
+                  return OrderItemRequest(
+                    menuItemId: item.menuItemId!,
+                    menuItemName: item.menuItemName ?? '',
+                    quantity: item.quantity ?? 1,
+                    price: item.unitPrice ?? 0,
+                    flashSaleItemId: cartItem?.flashSaleItemId,
+                  );
+                },
               )
               .toList()
         : cart.items
@@ -524,6 +531,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   menuItemName: item.menuItemName,
                   quantity: item.quantity,
                   price: item.price,
+                  flashSaleItemId: item.flashSaleItemId,
                 ),
               )
               .toList();

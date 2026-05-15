@@ -12,6 +12,8 @@ import '../widgets/shared/orders_list.dart' as orders_widget;
 import '../widgets/shared/orders_empty_state.dart';
 import '../widgets/shared/orders_error_state.dart';
 import '../widgets/order_detail/cancel_order_dialog.dart';
+import 'package:delivery_app/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:delivery_app/features/cart/presentation/providers/state/cart_notifier.dart';
 
 class OrdersScreen extends ConsumerStatefulWidget {
   const OrdersScreen({super.key});
@@ -99,6 +101,29 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
     Navigator.of(context).pop();
   }
 
+  void _handleReorder(OrderEntity order) async {
+    final cartNotifier = ref.read(cartProvider.notifier);
+    // Xoá giỏ hàng hiện tại
+    await cartNotifier.clearCart();
+    
+    // Thêm lại toàn bộ các món trong đơn hàng cũ vào giỏ
+    for (var item in order.items) {
+      await cartNotifier.addItem(CartItemEntity(
+        menuItemId: item.menuItemId,
+        menuItemName: item.menuItemName,
+        price: item.price,
+        quantity: item.quantity,
+        restaurantId: order.restaurantId ?? 0,
+        restaurantName: order.restaurantName ?? 'Restaurant',
+        notes: item.notes,
+      ));
+    }
+    
+    // Chuyển sang giỏ hàng để user tiếp tục checkout
+    if (!mounted) return;
+    context.pushCart();
+  }
+
   List<OrderEntity> _getFilteredOrders(List<OrderEntity> orders) {
     if (currentStatus == null) return orders; // All
     if (currentStatus == OrderStatus.pending) {
@@ -173,6 +198,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
                 scrollController: _scrollController,
                 onOrderTap: _navigateToOrderDetail,
                 onOrderCancel: _showCancelOrderDialog,
+                onOrderReorder: _handleReorder,
                 onRetry: _retryLoadOrders,
               ),
             ),
@@ -220,6 +246,7 @@ class OrdersBody extends StatelessWidget {
   final ScrollController scrollController;
   final void Function(int) onOrderTap;
   final void Function(OrderEntity) onOrderCancel;
+  final void Function(OrderEntity) onOrderReorder;
   final VoidCallback onRetry;
 
   const OrdersBody({
@@ -230,6 +257,7 @@ class OrdersBody extends StatelessWidget {
     required this.scrollController,
     required this.onOrderTap,
     required this.onOrderCancel,
+    required this.onOrderReorder,
     required this.onRetry,
   });
 
@@ -257,11 +285,7 @@ class OrdersBody extends StatelessWidget {
           scrollController: scrollController,
           onOrderTap: onOrderTap,
           onOrderCancel: onOrderCancel,
-          onOrderReorder: (order) {
-            if (order.restaurantId != null) {
-              context.pushToRestaurantDetails(order.restaurantId.toString());
-            }
-          },
+          onOrderReorder: onOrderReorder,
         );
       },
     );

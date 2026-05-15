@@ -15,6 +15,7 @@ sealed class CartItemEntity with _$CartItemEntity {
     required String restaurantName,
     String? imageUrl,
     String? notes,
+    int? flashSaleItemId,
   }) = _CartItemEntity;
 
   const CartItemEntity._();

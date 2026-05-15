@@ -26,4 +26,14 @@ class PromotionDataSource {
       throw Exception('Failed to collect voucher: $e');
     }
   }
+
+  Future<List<Map<String, dynamic>>> getMyVouchers() async {
+    try {
+      final response = await _dio.get('/promotions/my-vouchers');
+      final List data = response.data ?? [];
+      return data.cast<Map<String, dynamic>>();
+    } catch (e) {
+      throw Exception('Failed to fetch my vouchers: $e');
+    }
+  }
 }

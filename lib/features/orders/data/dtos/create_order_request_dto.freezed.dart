@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$OrderItemRequest {
 
- int get menuItemId; String get menuItemName; double get price; int get quantity;
+ int get menuItemId; String get menuItemName; double get price; int get quantity; int? get flashSaleItemId;
 /// Create a copy of OrderItemRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $OrderItemRequestCopyWith<OrderItemRequest> get copyWith => _$OrderItemRequestCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is OrderItemRequest&&(identical(other.menuItemId, menuItemId) || other.menuItemId == menuItemId)&&(identical(other.menuItemName, menuItemName) || other.menuItemName == menuItemName)&&(identical(other.price, price) || other.price == price)&&(identical(other.quantity, quantity) || other.quantity == quantity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OrderItemRequest&&(identical(other.menuItemId, menuItemId) || other.menuItemId == menuItemId)&&(identical(other.menuItemName, menuItemName) || other.menuItemName == menuItemName)&&(identical(other.price, price) || other.price == price)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.flashSaleItemId, flashSaleItemId) || other.flashSaleItemId == flashSaleItemId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,menuItemId,menuItemName,price,quantity);
+int get hashCode => Object.hash(runtimeType,menuItemId,menuItemName,price,quantity,flashSaleItemId);
 
 @override
 String toString() {
-  return 'OrderItemRequest(menuItemId: $menuItemId, menuItemName: $menuItemName, price: $price, quantity: $quantity)';
+  return 'OrderItemRequest(menuItemId: $menuItemId, menuItemName: $menuItemName, price: $price, quantity: $quantity, flashSaleItemId: $flashSaleItemId)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $OrderItemRequestCopyWith<$Res>  {
   factory $OrderItemRequestCopyWith(OrderItemRequest value, $Res Function(OrderItemRequest) _then) = _$OrderItemRequestCopyWithImpl;
 @useResult
 $Res call({
- int menuItemId, String menuItemName, double price, int quantity
+ int menuItemId, String menuItemName, double price, int quantity, int? flashSaleItemId
 });
 
 
@@ -65,13 +65,14 @@ class _$OrderItemRequestCopyWithImpl<$Res>
 
 /// Create a copy of OrderItemRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? menuItemId = null,Object? menuItemName = null,Object? price = null,Object? quantity = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? menuItemId = null,Object? menuItemName = null,Object? price = null,Object? quantity = null,Object? flashSaleItemId = freezed,}) {
   return _then(_self.copyWith(
 menuItemId: null == menuItemId ? _self.menuItemId : menuItemId // ignore: cast_nullable_to_non_nullable
 as int,menuItemName: null == menuItemName ? _self.menuItemName : menuItemName // ignore: cast_nullable_to_non_nullable
 as String,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
 as double,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
-as int,
+as int,flashSaleItemId: freezed == flashSaleItemId ? _self.flashSaleItemId : flashSaleItemId // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -153,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int menuItemId,  String menuItemName,  double price,  int quantity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int menuItemId,  String menuItemName,  double price,  int quantity,  int? flashSaleItemId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _OrderItemRequest() when $default != null:
-return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity);case _:
+return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity,_that.flashSaleItemId);case _:
   return orElse();
 
 }
@@ -174,10 +175,10 @@ return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity);
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int menuItemId,  String menuItemName,  double price,  int quantity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int menuItemId,  String menuItemName,  double price,  int quantity,  int? flashSaleItemId)  $default,) {final _that = this;
 switch (_that) {
 case _OrderItemRequest():
-return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity);}
+return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity,_that.flashSaleItemId);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -191,10 +192,10 @@ return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity);
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int menuItemId,  String menuItemName,  double price,  int quantity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int menuItemId,  String menuItemName,  double price,  int quantity,  int? flashSaleItemId)?  $default,) {final _that = this;
 switch (_that) {
 case _OrderItemRequest() when $default != null:
-return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity);case _:
+return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity,_that.flashSaleItemId);case _:
   return null;
 
 }
@@ -206,13 +207,14 @@ return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity);
 @JsonSerializable()
 
 class _OrderItemRequest implements OrderItemRequest {
-  const _OrderItemRequest({required this.menuItemId, required this.menuItemName, required this.price, required this.quantity});
+  const _OrderItemRequest({required this.menuItemId, required this.menuItemName, required this.price, required this.quantity, this.flashSaleItemId});
   factory _OrderItemRequest.fromJson(Map<String, dynamic> json) => _$OrderItemRequestFromJson(json);
 
 @override final  int menuItemId;
 @override final  String menuItemName;
 @override final  double price;
 @override final  int quantity;
+@override final  int? flashSaleItemId;
 
 /// Create a copy of OrderItemRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -227,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OrderItemRequest&&(identical(other.menuItemId, menuItemId) || other.menuItemId == menuItemId)&&(identical(other.menuItemName, menuItemName) || other.menuItemName == menuItemName)&&(identical(other.price, price) || other.price == price)&&(identical(other.quantity, quantity) || other.quantity == quantity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OrderItemRequest&&(identical(other.menuItemId, menuItemId) || other.menuItemId == menuItemId)&&(identical(other.menuItemName, menuItemName) || other.menuItemName == menuItemName)&&(identical(other.price, price) || other.price == price)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.flashSaleItemId, flashSaleItemId) || other.flashSaleItemId == flashSaleItemId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,menuItemId,menuItemName,price,quantity);
+int get hashCode => Object.hash(runtimeType,menuItemId,menuItemName,price,quantity,flashSaleItemId);
 
 @override
 String toString() {
-  return 'OrderItemRequest(menuItemId: $menuItemId, menuItemName: $menuItemName, price: $price, quantity: $quantity)';
+  return 'OrderItemRequest(menuItemId: $menuItemId, menuItemName: $menuItemName, price: $price, quantity: $quantity, flashSaleItemId: $flashSaleItemId)';
 }
 
 
@@ -247,7 +249,7 @@ abstract mixin class _$OrderItemRequestCopyWith<$Res> implements $OrderItemReque
   factory _$OrderItemRequestCopyWith(_OrderItemRequest value, $Res Function(_OrderItemRequest) _then) = __$OrderItemRequestCopyWithImpl;
 @override @useResult
 $Res call({
- int menuItemId, String menuItemName, double price, int quantity
+ int menuItemId, String menuItemName, double price, int quantity, int? flashSaleItemId
 });
 
 
@@ -264,13 +266,14 @@ class __$OrderItemRequestCopyWithImpl<$Res>
 
 /// Create a copy of OrderItemRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? menuItemId = null,Object? menuItemName = null,Object? price = null,Object? quantity = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? menuItemId = null,Object? menuItemName = null,Object? price = null,Object? quantity = null,Object? flashSaleItemId = freezed,}) {
   return _then(_OrderItemRequest(
 menuItemId: null == menuItemId ? _self.menuItemId : menuItemId // ignore: cast_nullable_to_non_nullable
 as int,menuItemName: null == menuItemName ? _self.menuItemName : menuItemName // ignore: cast_nullable_to_non_nullable
 as String,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
 as double,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
-as int,
+as int,flashSaleItemId: freezed == flashSaleItemId ? _self.flashSaleItemId : flashSaleItemId // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

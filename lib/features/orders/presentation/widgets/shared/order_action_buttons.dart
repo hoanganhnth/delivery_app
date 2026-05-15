@@ -6,6 +6,9 @@ import 'package:delivery_app/features/orders/presentation/providers/providers.da
 import '../order_detail/shipper_rating_bottom_sheet.dart';
 import '../order_detail/restaurant_rating_bottom_sheet.dart';
 import '../order_detail/cancel_order_bottom_sheet.dart';
+import 'package:delivery_app/core/routing/routing.dart';
+import 'package:delivery_app/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:delivery_app/features/cart/presentation/providers/state/cart_notifier.dart';
 
 /// Widget hiển thị các nút hành động cho đơn hàng
 class OrderActionButtons extends ConsumerWidget {
@@ -25,8 +28,8 @@ class OrderActionButtons extends ConsumerWidget {
     
     final theme = Theme.of(context);
 
-    // Chỉ hiển thị nút cancel nếu có thể huỷ
-    if (!order.canCancel && order.status != OrderStatus.delivered) {
+    // Nếu đang giao hàng nhưng chưa có shipper hoặc chưa thể huỷ, không hiển thị gì (trừ khi là đã huỷ/delivered)
+    if (!order.canCancel && order.status == OrderStatus.delivering) {
       return const SizedBox.shrink();
     }
 
@@ -82,6 +85,23 @@ class OrderActionButtons extends ConsumerWidget {
                     label: const Text('Đánh giá Quán ăn'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepOrange,
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(vertical: 12.w),
+                    ),
+                  ),
+                ),
+              ),
+            if (order.status == OrderStatus.delivered || order.status == OrderStatus.cancelled)
+              Padding(
+                padding: EdgeInsets.only(top: 8.w),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () => _handleReorder(context, ref),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Đặt lại đơn này'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: theme.primaryColor,
                       foregroundColor: Colors.white,
                       padding: EdgeInsets.symmetric(vertical: 12.w),
                     ),
@@ -186,6 +206,27 @@ class OrderActionButtons extends ConsumerWidget {
           ),
         );
       }
+    }
+  }
+
+  void _handleReorder(BuildContext context, WidgetRef ref) async {
+    final cartNotifier = ref.read(cartProvider.notifier);
+    await cartNotifier.clearCart();
+    
+    for (var item in order.items) {
+      await cartNotifier.addItem(CartItemEntity(
+        menuItemId: item.menuItemId,
+        menuItemName: item.menuItemName,
+        price: item.price,
+        quantity: item.quantity,
+        restaurantId: order.restaurantId ?? 0,
+        restaurantName: order.restaurantName ?? 'Restaurant',
+        notes: item.notes,
+      ));
+    }
+    
+    if (context.mounted) {
+      context.pushCart();
     }
   }
 }

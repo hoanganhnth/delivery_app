@@ -10,6 +10,7 @@ sealed class OrderItemRequest with _$OrderItemRequest {
     required String menuItemName,
     required double price,
     required int quantity,
+    int? flashSaleItemId,
   }) = _OrderItemRequest;
 
   factory OrderItemRequest.fromJson(Map<String, dynamic> json) =>
