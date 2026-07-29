@@ -29,12 +29,13 @@ class CheckoutPreviewNotifier extends _$CheckoutPreviewNotifier {
     try {
       final service = ref.read(checkoutOrderApiServiceProvider);
       final response = await service.checkoutPreview(request);
-      
+
       if (!ref.mounted) return null;
 
       if (response.status == 1 && response.data != null) {
-        state = AsyncValue.data(response.data);
-        return response.data;
+        final preview = response.data!.validateFor(request);
+        state = AsyncValue.data(preview);
+        return preview;
       } else {
         throw Exception(response.message);
       }

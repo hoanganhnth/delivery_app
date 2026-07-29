@@ -10,20 +10,17 @@ library;
 
 import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
 import 'package:delivery_app/features/orders/presentation/screens/order_detail_screen.dart';
-import 'package:delivery_app/features/support/presentation/screens/support_chat_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:delivery_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:delivery_app/features/auth/presentation/screens/register_screen.dart';
-import 'package:delivery_app/features/auth/presentation/screens/forgot_password_screen.dart';
+import 'package:delivery_app/features/notification/presentation/screens/notification_screen.dart';
+import 'package:delivery_app/features/search/presentation/screens/search_screen.dart';
 import 'package:delivery_app/features/main/presentation/pages/main_screen.dart';
 import 'package:delivery_app/features/profile/profile.dart';
 import 'package:delivery_app/features/settings/settings.dart';
-import 'package:delivery_app/features/settings/presentation/screens/theme_settings_screen.dart';
 import 'package:delivery_app/features/orders/orders.dart';
 import 'package:delivery_app/features/restaurants/restaurants.dart';
 import 'package:delivery_app/features/cart/cart.dart';
-import 'package:delivery_app/features/livestream/presentation/screens/all_livestreams_screen.dart';
-import 'package:delivery_app/features/livestream/presentation/screens/livestream_detail_screen.dart';
 import 'package:delivery_app/features/user_address/presentation/screens/address_list_screen.dart';
 import 'package:delivery_app/features/user_address/presentation/screens/add_edit_address_screen.dart';
 import 'package:delivery_app/features/user_address/domain/entities/user_address_entity.dart';
@@ -82,12 +79,6 @@ GoRouter createAppRouter({
         name: 'register',
         builder: (context, state) => const RegisterScreen(),
       ),
-      GoRoute(
-        path: AppRoutes.forgotPassword,
-        name: 'forgot-password',
-        builder: (context, state) => const ForgotPasswordScreen(),
-      ),
-
       // Main navigation
       GoRoute(
         path: AppRoutes.main,
@@ -95,9 +86,14 @@ GoRouter createAppRouter({
         builder: (context, state) => const MainScreen(),
       ),
       GoRoute(
-        path: AppRoutes.themeSettings,
-        name: 'theme-settings',
-        builder: (context, state) => const ThemeSettingsScreen(),
+        path: AppRoutes.search,
+        name: 'search',
+        builder: (context, state) => const SearchScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.notifications,
+        name: 'notifications',
+        builder: (context, state) => const NotificationScreen(),
       ),
 
       // Home with nested profile
@@ -129,16 +125,24 @@ GoRouter createAppRouter({
             path: ':orderId',
             name: 'order-details',
             builder: (context, state) {
-              final orderId = state.pathParameters['orderId']!;
-              return OrderDetailScreen(orderId: num.tryParse(orderId) ?? 0);
+              final orderId = parsePositiveRouteId(
+                state.pathParameters['orderId'],
+              );
+              return orderId == null
+                  ? const NotFoundScreen()
+                  : OrderDetailScreen(orderId: orderId);
             },
             routes: [
               GoRoute(
                 path: 'track',
                 name: 'track-order',
                 builder: (context, state) {
-                  final orderId = state.pathParameters['orderId']!;
-                  return TrackOrderScreen(orderId: num.tryParse(orderId) ?? 0);
+                  final orderId = parsePositiveRouteId(
+                    state.pathParameters['orderId'],
+                  );
+                  return orderId == null
+                      ? const NotFoundScreen()
+                      : OrderDetailScreen(orderId: orderId);
                 },
               ),
             ],
@@ -156,20 +160,13 @@ GoRouter createAppRouter({
             path: ':restaurantId',
             name: 'restaurant-details',
             builder: (context, state) {
-              final restaurantId =
-                  num.tryParse(state.pathParameters['restaurantId']!) ?? 1;
-              return RestaurantDetailScreen(restaurantId: restaurantId);
+              final restaurantId = parsePositiveRouteId(
+                state.pathParameters['restaurantId'],
+              );
+              return restaurantId == null
+                  ? const NotFoundScreen()
+                  : RestaurantDetailScreen(restaurantId: restaurantId);
             },
-            routes: [
-              GoRoute(
-                path: 'menu',
-                name: 'menu',
-                builder: (context, state) {
-                  final restaurantId = state.pathParameters['restaurantId']!;
-                  return MenuScreen(restaurantId: restaurantId);
-                },
-              ),
-            ],
           ),
         ],
       ),
@@ -186,29 +183,9 @@ GoRouter createAppRouter({
         builder: (context, state) => const CheckoutScreen(),
       ),
       GoRoute(
-        path: AppRoutes.payment,
-        name: 'payment',
-        builder: (context, state) => const PaymentScreen(),
-      ),
-      GoRoute(
         path: AppRoutes.orderConfirmation,
         name: 'order-confirmation',
         builder: (context, state) => const OrderConfirmationScreen(),
-      ),
-
-      // Livestream
-      GoRoute(
-        path: '/livestreams',
-        name: 'livestreams',
-        builder: (context, state) => const AllLivestreamsScreen(),
-      ),
-      GoRoute(
-        path: '/livestream-detail/:id',
-        name: 'livestream-detail',
-        builder: (context, state) {
-          final id = state.pathParameters['id']!;
-          return LivestreamDetailScreen(livestreamId: id);
-        },
       ),
 
       // Address management
@@ -231,13 +208,6 @@ GoRouter createAppRouter({
         },
       ),
 
-      // Support
-      GoRoute(
-        path: AppRoutes.supportChat,
-        name: 'support-chat',
-        builder: (context, state) => const SupportChatScreen(),
-      ),
-
       // 404
       GoRoute(
         path: AppRoutes.notFound,
@@ -245,8 +215,13 @@ GoRouter createAppRouter({
         builder: (context, state) => const NotFoundScreen(),
       ),
     ],
-    errorBuilder: (context, state) => ErrorScreen(error: state.error),
+    errorBuilder: (context, state) => const ErrorScreen(),
   );
+}
+
+int? parsePositiveRouteId(String? rawValue) {
+  final value = int.tryParse(rawValue ?? '');
+  return value != null && value > 0 ? value : null;
 }
 
 /// Navigation extension for [GoRouter] — named-route shortcuts.
@@ -264,9 +239,9 @@ extension GoRouterExtension on GoRouter {
       pushNamed('order-details', pathParameters: {'orderId': orderId});
 
   void pushRestaurantDetails(String restaurantId) => pushNamed(
-        'restaurant-details',
-        pathParameters: {'restaurantId': restaurantId},
-      );
+    'restaurant-details',
+    pathParameters: {'restaurantId': restaurantId},
+  );
 
   void pushAddressList() => pushNamed('address-list');
   void pushAddAddress() => pushNamed('add-address');

@@ -11,11 +11,7 @@ class OrderSummaryCard extends ConsumerWidget {
   final CartEntity cart;
   final CheckoutPreviewResponse? preview;
 
-  const OrderSummaryCard({
-    super.key,
-    required this.cart,
-    this.preview,
-  });
+  const OrderSummaryCard({super.key, required this.cart, this.preview});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,7 +46,7 @@ class OrderSummaryCard extends ConsumerWidget {
                             ),
                           ),
                           Text(
-                            '${((item.unitPrice ?? 0) * (item.quantity ?? 1)).toStringAsFixed(0)}₫',
+                            '${item.lineTotal!.toStringAsFixed(0)}₫',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               color: ref.colors.textPrimary,
@@ -91,9 +87,9 @@ class OrderSummaryCard extends ConsumerWidget {
                       ),
                     ),
                   )),
-            
+
             const Divider(),
-            
+
             // Subtotal
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -109,7 +105,7 @@ class OrderSummaryCard extends ConsumerWidget {
               ],
             ),
             SizedBox(height: 8.w),
-            
+
             // Delivery fee
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,14 +115,16 @@ class OrderSummaryCard extends ConsumerWidget {
                   style: TextStyle(color: ref.colors.textSecondary),
                 ),
                 Text(
-                  '${(preview?.shippingFee ?? 0).toStringAsFixed(0)}₫',
+                  preview == null
+                      ? '—'
+                      : '${preview!.shippingFee!.toStringAsFixed(0)}₫',
                   style: TextStyle(color: ref.colors.textPrimary),
                 ),
               ],
             ),
-            
+
             const Divider(),
-            
+
             // Total
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -140,7 +138,9 @@ class OrderSummaryCard extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  '${(preview?.totalPrice ?? cart.totalAmount).toStringAsFixed(0)}₫',
+                  preview == null
+                      ? '—'
+                      : '${preview!.totalPrice!.toStringAsFixed(0)}₫',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,

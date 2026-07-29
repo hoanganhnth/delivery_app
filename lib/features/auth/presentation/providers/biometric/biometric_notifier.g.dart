@@ -44,7 +44,7 @@ final class BiometricNotifierProvider
   }
 }
 
-String _$biometricNotifierHash() => r'a692fe4b5d71cb7b567753988e4e9dcbc15f9900';
+String _$biometricNotifierHash() => r'c703d372e8acd6898d9492579a8e34b012a0bd32';
 
 /// Notifier for biometric authentication state
 

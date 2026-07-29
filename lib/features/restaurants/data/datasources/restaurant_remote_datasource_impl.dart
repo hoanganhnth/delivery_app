@@ -8,7 +8,6 @@ import '../dtos/restaurant_dto.dart';
 import '../dtos/menu_item_dto.dart';
 import '../dtos/get_restaurants_request_dto.dart';
 import '../dtos/search_restaurants_request_dto.dart';
-import '../dtos/nearby_restaurants_request_dto.dart';
 import 'restaurant_remote_datasource.dart';
 
 part 'restaurant_remote_datasource_impl.g.dart';
@@ -31,18 +30,10 @@ abstract class RestaurantApiService {
     @Path('restaurantId') num restaurantId,
   );
 
-  @GET(ApiConstants.getRestaurantNearBy)
-  Future<BaseResponseDto<List<RestaurantDto>>> getNearbyRestaurants(
-    @Queries() NearbyRestaurantsRequestDto request,
-  );
-
   @GET('/restaurants/search')
   Future<BaseResponseDto<List<RestaurantDto>>> searchRestaurants(
     @Queries() SearchRestaurantsRequestDto request,
   );
-
-  @GET('/restaurants/categories')
-  Future<BaseResponseDto<List<String>>> getRestaurantCategories();
 }
 
 class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
@@ -55,7 +46,7 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
     GetRestaurantsRequestDto request,
   ) async {
     try {
-      AppLogger.d('Getting restaurants with params: $request');
+      AppLogger.d('Getting restaurants');
       final response = await _apiService.getRestaurants(request);
       AppLogger.i(
         'Successfully retrieved ${response.data?.length ?? 0} restaurants',
@@ -75,7 +66,7 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
     try {
       AppLogger.d('Getting restaurant with id: $id');
       final response = await _apiService.getRestaurantById(id);
-      AppLogger.i('Successfully retrieved restaurant: ${response.data?.name}');
+      AppLogger.i('Successfully retrieved restaurant');
       return response;
     } on DioException catch (e) {
       AppLogger.e('Failed to get restaurant with id: $id', e);
@@ -107,31 +98,11 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
   }
 
   @override
-  Future<BaseResponseDto<List<RestaurantDto>>> getNearbyRestaurants(
-    NearbyRestaurantsRequestDto request,
-  ) async {
-    try {
-      AppLogger.d('Getting nearby restaurants with params: $request');
-      final response = await _apiService.getNearbyRestaurants(request);
-      AppLogger.i(
-        'Successfully retrieved ${response.data?.length ?? 0} nearby restaurants',
-      );
-      return response;
-    } on DioException catch (e) {
-      AppLogger.e('Failed to get nearby restaurants', e);
-      throw DioExceptionHandler.mapDioExceptionToException(e);
-    } catch (e) {
-      AppLogger.e('Unexpected error getting nearby restaurants', e);
-      throw Exception('Unexpected error: ${e.toString()}');
-    }
-  }
-
-  @override
   Future<BaseResponseDto<List<RestaurantDto>>> searchRestaurants(
     SearchRestaurantsRequestDto request,
   ) async {
     try {
-      AppLogger.d('Searching restaurants with query: ${request.query}');
+      AppLogger.d('Searching restaurants');
       final response = await _apiService.searchRestaurants(request);
       AppLogger.i('Search returned ${response.data?.length ?? 0} restaurants');
       return response;
@@ -140,24 +111,6 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
       throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error searching restaurants', e);
-      throw Exception('Unexpected error: ${e.toString()}');
-    }
-  }
-
-  @override
-  Future<BaseResponseDto<List<String>>> getRestaurantCategories() async {
-    try {
-      AppLogger.d('Getting restaurant categories');
-      final response = await _apiService.getRestaurantCategories();
-      AppLogger.i(
-        'Successfully retrieved ${response.data?.length ?? 0} categories',
-      );
-      return response;
-    } on DioException catch (e) {
-      AppLogger.e('Failed to get restaurant categories', e);
-      throw DioExceptionHandler.mapDioExceptionToException(e);
-    } catch (e) {
-      AppLogger.e('Unexpected error getting categories', e);
       throw Exception('Unexpected error: ${e.toString()}');
     }
   }

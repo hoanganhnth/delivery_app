@@ -7,27 +7,38 @@ class LoggerImpl implements ILogger {
   final logger_pkg.Logger _logger;
 
   LoggerImpl()
-      : _logger = logger_pkg.Logger(
-          printer: logger_pkg.PrettyPrinter(
-            methodCount: 0,
-            errorMethodCount: 5,
-            lineLength: 80,
-            colors: true,
-            printEmojis: true,
-          ),
-          level: kReleaseMode ? logger_pkg.Level.error : logger_pkg.Level.debug,
-        );
+    : _logger = logger_pkg.Logger(
+        printer: logger_pkg.PrettyPrinter(
+          methodCount: 0,
+          errorMethodCount: 5,
+          lineLength: 80,
+          colors: true,
+          printEmojis: true,
+        ),
+        level: logger_pkg.Level.debug,
+      );
 
   @override
-  void d(dynamic message) => _logger.d(message);
+  void d(dynamic message) {
+    if (kDebugMode) _logger.d(message);
+  }
 
   @override
-  void i(dynamic message) => _logger.i(message);
+  void i(dynamic message) {
+    if (kDebugMode) _logger.i(message);
+  }
 
   @override
-  void w(dynamic message) => _logger.w(message);
+  void w(dynamic message) {
+    if (kDebugMode) _logger.w(message);
+  }
 
   @override
-  void e(dynamic message, [dynamic error, StackTrace? stackTrace]) =>
-      _logger.e(message, error: error, stackTrace: stackTrace);
+  void e(dynamic message, [dynamic error, StackTrace? stackTrace]) {
+    if (kDebugMode) {
+      // Error objects from HTTP/socket libraries can retain request headers and
+      // payloads. Log only the caller-owned metadata message.
+      _logger.e(message);
+    }
+  }
 }

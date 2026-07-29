@@ -38,14 +38,15 @@ class TrackingRealMapWidget extends ConsumerWidget {
 
     // Chỉ hiển thị bản đồ khi đã có shipper nhận đơn
     if (currentTracking.shipperId == null ||
-        currentTracking.status == DeliveryStatus.pending) {
+        currentTracking.status == DeliveryStatus.pending ||
+        currentTracking.status == DeliveryStatus.findingShipper ||
+        currentTracking.status == DeliveryStatus.waitShipperConfirm ||
+        currentTracking.status == DeliveryStatus.shipperNotFound) {
       return const TrackingFindingShipperCard();
     }
 
     return OptimizedDeliveryTrackingMapWidget(
       deliveryTracking: currentTracking,
-      shipper: trackingState.shipper,
-      useFakeMovement: false,
     );
   }
 }

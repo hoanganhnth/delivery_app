@@ -15,7 +15,6 @@ sealed class CartItemEntity with _$CartItemEntity {
     required String restaurantName,
     String? imageUrl,
     String? notes,
-    int? flashSaleItemId,
   }) = _CartItemEntity;
 
   const CartItemEntity._();
@@ -27,12 +26,17 @@ sealed class CartItemEntity with _$CartItemEntity {
     int quantity = 1,
     String? notes,
   }) {
+    if (!menuItem.canAddToCart) {
+      throw ArgumentError(
+        'Menu item requires positive menu/restaurant IDs, name and price',
+      );
+    }
     return CartItemEntity(
-      menuItemId: menuItem.id ?? 0,
+      menuItemId: menuItem.id!,
       menuItemName: menuItem.name,
       price: menuItem.price,
       quantity: quantity,
-      restaurantId: menuItem.restaurantId ?? 0,
+      restaurantId: menuItem.restaurantId!,
       restaurantName: restaurantName,
       imageUrl: menuItem.image,
       notes: notes,
@@ -55,9 +59,9 @@ sealed class CartItemEntity with _$CartItemEntity {
   /// Check if this cart item matches a menu item
   bool matchesMenuItem(MenuItemEntity menuItem) {
     return menuItemId == menuItem.id &&
-           menuItemName == menuItem.name &&
-           price == menuItem.price &&
-           restaurantId == menuItem.restaurantId;
+        menuItemName == menuItem.name &&
+        price == menuItem.price &&
+        restaurantId == menuItem.restaurantId;
   }
 
   /// Update cart item with latest menu item data (for price changes, etc.)

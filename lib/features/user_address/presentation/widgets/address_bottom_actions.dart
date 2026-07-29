@@ -45,12 +45,14 @@ class AddressBottomActions extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Đặt làm địa chỉ mặc định',
-                  style: TextStyle(
-                    fontSize: ResponsiveSize.fontM,
-                    color: colors.textPrimary,
-                    fontWeight: FontWeight.w500,
+                Expanded(
+                  child: Text(
+                    'Đặt làm địa chỉ mặc định',
+                    style: TextStyle(
+                      fontSize: ResponsiveSize.fontM,
+                      color: colors.textPrimary,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
                 Switch.adaptive(

@@ -1,5 +1,4 @@
 import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
-import 'package:delivery_app/features/livestream/presentation/screens/all_livestreams_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
@@ -14,12 +13,7 @@ class MainScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentTab = ref.watch(selectedTabProvider);
 
-    const pages = <Widget>[
-      HomePage(),
-      CartPage(),
-      AllLivestreamsScreen(),
-      ProfilePage(),
-    ];
+    const pages = <Widget>[HomePage(), CartPage(), ProfilePage()];
 
     // Map AppTab to physical index for IndexedStack
     int getPageIndex(AppTab tab) {
@@ -28,10 +22,8 @@ class MainScreen extends ConsumerWidget {
           return 0;
         case AppTab.cart:
           return 1;
-        case AppTab.livestreams:
-          return 2;
         case AppTab.profile:
-          return 3;
+          return 2;
         default:
           return 0; // Default to home if on restaurants or other
       }
@@ -45,8 +37,6 @@ class MainScreen extends ConsumerWidget {
         case 1:
           return AppTab.cart;
         case 2:
-          return AppTab.livestreams;
-        case 3:
           return AppTab.profile;
         default:
           return AppTab.home;

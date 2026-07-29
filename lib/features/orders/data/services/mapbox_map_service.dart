@@ -22,7 +22,7 @@ class MapboxMapService {
     String geometries = 'geojson',
   }) async {
     final token = dotenv.env['MAPBOX_ACCESS_TOKEN'];
-    
+
     if (token == null || token.isEmpty) {
       AppLogger.e('MAPBOX_ACCESS_TOKEN is missing in .env file');
       throw Exception('Mapbox access token is missing');
@@ -31,17 +31,18 @@ class MapboxMapService {
     // Format: longitude,latitude
     final originStr = '${origin[0]},${origin[1]}';
     final destStr = '${destination[0]},${destination[1]}';
-    
-    final url = '$_baseUrl/$originStr;$destStr?geometries=$geometries&access_token=$token';
 
-    AppLogger.i('Fetching directions from Mapbox: origin=$origin, destination=$destination');
+    final url =
+        '$_baseUrl/$originStr;$destStr?geometries=$geometries&access_token=$token';
+
+    AppLogger.i('Fetching directions from Mapbox');
 
     try {
       final response = await _dio.get(url);
       return response.data as Map<String, dynamic>;
-    } catch (e) {
-      AppLogger.e('Failed to get directions from Mapbox: $e');
-      throw Exception('Failed to get directions: $e');
+    } catch (_) {
+      AppLogger.e('Failed to get directions from Mapbox');
+      throw Exception('Failed to get directions');
     }
   }
 }

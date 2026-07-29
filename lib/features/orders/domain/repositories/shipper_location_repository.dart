@@ -6,16 +6,16 @@ import '../entities/shipper_location_entity.dart';
 abstract class ShipperLocationRepository {
   /// Stream để lắng nghe location updates của shipper
   Stream<ShipperLocationEntity> get locationStream;
-  
-  /// Bắt đầu theo dõi vị trí shipper
-  Future<Either<Failure, void>> startTrackingShipper(int shipperId);
 
-  /// Lấy vị trí hiện tại của shipper (thông qua REST API)
-  Future<Either<Failure, ShipperLocationEntity>> getShipperLocation(int shipperId);
-  
+  /// Bắt đầu theo dõi vị trí shipper
+  Future<Either<Failure, void>> startTrackingShipper(
+    int shipperId,
+    int deliveryId,
+  );
+
   /// Dừng theo dõi vị trí shipper
   Future<Either<Failure, void>> stopTrackingShipper();
-  
+
   /// Kiểm tra trạng thái tracking
   bool get isTracking;
 }

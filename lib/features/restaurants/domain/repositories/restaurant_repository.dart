@@ -17,17 +17,9 @@ abstract class RestaurantRepository {
 
   Future<Either<Failure, List<MenuItemEntity>>> getMenuItems(num restaurantId);
 
-  Future<Either<Failure, List<RestaurantEntity>>> getNearbyRestaurants({
-    required double latitude,
-    required double longitude,
-    double radius = 5.0, // km
-  });
-
   Future<Either<Failure, List<RestaurantEntity>>> searchRestaurants({
     required String query,
     double? latitude,
     double? longitude,
   });
-
-  Future<Either<Failure, List<String>>> getRestaurantCategories();
 }

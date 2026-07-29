@@ -109,7 +109,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                         ),
                         SizedBox(height: 16.w),
                         Text(
-                          error.toString(),
+                          'Không thể tải giỏ hàng. Vui lòng thử lại.',
                           style: TextStyle(
                             color: const Color(0xFFBA1A1A),
                             fontSize: 14.sp,
@@ -152,12 +152,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                 padding: EdgeInsets.all(16.w),
                                 child: RestaurantHeaderCard(
                                   name: cart.currentRestaurantName ?? '',
-                                  logoUrl: null, // TODO: Get from cart
-                                  rating: 4.8,
-                                  distance: '1.2 km',
-                                  onTap: () {
-                                    // TODO: Navigate to restaurant
-                                  },
                                 ),
                               ),
                             ),
@@ -241,10 +235,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
                           // Order summary section
                           SliverToBoxAdapter(
-                            child: CartOrderSummary(
-                              subtotal: cart.totalAmount,
-                              deliveryFee: 15000.0,
-                            ),
+                            child: CartOrderSummary(subtotal: cart.totalAmount),
                           ),
 
                           // Bottom padding for checkout button
@@ -260,7 +251,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             ? MediaQuery.of(context).padding.bottom
                             : 16.w,
                         child: CartCheckoutButton(
-                          totalAmount: cart.totalAmount + 15000.0,
+                          totalAmount: cart.totalAmount,
                           onPressed: () => context.pushCheckout(),
                         ),
                       ),

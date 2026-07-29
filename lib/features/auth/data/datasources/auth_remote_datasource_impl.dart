@@ -21,7 +21,9 @@ abstract class AuthApiService {
   Future<BaseResponseDto<AuthDataDto>> login(@Body() LoginRequestDto request);
 
   @POST(ApiConstants.socialLogin)
-  Future<BaseResponseDto<AuthDataDto>> socialLogin(@Body() SocialLoginRequestDto request);
+  Future<BaseResponseDto<AuthDataDto>> socialLogin(
+    @Body() SocialLoginRequestDto request,
+  );
 
   @POST(ApiConstants.register)
   Future<BaseResponseDto<bool>> register(@Body() RegisterRequestDto request);
@@ -40,12 +42,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<AuthResponseDto> login(LoginRequestDto request) async {
     try {
-      AppLogger.d('Attempting login for email: ${request.email}');
+      AppLogger.d('Attempting login');
       final response = await _apiService.login(request);
-      AppLogger.i('Login successful for email: ${request.email}');
+      AppLogger.i('Login successful');
       return response;
     } on DioException catch (e) {
-      AppLogger.e('Failed to login for email: ${request.email}', e);
+      AppLogger.e('Login failed');
       throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error during login', e);
@@ -59,7 +61,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       AppLogger.d('Attempting social login via: ${requestJson["provider"]}');
       final request = SocialLoginRequestDto.fromJson(requestJson);
       final response = await _apiService.socialLogin(request);
-      AppLogger.i('Social login successful for provider: ${requestJson["provider"]}');
+      AppLogger.i(
+        'Social login successful for provider: ${requestJson["provider"]}',
+      );
       return response;
     } on DioException catch (e) {
       AppLogger.e('Failed to social login', e);
@@ -73,12 +77,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<BaseResponseDto<bool>> register(RegisterRequestDto request) async {
     try {
-      AppLogger.d('Attempting registration for email: ${request.email}');
+      AppLogger.d('Attempting registration');
       final response = await _apiService.register(request);
-      AppLogger.i('Registration successful for email: ${request.email}');
+      AppLogger.i('Registration successful');
       return response;
     } on DioException catch (e) {
-      AppLogger.e('Failed to register for email: ${request.email}', e);
+      AppLogger.e('Registration failed');
       throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error during registration', e);

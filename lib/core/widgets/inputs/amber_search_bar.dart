@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Amber Hearth style search bar
-/// 
+///
 /// Features:
 /// - Elevated white background with shadow-md
 /// - Border radius: 12px (rounded-xl)
@@ -12,19 +12,22 @@ import 'package:flutter/material.dart';
 class AmberSearchBar extends StatefulWidget {
   /// Placeholder text
   final String placeholder;
-  
+
   /// Text editing controller
   final TextEditingController? controller;
-  
+
   /// Callback when search is submitted (via button or enter)
   final ValueChanged<String>? onSearch;
-  
+
   /// Callback when text changes
   final ValueChanged<String>? onChanged;
-  
+
+  /// Optional tap handler for a read-only launcher variant.
+  final VoidCallback? onTap;
+
   /// Whether to show the Find button
   final bool showButton;
-  
+
   /// Button text (default: "Find")
   final String buttonText;
 
@@ -34,6 +37,7 @@ class AmberSearchBar extends StatefulWidget {
     this.controller,
     this.onSearch,
     this.onChanged,
+    this.onTap,
     this.showButton = true,
     this.buttonText = 'Find',
   });
@@ -98,18 +102,16 @@ class _AmberSearchBarState extends State<AmberSearchBar> {
           // Search icon
           const Padding(
             padding: EdgeInsets.only(left: 16),
-            child: Icon(
-              Icons.search,
-              color: Color(0xFFF49D25),
-              size: 24,
-            ),
+            child: Icon(Icons.search, color: Color(0xFFF49D25), size: 24),
           ),
-          
+
           // Text field
           Expanded(
             child: TextField(
               controller: _controller,
               focusNode: _focusNode,
+              readOnly: widget.onTap != null,
+              onTap: widget.onTap,
               onChanged: widget.onChanged,
               onSubmitted: (value) => _handleSearch(),
               style: const TextStyle(
@@ -134,7 +136,7 @@ class _AmberSearchBarState extends State<AmberSearchBar> {
               ),
             ),
           ),
-          
+
           // Find button
           if (widget.showButton)
             Padding(

@@ -1,7 +1,8 @@
+import '../config/runtime_config.dart';
+
 class ApiConstants {
   ApiConstants._();
-  static const api = "http://10.0.2.2:8079/api";
-  static const apiIos = "http://localhost:8079/api";
+  static String get api => RuntimeConfig.apiBaseUrl;
   static const auth = "/auth";
   static const login = "$auth/login";
   static const socialLogin = "$auth/social-login";
@@ -12,7 +13,6 @@ class ApiConstants {
   static const getRestaurant = "/restaurants";
   static const getMenuItemsByRestaurant =
       "/menu-items/restaurant/{restaurantId}";
-  static const getRestaurantNearBy = "/restaurants/nearby";
   static const order = "/orders";
   static const getOrdersByUser = "$order/my-orders";
   static const delivery = "/deliveries";
@@ -27,17 +27,4 @@ class ApiConstants {
   // Firebase FCM Token
   static const firebaseRegisterToken = "/firebase/register-token";
   static const firebaseUnregisterToken = "/firebase/unregister-token";
-
-  // Tracking
-  static const tracking = "/tracking";
-  static const shipperLocations = "$tracking/shipper-locations";
-
-  // Shippers
-  static const shippers = "/shippers";
-  static const rateShipper = "$shippers/{shipperId}/ratings";
-
-  // Flash Sale
-  static const flashSale = "/flashsales";
-  static const getActiveCampaigns = "$flashSale/public/campaigns";
-  static const getCampaignItems = "$flashSale/public/campaigns/{id}/items";
 }

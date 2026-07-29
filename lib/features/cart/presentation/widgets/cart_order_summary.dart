@@ -6,17 +6,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 /// Order summary card showing subtotal, delivery fee, and total
 class CartOrderSummary extends ConsumerWidget {
   final double subtotal;
-  final double deliveryFee;
-  
-  const CartOrderSummary({
-    super.key,
-    required this.subtotal,
-    this.deliveryFee = 15000.0,
-  });
+  final double? deliveryFee;
+
+  const CartOrderSummary({super.key, required this.subtotal, this.deliveryFee});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final total = subtotal + deliveryFee;
+    final total = deliveryFee == null ? null : subtotal + deliveryFee!;
 
     return Container(
       margin: EdgeInsets.all(16.w),
@@ -44,34 +40,33 @@ class CartOrderSummary extends ConsumerWidget {
             ),
           ),
           SizedBox(height: 16.w),
-          
+
           // Subtotal row
           _SummaryRow(
             label: 'Tạm tính',
             value: '${subtotal.toStringAsFixed(0)}đ',
           ),
           SizedBox(height: 12.w),
-          
+
           // Delivery fee row
           _SummaryRow(
             label: 'Phí giao hàng',
-            value: '${deliveryFee.toStringAsFixed(0)}đ',
+            value: deliveryFee == null
+                ? 'Tính ở bước thanh toán'
+                : '${deliveryFee!.toStringAsFixed(0)}đ',
           ),
-          
+
           Padding(
             padding: EdgeInsets.symmetric(vertical: 16.w),
-            child: Divider(
-              color: Colors.grey[200],
-              thickness: 1,
-            ),
+            child: Divider(color: Colors.grey[200], thickness: 1),
           ),
-          
+
           // Total row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Tổng cộng',
+                total == null ? 'Tạm tính' : 'Tổng cộng',
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w800,
@@ -79,7 +74,7 @@ class CartOrderSummary extends ConsumerWidget {
                 ),
               ),
               Text(
-                '${total.toStringAsFixed(0)}đ',
+                '${(total ?? subtotal).toStringAsFixed(0)}đ',
                 style: TextStyle(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w900,
@@ -98,10 +93,7 @@ class _SummaryRow extends ConsumerWidget {
   final String label;
   final String value;
 
-  const _SummaryRow({
-    required this.label,
-    required this.value,
-  });
+  const _SummaryRow({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -4,30 +4,20 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
-import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/core/utils/logger/app_logger.dart';
 import 'package:delivery_app/features/orders/domain/entities/delivery_tracking_entity.dart';
 import 'package:delivery_app/features/orders/domain/entities/delivery_status.dart';
-import 'package:delivery_app/features/orders/domain/entities/shipper_entity.dart';
 import 'package:delivery_app/features/orders/domain/entities/shipper_location_entity.dart';
-import '../../services/fake_shipper_movement_service.dart';
 import '../../services/mapbox_map_service.dart';
 import '../../services/i_map_service.dart';
 import 'package:delivery_app/features/orders/presentation/providers/providers.dart';
 
 /// Widget tối ưu để hiển thị bản đồ theo dõi delivery với MapBox
-/// Sử dụng shipperLocationProvider thay vì fake movement
+/// Sử dụng vị trí thật từ shipperLocationProvider.
 class OptimizedDeliveryTrackingMapWidget extends ConsumerStatefulWidget {
   final DeliveryTrackingEntity? deliveryTracking;
-  final ShipperEntity? shipper;
-  final bool useFakeMovement; // Flag để quyết định có dùng fake movement không
 
-  const OptimizedDeliveryTrackingMapWidget({
-    super.key,
-    this.deliveryTracking,
-    this.shipper,
-    this.useFakeMovement = false, // Mặc định không dùng fake
-  });
+  const OptimizedDeliveryTrackingMapWidget({super.key, this.deliveryTracking});
 
   @override
   ConsumerState<OptimizedDeliveryTrackingMapWidget> createState() =>
@@ -38,7 +28,6 @@ class _OptimizedDeliveryTrackingMapWidgetState
     extends ConsumerState<OptimizedDeliveryTrackingMapWidget> {
   // Services để tách logic riêng biệt
   late IMapService<MapboxMap, CameraOptions> _mapService;
-  FakeShipperMovementService? _movementService;
 
   // Map states
   bool _isExpanded = false;
@@ -53,13 +42,6 @@ class _OptimizedDeliveryTrackingMapWidgetState
     // Khởi tạo services
     _mapService = MapboxMapService();
 
-    // Chỉ khởi tạo fake movement service nếu cần
-    if (widget.useFakeMovement) {
-      _movementService = FakeShipperMovementService(
-        onPositionUpdated: _onShipperPositionUpdated,
-      );
-    }
-
     // Delay nhỏ để đảm bảo widget được render hoàn toàn trước khi khởi tạo map
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
@@ -72,7 +54,6 @@ class _OptimizedDeliveryTrackingMapWidgetState
 
   @override
   void dispose() {
-    _movementService?.dispose();
     _mapService.dispose();
     // ref.read(shipperLocationProvider.notifier).dispose();
     super.dispose();
@@ -80,28 +61,27 @@ class _OptimizedDeliveryTrackingMapWidgetState
 
   @override
   Widget build(BuildContext context) {
-    // Watch shipper location từ provider nếu không dùng fake movement
+    // Watch canonical shipper location from the authenticated WebSocket.
     ShipperLocationEntity? currentShipperLocation;
     final shipperLocationState = ref.watch(shipperLocationProvider);
-    if (!widget.useFakeMovement) {
-      if (shipperLocationState.currentLocation != null) {
-        currentShipperLocation = shipperLocationState.currentLocation;
+    if (shipperLocationState.currentLocation != null) {
+      currentShipperLocation = shipperLocationState.currentLocation;
 
-        // Cập nhật shipper marker khi có vị trí mới
-        if (_previousShipperLocation != currentShipperLocation) {
-          _previousShipperLocation = currentShipperLocation;
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted && currentShipperLocation != null) {
-              _onShipperPositionUpdated(currentShipperLocation);
-            }
-          });
-        }
+      // Cập nhật shipper marker khi có vị trí mới
+      if (_previousShipperLocation != currentShipperLocation) {
+        _previousShipperLocation = currentShipperLocation;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && currentShipperLocation != null) {
+            _onShipperPositionUpdated(currentShipperLocation);
+          }
+        });
       }
     }
 
     // ✅ Lắng nghe và vẽ polyline route
-    final polylinePoints =
-        ref.watch(deliveryTrackingProvider.select((s) => s.polylinePoints));
+    final polylinePoints = ref.watch(
+      deliveryTrackingProvider.select((s) => s.polylinePoints),
+    );
     if (_isMapInitialized && polylinePoints != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
@@ -129,9 +109,7 @@ class _OptimizedDeliveryTrackingMapWidgetState
         // Thông tin bên ngoài khi compact mode (ẩn khi expanded)
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
-          child:
-              !_isExpanded &&
-                  (widget.deliveryTracking != null || widget.shipper != null)
+          child: !_isExpanded && widget.deliveryTracking != null
               ? Column(
                   key: const ValueKey('external_info'),
                   children: [
@@ -227,19 +205,6 @@ class _OptimizedDeliveryTrackingMapWidgetState
                           child: _buildStatusOverlay(),
                         ),
                       ),
-
-                    // Shipper info overlay - trực tiếp trong Stack với opacity animation
-                    if (_isMapInitialized && _isExpanded)
-                      Positioned(
-                        bottom: 12.w,
-                        left: 12.w,
-                        right: 12.w,
-                        child: AnimatedOpacity(
-                          duration: const Duration(milliseconds: 300),
-                          opacity: _isExpanded ? 1.0 : 0.0,
-                          child: _buildShipperInfoOverlay(),
-                        ),
-                      ),
                   ],
                 );
               },
@@ -326,18 +291,13 @@ class _OptimizedDeliveryTrackingMapWidgetState
             deliveryLng: dt.deliveryLng,
           );
         }
-
-        // Bắt đầu fake shipper movement
-        _startFakeShipperMovement();
       }
-      
+
       // Khắc phục lỗi Race Condition: Khi Riverpod nhả stream state trước khi MapBox khởi tạo xong.
       // Ép Map vẽ marker tại vị trí hiện tại ngay sau khi init xong
-      if (!widget.useFakeMovement) {
-        final currentLocation = ref.read(shipperLocationProvider).currentLocation;
-        if (currentLocation != null) {
-          await _mapService.updateShipperMarker(currentLocation);
-        }
+      final currentLocation = ref.read(shipperLocationProvider).currentLocation;
+      if (currentLocation != null) {
+        await _mapService.updateShipperMarker(currentLocation);
       }
 
       // ✅ Vẽ route ban đầu nếu có sẵn
@@ -352,7 +312,6 @@ class _OptimizedDeliveryTrackingMapWidgetState
     }
   }
 
-  // Callback từ FakeShipperMovementService
   void _onShipperPositionUpdated(ShipperLocationEntity location) {
     if (!mounted) return;
 
@@ -369,23 +328,6 @@ class _OptimizedDeliveryTrackingMapWidgetState
         );
       }
     });
-  }
-
-  // Bắt đầu fake shipper movement (chỉ khi useFakeMovement = true)
-  void _startFakeShipperMovement() {
-    if (widget.deliveryTracking == null ||
-        !_isMapInitialized ||
-        !widget.useFakeMovement) {
-      return;
-    }
-
-    _movementService?.startFakeShipperMovement(
-      pickupLat: widget.deliveryTracking!.pickupLat,
-      pickupLng: widget.deliveryTracking!.pickupLng,
-      deliveryLat: widget.deliveryTracking!.deliveryLat,
-      deliveryLng: widget.deliveryTracking!.deliveryLng,
-      shipperId: widget.shipper?.id ?? 456,
-    );
   }
 
   // ==================== UI COMPONENTS ====================
@@ -444,54 +386,6 @@ class _OptimizedDeliveryTrackingMapWidgetState
               ),
               SizedBox(height: 12.w),
             ],
-
-            // Shipper Info
-            if (widget.shipper != null) ...[
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.grey[200],
-                    child: Icon(Icons.person, size: 20),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.shipper!.name,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14.sp,
-                          ),
-                        ),
-                        Text(
-                          '${widget.shipper!.vehicleType.toUpperCase()} • ${widget.shipper!.vehicleNumber}',
-                          style: TextStyle(
-                            color: ref.colors.textSecondary,
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: _callShipper,
-                    icon: Icon(Icons.phone, size: 16),
-                    label: Text('Gọi', style: TextStyle(fontSize: 12.sp)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 12.w,
-                        vertical: 8.w,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
           ],
         ),
       ),
@@ -527,72 +421,16 @@ class _OptimizedDeliveryTrackingMapWidgetState
     );
   }
 
-  Widget _buildShipperInfoOverlay() {
-    if (widget.shipper == null) return const SizedBox.shrink();
-
-    return Container(
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 20,
-            backgroundColor: Colors.grey[200],
-            child: Icon(Icons.person, size: 20),
-          ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.shipper!.name,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14.sp,
-                  ),
-                ),
-                Text(
-                  '${widget.shipper!.vehicleType.toUpperCase()} • ${widget.shipper!.vehicleNumber}',
-                  style: TextStyle(
-                    color: ref.colors.textSecondary,
-                    fontSize: 12.sp,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          ElevatedButton.icon(
-            onPressed: _callShipper,
-            icon: Icon(Icons.phone, size: 16),
-            label: Text('Gọi', style: TextStyle(fontSize: 12.sp)),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.w),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   // ==================== HELPER METHODS ====================
 
   Icon _getStatusIcon(DeliveryStatus status) {
     switch (status) {
       case DeliveryStatus.pending:
+      case DeliveryStatus.findingShipper:
+      case DeliveryStatus.waitShipperConfirm:
         return Icon(Icons.access_time, color: Colors.grey);
+      case DeliveryStatus.shipperNotFound:
+        return Icon(Icons.error_outline, color: Colors.red);
       case DeliveryStatus.assigned:
         return Icon(Icons.check_circle, color: Colors.green);
       case DeliveryStatus.pickedUp:
@@ -608,12 +446,5 @@ class _OptimizedDeliveryTrackingMapWidgetState
 
   String _getStatusTitle(DeliveryStatus status) {
     return status.displayName;
-  }
-
-  void _callShipper() {
-    if (widget.shipper != null) {
-      AppLogger.i('Gọi cho shipper: ${widget.shipper!.name}');
-      // Implement actual call functionality here
-    }
   }
 }

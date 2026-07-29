@@ -15,7 +15,7 @@ class ShipperLocationSocketDataSource implements ShipperLocationDataSource {
   final _connectionSubject = BehaviorSubject<bool>.seeded(false);
 
   // State management
-  final Set<String> _trackedShipperIds = {};
+  final Map<String, int> _trackedDeliveriesByShipper = {};
   final Map<String, ShipperLocationEntity> _locationCache = {};
   StreamSubscription? _connectionSubscription;
 
@@ -28,7 +28,8 @@ class ShipperLocationSocketDataSource implements ShipperLocationDataSource {
   Stream<bool> get connectionStream => _connectionSubject.stream;
 
   @override
-  List<String> get trackedShipperIds => _trackedShipperIds.toList();
+  List<String> get trackedShipperIds =>
+      _trackedDeliveriesByShipper.keys.toList();
 
   @override
   Future<bool> connect() async {
@@ -70,17 +71,18 @@ class ShipperLocationSocketDataSource implements ShipperLocationDataSource {
   }
 
   @override
-  Future<void> subscribeToShipper(String shipperId) async {
+  Future<void> subscribeToShipper(String shipperId, int deliveryId) async {
     try {
       AppLogger.d(
         'ShipperLocationSocketDataSource: Subscribing to shipper $shipperId',
       );
 
-      _trackedShipperIds.add(shipperId);
+      _trackedDeliveriesByShipper[shipperId] = deliveryId;
 
       final message = jsonEncode({
         'action': 'subscribe_shipper',
         'shipperId': shipperId,
+        'deliveryId': deliveryId,
       });
 
       socket.sendRaw(message);
@@ -88,7 +90,7 @@ class ShipperLocationSocketDataSource implements ShipperLocationDataSource {
         'ShipperLocationSocketDataSource: Subscribed to shipper $shipperId',
       );
     } catch (e) {
-      _trackedShipperIds.remove(shipperId);
+      _trackedDeliveriesByShipper.remove(shipperId);
       AppLogger.e(
         'ShipperLocationSocketDataSource: Subscribe to shipper $shipperId failed: $e',
       );
@@ -103,7 +105,7 @@ class ShipperLocationSocketDataSource implements ShipperLocationDataSource {
         'ShipperLocationSocketDataSource: Unsubscribing from shipper $shipperId',
       );
 
-      _trackedShipperIds.remove(shipperId);
+      _trackedDeliveriesByShipper.remove(shipperId);
       _locationCache.remove(shipperId);
 
       final message = jsonEncode({
@@ -125,15 +127,8 @@ class ShipperLocationSocketDataSource implements ShipperLocationDataSource {
   }
 
   @override
-  Future<void> subscribeToShippers(List<String> shipperIds) async {
-    for (final shipperId in shipperIds) {
-      await subscribeToShipper(shipperId);
-    }
-  }
-
-  @override
   Future<void> unsubscribeAll() async {
-    final shipperIds = _trackedShipperIds.toList();
+    final shipperIds = _trackedDeliveriesByShipper.keys.toList();
     for (final shipperId in shipperIds) {
       await unsubscribeFromShipper(shipperId);
     }
@@ -149,18 +144,34 @@ class ShipperLocationSocketDataSource implements ShipperLocationDataSource {
       final data = jsonDecode(message) as Map<String, dynamic>;
 
       if (data['type'] == 'location_update') {
+        final shipperId = _toInt(data['shipperId']);
+        final latitude = _toDouble(data['latitude']);
+        final longitude = _toDouble(data['longitude']);
+        final timestamp = _toDateTime(data['timestamp']);
+        if (shipperId == null ||
+            latitude == null ||
+            longitude == null ||
+            timestamp == null) {
+          AppLogger.w(
+            'ShipperLocationSocketDataSource: Ignoring malformed location update',
+          );
+          return;
+        }
+
         final location = ShipperLocationEntity(
-          shipperId: _toInt(data['shipperId']) ?? 0,
-          latitude: _toDouble(data['latitude']) ?? 0.0,
-          longitude: _toDouble(data['longitude']) ?? 0.0,
-          updatedAt: _toDateTime(data['timestamp']) ?? DateTime.now(),
+          shipperId: shipperId,
+          latitude: latitude,
+          longitude: longitude,
+          updatedAt: timestamp,
           accuracy: _toDouble(data['accuracy']),
           speed: _toDouble(data['speed']),
           heading: _toDouble(data['heading']),
         );
 
         // Chỉ xử lý location của shippers đang track
-        if (_trackedShipperIds.contains(location.shipperId.toString())) {
+        if (_trackedDeliveriesByShipper.containsKey(
+          location.shipperId.toString(),
+        )) {
           _locationCache[location.shipperId.toString()] = location;
 
           // Emit single entity thay vì list
@@ -182,16 +193,16 @@ class ShipperLocationSocketDataSource implements ShipperLocationDataSource {
 
   /// Tự động re-subscribe các shippers sau khi reconnect
   Future<void> _resubscribeToShippers() async {
-    if (_trackedShipperIds.isNotEmpty) {
+    if (_trackedDeliveriesByShipper.isNotEmpty) {
       AppLogger.d(
-        'ShipperLocationSocketDataSource: Re-subscribing to ${_trackedShipperIds.length} shippers',
+        'ShipperLocationSocketDataSource: Re-subscribing to ${_trackedDeliveriesByShipper.length} shippers',
       );
 
-      final shipperIds = _trackedShipperIds.toList();
-      _trackedShipperIds.clear(); // Clear để subscribeToShipper không duplicate
+      final subscriptions = Map<String, int>.from(_trackedDeliveriesByShipper);
+      _trackedDeliveriesByShipper.clear();
 
-      for (final shipperId in shipperIds) {
-        await subscribeToShipper(shipperId);
+      for (final entry in subscriptions.entries) {
+        await subscribeToShipper(entry.key, entry.value);
       }
     }
   }
@@ -236,6 +247,6 @@ class ShipperLocationSocketDataSource implements ShipperLocationDataSource {
     }
 
     _locationCache.clear();
-    _trackedShipperIds.clear();
+    _trackedDeliveriesByShipper.clear();
   }
 }

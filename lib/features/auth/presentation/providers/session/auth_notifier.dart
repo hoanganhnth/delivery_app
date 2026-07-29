@@ -13,6 +13,7 @@ import 'package:delivery_app/features/auth/domain/usecases/clear_tokens_usecase.
 import 'package:delivery_app/features/auth/presentation/providers/session/auth_state.dart';
 import 'package:delivery_app/features/auth/presentation/providers/di/auth_di_providers.dart';
 import 'package:delivery_app/features/auth/presentation/providers/di/storage_di_providers.dart';
+import 'package:delivery_app/features/auth/services/device_identity_service.dart';
 import 'package:delivery_app/core/services/app_initializer/_riverpod/app_initializer_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -51,12 +52,15 @@ class AuthNotifier extends _$AuthNotifier {
   }) async {
     state = const AuthState.unauthenticated(isLoginLoading: true);
 
+    final resolvedDeviceId =
+        deviceId ?? await DeviceIdentityService.getDeviceId();
+
     final params = LoginParams(
       email: email,
       password: password,
-      deviceId: deviceId,
-      deviceName: deviceName,
-      deviceType: deviceType,
+      deviceId: resolvedDeviceId,
+      deviceName: deviceName ?? DeviceIdentityService.deviceName,
+      deviceType: deviceType ?? DeviceIdentityService.deviceType,
       ipAddress: ipAddress,
     );
     final result = await _loginUseCase(params);
@@ -93,9 +97,7 @@ class AuthNotifier extends _$AuthNotifier {
     state = const AuthState.unauthenticated(isLoginLoading: true);
 
     try {
-      final GoogleSignIn googleSignIn = GoogleSignIn(
-        scopes: ['email'],
-      );
+      final GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
 
       final GoogleSignInAccount? account = await googleSignIn.signIn();
 
@@ -122,11 +124,10 @@ class AuthNotifier extends _$AuthNotifier {
       final params = SocialLoginParams(
         provider: 'google',
         token: idToken,
-        role: 'CUSTOMER', // Default role for app users
-        deviceId: 'social-auth',
-        deviceName: 'Mobile Device',
-        deviceType: 'MOBILE',
-        ipAddress: '127.0.0.1',
+        role: 'USER',
+        deviceId: await DeviceIdentityService.getDeviceId(),
+        deviceName: DeviceIdentityService.deviceName,
+        deviceType: DeviceIdentityService.deviceType,
       );
 
       final result = await _socialLoginUseCase(params);
@@ -142,7 +143,8 @@ class AuthNotifier extends _$AuthNotifier {
           );
           storeResult.fold(
             (failure) => AppLogger.e(
-                'AuthNotifier: Failed to store tokens - ${failure.message}'),
+              'AuthNotifier: Failed to store tokens - ${failure.message}',
+            ),
             (_) => AppLogger.d('AuthNotifier: Tokens stored successfully'),
           );
 
@@ -261,6 +263,14 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
+  /// Handles an expired/revoked session after the network layer has already
+  /// cleared persisted tokens. This path must not make authenticated cleanup
+  /// requests because doing so can recursively trigger another 401.
+  Future<void> handleUnauthorized() async {
+    if (!ref.mounted || !state.isAuthenticated) return;
+    state = const AuthState.unauthenticated();
+  }
+
   // Check if user is logged in
   Future<AuthState> checkAuthStatus() async {
     final tokensResult = await _getTokensUseCase(NoParams());
@@ -302,7 +312,7 @@ class AuthNotifier extends _$AuthNotifier {
       refreshToken: currentRefresh,
       isRefreshLoading: true,
     );
-    
+
     AppLogger.d('AuthNotifier: Refreshing token');
 
     final params = RefreshTokenParams(refreshToken: currentRefresh);
@@ -337,7 +347,7 @@ class AuthNotifier extends _$AuthNotifier {
           accessToken: newTokens.accessToken,
           refreshToken: newTokens.refreshToken,
         );
-        
+
         return newTokens.accessToken;
       },
     );

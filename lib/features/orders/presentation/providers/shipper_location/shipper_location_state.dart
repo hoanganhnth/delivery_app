@@ -14,6 +14,7 @@ sealed class ShipperLocationState with _$ShipperLocationState {
     @Default(false) bool isConnected,
     ShipperLocationEntity? currentLocation,
     int? trackingShipperId,
+    int? trackingDeliveryId,
     Failure? failure,
   }) = _ShipperLocationState;
 

@@ -23,7 +23,8 @@ class NavigationController {
   NavigationController(this._ref);
 
   /// Chuyển đến tab Home
-  void goToHome() => _ref.read(selectedTabProvider.notifier).setTab(AppTab.home);
+  void goToHome() =>
+      _ref.read(selectedTabProvider.notifier).setTab(AppTab.home);
 
   /// Chuyển đến tab Restaurants
   void goToRestaurants() =>
@@ -32,10 +33,6 @@ class NavigationController {
   /// Chuyển đến tab Cart
   void goToCart() =>
       _ref.read(selectedTabProvider.notifier).setTab(AppTab.cart);
-
-  /// Chuyển đến tab Livestreams
-  void goToLivestreams() =>
-      _ref.read(selectedTabProvider.notifier).setTab(AppTab.livestreams);
 
   /// Chuyển đến tab Profile
   void goToProfile() =>
@@ -57,8 +54,7 @@ enum AppTab {
   home(0, 'Home'),
   restaurants(1, 'Restaurants'),
   cart(2, 'Cart'),
-  livestreams(3, 'Live'),
-  profile(4, 'Profile');
+  profile(3, 'Profile');
 
   const AppTab(this.tabIndex, this.label);
 

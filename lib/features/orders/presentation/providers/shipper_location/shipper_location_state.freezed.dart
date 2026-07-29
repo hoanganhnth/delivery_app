@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShipperLocationState {
 
- bool get isLoading; bool get isTracking; bool get isConnected; ShipperLocationEntity? get currentLocation; int? get trackingShipperId; Failure? get failure;
+ bool get isLoading; bool get isTracking; bool get isConnected; ShipperLocationEntity? get currentLocation; int? get trackingShipperId; int? get trackingDeliveryId; Failure? get failure;
 /// Create a copy of ShipperLocationState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ShipperLocationStateCopyWith<ShipperLocationState> get copyWith => _$ShipperLoc
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShipperLocationState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isTracking, isTracking) || other.isTracking == isTracking)&&(identical(other.isConnected, isConnected) || other.isConnected == isConnected)&&(identical(other.currentLocation, currentLocation) || other.currentLocation == currentLocation)&&(identical(other.trackingShipperId, trackingShipperId) || other.trackingShipperId == trackingShipperId)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShipperLocationState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isTracking, isTracking) || other.isTracking == isTracking)&&(identical(other.isConnected, isConnected) || other.isConnected == isConnected)&&(identical(other.currentLocation, currentLocation) || other.currentLocation == currentLocation)&&(identical(other.trackingShipperId, trackingShipperId) || other.trackingShipperId == trackingShipperId)&&(identical(other.trackingDeliveryId, trackingDeliveryId) || other.trackingDeliveryId == trackingDeliveryId)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,isTracking,isConnected,currentLocation,trackingShipperId,failure);
+int get hashCode => Object.hash(runtimeType,isLoading,isTracking,isConnected,currentLocation,trackingShipperId,trackingDeliveryId,failure);
 
 @override
 String toString() {
-  return 'ShipperLocationState(isLoading: $isLoading, isTracking: $isTracking, isConnected: $isConnected, currentLocation: $currentLocation, trackingShipperId: $trackingShipperId, failure: $failure)';
+  return 'ShipperLocationState(isLoading: $isLoading, isTracking: $isTracking, isConnected: $isConnected, currentLocation: $currentLocation, trackingShipperId: $trackingShipperId, trackingDeliveryId: $trackingDeliveryId, failure: $failure)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ShipperLocationStateCopyWith<$Res>  {
   factory $ShipperLocationStateCopyWith(ShipperLocationState value, $Res Function(ShipperLocationState) _then) = _$ShipperLocationStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, bool isTracking, bool isConnected, ShipperLocationEntity? currentLocation, int? trackingShipperId, Failure? failure
+ bool isLoading, bool isTracking, bool isConnected, ShipperLocationEntity? currentLocation, int? trackingShipperId, int? trackingDeliveryId, Failure? failure
 });
 
 
@@ -62,13 +62,14 @@ class _$ShipperLocationStateCopyWithImpl<$Res>
 
 /// Create a copy of ShipperLocationState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? isTracking = null,Object? isConnected = null,Object? currentLocation = freezed,Object? trackingShipperId = freezed,Object? failure = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? isTracking = null,Object? isConnected = null,Object? currentLocation = freezed,Object? trackingShipperId = freezed,Object? trackingDeliveryId = freezed,Object? failure = freezed,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,isTracking: null == isTracking ? _self.isTracking : isTracking // ignore: cast_nullable_to_non_nullable
 as bool,isConnected: null == isConnected ? _self.isConnected : isConnected // ignore: cast_nullable_to_non_nullable
 as bool,currentLocation: freezed == currentLocation ? _self.currentLocation : currentLocation // ignore: cast_nullable_to_non_nullable
 as ShipperLocationEntity?,trackingShipperId: freezed == trackingShipperId ? _self.trackingShipperId : trackingShipperId // ignore: cast_nullable_to_non_nullable
+as int?,trackingDeliveryId: freezed == trackingDeliveryId ? _self.trackingDeliveryId : trackingDeliveryId // ignore: cast_nullable_to_non_nullable
 as int?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as Failure?,
   ));
@@ -164,10 +165,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  bool isTracking,  bool isConnected,  ShipperLocationEntity? currentLocation,  int? trackingShipperId,  Failure? failure)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  bool isTracking,  bool isConnected,  ShipperLocationEntity? currentLocation,  int? trackingShipperId,  int? trackingDeliveryId,  Failure? failure)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShipperLocationState() when $default != null:
-return $default(_that.isLoading,_that.isTracking,_that.isConnected,_that.currentLocation,_that.trackingShipperId,_that.failure);case _:
+return $default(_that.isLoading,_that.isTracking,_that.isConnected,_that.currentLocation,_that.trackingShipperId,_that.trackingDeliveryId,_that.failure);case _:
   return orElse();
 
 }
@@ -185,10 +186,10 @@ return $default(_that.isLoading,_that.isTracking,_that.isConnected,_that.current
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  bool isTracking,  bool isConnected,  ShipperLocationEntity? currentLocation,  int? trackingShipperId,  Failure? failure)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  bool isTracking,  bool isConnected,  ShipperLocationEntity? currentLocation,  int? trackingShipperId,  int? trackingDeliveryId,  Failure? failure)  $default,) {final _that = this;
 switch (_that) {
 case _ShipperLocationState():
-return $default(_that.isLoading,_that.isTracking,_that.isConnected,_that.currentLocation,_that.trackingShipperId,_that.failure);}
+return $default(_that.isLoading,_that.isTracking,_that.isConnected,_that.currentLocation,_that.trackingShipperId,_that.trackingDeliveryId,_that.failure);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -202,10 +203,10 @@ return $default(_that.isLoading,_that.isTracking,_that.isConnected,_that.current
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  bool isTracking,  bool isConnected,  ShipperLocationEntity? currentLocation,  int? trackingShipperId,  Failure? failure)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  bool isTracking,  bool isConnected,  ShipperLocationEntity? currentLocation,  int? trackingShipperId,  int? trackingDeliveryId,  Failure? failure)?  $default,) {final _that = this;
 switch (_that) {
 case _ShipperLocationState() when $default != null:
-return $default(_that.isLoading,_that.isTracking,_that.isConnected,_that.currentLocation,_that.trackingShipperId,_that.failure);case _:
+return $default(_that.isLoading,_that.isTracking,_that.isConnected,_that.currentLocation,_that.trackingShipperId,_that.trackingDeliveryId,_that.failure);case _:
   return null;
 
 }
@@ -217,7 +218,7 @@ return $default(_that.isLoading,_that.isTracking,_that.isConnected,_that.current
 
 
 class _ShipperLocationState extends ShipperLocationState {
-  const _ShipperLocationState({this.isLoading = false, this.isTracking = false, this.isConnected = false, this.currentLocation, this.trackingShipperId, this.failure}): super._();
+  const _ShipperLocationState({this.isLoading = false, this.isTracking = false, this.isConnected = false, this.currentLocation, this.trackingShipperId, this.trackingDeliveryId, this.failure}): super._();
   
 
 @override@JsonKey() final  bool isLoading;
@@ -225,6 +226,7 @@ class _ShipperLocationState extends ShipperLocationState {
 @override@JsonKey() final  bool isConnected;
 @override final  ShipperLocationEntity? currentLocation;
 @override final  int? trackingShipperId;
+@override final  int? trackingDeliveryId;
 @override final  Failure? failure;
 
 /// Create a copy of ShipperLocationState
@@ -237,16 +239,16 @@ _$ShipperLocationStateCopyWith<_ShipperLocationState> get copyWith => __$Shipper
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShipperLocationState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isTracking, isTracking) || other.isTracking == isTracking)&&(identical(other.isConnected, isConnected) || other.isConnected == isConnected)&&(identical(other.currentLocation, currentLocation) || other.currentLocation == currentLocation)&&(identical(other.trackingShipperId, trackingShipperId) || other.trackingShipperId == trackingShipperId)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShipperLocationState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isTracking, isTracking) || other.isTracking == isTracking)&&(identical(other.isConnected, isConnected) || other.isConnected == isConnected)&&(identical(other.currentLocation, currentLocation) || other.currentLocation == currentLocation)&&(identical(other.trackingShipperId, trackingShipperId) || other.trackingShipperId == trackingShipperId)&&(identical(other.trackingDeliveryId, trackingDeliveryId) || other.trackingDeliveryId == trackingDeliveryId)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,isTracking,isConnected,currentLocation,trackingShipperId,failure);
+int get hashCode => Object.hash(runtimeType,isLoading,isTracking,isConnected,currentLocation,trackingShipperId,trackingDeliveryId,failure);
 
 @override
 String toString() {
-  return 'ShipperLocationState(isLoading: $isLoading, isTracking: $isTracking, isConnected: $isConnected, currentLocation: $currentLocation, trackingShipperId: $trackingShipperId, failure: $failure)';
+  return 'ShipperLocationState(isLoading: $isLoading, isTracking: $isTracking, isConnected: $isConnected, currentLocation: $currentLocation, trackingShipperId: $trackingShipperId, trackingDeliveryId: $trackingDeliveryId, failure: $failure)';
 }
 
 
@@ -257,7 +259,7 @@ abstract mixin class _$ShipperLocationStateCopyWith<$Res> implements $ShipperLoc
   factory _$ShipperLocationStateCopyWith(_ShipperLocationState value, $Res Function(_ShipperLocationState) _then) = __$ShipperLocationStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, bool isTracking, bool isConnected, ShipperLocationEntity? currentLocation, int? trackingShipperId, Failure? failure
+ bool isLoading, bool isTracking, bool isConnected, ShipperLocationEntity? currentLocation, int? trackingShipperId, int? trackingDeliveryId, Failure? failure
 });
 
 
@@ -274,13 +276,14 @@ class __$ShipperLocationStateCopyWithImpl<$Res>
 
 /// Create a copy of ShipperLocationState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? isTracking = null,Object? isConnected = null,Object? currentLocation = freezed,Object? trackingShipperId = freezed,Object? failure = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? isTracking = null,Object? isConnected = null,Object? currentLocation = freezed,Object? trackingShipperId = freezed,Object? trackingDeliveryId = freezed,Object? failure = freezed,}) {
   return _then(_ShipperLocationState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,isTracking: null == isTracking ? _self.isTracking : isTracking // ignore: cast_nullable_to_non_nullable
 as bool,isConnected: null == isConnected ? _self.isConnected : isConnected // ignore: cast_nullable_to_non_nullable
 as bool,currentLocation: freezed == currentLocation ? _self.currentLocation : currentLocation // ignore: cast_nullable_to_non_nullable
 as ShipperLocationEntity?,trackingShipperId: freezed == trackingShipperId ? _self.trackingShipperId : trackingShipperId // ignore: cast_nullable_to_non_nullable
+as int?,trackingDeliveryId: freezed == trackingDeliveryId ? _self.trackingDeliveryId : trackingDeliveryId // ignore: cast_nullable_to_non_nullable
 as int?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as Failure?,
   ));

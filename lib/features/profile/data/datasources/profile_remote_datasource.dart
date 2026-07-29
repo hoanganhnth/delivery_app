@@ -7,7 +7,4 @@ abstract class ProfileRemoteDataSource {
   Future<BaseResponseDto<UserProfileDto>> updateUserProfile(
     UpdateProfileRequestDto request,
   );
-  Future<BaseResponseDto<String>> uploadAvatar(
-    String imagePath,
-  );
 }

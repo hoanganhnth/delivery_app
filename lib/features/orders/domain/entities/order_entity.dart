@@ -15,34 +15,39 @@ enum OrderStatus {
 
   /// Chuyển đổi từ string thành enum
   static OrderStatus fromString(String value) {
-    switch (value.toUpperCase()) {
+    switch (value.trim().toUpperCase()) {
       // Nhóm "Đang chờ xử lý"
       case OrderStatusConstants.pending:
       case OrderStatusConstants.pendingPayment:
       case OrderStatusConstants.confirmed:
-      case OrderStatusConstants.confirmedByRestaurant:      
+      case OrderStatusConstants.confirmedByRestaurant:
+      case 'READY':
         return OrderStatus.pending;
-        
+
       // Nhóm "Đang đi giao"
       case OrderStatusConstants.findingShipper:
+      case 'WAIT_SHIPPER_CONFIRM':
+      case 'ASSIGNED':
       case OrderStatusConstants.assignedToShipper:
+      case 'PICKED_UP':
       case OrderStatusConstants.inDelivery:
+      case 'IN_PROGRESS':
       case OrderStatusConstants.delivering:
         return OrderStatus.delivering;
-        
+
       // Nhóm "Thành công"
       case OrderStatusConstants.delivered:
         return OrderStatus.delivered;
-        
+
       // Nhóm "Hủy/Lỗi"
       case OrderStatusConstants.cancelled:
       case OrderStatusConstants.paymentFailed:
       case OrderStatusConstants.rejectedByRestaurant:
       case OrderStatusConstants.shipperNotFound:
         return OrderStatus.cancelled;
-        
+
       default:
-        return OrderStatus.pending; // Default fallback
+        throw FormatException('Unknown order status: $value');
     }
   }
 
@@ -86,7 +91,7 @@ enum PaymentMethod {
 
   /// Chuyển đổi từ string thành enum
   static PaymentMethod fromString(String value) {
-    switch (value.toUpperCase()) {
+    switch (value.trim().toUpperCase()) {
       case PaymentMethodConstants.cod:
         return PaymentMethod.cod;
       case PaymentMethodConstants.card:
@@ -94,7 +99,7 @@ enum PaymentMethod {
       case PaymentMethodConstants.wallet:
         return PaymentMethod.wallet;
       default:
-        return PaymentMethod.cod; // Default fallback
+        throw FormatException('Unknown payment method: $value');
     }
   }
 
@@ -120,6 +125,9 @@ class OrderEntity extends Equatable {
   final String customerPhone;
   final String deliveryAddress;
   final PaymentMethod paymentMethod;
+  final double? subtotalPrice;
+  final double? discountAmount;
+  final double? shippingFee;
   final double totalAmount;
   final String? notes;
   final List<OrderItemEntity> items;
@@ -145,6 +153,9 @@ class OrderEntity extends Equatable {
     required this.customerPhone,
     required this.deliveryAddress,
     required this.paymentMethod,
+    this.subtotalPrice,
+    this.discountAmount,
+    this.shippingFee,
     required this.totalAmount,
     this.notes,
     required this.items,
@@ -202,7 +213,7 @@ class OrderEntity extends Equatable {
     if (status == OrderStatus.delivering) {
       // Allow cancellation if still finding shipper or just assigned
       return rawBackendStatus == OrderStatusConstants.findingShipper ||
-             rawBackendStatus == OrderStatusConstants.assignedToShipper;
+          rawBackendStatus == OrderStatusConstants.assignedToShipper;
     }
     return false;
   }
@@ -231,6 +242,9 @@ class OrderEntity extends Equatable {
     String? customerPhone,
     String? deliveryAddress,
     PaymentMethod? paymentMethod,
+    double? subtotalPrice,
+    double? discountAmount,
+    double? shippingFee,
     double? totalAmount,
     String? notes,
     List<OrderItemEntity>? items,
@@ -256,6 +270,9 @@ class OrderEntity extends Equatable {
       customerPhone: customerPhone ?? this.customerPhone,
       deliveryAddress: deliveryAddress ?? this.deliveryAddress,
       paymentMethod: paymentMethod ?? this.paymentMethod,
+      subtotalPrice: subtotalPrice ?? this.subtotalPrice,
+      discountAmount: discountAmount ?? this.discountAmount,
+      shippingFee: shippingFee ?? this.shippingFee,
       totalAmount: totalAmount ?? this.totalAmount,
       notes: notes ?? this.notes,
       items: items ?? this.items,
@@ -299,6 +316,9 @@ class OrderEntity extends Equatable {
     customerPhone,
     deliveryAddress,
     paymentMethod,
+    subtotalPrice,
+    discountAmount,
+    shippingFee,
     totalAmount,
     notes,
     items,

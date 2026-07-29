@@ -18,16 +18,6 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
-  void initState() {
-    super.initState();
-    // Check biometric availability when entering login screen
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(biometricProvider.notifier).checkBiometricAvailability();
-      ref.read(biometricProvider.notifier).checkBiometricEnabled();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     // Listen to auth state changes
     ref.listen<AuthState>(authProvider, (previous, next) {
@@ -72,7 +62,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ),
           ),
-          
+
           // Main content
           Center(
             child: Container(
@@ -91,9 +81,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               child: const Column(
                 children: [
                   LoginHeader(),
-                  Expanded(
-                    child: LoginForm(),
-                  ),
+                  Expanded(child: LoginForm()),
                 ],
               ),
             ),

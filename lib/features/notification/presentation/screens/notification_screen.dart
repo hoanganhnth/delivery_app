@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/generated/l10n.dart';
+import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
 import '../../domain/entities/notification_entity.dart';
 import '../providers/notification_providers.dart';
 import 'widgets/notification_empty_state.dart';
@@ -33,33 +34,33 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
 
     final repository = ref.read(notificationRepositoryProvider);
 
+    var profile = ref.read(profileProvider);
+    if (profile.user == null) {
+      await ref.read(profileProvider.notifier).getUserProfile();
+      if (!mounted) return;
+      profile = ref.read(profileProvider);
+    }
+
+    final authenticatedUserId = profile.user?.authId;
+    if (authenticatedUserId == null) {
+      setState(() {
+        _error =
+            profile.errorMessage ?? 'Không xác định được tài khoản hiện tại';
+        _loading = false;
+      });
+      return;
+    }
+
     // Fetch unread count
     final countResult = await repository.getUnreadCount();
+    if (!mounted) return;
     countResult.fold(
       (failure) {},
       (count) => setState(() => _unreadCount = count),
     );
 
-    // Fetch all notifications (userId will come from X-User-Id header via gateway)
-    final result = await repository.getUnreadNotifications();
-    result.fold(
-      (failure) {
-        // Try getUserNotifications as fallback with userId 0 (gateway fills the header)
-        _fetchAllNotifications();
-      },
-      (notifications) {
-        setState(() {
-          _notifications = notifications;
-          _loading = false;
-        });
-      },
-    );
-  }
-
-  Future<void> _fetchAllNotifications() async {
-    final repository = ref.read(notificationRepositoryProvider);
-    // userId=0 is a placeholder; the gateway attaches the real userId via X-User-Id header
-    final result = await repository.getUserNotifications(0);
+    final result = await repository.getUserNotifications(authenticatedUserId);
+    if (!mounted) return;
     result.fold(
       (failure) {
         setState(() {
@@ -81,9 +82,9 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
     final result = await repository.markAsRead(id);
     result.fold(
       (failure) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(failure.message)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(failure.message)));
       },
       (updated) {
         setState(() {
@@ -99,9 +100,9 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
     final result = await repository.markAllAsRead();
     result.fold(
       (failure) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(failure.message)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(failure.message)));
       },
       (_) {
         setState(() {
@@ -119,9 +120,9 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
     final result = await repository.deleteNotification(id);
     result.fold(
       (failure) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(failure.message)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(failure.message)));
       },
       (_) {
         setState(() {
@@ -159,7 +160,9 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
     final s = S.of(context);
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC),
+      backgroundColor: isDark
+          ? const Color(0xFF0F172A)
+          : const Color(0xFFF8FAFC),
       appBar: AppBar(
         backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
         elevation: 0,
@@ -196,7 +199,11 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
           if (_unreadCount > 0)
             TextButton.icon(
               onPressed: _markAllAsRead,
-              icon: Icon(Icons.done_all, size: 18, color: theme.colorScheme.primary),
+              icon: Icon(
+                Icons.done_all,
+                size: 18,
+                color: theme.colorScheme.primary,
+              ),
               label: Text(
                 s.notificationMarkAllRead,
                 style: TextStyle(
@@ -211,52 +218,56 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.error_outline, size: 48, color: Colors.red.shade300),
-                      const SizedBox(height: 12),
-                      Text(
-                        _error!,
-                        style: TextStyle(color: Colors.grey.shade600),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton.icon(
-                        onPressed: _loadNotifications,
-                        icon: const Icon(Icons.refresh, size: 18),
-                        label: Text(s.supportRetry),
-                      ),
-                    ],
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 48,
+                    color: Colors.red.shade300,
                   ),
-                )
-              : _notifications.isEmpty
-                  ? const NotificationEmptyState()
-                  : RefreshIndicator(
-                      onRefresh: _loadNotifications,
-                      child: ListView.builder(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        itemCount: _notifications.length,
-                        itemBuilder: (context, index) {
-                          final notification = _notifications[index];
-                          final color = _getColorForType(notification.type);
+                  const SizedBox(height: 12),
+                  Text(
+                    _error!,
+                    style: TextStyle(color: Colors.grey.shade600),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: _loadNotifications,
+                    icon: const Icon(Icons.refresh, size: 18),
+                    label: Text(s.supportRetry),
+                  ),
+                ],
+              ),
+            )
+          : _notifications.isEmpty
+          ? const NotificationEmptyState()
+          : RefreshIndicator(
+              onRefresh: _loadNotifications,
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                itemCount: _notifications.length,
+                itemBuilder: (context, index) {
+                  final notification = _notifications[index];
+                  final color = _getColorForType(notification.type);
 
-                          return NotificationListItem(
-                            notification: notification,
-                            isDark: isDark,
-                            color: color,
-                            onTap: () {
-                              if (!notification.isRead) {
-                                _markAsRead(notification.id, index);
-                              }
-                            },
-                            onDismissed: () => _deleteNotification(notification.id, index),
-                          );
-                        },
-                      ),
-                    ),
+                  return NotificationListItem(
+                    notification: notification,
+                    isDark: isDark,
+                    color: color,
+                    onTap: () {
+                      if (!notification.isRead) {
+                        _markAsRead(notification.id, index);
+                      }
+                    },
+                    onDismissed: () =>
+                        _deleteNotification(notification.id, index),
+                  );
+                },
+              ),
+            ),
     );
   }
 }
-

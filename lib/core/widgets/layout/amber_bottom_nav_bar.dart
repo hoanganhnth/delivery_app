@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Amber Hearth style floating dark bottom navigation bar
-/// 
+///
 /// This is a reusable bottom navigation component that follows the Stitch design:
 /// - Floating dark pill (stone-900) with rounded-full
 /// - Active state: Elevated orange pill with -translate-y effect
@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 class AmberBottomNavBar extends StatelessWidget {
   /// Current selected index (0-based)
   final int currentIndex;
-  
+
   /// Callback when a navigation item is tapped
   final ValueChanged<int> onTap;
 
@@ -23,12 +23,7 @@ class AmberBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(
-        left: 24,
-        right: 24,
-        bottom: 24,
-        top: 0,
-      ),
+      padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24, top: 0),
       child: Container(
         height: 72,
         decoration: BoxDecoration(
@@ -58,16 +53,10 @@ class AmberBottomNavBar extends StatelessWidget {
               onTap: () => onTap(1),
             ),
             _NavItem(
-              icon: Icons.live_tv,
-              label: 'Live',
-              isActive: currentIndex == 2,
-              onTap: () => onTap(2),
-            ),
-            _NavItem(
               icon: Icons.person_outline,
               label: 'Profile',
-              isActive: currentIndex == 3,
-              onTap: () => onTap(3),
+              isActive: currentIndex == 2,
+              onTap: () => onTap(2),
             ),
           ],
         ),
@@ -104,7 +93,7 @@ class _NavItem extends StatelessWidget {
           width: isActive ? 72 : 56,
           height: isActive ? 72 : 56,
           decoration: BoxDecoration(
-            color: isActive 
+            color: isActive
                 ? const Color(0xFFF49D25) // primary
                 : Colors.transparent,
             shape: BoxShape.circle,
@@ -124,8 +113,8 @@ class _NavItem extends StatelessWidget {
               Icon(
                 icon,
                 size: 24,
-                color: isActive 
-                    ? Colors.white 
+                color: isActive
+                    ? Colors.white
                     : const Color(0xFF9CA3AF), // stone-400
               ),
               const SizedBox(height: 2),
@@ -136,9 +125,7 @@ class _NavItem extends StatelessWidget {
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 1.5,
-                  color: isActive 
-                      ? Colors.white 
-                      : const Color(0xFF9CA3AF),
+                  color: isActive ? Colors.white : const Color(0xFF9CA3AF),
                 ),
               ),
             ],

@@ -21,7 +21,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       AppLogger.d('Getting user orders page $page size $size');
       final response = await _apiService.getUserOrders(page, size);
       AppLogger.i(
-        'Successfully retrieved ${response.data?.content.length ?? 0} orders',
+        'Successfully retrieved ${response.data?.items.length ?? 0} orders',
       );
 
       if (response.isSuccess && response.data != null) {
@@ -34,7 +34,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error getting user orders', e);
-      throw Exception('Unexpected error: ${e.toString()}');
+      throw const FormatException('Invalid order history response');
     }
   }
 
@@ -55,7 +55,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error getting order', e);
-      throw Exception('Unexpected error: ${e.toString()}');
+      throw const FormatException('Invalid order detail response');
     }
   }
 
@@ -76,36 +76,17 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error creating order with DTO', e);
-      throw Exception('Unexpected error: ${e.toString()}');
-    }
-  }
-
-  @override
-  Future<OrderDto> createOrder(OrderDto order) async {
-    try {
-      AppLogger.d('Creating new order');
-      final response = await _apiService.createOrder(order);
-      AppLogger.i('Successfully created order');
-
-      if (response.isSuccess && response.data != null) {
-        return response.data!;
-      } else {
-        throw Exception(response.message);
-      }
-    } on DioException catch (e) {
-      AppLogger.e('Failed to create order', e);
-      throw DioExceptionHandler.mapDioExceptionToException(e);
-    } catch (e) {
-      AppLogger.e('Unexpected error creating order', e);
-      throw Exception('Unexpected error: ${e.toString()}');
+      throw const FormatException('Invalid create-order response');
     }
   }
 
   @override
   Future<bool> cancelOrder(int orderId, {String? reason}) async {
     try {
-      AppLogger.d('Cancelling order: $orderId with reason: $reason');
-      final response = await _apiService.cancelOrder(orderId, {'reason': reason});
+      AppLogger.d('Cancelling order: $orderId');
+      final response = await _apiService.cancelOrder(orderId, {
+        'reason': reason,
+      });
       AppLogger.i('Successfully cancelled order: $orderId');
 
       if (response.isSuccess) {
@@ -118,32 +99,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error cancelling order', e);
-      throw Exception('Unexpected error: ${e.toString()}');
-    }
-  }
-
-  @override
-  Future<bool> rateShipper(int shipperId, int orderId, int rating, String? comment) async {
-    try {
-      AppLogger.d('Rating shipper $shipperId for order $orderId');
-      final response = await _apiService.rateShipper(shipperId, {
-        'orderId': orderId,
-        'rating': rating,
-        'comment': comment,
-      });
-      AppLogger.i('Successfully rated shipper: $shipperId');
-
-      if (response.isSuccess) {
-        return true;
-      } else {
-        throw Exception(response.message);
-      }
-    } on DioException catch (e) {
-      AppLogger.e('Failed to rate shipper: $shipperId', e);
-      throw DioExceptionHandler.mapDioExceptionToException(e);
-    } catch (e) {
-      AppLogger.e('Unexpected error rating shipper', e);
-      throw Exception('Unexpected error: ${e.toString()}');
+      throw const FormatException('Invalid cancel-order response');
     }
   }
 }

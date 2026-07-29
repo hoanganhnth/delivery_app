@@ -9,7 +9,7 @@ import 'package:delivery_app/generated/l10n.dart';
 class CheckoutBottomSection extends ConsumerWidget {
   final CartEntity cart;
   final bool isLoading;
-  final VoidCallback onPlaceOrder;
+  final VoidCallback? onPlaceOrder;
   final String? buttonText;
 
   /// Server-calculated prices (nếu có sẽ hiển thị breakdown)
@@ -33,8 +33,9 @@ class CheckoutBottomSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final hasServerPrices = serverTotal != null;
-    final displayTotal = hasServerPrices ? serverTotal! : cart.totalAmount;
+    final hasServerTotal = serverTotal != null;
+    final hasServerBreakdown =
+        serverSubtotal != null && serverShippingFee != null && serverTotal != null;
 
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -52,13 +53,18 @@ class CheckoutBottomSection extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Breakdown chi tiết khi có dữ liệu từ server
-          if (hasServerPrices) ...[
-            _buildPriceRow(ref, s.checkoutSubtotal, serverSubtotal ?? 0),
+          if (hasServerBreakdown) ...[
+            _buildPriceRow(ref, s.checkoutSubtotal, serverSubtotal!),
             SizedBox(height: 4.w),
-            _buildPriceRow(ref, s.checkoutShippingFee, serverShippingFee ?? 0),
+            _buildPriceRow(ref, s.checkoutShippingFee, serverShippingFee!),
             if (serverDiscount != null && serverDiscount! > 0) ...[
               SizedBox(height: 4.w),
-              _buildPriceRow(ref, s.checkoutDiscount, -serverDiscount!, isDiscount: true),
+              _buildPriceRow(
+                ref,
+                s.checkoutDiscount,
+                -serverDiscount!,
+                isDiscount: true,
+              ),
             ],
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8.w),
@@ -77,7 +83,7 @@ class CheckoutBottomSection extends ConsumerWidget {
                 ),
               ),
               Text(
-                '${displayTotal.toStringAsFixed(0)}₫',
+                hasServerTotal ? '${serverTotal!.toStringAsFixed(0)}₫' : '—',
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w700,
@@ -122,11 +128,19 @@ class CheckoutBottomSection extends ConsumerWidget {
     );
   }
 
-  Widget _buildPriceRow(WidgetRef ref, String label, double amount, {bool isDiscount = false}) {
+  Widget _buildPriceRow(
+    WidgetRef ref,
+    String label,
+    double amount, {
+    bool isDiscount = false,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: TextStyle(fontSize: 13.sp, color: ref.colors.textSecondary)),
+        Text(
+          label,
+          style: TextStyle(fontSize: 13.sp, color: ref.colors.textSecondary),
+        ),
         Text(
           '${isDiscount ? "-" : ""}${amount.abs().toStringAsFixed(0)}₫',
           style: TextStyle(

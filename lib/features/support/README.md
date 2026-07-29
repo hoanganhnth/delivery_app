@@ -1,5 +1,9 @@
 # Support Feature
 
+> MVP note: support chat is hidden from the runtime navigation graph. The code
+> remains in the repository as historical/source material, but it is not a
+> client-visible MVP surface.
+
 ## 🎨 New Design (from Stitch)
 **Reference:** `.stitch_designs/DESIGN_ANALYSIS.md`
 - **Screen**: Customer Support

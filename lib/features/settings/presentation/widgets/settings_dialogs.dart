@@ -46,9 +46,30 @@ class SettingsDialogs {
               ),
             ),
             SizedBox(height: ResponsiveSize.m),
-            _buildLanguageOption(context, colors, 'Tiếng Việt', '🇻🇳', selectedLanguage, onLanguageSelected),
-            _buildLanguageOption(context, colors, 'English', '🇺🇸', selectedLanguage, onLanguageSelected),
-            _buildLanguageOption(context, colors, '日本語', '🇯🇵', selectedLanguage, onLanguageSelected),
+            _buildLanguageOption(
+              context,
+              colors,
+              'Tiếng Việt',
+              '🇻🇳',
+              selectedLanguage,
+              onLanguageSelected,
+            ),
+            _buildLanguageOption(
+              context,
+              colors,
+              'English',
+              '🇺🇸',
+              selectedLanguage,
+              onLanguageSelected,
+            ),
+            _buildLanguageOption(
+              context,
+              colors,
+              '日本語',
+              '🇯🇵',
+              selectedLanguage,
+              onLanguageSelected,
+            ),
             SizedBox(height: ResponsiveSize.m),
           ],
         ),
@@ -98,75 +119,12 @@ class SettingsDialogs {
             color: colors.primary,
             borderRadius: BorderRadius.circular(ResponsiveSize.radiusM),
           ),
-          child: Icon(
-            Icons.delivery_dining,
-            color: Colors.white,
-            size: 32.w,
-          ),
+          child: Icon(Icons.delivery_dining, color: Colors.white, size: 32.w),
         ),
         children: [
           Text(
             'Ứng dụng giao đồ ăn nhanh chóng và tiện lợi.', // Keep or update to localized
             style: TextStyle(color: colors.textSecondary),
-          ),
-        ],
-      ),
-    );
-  }
-
-  static void showClearCacheDialog(BuildContext context, AppColors colors) {
-    final s = S.of(context);
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(s.settingsClearCache),
-        content: Text(s.settingsClearCacheDesc),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Hủy'), // Could be localized
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Đã xóa cache thành công')), // Could be localized
-              );
-            },
-            child: Text(
-              'Xóa', // Could be localized
-              style: TextStyle(color: colors.warning),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  static void showDeleteAccountDialog(BuildContext context, AppColors colors) {
-    final s = S.of(context);
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          s.settingsDeleteAccount,
-          style: TextStyle(color: colors.error),
-        ),
-        content: Text(s.settingsDeleteAccountDesc),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Hủy'), // Could be localized
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // TODO: Implement delete account
-            },
-            child: Text(
-              'Xóa vĩnh viễn', // Could be localized
-              style: TextStyle(color: colors.error),
-            ),
           ),
         ],
       ),

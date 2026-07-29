@@ -17,9 +17,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:delivery_app/core/services/push_notification_service.dart';
-import 'features/auth/presentation/providers/di/storage_di_providers.dart';
-import 'features/auth/presentation/providers/di/auth_network_providers.dart' as auth_net;
-import 'package:delivery_app/core/network/_riverpod/authenticated_network_providers.dart' as core_net;
+import 'features/auth/presentation/providers/providers.dart';
+import 'features/auth/presentation/providers/di/auth_network_providers.dart'
+    as auth_net;
+import 'package:delivery_app/core/network/_riverpod/authenticated_network_providers.dart'
+    as core_net;
 
 Future<void> main() async {
   runZonedGuarded<Future<void>>(
@@ -40,19 +42,19 @@ Future<void> main() async {
 
       // ✅ Khởi tạo SharedPreferences
       final sharedPreferences = await SharedPreferences.getInstance();
-      
+
       // ✅ Khởi tạo Hive và đăng ký adapters
       await AppSetup.initializeHive();
-      
+
       // ✅ Đăng ký Hive adapters thêm
       HiveAdapterRegistry.registerAllAdapters();
-      
+
       // ✅ Khởi tạo Mapbox
       AppSetup.initializeMapbox();
 
       // ✅ Đăng ký FCM background message handler
       FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-      
+
       // Bắt lỗi Flutter framework
       FlutterError.onError = (FlutterErrorDetails details) {
         FlutterError.presentError(details);
@@ -68,12 +70,12 @@ Future<void> main() async {
             core_net.authenticatedDioProvider.overrideWith((ref) {
               return ref.watch(auth_net.authAwareDioProvider);
               // final authState = ref.watch(authProvider);
-              
+
               // // ✅ Nếu đã login, dùng authAwareDio (có token)
               // if (authState.isAuthenticated && authState.accessToken != null) {
               //   return ref.watch(auth_net.authAwareDioProvider);
               // }
-              
+
               // // ❌ Chưa login, dùng Dio mặc định (không token)
               // return ref.watch(dioProvider);
             }),
@@ -111,14 +113,28 @@ class _MainAppState extends ConsumerState<MainApp> {
     if (!mounted) return;
     try {
       final pushService = ref.read(pushNotificationServiceProvider);
-      await pushService.initialize();
-    } catch (e) {
-      debugPrint('⚠️ FCM init error (will retry on auth): $e');
+      await pushService.initialize(
+        authenticated: ref.read(authProvider).isAuthenticated,
+      );
+    } catch (_) {
+      debugPrint(
+        '[FCM] Initialization failed; will retry after authentication',
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AuthState>(authProvider, (previous, next) {
+      if (previous?.isAuthenticated != next.isAuthenticated) {
+        unawaited(
+          ref
+              .read(pushNotificationServiceProvider)
+              .updateAuthentication(next.isAuthenticated),
+        );
+      }
+    });
+
     final router = ref.watch(routerProvider);
     final theme = ref.watch(themeProvider);
 

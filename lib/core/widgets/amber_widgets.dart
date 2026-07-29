@@ -16,7 +16,6 @@ export 'inputs/amber_search_bar.dart';
 export 'cards/glassmorphic_card.dart';
 
 // Sections & Complex UI
-export 'sections/flash_sale_section.dart';
 
 // Chips & Indicators
 export 'chips/category_pill.dart';

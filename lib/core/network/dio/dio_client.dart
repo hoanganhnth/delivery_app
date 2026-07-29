@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:async';
 
 import 'package:delivery_app/core/constants/api_constants.dart';
 import 'package:dio/dio.dart';
@@ -8,13 +8,13 @@ import 'token_storage.dart';
 
 class DioClient {
   final TokenStorage? tokenStorage;
-  final void Function()? onUnauthorized;
+  final FutureOr<void> Function()? onUnauthorized;
 
   late final Dio dio;
 
   DioClient({this.tokenStorage, this.onUnauthorized}) {
     final baseOptions = BaseOptions(
-      baseUrl: Platform.isAndroid ? ApiConstants.api : ApiConstants.apiIos,
+      baseUrl: ApiConstants.api,
       connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(seconds: 15),
       sendTimeout: const Duration(seconds: 30),

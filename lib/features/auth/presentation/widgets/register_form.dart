@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
+import 'package:delivery_app/core/utils/validators.dart';
 import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/core/utils/logger/app_logger.dart';
 import '../../../../generated/l10n.dart';
@@ -38,10 +39,11 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
     }
 
     final authNotifier = ref.read(authProvider.notifier);
-    
+
     AppLogger.d('RegisterForm: Attempting registration');
-    
+
     await authNotifier.register(
+      name: _nameController.text.trim(),
       email: _emailController.text.trim(),
       password: _passwordController.text,
       confirmPassword: _confirmPasswordController.text,
@@ -70,7 +72,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
               ),
             ),
             const SizedBox(height: 32),
-            
+
             Form(
               key: _formKey,
               child: Column(
@@ -85,7 +87,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                     enabled: !authState.isRegisterLoading,
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Email field
                   StitchRegisterField(
                     controller: _emailController,
@@ -98,14 +100,14 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                       if (value == null || value.isEmpty) {
                         return s.enterEmail;
                       }
-                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                      if (!Validators.isEmailValid(value)) {
                         return s.invalidEmail;
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Password field
                   StitchRegisterField(
                     controller: _passwordController,
@@ -117,7 +119,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                     helperText: s.passwordHelper,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                        _obscurePassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
                         color: ref.colors.secondary,
                       ),
                       onPressed: () {
@@ -137,7 +141,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                     },
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Confirm Password field
                   StitchRegisterField(
                     controller: _confirmPasswordController,
@@ -148,7 +152,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                     enabled: !authState.isRegisterLoading,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscureConfirmPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                        _obscureConfirmPassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
                         color: ref.colors.secondary,
                       ),
                       onPressed: () {
@@ -168,12 +174,14 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                     },
                   ),
                   const SizedBox(height: 32),
-                  
+
                   // Create Account button
                   SizedBox(
                     height: 56,
                     child: ElevatedButton(
-                      onPressed: authState.isRegisterLoading ? null : _handleRegister,
+                      onPressed: authState.isRegisterLoading
+                          ? null
+                          : _handleRegister,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: ref.colors.primary,
                         foregroundColor: Colors.white,
@@ -204,16 +212,13 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                   ),
                                 ),
                                 const SizedBox(width: 8),
-                                const Icon(
-                                  Icons.arrow_forward,
-                                  size: 20,
-                                ),
+                                const Icon(Icons.arrow_forward, size: 20),
                               ],
                             ),
                     ),
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Back to Login
                   Center(
                     child: Row(

@@ -92,7 +92,7 @@ final class CheckoutPreviewNotifierProvider
 }
 
 String _$checkoutPreviewNotifierHash() =>
-    r'6e3701719430d514249239f1627c69430e3da0ca';
+    r'416cd1e74e38e9225d7d46b207213ef54372a98d';
 
 /// ✅ Checkout Preview Provider
 /// Gọi server để tính giá chính xác trước khi đặt hàng.

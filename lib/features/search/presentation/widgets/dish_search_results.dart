@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/features/search/presentation/providers/search_providers.dart';
 
 class DishSearchResults extends ConsumerWidget {
@@ -11,13 +13,13 @@ class DishSearchResults extends ConsumerWidget {
     final query = ref.watch(searchQueryProvider);
 
     if (query.isEmpty) {
-      return const Center(child: Text('Type to search dishes...'));
+      return const Center(child: Text('Nhập tên món ăn để tìm kiếm'));
     }
 
     return searchAsync.when(
       data: (dishes) {
         if (dishes.isEmpty) {
-          return const Center(child: Text('No dishes found.'));
+          return const Center(child: Text('Không tìm thấy món ăn'));
         }
         return ListView.builder(
           itemCount: dishes.length,
@@ -25,21 +27,34 @@ class DishSearchResults extends ConsumerWidget {
             final dish = dishes[index];
             return ListTile(
               leading: CircleAvatar(
-                backgroundImage: dish.imageUrl != null ? NetworkImage(dish.imageUrl!) : null,
-                child: dish.imageUrl == null ? const Icon(Icons.fastfood) : null,
+                backgroundImage: dish.imageUrl != null
+                    ? NetworkImage(dish.imageUrl!)
+                    : null,
+                child: dish.imageUrl == null
+                    ? const Icon(Icons.fastfood)
+                    : null,
               ),
               title: Text(dish.name),
-              subtitle: Text(dish.description ?? ''),
-              trailing: Text('\$${dish.price ?? 0.0}'),
-              onTap: () {
-                // Navigate to dish details
-              },
+              subtitle: dish.description?.trim().isNotEmpty == true
+                  ? Text(dish.description!.trim())
+                  : null,
+              trailing: dish.price == null
+                  ? null
+                  : Text(
+                      '${NumberFormat('#,###', 'vi_VN').format(dish.price)}đ',
+                    ),
+              onTap: dish.restaurantId?.trim().isNotEmpty == true
+                  ? () => context.pushToRestaurantDetails(
+                      dish.restaurantId!.trim(),
+                    )
+                  : null,
             );
           },
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(child: Text('Error: $error')),
+      error: (_, _) =>
+          const Center(child: Text('Không thể tải kết quả món ăn')),
     );
   }
 }

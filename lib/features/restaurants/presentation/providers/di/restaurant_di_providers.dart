@@ -7,7 +7,6 @@ import '../../../domain/usecases/get_restaurants_usecase.dart';
 import '../../../domain/usecases/get_restaurant_by_id_usecase.dart';
 import '../../../domain/usecases/get_menu_items_usecase.dart';
 import '../../../domain/usecases/search_restaurants_usecase.dart';
-import '../../../domain/usecases/get_restaurants_nearby_usecase.dart';
 import 'restaurant_network_providers.dart';
 import '../list/restaurants_notifier.dart';
 import '../detail/restaurant_detail_notifier.dart';
@@ -44,12 +43,6 @@ GetMenuItemsUseCase getMenuItemsUseCase(Ref ref) {
 SearchRestaurantsUseCase searchRestaurantsUseCase(Ref ref) {
   final repository = ref.watch(restaurantRepositoryProvider);
   return SearchRestaurantsUseCase(repository);
-}
-
-@Riverpod(keepAlive: true)
-GetRestaurantsNearByUseCase getRestaurantsNearByUseCase(Ref ref) {
-  final repository = ref.watch(restaurantRepositoryProvider);
-  return GetRestaurantsNearByUseCase(repository);
 }
 
 // Helper providers for specific use cases
@@ -98,15 +91,20 @@ class SearchQuery extends _$SearchQuery {
 List<RestaurantEntity> filteredRestaurants(Ref ref) {
   final query = ref.watch(searchQueryProvider);
   final state = ref.watch(restaurantsProvider);
-  
+
   if (query.isEmpty) {
     return state.restaurants;
   }
-  
+
   return state.restaurants
-      .where((restaurant) =>
-          restaurant.name.toLowerCase().contains(query.toLowerCase()) ||
-          (restaurant.description?.toLowerCase().contains(query.toLowerCase()) ?? false))
+      .where(
+        (restaurant) =>
+            restaurant.name.toLowerCase().contains(query.toLowerCase()) ||
+            (restaurant.description?.toLowerCase().contains(
+                  query.toLowerCase(),
+                ) ??
+                false),
+      )
       .toList();
 }
 
@@ -124,11 +122,6 @@ bool isLoadingRestaurantDetail(Ref ref, num restaurantId) {
 @riverpod
 bool isLoadingSearch(Ref ref) {
   return ref.watch(restaurantsProvider).isSearchLoading;
-}
-
-@riverpod
-bool isLoadingNearby(Ref ref) {
-  return ref.watch(restaurantsProvider).isNearbyLoading;
 }
 
 @riverpod

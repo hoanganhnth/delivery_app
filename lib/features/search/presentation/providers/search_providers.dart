@@ -17,7 +17,7 @@ class SearchQuery extends _$SearchQuery {
 @riverpod
 class SearchFilterTab extends _$SearchFilterTab {
   @override
-  int build() => 0; // 0: Dishes, 1: Restaurants, 2: Shippers
+  int build() => 0; // 0: Dishes, 1: Restaurants
 
   void setTab(int tabIndex) {
     state = tabIndex;
@@ -28,10 +28,10 @@ class SearchFilterTab extends _$SearchFilterTab {
 Future<List<DishSearchResult>> searchDishesResults(Ref ref) async {
   final query = ref.watch(searchQueryProvider);
   if (query.isEmpty) return [];
-  
+
   // Optional: add a debounce delay
   await Future.delayed(const Duration(milliseconds: 300));
-  
+
   final repository = ref.read(searchRepositoryProvider);
   return repository.searchDishes(query);
 }
@@ -40,20 +40,9 @@ Future<List<DishSearchResult>> searchDishesResults(Ref ref) async {
 Future<List<RestaurantSearchResult>> searchRestaurantsResults(Ref ref) async {
   final query = ref.watch(searchQueryProvider);
   if (query.isEmpty) return [];
-  
+
   await Future.delayed(const Duration(milliseconds: 300));
-  
+
   final repository = ref.read(searchRepositoryProvider);
   return repository.searchRestaurants(query);
-}
-
-@riverpod
-Future<List<ShipperSearchResult>> searchShippersResults(Ref ref) async {
-  final query = ref.watch(searchQueryProvider);
-  if (query.isEmpty) return [];
-  
-  await Future.delayed(const Duration(milliseconds: 300));
-  
-  final repository = ref.read(searchRepositoryProvider);
-  return repository.searchShippers(query);
 }

@@ -1,4 +1,3 @@
-
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../features/profile/data/models/user_model.dart';
 import '../../../features/cart/data/adapters/cart_dto_adapter.dart';
@@ -15,12 +14,17 @@ class HiveTypeIds {
 class HiveAdapterRegistry {
   /// Register all Hive adapters with their type IDs
   static void registerAllAdapters() {
-    // Cart adapters
-    Hive.registerAdapter(CartItemDtoAdapter());
-    Hive.registerAdapter(CartDtoAdapter());
+    if (Hive.isAdapterRegistered(HiveTypeIds.cartItemDto) == false) {
+      Hive.registerAdapter(CartItemDtoAdapter());
+    }
 
-    // User adapters
-    Hive.registerAdapter(UserModelAdapter());
+    if (Hive.isAdapterRegistered(HiveTypeIds.cartDto) == false) {
+      Hive.registerAdapter(CartDtoAdapter());
+    }
+
+    if (Hive.isAdapterRegistered(HiveTypeIds.userModel) == false) {
+      Hive.registerAdapter(UserModelAdapter());
+    }
 
     // Add more adapters here as needed
   }

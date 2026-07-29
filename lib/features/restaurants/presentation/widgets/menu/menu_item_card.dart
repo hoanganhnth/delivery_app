@@ -12,25 +12,36 @@ class MenuItemCard extends ConsumerWidget {
   final String restaurantName;
 
   const MenuItemCard({
-    super.key, 
+    super.key,
     required this.menuItem,
     required this.restaurantName,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isUnavailable = menuItem.status != MenuItemStatus.available;
+    final itemId = menuItem.id;
+    final restaurantId = menuItem.restaurantId;
+    final hasCanonicalIdentity =
+        itemId != null &&
+        itemId > 0 &&
+        restaurantId != null &&
+        restaurantId > 0;
+    final isUnavailable = !menuItem.canAddToCart;
     final cartNotifier = ref.read(cartProvider.notifier);
-    final itemQuantity = ref.watch(menuItemQuantityProvider(menuItem.id ?? 0));
-    final canAddFromRestaurant = ref.watch(canAddFromRestaurantProvider(menuItem.restaurantId ?? 0));
+    final itemQuantity = hasCanonicalIdentity
+        ? ref.watch(menuItemQuantityProvider(itemId))
+        : 0;
+    final canAddFromRestaurant =
+        hasCanonicalIdentity &&
+        ref.watch(canAddFromRestaurantProvider(restaurantId));
 
     // Listen for cart AsyncValue changes to show error messages
     ref.listen(cartProvider, (previous, next) {
       next.whenOrNull(
         error: (error, stackTrace) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(error.toString()),
+            const SnackBar(
+              content: Text('Không thể cập nhật giỏ hàng. Vui lòng thử lại.'),
               backgroundColor: Colors.red,
             ),
           );
@@ -113,7 +124,10 @@ class MenuItemCard extends ConsumerWidget {
                       SizedBox(height: 4.w),
                       Text(
                         menuItem.description,
-                        style: TextStyle(color: ref.colors.textSecondary, fontSize: 14.sp),
+                        style: TextStyle(
+                          color: ref.colors.textSecondary,
+                          fontSize: 14.sp,
+                        ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -165,17 +179,23 @@ class MenuItemCard extends ConsumerWidget {
                                       onPressed: () async {
                                         if (itemQuantity > 1) {
                                           await cartNotifier.updateItemQuantity(
-                                            menuItem.id ?? 0, 
-                                            itemQuantity - 1
+                                            itemId!,
+                                            itemQuantity - 1,
                                           );
                                         } else {
-                                          await cartNotifier.removeItem(menuItem.id ?? 0);
+                                          await cartNotifier.removeItem(
+                                            itemId!,
+                                          );
                                         }
                                       },
                                       icon: Icon(
-                                        itemQuantity > 1 ? Icons.remove : Icons.delete_outline,
+                                        itemQuantity > 1
+                                            ? Icons.remove
+                                            : Icons.delete_outline,
                                         size: 16,
-                                        color: itemQuantity > 1 ? Colors.orange : Colors.red,
+                                        color: itemQuantity > 1
+                                            ? Colors.orange
+                                            : Colors.red,
                                       ),
                                       constraints: const BoxConstraints(
                                         minWidth: 32,
@@ -183,10 +203,12 @@ class MenuItemCard extends ConsumerWidget {
                                       ),
                                       padding: EdgeInsets.zero,
                                     ),
-                                  
+
                                   // Quantity display
                                   Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8.w),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w,
+                                    ),
                                     child: Text(
                                       '$itemQuantity',
                                       style: TextStyle(
@@ -194,7 +216,7 @@ class MenuItemCard extends ConsumerWidget {
                                       ),
                                     ),
                                   ),
-                                  
+
                                   // Add button
                                   IconButton(
                                     onPressed: !menuItem.canAddToCart
@@ -207,14 +229,18 @@ class MenuItemCard extends ConsumerWidget {
                                                 return;
                                               }
                                               // Add new item to cart
-                                              final cartItem = menuItem.toCartItem(restaurantName);
-                                              await cartNotifier.addItem(cartItem);
+                                              final cartItem = menuItem
+                                                  .toCartItem(restaurantName);
+                                              await cartNotifier.addItem(
+                                                cartItem,
+                                              );
                                             } else {
                                               // Increase quantity
-                                              await cartNotifier.updateItemQuantity(
-                                                menuItem.id ?? 0,
-                                                itemQuantity + 1
-                                              );
+                                              await cartNotifier
+                                                  .updateItemQuantity(
+                                                    itemId!,
+                                                    itemQuantity + 1,
+                                                  );
                                             }
                                           },
                                     icon: Icon(

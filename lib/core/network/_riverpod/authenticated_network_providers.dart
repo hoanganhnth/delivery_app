@@ -18,7 +18,7 @@ Dio authenticatedDio(Ref ref) {
 /// Factory function to create authenticated Dio with auth callbacks
 Dio createAuthenticatedDio({
   required TokenStorage tokenStorage,
-  void Function()? onUnauthorized,
+  FutureOr<void> Function()? onUnauthorized,
 }) {
   final dioClient = DioClient(
     tokenStorage: tokenStorage,

@@ -15,28 +15,24 @@ sealed class OrderItemDto with _$OrderItemDto {
     String? notes,
   }) = _OrderItemDto;
 
-  factory OrderItemDto.fromJson(Map<String, dynamic> json) => _$OrderItemDtoFromJson(json);
+  factory OrderItemDto.fromJson(Map<String, dynamic> json) =>
+      _$OrderItemDtoFromJson(json);
 }
 
 extension OrderItemDtoX on OrderItemDto {
   OrderItemEntity toEntity() {
+    final normalizedName = menuItemName.trim();
+    if (menuItemId <= 0 ||
+        normalizedName.isEmpty ||
+        quantity <= 0 ||
+        !price.isFinite ||
+        price <= 0) {
+      throw const FormatException('Invalid order item contract');
+    }
     return OrderItemEntity(
       id: id,
       menuItemId: menuItemId,
-      menuItemName: menuItemName,
-      quantity: quantity,
-      price: price,
-      notes: notes,
-    );
-  }
-}
-
-extension OrderItemEntityX on OrderItemEntity {
-  OrderItemDto toDto() {
-    return OrderItemDto(
-      id: id,
-      menuItemId: menuItemId,
-      menuItemName: menuItemName,
+      menuItemName: normalizedName,
       quantity: quantity,
       price: price,
       notes: notes,

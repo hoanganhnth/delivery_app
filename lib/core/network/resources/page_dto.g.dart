@@ -10,20 +10,22 @@ _PageDto<T> _$PageDtoFromJson<T>(
   Map<String, dynamic> json,
   T Function(Object? json) fromJsonT,
 ) => _PageDto<T>(
-  content: (json['content'] as List<dynamic>).map(fromJsonT).toList(),
-  totalPages: (json['totalPages'] as num).toInt(),
-  totalElements: (json['totalElements'] as num).toInt(),
+  items: (json['items'] as List<dynamic>).map(fromJsonT).toList(),
+  page: (json['page'] as num).toInt(),
   size: (json['size'] as num).toInt(),
-  number: (json['number'] as num).toInt(),
+  totalItems: (json['totalItems'] as num).toInt(),
+  totalPages: (json['totalPages'] as num).toInt(),
+  hasNext: json['hasNext'] as bool,
 );
 
 Map<String, dynamic> _$PageDtoToJson<T>(
   _PageDto<T> instance,
   Object? Function(T value) toJsonT,
 ) => <String, dynamic>{
-  'content': instance.content.map(toJsonT).toList(),
-  'totalPages': instance.totalPages,
-  'totalElements': instance.totalElements,
+  'items': instance.items.map(toJsonT).toList(),
+  'page': instance.page,
   'size': instance.size,
-  'number': instance.number,
+  'totalItems': instance.totalItems,
+  'totalPages': instance.totalPages,
+  'hasNext': instance.hasNext,
 };

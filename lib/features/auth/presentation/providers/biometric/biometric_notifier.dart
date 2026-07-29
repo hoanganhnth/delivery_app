@@ -40,6 +40,7 @@ class BiometricNotifier extends _$BiometricNotifier {
     state = state.copyWith(isLoading: true, clearFailure: true);
 
     final availabilityResult = await _checkAvailability(NoParams());
+    if (!ref.mounted) return;
 
     await availabilityResult.fold(
       (failure) async {
@@ -54,6 +55,7 @@ class BiometricNotifier extends _$BiometricNotifier {
         if (isAvailable) {
           // Get available biometric types
           final typesResult = await _getAvailableBiometrics(NoParams());
+          if (!ref.mounted) return;
 
           typesResult.fold(
             (failure) {
@@ -96,6 +98,7 @@ class BiometricNotifier extends _$BiometricNotifier {
     final result = await _authenticate(
       AuthenticateWithBiometricParams(reason: reason),
     );
+    if (!ref.mounted) return false;
 
     return result.fold(
       (failure) {
@@ -125,6 +128,7 @@ class BiometricNotifier extends _$BiometricNotifier {
         refreshToken: refreshToken,
       ),
     );
+    if (!ref.mounted) return;
 
     result.fold(
       (failure) {
@@ -148,6 +152,7 @@ class BiometricNotifier extends _$BiometricNotifier {
     state = state.copyWith(isLoading: true, clearFailure: true);
 
     final result = await _disableBiometric(NoParams());
+    if (!ref.mounted) return;
 
     result.fold(
       (failure) {
@@ -166,6 +171,7 @@ class BiometricNotifier extends _$BiometricNotifier {
     AppLogger.d('BiometricNotifier: Checking if biometric is enabled');
 
     final result = await _getAuthSession(NoParams());
+    if (!ref.mounted) return;
 
     result.fold(
       (failure) {

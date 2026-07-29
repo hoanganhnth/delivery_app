@@ -13,12 +13,12 @@ sealed class RestaurantsState with _$RestaurantsState {
     @Default([]) List<RestaurantEntity> restaurants,
     Failure? failure,
     @Default(false) bool isSearchLoading,
-    @Default(false) bool isNearbyLoading,
     @Default(false) bool isFeaturedLoading,
   }) = _RestaurantsState;
 
   // Computed properties
   bool get hasError => failure != null;
   String? get errorMessage => failure?.message;
-  List<RestaurantEntity> get featuredRestaurants => restaurants.take(3).toList();
+  List<RestaurantEntity> get featuredRestaurants =>
+      restaurants.take(3).toList();
 }

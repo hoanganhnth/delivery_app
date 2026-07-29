@@ -4,7 +4,6 @@ library;
 // Screens
 export 'presentation/screens/all_restaurants_screen.dart';
 export 'presentation/screens/restaurant_detail_screen.dart';
-export 'presentation/screens/menu_screen.dart';
 
 // Providers
 export 'presentation/providers/providers.dart';

@@ -1,6 +1,6 @@
 import 'package:delivery_app/core/theme/theme_extensions.dart';
-import 'dart:ui';
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
+import 'package:delivery_app/features/restaurants/domain/entities/restaurant_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,12 +8,9 @@ import 'package:go_router/go_router.dart';
 
 /// Restaurant hero section with image, gradient overlay, and info
 class RestaurantHeroSection extends ConsumerWidget {
-  final dynamic restaurant;
-  
-  const RestaurantHeroSection({
-    super.key,
-    required this.restaurant,
-  });
+  final RestaurantEntity restaurant;
+
+  const RestaurantHeroSection({super.key, required this.restaurant});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,26 +23,6 @@ class RestaurantHeroSection extends ConsumerWidget {
         padding: EdgeInsets.all(8.w),
         child: GlassBackButton(onPressed: () => context.pop()),
       ),
-      actions: [
-        Padding(
-          padding: EdgeInsets.only(right: 4.w),
-          child: GlassActionButton(
-            icon: Icons.favorite_border,
-            onPressed: () {
-              // TODO: Add to favorites
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(right: 8.w),
-          child: GlassActionButton(
-            icon: Icons.share_outlined,
-            onPressed: () {
-              // TODO: Share restaurant
-            },
-          ),
-        ),
-      ],
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           fit: StackFit.expand,
@@ -98,7 +75,7 @@ class RestaurantHeroSection extends ConsumerWidget {
                       letterSpacing: -0.5,
                     ),
                   ),
-                  
+
                   if (restaurant.description != null) ...[
                     SizedBox(height: 6.w),
                     Text(
@@ -112,69 +89,64 @@ class RestaurantHeroSection extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
-                  
-                  SizedBox(height: 12.w),
-                  
-                  // Rating and delivery info
-                  Row(
-                    children: [
-                      // Rating badge
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 6.w,
-                        ),
-                        decoration: BoxDecoration(
-                          color: ref.colors.primary,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.star,
-                              size: 14.w,
-                              color: Colors.white,
+
+                  if (restaurant.rating != null ||
+                      restaurant.reviewCount != null ||
+                      restaurant.deliveryTime != null) ...[
+                    SizedBox(height: 12.w),
+                    Row(
+                      children: [
+                        if (restaurant.rating != null)
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.w,
+                              vertical: 6.w,
                             ),
-                            SizedBox(width: 4.w),
-                            Text(
-                              '4.8',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w700,
-                              ),
+                            decoration: BoxDecoration(
+                              color: ref.colors.primary,
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                          ],
-                        ),
-                      ),
-                      
-                      SizedBox(width: 8.w),
-                      
-                      // Reviews
-                      Text(
-                        '(200+ đánh giá)',
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.9),
-                          fontSize: 12.sp,
-                        ),
-                      ),
-                      
-                      const Spacer(),
-                      
-                      // Delivery time badge
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 6.w,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: ClipRRect(
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.star,
+                                  size: 14.w,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(width: 4.w),
+                                Text(
+                                  restaurant.rating!.toStringAsFixed(1),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        if (restaurant.reviewCount != null) ...[
+                          SizedBox(width: 8.w),
+                          Text(
+                            '(${restaurant.reviewCount} đánh giá)',
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.9),
+                              fontSize: 12.sp,
+                            ),
+                          ),
+                        ],
+                        const Spacer(),
+                        if (restaurant.deliveryTime != null)
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.w,
+                              vertical: 6.w,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -185,7 +157,7 @@ class RestaurantHeroSection extends ConsumerWidget {
                                 ),
                                 SizedBox(width: 4.w),
                                 Text(
-                                  '20-30 min',
+                                  '${restaurant.deliveryTime} phút',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 12.sp,
@@ -195,10 +167,9 @@ class RestaurantHeroSection extends ConsumerWidget {
                               ],
                             ),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),

@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 /// Restaurant header card for cart screen
-/// 
+///
 /// Features:
 /// - White card with rounded-3xl (24px)
 /// - Logo: 64x64px rounded-2xl
@@ -12,16 +12,16 @@ import 'package:flutter/material.dart';
 class RestaurantHeaderCard extends StatelessWidget {
   /// Restaurant name
   final String name;
-  
+
   /// Restaurant logo URL
   final String? logoUrl;
-  
+
   /// Restaurant rating (0-5)
-  final double rating;
-  
+  final double? rating;
+
   /// Distance (e.g., "1.2km")
-  final String distance;
-  
+  final String? distance;
+
   /// Callback when card is tapped
   final VoidCallback? onTap;
 
@@ -29,8 +29,8 @@ class RestaurantHeaderCard extends StatelessWidget {
     super.key,
     required this.name,
     this.logoUrl,
-    required this.rating,
-    required this.distance,
+    this.rating,
+    this.distance,
     this.onTap,
   });
 
@@ -63,7 +63,7 @@ class RestaurantHeaderCard extends StatelessWidget {
                 color: const Color(0xFFF49D25).withValues(alpha: 0.05),
               ),
             ),
-            
+
             // Content
             Row(
               children: [
@@ -114,9 +114,9 @@ class RestaurantHeaderCard extends StatelessWidget {
                           ),
                   ),
                 ),
-                
+
                 const SizedBox(width: 16),
-                
+
                 // Restaurant info
                 Expanded(
                   child: Column(
@@ -145,36 +145,42 @@ class RestaurantHeaderCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.star,
-                            size: 14,
-                            color: Color(0xFFF49D25),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            rating.toStringAsFixed(1),
-                            style: const TextStyle(
-                              fontFamily: 'Plus Jakarta Sans',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF1C160D),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '• $distance',
-                            style: const TextStyle(
-                              fontFamily: 'Plus Jakarta Sans',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xFF9C7A49),
-                            ),
-                          ),
-                        ],
-                      ),
+                      if (rating != null || distance != null) ...[
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            if (rating != null) ...[
+                              const Icon(
+                                Icons.star,
+                                size: 14,
+                                color: Color(0xFFF49D25),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                rating!.toStringAsFixed(1),
+                                style: const TextStyle(
+                                  fontFamily: 'Plus Jakarta Sans',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF1C160D),
+                                ),
+                              ),
+                            ],
+                            if (rating != null && distance != null)
+                              const SizedBox(width: 8),
+                            if (distance != null)
+                              Text(
+                                rating == null ? distance! : '• $distance',
+                                style: const TextStyle(
+                                  fontFamily: 'Plus Jakarta Sans',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xFF9C7A49),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
                 ),

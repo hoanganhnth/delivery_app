@@ -3,62 +3,55 @@ import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/utils/logger/app_logger.dart';
 import '../datasources/shipper_location_datasource.dart';
-import '../datasources/shipper_location_remote_datasource.dart';
 import '../../domain/entities/shipper_location_entity.dart';
 import '../../domain/repositories/shipper_location_repository.dart';
 
 /// Repository implementation sử dụng trực tiếp DataSource
 class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
   final ShipperLocationDataSource _dataSource;
-  final ShipperLocationRemoteDataSource _remoteDataSource;
   String? _currentShipperId;
-  
-  ShipperLocationRepositoryImpl(this._dataSource, this._remoteDataSource);
-  
-  @override
-  Future<Either<Failure, ShipperLocationEntity>> getShipperLocation(int shipperId) async {
-    try {
-      final response = await _remoteDataSource.getShipperLocation(shipperId);
-      if (response.data != null) {
-        return right(response.data!.toEntity());
-      } else {
-        return left(const ServerFailure('Không tìm thấy vị trí shipper'));
-      }
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
-  }
-  
+
+  ShipperLocationRepositoryImpl(this._dataSource);
+
   @override
   Stream<ShipperLocationEntity> get locationStream {
     // Sử dụng trực tiếp single entity stream và filter theo current shipper
     return _dataSource.locationStream
-        .where((entity) => _currentShipperId != null && entity.shipperId.toString() == _currentShipperId)
+        .where(
+          (entity) =>
+              _currentShipperId != null &&
+              entity.shipperId.toString() == _currentShipperId,
+        )
         .where((entity) => _isValidLocationEntity(entity));
   }
-  
+
   @override
   bool get isTracking => _currentShipperId != null;
-  
+
   @override
-  Future<Either<Failure, void>> startTrackingShipper(int shipperId) async {
+  Future<Either<Failure, void>> startTrackingShipper(
+    int shipperId,
+    int deliveryId,
+  ) async {
     try {
       AppLogger.d('Starting shipper location tracking: $shipperId');
-      
+
       // Connect nếu chưa kết nối
       final connectionStatus = await _dataSource.connectionStream.first;
       if (!connectionStatus) {
         final connected = await _dataSource.connect();
         if (!connected) {
-          return left(const NetworkFailure('Failed to connect to location service'));
+          return left(
+            const NetworkFailure('Failed to connect to location service'),
+          );
         }
       }
-      
+
       // Subscribe to shipper
       final shipperIdString = shipperId.toString();
       final connectionStatus2 = await _dataSource.connectionStream.first;
       if (connectionStatus2) {
-        await _dataSource.subscribeToShipper(shipperIdString);
+        await _dataSource.subscribeToShipper(shipperIdString, deliveryId);
         _currentShipperId = shipperIdString;
         AppLogger.i('Started tracking shipper: $shipperId');
         return right(null);
@@ -70,17 +63,17 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
       return left(const ServerFailure('Failed to start tracking'));
     }
   }
-  
+
   @override
   Future<Either<Failure, void>> stopTrackingShipper() async {
     try {
       AppLogger.d('Stopping shipper location tracking');
-      
+
       if (_currentShipperId != null) {
         await _dataSource.unsubscribeFromShipper(_currentShipperId!);
         _currentShipperId = null;
       }
-      
+
       AppLogger.i('Stopped shipper location tracking');
       return right(null);
     } catch (e) {
@@ -88,14 +81,14 @@ class ShipperLocationRepositoryImpl implements ShipperLocationRepository {
       return left(const ServerFailure('Failed to stop tracking'));
     }
   }
-  
+
   /// Validate entity data
   bool _isValidLocationEntity(ShipperLocationEntity entity) {
     return entity.shipperId > 0 &&
-           entity.latitude.abs() <= 90 &&
-           entity.longitude.abs() <= 180;
+        entity.latitude.abs() <= 90 &&
+        entity.longitude.abs() <= 180;
   }
-  
+
   /// No dispose needed - DataSource handles stream cleanup
   void dispose() {
     stopTrackingShipper();

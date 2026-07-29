@@ -5,22 +5,14 @@ void main() {
   group('CreateOrderRequestDto Tests', () {
     test('should create CreateOrderRequestDto properly', () {
       // Arrange
-      final orderItems = [
-        const OrderItemRequest(
-          menuItemId: 1,
-          menuItemName: 'Phở bò',
-          price: 50000.0,
-          quantity: 2,
-        ),
-      ];
+      final orderItems = [const OrderItemRequest(menuItemId: 1, quantity: 2)];
 
       // Act
       final createOrderRequest = CreateOrderRequestDto(
         restaurantId: 1,
-        restaurantName: 'Nhà hàng Phở',
-        restaurantAddress: '123 Đường ABC',
-        restaurantPhone: '0901234567',
         deliveryAddress: '456 Đường XYZ, Quận 1, TP.HCM',
+        deliveryLat: 10.78,
+        deliveryLng: 106.69,
         customerName: 'Nguyễn Văn A',
         customerPhone: '0123456789',
         paymentMethod: 'COD',
@@ -30,10 +22,12 @@ void main() {
 
       // Assert
       expect(createOrderRequest.restaurantId, 1);
-      expect(createOrderRequest.restaurantName, 'Nhà hàng Phở');
       expect(createOrderRequest.customerName, 'Nguyễn Văn A');
       expect(createOrderRequest.customerPhone, '0123456789');
-      expect(createOrderRequest.deliveryAddress, '456 Đường XYZ, Quận 1, TP.HCM');
+      expect(
+        createOrderRequest.deliveryAddress,
+        '456 Đường XYZ, Quận 1, TP.HCM',
+      );
       expect(createOrderRequest.paymentMethod, 'COD');
       expect(createOrderRequest.items.length, 1);
       expect(createOrderRequest.notes, 'Giao nhanh nhé');
@@ -41,35 +35,26 @@ void main() {
 
     test('should handle optional fields properly', () {
       // Arrange
-      final orderItems = [
-        const OrderItemRequest(
-          menuItemId: 1,
-          menuItemName: 'Phở bò',
-          price: 50000.0,
-          quantity: 1,
-        ),
-      ];
+      final orderItems = [const OrderItemRequest(menuItemId: 1, quantity: 1)];
 
       // Act
       final createOrderRequest = CreateOrderRequestDto(
         restaurantId: 1,
-        restaurantName: 'Nhà hàng Phở',
-        restaurantAddress: '123 Đường ABC',
-        restaurantPhone: '0901234567',
         deliveryAddress: '456 Đường XYZ',
+        deliveryLat: 10.78,
+        deliveryLng: 106.69,
         customerName: 'Nguyễn Văn A',
         customerPhone: '0123456789',
-        paymentMethod: 'ONLINE',
+        paymentMethod: 'COD',
         items: orderItems,
         // Optional fields are null
       );
 
       // Assert
-      expect(createOrderRequest.deliveryLat, isNull);
-      expect(createOrderRequest.deliveryLng, isNull);
+      expect(createOrderRequest.deliveryLat, 10.78);
+      expect(createOrderRequest.deliveryLng, 106.69);
       expect(createOrderRequest.notes, isNull);
-      expect(createOrderRequest.pickupLat, isNull);
-      expect(createOrderRequest.pickupLng, isNull);
+      expect(createOrderRequest.items.single.notes, isNull);
     });
   });
 }

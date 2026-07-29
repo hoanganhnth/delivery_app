@@ -64,11 +64,6 @@ class NavigationHelper {
     context.go(AppRoutes.restaurantDetailsPath(restaurantId));
   }
 
-  /// Navigate to menu screen
-  static void goToMenu(BuildContext context, String restaurantId) {
-    context.go(AppRoutes.menuPath(restaurantId));
-  }
-
   /// Navigate to cart screen
   static void goToCart(BuildContext context) {
     context.go(AppRoutes.cart);
@@ -79,19 +74,9 @@ class NavigationHelper {
     context.go(AppRoutes.checkout);
   }
 
-  /// Navigate to payment screen
-  static void goToPayment(BuildContext context) {
-    context.go(AppRoutes.payment);
-  }
-
   /// Navigate to order confirmation screen
   static void goToOrderConfirmation(BuildContext context) {
     context.go(AppRoutes.orderConfirmation);
-  }
-
-  // navigate to support screen
-  static void pushSupport(BuildContext context) {
-    context.push(AppRoutes.supportChat);
   }
 
   /// Push navigation methods (keeps current screen in stack)
@@ -116,11 +101,6 @@ class NavigationHelper {
     context.push(AppRoutes.settings);
   }
 
-  /// Push theme settings screen
-  static void pushThemeSettings(BuildContext context) {
-    context.push(AppRoutes.themeSettings);
-  }
-
   /// Push order details screen
   static void pushOrderDetails(BuildContext context, String orderId) {
     context.push(AppRoutes.orderDetailsPath(orderId));
@@ -129,11 +109,6 @@ class NavigationHelper {
   /// Push restaurant details screen
   static void pushRestaurantDetails(BuildContext context, String restaurantId) {
     context.push(AppRoutes.restaurantDetailsPath(restaurantId));
-  }
-
-  /// Push menu screen
-  static void pushMenu(BuildContext context, String restaurantId) {
-    context.push(AppRoutes.menuPath(restaurantId));
   }
 
   /// Push cart screen
@@ -223,21 +198,19 @@ class NavigationHelper {
   }) {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(title),
-            content: Text(content),
-            actions:
-                actions.map((action) {
-                  return TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      action.onPressed?.call();
-                    },
-                    child: Text(action.label),
-                  );
-                }).toList(),
-          ),
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: actions.map((action) {
+          return TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              action.onPressed?.call();
+            },
+            child: Text(action.label),
+          );
+        }).toList(),
+      ),
     );
   }
 }
@@ -268,9 +241,6 @@ extension NavigationExtension on BuildContext {
       NavigationHelper.goToOrderDetails(this, orderId);
   void goToRestaurantDetails(String restaurantId) =>
       NavigationHelper.goToRestaurantDetails(this, restaurantId);
-  void goToMenu(String restaurantId) =>
-      NavigationHelper.goToMenu(this, restaurantId);
-
   void pushLogin() => NavigationHelper.pushLogin(this);
   void pushRegister() => NavigationHelper.pushRegister(this);
   void pushProfile() => NavigationHelper.pushProfile(this);
@@ -285,8 +255,7 @@ extension NavigationExtension on BuildContext {
   void pushCheckout() => NavigationHelper.pushCheckout(this);
   void pushOrderDetail(String orderId) =>
       NavigationHelper.pushOrderDetail(this, orderId);
-  void pushSupport() => NavigationHelper.pushSupport(this);
-  
+
   // Address management extension methods
   void goToAddressList() => NavigationHelper.goToAddressList(this);
   void pushAddressList() => NavigationHelper.pushAddressList(this);

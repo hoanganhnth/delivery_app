@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PageDto<T> {
 
- List<T> get content; int get totalPages; int get totalElements; int get size; int get number;
+ List<T> get items; int get page; int get size; int get totalItems; int get totalPages; bool get hasNext;
 /// Create a copy of PageDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $PageDtoCopyWith<T, PageDto<T>> get copyWith => _$PageDtoCopyWithImpl<T, PageDto
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PageDto<T>&&const DeepCollectionEquality().equals(other.content, content)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&(identical(other.totalElements, totalElements) || other.totalElements == totalElements)&&(identical(other.size, size) || other.size == size)&&(identical(other.number, number) || other.number == number));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PageDto<T>&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.page, page) || other.page == page)&&(identical(other.size, size) || other.size == size)&&(identical(other.totalItems, totalItems) || other.totalItems == totalItems)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(content),totalPages,totalElements,size,number);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items),page,size,totalItems,totalPages,hasNext);
 
 @override
 String toString() {
-  return 'PageDto<$T>(content: $content, totalPages: $totalPages, totalElements: $totalElements, size: $size, number: $number)';
+  return 'PageDto<$T>(items: $items, page: $page, size: $size, totalItems: $totalItems, totalPages: $totalPages, hasNext: $hasNext)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $PageDtoCopyWith<T,$Res>  {
   factory $PageDtoCopyWith(PageDto<T> value, $Res Function(PageDto<T>) _then) = _$PageDtoCopyWithImpl;
 @useResult
 $Res call({
- List<T> content, int totalPages, int totalElements, int size, int number
+ List<T> items, int page, int size, int totalItems, int totalPages, bool hasNext
 });
 
 
@@ -65,14 +65,15 @@ class _$PageDtoCopyWithImpl<T,$Res>
 
 /// Create a copy of PageDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? content = null,Object? totalPages = null,Object? totalElements = null,Object? size = null,Object? number = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? page = null,Object? size = null,Object? totalItems = null,Object? totalPages = null,Object? hasNext = null,}) {
   return _then(_self.copyWith(
-content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
-as List<T>,totalPages: null == totalPages ? _self.totalPages : totalPages // ignore: cast_nullable_to_non_nullable
-as int,totalElements: null == totalElements ? _self.totalElements : totalElements // ignore: cast_nullable_to_non_nullable
+items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
+as List<T>,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
 as int,size: null == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
-as int,number: null == number ? _self.number : number // ignore: cast_nullable_to_non_nullable
-as int,
+as int,totalItems: null == totalItems ? _self.totalItems : totalItems // ignore: cast_nullable_to_non_nullable
+as int,totalPages: null == totalPages ? _self.totalPages : totalPages // ignore: cast_nullable_to_non_nullable
+as int,hasNext: null == hasNext ? _self.hasNext : hasNext // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<T> content,  int totalPages,  int totalElements,  int size,  int number)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<T> items,  int page,  int size,  int totalItems,  int totalPages,  bool hasNext)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PageDto() when $default != null:
-return $default(_that.content,_that.totalPages,_that.totalElements,_that.size,_that.number);case _:
+return $default(_that.items,_that.page,_that.size,_that.totalItems,_that.totalPages,_that.hasNext);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.content,_that.totalPages,_that.totalElements,_that.size,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<T> content,  int totalPages,  int totalElements,  int size,  int number)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<T> items,  int page,  int size,  int totalItems,  int totalPages,  bool hasNext)  $default,) {final _that = this;
 switch (_that) {
 case _PageDto():
-return $default(_that.content,_that.totalPages,_that.totalElements,_that.size,_that.number);case _:
+return $default(_that.items,_that.page,_that.size,_that.totalItems,_that.totalPages,_that.hasNext);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.content,_that.totalPages,_that.totalElements,_that.size,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<T> content,  int totalPages,  int totalElements,  int size,  int number)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<T> items,  int page,  int size,  int totalItems,  int totalPages,  bool hasNext)?  $default,) {final _that = this;
 switch (_that) {
 case _PageDto() when $default != null:
-return $default(_that.content,_that.totalPages,_that.totalElements,_that.size,_that.number);case _:
+return $default(_that.items,_that.page,_that.size,_that.totalItems,_that.totalPages,_that.hasNext);case _:
   return null;
 
 }
@@ -213,20 +214,21 @@ return $default(_that.content,_that.totalPages,_that.totalElements,_that.size,_t
 @JsonSerializable(genericArgumentFactories: true)
 
 class _PageDto<T> implements PageDto<T> {
-  const _PageDto({required final  List<T> content, required this.totalPages, required this.totalElements, required this.size, required this.number}): _content = content;
+  const _PageDto({required final  List<T> items, required this.page, required this.size, required this.totalItems, required this.totalPages, required this.hasNext}): _items = items;
   factory _PageDto.fromJson(Map<String, dynamic> json,T Function(Object?) fromJsonT) => _$PageDtoFromJson(json,fromJsonT);
 
- final  List<T> _content;
-@override List<T> get content {
-  if (_content is EqualUnmodifiableListView) return _content;
+ final  List<T> _items;
+@override List<T> get items {
+  if (_items is EqualUnmodifiableListView) return _items;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_content);
+  return EqualUnmodifiableListView(_items);
 }
 
-@override final  int totalPages;
-@override final  int totalElements;
+@override final  int page;
 @override final  int size;
-@override final  int number;
+@override final  int totalItems;
+@override final  int totalPages;
+@override final  bool hasNext;
 
 /// Create a copy of PageDto
 /// with the given fields replaced by the non-null parameter values.
@@ -241,16 +243,16 @@ Map<String, dynamic> toJson(Object? Function(T) toJsonT) {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PageDto<T>&&const DeepCollectionEquality().equals(other._content, _content)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&(identical(other.totalElements, totalElements) || other.totalElements == totalElements)&&(identical(other.size, size) || other.size == size)&&(identical(other.number, number) || other.number == number));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PageDto<T>&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.page, page) || other.page == page)&&(identical(other.size, size) || other.size == size)&&(identical(other.totalItems, totalItems) || other.totalItems == totalItems)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_content),totalPages,totalElements,size,number);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),page,size,totalItems,totalPages,hasNext);
 
 @override
 String toString() {
-  return 'PageDto<$T>(content: $content, totalPages: $totalPages, totalElements: $totalElements, size: $size, number: $number)';
+  return 'PageDto<$T>(items: $items, page: $page, size: $size, totalItems: $totalItems, totalPages: $totalPages, hasNext: $hasNext)';
 }
 
 
@@ -261,7 +263,7 @@ abstract mixin class _$PageDtoCopyWith<T,$Res> implements $PageDtoCopyWith<T, $R
   factory _$PageDtoCopyWith(_PageDto<T> value, $Res Function(_PageDto<T>) _then) = __$PageDtoCopyWithImpl;
 @override @useResult
 $Res call({
- List<T> content, int totalPages, int totalElements, int size, int number
+ List<T> items, int page, int size, int totalItems, int totalPages, bool hasNext
 });
 
 
@@ -278,14 +280,15 @@ class __$PageDtoCopyWithImpl<T,$Res>
 
 /// Create a copy of PageDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? content = null,Object? totalPages = null,Object? totalElements = null,Object? size = null,Object? number = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? items = null,Object? page = null,Object? size = null,Object? totalItems = null,Object? totalPages = null,Object? hasNext = null,}) {
   return _then(_PageDto<T>(
-content: null == content ? _self._content : content // ignore: cast_nullable_to_non_nullable
-as List<T>,totalPages: null == totalPages ? _self.totalPages : totalPages // ignore: cast_nullable_to_non_nullable
-as int,totalElements: null == totalElements ? _self.totalElements : totalElements // ignore: cast_nullable_to_non_nullable
+items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
+as List<T>,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
 as int,size: null == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
-as int,number: null == number ? _self.number : number // ignore: cast_nullable_to_non_nullable
-as int,
+as int,totalItems: null == totalItems ? _self.totalItems : totalItems // ignore: cast_nullable_to_non_nullable
+as int,totalPages: null == totalPages ? _self.totalPages : totalPages // ignore: cast_nullable_to_non_nullable
+as int,hasNext: null == hasNext ? _self.hasNext : hasNext // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

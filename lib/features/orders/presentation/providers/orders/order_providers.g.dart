@@ -99,52 +99,6 @@ final class OrderRemoteDataSourceProvider
 String _$orderRemoteDataSourceHash() =>
     r'8e69436d9c716e68b18ea006d525611ba0ba1520';
 
-@ProviderFor(mockOrderService)
-final mockOrderServiceProvider = MockOrderServiceProvider._();
-
-final class MockOrderServiceProvider
-    extends
-        $FunctionalProvider<
-          MockOrderService,
-          MockOrderService,
-          MockOrderService
-        >
-    with $Provider<MockOrderService> {
-  MockOrderServiceProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'mockOrderServiceProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$mockOrderServiceHash();
-
-  @$internal
-  @override
-  $ProviderElement<MockOrderService> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  MockOrderService create(Ref ref) {
-    return mockOrderService(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(MockOrderService value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<MockOrderService>(value),
-    );
-  }
-}
-
-String _$mockOrderServiceHash() => r'f28faf34cc961cd49f7170024c301ae9f79900c3';
-
 @ProviderFor(orderRepository)
 final orderRepositoryProvider = OrderRepositoryProvider._();
 
@@ -185,7 +139,7 @@ final class OrderRepositoryProvider
   }
 }
 
-String _$orderRepositoryHash() => r'82b6c64e2d7692084b3cf59f9eaf07ab95955dcb';
+String _$orderRepositoryHash() => r'b113c7bc19a9f8b6f573ecf20ce9f0b704ebad02';
 
 @ProviderFor(getUserOrdersUseCase)
 final getUserOrdersUseCaseProvider = GetUserOrdersUseCaseProvider._();

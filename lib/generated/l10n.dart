@@ -357,7 +357,7 @@ class S {
     final String ratingString = ratingNumberFormat.format(rating);
 
     return Intl.message(
-      '$ratingString',
+      ratingString,
       name: 'rating',
       desc: '',
       args: [ratingString],

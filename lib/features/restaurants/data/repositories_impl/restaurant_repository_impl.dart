@@ -10,7 +10,6 @@ import '../dtos/restaurant_dto.dart';
 import '../dtos/menu_item_dto.dart';
 import '../dtos/get_restaurants_request_dto.dart';
 import '../dtos/search_restaurants_request_dto.dart';
-import '../dtos/nearby_restaurants_request_dto.dart';
 
 class RestaurantRepositoryImpl implements RestaurantRepository {
   final RestaurantRemoteDataSource _remoteDataSource;
@@ -95,36 +94,6 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   }
 
   @override
-  Future<Either<Failure, List<RestaurantEntity>>> getNearbyRestaurants({
-    required double latitude,
-    required double longitude,
-    double? radius,
-  }) async {
-    try {
-      final request = NearbyRestaurantsRequestDto(
-        latitude: latitude,
-        longitude: longitude,
-        radius: radius,
-      );
-
-      final response = await _remoteDataSource.getNearbyRestaurants(request);
-
-      if (response.isSuccess && response.data != null) {
-        final entities = (response.data)!
-            .map((data) => data.toEntity())
-            .toList();
-        return right(entities);
-      } else {
-        return left(ServerFailure(response.message));
-      }
-    } on Exception catch (e) {
-      return left(mapExceptionToFailure(e));
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
-  }
-
-  @override
   Future<Either<Failure, List<RestaurantEntity>>> searchRestaurants({
     required String query,
     double? latitude,
@@ -150,26 +119,6 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
             .map((data) => data.toEntity())
             .toList();
         return right(entities);
-      } else {
-        return left(ServerFailure(response.message));
-      }
-    } on Exception catch (e) {
-      return left(mapExceptionToFailure(e));
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
-  }
-
-  @override
-  Future<Either<Failure, List<String>>> getRestaurantCategories() async {
-    try {
-      final response = await _remoteDataSource.getRestaurantCategories();
-
-      if (response.isSuccess && response.data != null) {
-        final categories = (response.data)!
-            .map((category) => category.toString())
-            .toList();
-        return right(categories);
       } else {
         return left(ServerFailure(response.message));
       }

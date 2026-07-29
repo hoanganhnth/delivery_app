@@ -127,45 +127,6 @@ class _RestaurantApiService implements RestaurantApiService {
   }
 
   @override
-  Future<BaseResponseDto<List<RestaurantDto>>> getNearbyRestaurants(
-    NearbyRestaurantsRequestDto request,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    queryParameters.addAll(request.toJson());
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<BaseResponseDto<List<RestaurantDto>>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/restaurants/nearby',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BaseResponseDto<List<RestaurantDto>> _value;
-    try {
-      _value = BaseResponseDto<List<RestaurantDto>>.fromJson(
-        _result.data!,
-        (json) => json is List<dynamic>
-            ? json
-                  .map<RestaurantDto>(
-                    (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
-                  )
-                  .toList()
-            : List.empty(),
-      );
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
   Future<BaseResponseDto<List<RestaurantDto>>> searchRestaurants(
     SearchRestaurantsRequestDto request,
   ) async {
@@ -195,38 +156,6 @@ class _RestaurantApiService implements RestaurantApiService {
                     (i) => RestaurantDto.fromJson(i as Map<String, dynamic>),
                   )
                   .toList()
-            : List.empty(),
-      );
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<BaseResponseDto<List<String>>> getRestaurantCategories() async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<BaseResponseDto<List<String>>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/restaurants/categories',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BaseResponseDto<List<String>> _value;
-    try {
-      _value = BaseResponseDto<List<String>>.fromJson(
-        _result.data!,
-        (json) => json is List<dynamic>
-            ? json.map<String>((i) => i as String).toList()
             : List.empty(),
       );
     } on Object catch (e, s) {

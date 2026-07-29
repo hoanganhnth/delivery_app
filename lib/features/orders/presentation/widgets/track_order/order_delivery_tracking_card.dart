@@ -31,11 +31,12 @@ class _OrderDeliveryTrackingCardState
     super.initState();
     // Start tracking when widget is created
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (widget.order.id != null) {
+      final orderId = widget.order.id;
+      if (orderId != null && orderId > 0) {
         await ref
             .read(deliveryTrackingProvider.notifier)
             .startTrackingOrderSafe(
-              widget.order.id!,
+              orderId,
               trackingRealtime: widget.order.canTrackingRealtime,
             );
       }
@@ -50,8 +51,14 @@ class _OrderDeliveryTrackingCardState
 
   @override
   Widget build(BuildContext context) {
+    final orderId = widget.order.id;
+    if (orderId == null || orderId <= 0) {
+      return const TrackingErrorMessage(
+        error: 'Không thể theo dõi đơn hàng này.',
+      );
+    }
+
     final trackingState = ref.watch(deliveryTrackingProvider);
-    final connectionAsync = ref.watch(trackingConnectionProvider);
 
     /// ✅ Lắng nghe delivery stream - khi DELIVERED thì ẩn map và refresh order detail
     ref.listen<DeliveryTrackingState>(deliveryTrackingProvider, (prev, next) {
@@ -62,10 +69,11 @@ class _OrderDeliveryTrackingCardState
       if (next.currentTracking != null &&
           prev?.currentTracking?.shipperId != next.currentTracking?.shipperId) {
         final shipperId = next.currentTracking!.shipperId;
-        if (shipperId != null) {
+        final deliveryId = next.currentTracking!.id;
+        if (shipperId != null && deliveryId > 0) {
           ref
               .read(shipperLocationProvider.notifier)
-              .startTrackingShipper(shipperId);
+              .startTrackingShipper(shipperId, deliveryId);
         }
       }
 
@@ -75,10 +83,8 @@ class _OrderDeliveryTrackingCardState
         AppLogger.i(
           '✅ Delivery DELIVERED - refreshing order detail and stopping tracking',
         );
-        if (widget.order.id != null) {
-          ref.invalidate(orderDetailProvider(widget.order.id!));
-          ref.invalidate(deliveryTrackingProvider);
-        }
+        ref.invalidate(orderDetailProvider(orderId));
+        ref.invalidate(deliveryTrackingProvider);
         ref.read(deliveryTrackingProvider.notifier).stopTrackingOrder();
       }
     });
@@ -115,11 +121,7 @@ class _OrderDeliveryTrackingCardState
                     ),
                     const Spacer(),
                     TrackingConnectionStatusBadge(
-                      isConnected: connectionAsync.when(
-                        data: (connected) => connected,
-                        loading: () => false,
-                        error: (_, __) => false,
-                      ),
+                      isConnected: trackingState.hasTracking,
                       isLoading: trackingState.isLoading,
                     ),
                   ],
@@ -135,13 +137,6 @@ class _OrderDeliveryTrackingCardState
                       ref.read(deliveryTrackingProvider.notifier).clearError();
                     },
                   ),
-
-                // TODO: Add back when DTOs are ready
-                // Shipper info when available
-                // if (shipperInfo != null) ...[
-                //   SizedBox(height: 16.w),
-                //   _buildShipperInfo(shipperInfo),
-                // ],
               ],
             ),
           ),
@@ -150,7 +145,7 @@ class _OrderDeliveryTrackingCardState
         SizedBox(height: 16.w),
 
         TrackingRealMapWidget(
-          orderId: widget.order.id ?? 0,
+          orderId: orderId,
           canTrackingRealtime: widget.order.canTrackingRealtime,
         ),
 
@@ -158,5 +153,4 @@ class _OrderDeliveryTrackingCardState
       ],
     );
   }
-
 }

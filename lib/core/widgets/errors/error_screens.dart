@@ -53,9 +53,7 @@ class NotFoundScreen extends StatelessWidget {
 
 /// Generic Error Screen
 class ErrorScreen extends StatelessWidget {
-  final Exception? error;
-  
-  const ErrorScreen({super.key, this.error});
+  const ErrorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -81,24 +79,6 @@ class ErrorScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 16.w),
-              if (error != null) ...[
-                Container(
-                  padding: EdgeInsets.all(12.w),
-                  decoration: BoxDecoration(
-                    color: Colors.red.shade50,
-                    border: Border.all(color: Colors.red.shade200),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    error.toString(),
-                    style: TextStyle(
-                      color: Colors.red.shade700,
-                      fontFamily: 'monospace',
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16.w),
-              ],
               const Text(
                 'Please try again or contact support if the problem persists.',
                 textAlign: TextAlign.center,

@@ -23,11 +23,13 @@ class _AuthTokenStorage implements TokenStorage {
   }
 
   @override
-  Future<void> saveTokens({required String accessToken, required String refreshToken}) async {
-    await ref.read(authProvider.notifier).loginWithTokens(
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-    );
+  Future<void> saveTokens({
+    required String accessToken,
+    required String refreshToken,
+  }) async {
+    await ref
+        .read(authProvider.notifier)
+        .loginWithTokens(accessToken: accessToken, refreshToken: refreshToken);
   }
 
   @override
@@ -43,12 +45,10 @@ class _AuthTokenStorage implements TokenStorage {
 @Riverpod(keepAlive: true)
 Dio authAwareDio(Ref ref) {
   final authNotifier = ref.read(authProvider.notifier);
-  
+
   final dioClient = DioClient(
     tokenStorage: _AuthTokenStorage(ref),
-    onUnauthorized: () {
-      authNotifier.logout();
-    },
+    onUnauthorized: authNotifier.handleUnauthorized,
   );
   return dioClient.dio;
 }

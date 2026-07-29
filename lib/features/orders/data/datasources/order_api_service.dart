@@ -26,11 +26,9 @@ abstract class OrderApiService {
 
   /// Tạo đơn hàng mới với CreateOrderRequestDto
   @POST(ApiConstants.order)
-  Future<BaseResponseDto<OrderDto>> createOrderWithDto(@Body() CreateOrderRequestDto request);
-
-  /// Tạo đơn hàng mới (legacy method)
-  @POST(ApiConstants.order)
-  Future<BaseResponseDto<OrderDto>> createOrder(@Body() OrderDto order);
+  Future<BaseResponseDto<OrderDto>> createOrderWithDto(
+    @Body() CreateOrderRequestDto request,
+  );
 
   // /// Cập nhật trạng thái đơn hàng
   // @PUT('/orders/{id}/status')
@@ -64,11 +62,4 @@ abstract class OrderApiService {
   //   @Query('page') int page,
   //   @Query('limit') int limit,
   // );
-
-  /// Đánh giá shipper
-  @POST(ApiConstants.rateShipper)
-  Future<BaseResponseDto<dynamic>> rateShipper(
-    @Path('shipperId') int shipperId,
-    @Body() Map<String, dynamic> request,
-  );
 }

@@ -16,14 +16,6 @@ import '../providers/providers.dart';
 import '../providers/checkout_preview_provider.dart';
 import '../widgets/widgets.dart';
 import '../../domain/entities/cart_entity.dart';
-import 'package:delivery_app/features/cart/presentation/providers/payment_provider.dart';
-import 'package:delivery_app/features/cart/data/dtos/payment_order_dto.dart';
-import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
-import '../../../promotion/presentation/widgets/voucher_bottom_sheet.dart';
-import '../../../promotion/presentation/providers/checkout_calculation_notifier.dart';
-import '../../../promotion/presentation/providers/selected_vouchers_notifier.dart';
-import '../../../promotion/data/dtos/cart_context_request_dto.dart';
-import 'payment_webview_screen.dart';
 
 /// Checkout Screen với giao diện Amber Hearth
 class CheckoutScreen extends ConsumerStatefulWidget {
@@ -34,12 +26,14 @@ class CheckoutScreen extends ConsumerStatefulWidget {
 }
 
 class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
-  PaymentMethod _selectedPaymentMethod = PaymentMethod.cod;
   final TextEditingController _notesController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _loadCheckoutPreview();
+    });
   }
 
   @override
@@ -56,24 +50,35 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     final addressState = ref.read(userAddressListProvider);
     final selectedAddress =
         addressState.selectedAddress ?? addressState.defaultAddress;
+    final restaurantId = _positiveInt(cart.currentRestaurantId);
+    final deliveryLat = selectedAddress?.latitude;
+    final deliveryLng = selectedAddress?.longitude;
+    final previewNotifier = ref.read(checkoutPreviewProvider.notifier);
+    if (restaurantId == null ||
+        !_isVietnamCoordinate(deliveryLat, deliveryLng) ||
+        !_hasValidCartItems(cart)) {
+      previewNotifier.reset();
+      return;
+    }
 
     try {
       final request = CheckoutPreviewRequest(
-        restaurantId: cart.currentRestaurantId! as int,
-        deliveryLat: selectedAddress?.latitude,
-        deliveryLng: selectedAddress?.longitude,
+        restaurantId: restaurantId,
+        deliveryLat: deliveryLat!,
+        deliveryLng: deliveryLng!,
         items: cart.items
             .map(
               (item) => CheckoutPreviewItemRequest(
-                menuItemId: item.menuItemId as int,
+                menuItemId: _positiveInt(item.menuItemId)!,
                 quantity: item.quantity,
               ),
             )
             .toList(),
       );
 
-      await ref.read(checkoutPreviewProvider.notifier).loadPreview(request);
+      await previewNotifier.loadPreview(request);
     } catch (_) {
+      previewNotifier.reset();
       // Errors are handled by watching the provider state
     }
   }
@@ -105,47 +110,15 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     );
   }
 
-  double _calculateLocalDiscount(
-    List<int> selectedIds,
-    CheckoutPreviewResponse? preview,
-  ) {
-    final calcState = ref.read(checkoutCalculationProvider).value;
-    if (calcState == null) return 0.0;
-
-    double totalDiscount = 0.0;
-    for (var id in selectedIds) {
-      final voucher = calcState.availableVouchers
-          .where((v) => v.id == id)
-          .firstOrNull;
-      if (voucher != null) {
-        if (voucher.rewardType == 'FIXED') {
-          totalDiscount += voucher.discountValue;
-        } else if (voucher.rewardType == 'PERCENTAGE') {
-          totalDiscount +=
-              (preview?.subtotal ?? 0) * voucher.discountValue / 100.0;
-        } else if (voucher.rewardType == 'FREESHIP') {
-          totalDiscount += (preview?.shippingFee ?? 0);
-        }
-      }
-    }
-    return totalDiscount;
-  }
-
   // Amber Hearth design tokens
   @override
   Widget build(BuildContext context) {
     final cartAsyncValue = ref.watch(cartProvider);
     final createOrderState = ref.watch(createOrderProvider);
-    final calculateState = ref.watch(checkoutCalculationProvider);
-    final selectedVouchers = ref.watch(selectedVouchersProvider);
     final previewState = ref.watch(checkoutPreviewProvider);
     final s = S.of(context);
 
     final previewData = previewState.value;
-    final localDiscount = _calculateLocalDiscount(
-      selectedVouchers,
-      previewData,
-    );
 
     // Listen to create order state for success/error
     ref.listen<AsyncValue<OrderEntity?>>(createOrderProvider, (prev, next) {
@@ -158,7 +131,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           }
         },
         error: (error, stackTrace) {
-          ToastUtils.showOrderPlacedError(context, message: error.toString());
+          ToastUtils.showOrderPlacedError(context);
         },
       );
     });
@@ -171,19 +144,6 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       next.whenOrNull(
         data: (preview) {
           if (preview != null) {
-            // Fetch promotions
-            final cart = ref.read(cartProvider).value;
-            final userId = ref.read(profileProvider).user?.id;
-            if (cart != null && userId != null) {
-              final req = CartContextRequestDto(
-                shopId: cart.currentRestaurantId! as int,
-                userId: userId,
-                subTotal: preview.subtotal ?? 0,
-                shippingFee: preview.shippingFee ?? 0,
-              );
-              ref.read(checkoutCalculationProvider.notifier).calculate(req);
-            }
-
             // Hiển thị cảnh báo nếu có món hết hàng
             if (preview.unavailableItemIds != null &&
                 preview.unavailableItemIds!.isNotEmpty) {
@@ -225,7 +185,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 ),
                 SizedBox(height: 16.w),
                 Text(
-                  'Error: ${error.toString()}',
+                  'Không thể tải thông tin thanh toán. Vui lòng thử lại.',
                   style: TextStyle(
                     color: const Color(0xFFBA1A1A),
                     fontSize: 14.sp,
@@ -346,16 +306,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                           icon: Icons.payment_outlined,
                         ),
                         SizedBox(height: 8.w),
-                        CheckoutSectionCard(
-                          child: PaymentMethodCard(
-                            selectedPaymentMethod: _selectedPaymentMethod,
-                            onPaymentMethodChanged: (method) {
-                              setState(() {
-                                _selectedPaymentMethod = method;
-                              });
-                            },
-                          ),
-                        ),
+                        CheckoutSectionCard(child: const PaymentMethodCard()),
                         SizedBox(height: 16.w),
 
                         // Order Items Summary
@@ -365,72 +316,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                         ),
                         SizedBox(height: 8.w),
                         CheckoutSectionCard(
-                          child: OrderSummaryCard(cart: cart, preview: previewData),
-                        ),
-                        SizedBox(height: 16.w),
-
-                        // Voucher Section
-                        CheckoutSectionHeader(
-                          title: s.checkoutPromoTitle,
-                          icon: Icons.local_offer_outlined,
-                        ),
-                        SizedBox(height: 8.w),
-                        CheckoutSectionCard(
-                          child: Consumer(
-                            builder: (context, ref, child) {
-                              final selectedVouchers = ref.watch(
-                                selectedVouchersProvider,
-                              );
-
-                              String text = s.checkoutSelectPromo;
-                              Color textColor = Colors.grey.shade600;
-
-                              if (selectedVouchers.isNotEmpty) {
-                                text = s.checkoutSelectedPromo(selectedVouchers.length);
-                                textColor = Colors.amber.shade700;
-                              }
-
-                              return InkWell(
-                                onTap: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    isScrollControlled: true,
-                                    backgroundColor: Colors.transparent,
-                                    builder: (context) =>
-                                        const VoucherBottomSheet(),
-                                  );
-                                },
-                                borderRadius: BorderRadius.circular(12.w),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 16.w,
-                                    vertical: 12.w,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        text,
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight:
-                                              selectedVouchers.isNotEmpty
-                                              ? FontWeight.bold
-                                              : FontWeight.normal,
-                                          color: textColor,
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 14.w,
-                                        color: Colors.grey,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
+                          child: OrderSummaryCard(
+                            cart: cart,
+                            preview: previewData,
                           ),
                         ),
                         SizedBox(height: 16.w),
@@ -456,25 +344,17 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 CheckoutBottomSection(
                   cart: cart,
                   isLoading:
-                      previewState.isLoading ||
-                      calculateState.isLoading ||
-                      createOrderState.isLoading ||
-                      ref.watch(paymentProvider).isLoading,
+                      previewState.isLoading || createOrderState.isLoading,
                   buttonText: previewState.isLoading
                       ? s.checkoutLoadingPrice
-                      : (_selectedPaymentMethod == PaymentMethod.wallet
-                            ? s.checkoutPayBtn
-                            : s.checkoutOrderBtn),
-                  onPlaceOrder: previewState.isLoading
-                      ? () {}
-                      : () => _placeOrder(cart, selectedVouchers),
-                  serverSubtotal: previewData?.subtotal ?? cart.totalAmount,
+                      : s.checkoutOrderBtn,
+                  onPlaceOrder: previewData == null
+                      ? null
+                      : () => _placeOrder(cart),
+                  serverSubtotal: previewData?.subtotal,
                   serverShippingFee: previewData?.shippingFee,
-                  serverDiscount:
-                      (previewData?.discountAmount ?? 0) + localDiscount,
-                  serverTotal: previewData?.totalPrice != null
-                      ? (previewData!.totalPrice! - localDiscount)
-                      : (cart.totalAmount - localDiscount),
+                  serverDiscount: previewData?.discountAmount,
+                  serverTotal: previewData?.totalPrice,
                 ),
               ],
             ),
@@ -484,13 +364,19 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     );
   }
 
-  Future<void> _placeOrder(CartEntity cart, List<int> voucherIds) async {
+  Future<void> _placeOrder(CartEntity cart) async {
     final s = S.of(context);
     final addressState = ref.read(userAddressListProvider);
     final selectedAddress =
         addressState.selectedAddress ?? addressState.defaultAddress;
+    final restaurantId = _positiveInt(cart.currentRestaurantId);
+    final deliveryLat = selectedAddress?.latitude;
+    final deliveryLng = selectedAddress?.longitude;
 
-    if (selectedAddress == null || cart.currentRestaurantId == null) {
+    if (selectedAddress == null ||
+        restaurantId == null ||
+        !_isVietnamCoordinate(deliveryLat, deliveryLng) ||
+        !_hasValidCartItems(cart)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(s.checkoutAddressRequired),
@@ -504,113 +390,84 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       return;
     }
 
-    // Sử dụng giá từ server preview nếu có, fallback giá local
     final preview = ref.read(checkoutPreviewProvider).value;
-    final items = preview?.items != null
-        ? preview!.items!
-              .map<OrderItemRequest>(
-                (item) {
-                  // Match with cart item to get flashSaleItemId
-                  final cartItem = cart.items
-                      .where((c) => c.menuItemId == item.menuItemId)
-                      .firstOrNull;
-                  return OrderItemRequest(
-                    menuItemId: item.menuItemId!,
-                    menuItemName: item.menuItemName ?? '',
-                    quantity: item.quantity ?? 1,
-                    price: item.unitPrice ?? 0,
-                    flashSaleItemId: cartItem?.flashSaleItemId,
-                  );
-                },
-              )
-              .toList()
-        : cart.items
-              .map<OrderItemRequest>(
-                (item) => OrderItemRequest(
-                  menuItemId: item.menuItemId as int,
-                  menuItemName: item.menuItemName,
-                  quantity: item.quantity,
-                  price: item.price,
-                  flashSaleItemId: item.flashSaleItemId,
-                ),
-              )
-              .toList();
+    final previewRequest = CheckoutPreviewRequest(
+      restaurantId: restaurantId,
+      deliveryLat: deliveryLat!,
+      deliveryLng: deliveryLng!,
+      items: cart.items
+          .map(
+            (item) => CheckoutPreviewItemRequest(
+              menuItemId: _positiveInt(item.menuItemId)!,
+              quantity: item.quantity,
+            ),
+          )
+          .toList(growable: false),
+    );
+    try {
+      preview?.validateFor(previewRequest);
+    } on FormatException {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Giá đơn hàng chưa được xác nhận. Vui lòng thử lại.'),
+        ),
+      );
+      return;
+    }
+    if (preview == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Giá đơn hàng chưa được xác nhận. Vui lòng thử lại.'),
+        ),
+      );
+      return;
+    }
+
+    final items = cart.items
+        .map<OrderItemRequest>(
+          (item) => OrderItemRequest(
+            menuItemId: _positiveInt(item.menuItemId)!,
+            quantity: item.quantity,
+            notes: item.notes,
+          ),
+        )
+        .toList(growable: false);
 
     final request = CreateOrderRequestDto(
-      restaurantId: cart.currentRestaurantId! as int,
-      restaurantName:
-          preview?.restaurantName ?? cart.currentRestaurantName ?? '',
-      restaurantAddress: 'server-validated', // Server sẽ lấy từ DB
-      restaurantPhone: '0000000000', // Server sẽ lấy từ DB
+      restaurantId: restaurantId,
       deliveryAddress: selectedAddress.fullAddress,
-      deliveryLat: selectedAddress.latitude,
-      deliveryLng: selectedAddress.longitude,
+      deliveryLat: deliveryLat,
+      deliveryLng: deliveryLng,
       customerName: selectedAddress.recipientName,
       customerPhone: selectedAddress.phoneNumber,
-      paymentMethod: _selectedPaymentMethod == PaymentMethod.wallet
-          ? 'ONLINE'
-          : 'COD',
+      paymentMethod: 'COD',
       notes: _notesController.text,
-      voucherIds: voucherIds,
       items: items,
     );
 
-    if (_selectedPaymentMethod == PaymentMethod.wallet) {
-      // Xử lý luồng thanh toán ONLINE
-      try {
-        final user = ref.read(profileProvider).user;
-        if (user == null) {
-          ToastUtils.showOrderPlacedError(
-            context,
-            message: 'Lỗi: Không tìm thấy thông tin người dùng.',
-          );
-          return;
-        }
+    ref.read(createOrderProvider.notifier).createOrder(request);
+  }
 
-        // Dùng totalPrice từ server preview
-        final amount = preview?.totalPrice ?? cart.totalAmount;
+  static int? _positiveInt(num? value) {
+    return value is int && value > 0 ? value : null;
+  }
 
-        final paymentDto = CreatePaymentDto(
-          entityId: user.id!,
-          entityType: 'CUSTOMER',
-          amount: amount,
-          provider: 'VNPAY',
-          purpose: 'ORDER_PAYMENT',
+  static bool _hasValidCartItems(CartEntity cart) {
+    return cart.items.isNotEmpty &&
+        cart.items.every(
+          (item) => _positiveInt(item.menuItemId) != null && item.quantity > 0,
         );
+  }
 
-        final paymentOrder = await ref
-            .read(paymentProvider.notifier)
-            .createPayment(paymentDto);
-
-        if (paymentOrder != null && paymentOrder.paymentUrl != null) {
-          if (mounted) {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => PaymentWebViewScreen(
-                  paymentUrl: paymentOrder.paymentUrl!,
-                  paymentRef: paymentOrder.paymentRef,
-                  cart: cart,
-                  orderRequest: request,
-                ),
-              ),
-            );
-          }
-        } else {
-          if (mounted) {
-            ToastUtils.showOrderPlacedError(
-              context,
-              message: 'Lỗi: Không lấy được URL thanh toán.',
-            );
-          }
-        }
-      } catch (e) {
-        if (mounted) {
-          ToastUtils.showOrderPlacedError(context, message: e.toString());
-        }
-      }
-    } else {
-      // COD - Tạo đơn trực tiếp
-      ref.read(createOrderProvider.notifier).createOrder(request);
-    }
+  static bool _isVietnamCoordinate(double? latitude, double? longitude) {
+    return latitude != null &&
+        longitude != null &&
+        latitude.isFinite &&
+        longitude.isFinite &&
+        latitude >= 8.0 &&
+        latitude <= 24.0 &&
+        longitude >= 102.0 &&
+        longitude <= 110.0;
   }
 }

@@ -295,54 +295,6 @@ final class UpdateUserProfileUseCaseProvider
 String _$updateUserProfileUseCaseHash() =>
     r'5dc3ae3b2d0ca760057fab814e9a20f28df37d5f';
 
-@ProviderFor(uploadAvatarUseCase)
-final uploadAvatarUseCaseProvider = UploadAvatarUseCaseProvider._();
-
-final class UploadAvatarUseCaseProvider
-    extends
-        $FunctionalProvider<
-          UploadAvatarUseCase,
-          UploadAvatarUseCase,
-          UploadAvatarUseCase
-        >
-    with $Provider<UploadAvatarUseCase> {
-  UploadAvatarUseCaseProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'uploadAvatarUseCaseProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$uploadAvatarUseCaseHash();
-
-  @$internal
-  @override
-  $ProviderElement<UploadAvatarUseCase> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
-
-  @override
-  UploadAvatarUseCase create(Ref ref) {
-    return uploadAvatarUseCase(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(UploadAvatarUseCase value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<UploadAvatarUseCase>(value),
-    );
-  }
-}
-
-String _$uploadAvatarUseCaseHash() =>
-    r'7a74884cb229ce0f75cc218b657b8efe7d12460b';
-
 @ProviderFor(clearProfileCacheUseCase)
 final clearProfileCacheUseCaseProvider = ClearProfileCacheUseCaseProvider._();
 

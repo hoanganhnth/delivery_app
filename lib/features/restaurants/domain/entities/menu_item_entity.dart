@@ -13,18 +13,14 @@ sealed class MenuItemEntity with _$MenuItemEntity {
     required String description,
     required double price,
     String? image,
-   @MenuItemStatusConverter() required MenuItemStatus status,
+    @MenuItemStatusConverter() required MenuItemStatus status,
   }) = _MenuItemEntity;
 
   factory MenuItemEntity.fromJson(Map<String, dynamic> json) =>
       _$MenuItemEntityFromJson(json);
 }
 
-enum MenuItemStatus {
-  available,
-  unavailable,
-  soldOut,
-}
+enum MenuItemStatus { available, unavailable, soldOut }
 
 /// Extension methods for MenuItemEntity to work with Cart
 extension MenuItemToCartExtension on MenuItemEntity {
@@ -44,7 +40,13 @@ extension MenuItemToCartExtension on MenuItemEntity {
 
   /// Check if this menu item can be added to cart
   bool get canAddToCart {
-    return status == MenuItemStatus.available && id != null;
+    return status == MenuItemStatus.available &&
+        id != null &&
+        id! > 0 &&
+        restaurantId != null &&
+        restaurantId! > 0 &&
+        name.trim().isNotEmpty &&
+        price > 0;
   }
 
   /// Get display status text
@@ -59,8 +61,6 @@ extension MenuItemToCartExtension on MenuItemEntity {
     }
   }
 }
-
-
 
 class MenuItemStatusConverter implements JsonConverter<MenuItemStatus, String> {
   const MenuItemStatusConverter();

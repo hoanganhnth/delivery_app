@@ -32,6 +32,7 @@ IAppInitializerService appInitializerService(Ref ref) {
     cleanupTasks: [
       () async => profileNotifier.clearProfileCache(),
       () async {
+        if (!authNotifier.isAuthenticated) return;
         try {
           await pushService.unregisterToken();
         } catch (e) {

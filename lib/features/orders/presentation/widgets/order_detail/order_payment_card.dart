@@ -9,10 +9,7 @@ import 'order_price_row.dart';
 class OrderPaymentCard extends StatelessWidget {
   final OrderEntity order;
 
-  const OrderPaymentCard({
-    super.key,
-    required this.order,
-  });
+  const OrderPaymentCard({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {
@@ -48,15 +45,25 @@ class OrderPaymentCard extends StatelessWidget {
             Divider(height: 20.w),
             OrderPriceRow(
               label: S.of(context).subtotal,
-              amount: _calculateSubtotal(),
+              amount: order.subtotalPrice ?? _calculateSubtotal(),
               isTotal: false,
             ),
-            SizedBox(height: 8.w),
-            OrderPriceRow(
-              label: S.of(context).deliveryFee,
-              amount: _getDeliveryFee(),
-              isTotal: false,
-            ),
+            if (order.discountAmount != null && order.discountAmount! > 0) ...[
+              SizedBox(height: 8.w),
+              OrderPriceRow(
+                label: 'Giảm giá',
+                amount: -order.discountAmount!,
+                isTotal: false,
+              ),
+            ],
+            if (order.shippingFee != null) ...[
+              SizedBox(height: 8.w),
+              OrderPriceRow(
+                label: S.of(context).deliveryFee,
+                amount: order.shippingFee!,
+                isTotal: false,
+              ),
+            ],
             Divider(height: 20.w),
             OrderPriceRow(
               label: S.of(context).total,
@@ -82,10 +89,5 @@ class OrderPaymentCard extends StatelessWidget {
 
   double _calculateSubtotal() {
     return order.items.fold(0.0, (sum, item) => sum + item.totalPrice);
-  }
-
-  double _getDeliveryFee() {
-    // Mock delivery fee - in real app this would come from order data
-    return order.totalAmount * 0.1; // 10% delivery fee as example
   }
 }

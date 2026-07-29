@@ -42,7 +42,7 @@ final class RestaurantsNotifierProvider
 }
 
 String _$restaurantsNotifierHash() =>
-    r'544def9754f955820407acecb7df443d03bc70f6';
+    r'7f2a692e9f78471ff1b9c750b2959e06ea90fc47';
 
 abstract class _$RestaurantsNotifier extends $Notifier<RestaurantsState> {
   RestaurantsState build();

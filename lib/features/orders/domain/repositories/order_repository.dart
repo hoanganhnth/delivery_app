@@ -6,17 +6,19 @@ import '../../data/dtos/create_order_request_dto.dart';
 /// Repository interface for order management
 abstract class OrderRepository {
   /// Lấy danh sách đơn hàng của người dùng
-  Future<Either<Failure, List<OrderEntity>>> getUserOrders({int page = 0, int size = 20});
+  Future<Either<Failure, List<OrderEntity>>> getUserOrders({
+    int page = 0,
+    int size = 20,
+  });
 
   /// Lấy chi tiết đơn hàng theo ID
   Future<Either<Failure, OrderEntity>> getOrderById(num orderId);
 
   /// Tạo đơn hàng mới với CreateOrderRequestDto
-  Future<Either<Failure, OrderEntity>> createOrder(CreateOrderRequestDto request);
+  Future<Either<Failure, OrderEntity>> createOrder(
+    CreateOrderRequestDto request,
+  );
 
   /// Hủy đơn hàng
   Future<Either<Failure, bool>> cancelOrder(int orderId, {String? reason});
-
-  /// Đánh giá shipper
-  Future<Either<Failure, bool>> rateShipper(int shipperId, int orderId, int rating, String? comment);
 }

@@ -7,7 +7,6 @@ import 'package:delivery_app/features/profile/domain/repositories/profile_reposi
 import 'package:delivery_app/features/profile/domain/usecases/clear_profile_cache_usecase.dart';
 import 'package:delivery_app/features/profile/domain/usecases/get_user_profile_usecase.dart';
 import 'package:delivery_app/features/profile/domain/usecases/update_user_profile_usecase.dart';
-import 'package:delivery_app/features/profile/domain/usecases/upload_avatar_usecase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'profile_providers.g.dart';
@@ -49,12 +48,6 @@ GetUserProfileUseCase getUserProfileUseCase(Ref ref) {
 UpdateUserProfileUseCase updateUserProfileUseCase(Ref ref) {
   final repository = ref.watch(profileRepositoryProvider);
   return UpdateUserProfileUseCase(repository);
-}
-
-@Riverpod(keepAlive: true)
-UploadAvatarUseCase uploadAvatarUseCase(Ref ref) {
-  final repository = ref.watch(profileRepositoryProvider);
-  return UploadAvatarUseCase(repository);
 }
 
 @Riverpod(keepAlive: true)

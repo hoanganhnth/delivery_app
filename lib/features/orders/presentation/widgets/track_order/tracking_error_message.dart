@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 class TrackingErrorMessage extends StatelessWidget {
   final String error;
-  final VoidCallback onClear;
+  final VoidCallback? onClear;
 
-  const TrackingErrorMessage({
-    super.key,
-    required this.error,
-    required this.onClear,
-  });
+  const TrackingErrorMessage({super.key, required this.error, this.onClear});
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +26,11 @@ class TrackingErrorMessage extends StatelessWidget {
               style: TextStyle(color: Colors.red.shade800, fontSize: 14.sp),
             ),
           ),
-          IconButton(
-            onPressed: onClear,
-            icon: Icon(Icons.close, color: Colors.red.shade600, size: 20),
-          ),
+          if (onClear != null)
+            IconButton(
+              onPressed: onClear,
+              icon: Icon(Icons.close, color: Colors.red.shade600, size: 20),
+            ),
         ],
       ),
     );

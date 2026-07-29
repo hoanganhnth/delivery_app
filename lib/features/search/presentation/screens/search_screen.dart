@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/features/search/presentation/providers/search_providers.dart';
 import 'package:delivery_app/features/search/presentation/widgets/dish_search_results.dart';
 import 'package:delivery_app/features/search/presentation/widgets/restaurant_search_results.dart';
-import 'package:delivery_app/features/search/presentation/widgets/shipper_search_results.dart';
 
 class SearchScreen extends ConsumerWidget {
   const SearchScreen({super.key});
@@ -40,23 +39,24 @@ class SearchScreen extends ConsumerWidget {
             children: [
               _buildTab(context, ref, 'Dishes', 0, tabIndex),
               _buildTab(context, ref, 'Restaurants', 1, tabIndex),
-              _buildTab(context, ref, 'Shippers', 2, tabIndex),
             ],
           ),
         ),
       ),
       body: IndexedStack(
         index: tabIndex,
-        children: const [
-          DishSearchResults(),
-          RestaurantSearchResults(),
-          ShipperSearchResults(),
-        ],
+        children: const [DishSearchResults(), RestaurantSearchResults()],
       ),
     );
   }
 
-  Widget _buildTab(BuildContext context, WidgetRef ref, String title, int index, int currentIndex) {
+  Widget _buildTab(
+    BuildContext context,
+    WidgetRef ref,
+    String title,
+    int index,
+    int currentIndex,
+  ) {
     final isSelected = index == currentIndex;
     return InkWell(
       onTap: () => ref.read(searchFilterTabProvider.notifier).setTab(index),
@@ -65,7 +65,9 @@ class SearchScreen extends ConsumerWidget {
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: isSelected ? Theme.of(context).primaryColor : Colors.transparent,
+              color: isSelected
+                  ? Theme.of(context).primaryColor
+                  : Colors.transparent,
               width: 2,
             ),
           ),

@@ -16,7 +16,6 @@ class GuardManager {
     final publicRoutes = [
       AppRoutes.login,
       AppRoutes.register,
-      AppRoutes.forgotPassword,
       AppRoutes.splash,
       AppRoutes.root,
     ];
@@ -29,8 +28,7 @@ class GuardManager {
     }
 
     if (_authChecker.isAuthenticated &&
-        (currentPath == AppRoutes.login ||
-            currentPath == AppRoutes.register)) {
+        (currentPath == AppRoutes.login || currentPath == AppRoutes.register)) {
       return AppRoutes.home;
     }
 
@@ -50,7 +48,6 @@ class GuardManager {
     final publicRoutes = [
       AppRoutes.login,
       AppRoutes.register,
-      AppRoutes.forgotPassword,
       AppRoutes.splash,
       AppRoutes.root,
     ];

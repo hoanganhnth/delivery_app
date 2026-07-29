@@ -31,7 +31,8 @@ class _OrderCardState extends ConsumerState<OrderCard> {
   @override
   Widget build(BuildContext context) {
     final colors = ref.colors;
-    final isActive = widget.order.status == OrderStatus.pending ||
+    final isActive =
+        widget.order.status == OrderStatus.pending ||
         widget.order.status == OrderStatus.delivering;
     final isCompleted = widget.order.status == OrderStatus.delivered;
     final isCancelled = widget.order.status == OrderStatus.cancelled;
@@ -53,8 +54,8 @@ class _OrderCardState extends ConsumerState<OrderCard> {
               color: isActive
                   ? colors.border
                   : isCancelled
-                      ? colors.border.withValues(alpha: 0.5)
-                      : Colors.transparent,
+                  ? colors.border.withValues(alpha: 0.5)
+                  : Colors.transparent,
               width: 1,
             ),
             boxShadow: [
@@ -87,19 +88,22 @@ class _OrderCardState extends ConsumerState<OrderCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
-                              child: Text(
-                                _getRestaurantName(),
-                                style: TextStyle(
-                                  fontSize: ResponsiveSize.fontXl,
-                                  fontWeight: FontWeight.w900,
-                                  color: colors.textPrimary,
-                                  letterSpacing: -0.5,
+                            if (_restaurantName != null)
+                              Expanded(
+                                child: Text(
+                                  _restaurantName!,
+                                  style: TextStyle(
+                                    fontSize: ResponsiveSize.fontXl,
+                                    fontWeight: FontWeight.w900,
+                                    color: colors.textPrimary,
+                                    letterSpacing: -0.5,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
+                              )
+                            else
+                              const Spacer(),
                             SizedBox(width: ResponsiveSize.s),
                             _OrderStatusBadge(status: widget.order.status),
                           ],
@@ -125,7 +129,7 @@ class _OrderCardState extends ConsumerState<OrderCard> {
                             // Price
                             Expanded(
                               child: Text(
-                                '\$${widget.order.totalAmount.toStringAsFixed(2)}',
+                                _formatVnd(widget.order.totalAmount),
                                 style: TextStyle(
                                   fontSize: ResponsiveSize.fontL,
                                   fontWeight: FontWeight.w900,
@@ -157,16 +161,19 @@ class _OrderCardState extends ConsumerState<OrderCard> {
     );
   }
 
+  String? get _restaurantName {
+    final value = widget.order.restaurantName?.trim();
+    return value == null || value.isEmpty ? null : value;
+  }
 
-
-  String _getRestaurantName() {
-    // Get restaurant name from first item if available
-    if (widget.order.items.isNotEmpty &&
-        widget.order.items.first.menuItemName.isNotEmpty) {
-      final firstWord = widget.order.items.first.menuItemName.split(' ').first;
-      return '$firstWord Restaurant';
+  String _formatVnd(double amount) {
+    final digits = amount.round().toString();
+    final buffer = StringBuffer();
+    for (var index = 0; index < digits.length; index++) {
+      if (index > 0 && (digits.length - index) % 3 == 0) buffer.write('.');
+      buffer.write(digits[index]);
     }
-    return 'Restaurant #${widget.order.id ?? 0}';
+    return '${buffer.toString()} ₫';
   }
 
   String _formatDate(DateTime? dateTime) {
@@ -194,7 +201,7 @@ class _OrderCardState extends ConsumerState<OrderCard> {
         'Sep',
         'Oct',
         'Nov',
-        'Dec'
+        'Dec',
       ];
       return '${months[dateTime.month - 1]} ${dateTime.day}';
     }
@@ -258,7 +265,11 @@ class OrderCardImage extends StatelessWidget {
   final AppColors colors;
   final bool isCancelled;
 
-  const OrderCardImage({super.key, required this.colors, required this.isCancelled});
+  const OrderCardImage({
+    super.key,
+    required this.colors,
+    required this.isCancelled,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -272,7 +283,9 @@ class OrderCardImage extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(ResponsiveSize.radiusL),
-        child: OrderCardPlaceholderImage(colors: colors), // Always use placeholder for now
+        child: OrderCardPlaceholderImage(
+          colors: colors,
+        ), // Always use placeholder for now
       ),
     );
   }
@@ -286,11 +299,7 @@ class OrderCardPlaceholderImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Icon(
-        Icons.restaurant,
-        color: colors.primary,
-        size: 40.w,
-      ),
+      child: Icon(Icons.restaurant, color: colors.primary, size: 40.w),
     );
   }
 }
@@ -338,12 +347,12 @@ class OrderCardActionButton extends StatelessWidget {
       onTap: actionOnTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-        decoration: actionOnTap != null 
-          ? BoxDecoration(
-              color: colors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(ResponsiveSize.radiusM),
-            )
-          : null,
+        decoration: actionOnTap != null
+            ? BoxDecoration(
+                color: colors.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(ResponsiveSize.radiusM),
+              )
+            : null,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -363,4 +372,3 @@ class OrderCardActionButton extends StatelessWidget {
     );
   }
 }
-

@@ -27,8 +27,10 @@ class Validators {
     final digitsOnly = phone.replaceAll(RegExp(r'\D'), '');
     return digitsOnly.length >= 10 && digitsOnly.length <= 15;
   }
+
   static bool isEmailValid(String email) {
-    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
+    final normalized = email.trim();
+    return RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(normalized);
   }
 
   static bool isPasswordValid(String password) {
@@ -39,7 +41,7 @@ class Validators {
     // Check file extension
     final allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
     final extension = imagePath.toLowerCase().split('.').last;
-    
+
     if (!allowedExtensions.any((ext) => ext.contains(extension))) {
       return 'Please select a valid image file (JPG, PNG, GIF, WebP)';
     }

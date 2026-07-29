@@ -1,173 +1,250 @@
 import 'dart:async';
+
 import 'package:dio/dio.dart';
+
 import '../../../constants/api_constants.dart';
 import '../../../error/exceptions.dart';
 import '../../../utils/logger/app_logger.dart';
 import '../token_storage.dart';
 
+typedef UnauthorizedCallback = FutureOr<void> Function();
+
 class _PendingRequest {
   final RequestOptions requestOptions;
-  final Completer<Response> completer;
-  final ErrorInterceptorHandler handler;
+  final Completer<Response<dynamic>> completer;
 
-  _PendingRequest({
-    required this.requestOptions,
-    required this.completer,
-    required this.handler,
-  });
+  _PendingRequest({required this.requestOptions, required this.completer});
 }
 
 class AuthInterceptor extends Interceptor {
+  static const skipAuthRefreshKey = 'skipAuthRefresh';
+  static const _authRetryKey = 'authRetry';
+
+  static const _publicAuthPaths = <String>{
+    ApiConstants.login,
+    ApiConstants.register,
+    ApiConstants.socialLogin,
+    ApiConstants.refreshToken,
+  };
+
   final Dio dio;
+  final Dio? refreshDio;
   final TokenStorage? tokenStorage;
-  final void Function()? onUnauthorized;
+  final UnauthorizedCallback? onUnauthorized;
 
   bool _isRefreshing = false;
+  bool _unauthorizedNotified = false;
   final _pendingRequests = <_PendingRequest>[];
 
   AuthInterceptor({
     required this.dio,
+    this.refreshDio,
     this.tokenStorage,
     this.onUnauthorized,
   });
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     if (tokenStorage != null) {
       final token = await tokenStorage!.getAccessToken();
       if (token != null && token.isNotEmpty) {
-        options.headers["Authorization"] = "Bearer $token";
+        options.headers['Authorization'] = 'Bearer $token';
+        _unauthorizedNotified = false;
       }
     }
-    options.headers["App-Version"] = "1.0.0";
+    options.headers['App-Version'] = '1.0.0';
     handler.next(options);
   }
 
   @override
-  void onError(DioException err, ErrorInterceptorHandler handler) async {
-    // Only handle 401 Unauthorized
-    if (err.response?.statusCode == 401 && tokenStorage != null) {
-      
-      // If a refresh is already in progress, queue this request
-      if (_isRefreshing) {
-        final completer = Completer<Response>();
-        _pendingRequests.add(_PendingRequest(
+  Future<void> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
+    if (!_shouldAttemptRefresh(err)) {
+      handler.next(err);
+      return;
+    }
+
+    if (err.requestOptions.extra[_authRetryKey] == true) {
+      await _handleUnauthorized(
+        err,
+        handler,
+        'Request remained unauthorized after token refresh',
+      );
+      return;
+    }
+
+    if (_isRefreshing) {
+      final completer = Completer<Response<dynamic>>();
+      _pendingRequests.add(
+        _PendingRequest(
           requestOptions: err.requestOptions,
           completer: completer,
-          handler: handler,
-        ));
-        
-        // Wait for the token to be refreshed
-        try {
-          final response = await completer.future;
-          return handler.resolve(response);
-        } catch (e) {
-          if (e is DioException) {
-            return handler.reject(e);
-          } else {
-            return handler.reject(DioException(
-              requestOptions: err.requestOptions,
-              error: e,
-            ));
-          }
-        }
-      }
-
-      // Start token refresh
-      _isRefreshing = true;
-      AppLogger.d("🔐 Starting token refresh...");
+        ),
+      );
 
       try {
-        final refreshToken = await tokenStorage!.getRefreshToken();
-        
-        if (refreshToken == null || refreshToken.isEmpty) {
-          _handleUnauthorized(err, handler, "No refresh token available");
-          return;
-        }
-
-        // Use a new Dio instance to avoid interceptor loops
-        final refreshDio = Dio(dio.options);
-        final refreshResponse = await refreshDio.post(
-          ApiConstants.refreshToken,
-          data: {'refreshToken': refreshToken},
+        handler.resolve(await completer.future);
+      } on DioException catch (error) {
+        handler.reject(error);
+      } catch (error) {
+        handler.reject(
+          DioException(requestOptions: err.requestOptions, error: error),
         );
+      }
+      return;
+    }
 
-        if (refreshResponse.statusCode == 200 && refreshResponse.data != null) {
-          final data = refreshResponse.data['data'];
-          if (data != null) {
-            final newAccessToken = data['accessToken'];
-            final newRefreshToken = data['refreshToken'];
+    _isRefreshing = true;
+    AppLogger.d('Starting token refresh');
 
-            if (newAccessToken != null && newRefreshToken != null) {
-              await tokenStorage!.saveTokens(
-                accessToken: newAccessToken,
-                refreshToken: newRefreshToken,
-              );
+    try {
+      final refreshToken = await tokenStorage!.getRefreshToken();
+      if (refreshToken == null || refreshToken.isEmpty) {
+        await _handleUnauthorized(err, handler, 'No refresh token available');
+        return;
+      }
 
-              AppLogger.i("✅ Token refreshed successfully, resuming ${_pendingRequests.length} queued requests");
-              
-              // Retry the original request that triggered the 401
-              err.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
-              final response = await dio.fetch(err.requestOptions);
-              handler.resolve(response);
+      final refreshResponse = await (refreshDio ?? Dio(dio.options))
+          .post<dynamic>(
+            ApiConstants.refreshToken,
+            data: {'refreshToken': refreshToken},
+          );
+      final responseData = refreshResponse.data;
+      final tokenData = responseData is Map<String, dynamic>
+          ? responseData['data']
+          : null;
+      final newAccessToken = tokenData is Map<String, dynamic>
+          ? tokenData['accessToken']
+          : null;
+      final newRefreshToken = tokenData is Map<String, dynamic>
+          ? tokenData['refreshToken']
+          : null;
 
-              // Retry all pending requests
-              for (final pending in _pendingRequests) {
-                pending.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
-                try {
-                  final res = await dio.fetch(pending.requestOptions);
-                  pending.completer.complete(res);
-                } catch (e) {
-                  pending.completer.completeError(e);
-                }
-              }
-              return;
-            }
-          }
+      if (newAccessToken is! String ||
+          newAccessToken.isEmpty ||
+          newRefreshToken is! String ||
+          newRefreshToken.isEmpty) {
+        await _handleUnauthorized(
+          err,
+          handler,
+          'Refresh token response invalid',
+        );
+        return;
+      }
+
+      await tokenStorage!.saveTokens(
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+      );
+      _unauthorizedNotified = false;
+
+      handler.resolve(await _retry(err.requestOptions, newAccessToken));
+
+      final pendingRequests = List<_PendingRequest>.of(_pendingRequests);
+      _pendingRequests.clear();
+      for (final pending in pendingRequests) {
+        try {
+          pending.completer.complete(
+            await _retry(pending.requestOptions, newAccessToken),
+          );
+        } on Object catch (error, stackTrace) {
+          pending.completer.completeError(error, stackTrace);
         }
-        
-        _handleUnauthorized(err, handler, "Refresh token response invalid");
-      } catch (e, st) {
-        _handleUnauthorized(err, handler, "Token refresh failed: $e", st);
-      } finally {
-        _pendingRequests.clear();
-        _isRefreshing = false;
       }
-    } else {
-      // For any other error (or no refresh logic), just pass it down
-      if (err.response?.statusCode == 401) {
-        onUnauthorized?.call();
+    } on DioException catch (error, stackTrace) {
+      if (error.error is UnauthorizedException) {
+        handler.reject(error);
+        return;
       }
-      handler.reject(DioException(
-        requestOptions: err.requestOptions,
-        error: ServerException("Server error: ${err.message}"),
-        response: err.response,
-        type: err.type,
-      ));
+      await _handleUnauthorized(
+        err,
+        handler,
+        'Token refresh failed (${error.type.name})',
+        stackTrace,
+      );
+    } catch (error, stackTrace) {
+      await _handleUnauthorized(
+        err,
+        handler,
+        'Token refresh failed',
+        stackTrace,
+      );
+    } finally {
+      _isRefreshing = false;
     }
   }
 
-  void _handleUnauthorized(DioException err, ErrorInterceptorHandler handler, String reason, [StackTrace? st]) {
-    AppLogger.w("⚠️ $reason, rejecting ${_pendingRequests.length} queued requests");
-    
-    final unauthorizedError = DioException(
-      requestOptions: err.requestOptions,
-      error: UnauthorizedException("Unauthorized - $reason"),
-      response: err.response,
-      type: DioExceptionType.badResponse,
-      stackTrace: st,
+  bool _shouldAttemptRefresh(DioException err) {
+    if (err.response?.statusCode != 401 || tokenStorage == null) {
+      return false;
+    }
+    if (_unauthorizedNotified) {
+      return false;
+    }
+    if (err.requestOptions.extra[skipAuthRefreshKey] == true) {
+      return false;
+    }
+    if (_publicAuthPaths.contains(err.requestOptions.path)) {
+      return false;
+    }
+
+    final authorization = err.requestOptions.headers['Authorization'];
+    return authorization is String && authorization.startsWith('Bearer ');
+  }
+
+  Future<Response<dynamic>> _retry(
+    RequestOptions requestOptions,
+    String accessToken,
+  ) {
+    requestOptions.headers['Authorization'] = 'Bearer $accessToken';
+    requestOptions.extra[_authRetryKey] = true;
+    return dio.fetch<dynamic>(requestOptions);
+  }
+
+  Future<void> _handleUnauthorized(
+    DioException err,
+    ErrorInterceptorHandler handler,
+    String reason, [
+    StackTrace? stackTrace,
+  ]) async {
+    AppLogger.w(
+      '$reason; rejecting ${_pendingRequests.length} queued request(s)',
     );
 
-    // Reject all queued requests
-    for (final pending in _pendingRequests) {
-      pending.completer.completeError(unauthorizedError);
+    final unauthorizedError = DioException(
+      requestOptions: err.requestOptions,
+      error: UnauthorizedException('Unauthorized'),
+      response: err.response,
+      type: DioExceptionType.badResponse,
+      stackTrace: stackTrace,
+    );
+
+    await tokenStorage!.clearTokens();
+    if (!_unauthorizedNotified) {
+      _unauthorizedNotified = true;
+      await onUnauthorized?.call();
     }
-    
-    // Clear storage and trigger callback
-    tokenStorage?.clearTokens();
-    onUnauthorized?.call();
-    
-    // Reject original request
+
+    final pendingRequests = List<_PendingRequest>.of(_pendingRequests);
+    _pendingRequests.clear();
+    for (final pending in pendingRequests) {
+      pending.completer.completeError(
+        DioException(
+          requestOptions: pending.requestOptions,
+          error: const UnauthorizedException('Unauthorized'),
+          response: err.response,
+          type: DioExceptionType.badResponse,
+          stackTrace: stackTrace,
+        ),
+        stackTrace,
+      );
+    }
+
     handler.reject(unauthorizedError);
   }
 }

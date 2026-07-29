@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:delivery_app/core/constants/api_constants.dart';
 import 'package:delivery_app/core/error/dio_exception_handler.dart';
 import 'package:dio/dio.dart';
@@ -18,15 +17,9 @@ abstract class ProfileApiService {
   @GET(ApiConstants.getProfile)
   Future<BaseResponseDto<UserProfileDto>> getUserProfile();
 
-  @PUT('/user/profile')
+  @PUT(ApiConstants.getProfile)
   Future<BaseResponseDto<UserProfileDto>> updateUserProfile(
-    @Body() UpdateProfileRequestDto request,
-  );
-
-  @MultiPart()
-  @POST('/user/avatar')
-  Future<BaseResponseDto<String>> uploadAvatar(
-    @Part(name: 'avatar') File avatar,
+    @Body() Map<String, dynamic> request,
   );
 }
 
@@ -57,7 +50,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   ) async {
     try {
       AppLogger.d('Updating user profile');
-      final response = await _apiService.updateUserProfile(request);
+      final response = await _apiService.updateUserProfile(request.toJson());
       AppLogger.i('Successfully updated user profile');
       return response;
     } on DioException catch (e) {
@@ -65,28 +58,6 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error updating user profile', e);
-      throw Exception('Unexpected error: ${e.toString()}');
-    }
-  }
-
-  @override
-  Future<BaseResponseDto<String>> uploadAvatar(String imagePath) async {
-    try {
-      AppLogger.d('Uploading avatar from path: $imagePath');
-      final file = File(imagePath);
-
-      if (!await file.exists()) {
-        throw Exception('Image file not found at path: $imagePath');
-      }
-
-      final response = await _apiService.uploadAvatar(file);
-      AppLogger.i('Successfully uploaded avatar');
-      return response;
-    } on DioException catch (e) {
-      AppLogger.e('Failed to upload avatar', e);
-      throw DioExceptionHandler.mapDioExceptionToException(e);
-    } catch (e) {
-      AppLogger.e('Unexpected error uploading avatar', e);
       throw Exception('Unexpected error: ${e.toString()}');
     }
   }

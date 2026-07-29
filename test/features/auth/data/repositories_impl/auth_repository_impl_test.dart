@@ -52,108 +52,105 @@ void main() {
           data: const AuthDataDto(
             accessToken: 'access_token_123',
             refreshToken: 'refresh_token_123',
-            user: UserDto(
-              id: 1,
-              email: 'test@example.com',
-              name: 'Test User',
-            ),
+            user: UserDto(id: 1, email: 'test@example.com', name: 'Test User'),
           ),
         );
 
-        when(mockRemoteDataSource.login(any))
-            .thenAnswer((_) async => successResponse);
+        when(
+          mockRemoteDataSource.login(any),
+        ).thenAnswer((_) async => successResponse);
 
         // Act
         final result = await repository.login(testLoginParams);
 
         // Assert
         expect(result.isRight(), true);
-        result.fold(
-          (failure) => fail('Should not return failure'),
-          (authEntity) {
-            expect(authEntity.accessToken, 'access_token_123');
-            expect(authEntity.refreshToken, 'refresh_token_123');
-          },
-        );
+        result.fold((failure) => fail('Should not return failure'), (
+          authEntity,
+        ) {
+          expect(authEntity.accessToken, 'access_token_123');
+          expect(authEntity.refreshToken, 'refresh_token_123');
+        });
 
         verify(mockRemoteDataSource.login(testLoginRequest)).called(1);
       });
 
-      test('should return ServerFailure when login response is unsuccessful', () async {
-        // Arrange
-        final errorResponse = AuthResponseDto(
-          status: 0,
-          message: 'Invalid credentials',
-          data: null,
-        );
+      test(
+        'should return ServerFailure when login response is unsuccessful',
+        () async {
+          // Arrange
+          final errorResponse = AuthResponseDto(
+            status: 0,
+            message: 'Invalid credentials',
+            data: null,
+          );
 
-        when(mockRemoteDataSource.login(any))
-            .thenAnswer((_) async => errorResponse);
+          when(
+            mockRemoteDataSource.login(any),
+          ).thenAnswer((_) async => errorResponse);
 
-        // Act
-        final result = await repository.login(testLoginParams);
+          // Act
+          final result = await repository.login(testLoginParams);
 
-        // Assert
-        expect(result.isLeft(), true);
-        result.fold(
-          (failure) {
+          // Assert
+          expect(result.isLeft(), true);
+          result.fold((failure) {
             expect(failure, isA<ServerFailure>());
             expect(failure.message, 'Invalid credentials');
-          },
-          (authEntity) => fail('Should not return auth entity'),
-        );
+          }, (authEntity) => fail('Should not return auth entity'));
 
-        verify(mockRemoteDataSource.login(testLoginRequest)).called(1);
-      });
+          verify(mockRemoteDataSource.login(testLoginRequest)).called(1);
+        },
+      );
 
-      test('should return ServerFailure when datasource throws DioException', () async {
-        // Arrange
-        final dioException = DioException(
-          requestOptions: RequestOptions(path: '/login'),
-          response: Response(
+      test(
+        'should return NetworkFailure when datasource throws DioException',
+        () async {
+          // Arrange
+          final dioException = DioException(
             requestOptions: RequestOptions(path: '/login'),
-            statusCode: 401,
-            data: {'message': 'Unauthorized'},
-          ),
-        );
+            response: Response(
+              requestOptions: RequestOptions(path: '/login'),
+              statusCode: 401,
+              data: {'message': 'Unauthorized'},
+            ),
+          );
 
-        when(mockRemoteDataSource.login(any))
-            .thenThrow(dioException);
+          when(mockRemoteDataSource.login(any)).thenThrow(dioException);
 
-        // Act
-        final result = await repository.login(testLoginParams);
+          // Act
+          final result = await repository.login(testLoginParams);
 
-        // Assert
-        expect(result.isLeft(), true);
-        result.fold(
-          (failure) {
-            expect(failure, isA<ServerFailure>());
-          },
-          (authEntity) => fail('Should not return auth entity'),
-        );
+          // Assert
+          expect(result.isLeft(), true);
+          result.fold((failure) {
+            expect(failure, isA<NetworkFailure>());
+          }, (authEntity) => fail('Should not return auth entity'));
 
-        verify(mockRemoteDataSource.login(testLoginRequest)).called(1);
-      });
+          verify(mockRemoteDataSource.login(testLoginRequest)).called(1);
+        },
+      );
 
-      test('should return ServerFailure when datasource throws generic exception', () async {
-        // Arrange
-        when(mockRemoteDataSource.login(any))
-            .thenThrow(Exception('Unexpected error'));
+      test(
+        'should return UnexpectedFailure for an unmapped exception',
+        () async {
+          // Arrange
+          when(
+            mockRemoteDataSource.login(any),
+          ).thenThrow(Exception('Unexpected error'));
 
-        // Act
-        final result = await repository.login(testLoginParams);
+          // Act
+          final result = await repository.login(testLoginParams);
 
-        // Assert
-        expect(result.isLeft(), true);
-        result.fold(
-          (failure) {
-            expect(failure, isA<ServerFailure>());
-          },
-          (authEntity) => fail('Should not return auth entity'),
-        );
+          // Assert
+          expect(result.isLeft(), true);
+          result.fold((failure) {
+            expect(failure, isA<UnexpectedFailure>());
+          }, (authEntity) => fail('Should not return auth entity'));
 
-        verify(mockRemoteDataSource.login(testLoginRequest)).called(1);
-      });
+          verify(mockRemoteDataSource.login(testLoginRequest)).called(1);
+        },
+      );
     });
 
     group('Register Operation', () {
@@ -174,8 +171,9 @@ void main() {
           data: true,
         );
 
-        when(mockRemoteDataSource.register(any))
-            .thenAnswer((_) async => successResponse);
+        when(
+          mockRemoteDataSource.register(any),
+        ).thenAnswer((_) async => successResponse);
 
         // Act
         final result = await repository.register(testEmail, testPassword);
@@ -198,21 +196,19 @@ void main() {
           data: false,
         );
 
-        when(mockRemoteDataSource.register(any))
-            .thenAnswer((_) async => errorResponse);
+        when(
+          mockRemoteDataSource.register(any),
+        ).thenAnswer((_) async => errorResponse);
 
         // Act
         final result = await repository.register(testEmail, testPassword);
 
         // Assert
         expect(result.isLeft(), true);
-        result.fold(
-          (failure) {
-            expect(failure, isA<ServerFailure>());
-            expect(failure.message, 'Email already exists');
-          },
-          (success) => fail('Should not return success'),
-        );
+        result.fold((failure) {
+          expect(failure, isA<ServerFailure>());
+          expect(failure.message, 'Email already exists');
+        }, (success) => fail('Should not return success'));
 
         verify(mockRemoteDataSource.register(any)).called(1);
       });
@@ -226,56 +222,55 @@ void main() {
         final successResponse = RefreshTokenResponseDto(
           status: 1,
           message: 'Token refreshed successfully',
-          data: const RefreshTokenDataDto(
-            accessToken: 'new_access_token_456',
-          ),
+          data: const RefreshTokenDataDto(accessToken: 'new_access_token_456'),
         );
 
-        when(mockRemoteDataSource.refreshToken(any))
-            .thenAnswer((_) async => successResponse);
+        when(
+          mockRemoteDataSource.refreshToken(any),
+        ).thenAnswer((_) async => successResponse);
 
         // Act
         final result = await repository.refreshToken(testRefreshToken);
 
         // Assert
         expect(result.isRight(), true);
-        result.fold(
-          (failure) => fail('Should not return failure'),
-          (authEntity) {
-            expect(authEntity.accessToken, 'new_access_token_456');
-            // refreshToken should remain the same or be empty
-          },
-        );
+        result.fold((failure) => fail('Should not return failure'), (
+          authEntity,
+        ) {
+          expect(authEntity.accessToken, 'new_access_token_456');
+          // refreshToken should remain the same or be empty
+        });
 
         verify(mockRemoteDataSource.refreshToken(testRefreshToken)).called(1);
       });
 
-      test('should return ServerFailure when refresh token is invalid', () async {
-        // Arrange
-        final errorResponse = RefreshTokenResponseDto(
-          status: 0,
-          message: 'Invalid refresh token',
-          data: null,
-        );
+      test(
+        'should return ServerFailure when refresh token is invalid',
+        () async {
+          // Arrange
+          final errorResponse = RefreshTokenResponseDto(
+            status: 0,
+            message: 'Invalid refresh token',
+            data: null,
+          );
 
-        when(mockRemoteDataSource.refreshToken(any))
-            .thenAnswer((_) async => errorResponse);
+          when(
+            mockRemoteDataSource.refreshToken(any),
+          ).thenAnswer((_) async => errorResponse);
 
-        // Act
-        final result = await repository.refreshToken(testRefreshToken);
+          // Act
+          final result = await repository.refreshToken(testRefreshToken);
 
-        // Assert
-        expect(result.isLeft(), true);
-        result.fold(
-          (failure) {
+          // Assert
+          expect(result.isLeft(), true);
+          result.fold((failure) {
             expect(failure, isA<ServerFailure>());
             expect(failure.message, 'Invalid refresh token');
-          },
-          (authEntity) => fail('Should not return auth entity'),
-        );
+          }, (authEntity) => fail('Should not return auth entity'));
 
-        verify(mockRemoteDataSource.refreshToken(testRefreshToken)).called(1);
-      });
+          verify(mockRemoteDataSource.refreshToken(testRefreshToken)).called(1);
+        },
+      );
     });
   });
 }

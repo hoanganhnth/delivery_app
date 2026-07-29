@@ -43,47 +43,6 @@ class RestaurantListCard extends ConsumerWidget {
                   const Center(
                     child: Icon(Icons.restaurant, size: 60, color: Colors.grey),
                   ),
-
-                // Discount badge (Mock data for UI)
-                Positioned(
-                  top: 8.w,
-                  left: 8.w,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8.w,
-                      vertical: 4.w,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      'GIẢM 30%',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Favorite button
-                Positioned(
-                  top: 8.w,
-                  right: 8.w,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.favorite_border),
-                      iconSize: 20,
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
@@ -105,19 +64,29 @@ class RestaurantListCard extends ConsumerWidget {
                 if (restaurant.description != null)
                   Text(
                     restaurant.description!,
-                    style: TextStyle(color: ref.colors.textSecondary, fontSize: 14.sp),
+                    style: TextStyle(
+                      color: ref.colors.textSecondary,
+                      fontSize: 14.sp,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 SizedBox(height: 8.w),
                 Row(
                   children: [
-                    Icon(Icons.location_on, size: 14, color: ref.colors.textSecondary),
+                    Icon(
+                      Icons.location_on,
+                      size: 14,
+                      color: ref.colors.textSecondary,
+                    ),
                     SizedBox(width: 4.w),
                     Expanded(
                       child: Text(
                         restaurant.address,
-                        style: TextStyle(color: ref.colors.textSecondary, fontSize: 12.sp),
+                        style: TextStyle(
+                          color: ref.colors.textSecondary,
+                          fontSize: 12.sp,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -125,42 +94,62 @@ class RestaurantListCard extends ConsumerWidget {
                   ],
                 ),
                 SizedBox(height: 8.w),
-                Row(
-                  children: [
-                    Icon(Icons.star, size: 14, color: Colors.orange[700]),
-                    SizedBox(width: 2.w),
-                    Text(
-                      '4.5',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      '(200+)',
-                      style: TextStyle(fontSize: 12.sp, color: Colors.grey),
-                    ),
-                    const Spacer(),
-                    Icon(Icons.access_time, size: 14, color: ref.colors.textSecondary),
-                    SizedBox(width: 2.w),
-                    Text(
-                      '20-30 phút',
-                      style: TextStyle(fontSize: 12.sp, color: Colors.grey),
-                    ),
-                    SizedBox(width: 12.w),
-                    Icon(
-                      Icons.delivery_dining,
-                      size: 14,
-                      color: ref.colors.textSecondary,
-                    ),
-                    SizedBox(width: 2.w),
-                    Text(
-                      s.restaurantsFreeDelivery,
-                      style: TextStyle(fontSize: 12.sp, color: Colors.grey),
-                    ),
-                  ],
-                ),
+                if (restaurant.rating != null ||
+                    restaurant.deliveryTime != null ||
+                    restaurant.deliveryFee != null)
+                  Row(
+                    children: [
+                      if (restaurant.rating != null) ...[
+                        Icon(Icons.star, size: 14, color: Colors.orange[700]),
+                        SizedBox(width: 2.w),
+                        Text(
+                          restaurant.rating!.toStringAsFixed(1),
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        if (restaurant.reviewCount != null) ...[
+                          SizedBox(width: 4.w),
+                          Text(
+                            '(${restaurant.reviewCount})',
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ],
+                      const Spacer(),
+                      if (restaurant.deliveryTime != null) ...[
+                        Icon(
+                          Icons.access_time,
+                          size: 14,
+                          color: ref.colors.textSecondary,
+                        ),
+                        SizedBox(width: 2.w),
+                        Text(
+                          '${restaurant.deliveryTime} phút',
+                          style: TextStyle(fontSize: 12.sp, color: Colors.grey),
+                        ),
+                      ],
+                      if (restaurant.deliveryFee != null) ...[
+                        SizedBox(width: 12.w),
+                        Icon(
+                          Icons.delivery_dining,
+                          size: 14,
+                          color: ref.colors.textSecondary,
+                        ),
+                        SizedBox(width: 2.w),
+                        Text(
+                          restaurant.deliveryFee == 0
+                              ? s.restaurantsFreeDelivery
+                              : '${restaurant.deliveryFee!.toStringAsFixed(0)}đ',
+                          style: TextStyle(fontSize: 12.sp, color: Colors.grey),
+                        ),
+                      ],
+                    ],
+                  ),
               ],
             ),
           ),

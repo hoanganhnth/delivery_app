@@ -40,7 +40,7 @@ class ShipperLocation extends _$ShipperLocation {
   }
 
   /// Bắt đầu theo dõi shipper location thông qua UseCase
-  Future<void> startTrackingShipper(int shipperId) async {
+  Future<void> startTrackingShipper(int shipperId, int deliveryId) async {
     try {
       // Stop previous tracking if any
       await stopTracking();
@@ -48,29 +48,14 @@ class ShipperLocation extends _$ShipperLocation {
       state = state.copyWith(
         isLoading: true,
         trackingShipperId: shipperId,
+        trackingDeliveryId: deliveryId,
         failure: null,
         currentLocation: null,
       );
 
       final trackShipperUseCase = ref.read(trackShipperLocationUseCaseProvider);
-      final getShipperLocationUseCase = ref.read(getShipperLocationUseCaseProvider);
-
-      // 1. Fetch initial location via REST
-      final initialResult = await getShipperLocationUseCase(shipperId);
-      
-      if (!ref.mounted) return;
-      
-      initialResult.fold(
-        (failure) => AppLogger.w('Fetch initial location failed: ${failure.message}'),
-        (location) {
-          AppLogger.i('Fetched initial location for shipper: $shipperId');
-          state = state.copyWith(currentLocation: location);
-        },
-      );
-
-      // 2. Start real-time stream
       final streamResult = await trackShipperUseCase(
-        TrackShipperParams(shipperId: shipperId),
+        TrackShipperParams(shipperId: shipperId, deliveryId: deliveryId),
       );
 
       if (!ref.mounted) return;
@@ -94,16 +79,15 @@ class ShipperLocation extends _$ShipperLocation {
           _locationSubscription = locationStream.listen(
             (location) {
               if (!ref.mounted) return;
-              state = state.copyWith(
-                currentLocation: location,
-                failure: null,
-              );
+              state = state.copyWith(currentLocation: location, failure: null);
             },
             onError: (error) {
               AppLogger.e('Error in shipper location stream', error);
               if (!ref.mounted) return;
               state = state.copyWith(
-                failure: Failure.server('Lỗi nhận dữ liệu vị trí shipper: ${error.toString()}'),
+                failure: const Failure.server(
+                  'Không thể nhận vị trí shipper. Vui lòng thử lại.',
+                ),
               );
             },
             onDone: () {
@@ -120,7 +104,9 @@ class ShipperLocation extends _$ShipperLocation {
       state = state.copyWith(
         isLoading: false,
         isTracking: false,
-        failure: Failure.server('Không thể bắt đầu theo dõi shipper: ${e.toString()}'),
+        failure: const Failure.server(
+          'Không thể bắt đầu theo dõi shipper. Vui lòng thử lại.',
+        ),
       );
     }
   }
@@ -148,6 +134,7 @@ class ShipperLocation extends _$ShipperLocation {
             isTracking: false,
             isConnected: false,
             trackingShipperId: null,
+            trackingDeliveryId: null,
             currentLocation: null,
             failure: null,
           );
@@ -156,7 +143,9 @@ class ShipperLocation extends _$ShipperLocation {
     } catch (e) {
       AppLogger.e('Error stopping shipper tracking', e);
       if (!ref.mounted) return;
-      state = state.copyWith(failure: const Failure.server('Lỗi khi dừng theo dõi shipper'));
+      state = state.copyWith(
+        failure: const Failure.server('Lỗi khi dừng theo dõi shipper'),
+      );
     }
   }
 
@@ -171,14 +160,17 @@ class ShipperLocation extends _$ShipperLocation {
       AppLogger.i('Refreshing shipper location tracking');
 
       final currentShipperId = state.trackingShipperId;
-      if (currentShipperId != null) {
+      final currentDeliveryId = state.trackingDeliveryId;
+      if (currentShipperId != null && currentDeliveryId != null) {
         state = state.copyWith(isLoading: true, failure: null);
-        await startTrackingShipper(currentShipperId);
+        await startTrackingShipper(currentShipperId, currentDeliveryId);
       } else {
         AppLogger.w('No current shipper to refresh tracking for');
 
         state = state.copyWith(
-          failure: const Failure.server('Không có shipper nào đang được theo dõi để refresh'),
+          failure: const Failure.server(
+            'Không có shipper nào đang được theo dõi để refresh',
+          ),
         );
       }
     } catch (e) {

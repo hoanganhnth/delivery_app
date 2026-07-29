@@ -12,8 +12,8 @@ import '../widgets/shared/orders_list.dart' as orders_widget;
 import '../widgets/shared/orders_empty_state.dart';
 import '../widgets/shared/orders_error_state.dart';
 import '../widgets/order_detail/cancel_order_dialog.dart';
-import 'package:delivery_app/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:delivery_app/features/cart/presentation/providers/state/cart_notifier.dart';
+import '../utils/reorder_cart_items.dart';
 
 class OrdersScreen extends ConsumerStatefulWidget {
   const OrdersScreen({super.key});
@@ -41,7 +41,8 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
 
   void _setupScrollListener() {
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
         ref.read(ordersListProvider.notifier).loadMoreOrders();
       }
     });
@@ -102,26 +103,22 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
   }
 
   void _handleReorder(OrderEntity order) async {
-    final cartNotifier = ref.read(cartProvider.notifier);
-    // Xoá giỏ hàng hiện tại
-    await cartNotifier.clearCart();
-    
-    // Thêm lại toàn bộ các món trong đơn hàng cũ vào giỏ
-    for (var item in order.items) {
-      await cartNotifier.addItem(CartItemEntity(
-        menuItemId: item.menuItemId,
-        menuItemName: item.menuItemName,
-        price: item.price,
-        quantity: item.quantity,
-        restaurantId: order.restaurantId ?? 0,
-        restaurantName: order.restaurantName ?? 'Restaurant',
-        notes: item.notes,
-      ));
+    try {
+      final items = buildReorderCartItems(order);
+      final cartNotifier = ref.read(cartProvider.notifier);
+      await cartNotifier.clearCart();
+      for (final item in items) {
+        await cartNotifier.addItem(item);
+      }
+
+      if (!mounted) return;
+      context.pushCart();
+    } on FormatException {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Không thể đặt lại đơn này.')),
+      );
     }
-    
-    // Chuyển sang giỏ hàng để user tiếp tục checkout
-    if (!mounted) return;
-    context.pushCart();
   }
 
   List<OrderEntity> _getFilteredOrders(List<OrderEntity> orders) {
@@ -207,7 +204,6 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
       ),
     );
   }
-
 }
 
 class OrdersAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -224,14 +220,6 @@ class OrdersAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: Icon(Icons.arrow_back, color: colors.textPrimary),
         onPressed: () => Navigator.of(context).pop(),
       ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.search, color: colors.textSecondary),
-          onPressed: () {
-            // TODO: Implement search
-          },
-        ),
-      ],
     );
   }
 
@@ -266,7 +254,7 @@ class OrdersBody extends StatelessWidget {
     return ordersState.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => OrdersErrorState(
-        errorMessage: error.toString(),
+        errorMessage: 'Không thể tải danh sách đơn hàng. Vui lòng thử lại.',
         onRetry: onRetry,
       ),
       data: (orders) {
@@ -290,5 +278,4 @@ class OrdersBody extends StatelessWidget {
       },
     );
   }
-
 }

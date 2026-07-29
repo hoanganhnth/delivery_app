@@ -7,10 +7,8 @@ part 'create_order_request_dto.g.dart';
 sealed class OrderItemRequest with _$OrderItemRequest {
   const factory OrderItemRequest({
     required int menuItemId,
-    required String menuItemName,
-    required double price,
     required int quantity,
-    int? flashSaleItemId,
+    String? notes,
   }) = _OrderItemRequest;
 
   factory OrderItemRequest.fromJson(Map<String, dynamic> json) =>
@@ -21,19 +19,13 @@ sealed class OrderItemRequest with _$OrderItemRequest {
 sealed class CreateOrderRequestDto with _$CreateOrderRequestDto {
   const factory CreateOrderRequestDto({
     required int restaurantId,
-    required String restaurantName,
-    required String restaurantAddress,
-    required String restaurantPhone,
     required String deliveryAddress,
-    double? deliveryLat,
-    double? deliveryLng,
+    required double deliveryLat,
+    required double deliveryLng,
     required String customerName,
     required String customerPhone,
-    required String paymentMethod, // COD or ONLINE
+    required String paymentMethod, // COD-only in the current MVP
     String? notes,
-    List<int>? voucherIds,
-    double? pickupLat,
-    double? pickupLng,
     required List<OrderItemRequest> items,
   }) = _CreateOrderRequestDto;
 

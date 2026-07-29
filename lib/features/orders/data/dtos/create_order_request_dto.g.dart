@@ -9,40 +9,28 @@ part of 'create_order_request_dto.dart';
 _OrderItemRequest _$OrderItemRequestFromJson(Map<String, dynamic> json) =>
     _OrderItemRequest(
       menuItemId: (json['menuItemId'] as num).toInt(),
-      menuItemName: json['menuItemName'] as String,
-      price: (json['price'] as num).toDouble(),
       quantity: (json['quantity'] as num).toInt(),
-      flashSaleItemId: (json['flashSaleItemId'] as num?)?.toInt(),
+      notes: json['notes'] as String?,
     );
 
 Map<String, dynamic> _$OrderItemRequestToJson(_OrderItemRequest instance) =>
     <String, dynamic>{
       'menuItemId': instance.menuItemId,
-      'menuItemName': instance.menuItemName,
-      'price': instance.price,
       'quantity': instance.quantity,
-      'flashSaleItemId': instance.flashSaleItemId,
+      'notes': instance.notes,
     };
 
 _CreateOrderRequestDto _$CreateOrderRequestDtoFromJson(
   Map<String, dynamic> json,
 ) => _CreateOrderRequestDto(
   restaurantId: (json['restaurantId'] as num).toInt(),
-  restaurantName: json['restaurantName'] as String,
-  restaurantAddress: json['restaurantAddress'] as String,
-  restaurantPhone: json['restaurantPhone'] as String,
   deliveryAddress: json['deliveryAddress'] as String,
-  deliveryLat: (json['deliveryLat'] as num?)?.toDouble(),
-  deliveryLng: (json['deliveryLng'] as num?)?.toDouble(),
+  deliveryLat: (json['deliveryLat'] as num).toDouble(),
+  deliveryLng: (json['deliveryLng'] as num).toDouble(),
   customerName: json['customerName'] as String,
   customerPhone: json['customerPhone'] as String,
   paymentMethod: json['paymentMethod'] as String,
   notes: json['notes'] as String?,
-  voucherIds: (json['voucherIds'] as List<dynamic>?)
-      ?.map((e) => (e as num).toInt())
-      .toList(),
-  pickupLat: (json['pickupLat'] as num?)?.toDouble(),
-  pickupLng: (json['pickupLng'] as num?)?.toDouble(),
   items: (json['items'] as List<dynamic>)
       .map((e) => OrderItemRequest.fromJson(e as Map<String, dynamic>))
       .toList(),
@@ -52,9 +40,6 @@ Map<String, dynamic> _$CreateOrderRequestDtoToJson(
   _CreateOrderRequestDto instance,
 ) => <String, dynamic>{
   'restaurantId': instance.restaurantId,
-  'restaurantName': instance.restaurantName,
-  'restaurantAddress': instance.restaurantAddress,
-  'restaurantPhone': instance.restaurantPhone,
   'deliveryAddress': instance.deliveryAddress,
   'deliveryLat': instance.deliveryLat,
   'deliveryLng': instance.deliveryLng,
@@ -62,8 +47,5 @@ Map<String, dynamic> _$CreateOrderRequestDtoToJson(
   'customerPhone': instance.customerPhone,
   'paymentMethod': instance.paymentMethod,
   'notes': instance.notes,
-  'voucherIds': instance.voucherIds,
-  'pickupLat': instance.pickupLat,
-  'pickupLng': instance.pickupLng,
   'items': instance.items,
 };

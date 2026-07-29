@@ -13,12 +13,6 @@ abstract class OrderRemoteDataSource {
   /// Tạo đơn hàng mới với DTO
   Future<OrderDto> createOrderWithDto(CreateOrderRequestDto request);
 
-  /// Tạo đơn hàng mới (legacy method)
-  Future<OrderDto> createOrder(OrderDto order);
-
   /// Hủy đơn hàng
   Future<bool> cancelOrder(int orderId, {String? reason});
-
-  /// Đánh giá shipper
-  Future<bool> rateShipper(int shipperId, int orderId, int rating, String? comment);
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/status.dart' as status;
 import 'package:rxdart/rxdart.dart';
 import '../../utils/logger/app_logger.dart';
@@ -9,6 +10,8 @@ import '../../utils/logger/app_logger.dart';
 class SocketClient {
   final String url;
   final String _name;
+  final Map<String, dynamic> headers;
+  final bool requireAuthorization;
 
   WebSocketChannel? _channel;
   final _rawStream = PublishSubject<String>();
@@ -19,7 +22,12 @@ class SocketClient {
   Completer<void>? _connectionCompleter;
   int _reconnectAttempts = 0;
 
-  SocketClient(this.url, {String? name}) : _name = name ?? 'Socket';
+  SocketClient(
+    this.url, {
+    this.headers = const {},
+    this.requireAuthorization = false,
+    String? name,
+  }) : _name = name ?? 'Socket';
 
   /// Stream raw messages từ WebSocket
   Stream<String> get rawStream => _rawStream.stream;
@@ -41,6 +49,14 @@ class SocketClient {
       return;
     }
 
+    final authorization = headers['Authorization']?.toString().trim();
+    if (requireAuthorization &&
+        (authorization == null ||
+            authorization.isEmpty ||
+            authorization == 'Bearer')) {
+      throw StateError('$_name requires an access token');
+    }
+
     // Check if connection is already in progress
     if (_connectionCompleter != null && !_connectionCompleter!.isCompleted) {
       AppLogger.d('$_name [$url] Connection already in progress, waiting...');
@@ -51,17 +67,12 @@ class SocketClient {
     _connectionCompleter = Completer<void>();
 
     try {
-      _channel = WebSocketChannel.connect(Uri.parse(url));
+      _channel = IOWebSocketChannel.connect(Uri.parse(url), headers: headers);
       _setConnectionState(false);
 
       // Listen to WebSocket stream
       _channel!.stream.listen(
         (message) {
-          if (!message.toString().contains('"ping"') &&
-              !message.toString().contains('"pong"')) {
-            AppLogger.d('$_name [$url] Nhận: $message');
-          }
-
           // First message confirms connection is ready
           if (!isConnected) {
             _setConnectionState(true);
@@ -124,9 +135,6 @@ class SocketClient {
   /// Gửi raw message
   void sendRaw(String message) {
     if (_channel != null && isConnected) {
-      if (!message.contains('"ping"') && !message.contains('"pong"')) {
-        AppLogger.d('$_name [$url] Gửi: $message');
-      }
       _channel!.sink.add(message);
     } else {
       AppLogger.w('$_name [$url] Chưa kết nối, không gửi được');

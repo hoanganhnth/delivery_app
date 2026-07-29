@@ -249,55 +249,6 @@ final class SearchRestaurantsUseCaseProvider
 String _$searchRestaurantsUseCaseHash() =>
     r'6f3d61a1be822997af37283f9da53e3728c692be';
 
-@ProviderFor(getRestaurantsNearByUseCase)
-final getRestaurantsNearByUseCaseProvider =
-    GetRestaurantsNearByUseCaseProvider._();
-
-final class GetRestaurantsNearByUseCaseProvider
-    extends
-        $FunctionalProvider<
-          GetRestaurantsNearByUseCase,
-          GetRestaurantsNearByUseCase,
-          GetRestaurantsNearByUseCase
-        >
-    with $Provider<GetRestaurantsNearByUseCase> {
-  GetRestaurantsNearByUseCaseProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'getRestaurantsNearByUseCaseProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$getRestaurantsNearByUseCaseHash();
-
-  @$internal
-  @override
-  $ProviderElement<GetRestaurantsNearByUseCase> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
-
-  @override
-  GetRestaurantsNearByUseCase create(Ref ref) {
-    return getRestaurantsNearByUseCase(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(GetRestaurantsNearByUseCase value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<GetRestaurantsNearByUseCase>(value),
-    );
-  }
-}
-
-String _$getRestaurantsNearByUseCaseHash() =>
-    r'b3a7d1a195bbbf4ce420b7bd190ccebc4a37a66d';
-
 @ProviderFor(featuredRestaurants)
 final featuredRestaurantsProvider = FeaturedRestaurantsProvider._();
 
@@ -773,47 +724,6 @@ final class IsLoadingSearchProvider
 }
 
 String _$isLoadingSearchHash() => r'2ab55bd2ed479046ec0e960e4d5b5a8e660751b2';
-
-@ProviderFor(isLoadingNearby)
-final isLoadingNearbyProvider = IsLoadingNearbyProvider._();
-
-final class IsLoadingNearbyProvider
-    extends $FunctionalProvider<bool, bool, bool>
-    with $Provider<bool> {
-  IsLoadingNearbyProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'isLoadingNearbyProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$isLoadingNearbyHash();
-
-  @$internal
-  @override
-  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  bool create(Ref ref) {
-    return isLoadingNearby(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<bool>(value),
-    );
-  }
-}
-
-String _$isLoadingNearbyHash() => r'bf1c6ebc61fb440d414a6b6021158ab07972ff00';
 
 @ProviderFor(isLoadingFeatured)
 final isLoadingFeaturedProvider = IsLoadingFeaturedProvider._();

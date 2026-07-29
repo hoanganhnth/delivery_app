@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RestaurantsState {
 
- bool get isLoading; List<RestaurantEntity> get restaurants; Failure? get failure; bool get isSearchLoading; bool get isNearbyLoading; bool get isFeaturedLoading;
+ bool get isLoading; List<RestaurantEntity> get restaurants; Failure? get failure; bool get isSearchLoading; bool get isFeaturedLoading;
 /// Create a copy of RestaurantsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $RestaurantsStateCopyWith<RestaurantsState> get copyWith => _$RestaurantsStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RestaurantsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.restaurants, restaurants)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.isSearchLoading, isSearchLoading) || other.isSearchLoading == isSearchLoading)&&(identical(other.isNearbyLoading, isNearbyLoading) || other.isNearbyLoading == isNearbyLoading)&&(identical(other.isFeaturedLoading, isFeaturedLoading) || other.isFeaturedLoading == isFeaturedLoading));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RestaurantsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.restaurants, restaurants)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.isSearchLoading, isSearchLoading) || other.isSearchLoading == isSearchLoading)&&(identical(other.isFeaturedLoading, isFeaturedLoading) || other.isFeaturedLoading == isFeaturedLoading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(restaurants),failure,isSearchLoading,isNearbyLoading,isFeaturedLoading);
+int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(restaurants),failure,isSearchLoading,isFeaturedLoading);
 
 @override
 String toString() {
-  return 'RestaurantsState(isLoading: $isLoading, restaurants: $restaurants, failure: $failure, isSearchLoading: $isSearchLoading, isNearbyLoading: $isNearbyLoading, isFeaturedLoading: $isFeaturedLoading)';
+  return 'RestaurantsState(isLoading: $isLoading, restaurants: $restaurants, failure: $failure, isSearchLoading: $isSearchLoading, isFeaturedLoading: $isFeaturedLoading)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $RestaurantsStateCopyWith<$Res>  {
   factory $RestaurantsStateCopyWith(RestaurantsState value, $Res Function(RestaurantsState) _then) = _$RestaurantsStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, List<RestaurantEntity> restaurants, Failure? failure, bool isSearchLoading, bool isNearbyLoading, bool isFeaturedLoading
+ bool isLoading, List<RestaurantEntity> restaurants, Failure? failure, bool isSearchLoading, bool isFeaturedLoading
 });
 
 
@@ -62,13 +62,12 @@ class _$RestaurantsStateCopyWithImpl<$Res>
 
 /// Create a copy of RestaurantsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? restaurants = null,Object? failure = freezed,Object? isSearchLoading = null,Object? isNearbyLoading = null,Object? isFeaturedLoading = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? restaurants = null,Object? failure = freezed,Object? isSearchLoading = null,Object? isFeaturedLoading = null,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,restaurants: null == restaurants ? _self.restaurants : restaurants // ignore: cast_nullable_to_non_nullable
 as List<RestaurantEntity>,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as Failure?,isSearchLoading: null == isSearchLoading ? _self.isSearchLoading : isSearchLoading // ignore: cast_nullable_to_non_nullable
-as bool,isNearbyLoading: null == isNearbyLoading ? _self.isNearbyLoading : isNearbyLoading // ignore: cast_nullable_to_non_nullable
 as bool,isFeaturedLoading: null == isFeaturedLoading ? _self.isFeaturedLoading : isFeaturedLoading // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -164,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  List<RestaurantEntity> restaurants,  Failure? failure,  bool isSearchLoading,  bool isNearbyLoading,  bool isFeaturedLoading)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  List<RestaurantEntity> restaurants,  Failure? failure,  bool isSearchLoading,  bool isFeaturedLoading)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RestaurantsState() when $default != null:
-return $default(_that.isLoading,_that.restaurants,_that.failure,_that.isSearchLoading,_that.isNearbyLoading,_that.isFeaturedLoading);case _:
+return $default(_that.isLoading,_that.restaurants,_that.failure,_that.isSearchLoading,_that.isFeaturedLoading);case _:
   return orElse();
 
 }
@@ -185,10 +184,10 @@ return $default(_that.isLoading,_that.restaurants,_that.failure,_that.isSearchLo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  List<RestaurantEntity> restaurants,  Failure? failure,  bool isSearchLoading,  bool isNearbyLoading,  bool isFeaturedLoading)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  List<RestaurantEntity> restaurants,  Failure? failure,  bool isSearchLoading,  bool isFeaturedLoading)  $default,) {final _that = this;
 switch (_that) {
 case _RestaurantsState():
-return $default(_that.isLoading,_that.restaurants,_that.failure,_that.isSearchLoading,_that.isNearbyLoading,_that.isFeaturedLoading);}
+return $default(_that.isLoading,_that.restaurants,_that.failure,_that.isSearchLoading,_that.isFeaturedLoading);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -202,10 +201,10 @@ return $default(_that.isLoading,_that.restaurants,_that.failure,_that.isSearchLo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  List<RestaurantEntity> restaurants,  Failure? failure,  bool isSearchLoading,  bool isNearbyLoading,  bool isFeaturedLoading)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  List<RestaurantEntity> restaurants,  Failure? failure,  bool isSearchLoading,  bool isFeaturedLoading)?  $default,) {final _that = this;
 switch (_that) {
 case _RestaurantsState() when $default != null:
-return $default(_that.isLoading,_that.restaurants,_that.failure,_that.isSearchLoading,_that.isNearbyLoading,_that.isFeaturedLoading);case _:
+return $default(_that.isLoading,_that.restaurants,_that.failure,_that.isSearchLoading,_that.isFeaturedLoading);case _:
   return null;
 
 }
@@ -217,7 +216,7 @@ return $default(_that.isLoading,_that.restaurants,_that.failure,_that.isSearchLo
 
 
 class _RestaurantsState extends RestaurantsState {
-  const _RestaurantsState({this.isLoading = false, final  List<RestaurantEntity> restaurants = const [], this.failure, this.isSearchLoading = false, this.isNearbyLoading = false, this.isFeaturedLoading = false}): _restaurants = restaurants,super._();
+  const _RestaurantsState({this.isLoading = false, final  List<RestaurantEntity> restaurants = const [], this.failure, this.isSearchLoading = false, this.isFeaturedLoading = false}): _restaurants = restaurants,super._();
   
 
 @override@JsonKey() final  bool isLoading;
@@ -230,7 +229,6 @@ class _RestaurantsState extends RestaurantsState {
 
 @override final  Failure? failure;
 @override@JsonKey() final  bool isSearchLoading;
-@override@JsonKey() final  bool isNearbyLoading;
 @override@JsonKey() final  bool isFeaturedLoading;
 
 /// Create a copy of RestaurantsState
@@ -243,16 +241,16 @@ _$RestaurantsStateCopyWith<_RestaurantsState> get copyWith => __$RestaurantsStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RestaurantsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._restaurants, _restaurants)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.isSearchLoading, isSearchLoading) || other.isSearchLoading == isSearchLoading)&&(identical(other.isNearbyLoading, isNearbyLoading) || other.isNearbyLoading == isNearbyLoading)&&(identical(other.isFeaturedLoading, isFeaturedLoading) || other.isFeaturedLoading == isFeaturedLoading));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RestaurantsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._restaurants, _restaurants)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.isSearchLoading, isSearchLoading) || other.isSearchLoading == isSearchLoading)&&(identical(other.isFeaturedLoading, isFeaturedLoading) || other.isFeaturedLoading == isFeaturedLoading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(_restaurants),failure,isSearchLoading,isNearbyLoading,isFeaturedLoading);
+int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(_restaurants),failure,isSearchLoading,isFeaturedLoading);
 
 @override
 String toString() {
-  return 'RestaurantsState(isLoading: $isLoading, restaurants: $restaurants, failure: $failure, isSearchLoading: $isSearchLoading, isNearbyLoading: $isNearbyLoading, isFeaturedLoading: $isFeaturedLoading)';
+  return 'RestaurantsState(isLoading: $isLoading, restaurants: $restaurants, failure: $failure, isSearchLoading: $isSearchLoading, isFeaturedLoading: $isFeaturedLoading)';
 }
 
 
@@ -263,7 +261,7 @@ abstract mixin class _$RestaurantsStateCopyWith<$Res> implements $RestaurantsSta
   factory _$RestaurantsStateCopyWith(_RestaurantsState value, $Res Function(_RestaurantsState) _then) = __$RestaurantsStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, List<RestaurantEntity> restaurants, Failure? failure, bool isSearchLoading, bool isNearbyLoading, bool isFeaturedLoading
+ bool isLoading, List<RestaurantEntity> restaurants, Failure? failure, bool isSearchLoading, bool isFeaturedLoading
 });
 
 
@@ -280,13 +278,12 @@ class __$RestaurantsStateCopyWithImpl<$Res>
 
 /// Create a copy of RestaurantsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? restaurants = null,Object? failure = freezed,Object? isSearchLoading = null,Object? isNearbyLoading = null,Object? isFeaturedLoading = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? restaurants = null,Object? failure = freezed,Object? isSearchLoading = null,Object? isFeaturedLoading = null,}) {
   return _then(_RestaurantsState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,restaurants: null == restaurants ? _self._restaurants : restaurants // ignore: cast_nullable_to_non_nullable
 as List<RestaurantEntity>,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as Failure?,isSearchLoading: null == isSearchLoading ? _self.isSearchLoading : isSearchLoading // ignore: cast_nullable_to_non_nullable
-as bool,isNearbyLoading: null == isNearbyLoading ? _self.isNearbyLoading : isNearbyLoading // ignore: cast_nullable_to_non_nullable
 as bool,isFeaturedLoading: null == isFeaturedLoading ? _self.isFeaturedLoading : isFeaturedLoading // ignore: cast_nullable_to_non_nullable
 as bool,
   ));

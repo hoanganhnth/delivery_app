@@ -3,12 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
 import 'package:delivery_app/features/orders/presentation/providers/providers.dart';
-import '../order_detail/shipper_rating_bottom_sheet.dart';
 import '../order_detail/restaurant_rating_bottom_sheet.dart';
 import '../order_detail/cancel_order_bottom_sheet.dart';
 import 'package:delivery_app/core/routing/routing.dart';
-import 'package:delivery_app/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:delivery_app/features/cart/presentation/providers/state/cart_notifier.dart';
+import '../../utils/reorder_cart_items.dart';
 
 /// Widget hiển thị các nút hành động cho đơn hàng
 class OrderActionButtons extends ConsumerWidget {
@@ -25,7 +24,7 @@ class OrderActionButtons extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Keep the provider alive during async operations
     ref.watch(cancelOrderProvider);
-    
+
     final theme = Theme.of(context);
 
     // Nếu đang giao hàng nhưng chưa có shipper hoặc chưa thể huỷ, không hiển thị gì (trừ khi là đã huỷ/delivered)
@@ -60,20 +59,6 @@ class OrderActionButtons extends ConsumerWidget {
                   ),
                 ),
               ),
-              if (order.status == OrderStatus.delivered && order.shipperId != null)
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () => _showRatingBottomSheet(context),
-                  icon: const Icon(Icons.star_outline),
-                  label: const Text('Đánh giá Shipper'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.amber,
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(vertical: 12.w),
-                  ),
-                ),
-              ),
             if (order.status == OrderStatus.delivered)
               Padding(
                 padding: EdgeInsets.only(top: 8.w),
@@ -91,7 +76,8 @@ class OrderActionButtons extends ConsumerWidget {
                   ),
                 ),
               ),
-            if (order.status == OrderStatus.delivered || order.status == OrderStatus.cancelled)
+            if (order.status == OrderStatus.delivered ||
+                order.status == OrderStatus.cancelled)
               Padding(
                 padding: EdgeInsets.only(top: 8.w),
                 child: SizedBox(
@@ -114,34 +100,16 @@ class OrderActionButtons extends ConsumerWidget {
     );
   }
 
-  void _showRatingBottomSheet(BuildContext context) {
-    if (order.shipperId == null || order.id == null) return;
-    
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => ShipperRatingBottomSheet(
-        orderId: order.id!,
-        shipperId: order.shipperId!,
-      ),
-    );
-  }
-
   void _showRestaurantRatingBottomSheet(BuildContext context) {
     if (order.restaurantId == null || order.id == null) return;
-    
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => RestaurantRatingBottomSheet(
-        order: order,
-      ),
+      builder: (context) => RestaurantRatingBottomSheet(order: order),
     );
   }
 
@@ -152,7 +120,11 @@ class OrderActionButtons extends ConsumerWidget {
     }
   }
 
-  Future<void> _cancelOrder(BuildContext context, WidgetRef ref, String reason) async {
+  Future<void> _cancelOrder(
+    BuildContext context,
+    WidgetRef ref,
+    String reason,
+  ) async {
     try {
       // Hiển thị loading
       showDialog(
@@ -200,8 +172,8 @@ class OrderActionButtons extends ConsumerWidget {
 
         // Hiển thị thông báo lỗi
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Lỗi khi hủy đơn hàng: ${e.toString()}'),
+          const SnackBar(
+            content: Text('Không thể hủy đơn hàng. Vui lòng thử lại.'),
             backgroundColor: Colors.red,
           ),
         );
@@ -210,23 +182,20 @@ class OrderActionButtons extends ConsumerWidget {
   }
 
   void _handleReorder(BuildContext context, WidgetRef ref) async {
-    final cartNotifier = ref.read(cartProvider.notifier);
-    await cartNotifier.clearCart();
-    
-    for (var item in order.items) {
-      await cartNotifier.addItem(CartItemEntity(
-        menuItemId: item.menuItemId,
-        menuItemName: item.menuItemName,
-        price: item.price,
-        quantity: item.quantity,
-        restaurantId: order.restaurantId ?? 0,
-        restaurantName: order.restaurantName ?? 'Restaurant',
-        notes: item.notes,
-      ));
-    }
-    
-    if (context.mounted) {
+    try {
+      final items = buildReorderCartItems(order);
+      final cartNotifier = ref.read(cartProvider.notifier);
+      await cartNotifier.clearCart();
+      for (final item in items) {
+        await cartNotifier.addItem(item);
+      }
+      if (!context.mounted) return;
       context.pushCart();
+    } on FormatException {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Không thể đặt lại đơn này.')),
+      );
     }
   }
 }

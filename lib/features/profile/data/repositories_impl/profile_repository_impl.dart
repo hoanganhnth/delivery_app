@@ -169,27 +169,4 @@ class ProfileRepositoryImpl implements ProfileRepository {
       return left(const CacheFailure('Unexpected error occurred'));
     }
   }
-
-  @override
-  Future<Either<Failure, String>> uploadAvatar(String imagePath) async {
-    try {
-      AppLogger.i('Repository: Uploading avatar');
-
-      final response = await remoteDataSource.uploadAvatar(imagePath);
-
-      if (response.isSuccess && response.data != null) {
-        AppLogger.i('Repository: Upload avatar successful');
-        return right(response.data!);
-      } else {
-        AppLogger.e('Repository: Upload avatar failed - ${response.message}');
-        return left(ServerFailure(response.message));
-      }
-    } on Exception catch (e) {
-      AppLogger.e('Repository: Failed to upload avatar - $e');
-      return left(mapExceptionToFailure(e));
-    } catch (e) {
-      AppLogger.e('Repository: Unexpected error during upload avatar - $e');
-      return left(const ServerFailure('Unexpected error occurred'));
-    }
-  }
 }

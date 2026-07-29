@@ -2,11 +2,8 @@ import 'dart:async';
 import 'package:delivery_app/core/error/failures.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:delivery_app/core/utils/logger/app_logger.dart';
-import 'package:delivery_app/core/usecases/usecase.dart';
-import '../../../domain/usecases/tracking_usecases.dart';
 import '../../../domain/usecases/get_current_delivery_usecase.dart';
 import 'delivery_tracking_providers.dart';
-import '../shipper_providers.dart';
 import 'delivery_tracking_state.dart';
 import '../../../data/services/mapbox_map_service.dart';
 import '../../../domain/entities/delivery_status.dart';
@@ -17,18 +14,15 @@ part 'delivery_tracking_notifier.g.dart';
 /// Notifier để quản lý delivery tracking
 @Riverpod(keepAlive: true)
 class DeliveryTracking extends _$DeliveryTracking {
-  /// ✅ Lưu subscription để có thể cancel khi cần
-  StreamSubscription<dynamic>? _deliverySubscription;
+  static const _refreshInterval = Duration(seconds: 15);
+  Timer? _refreshTimer;
+  int? _trackedOrderId;
 
   @override
   DeliveryTrackingState build() {
-    // ✅ Tự động cancel subscription khi provider bị dispose (người dùng rời khỏi màn hình)
     ref.onDispose(() {
-      AppLogger.d(
-        'DeliveryTracking provider disposed — cancelling stream subscription',
-      );
-      _deliverySubscription?.cancel();
-      _deliverySubscription = null;
+      _refreshTimer?.cancel();
+      _refreshTimer = null;
     });
     return const DeliveryTrackingState();
   }
@@ -38,219 +32,49 @@ class DeliveryTracking extends _$DeliveryTracking {
     int orderId, {
     bool trackingRealtime = false,
   }) async {
-    // Kiểm tra nếu đã đang track order này
-    if (state.currentTracking?.orderId == orderId && state.isTracking) {
+    if (_trackedOrderId == orderId && state.isTracking) {
       AppLogger.d('Already tracking order $orderId, skipping duplicate call');
       return;
     }
 
-    // Bước 1: Lấy delivery hiện tại qua REST API trước
     await getCurrentDelivery(orderId);
 
-    // Bước 2: Nếu cần real-time updates, start WebSocket tracking
     if (state.currentTracking != null && trackingRealtime) {
-      AppLogger.i('Starting real-time tracking for order: $orderId');
-      await startTrackingOrder(orderId);
+      _startRestRefresh(orderId);
     }
   }
 
-  /// Bắt đầu theo dõi order thông qua UseCase (WebSocket)
+  /// Backward-compatible entry point. Delivery status is refreshed via REST.
   Future<void> startTrackingOrder(int orderId) async {
-    try {
-      AppLogger.i('Starting tracking for order $orderId');
-
-      state = state.copyWith(isTracking: true, failure: null);
-
-      final startTrackingUseCase = ref.read(trackDeliveryUseCaseProvider);
-      final result = await startTrackingUseCase(
-        TrackDeliveryParams(orderId: orderId),
-      );
-
-      result.fold(
-        (failure) {
-          if (ref.mounted) {
-            state = state.copyWith(isTracking: false, failure: failure);
-          }
-        },
-        (deliveryStream) {
-          if (ref.mounted) {
-            state = state.copyWith(
-              isLoading: false,
-              isTracking: true,
-              isConnected: true,
-            );
-          }
-
-          // ✅ Cancel subscription cũ trước khi subscribe mới — tránh nhận data cũ lọt ra
-          _deliverySubscription?.cancel();
-          _deliverySubscription = deliveryStream.listen(
-            (delivery) {
-              if (!ref.mounted) return;
-
-              final previousStatus = state.currentTracking?.status;
-              final statusChanged = previousStatus != delivery.status;
-
-              AppLogger.d(
-                'Received delivery tracking: Order ${delivery.orderId}, Status ${delivery.status}',
-              );
-
-              // Cập nhật delivery tracking
-              state = state.copyWith(
-                currentTracking: delivery,
-                failure: null,
-              );
-
-              // Lấy thông tin shipper nếu là shipper ID mới
-              if (delivery.shipperId != null &&
-                  delivery.shipperId != state.currentShipperId) {
-                _fetchShipperInfoIfNeeded(delivery.shipperId!);
-              }
-
-              // ✅ Cập nhật route polyline nếu:
-              // 1. Trạng thái thay đổi (đổi điểm đích)
-              // 2. Hoặc chưa có polyline
-              if (statusChanged || state.polylinePoints == null) {
-                _updateRoutePoints(delivery);
-              }
-            },
-            onError: (error) {
-              if (ref.mounted) {
-                state = state.copyWith(
-                  failure: ServerFailure('Lỗi nhận dữ liệu delivery: ${error.toString()}'),
-                );
-              }
-            },
-            onDone: () {
-              AppLogger.i('Delivery stream closed');
-              if (ref.mounted) {
-                state = state.copyWith(isTracking: false, isConnected: false);
-              }
-              _deliverySubscription = null;
-            },
-          );
-        },
-      );
-    } catch (e) {
-      AppLogger.e('Failed to start tracking order $orderId', e);
-      state = state.copyWith(
-        isTracking: false,
-        failure: ServerFailure('Không thể bắt đầu theo dõi order: ${e.toString()}'),
-      );
-    }
+    await getCurrentDelivery(orderId);
+    if (state.currentTracking != null) _startRestRefresh(orderId);
   }
 
-  /// Dừng theo dõi order thông qua UseCase
+  void _startRestRefresh(int orderId) {
+    _refreshTimer?.cancel();
+    _trackedOrderId = orderId;
+    state = state.copyWith(isTracking: true, isConnected: true);
+    _refreshTimer = Timer.periodic(_refreshInterval, (_) {
+      getCurrentDelivery(orderId, showLoading: false);
+    });
+  }
+
   Future<void> stopTrackingOrder() async {
-    try {
-      AppLogger.i('Stopping delivery tracking');
-
-      // ✅ Cancel subscription trước khi gọi UseCase
-      await _deliverySubscription?.cancel();
-      _deliverySubscription = null;
-
-      final stopTrackingUseCase = ref.read(stopDeliveryTrackingUseCaseProvider);
-      final result = await stopTrackingUseCase(NoParams());
-
-      result.fold(
-        (failure) {
-          if (ref.mounted) {
-            state = state.copyWith(failure: failure);
-          }
-        },
-        (_) {
-          if (ref.mounted) {
-            state = state.copyWith(
-              isTracking: false,
-              currentTracking: null,
-              failure: null,
-              polylinePoints: null,
-            );
-          }
-        },
-      );
-    } catch (e) {
-      AppLogger.e('Error stopping delivery tracking', e);
-      state = state.copyWith(failure: const ServerFailure('Lỗi khi dừng theo dõi delivery'));
-    }
+    _refreshTimer?.cancel();
+    _refreshTimer = null;
+    _trackedOrderId = null;
+    state = state.copyWith(
+      isTracking: false,
+      isConnected: false,
+      currentTracking: null,
+      failure: null,
+      polylinePoints: null,
+    );
   }
 
-  /// Làm mới kết nối thông qua UseCase
   Future<void> refresh() async {
-    try {
-      AppLogger.i('Refreshing delivery tracking connection');
-      state = state.copyWith(isLoading: true, failure: null);
-
-      final refreshUseCase = ref.read(refreshDeliveryTrackingUseCaseProvider);
-      final result = await refreshUseCase(NoParams());
-
-      result.fold(
-        (failure) {
-          if (ref.mounted) {
-            state = state.copyWith(isLoading: false, failure: failure);
-          }
-        },
-        (_) {
-          if (ref.mounted) {
-            state = state.copyWith(isLoading: false);
-          }
-        },
-      );
-    } catch (e) {
-      AppLogger.e('Failed to refresh delivery tracking', e);
-      state = state.copyWith(
-        isLoading: false,
-        failure: const ServerFailure('Không thể làm mới kết nối'),
-      );
-    }
-  }
-
-  /// Lấy thông tin shipper nếu cần (shipper ID khác với hiện tại)
-  Future<void> _fetchShipperInfoIfNeeded(int shipperId) async {
-    // Kiểm tra xem có cần lấy thông tin shipper không
-    if (state.currentShipperId == shipperId) {
-      AppLogger.d('Shipper $shipperId already loaded, skipping API call');
-      return;
-    }
-
-    try {
-      AppLogger.i('Fetching shipper info for ID: $shipperId');
-
-      // Bắt đầu loading shipper
-      state = state.copyWith(
-        isLoadingShipper: true,
-        currentShipperId: shipperId,
-      );
-
-      final getShipperUseCase = ref.read(getShipperByIdUseCaseProvider);
-      final result = await getShipperUseCase(shipperId);
-
-      result.fold(
-        (failure) {
-          AppLogger.e('Failed to fetch shipper info: ${failure.message}');
-          if (ref.mounted) {
-            state = state.copyWith(
-              isLoadingShipper: false,
-              failure: failure,
-            );
-          }
-        },
-        (shipper) {
-          if (ref.mounted) {
-            state = state.copyWith(
-              shipper: shipper,
-              isLoadingShipper: false,
-              failure: null,
-            );
-          }
-        },
-      );
-    } catch (e) {
-      AppLogger.e('Unexpected error fetching shipper info', e);
-      state = state.copyWith(
-        isLoadingShipper: false,
-        failure: const ServerFailure('Lỗi không mong muốn khi lấy thông tin shipper'),
-      );
-    }
+    final orderId = _trackedOrderId ?? state.currentTracking?.orderId;
+    if (orderId != null) await getCurrentDelivery(orderId);
   }
 
   /// Clear error
@@ -259,11 +83,16 @@ class DeliveryTracking extends _$DeliveryTracking {
   }
 
   /// Lấy delivery tracking hiện tại qua REST API
-  Future<void> getCurrentDelivery(int orderId) async {
+  Future<void> getCurrentDelivery(
+    int orderId, {
+    bool showLoading = true,
+  }) async {
     try {
       AppLogger.i('Getting current delivery for order: $orderId');
 
-      state = state.copyWith(isLoading: true, failure: null);
+      if (showLoading) {
+        state = state.copyWith(isLoading: true, failure: null);
+      }
 
       final getCurrentDeliveryUseCase = ref.read(
         getCurrentDeliveryUseCaseProvider,
@@ -282,19 +111,17 @@ class DeliveryTracking extends _$DeliveryTracking {
         (delivery) {
           AppLogger.i('Successfully got current delivery for order: $orderId');
           if (ref.mounted) {
+            final previousStatus = state.currentTracking?.status;
             state = state.copyWith(
               isLoading: false,
               currentTracking: delivery,
               failure: null,
             );
 
-            // Tự động lấy thông tin shipper nếu cần
-            if (delivery.shipperId != null) {
-              _fetchShipperInfoIfNeeded(delivery.shipperId!);
+            if (previousStatus != delivery.status ||
+                state.polylinePoints == null) {
+              _updateRoutePoints(delivery);
             }
-
-            // ✅ Cập nhật route polyline ban đầu
-            _updateRoutePoints(delivery);
           }
         },
       );
@@ -303,7 +130,9 @@ class DeliveryTracking extends _$DeliveryTracking {
       if (ref.mounted) {
         state = state.copyWith(
           isLoading: false,
-          failure: ServerFailure('Lỗi không mong muốn khi lấy thông tin delivery: ${e.toString()}'),
+          failure: ServerFailure(
+            'Lỗi không mong muốn khi lấy thông tin delivery: ${e.toString()}',
+          ),
         );
       }
     }

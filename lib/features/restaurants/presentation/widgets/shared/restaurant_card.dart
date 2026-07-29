@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 /// Amber Hearth style restaurant card
-/// 
+///
 /// Features:
 /// - Border radius: 40px (rounded-[2.5rem])
 /// - Image height: 192px (h-48)
@@ -12,31 +12,31 @@ import 'package:flutter/material.dart';
 class RestaurantCard extends StatefulWidget {
   /// Restaurant name
   final String name;
-  
+
   /// Restaurant image URL
   final String? imageUrl;
-  
+
   /// Restaurant rating (0-5)
-  final double rating;
-  
+  final double? rating;
+
   /// Delivery time (e.g., "15-25 min")
-  final String deliveryTime;
-  
+  final String? deliveryTime;
+
   /// Restaurant category (e.g., "Modern American")
-  final String category;
-  
+  final String? category;
+
   /// Price level (e.g., "$$$")
-  final String priceLevel;
-  
+  final String? priceLevel;
+
   /// Distance (e.g., "1.2 miles")
-  final String distance;
-  
+  final String? distance;
+
   /// Delivery fee (e.g., "Free Delivery" or "$2.99 Delivery")
-  final String deliveryFee;
-  
+  final String? deliveryFee;
+
   /// Whether delivery is free
   final bool isFreeDelivery;
-  
+
   /// Callback when card is tapped
   final VoidCallback? onTap;
 
@@ -44,12 +44,12 @@ class RestaurantCard extends StatefulWidget {
     super.key,
     required this.name,
     this.imageUrl,
-    required this.rating,
-    required this.deliveryTime,
-    required this.category,
-    required this.priceLevel,
-    required this.distance,
-    required this.deliveryFee,
+    this.rating,
+    this.deliveryTime,
+    this.category,
+    this.priceLevel,
+    this.distance,
+    this.deliveryFee,
     this.isFreeDelivery = false,
     this.onTap,
   });
@@ -63,6 +63,12 @@ class _RestaurantCardState extends State<RestaurantCard> {
 
   @override
   Widget build(BuildContext context) {
+    final details = [
+      widget.category,
+      widget.priceLevel,
+      widget.distance,
+    ].whereType<String>().where((value) => value.trim().isNotEmpty).toList();
+
     return GestureDetector(
       onTap: widget.onTap,
       child: MouseRegion(
@@ -126,98 +132,101 @@ class _RestaurantCardState extends State<RestaurantCard> {
                     ),
                   ),
                 ),
-                
+
                 // Rating badge (top-right)
-                Positioned(
-                  top: 16,
-                  right: 16,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.9),
-                      borderRadius: BorderRadius.circular(9999),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.star,
-                          size: 14,
-                          color: Color(0xFFF59E0B), // amber-500
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          widget.rating.toStringAsFixed(1),
-                          style: const TextStyle(
-                            fontFamily: 'Plus Jakarta Sans',
-                            fontSize: 12,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xFF1C160D),
+                if (widget.rating != null)
+                  Positioned(
+                    top: 16,
+                    right: 16,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.9),
+                        borderRadius: BorderRadius.circular(9999),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.star,
+                            size: 14,
+                            color: Color(0xFFF59E0B), // amber-500
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            widget.rating!.toStringAsFixed(1),
+                            style: const TextStyle(
+                              fontFamily: 'Plus Jakarta Sans',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w900,
+                              color: Color(0xFF1C160D),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                
+
                 // Delivery time badge (bottom-left)
-                Positioned(
-                  bottom: 16,
-                  left: 16,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1C160D).withValues(alpha: 0.8),
-                      borderRadius: BorderRadius.circular(9999),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.schedule,
-                          size: 14,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          widget.deliveryTime.toUpperCase(),
-                          style: const TextStyle(
-                            fontFamily: 'Plus Jakarta Sans',
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 1.5,
+                if (widget.deliveryTime != null &&
+                    widget.deliveryTime!.trim().isNotEmpty)
+                  Positioned(
+                    bottom: 16,
+                    left: 16,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1C160D).withValues(alpha: 0.8),
+                        borderRadius: BorderRadius.circular(9999),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.schedule,
+                            size: 14,
                             color: Colors.white,
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 6),
+                          Text(
+                            widget.deliveryTime!.toUpperCase(),
+                            style: const TextStyle(
+                              fontFamily: 'Plus Jakarta Sans',
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 1.5,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Restaurant info
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,49 +248,55 @@ class _RestaurantCardState extends State<RestaurantCard> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${widget.category} • ${widget.priceLevel} • ${widget.distance}',
-                        style: const TextStyle(
-                          fontFamily: 'Plus Jakarta Sans',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF9C7A49),
+                      if (details.isNotEmpty) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          details.join(' • '),
+                          style: const TextStyle(
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF9C7A49),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      ],
                     ],
                   ),
                 ),
-                
-                const SizedBox(width: 12),
-                
+
+                if (widget.deliveryFee != null &&
+                    widget.deliveryFee!.trim().isNotEmpty)
+                  const SizedBox(width: 12),
+
                 // Delivery fee badge
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: widget.isFreeDelivery
-                        ? const Color(0xFFF49D25).withValues(alpha: 0.1)
-                        : const Color(0xFFEDE7E0),
-                    borderRadius: BorderRadius.circular(9999),
-                  ),
-                  child: Text(
-                    widget.deliveryFee.toUpperCase(),
-                    style: TextStyle(
-                      fontFamily: 'Plus Jakarta Sans',
-                      fontSize: 10,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 1.5,
+                if (widget.deliveryFee != null &&
+                    widget.deliveryFee!.trim().isNotEmpty)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
                       color: widget.isFreeDelivery
-                          ? const Color(0xFFF49D25)
-                          : const Color(0xFF9C7A49),
+                          ? const Color(0xFFF49D25).withValues(alpha: 0.1)
+                          : const Color(0xFFEDE7E0),
+                      borderRadius: BorderRadius.circular(9999),
+                    ),
+                    child: Text(
+                      widget.deliveryFee!.toUpperCase(),
+                      style: TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.5,
+                        color: widget.isFreeDelivery
+                            ? const Color(0xFFF49D25)
+                            : const Color(0xFF9C7A49),
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ],

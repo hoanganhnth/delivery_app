@@ -2,8 +2,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../../core/utils/logger/app_logger.dart';
 import '../../../domain/usecases/get_restaurants_usecase.dart';
 import '../../../domain/usecases/search_restaurants_usecase.dart';
-import '../../../domain/usecases/get_restaurants_nearby_usecase.dart';
-import '../../mock/mock_restaurant_service.dart';
 import 'restaurants_state.dart';
 import '../di/restaurant_di_providers.dart';
 
@@ -13,13 +11,11 @@ part 'restaurants_notifier.g.dart';
 class RestaurantsNotifier extends _$RestaurantsNotifier {
   late final GetRestaurantsUseCase _getRestaurantsUseCase;
   late final SearchRestaurantsUseCase _searchRestaurantsUseCase;
-  late final GetRestaurantsNearByUseCase _getRestaurantsNearByUseCase;
 
   @override
   RestaurantsState build() {
     _getRestaurantsUseCase = ref.read(getRestaurantsUseCaseProvider);
     _searchRestaurantsUseCase = ref.read(searchRestaurantsUseCaseProvider);
-    _getRestaurantsNearByUseCase = ref.read(getRestaurantsNearByUseCaseProvider);
     return const RestaurantsState();
   }
 
@@ -33,7 +29,9 @@ class RestaurantsNotifier extends _$RestaurantsNotifier {
   }) async {
     state = state.copyWith(isLoading: true, failure: null);
 
-    AppLogger.d('RestaurantsNotifier: Loading restaurants (page: $page, limit: $limit)');
+    AppLogger.d(
+      'RestaurantsNotifier: Loading restaurants (page: $page, limit: $limit)',
+    );
 
     final params = GetRestaurantsParams(
       latitude: latitude,
@@ -44,21 +42,21 @@ class RestaurantsNotifier extends _$RestaurantsNotifier {
     );
 
     final result = await _getRestaurantsUseCase.call(params);
-    
+
     if (!ref.mounted) return;
 
     result.fold(
       (failure) {
-        AppLogger.e('RestaurantsNotifier: Failed to load restaurants - ${failure.message}');
-        // Fallback to mock data if API fails
-        _loadMockRestaurants();
+        AppLogger.e(
+          'RestaurantsNotifier: Failed to load restaurants - ${failure.message}',
+        );
+        state = state.copyWith(isLoading: false, failure: failure);
       },
       (restaurants) {
-        AppLogger.i('RestaurantsNotifier: Successfully loaded ${restaurants.length} restaurants');
-        state = state.copyWith(
-          isLoading: false,
-          restaurants: restaurants,
+        AppLogger.i(
+          'RestaurantsNotifier: Successfully loaded ${restaurants.length} restaurants',
         );
+        state = state.copyWith(isLoading: false, restaurants: restaurants);
       },
     );
   }
@@ -76,7 +74,9 @@ class RestaurantsNotifier extends _$RestaurantsNotifier {
 
     state = state.copyWith(isSearchLoading: true, failure: null);
 
-    AppLogger.d('RestaurantsNotifier: Searching restaurants with query: "$query"');
+    AppLogger.d(
+      'RestaurantsNotifier: Searching restaurants with query: "$query"',
+    );
 
     final params = SearchRestaurantsParams(
       query: query,
@@ -85,56 +85,22 @@ class RestaurantsNotifier extends _$RestaurantsNotifier {
     );
 
     final result = await _searchRestaurantsUseCase.call(params);
-    
+
     if (!ref.mounted) return;
 
     result.fold(
       (failure) {
-        AppLogger.e('RestaurantsNotifier: Failed to search restaurants - ${failure.message}');
-        // Fallback to mock search
-        _searchMockRestaurants(query);
+        AppLogger.e(
+          'RestaurantsNotifier: Failed to search restaurants - ${failure.message}',
+        );
+        state = state.copyWith(isSearchLoading: false, failure: failure);
       },
       (restaurants) {
-        AppLogger.i('RestaurantsNotifier: Search found ${restaurants.length} restaurants');
+        AppLogger.i(
+          'RestaurantsNotifier: Search found ${restaurants.length} restaurants',
+        );
         state = state.copyWith(
           isSearchLoading: false,
-          restaurants: restaurants,
-        );
-      },
-    );
-  }
-
-  /// Load nearby restaurants
-  Future<void> loadNearbyRestaurants({
-    required double latitude,
-    required double longitude,
-    double? radius,
-    String? category,
-  }) async {
-    state = state.copyWith(isNearbyLoading: true, failure: null);
-
-    AppLogger.d('RestaurantsNotifier: Loading nearby restaurants at ($latitude, $longitude)');
-
-    final params = GetRestaurantsNearByParams(
-      latitude: latitude,
-      longitude: longitude,
-      radius: radius,
-    );
-
-    final result = await _getRestaurantsNearByUseCase.call(params);
-    
-    if (!ref.mounted) return;
-
-    result.fold(
-      (failure) {
-        AppLogger.e('RestaurantsNotifier: Failed to load nearby restaurants - ${failure.message}');
-        // Fallback to mock data
-        _loadMockRestaurants();
-      },
-      (restaurants) {
-        AppLogger.i('RestaurantsNotifier: Successfully loaded ${restaurants.length} nearby restaurants');
-        state = state.copyWith(
-          isNearbyLoading: false,
           restaurants: restaurants,
         );
       },
@@ -153,20 +119,25 @@ class RestaurantsNotifier extends _$RestaurantsNotifier {
     );
 
     final result = await _getRestaurantsUseCase.call(params);
-    
+
     if (!ref.mounted) return;
 
     result.fold(
       (failure) {
-        AppLogger.e('RestaurantsNotifier: Failed to load featured restaurants - ${failure.message}');
-        // Fallback to mock data
-        _loadMockFeaturedRestaurants();
+        AppLogger.e(
+          'RestaurantsNotifier: Failed to load featured restaurants - ${failure.message}',
+        );
+        state = state.copyWith(isFeaturedLoading: false, failure: failure);
       },
       (restaurants) {
-        AppLogger.i('RestaurantsNotifier: Successfully loaded ${restaurants.length} featured restaurants');
+        AppLogger.i(
+          'RestaurantsNotifier: Successfully loaded ${restaurants.length} featured restaurants',
+        );
         state = state.copyWith(
           isFeaturedLoading: false,
-          restaurants: restaurants.take(3).toList(), // Take only first 3 for featured
+          restaurants: restaurants
+              .take(3)
+              .toList(), // Take only first 3 for featured
         );
       },
     );
@@ -182,66 +153,5 @@ class RestaurantsNotifier extends _$RestaurantsNotifier {
   Future<void> refreshRestaurants() async {
     AppLogger.d('RestaurantsNotifier: Refreshing restaurants');
     await loadRestaurants();
-  }
-
-  // Fallback methods using mock data
-
-  void _loadMockRestaurants() {
-    AppLogger.w('RestaurantsNotifier: Using mock data as fallback');
-    try {
-      final mockRestaurants = MockRestaurantService.getMockRestaurants();
-      state = state.copyWith(
-        isLoading: false,
-        isNearbyLoading: false,
-        restaurants: mockRestaurants,
-      );
-    } catch (e) {
-      AppLogger.e('RestaurantsNotifier: Failed to load mock data - $e');
-      state = state.copyWith(
-        isLoading: false,
-        isNearbyLoading: false,
-        restaurants: const [],
-      );
-    }
-  }
-
-  void _loadMockFeaturedRestaurants() {
-    AppLogger.w('RestaurantsNotifier: Using mock featured data as fallback');
-    try {
-      final mockRestaurants = MockRestaurantService.getMockRestaurants().take(3).toList();
-      state = state.copyWith(
-        isFeaturedLoading: false,
-        restaurants: mockRestaurants,
-      );
-    } catch (e) {
-      AppLogger.e('RestaurantsNotifier: Failed to load mock featured data - $e');
-      state = state.copyWith(
-        isFeaturedLoading: false,
-        restaurants: const [],
-      );
-    }
-  }
-
-  void _searchMockRestaurants(String query) {
-    AppLogger.w('RestaurantsNotifier: Using mock search as fallback');
-    try {
-      final allRestaurants = MockRestaurantService.getMockRestaurants();
-      final filteredRestaurants = allRestaurants
-          .where((restaurant) =>
-              restaurant.name.toLowerCase().contains(query.toLowerCase()) ||
-              (restaurant.description?.toLowerCase().contains(query.toLowerCase()) ?? false))
-          .toList();
-      
-      state = state.copyWith(
-        isSearchLoading: false,
-        restaurants: filteredRestaurants,
-      );
-    } catch (e) {
-      AppLogger.e('RestaurantsNotifier: Failed to search mock data - $e');
-      state = state.copyWith(
-        isSearchLoading: false,
-        restaurants: const [],
-      );
-    }
   }
 }

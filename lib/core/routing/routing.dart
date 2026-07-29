@@ -11,7 +11,6 @@ export 'models/i_auth_checker.dart';
 
 // Guards (Logic — depends only on IAuthChecker)
 export 'guards/guard_manager.dart';
-export 'guards/route_guards.dart';
 
 // Helpers (UI/Extensions — depends on Flutter + GoRouter)
 export 'helpers/navigation_helper.dart';

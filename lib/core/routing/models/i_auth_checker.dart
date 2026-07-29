@@ -15,15 +15,8 @@ abstract interface class IAuthNotifier implements IAuthChecker, Listenable {}
 /// User roles for role-based access control.
 enum UserRole {
   guest,
-  regular,
-  premium,
-  admin;
+  regular;
 
   bool get isGuest => this == UserRole.guest;
   bool get isRegular => this == UserRole.regular;
-  bool get isPremium => this == UserRole.premium;
-  bool get isAdmin => this == UserRole.admin;
-
-  bool get canAccessAdmin => isAdmin;
-  bool get canAccessPremium => isPremium || isAdmin;
 }

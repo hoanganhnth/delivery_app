@@ -51,17 +51,18 @@ class _ProfileApiService implements ProfileApiService {
 
   @override
   Future<BaseResponseDto<UserProfileDto>> updateUserProfile(
-    UpdateProfileRequestDto request,
+    Map<String, dynamic> request,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = request;
+    final _data = <String, dynamic>{};
+    _data.addAll(request);
     final _options = _setStreamType<BaseResponseDto<UserProfileDto>>(
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/user/profile',
+            '/users',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -73,50 +74,6 @@ class _ProfileApiService implements ProfileApiService {
       _value = BaseResponseDto<UserProfileDto>.fromJson(
         _result.data!,
         (json) => UserProfileDto.fromJson(json as Map<String, dynamic>),
-      );
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<BaseResponseDto<String>> uploadAvatar(File avatar) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = FormData();
-    _data.files.add(
-      MapEntry(
-        'avatar',
-        MultipartFile.fromFileSync(
-          avatar.path,
-          filename: avatar.path.split(Platform.pathSeparator).last,
-        ),
-      ),
-    );
-    final _options = _setStreamType<BaseResponseDto<String>>(
-      Options(
-            method: 'POST',
-            headers: _headers,
-            extra: _extra,
-            contentType: 'multipart/form-data',
-          )
-          .compose(
-            _dio.options,
-            '/user/avatar',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BaseResponseDto<String> _value;
-    try {
-      _value = BaseResponseDto<String>.fromJson(
-        _result.data!,
-        (json) => json as String,
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, _result);

@@ -35,7 +35,10 @@ class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
         backgroundColor: Colors.orange,
         title: Text(
           s.restaurantsAllTitle,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         leading: IconButton(
           onPressed: () => context.pop(),
@@ -43,84 +46,32 @@ class _AllRestaurantsScreenState extends ConsumerState<AllRestaurantsScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => context.push(AppRoutes.search),
             icon: const Icon(Icons.search, color: Colors.white),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.filter_list, color: Colors.white),
-          ),
         ],
       ),
-      body: Column(
-        children: [
-          // Filter chips
-          Container(
-            height: 50.w,
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                _buildFilterChip(s.restaurantsFilterAll, true),
-                SizedBox(width: 8.w),
-                _buildFilterChip(s.restaurantsFilterFastDelivery, false),
-                SizedBox(width: 8.w),
-                _buildFilterChip(s.restaurantsFilterPromo, false),
-                SizedBox(width: 8.w),
-                _buildFilterChip(s.restaurantsFilterTopRated, false),
-                SizedBox(width: 8.w),
-                _buildFilterChip(s.restaurantsFilterNearby, false),
-              ],
+      body: restaurantsState.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : restaurantsState.hasError
+          ? Center(
+              child: Text(
+                s.restaurantsError(restaurantsState.errorMessage ?? ''),
+                style: const TextStyle(color: Colors.red),
+              ),
+            )
+          : ListView.builder(
+              padding: EdgeInsets.all(16.w),
+              itemCount: restaurantsState.restaurants.length,
+              itemBuilder: (context, index) {
+                final restaurant = restaurantsState.restaurants[index];
+                return GestureDetector(
+                  onTap: () =>
+                      context.pushToRestaurantDetails(restaurant.id.toString()),
+                  child: RestaurantListCard(restaurant: restaurant),
+                );
+              },
             ),
-          ),
-
-          Divider(height: 1.w),
-
-          // Restaurants list
-          Expanded(
-            child: restaurantsState.isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : restaurantsState.hasError
-                ? Center(
-                    child: Text(
-                      s.restaurantsError(restaurantsState.errorMessage ?? ''),
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  )
-                : ListView.builder(
-                    padding: EdgeInsets.all(16.w),
-                    itemCount: restaurantsState.restaurants.length,
-                    itemBuilder: (context, index) {
-                      final restaurant = restaurantsState.restaurants[index];
-                      return GestureDetector(
-                        onTap: () => context.pushToRestaurantDetails(
-                          restaurant.id.toString(),
-                        ),
-                        child: RestaurantListCard(restaurant: restaurant),
-                      );
-                    },
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFilterChip(String label, bool isSelected) {
-    return FilterChip(
-      label: Text(label),
-      selected: isSelected,
-      onSelected: (selected) {},
-      selectedColor: Colors.orange.withValues(alpha: 0.2),
-      backgroundColor: Colors.grey[100],
-      labelStyle: TextStyle(
-        color: isSelected ? Colors.orange : Colors.grey[700],
-        fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(color: isSelected ? Colors.orange : Colors.grey[300]!),
-      ),
     );
   }
 }

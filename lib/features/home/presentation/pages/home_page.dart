@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../../restaurants/presentation/providers/providers.dart';
-import 'package:delivery_app/features/flash_sale/presentation/widgets/flash_sale_banner.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -16,20 +15,6 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  int _selectedCategoryIndex = 0;
-
-  // Amber Hearth design tokens
-  final List<CategoryItem> _categories = [
-    CategoryItem(icon: Icons.restaurant_menu, label: 'Tất cả', isActive: true),
-    CategoryItem(icon: Icons.local_pizza, label: 'Pizza'),
-    CategoryItem(icon: Icons.rice_bowl, label: 'Cơm'),
-    CategoryItem(icon: Icons.local_cafe, label: 'Cà phê'),
-    CategoryItem(icon: Icons.cake, label: 'Bánh ngọt'),
-    CategoryItem(icon: Icons.ramen_dining, label: 'Mì phở'),
-    CategoryItem(icon: Icons.fastfood, label: 'Fast food'),
-    CategoryItem(icon: Icons.local_drink, label: 'Đồ uống'),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -47,49 +32,36 @@ class _HomePageState extends ConsumerState<HomePage> {
       bottom: false,
       child: CustomScrollView(
         slivers: [
-            // Glass App Bar
-            SliverToBoxAdapter(child: _buildHeader(context)),
+          // Glass App Bar
+          SliverToBoxAdapter(child: _buildHeader(context)),
 
-            // Search bar
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(16.w, 8.w, 16.w, 16.w),
-                child: AmberSearchBar(
-                  placeholder: 'Bạn muốn ăn gì hôm nay?',
-                  onSearch: (query) {
-                    // TODO: Navigate to search results
-                    debugPrint('Search: $query');
-                  },
-                ),
+          // Search bar
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16.w, 8.w, 16.w, 16.w),
+              child: AmberSearchBar(
+                placeholder: 'Bạn muốn ăn gì hôm nay?',
+                showButton: false,
+                onTap: () => context.push(AppRoutes.search),
               ),
             ),
+          ),
 
-            // Categories horizontal scroll
-            SliverToBoxAdapter(child: _buildCategoriesSection()),
-
-            // Flash Sale Section
-            const SliverToBoxAdapter(
-              child: FlashSaleBanner(),
+          // Featured restaurants section header
+          SliverToBoxAdapter(
+            child: _buildSectionHeader(
+              title: 'Nhà hàng nổi bật',
+              onSeeAll: () => context.pushToRestaurants(),
             ),
+          ),
 
-            // Featured livestreams section
-            // const SliverToBoxAdapter(child: LivestreamHomeSection()),
+          // Featured restaurants list
+          _buildRestaurantsList(restaurantsState),
 
-            // Featured restaurants section header
-            SliverToBoxAdapter(
-              child: _buildSectionHeader(
-                title: 'Nhà hàng nổi bật',
-                onSeeAll: () => context.pushToRestaurants(),
-              ),
-            ),
-
-            // Featured restaurants list
-            _buildRestaurantsList(restaurantsState),
-
-            // Bottom padding for nav bar
-            SliverToBoxAdapter(child: SizedBox(height: 140.w)),
-          ],
-        ),
+          // Bottom padding for nav bar
+          SliverToBoxAdapter(child: SizedBox(height: 140.w)),
+        ],
+      ),
     );
   }
 
@@ -100,52 +72,54 @@ class _HomePageState extends ConsumerState<HomePage> {
         children: [
           // Location
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.location_on,
-                      color: ref.colors.primary,
-                      size: 20.w,
-                    ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      'Giao đến',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: ref.colors.textSecondary,
+            child: InkWell(
+              onTap: () => context.pushAddressList(),
+              borderRadius: BorderRadius.circular(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        color: ref.colors.primary,
+                        size: 20.w,
                       ),
-                    ),
-                    Icon(
-                      Icons.keyboard_arrow_down,
-                      color: ref.colors.textSecondary,
-                      size: 18.w,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 2.w),
-                Text(
-                  '123 Nguyễn Văn Linh, Q.7',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                    color: ref.colors.textPrimary,
+                      SizedBox(width: 4.w),
+                      Text(
+                        'Giao đến',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: ref.colors.textSecondary,
+                        ),
+                      ),
+                      Icon(
+                        Icons.keyboard_arrow_down,
+                        color: ref.colors.textSecondary,
+                        size: 18.w,
+                      ),
+                    ],
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+                  SizedBox(height: 2.w),
+                  Text(
+                    'Chọn địa chỉ giao hàng',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: ref.colors.textPrimary,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
           ),
 
           // Notification button
           GlassActionButton(
             icon: Icons.notifications_outlined,
-            onPressed: () {
-              // TODO: Open notifications
-            },
+            onPressed: () => context.push(AppRoutes.notifications),
           ),
 
           SizedBox(width: 8.w),
@@ -157,50 +131,6 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildCategoriesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 8.w, 16.w, 12.w),
-          child: Text(
-            'Danh mục',
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-              color: ref.colors.textPrimary,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 100.w,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(horizontal: 12.w),
-            itemCount: _categories.length,
-            itemBuilder: (context, index) {
-              final category = _categories[index];
-              final isSelected = index == _selectedCategoryIndex;
-
-              return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 4.w),
-                child: CategoryPill(
-                  icon: category.icon,
-                  label: category.label,
-                  isActive: isSelected,
-                  onTap: () {
-                    setState(() => _selectedCategoryIndex = index);
-                    // TODO: Filter restaurants by category
-                  },
-                ),
-              );
-            },
-          ),
-        ),
-      ],
     );
   }
 
@@ -294,19 +224,22 @@ class _HomePageState extends ConsumerState<HomePage> {
             padding: EdgeInsets.only(bottom: 16.w),
             child: RestaurantCard(
               name: restaurant.name,
-              imageUrl:
-                  restaurant.image ??
-                  'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800',
-              rating: restaurant.rating ?? 4.5,
-              deliveryTime:
-                  '${restaurant.deliveryTime ?? 25}-${(restaurant.deliveryTime ?? 25) + 10} min',
-              category: restaurant.category ?? 'Đa dạng',
-              priceLevel: '\$\$',
-              distance: '${(restaurant.distance ?? 1.5).toStringAsFixed(1)} km',
-              deliveryFee: restaurant.deliveryFee == 0
+              imageUrl: restaurant.image,
+              rating: restaurant.rating,
+              deliveryTime: restaurant.deliveryTime == null
+                  ? null
+                  : '${restaurant.deliveryTime} phút',
+              category: restaurant.category,
+              distance: restaurant.distance == null
+                  ? null
+                  : '${restaurant.distance!.toStringAsFixed(1)} km',
+              deliveryFee: restaurant.deliveryFee == null
+                  ? null
+                  : restaurant.deliveryFee == 0
                   ? 'Miễn phí giao hàng'
-                  : '${restaurant.deliveryFee?.toStringAsFixed(0) ?? "15"}k',
-              isFreeDelivery: restaurant.deliveryFee == 0,
+                  : '${restaurant.deliveryFee!.toStringAsFixed(0)}đ',
+              isFreeDelivery:
+                  restaurant.deliveryFee != null && restaurant.deliveryFee == 0,
               onTap: () =>
                   context.pushToRestaurantDetails(restaurant.id.toString()),
             ),
@@ -315,7 +248,6 @@ class _HomePageState extends ConsumerState<HomePage> {
       ),
     );
   }
-
 }
 
 /// Model for category items

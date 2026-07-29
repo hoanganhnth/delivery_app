@@ -21,7 +21,8 @@ class AddEditAddressScreen extends ConsumerStatefulWidget {
   const AddEditAddressScreen({super.key, this.address});
 
   @override
-  ConsumerState<AddEditAddressScreen> createState() => _AddEditAddressScreenState();
+  ConsumerState<AddEditAddressScreen> createState() =>
+      _AddEditAddressScreenState();
 }
 
 class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
@@ -45,7 +46,9 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
     super.initState();
     final a = widget.address;
     _labelController = TextEditingController(text: a?.label ?? '');
-    _recipientNameController = TextEditingController(text: a?.recipientName ?? '');
+    _recipientNameController = TextEditingController(
+      text: a?.recipientName ?? '',
+    );
     _phoneController = TextEditingController(text: a?.phoneNumber ?? '');
     _addressLineController = TextEditingController(text: a?.addressLine ?? '');
     _wardController = TextEditingController(text: a?.ward ?? '');
@@ -74,7 +77,7 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
 
   void _submitForm() {
     if (!_formKey.currentState!.validate()) return;
-    
+
     final dto = UserAddressRequestDto(
       label: _labelController.text.trim(),
       recipientName: _recipientNameController.text.trim(),
@@ -88,9 +91,11 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
       latitude: _latitude,
       longitude: _longitude,
     );
-    
+
     if (_isEditing) {
-      ref.read(addressFormProvider.notifier).updateAddress(widget.address!.id!, dto);
+      ref
+          .read(addressFormProvider.notifier)
+          .updateAddress(widget.address!.id!, dto);
     } else {
       final user = ref.read(profileProvider).user;
       if (user?.id != null) {
@@ -105,19 +110,24 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(s.addressDelete),
-        content: const Text('Bạn có chắc chắn muốn xóa địa chỉ này?'), 
+        content: const Text('Bạn có chắc chắn muốn xóa địa chỉ này?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Hủy'), 
+            child: const Text('Hủy'),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              ref.read(userAddressListProvider.notifier).deleteAddress(widget.address!.id!);
-              context.pop(); 
+              ref
+                  .read(userAddressListProvider.notifier)
+                  .deleteAddress(widget.address!.id!);
+              context.pop();
             },
-            child: Text(s.addressDelete, style: TextStyle(color: ref.colors.error)),
+            child: Text(
+              s.addressDelete,
+              style: TextStyle(color: ref.colors.error),
+            ),
           ),
         ],
       ),
@@ -167,18 +177,29 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
     final colors = ref.colors;
     final formState = ref.watch(addressFormProvider);
 
-    ref.listen<AsyncValue<UserAddressEntity?>>(addressFormProvider, (previous, next) {
+    ref.listen<AsyncValue<UserAddressEntity?>>(addressFormProvider, (
+      previous,
+      next,
+    ) {
       next.when(
         data: (address) {
           if (previous?.isLoading == true && address != null) {
             if (_isEditing) {
-              ToastUtils.showAddressUpdateSuccess(context, addressLabel: address.label);
+              ToastUtils.showAddressUpdateSuccess(
+                context,
+                addressLabel: address.label,
+              );
             } else {
-              ToastUtils.showAddressAddSuccess(context, addressLabel: address.label);
+              ToastUtils.showAddressAddSuccess(
+                context,
+                addressLabel: address.label,
+              );
             }
             final user = ref.read(profileProvider).user;
             if (user?.id != null) {
-              ref.read(userAddressListProvider.notifier).loadAddresses(user!.id!);
+              ref
+                  .read(userAddressListProvider.notifier)
+                  .loadAddresses(user!.id!);
             }
             context.pop();
           }
@@ -187,9 +208,9 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
         error: (error, _) {
           if (previous?.isLoading == true) {
             if (_isEditing) {
-              ToastUtils.showAddressUpdateError(context, message: error.toString());
+              ToastUtils.showAddressUpdateError(context);
             } else {
-              ToastUtils.showAddressAddError(context, message: error.toString());
+              ToastUtils.showAddressAddError(context);
             }
           }
         },
@@ -201,7 +222,10 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
       appBar: AppBar(
         title: Text(
           _isEditing ? s.addressEditTitle : s.addressAddTitle,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
         backgroundColor: colors.primary,
@@ -222,9 +246,14 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(ResponsiveSize.radiusM),
+                      borderRadius: BorderRadius.circular(
+                        ResponsiveSize.radiusM,
+                      ),
                     ),
-                    child: const Icon(Icons.delete_outline, color: Colors.white),
+                    child: const Icon(
+                      Icons.delete_outline,
+                      color: Colors.white,
+                    ),
                   ),
                   onPressed: _showDeleteConfirmation,
                 ),
@@ -255,8 +284,12 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
                 setState(() {
                   _latitude = lat;
                   _longitude = lng;
-                  if (_addressLineController.text.isEmpty) _addressLineController.text = addressLine;
-                  if (_cityController.text.isEmpty) _cityController.text = city;
+                  if (_addressLineController.text.isEmpty) {
+                    _addressLineController.text = addressLine;
+                  }
+                  if (_cityController.text.isEmpty) {
+                    _cityController.text = city;
+                  }
                 });
               },
             ),

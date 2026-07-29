@@ -1,9 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../../core/utils/logger/app_logger.dart';
-import '../../../domain/entities/restaurant_entity.dart';
 import '../../../domain/usecases/get_restaurant_by_id_usecase.dart';
 import '../../../domain/usecases/get_menu_items_usecase.dart';
-import '../../mock/mock_restaurant_service.dart';
 import 'restaurant_detail_state.dart';
 import '../di/restaurant_di_providers.dart';
 
@@ -30,35 +28,53 @@ class RestaurantDetailNotifier extends _$RestaurantDetailNotifier {
 
     state = state.copyWith(isLoading: true, failure: null);
 
-    AppLogger.d('RestaurantDetailNotifier: Loading restaurant detail for ID: $restaurantId');
+    AppLogger.d(
+      'RestaurantDetailNotifier: Loading restaurant detail for ID: $restaurantId',
+    );
 
     // Load restaurant details first
     final restaurantResult = await _getRestaurantByIdUseCase.call(restaurantId);
-    
+
     if (!ref.mounted) return;
 
     restaurantResult.fold(
       (failure) {
-        AppLogger.e('RestaurantDetailNotifier: Failed to load restaurant - ${failure.message}');
-        // Fallback to mock restaurant
-        _loadMockRestaurantDetail(restaurantId);
+        AppLogger.e(
+          'RestaurantDetailNotifier: Failed to load restaurant - ${failure.message}',
+        );
+        state = state.copyWith(
+          isLoading: false,
+          restaurant: null,
+          menuItems: const [],
+          failure: failure,
+        );
       },
       (restaurant) async {
-        AppLogger.i('RestaurantDetailNotifier: Successfully loaded restaurant: ${restaurant.name}');
-        
+        AppLogger.i(
+          'RestaurantDetailNotifier: Successfully loaded restaurant: ${restaurant.name}',
+        );
+
         // Load menu items
         final menuResult = await _getMenuItemsUseCase.call(restaurantId);
-        
+
         if (!ref.mounted) return;
 
         menuResult.fold(
           (failure) {
-            AppLogger.e('RestaurantDetailNotifier: Failed to load menu items - ${failure.message}');
-            // Use restaurant data but fallback to mock menu
-            _loadMockMenuItems(restaurantId, restaurant);
+            AppLogger.e(
+              'RestaurantDetailNotifier: Failed to load menu items - ${failure.message}',
+            );
+            state = state.copyWith(
+              isLoading: false,
+              restaurant: restaurant,
+              menuItems: const [],
+              failure: failure,
+            );
           },
           (menuItems) {
-            AppLogger.i('RestaurantDetailNotifier: Successfully loaded ${menuItems.length} menu items');
+            AppLogger.i(
+              'RestaurantDetailNotifier: Successfully loaded ${menuItems.length} menu items',
+            );
             state = state.copyWith(
               isLoading: false,
               restaurant: restaurant,
@@ -79,24 +95,26 @@ class RestaurantDetailNotifier extends _$RestaurantDetailNotifier {
 
     state = state.copyWith(isMenuLoading: true, failure: null);
 
-    AppLogger.d('RestaurantDetailNotifier: Loading menu items for restaurant: $restaurantId');
+    AppLogger.d(
+      'RestaurantDetailNotifier: Loading menu items for restaurant: $restaurantId',
+    );
 
     final result = await _getMenuItemsUseCase.call(restaurantId);
-    
+
     if (!ref.mounted) return;
 
     result.fold(
       (failure) {
-        AppLogger.e('RestaurantDetailNotifier: Failed to load menu items - ${failure.message}');
-        // Fallback to mock menu items
-        _loadMockMenuItemsOnly(restaurantId);
+        AppLogger.e(
+          'RestaurantDetailNotifier: Failed to load menu items - ${failure.message}',
+        );
+        state = state.copyWith(isMenuLoading: false, failure: failure);
       },
       (menuItems) {
-        AppLogger.i('RestaurantDetailNotifier: Successfully loaded ${menuItems.length} menu items');
-        state = state.copyWith(
-          isMenuLoading: false,
-          menuItems: menuItems,
+        AppLogger.i(
+          'RestaurantDetailNotifier: Successfully loaded ${menuItems.length} menu items',
         );
+        state = state.copyWith(isMenuLoading: false, menuItems: menuItems);
       },
     );
   }
@@ -113,71 +131,9 @@ class RestaurantDetailNotifier extends _$RestaurantDetailNotifier {
 
   /// Refresh restaurant detail data
   Future<void> refreshRestaurantDetail(num restaurantId) async {
-    AppLogger.d('RestaurantDetailNotifier: Refreshing restaurant detail for: $restaurantId');
+    AppLogger.d(
+      'RestaurantDetailNotifier: Refreshing restaurant detail for: $restaurantId',
+    );
     await loadRestaurantDetail(restaurantId);
-  }
-
-  // Fallback methods using mock data
-
-  void _loadMockRestaurantDetail(num restaurantId) {
-    AppLogger.w('RestaurantDetailNotifier: Using mock data as fallback');
-    try {
-      final allRestaurants = MockRestaurantService.getMockRestaurants();
-      final restaurant = allRestaurants.firstWhere(
-        (r) => r.id == restaurantId,
-        orElse: () => allRestaurants.first,
-      );
-      
-      final menuItems = MockRestaurantService.getMockMenuItems(restaurantId);
-      
-      state = state.copyWith(
-        isLoading: false,
-        restaurant: restaurant,
-        menuItems: menuItems,
-      );
-    } catch (e) {
-      AppLogger.e('RestaurantDetailNotifier: Failed to load mock restaurant detail - $e');
-      state = state.copyWith(
-        isLoading: false,
-        restaurant: null,
-        menuItems: const [],
-      );
-    }
-  }
-
-  void _loadMockMenuItems(num restaurantId, RestaurantEntity restaurant) {
-    AppLogger.w('RestaurantDetailNotifier: Using mock menu items as fallback');
-    try {
-      final menuItems = MockRestaurantService.getMockMenuItems(restaurantId);
-      state = state.copyWith(
-        isLoading: false,
-        restaurant: restaurant,
-        menuItems: menuItems,
-      );
-    } catch (e) {
-      AppLogger.e('RestaurantDetailNotifier: Failed to load mock menu items - $e');
-      state = state.copyWith(
-        isLoading: false,
-        restaurant: restaurant,
-        menuItems: const [],
-      );
-    }
-  }
-
-  void _loadMockMenuItemsOnly(num restaurantId) {
-    AppLogger.w('RestaurantDetailNotifier: Using mock menu items only as fallback');
-    try {
-      final menuItems = MockRestaurantService.getMockMenuItems(restaurantId);
-      state = state.copyWith(
-        isMenuLoading: false,
-        menuItems: menuItems,
-      );
-    } catch (e) {
-      AppLogger.e('RestaurantDetailNotifier: Failed to load mock menu items only - $e');
-      state = state.copyWith(
-        isMenuLoading: false,
-        menuItems: const [],
-      );
-    }
   }
 }

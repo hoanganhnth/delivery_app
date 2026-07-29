@@ -27,11 +27,11 @@ Failure mapExceptionToFailure(Object e) {
 
   // Handle other common exception types
   if (e is FormatException) {
-    return Failure.validation('Invalid data format: ${e.message}');
+    return const Failure.validation('Dữ liệu phản hồi không hợp lệ');
   }
 
   if (e is TypeError) {
-    return Failure.server('Data type error: ${e.toString()}');
+    return const Failure.server('Dữ liệu phản hồi không hợp lệ');
   }
 
   // If it's already a failure, just return it
@@ -40,20 +40,18 @@ Failure mapExceptionToFailure(Object e) {
   }
 
   // Default fallback
-  return Failure.unexpected('Unexpected error: ${e.toString()}');
+  return const Failure.unexpected('Đã xảy ra lỗi. Vui lòng thử lại.');
 }
 
 extension AsyncValueUI on AsyncValue {
   /// Hiển thị thông báo lỗi nếu AsyncValue có lỗi
-  void showSnackBarOnError(
-    void Function(String message) showSnackBar,
-  ) {
+  void showSnackBarOnError(void Function(String message) showSnackBar) {
     if (hasError && !isLoading) {
       final error = this.error;
       if (error is Failure) {
         showSnackBar(error.message);
       } else {
-        showSnackBar(error.toString());
+        showSnackBar('Đã xảy ra lỗi. Vui lòng thử lại.');
       }
     }
   }
@@ -65,7 +63,7 @@ extension AsyncValueUI on AsyncValue {
       if (error is Failure) {
         return error.message;
       }
-      return error.toString();
+      return 'Đã xảy ra lỗi. Vui lòng thử lại.';
     }
     return null;
   }

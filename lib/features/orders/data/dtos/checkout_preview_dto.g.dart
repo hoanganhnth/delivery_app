@@ -24,8 +24,8 @@ _CheckoutPreviewRequest _$CheckoutPreviewRequestFromJson(
   Map<String, dynamic> json,
 ) => _CheckoutPreviewRequest(
   restaurantId: (json['restaurantId'] as num).toInt(),
-  deliveryLat: (json['deliveryLat'] as num?)?.toDouble(),
-  deliveryLng: (json['deliveryLng'] as num?)?.toDouble(),
+  deliveryLat: (json['deliveryLat'] as num).toDouble(),
+  deliveryLng: (json['deliveryLng'] as num).toDouble(),
   couponCode: json['couponCode'] as String?,
   items: (json['items'] as List<dynamic>)
       .map(

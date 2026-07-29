@@ -347,6 +347,10 @@
 
 ## 10. SUPPORT (Hỗ trợ)
 
+> MVP note: support chat is hidden from runtime navigation. The repository may
+> still contain the implementation as source history, but this is not a client-
+> visible MVP surface.
+
 ### 10.1 Support Chat Screen - Chat hỗ trợ khách hàng
 **File:** `lib/features/support/presentation/screens/support_chat_screen.dart`
 

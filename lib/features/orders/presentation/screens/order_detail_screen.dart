@@ -37,7 +37,8 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
       final nextStatus = next.currentTracking?.status;
 
       if (nextStatus != prevStatus &&
-          (nextStatus?.value == 'delivered' || nextStatus?.value == 'cancelled')) {
+          (nextStatus?.value == 'delivered' ||
+              nextStatus?.value == 'cancelled')) {
         ref.invalidate(ordersListProvider);
       }
     });
@@ -56,7 +57,11 @@ class OrderDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
   final num orderId;
   final AppColors colors;
 
-  const OrderDetailAppBar({super.key, required this.orderId, required this.colors});
+  const OrderDetailAppBar({
+    super.key,
+    required this.orderId,
+    required this.colors,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -75,14 +80,6 @@ class OrderDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
           color: colors.textPrimary,
         ),
       ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.share_outlined, color: colors.textSecondary),
-          onPressed: () {
-            // TODO: Share order
-          },
-        ),
-      ],
     );
   }
 
@@ -98,7 +95,7 @@ class OrderDetailBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final orderDetailState = ref.watch(orderDetailProvider(orderId));
-    
+
     return orderDetailState.when(
       data: (order) => order == null
           ? const OrderNotFoundWidget()
@@ -146,7 +143,8 @@ class OrderDetailBody extends ConsumerWidget {
                     // Actions
                     OrderActionButtons(
                       order: order,
-                      onOrderCanceled: () => ref.invalidate(orderDetailProvider(orderId)),
+                      onOrderCanceled: () =>
+                          ref.invalidate(orderDetailProvider(orderId)),
                     ),
 
                     SizedBox(height: ResponsiveSize.xl),
@@ -156,7 +154,7 @@ class OrderDetailBody extends ConsumerWidget {
             ),
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => OrderErrorWidget(
-        message: error.toString(),
+        message: 'Không thể tải thông tin đơn hàng. Vui lòng thử lại.',
         onRetry: () => ref.invalidate(orderDetailProvider(orderId)),
       ),
     );
@@ -197,7 +195,7 @@ class OrderMainStatusCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.colors;
-    
+
     return Container(
       padding: EdgeInsets.all(ResponsiveSize.l),
       decoration: BoxDecoration(
@@ -243,7 +241,7 @@ class OrderMainStatusCard extends ConsumerWidget {
                           ),
                           SizedBox(width: 4.w),
                           Text(
-                            'Dự kiến 15-20 phút', // Consider moving to constants or i18n
+                            'Dự kiến ${MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(order.estimatedDeliveryTime!))}',
                             style: TextStyle(
                               fontSize: ResponsiveSize.fontL,
                               fontWeight: FontWeight.w600,
@@ -297,7 +295,7 @@ class OrderTimelineSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.colors;
     final trackingState = ref.watch(deliveryTrackingProvider);
-    
+
     return Container(
       padding: EdgeInsets.all(ResponsiveSize.l),
       decoration: BoxDecoration(
@@ -313,7 +311,9 @@ class OrderTimelineSection extends ConsumerWidget {
       ),
       child: DeliveryTimeline(
         status: order.status,
-        rawBackendStatus: trackingState.currentTracking?.status.value ?? order.rawBackendStatus,
+        rawBackendStatus:
+            trackingState.currentTracking?.status.value ??
+            order.rawBackendStatus,
       ),
     );
   }
@@ -327,7 +327,7 @@ class OrderItemsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.colors;
-    
+
     return Container(
       padding: EdgeInsets.all(ResponsiveSize.m + 4.w),
       decoration: BoxDecoration(
