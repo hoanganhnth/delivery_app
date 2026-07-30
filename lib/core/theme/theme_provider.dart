@@ -1,55 +1,80 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app_theme.dart';
 import 'app_colors.dart';
 
 part 'theme_provider.g.dart';
 
+abstract interface class ThemeStoragePort {
+  AppThemeType? readTheme();
+  Future<void> writeTheme(AppThemeType themeType);
+}
+
+class SharedPreferencesThemeStorage implements ThemeStoragePort {
+  SharedPreferencesThemeStorage(this._preferences);
+
+  static const themeKey = 'app_theme';
+  final SharedPreferences _preferences;
+
+  @override
+  AppThemeType? readTheme() {
+    final stored = _preferences.getString(themeKey);
+    if (stored == null) return null;
+    for (final themeType in AppThemeType.values) {
+      if (themeType.name == stored) return themeType;
+    }
+    return null;
+  }
+
+  @override
+  Future<void> writeTheme(AppThemeType themeType) async {
+    await _preferences.setString(themeKey, themeType.name);
+  }
+}
+
+class MemoryThemeStorage implements ThemeStoragePort {
+  AppThemeType? _themeType;
+
+  @override
+  AppThemeType? readTheme() => _themeType;
+
+  @override
+  Future<void> writeTheme(AppThemeType themeType) async {
+    _themeType = themeType;
+  }
+}
+
+/// Safe test/preview default. Production replaces this at the application
+/// composition root with [SharedPreferencesThemeStorage].
+final themeStorageProvider = Provider<ThemeStoragePort>(
+  (ref) => MemoryThemeStorage(),
+);
+
 /// Theme provider to manage app theme state
 @riverpod
 class Theme extends _$Theme {
-  static const String _themeKey = 'app_theme';
-
   @override
   AppTheme build() {
-    _loadTheme();
-    return AppTheme.light;
-  }
-
-  /// Load theme from storage
-  Future<void> _loadTheme() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final themeTypeString = prefs.getString(_themeKey);
-      
-      if (themeTypeString != null) {
-        final themeType = AppThemeType.values.firstWhere(
-          (type) => type.name == themeTypeString,
-          orElse: () => AppThemeType.light,
-        );
-        state = AppTheme.fromType(themeType);
-      }
-    } catch (e) {
-      // If loading fails, keep default light theme
-    }
+    final storedTheme = ref.watch(themeStorageProvider).readTheme();
+    return storedTheme == null
+        ? AppTheme.light
+        : AppTheme.fromType(storedTheme);
   }
 
   /// Change theme and save to storage
   Future<void> setTheme(AppThemeType themeType) async {
     state = AppTheme.fromType(themeType);
-    
+
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_themeKey, themeType.name);
-    } catch (e) {
-      // Handle storage error
-    }
+      await ref.read(themeStorageProvider).writeTheme(themeType);
+    } catch (_) {}
   }
 
   /// Toggle between light and dark theme
   Future<void> toggleTheme() async {
-    final newThemeType = state.type == AppThemeType.light 
-        ? AppThemeType.dark 
+    final newThemeType = state.type == AppThemeType.light
+        ? AppThemeType.dark
         : AppThemeType.light;
     await setTheme(newThemeType);
   }

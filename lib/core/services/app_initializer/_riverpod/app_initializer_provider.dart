@@ -14,7 +14,7 @@ part 'app_initializer_provider.g.dart';
 IAppInitializerService appInitializerService(Ref ref) {
   final authNotifier = ref.read(authProvider.notifier);
   final profileNotifier = ref.read(profileProvider.notifier);
-  final pushService = ref.read(pushNotificationServiceProvider);
+  final pushService = ref.read(pushNotificationPortProvider);
 
   return AppInitializerService(
     initTasks: [

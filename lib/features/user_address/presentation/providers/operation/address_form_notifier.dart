@@ -31,6 +31,7 @@ class AddressFormNotifier extends _$AddressFormNotifier {
     int userId,
     UserAddressRequestDto request,
   ) async {
+    if (state.isLoading) return null;
     state = const AsyncValue.loading();
 
     final createAddressUseCase = ref.read(createAddressUseCaseProvider);
@@ -53,6 +54,7 @@ class AddressFormNotifier extends _$AddressFormNotifier {
     int addressId,
     UserAddressRequestDto request,
   ) async {
+    if (state.isLoading) return null;
     state = const AsyncValue.loading();
 
     final updateAddressUseCase = ref.read(updateAddressUseCaseProvider);

@@ -31,6 +31,19 @@ class CartRepositoryImpl implements CartRepository {
   @override
   Future<Either<Failure, CartEntity>> addItem(CartItemEntity item) async {
     try {
+      final currentCartResult = await getCart();
+      final crossRestaurantFailure = currentCartResult.fold<Failure?>(
+        (failure) => failure,
+        (cart) => cart.canAddFromRestaurant(item.restaurantId)
+            ? null
+            : const ValidationFailure(
+                'Không thể thêm món từ nhà hàng khác vào cùng giỏ hàng',
+              ),
+      );
+      if (crossRestaurantFailure != null) {
+        return left(crossRestaurantFailure);
+      }
+
       final cartItemDto = CartItemDto(
         menuItemId: item.menuItemId,
         menuItemName: item.menuItemName,

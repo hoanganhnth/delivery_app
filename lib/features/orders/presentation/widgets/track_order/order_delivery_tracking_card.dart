@@ -26,26 +26,36 @@ class OrderDeliveryTrackingCard extends ConsumerStatefulWidget {
 
 class _OrderDeliveryTrackingCardState
     extends ConsumerState<OrderDeliveryTrackingCard> {
+  late final DeliveryTracking _deliveryTrackingNotifier;
+  ShipperLocation? _shipperLocationNotifier;
+  bool _startedDeliveryTracking = false;
+  bool _startedShipperTracking = false;
+
   @override
   void initState() {
     super.initState();
+    _deliveryTrackingNotifier = ref.read(deliveryTrackingProvider.notifier);
     // Start tracking when widget is created
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final orderId = widget.order.id;
       if (orderId != null && orderId > 0) {
-        await ref
-            .read(deliveryTrackingProvider.notifier)
-            .startTrackingOrderSafe(
-              orderId,
-              trackingRealtime: widget.order.canTrackingRealtime,
-            );
+        _startedDeliveryTracking = true;
+        await _deliveryTrackingNotifier.startTrackingOrderSafe(
+          orderId,
+          trackingRealtime: widget.order.canTrackingRealtime,
+        );
       }
     });
   }
 
   @override
   void dispose() {
-    // Stop tracking when widget is disposed
+    if (_startedDeliveryTracking) {
+      _deliveryTrackingNotifier.cancelTrackingLease();
+    }
+    if (_startedShipperTracking && _shipperLocationNotifier != null) {
+      _shipperLocationNotifier!.cancelTrackingLease();
+    }
     super.dispose();
   }
 
@@ -71,9 +81,11 @@ class _OrderDeliveryTrackingCardState
         final shipperId = next.currentTracking!.shipperId;
         final deliveryId = next.currentTracking!.id;
         if (shipperId != null && deliveryId > 0) {
-          ref
-              .read(shipperLocationProvider.notifier)
-              .startTrackingShipper(shipperId, deliveryId);
+          _startedShipperTracking = true;
+          _shipperLocationNotifier ??= ref.read(
+            shipperLocationProvider.notifier,
+          );
+          _shipperLocationNotifier!.startTrackingShipper(shipperId, deliveryId);
         }
       }
 
@@ -85,7 +97,7 @@ class _OrderDeliveryTrackingCardState
         );
         ref.invalidate(orderDetailProvider(orderId));
         ref.invalidate(deliveryTrackingProvider);
-        ref.read(deliveryTrackingProvider.notifier).stopTrackingOrder();
+        _deliveryTrackingNotifier.stopTrackingOrder();
       }
     });
 
@@ -111,15 +123,19 @@ class _OrderDeliveryTrackingCardState
                       size: 24,
                     ),
                     SizedBox(width: 12.w),
-                    Text(
-                      S.of(context).trackDelivery,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
-                        color: ref.colors.textPrimary,
+                    Expanded(
+                      child: Text(
+                        S.of(context).trackDelivery,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                          color: ref.colors.textPrimary,
+                        ),
                       ),
                     ),
-                    const Spacer(),
+                    SizedBox(width: 8.w),
                     TrackingConnectionStatusBadge(
                       isConnected: trackingState.hasTracking,
                       isLoading: trackingState.isLoading,

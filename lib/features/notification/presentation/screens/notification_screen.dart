@@ -23,7 +23,9 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
   @override
   void initState() {
     super.initState();
-    _loadNotifications();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _loadNotifications();
+    });
   }
 
   Future<void> _loadNotifications() async {
@@ -115,14 +117,15 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
     );
   }
 
-  Future<void> _deleteNotification(int id, int index) async {
+  Future<bool> _deleteNotification(int id, int index) async {
     final repository = ref.read(notificationRepositoryProvider);
     final result = await repository.deleteNotification(id);
-    result.fold(
+    return result.fold(
       (failure) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(failure.message)));
+        return false;
       },
       (_) {
         setState(() {
@@ -131,6 +134,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
           }
           _notifications.removeAt(index);
         });
+        return true;
       },
     );
   }
@@ -167,12 +171,17 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
         backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
         elevation: 0,
         title: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              s.notificationTitle,
-              style: TextStyle(
-                fontWeight: FontWeight.w800,
-                color: isDark ? Colors.white : Colors.black87,
+            Flexible(
+              child: Text(
+                s.notificationTitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
               ),
             ),
             if (_unreadCount > 0) ...[

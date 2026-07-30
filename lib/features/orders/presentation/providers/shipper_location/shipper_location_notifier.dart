@@ -149,6 +149,15 @@ class ShipperLocation extends _$ShipperLocation {
     }
   }
 
+  /// Releases the local stream immediately without mutating state while a
+  /// consuming widget is being unmounted. Provider disposal remains the final
+  /// backend/socket cleanup boundary.
+  void cancelTrackingLease() {
+    _locationSubscription?.cancel();
+    _locationSubscription = null;
+    unawaited(ref.read(stopShipperTrackingUseCaseProvider).call(NoParams()));
+  }
+
   /// Clear error
   void clearError() {
     state = state.copyWith(failure: null);

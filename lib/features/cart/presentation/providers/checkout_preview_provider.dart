@@ -25,6 +25,7 @@ class CheckoutPreviewNotifier extends _$CheckoutPreviewNotifier {
   Future<CheckoutPreviewResponse?> loadPreview(
     CheckoutPreviewRequest request,
   ) async {
+    if (state.isLoading) return null;
     state = const AsyncValue.loading();
     try {
       final service = ref.read(checkoutOrderApiServiceProvider);

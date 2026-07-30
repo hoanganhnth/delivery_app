@@ -6,14 +6,13 @@ import 'package:delivery_app/features/auth/domain/usecases/login_usecase.dart';
 import 'package:delivery_app/features/auth/domain/usecases/register_usecase.dart';
 import 'package:delivery_app/features/auth/domain/usecases/refresh_token_usecase.dart';
 import 'package:delivery_app/features/auth/domain/usecases/social_login_usecase.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:delivery_app/features/auth/domain/usecases/store_tokens_usecase.dart';
 import 'package:delivery_app/features/auth/domain/usecases/get_tokens_usecase.dart';
 import 'package:delivery_app/features/auth/domain/usecases/clear_tokens_usecase.dart';
 import 'package:delivery_app/features/auth/presentation/providers/session/auth_state.dart';
 import 'package:delivery_app/features/auth/presentation/providers/di/auth_di_providers.dart';
 import 'package:delivery_app/features/auth/presentation/providers/di/storage_di_providers.dart';
-import 'package:delivery_app/features/auth/services/device_identity_service.dart';
+import 'package:delivery_app/features/auth/services/auth_platform_ports.dart';
 import 'package:delivery_app/core/services/app_initializer/_riverpod/app_initializer_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -28,6 +27,8 @@ class AuthNotifier extends _$AuthNotifier {
   late final StoreTokensUseCase _storeTokensUseCase;
   late final GetTokensUseCase _getTokensUseCase;
   late final ClearTokensUseCase _clearTokensUseCase;
+  late final DeviceIdentityPort _deviceIdentity;
+  late final SocialIdentityPort _socialIdentity;
 
   @override
   AuthState build() {
@@ -38,6 +39,8 @@ class AuthNotifier extends _$AuthNotifier {
     _storeTokensUseCase = ref.read(storeTokensUseCaseProvider);
     _getTokensUseCase = ref.read(getTokensUseCaseProvider);
     _clearTokensUseCase = ref.read(clearTokensUseCaseProvider);
+    _deviceIdentity = ref.read(deviceIdentityPortProvider);
+    _socialIdentity = ref.read(socialIdentityPortProvider);
     return const AuthState.initial();
   }
 
@@ -50,17 +53,17 @@ class AuthNotifier extends _$AuthNotifier {
     String? deviceType,
     String? ipAddress,
   }) async {
+    if (state.isLoginLoading) return;
     state = const AuthState.unauthenticated(isLoginLoading: true);
 
-    final resolvedDeviceId =
-        deviceId ?? await DeviceIdentityService.getDeviceId();
+    final resolvedDeviceId = deviceId ?? await _deviceIdentity.getDeviceId();
 
     final params = LoginParams(
       email: email,
       password: password,
       deviceId: resolvedDeviceId,
-      deviceName: deviceName ?? DeviceIdentityService.deviceName,
-      deviceType: deviceType ?? DeviceIdentityService.deviceType,
+      deviceName: deviceName ?? _deviceIdentity.deviceName,
+      deviceType: deviceType ?? _deviceIdentity.deviceType,
       ipAddress: ipAddress,
     );
     final result = await _loginUseCase(params);
@@ -94,29 +97,16 @@ class AuthNotifier extends _$AuthNotifier {
 
   // Google Sign In
   Future<void> loginWithGoogle() async {
+    if (state.isLoginLoading) return;
     state = const AuthState.unauthenticated(isLoginLoading: true);
 
     try {
-      final GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
+      final idToken = await _socialIdentity.getGoogleIdToken();
 
-      final GoogleSignInAccount? account = await googleSignIn.signIn();
-
-      if (account == null) {
+      if (idToken == null) {
         // User canceled the sign-in flow
         if (ref.mounted) {
           state = const AuthState.unauthenticated();
-        }
-        return;
-      }
-
-      final GoogleSignInAuthentication auth = await account.authentication;
-      final String? idToken = auth.idToken;
-
-      if (idToken == null) {
-        if (ref.mounted) {
-          state = const AuthState.unauthenticated(
-            failure: ServerFailure('Google login failed: Empty ID token'),
-          );
         }
         return;
       }
@@ -125,9 +115,9 @@ class AuthNotifier extends _$AuthNotifier {
         provider: 'google',
         token: idToken,
         role: 'USER',
-        deviceId: await DeviceIdentityService.getDeviceId(),
-        deviceName: DeviceIdentityService.deviceName,
-        deviceType: DeviceIdentityService.deviceType,
+        deviceId: await _deviceIdentity.getDeviceId(),
+        deviceName: _deviceIdentity.deviceName,
+        deviceType: _deviceIdentity.deviceType,
       );
 
       final result = await _socialLoginUseCase(params);
@@ -213,6 +203,7 @@ class AuthNotifier extends _$AuthNotifier {
     String? deviceType,
     String? ipAddress,
   }) async {
+    if (state.isRegisterLoading) return;
     state = const AuthState.unauthenticated(isRegisterLoading: true);
 
     final params = RegisterParams(
@@ -225,14 +216,14 @@ class AuthNotifier extends _$AuthNotifier {
 
     if (!ref.mounted) return;
 
-    result.fold(
-      (failure) {
+    await result.fold(
+      (failure) async {
         state = AuthState.unauthenticated(failure: failure);
       },
-      (success) {
+      (success) async {
         // Register successful, now login to get tokens
         if (success) {
-          login(email: email, password: password);
+          await login(email: email, password: password);
         } else {
           state = const AuthState.unauthenticated();
         }

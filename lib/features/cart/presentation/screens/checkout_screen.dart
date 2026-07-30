@@ -14,6 +14,7 @@ import '../../../orders/presentation/providers/orders/create_order_async_notifie
 import '../../../user_address/presentation/providers/providers.dart';
 import '../providers/providers.dart';
 import '../providers/checkout_preview_provider.dart';
+import '../utils/checkout_order_builder.dart';
 import '../widgets/widgets.dart';
 import '../../domain/entities/cart_entity.dart';
 
@@ -50,36 +51,17 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     final addressState = ref.read(userAddressListProvider);
     final selectedAddress =
         addressState.selectedAddress ?? addressState.defaultAddress;
-    final restaurantId = _positiveInt(cart.currentRestaurantId);
-    final deliveryLat = selectedAddress?.latitude;
-    final deliveryLng = selectedAddress?.longitude;
     final previewNotifier = ref.read(checkoutPreviewProvider.notifier);
-    if (restaurantId == null ||
-        !_isVietnamCoordinate(deliveryLat, deliveryLng) ||
-        !_hasValidCartItems(cart)) {
-      previewNotifier.reset();
-      return;
-    }
 
     try {
-      final request = CheckoutPreviewRequest(
-        restaurantId: restaurantId,
-        deliveryLat: deliveryLat!,
-        deliveryLng: deliveryLng!,
-        items: cart.items
-            .map(
-              (item) => CheckoutPreviewItemRequest(
-                menuItemId: _positiveInt(item.menuItemId)!,
-                quantity: item.quantity,
-              ),
-            )
-            .toList(),
+      final request = CheckoutOrderBuilder.buildPreviewRequest(
+        cart: cart,
+        address: selectedAddress,
       );
 
       await previewNotifier.loadPreview(request);
-    } catch (_) {
+    } on CheckoutOrderBuildException {
       previewNotifier.reset();
-      // Errors are handled by watching the provider state
     }
   }
 
@@ -369,105 +351,40 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     final addressState = ref.read(userAddressListProvider);
     final selectedAddress =
         addressState.selectedAddress ?? addressState.defaultAddress;
-    final restaurantId = _positiveInt(cart.currentRestaurantId);
-    final deliveryLat = selectedAddress?.latitude;
-    final deliveryLng = selectedAddress?.longitude;
-
-    if (selectedAddress == null ||
-        restaurantId == null ||
-        !_isVietnamCoordinate(deliveryLat, deliveryLng) ||
-        !_hasValidCartItems(cart)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(s.checkoutAddressRequired),
-          backgroundColor: const Color(0xFFBA1A1A),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-      );
-      return;
-    }
-
     final preview = ref.read(checkoutPreviewProvider).value;
-    final previewRequest = CheckoutPreviewRequest(
-      restaurantId: restaurantId,
-      deliveryLat: deliveryLat!,
-      deliveryLng: deliveryLng!,
-      items: cart.items
-          .map(
-            (item) => CheckoutPreviewItemRequest(
-              menuItemId: _positiveInt(item.menuItemId)!,
-              quantity: item.quantity,
-            ),
-          )
-          .toList(growable: false),
-    );
+    late final CreateOrderRequestDto request;
     try {
-      preview?.validateFor(previewRequest);
-    } on FormatException {
+      request = CheckoutOrderBuilder.buildOrderRequest(
+        cart: cart,
+        address: selectedAddress,
+        preview: preview,
+        notes: _notesController.text,
+      );
+    } on CheckoutOrderBuildException catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Giá đơn hàng chưa được xác nhận. Vui lòng thử lại.'),
-        ),
-      );
-      return;
-    }
-    if (preview == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Giá đơn hàng chưa được xác nhận. Vui lòng thử lại.'),
-        ),
-      );
-      return;
-    }
-
-    final items = cart.items
-        .map<OrderItemRequest>(
-          (item) => OrderItemRequest(
-            menuItemId: _positiveInt(item.menuItemId)!,
-            quantity: item.quantity,
-            notes: item.notes,
+      if (error.failure == CheckoutOrderBuildFailure.invalidInput) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(s.checkoutAddressRequired),
+            backgroundColor: const Color(0xFFBA1A1A),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
-        )
-        .toList(growable: false);
-
-    final request = CreateOrderRequestDto(
-      restaurantId: restaurantId,
-      deliveryAddress: selectedAddress.fullAddress,
-      deliveryLat: deliveryLat,
-      deliveryLng: deliveryLng,
-      customerName: selectedAddress.recipientName,
-      customerPhone: selectedAddress.phoneNumber,
-      paymentMethod: 'COD',
-      notes: _notesController.text,
-      items: items,
-    );
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Giá đơn hàng chưa được xác nhận. Vui lòng thử lại.',
+            ),
+          ),
+        );
+      }
+      return;
+    }
 
     ref.read(createOrderProvider.notifier).createOrder(request);
-  }
-
-  static int? _positiveInt(num? value) {
-    return value is int && value > 0 ? value : null;
-  }
-
-  static bool _hasValidCartItems(CartEntity cart) {
-    return cart.items.isNotEmpty &&
-        cart.items.every(
-          (item) => _positiveInt(item.menuItemId) != null && item.quantity > 0,
-        );
-  }
-
-  static bool _isVietnamCoordinate(double? latitude, double? longitude) {
-    return latitude != null &&
-        longitude != null &&
-        latitude.isFinite &&
-        longitude.isFinite &&
-        latitude >= 8.0 &&
-        latitude <= 24.0 &&
-        longitude >= 102.0 &&
-        longitude <= 110.0;
   }
 }

@@ -221,8 +221,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
 
                   // Back to Login
                   Center(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         Text(
                           s.alreadyHaveAccount,

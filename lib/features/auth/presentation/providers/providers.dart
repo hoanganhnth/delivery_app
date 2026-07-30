@@ -7,3 +7,4 @@ export 'di/biometric_di_providers.dart';
 export 'di/storage_di_providers.dart';
 export 'biometric/biometric_state.dart';
 export 'biometric/biometric_notifier.dart';
+export '../../services/auth_platform_ports.dart';

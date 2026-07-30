@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'push_notification_service.g.dart';
@@ -19,7 +20,13 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 /// ✅ Push Notification Service — manages FCM token lifecycle and message handling
-class PushNotificationService {
+abstract interface class PushNotificationPort {
+  Future<void> initialize({required bool authenticated});
+  Future<void> updateAuthentication(bool authenticated);
+  Future<void> unregisterToken();
+}
+
+class PushNotificationService implements PushNotificationPort {
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
@@ -41,6 +48,7 @@ class PushNotificationService {
   PushNotificationService(this._dio);
 
   /// Initialize FCM: request permissions, get token, setup listeners
+  @override
   Future<void> initialize({required bool authenticated}) async {
     _authenticated = authenticated;
     _initialization ??= _initializeOnce();
@@ -102,6 +110,7 @@ class PushNotificationService {
     }
   }
 
+  @override
   Future<void> updateAuthentication(bool authenticated) async {
     _authenticated = authenticated;
     if (authenticated) {
@@ -169,6 +178,7 @@ class PushNotificationService {
   }
 
   /// Unregister FCM token from backend (call on logout)
+  @override
   Future<void> unregisterToken() async {
     try {
       final token = await _messaging.getToken();
@@ -229,3 +239,9 @@ PushNotificationService pushNotificationService(Ref ref) {
   final dio = ref.watch(authenticatedDioProvider);
   return PushNotificationService(dio);
 }
+
+/// Stable application-facing port. Tests override this provider without
+/// constructing FirebaseMessaging or FlutterLocalNotificationsPlugin.
+final pushNotificationPortProvider = Provider<PushNotificationPort>((ref) {
+  return ref.watch(pushNotificationServiceProvider);
+});

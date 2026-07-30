@@ -7,7 +7,7 @@ class NotificationListItem extends StatelessWidget {
   final bool isDark;
   final Color color;
   final VoidCallback onTap;
-  final VoidCallback onDismissed;
+  final Future<bool> Function() onDismissed;
 
   const NotificationListItem({
     super.key,
@@ -63,7 +63,7 @@ class NotificationListItem extends StatelessWidget {
         ),
         child: const Icon(Icons.delete_outline, color: Colors.white),
       ),
-      onDismissed: (_) => onDismissed(),
+      confirmDismiss: (_) => onDismissed(),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         decoration: BoxDecoration(

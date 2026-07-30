@@ -9,3 +9,6 @@ export 'delivery_tracking/providers.dart';
 
 // Orders Management Providers
 export 'orders/providers.dart';
+
+// Restaurant rating submission boundary
+export 'ratings/restaurant_rating_submission_provider.dart';

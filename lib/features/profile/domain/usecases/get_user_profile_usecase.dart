@@ -43,9 +43,7 @@ class GetUserProfileUseCase implements UseCase<UserEntity, GetUserProfileParams>
   }
 
   Future<Either<Failure, UserEntity>> _fetchFromRemote() async {
-    final remoteResult = await repository.getUserProfile();
-    await Future.delayed(const Duration(milliseconds: 500)); // Simulate network delay
-    return remoteResult;
+    return repository.getUserProfile();
   }
 
   // bool _isCacheValid(UserEntity user) {

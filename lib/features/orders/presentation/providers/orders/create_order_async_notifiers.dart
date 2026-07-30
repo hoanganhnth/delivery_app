@@ -10,13 +10,14 @@ part 'create_order_async_notifiers.g.dart';
 @riverpod
 class CreateOrder extends _$CreateOrder {
   @override
-  FutureOr<OrderEntity?> build() async {
+  OrderEntity? build() {
     // Initial state - không có order nào được tạo
     return null;
   }
 
   /// Tạo đơn hàng mới với CreateOrderRequestDto
   Future<OrderEntity?> createOrder(CreateOrderRequestDto request) async {
+    if (state.isLoading) return null;
     state = const AsyncLoading();
 
     try {
@@ -51,13 +52,14 @@ class CreateOrder extends _$CreateOrder {
 @riverpod
 class CancelOrder extends _$CancelOrder {
   @override
-  FutureOr<bool?> build() async {
+  bool? build() {
     // Initial state
     return null;
   }
 
   /// Hủy đơn hàng
   Future<bool> cancelOrder(int orderId, {String? reason}) async {
+    if (state.isLoading) return false;
     state = const AsyncLoading();
 
     try {

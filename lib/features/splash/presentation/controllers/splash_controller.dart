@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/features/auth/presentation/providers/providers.dart';
 import 'package:delivery_app/core/utils/logger/app_logger.dart';
 import 'package:delivery_app/core/routing/routing.dart';
@@ -6,13 +7,23 @@ import 'package:delivery_app/core/services/app_initializer/_riverpod/app_initial
 
 part 'splash_controller.g.dart';
 
-/// Splash state
-enum SplashState {
-  initializing,
-  checkingAuth,
-  navigating,
-  error,
+abstract interface class SplashDelayPort {
+  Future<void> wait(Duration duration);
 }
+
+class DartSplashDelay implements SplashDelayPort {
+  const DartSplashDelay();
+
+  @override
+  Future<void> wait(Duration duration) => Future<void>.delayed(duration);
+}
+
+final splashDelayProvider = Provider<SplashDelayPort>(
+  (ref) => const DartSplashDelay(),
+);
+
+/// Splash state
+enum SplashState { initializing, checkingAuth, navigating, error }
 
 /// Splash controller to handle app initialization
 @riverpod
@@ -24,45 +35,46 @@ class SplashController extends _$SplashController {
   Future<void> initializeApp(GoRouter router) async {
     try {
       AppLogger.i('SplashController: Starting app initialization');
-      
+
       // Set state to initializing
       state = SplashState.initializing;
-      
+
       // Minimum splash duration for better UX
-      await Future.delayed(const Duration(seconds: 2));
-      
+      await ref.read(splashDelayProvider).wait(const Duration(seconds: 2));
+
       // Check authentication status
       state = SplashState.checkingAuth;
       AppLogger.i('SplashController: Checking authentication status');
-      
+
       // Use app initializer service for proper initialization
       final appInitializer = ref.read(appInitializerServiceProvider);
       await appInitializer.initialize();
-      
+
       final authState = ref.read(authProvider);
       final isAuthenticated = authState.isAuthenticated;
-      
+
       AppLogger.i('SplashController: Authentication status - $isAuthenticated');
-      
+
       // Navigate based on authentication status
       state = SplashState.navigating;
-      
+
       if (isAuthenticated) {
         AppLogger.i('SplashController: User authenticated, navigating to main');
         router.go(AppRoutes.main);
       } else {
-        AppLogger.i('SplashController: User not authenticated, navigating to login');
+        AppLogger.i(
+          'SplashController: User not authenticated, navigating to login',
+        );
         router.go(AppRoutes.login);
       }
-      
+
       AppLogger.i('SplashController: App initialization completed');
-      
     } catch (error, stackTrace) {
       AppLogger.e('SplashController: Error during initialization - $error');
       AppLogger.e('Stack trace: $stackTrace');
-      
+
       state = SplashState.error;
-      
+
       // Navigate to login on error
       router.go(AppRoutes.login);
     }

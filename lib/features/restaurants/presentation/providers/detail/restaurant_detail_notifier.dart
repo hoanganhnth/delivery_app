@@ -37,8 +37,8 @@ class RestaurantDetailNotifier extends _$RestaurantDetailNotifier {
 
     if (!ref.mounted) return;
 
-    restaurantResult.fold(
-      (failure) {
+    await restaurantResult.fold<Future<void>>(
+      (failure) async {
         AppLogger.e(
           'RestaurantDetailNotifier: Failed to load restaurant - ${failure.message}',
         );

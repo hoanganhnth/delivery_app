@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:delivery_app/core/error/failures.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:delivery_app/core/utils/logger/app_logger.dart';
@@ -15,14 +14,15 @@ part 'delivery_tracking_notifier.g.dart';
 @Riverpod(keepAlive: true)
 class DeliveryTracking extends _$DeliveryTracking {
   static const _refreshInterval = Duration(seconds: 15);
-  Timer? _refreshTimer;
+  TrackingPeriodicTask? _refreshTask;
   int? _trackedOrderId;
+  int _lifecycleGeneration = 0;
 
   @override
   DeliveryTrackingState build() {
     ref.onDispose(() {
-      _refreshTimer?.cancel();
-      _refreshTimer = null;
+      _refreshTask?.cancel();
+      _refreshTask = null;
     });
     return const DeliveryTrackingState();
   }
@@ -37,8 +37,10 @@ class DeliveryTracking extends _$DeliveryTracking {
       return;
     }
 
-    await getCurrentDelivery(orderId);
+    final generation = ++_lifecycleGeneration;
+    await getCurrentDelivery(orderId, expectedGeneration: generation);
 
+    if (!ref.mounted || generation != _lifecycleGeneration) return;
     if (state.currentTracking != null && trackingRealtime) {
       _startRestRefresh(orderId);
     }
@@ -46,23 +48,26 @@ class DeliveryTracking extends _$DeliveryTracking {
 
   /// Backward-compatible entry point. Delivery status is refreshed via REST.
   Future<void> startTrackingOrder(int orderId) async {
-    await getCurrentDelivery(orderId);
+    final generation = ++_lifecycleGeneration;
+    await getCurrentDelivery(orderId, expectedGeneration: generation);
+    if (!ref.mounted || generation != _lifecycleGeneration) return;
     if (state.currentTracking != null) _startRestRefresh(orderId);
   }
 
   void _startRestRefresh(int orderId) {
-    _refreshTimer?.cancel();
+    _refreshTask?.cancel();
     _trackedOrderId = orderId;
     state = state.copyWith(isTracking: true, isConnected: true);
-    _refreshTimer = Timer.periodic(_refreshInterval, (_) {
-      getCurrentDelivery(orderId, showLoading: false);
-    });
+    _refreshTask = ref
+        .read(trackingSchedulerProvider)
+        .schedulePeriodic(
+          _refreshInterval,
+          () => getCurrentDelivery(orderId, showLoading: false),
+        );
   }
 
   Future<void> stopTrackingOrder() async {
-    _refreshTimer?.cancel();
-    _refreshTimer = null;
-    _trackedOrderId = null;
+    cancelTrackingLease();
     state = state.copyWith(
       isTracking: false,
       isConnected: false,
@@ -70,6 +75,14 @@ class DeliveryTracking extends _$DeliveryTracking {
       failure: null,
       polylinePoints: null,
     );
+  }
+
+  /// Releases timers without notifying UI listeners during widget unmount.
+  void cancelTrackingLease() {
+    _lifecycleGeneration += 1;
+    _refreshTask?.cancel();
+    _refreshTask = null;
+    _trackedOrderId = null;
   }
 
   Future<void> refresh() async {
@@ -86,11 +99,16 @@ class DeliveryTracking extends _$DeliveryTracking {
   Future<void> getCurrentDelivery(
     int orderId, {
     bool showLoading = true,
+    int? expectedGeneration,
   }) async {
+    bool isCurrentGeneration() =>
+        expectedGeneration == null ||
+        expectedGeneration == _lifecycleGeneration;
+
     try {
       AppLogger.i('Getting current delivery for order: $orderId');
 
-      if (showLoading) {
+      if (showLoading && isCurrentGeneration()) {
         state = state.copyWith(isLoading: true, failure: null);
       }
 
@@ -101,16 +119,16 @@ class DeliveryTracking extends _$DeliveryTracking {
         GetCurrentDeliveryParams(orderId: orderId),
       );
 
-      result.fold(
-        (failure) {
+      await result.fold(
+        (failure) async {
           AppLogger.e('Failed to get current delivery: ${failure.message}');
-          if (ref.mounted) {
+          if (ref.mounted && isCurrentGeneration()) {
             state = state.copyWith(isLoading: false, failure: failure);
           }
         },
-        (delivery) {
+        (delivery) async {
           AppLogger.i('Successfully got current delivery for order: $orderId');
-          if (ref.mounted) {
+          if (ref.mounted && isCurrentGeneration()) {
             final previousStatus = state.currentTracking?.status;
             state = state.copyWith(
               isLoading: false,
@@ -120,14 +138,14 @@ class DeliveryTracking extends _$DeliveryTracking {
 
             if (previousStatus != delivery.status ||
                 state.polylinePoints == null) {
-              _updateRoutePoints(delivery);
+              await _updateRoutePoints(delivery);
             }
           }
         },
       );
     } catch (e) {
       AppLogger.e('Unexpected error getting current delivery', e);
-      if (ref.mounted) {
+      if (ref.mounted && isCurrentGeneration()) {
         state = state.copyWith(
           isLoading: false,
           failure: ServerFailure(

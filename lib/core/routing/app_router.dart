@@ -10,6 +10,7 @@ library;
 
 import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
 import 'package:delivery_app/features/orders/presentation/screens/order_detail_screen.dart';
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:delivery_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:delivery_app/features/auth/presentation/screens/register_screen.dart';
@@ -31,6 +32,37 @@ import 'package:delivery_app/core/routing/models/app_router_config.dart';
 import 'package:delivery_app/core/routing/models/i_auth_checker.dart';
 import 'package:delivery_app/core/routing/guards/guard_manager.dart';
 
+/// Replaceable screen factory for router tests and previews. Production keeps
+/// the concrete pages below; tests can verify redirects and route parameters
+/// without constructing network, storage, Firebase or Mapbox dependencies.
+class AppRouterPages {
+  const AppRouterPages();
+
+  Widget splash() => const SplashScreen();
+  Widget login() => const LoginScreen();
+  Widget register() => const RegisterScreen();
+  Widget main() => const MainScreen();
+  Widget search() => const SearchScreen();
+  Widget notifications() => const NotificationScreen();
+  Widget home() => const HomePage();
+  Widget profile() => const ProfileScreen();
+  Widget settings() => const SettingsScreen();
+  Widget orders() => const OrdersScreen();
+  Widget orderDetail(int orderId) => OrderDetailScreen(orderId: orderId);
+  Widget restaurants() => const AllRestaurantsScreen();
+  Widget restaurantDetail(int restaurantId) =>
+      RestaurantDetailScreen(restaurantId: restaurantId);
+  Widget cart() => const CartScreen();
+  Widget checkout() => const CheckoutScreen();
+  Widget orderConfirmation() => const OrderConfirmationScreen();
+  Widget addressList() => const AddressListScreen();
+  Widget addAddress() => const AddEditAddressScreen();
+  Widget editAddress(UserAddressEntity? address) =>
+      AddEditAddressScreen(address: address);
+  Widget notFound() => const NotFoundScreen();
+  Widget error() => const ErrorScreen();
+}
+
 /// Creates the application's [GoRouter].
 ///
 /// - [authNotifier] is used both as `refreshListenable` (reactive) and as
@@ -39,6 +71,7 @@ import 'package:delivery_app/core/routing/guards/guard_manager.dart';
 GoRouter createAppRouter({
   required IAuthNotifier authNotifier,
   required AppRouterConfig config,
+  AppRouterPages pages = const AppRouterPages(),
 }) {
   final guardManager = GuardManager(authNotifier);
 
@@ -65,61 +98,61 @@ GoRouter createAppRouter({
       GoRoute(
         path: AppRoutes.splash,
         name: 'splash',
-        builder: (context, state) => const SplashScreen(),
+        builder: (context, state) => pages.splash(),
       ),
 
       // Auth routes
       GoRoute(
         path: AppRoutes.login,
         name: 'login',
-        builder: (context, state) => const LoginScreen(),
+        builder: (context, state) => pages.login(),
       ),
       GoRoute(
         path: AppRoutes.register,
         name: 'register',
-        builder: (context, state) => const RegisterScreen(),
+        builder: (context, state) => pages.register(),
       ),
       // Main navigation
       GoRoute(
         path: AppRoutes.main,
         name: 'main',
-        builder: (context, state) => const MainScreen(),
+        builder: (context, state) => pages.main(),
       ),
       GoRoute(
         path: AppRoutes.search,
         name: 'search',
-        builder: (context, state) => const SearchScreen(),
+        builder: (context, state) => pages.search(),
       ),
       GoRoute(
         path: AppRoutes.notifications,
         name: 'notifications',
-        builder: (context, state) => const NotificationScreen(),
+        builder: (context, state) => pages.notifications(),
       ),
 
       // Home with nested profile
       GoRoute(
         path: AppRoutes.home,
         name: 'home',
-        builder: (context, state) => const HomePage(),
+        builder: (context, state) => pages.home(),
         routes: [
           GoRoute(
             path: 'profile',
             name: 'profile',
-            builder: (context, state) => const ProfileScreen(),
+            builder: (context, state) => pages.profile(),
           ),
         ],
       ),
       GoRoute(
         path: AppRoutes.settings,
         name: 'settings',
-        builder: (context, state) => const SettingsScreen(),
+        builder: (context, state) => pages.settings(),
       ),
 
       // Orders
       GoRoute(
         path: AppRoutes.orders,
         name: 'orders',
-        builder: (context, state) => const OrdersScreen(),
+        builder: (context, state) => pages.orders(),
         routes: [
           GoRoute(
             path: ':orderId',
@@ -129,8 +162,8 @@ GoRouter createAppRouter({
                 state.pathParameters['orderId'],
               );
               return orderId == null
-                  ? const NotFoundScreen()
-                  : OrderDetailScreen(orderId: orderId);
+                  ? pages.notFound()
+                  : pages.orderDetail(orderId);
             },
             routes: [
               GoRoute(
@@ -141,8 +174,8 @@ GoRouter createAppRouter({
                     state.pathParameters['orderId'],
                   );
                   return orderId == null
-                      ? const NotFoundScreen()
-                      : OrderDetailScreen(orderId: orderId);
+                      ? pages.notFound()
+                      : pages.orderDetail(orderId);
                 },
               ),
             ],
@@ -154,7 +187,7 @@ GoRouter createAppRouter({
       GoRoute(
         path: AppRoutes.restaurants,
         name: 'restaurants',
-        builder: (context, state) => const AllRestaurantsScreen(),
+        builder: (context, state) => pages.restaurants(),
         routes: [
           GoRoute(
             path: ':restaurantId',
@@ -164,8 +197,8 @@ GoRouter createAppRouter({
                 state.pathParameters['restaurantId'],
               );
               return restaurantId == null
-                  ? const NotFoundScreen()
-                  : RestaurantDetailScreen(restaurantId: restaurantId);
+                  ? pages.notFound()
+                  : pages.restaurantDetail(restaurantId);
             },
           ),
         ],
@@ -175,36 +208,36 @@ GoRouter createAppRouter({
       GoRoute(
         path: AppRoutes.cart,
         name: 'cart',
-        builder: (context, state) => const CartScreen(),
+        builder: (context, state) => pages.cart(),
       ),
       GoRoute(
         path: AppRoutes.checkout,
         name: 'checkout',
-        builder: (context, state) => const CheckoutScreen(),
+        builder: (context, state) => pages.checkout(),
       ),
       GoRoute(
         path: AppRoutes.orderConfirmation,
         name: 'order-confirmation',
-        builder: (context, state) => const OrderConfirmationScreen(),
+        builder: (context, state) => pages.orderConfirmation(),
       ),
 
       // Address management
       GoRoute(
         path: AppRoutes.addressList,
         name: 'address-list',
-        builder: (context, state) => const AddressListScreen(),
+        builder: (context, state) => pages.addressList(),
       ),
       GoRoute(
         path: AppRoutes.addAddress,
         name: 'add-address',
-        builder: (context, state) => const AddEditAddressScreen(),
+        builder: (context, state) => pages.addAddress(),
       ),
       GoRoute(
         path: AppRoutes.editAddress,
         name: 'edit-address',
         builder: (context, state) {
           final address = state.extra as UserAddressEntity?;
-          return AddEditAddressScreen(address: address);
+          return pages.editAddress(address);
         },
       ),
 
@@ -212,10 +245,10 @@ GoRouter createAppRouter({
       GoRoute(
         path: AppRoutes.notFound,
         name: 'not-found',
-        builder: (context, state) => const NotFoundScreen(),
+        builder: (context, state) => pages.notFound(),
       ),
     ],
-    errorBuilder: (context, state) => const ErrorScreen(),
+    errorBuilder: (context, state) => pages.error(),
   );
 }
 

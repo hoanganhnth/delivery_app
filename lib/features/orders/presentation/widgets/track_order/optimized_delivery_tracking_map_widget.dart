@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:delivery_app/core/utils/logger/app_logger.dart';
@@ -10,6 +8,7 @@ import 'package:delivery_app/features/orders/domain/entities/delivery_status.dar
 import 'package:delivery_app/features/orders/domain/entities/shipper_location_entity.dart';
 import '../../services/mapbox_map_service.dart';
 import '../../services/i_map_service.dart';
+import '../../services/tracking_map_platform.dart';
 import 'package:delivery_app/features/orders/presentation/providers/providers.dart';
 
 /// Widget tối ưu để hiển thị bản đồ theo dõi delivery với MapBox
@@ -39,8 +38,8 @@ class _OptimizedDeliveryTrackingMapWidgetState
   void initState() {
     super.initState();
 
-    // Khởi tạo services
-    _mapService = MapboxMapService();
+    // One owned service instance per widget; tests replace the factory.
+    _mapService = ref.read(trackingMapServiceFactoryProvider)();
 
     // Delay nhỏ để đảm bảo widget được render hoàn toàn trước khi khởi tạo map
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -161,27 +160,27 @@ class _OptimizedDeliveryTrackingMapWidgetState
                         width: validWidth,
                         height: validHeight,
                         child: _isMapInitialized
-                            ? MapWidget(
-                                key: const ValueKey("animated_map_widget"),
-                                onMapCreated: _onMapCreated,
-                                cameraOptions: _mapService
-                                    .getInitialCameraPosition(
-                                      pickupLat:
-                                          widget.deliveryTracking?.pickupLat,
-                                      pickupLng:
-                                          widget.deliveryTracking?.pickupLng,
-                                      deliveryLat:
-                                          widget.deliveryTracking?.deliveryLat,
-                                      deliveryLng:
-                                          widget.deliveryTracking?.deliveryLng,
-                                    ),
-                                textureView: true,
-                                gestureRecognizers: {
-                                  Factory<OneSequenceGestureRecognizer>(
-                                    () => EagerGestureRecognizer(),
-                                  ),
-                                },
-                              )
+                            ? ref
+                                  .read(trackingMapPlatformProvider)
+                                  .buildMap(
+                                    key: const ValueKey('animated_map_widget'),
+                                    onMapCreated: _onMapCreated,
+                                    cameraOptions: _mapService
+                                        .getInitialCameraPosition(
+                                          pickupLat: widget
+                                              .deliveryTracking
+                                              ?.pickupLat,
+                                          pickupLng: widget
+                                              .deliveryTracking
+                                              ?.pickupLng,
+                                          deliveryLat: widget
+                                              .deliveryTracking
+                                              ?.deliveryLat,
+                                          deliveryLng: widget
+                                              .deliveryTracking
+                                              ?.deliveryLng,
+                                        ),
+                                  )
                             : _buildLoadingState(),
                       ),
                     ),

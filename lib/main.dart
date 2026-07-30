@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:delivery_app/core/app_setup.dart';
+import 'package:delivery_app/core/app_dependencies.dart';
 import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/core/theme/theme.dart';
 import 'package:delivery_app/core/storage/adapter/hive_registry.dart';
@@ -18,10 +19,6 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:delivery_app/core/services/push_notification_service.dart';
 import 'features/auth/presentation/providers/providers.dart';
-import 'features/auth/presentation/providers/di/auth_network_providers.dart'
-    as auth_net;
-import 'package:delivery_app/core/network/_riverpod/authenticated_network_providers.dart'
-    as core_net;
 
 Future<void> main() async {
   runZonedGuarded<Future<void>>(
@@ -64,22 +61,9 @@ Future<void> main() async {
       runApp(
         AppSetup.setupApp(
           child: const MainApp(),
-          additionalOverrides: [
-            sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-            // 🔑 Conditional override: Chỉ override khi user đã login
-            core_net.authenticatedDioProvider.overrideWith((ref) {
-              return ref.watch(auth_net.authAwareDioProvider);
-              // final authState = ref.watch(authProvider);
-
-              // // ✅ Nếu đã login, dùng authAwareDio (có token)
-              // if (authState.isAuthenticated && authState.accessToken != null) {
-              //   return ref.watch(auth_net.authAwareDioProvider);
-              // }
-
-              // // ❌ Chưa login, dùng Dio mặc định (không token)
-              // return ref.watch(dioProvider);
-            }),
-          ],
+          additionalOverrides: AppDependencies.production(
+            sharedPreferences: sharedPreferences,
+          ),
         ),
       );
     },
@@ -90,7 +74,12 @@ Future<void> main() async {
 }
 
 class MainApp extends ConsumerStatefulWidget {
-  const MainApp({super.key});
+  const MainApp({
+    super.key,
+    this.pushInitializationDelay = const Duration(seconds: 1),
+  });
+
+  final Duration pushInitializationDelay;
 
   @override
   ConsumerState<MainApp> createState() => _MainAppState();
@@ -109,10 +98,10 @@ class _MainAppState extends ConsumerState<MainApp> {
     if (_fcmInitialized) return;
     _fcmInitialized = true;
     // Delay to allow providers to be ready
-    await Future.delayed(const Duration(seconds: 1));
+    await Future<void>.delayed(widget.pushInitializationDelay);
     if (!mounted) return;
     try {
-      final pushService = ref.read(pushNotificationServiceProvider);
+      final pushService = ref.read(pushNotificationPortProvider);
       await pushService.initialize(
         authenticated: ref.read(authProvider).isAuthenticated,
       );
@@ -129,7 +118,7 @@ class _MainAppState extends ConsumerState<MainApp> {
       if (previous?.isAuthenticated != next.isAuthenticated) {
         unawaited(
           ref
-              .read(pushNotificationServiceProvider)
+              .read(pushNotificationPortProvider)
               .updateAuthentication(next.isAuthenticated),
         );
       }

@@ -4,12 +4,9 @@ import 'package:delivery_app/features/cart/domain/entities/cart_item_entity.dart
 import 'package:delivery_app/features/cart/presentation/widgets/cart_checkout_button.dart';
 import 'package:delivery_app/features/cart/presentation/widgets/checkout_bottom_section.dart';
 import 'package:delivery_app/features/user_address/presentation/widgets/address_bottom_actions.dart';
-import 'package:delivery_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
+import '../../../../support/app_harness.dart';
 
 const _cart = CartEntity(
   currentRestaurantId: 7,
@@ -26,40 +23,15 @@ const _cart = CartEntity(
   ],
 );
 
-Widget _testApp(Widget child) {
-  return ProviderScope(
-    child: ScreenUtilInit(
-      designSize: const Size(390, 812),
-      builder: (_, __) => MaterialApp(
-        localizationsDelegates: const [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: S.delegate.supportedLocales,
-        home: Scaffold(body: child),
-      ),
-    ),
-  );
-}
-
-void _setPhoneViewport(WidgetTester tester) {
-  tester.view.devicePixelRatio = 1;
-  tester.view.physicalSize = const Size(390, 812);
-  addTearDown(tester.view.reset);
-}
-
 void main() {
-  testWidgets('checkout bottom action uses server-owned total and calls place-order callback', (
-    tester,
-  ) async {
-    _setPhoneViewport(tester);
-    var submitted = false;
+  testWidgets(
+    'checkout bottom action uses server-owned total and calls place-order callback',
+    (tester) async {
+      var submitted = false;
 
-    await tester.pumpWidget(
-      _testApp(
-        CheckoutBottomSection(
+      await pumpTestApp(
+        tester,
+        child: CheckoutBottomSection(
           cart: _cart,
           isLoading: false,
           serverSubtotal: 100000,
@@ -68,29 +40,29 @@ void main() {
           serverTotal: 110000,
           onPlaceOrder: () => submitted = true,
         ),
-      ),
-    );
+      );
 
-    expect(find.text('110000₫'), findsOneWidget);
+      expect(find.text('110000₫'), findsOneWidget);
 
-    await tester.tap(find.byType(ElevatedButton));
-    await tester.pump();
+      await tester.tap(find.byType(ElevatedButton));
+      await tester.pump();
 
-    expect(submitted, isTrue);
-  });
+      expect(submitted, isTrue);
+    },
+  );
 
-  testWidgets('checkout bottom action is disabled while loading', (tester) async {
-    _setPhoneViewport(tester);
+  testWidgets('checkout bottom action is disabled while loading', (
+    tester,
+  ) async {
     var submitted = false;
 
-    await tester.pumpWidget(
-      _testApp(
-        CheckoutBottomSection(
-          cart: _cart,
-          isLoading: true,
-          serverTotal: 110000,
-          onPlaceOrder: () => submitted = true,
-        ),
+    await pumpTestApp(
+      tester,
+      child: CheckoutBottomSection(
+        cart: _cart,
+        isLoading: true,
+        serverTotal: 110000,
+        onPlaceOrder: () => submitted = true,
       ),
     );
 
@@ -101,16 +73,16 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  testWidgets('cart checkout button calls checkout navigation callback', (tester) async {
-    _setPhoneViewport(tester);
+  testWidgets('cart checkout button calls checkout navigation callback', (
+    tester,
+  ) async {
     var tapped = false;
 
-    await tester.pumpWidget(
-      _testApp(
-        CartCheckoutButton(
-          totalAmount: 120000,
-          onPressed: () => tapped = true,
-        ),
+    await pumpTestApp(
+      tester,
+      child: CartCheckoutButton(
+        totalAmount: 120000,
+        onPressed: () => tapped = true,
       ),
     );
 
@@ -123,21 +95,21 @@ void main() {
     expect(tapped, isTrue);
   });
 
-  testWidgets('address bottom actions save and default switch are wired', (tester) async {
-    _setPhoneViewport(tester);
+  testWidgets('address bottom actions save and default switch are wired', (
+    tester,
+  ) async {
     var saved = false;
     bool? defaultValue;
 
-    await tester.pumpWidget(
-      _testApp(
-        AddressBottomActions(
-          colors: LightColors(),
-          isEditing: true,
-          isDefault: false,
-          isSubmitting: false,
-          onDefaultChanged: (value) => defaultValue = value,
-          onSave: () => saved = true,
-        ),
+    await pumpTestApp(
+      tester,
+      child: AddressBottomActions(
+        colors: LightColors(),
+        isEditing: true,
+        isDefault: false,
+        isSubmitting: false,
+        onDefaultChanged: (value) => defaultValue = value,
+        onSave: () => saved = true,
       ),
     );
 
@@ -150,19 +122,19 @@ void main() {
     expect(saved, isTrue);
   });
 
-  testWidgets('address save action is disabled while submitting', (tester) async {
-    _setPhoneViewport(tester);
+  testWidgets('address save action is disabled while submitting', (
+    tester,
+  ) async {
     var saved = false;
 
-    await tester.pumpWidget(
-      _testApp(
-        AddressBottomActions(
-          colors: LightColors(),
-          isEditing: false,
-          isDefault: false,
-          isSubmitting: true,
-          onSave: () => saved = true,
-        ),
+    await pumpTestApp(
+      tester,
+      child: AddressBottomActions(
+        colors: LightColors(),
+        isEditing: false,
+        isDefault: false,
+        isSubmitting: true,
+        onSave: () => saved = true,
       ),
     );
 

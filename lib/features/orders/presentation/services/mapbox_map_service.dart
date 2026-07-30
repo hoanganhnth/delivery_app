@@ -2,10 +2,20 @@ import 'dart:math' as math;
 import 'dart:ui' as ui;
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import '../../../../core/utils/logger/app_logger.dart';
 import '../../domain/entities/shipper_location_entity.dart';
 import 'i_map_service.dart';
+
+typedef TrackingMapService = IMapService<MapboxMap, CameraOptions>;
+typedef TrackingMapServiceFactory = TrackingMapService Function();
+
+/// Creates one owned map service per tracking widget. Tests override the
+/// factory with a recorder and never have to initialize the native Mapbox SDK.
+final trackingMapServiceFactoryProvider = Provider<TrackingMapServiceFactory>(
+  (ref) => MapboxMapService.new,
+);
 
 /// Service để quản lý các thao tác với MapBox
 class MapboxMapService implements IMapService<MapboxMap, CameraOptions> {
