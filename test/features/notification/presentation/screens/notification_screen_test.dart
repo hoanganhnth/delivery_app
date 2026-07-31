@@ -1,4 +1,5 @@
 import 'package:delivery_app/core/error/failures.dart';
+import 'package:delivery_app/core/services/push/customer_push_wake_coordinator.dart';
 import 'package:delivery_app/features/notification/domain/entities/notification_entity.dart';
 import 'package:delivery_app/features/notification/domain/repositories/notification_repository.dart';
 import 'package:delivery_app/features/notification/presentation/providers/notification_providers.dart';
@@ -7,6 +8,7 @@ import 'package:delivery_app/features/profile/domain/entities/user_entity.dart';
 import 'package:delivery_app/features/profile/domain/repositories/profile_repository.dart';
 import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -14,63 +16,64 @@ import '../../../../support/app_harness.dart';
 import '../../../../support/fulfilment_builders.dart';
 
 void main() {
-  testWidgets('notification actions expose failure and retry without losing rows', (
-    tester,
-  ) async {
-    final notifications = _FakeNotificationRepository();
-    await pumpTestApp(
-      tester,
-      child: const NotificationScreen(),
-      overrides: [
-        profileRepositoryProvider.overrideWithValue(_FakeProfileRepository()),
-        notificationRepositoryProvider.overrideWithValue(notifications),
-      ],
-    );
-    await tester.pumpAndSettle();
+  testWidgets(
+    'notification actions expose failure and retry without losing rows',
+    (tester) async {
+      final notifications = _FakeNotificationRepository();
+      await pumpTestApp(
+        tester,
+        child: const NotificationScreen(),
+        overrides: [
+          profileRepositoryProvider.overrideWithValue(_FakeProfileRepository()),
+          notificationRepositoryProvider.overrideWithValue(notifications),
+        ],
+      );
+      await tester.pumpAndSettle();
 
-    expect(find.text('Đơn mới'), findsOneWidget);
-    expect(find.text('Cập nhật hệ thống'), findsOneWidget);
-    expect(find.text('2'), findsOneWidget);
+      expect(find.text('Đơn mới'), findsOneWidget);
+      expect(find.text('Cập nhật hệ thống'), findsOneWidget);
+      expect(find.text('2'), findsOneWidget);
 
-    notifications.markFailure = const ServerFailure('Không thể đánh dấu');
-    await tester.tap(find.text('Đơn mới'));
-    await tester.pumpAndSettle();
-    expect(find.text('Không thể đánh dấu'), findsOneWidget);
-    expect(find.text('2'), findsOneWidget);
+      notifications.markFailure = const ServerFailure('Không thể đánh dấu');
+      await tester.tap(find.text('Đơn mới'));
+      await tester.pumpAndSettle();
+      expect(find.text('Không thể đánh dấu'), findsOneWidget);
+      expect(find.text('2'), findsOneWidget);
 
-    await tester.tap(find.text('Đơn mới'));
-    await tester.pumpAndSettle();
-    expect(notifications.markCalls, 2);
-    expect(find.text('1'), findsOneWidget);
+      await tester.tap(find.text('Đơn mới'));
+      await tester.pumpAndSettle();
+      expect(notifications.markCalls, 2);
+      expect(find.text('1'), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.done_all));
-    await tester.pumpAndSettle();
-    expect(notifications.markAllCalls, 1);
-    expect(find.byIcon(Icons.done_all), findsNothing);
+      await tester.tap(find.byIcon(Icons.done_all));
+      await tester.pumpAndSettle();
+      expect(notifications.markAllCalls, 1);
+      expect(find.byIcon(Icons.done_all), findsNothing);
 
-    notifications.deleteFailure = const ServerFailure('Không thể xóa');
-    var dismissible = tester.widget<Dismissible>(
-      find.byKey(const Key('notification_902')),
-    );
-    expect(
-      await dismissible.confirmDismiss!(DismissDirection.endToStart),
-      isFalse,
-    );
-    await tester.pumpAndSettle();
-    expect(notifications.deleteCalls, 1);
-    expect(find.text('Cập nhật hệ thống'), findsOneWidget);
+      notifications.deleteFailure = const ServerFailure('Không thể xóa');
+      var dismissible = tester.widget<Dismissible>(
+        find.byKey(const Key('notification_902')),
+      );
+      expect(
+        await dismissible.confirmDismiss!(DismissDirection.endToStart),
+        isFalse,
+      );
+      await tester.pumpAndSettle();
+      expect(notifications.deleteCalls, 1);
+      expect(find.text('Cập nhật hệ thống'), findsOneWidget);
 
-    dismissible = tester.widget<Dismissible>(
-      find.byKey(const Key('notification_902')),
-    );
-    expect(
-      await dismissible.confirmDismiss!(DismissDirection.endToStart),
-      isTrue,
-    );
-    await tester.pumpAndSettle();
-    expect(notifications.deleteCalls, 2);
-    expect(find.text('Cập nhật hệ thống'), findsNothing);
-  });
+      dismissible = tester.widget<Dismissible>(
+        find.byKey(const Key('notification_902')),
+      );
+      expect(
+        await dismissible.confirmDismiss!(DismissDirection.endToStart),
+        isTrue,
+      );
+      await tester.pumpAndSettle();
+      expect(notifications.deleteCalls, 2);
+      expect(find.text('Cập nhật hệ thống'), findsNothing);
+    },
+  );
 
   testWidgets('notification load failure shows an explicit retry action', (
     tester,
@@ -93,6 +96,30 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Đơn mới'), findsOneWidget);
+    expect(notifications.loadCalls, 2);
+  });
+
+  testWidgets('a deduplicated push wake refreshes the visible durable inbox', (
+    tester,
+  ) async {
+    final notifications = _FakeNotificationRepository();
+    await pumpTestApp(
+      tester,
+      child: const NotificationScreen(),
+      overrides: [
+        profileRepositoryProvider.overrideWithValue(_FakeProfileRepository()),
+        notificationRepositoryProvider.overrideWithValue(notifications),
+      ],
+    );
+    await tester.pumpAndSettle();
+    expect(notifications.loadCalls, 1);
+
+    final container = ProviderScope.containerOf(
+      tester.element(find.byType(NotificationScreen)),
+    );
+    container.read(notificationWakeEpochProvider.notifier).state += 1;
+    await tester.pumpAndSettle();
+
     expect(notifications.loadCalls, 2);
   });
 }
@@ -124,15 +151,13 @@ class _FakeNotificationRepository implements NotificationRepository {
   }
 
   @override
-  Future<Either<Failure, int>> getUnreadCount() async => Right(
-    rows.where((row) => !row.isRead).length,
-  );
+  Future<Either<Failure, int>> getUnreadCount() async =>
+      Right(rows.where((row) => !row.isRead).length);
 
   @override
   Future<Either<Failure, List<NotificationEntity>>>
-  getUnreadNotifications() async => Right(
-    rows.where((row) => !row.isRead).toList(),
-  );
+  getUnreadNotifications() async =>
+      Right(rows.where((row) => !row.isRead).toList());
 
   @override
   Future<Either<Failure, NotificationEntity>> markAsRead(int id) async {
@@ -174,8 +199,9 @@ class _FakeProfileRepository implements ProfileRepository {
   Future<Either<Failure, UserEntity>> getUserProfile() async => Right(profile);
 
   @override
-  Future<Either<Failure, UserEntity>> updateUserProfile(UserEntity user) async =>
-      Right(user);
+  Future<Either<Failure, UserEntity>> updateUserProfile(
+    UserEntity user,
+  ) async => Right(user);
 
   @override
   Future<Either<Failure, void>> cacheUserProfile(UserEntity user) async =>

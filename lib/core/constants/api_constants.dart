@@ -8,6 +8,7 @@ class ApiConstants {
   static const socialLogin = "$auth/social-login";
   static const register = "$auth/register";
   static const refreshToken = "$auth/refresh-token";
+  static const logout = "$auth/logout";
   static const getProfile = "/users";
 
   static const getRestaurant = "/restaurants";
@@ -16,6 +17,12 @@ class ApiConstants {
   static const order = "/orders";
   static const getOrdersByUser = "$order/my-orders";
   static const delivery = "/deliveries";
+  static const promotion = "/promotions";
+  static const myVouchers = "$promotion/my-vouchers";
+  static const flashSales = "/flashsales";
+  static const activeFlashSaleCampaigns = "$flashSales/public/campaigns";
+  static String flashSaleCampaignItems(int campaignId) =>
+      "$activeFlashSaleCampaigns/$campaignId/items";
 
   // Notifications
   static const notifications = "/notifications";

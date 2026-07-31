@@ -222,7 +222,10 @@ void main() {
         final successResponse = RefreshTokenResponseDto(
           status: 1,
           message: 'Token refreshed successfully',
-          data: const RefreshTokenDataDto(accessToken: 'new_access_token_456'),
+          data: const RefreshTokenDataDto(
+            accessToken: 'new_access_token_456',
+            refreshToken: 'new_refresh_token_456',
+          ),
         );
 
         when(
@@ -238,7 +241,7 @@ void main() {
           authEntity,
         ) {
           expect(authEntity.accessToken, 'new_access_token_456');
-          // refreshToken should remain the same or be empty
+          expect(authEntity.refreshToken, 'new_refresh_token_456');
         });
 
         verify(mockRemoteDataSource.refreshToken(testRefreshToken)).called(1);
@@ -271,6 +274,19 @@ void main() {
           verify(mockRemoteDataSource.refreshToken(testRefreshToken)).called(1);
         },
       );
+    });
+
+    group('Logout Operation', () {
+      test('revokes the current refresh session', () async {
+        when(
+          mockRemoteDataSource.logout('refresh-to-revoke'),
+        ).thenAnswer((_) async {});
+
+        final result = await repository.logout('refresh-to-revoke');
+
+        expect(result.isRight(), true);
+        verify(mockRemoteDataSource.logout('refresh-to-revoke')).called(1);
+      });
     });
   });
 }

@@ -9,6 +9,7 @@ import '../../../domain/usecases/login_usecase.dart';
 import '../../../domain/usecases/register_usecase.dart';
 import '../../../domain/usecases/refresh_token_usecase.dart';
 import '../../../domain/usecases/social_login_usecase.dart';
+import '../../../domain/usecases/logout_usecase.dart';
 
 part 'auth_di_providers.g.dart';
 
@@ -59,4 +60,10 @@ RefreshTokenUseCase refreshTokenUseCase(Ref ref) {
 SocialLoginUseCase socialLoginUseCase(Ref ref) {
   final repository = ref.watch(authRepositoryProvider);
   return SocialLoginUseCase(repository);
+}
+
+@Riverpod(keepAlive: true)
+LogoutUseCase logoutUseCase(Ref ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return LogoutUseCase(repository);
 }

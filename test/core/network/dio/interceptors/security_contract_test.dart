@@ -21,14 +21,14 @@ void main() {
     final profile = File(
       'lib/features/profile/presentation/pages/profile_page.dart',
     ).readAsStringSync();
-    final push = File(
-      'lib/core/services/push_notification_service.dart',
+    final pushBackend = File(
+      'lib/core/services/push/firebase_push_adapters.dart',
     ).readAsStringSync();
 
     expect(wiring, contains('onUnauthorized: authNotifier.handleUnauthorized'));
     expect(wiring, isNot(contains('onUnauthorized: authNotifier.logout')));
     expect(profile, isNot(contains('appInitializerServiceProvider).cleanup')));
-    expect(push, contains('AuthInterceptor.skipAuthRefreshKey'));
+    expect(pushBackend, contains('AuthInterceptor.skipAuthRefreshKey'));
   });
 
   test('auth, socket, map and order logs never include user payloads', () {

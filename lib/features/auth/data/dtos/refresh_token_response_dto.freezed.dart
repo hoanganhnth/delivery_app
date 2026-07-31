@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RefreshTokenDataDto {
 
- String get accessToken; String? get refreshToken;
+ String get accessToken; String get refreshToken;
 /// Create a copy of RefreshTokenDataDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $RefreshTokenDataDtoCopyWith<$Res>  {
   factory $RefreshTokenDataDtoCopyWith(RefreshTokenDataDto value, $Res Function(RefreshTokenDataDto) _then) = _$RefreshTokenDataDtoCopyWithImpl;
 @useResult
 $Res call({
- String accessToken, String? refreshToken
+ String accessToken, String refreshToken
 });
 
 
@@ -65,11 +65,11 @@ class _$RefreshTokenDataDtoCopyWithImpl<$Res>
 
 /// Create a copy of RefreshTokenDataDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? accessToken = null,Object? refreshToken = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? accessToken = null,Object? refreshToken = null,}) {
   return _then(_self.copyWith(
 accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
-as String,refreshToken: freezed == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
-as String?,
+as String,refreshToken: null == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -151,7 +151,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String accessToken,  String? refreshToken)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String accessToken,  String refreshToken)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RefreshTokenDataDto() when $default != null:
 return $default(_that.accessToken,_that.refreshToken);case _:
@@ -172,7 +172,7 @@ return $default(_that.accessToken,_that.refreshToken);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String accessToken,  String? refreshToken)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String accessToken,  String refreshToken)  $default,) {final _that = this;
 switch (_that) {
 case _RefreshTokenDataDto():
 return $default(_that.accessToken,_that.refreshToken);}
@@ -189,7 +189,7 @@ return $default(_that.accessToken,_that.refreshToken);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String accessToken,  String? refreshToken)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String accessToken,  String refreshToken)?  $default,) {final _that = this;
 switch (_that) {
 case _RefreshTokenDataDto() when $default != null:
 return $default(_that.accessToken,_that.refreshToken);case _:
@@ -204,11 +204,11 @@ return $default(_that.accessToken,_that.refreshToken);case _:
 @JsonSerializable()
 
 class _RefreshTokenDataDto implements RefreshTokenDataDto {
-  const _RefreshTokenDataDto({required this.accessToken, this.refreshToken});
+  const _RefreshTokenDataDto({required this.accessToken, required this.refreshToken});
   factory _RefreshTokenDataDto.fromJson(Map<String, dynamic> json) => _$RefreshTokenDataDtoFromJson(json);
 
 @override final  String accessToken;
-@override final  String? refreshToken;
+@override final  String refreshToken;
 
 /// Create a copy of RefreshTokenDataDto
 /// with the given fields replaced by the non-null parameter values.
@@ -243,7 +243,7 @@ abstract mixin class _$RefreshTokenDataDtoCopyWith<$Res> implements $RefreshToke
   factory _$RefreshTokenDataDtoCopyWith(_RefreshTokenDataDto value, $Res Function(_RefreshTokenDataDto) _then) = __$RefreshTokenDataDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String accessToken, String? refreshToken
+ String accessToken, String refreshToken
 });
 
 
@@ -260,11 +260,11 @@ class __$RefreshTokenDataDtoCopyWithImpl<$Res>
 
 /// Create a copy of RefreshTokenDataDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? accessToken = null,Object? refreshToken = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? accessToken = null,Object? refreshToken = null,}) {
   return _then(_RefreshTokenDataDto(
 accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
-as String,refreshToken: freezed == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
-as String?,
+as String,refreshToken: null == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

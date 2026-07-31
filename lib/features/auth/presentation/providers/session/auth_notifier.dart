@@ -9,6 +9,7 @@ import 'package:delivery_app/features/auth/domain/usecases/social_login_usecase.
 import 'package:delivery_app/features/auth/domain/usecases/store_tokens_usecase.dart';
 import 'package:delivery_app/features/auth/domain/usecases/get_tokens_usecase.dart';
 import 'package:delivery_app/features/auth/domain/usecases/clear_tokens_usecase.dart';
+import 'package:delivery_app/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:delivery_app/features/auth/presentation/providers/session/auth_state.dart';
 import 'package:delivery_app/features/auth/presentation/providers/di/auth_di_providers.dart';
 import 'package:delivery_app/features/auth/presentation/providers/di/storage_di_providers.dart';
@@ -27,6 +28,7 @@ class AuthNotifier extends _$AuthNotifier {
   late final StoreTokensUseCase _storeTokensUseCase;
   late final GetTokensUseCase _getTokensUseCase;
   late final ClearTokensUseCase _clearTokensUseCase;
+  late final LogoutUseCase _logoutUseCase;
   late final DeviceIdentityPort _deviceIdentity;
   late final SocialIdentityPort _socialIdentity;
 
@@ -39,6 +41,7 @@ class AuthNotifier extends _$AuthNotifier {
     _storeTokensUseCase = ref.read(storeTokensUseCaseProvider);
     _getTokensUseCase = ref.read(getTokensUseCaseProvider);
     _clearTokensUseCase = ref.read(clearTokensUseCaseProvider);
+    _logoutUseCase = ref.read(logoutUseCaseProvider);
     _deviceIdentity = ref.read(deviceIdentityPortProvider);
     _socialIdentity = ref.read(socialIdentityPortProvider);
     return const AuthState.initial();
@@ -233,11 +236,23 @@ class AuthNotifier extends _$AuthNotifier {
 
   // Logout method
   Future<void> logout() async {
+    final refreshToken = state.refreshToken;
+
     // Run all centralized cleanup tasks (e.g. FCM unregister, clear profile cache)
     try {
       await ref.read(appInitializerServiceProvider).cleanup();
     } catch (e) {
       AppLogger.e('AuthNotifier: Cleanup failed - $e');
+    }
+
+    if (refreshToken != null && refreshToken.isNotEmpty) {
+      final revokeResult = await _logoutUseCase(
+        LogoutParams(refreshToken: refreshToken),
+      );
+      revokeResult.fold(
+        (_) => AppLogger.w('AuthNotifier: Server session revocation failed'),
+        (_) => AppLogger.d('AuthNotifier: Server session revoked'),
+      );
     }
 
     // Clear stored tokens

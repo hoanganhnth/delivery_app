@@ -1,247 +1,285 @@
-import 'dart:convert';
-import 'dart:io';
+import 'dart:async';
 
-import 'package:delivery_app/core/constants/api_constants.dart';
 import 'package:delivery_app/core/network/_riverpod/authenticated_network_providers.dart';
-import 'package:delivery_app/core/network/dio/interceptors/auth_interceptor.dart';
-import 'package:dio/dio.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:delivery_app/features/auth/presentation/providers/di/storage_di_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'push_notification_service.g.dart';
+import 'push/firebase_push_adapters.dart';
+import 'push/push_notification_contracts.dart';
+import 'push/push_persistence_adapter.dart';
 
-/// ✅ Background message handler — must be top-level function
-@pragma('vm:entry-point')
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  debugPrint('[FCM] Background notification received');
-}
+export 'push/push_notification_contracts.dart';
 
-/// ✅ Push Notification Service — manages FCM token lifecycle and message handling
 abstract interface class PushNotificationPort {
+  Stream<PushWakeSignal> get wakeSignals;
   Future<void> initialize({required bool authenticated});
   Future<void> updateAuthentication(bool authenticated);
   Future<void> unregisterToken();
 }
 
 class PushNotificationService implements PushNotificationPort {
-  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotifications =
-      FlutterLocalNotificationsPlugin();
-  final Dio _dio;
+  PushNotificationService({
+    required PushNativePort native,
+    required PushTokenBackendPort backend,
+    required PushPersistencePort persistence,
+    required PushPresentationPort presentation,
+  }) : _native = native,
+       _backend = backend,
+       _persistence = persistence,
+       _presentation = presentation;
+
+  final PushNativePort _native;
+  final PushTokenBackendPort _backend;
+  final PushPersistencePort _persistence;
+  final PushPresentationPort _presentation;
+  final StreamController<PushWakeSignal> _wakeController =
+      StreamController<PushWakeSignal>.broadcast();
+
   bool _authenticated = false;
+  bool _initialized = false;
+  bool _permissionGranted = false;
   Future<void>? _initialization;
-  Future<void>? _tokenSync;
+  Future<void> _tokenOperations = Future<void>.value();
+  int _sessionGeneration = 0;
+  String? _registeredTokenInMemory;
+  final List<StreamSubscription<Object?>> _subscriptions = [];
 
-  /// Android notification channel for high-importance notifications
-  static const AndroidNotificationChannel _channel = AndroidNotificationChannel(
-    'delivery_high_importance',
-    'Delivery Notifications',
-    description: 'Thông báo đơn hàng và giao hàng',
-    importance: Importance.high,
-    showBadge: true,
-    playSound: true,
-  );
+  @override
+  Stream<PushWakeSignal> get wakeSignals => _wakeController.stream;
 
-  PushNotificationService(this._dio);
-
-  /// Initialize FCM: request permissions, get token, setup listeners
   @override
   Future<void> initialize({required bool authenticated}) async {
-    _authenticated = authenticated;
+    final generation = _setAuthentication(authenticated);
     _initialization ??= _initializeOnce();
     await _initialization;
     if (_authenticated) {
-      await syncTokenWithBackend();
+      await _activateSession(generation);
     }
+    // A false value during app startup is not authoritative until auth
+    // bootstrap completes. Preserve the native token and pending wake ledger;
+    // explicit logout/session-expiry transitions perform cleanup.
   }
 
   Future<void> _initializeOnce() async {
+    if (_initialized) return;
+    _initialized = true;
     try {
-      // 1. Request permission (iOS + Android 13+)
-      final settings = await _messaging.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: false,
-        criticalAlert: false,
-        provisional: false,
-        sound: true,
-      );
-
-      debugPrint('[FCM] Permission status: ${settings.authorizationStatus}');
-
-      if (settings.authorizationStatus == AuthorizationStatus.denied) {
-        debugPrint('[FCM] Notification permission denied');
-        return;
-      }
-
-      // 2. Setup local notification channel (Android)
-      await _setupLocalNotifications();
-
-      // 3. Listen for token refresh. Backend sync is allowed only while the
-      // app has an authenticated session.
-      _messaging.onTokenRefresh.listen((newToken) {
-        if (_authenticated) {
-          _registerTokenWithBackend(newToken);
-        }
-      });
-
-      // 4. Handle foreground messages
-      FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
-
-      // 5. Handle message tap (app opened from notification)
-      FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageOpenedApp);
-
-      // 6. Check for initial message (app opened from terminated state)
-      final initialMessage = await _messaging.getInitialMessage();
-      if (initialMessage != null) {
-        _handleMessageOpenedApp(initialMessage);
-      }
-
-      // 7. Register background handler
-      FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-
-      debugPrint('[FCM] Push notification service initialized');
+      _permissionGranted = await _native.requestPermission();
     } catch (_) {
-      debugPrint('[FCM] Push notification initialization failed');
+      _permissionGranted = false;
+    }
+
+    try {
+      await _presentation.initialize();
+    } catch (_) {}
+
+    try {
+      _subscriptions.add(
+        _native.tokenRefreshes.listen((token) {
+          if (_authenticated) {
+            final generation = _sessionGeneration;
+            unawaited(_queueTokenReplacement(token, generation));
+          }
+        }),
+      );
+    } catch (_) {}
+    try {
+      _subscriptions.add(
+        _native.foregroundMessages.listen((message) {
+          unawaited(_handleLiveMessage(message, showForeground: true));
+        }),
+      );
+    } catch (_) {}
+    try {
+      _subscriptions.add(
+        _native.openedMessages.listen((message) {
+          unawaited(_handleLiveMessage(message));
+        }),
+      );
+    } catch (_) {}
+
+    try {
+      final initial = await _native.getInitialMessage();
+      final signal = initial == null ? null : parsePushWakeSignal(initial);
+      if (signal != null) await _persistence.recordPending(signal);
+    } catch (_) {
+      // Durable inbox/order REST remains the recovery path.
     }
   }
 
   @override
   Future<void> updateAuthentication(bool authenticated) async {
-    _authenticated = authenticated;
+    final generation = _setAuthentication(authenticated);
     if (authenticated) {
-      await syncTokenWithBackend();
+      _initialization ??= _initializeOnce();
+      await _initialization;
+      await _activateSession(generation);
+    } else {
+      await _queueTokenCleanup(unregisterBackend: false);
     }
   }
 
-  Future<void> syncTokenWithBackend() {
-    if (!_authenticated) return Future<void>.value();
-    return _tokenSync ??= _syncToken().whenComplete(() => _tokenSync = null);
-  }
-
-  Future<void> _syncToken() async {
-    final token = await _messaging.getToken();
-    if (token != null && _authenticated) {
-      await _registerTokenWithBackend(token);
+  Future<void> _activateSession(int generation) async {
+    if (_permissionGranted) {
+      try {
+        final token = await _native.getToken();
+        if (token != null) {
+          await _queueTokenReplacement(token, generation);
+        }
+      } catch (_) {}
+    }
+    final pending = await _persistence.consumePending();
+    if (!_isCurrentSession(generation)) return;
+    for (final signal in pending) {
+      _wakeController.add(signal);
     }
   }
 
-  /// Setup local notification plugin for showing foreground notifications
-  Future<void> _setupLocalNotifications() async {
-    const androidSettings = AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
-    );
-
-    const iosSettings = DarwinInitializationSettings(
-      requestSoundPermission: true,
-      requestBadgePermission: true,
-      requestAlertPermission: true,
-    );
-
-    const initSettings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
-    );
-
-    await _localNotifications.initialize(
-      initSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse response) {
-        debugPrint('[FCM] Local notification opened');
-      },
-    );
-
-    // Create Android notification channel
-    if (Platform.isAndroid) {
-      await _localNotifications
-          .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin
-          >()
-          ?.createNotificationChannel(_channel);
-    }
+  Future<void> _queueTokenReplacement(String candidate, int generation) {
+    return _enqueueTokenOperation(() => _replaceToken(candidate, generation));
   }
 
-  /// Register FCM token with the backend
-  Future<void> _registerTokenWithBackend(String token) async {
+  Future<void> _enqueueTokenOperation(Future<void> Function() operation) {
+    final completer = Completer<void>();
+    _tokenOperations = _tokenOperations.then((_) async {
+      try {
+        await operation();
+        completer.complete();
+      } catch (error, stackTrace) {
+        completer.completeError(error, stackTrace);
+      }
+    });
+    return completer.future;
+  }
+
+  Future<void> _replaceToken(String candidate, int generation) async {
+    final token = candidate.trim();
+    if (!_isCurrentSession(generation) || token.isEmpty) return;
+    final previous = await _persistence.getLastSyncedToken();
+    if (previous == token) {
+      _registeredTokenInMemory = token;
+      return;
+    }
+
+    if (previous != null) {
+      try {
+        await _backend.unregisterToken(previous);
+        if (_registeredTokenInMemory == previous) {
+          _registeredTokenInMemory = null;
+        }
+      } catch (_) {}
+    }
+    if (!_isCurrentSession(generation)) return;
     try {
-      await _dio.post(
-        ApiConstants.firebaseRegisterToken,
-        data: {'token': token},
-      );
-      debugPrint('[FCM] Token registered with backend');
+      await _backend.registerToken(token);
+      // Persist even if logout started while registration was in flight. The
+      // serialized cleanup queued by logout will then unregister this token.
+      _registeredTokenInMemory = token;
+      await _persistence.setLastSyncedToken(token);
     } catch (_) {
-      debugPrint('[FCM] Token registration failed');
+      // Token sync is best-effort; REST polling remains available.
     }
   }
 
-  /// Unregister FCM token from backend (call on logout)
+  Future<void> _handleLiveMessage(
+    PushMessageEnvelope message, {
+    bool showForeground = false,
+  }) async {
+    final signal = parsePushWakeSignal(message);
+    if (signal == null) return;
+    final generation = _sessionGeneration;
+    if (!_authenticated) {
+      await _persistence.recordPending(signal);
+      return;
+    }
+    if (!await _persistence.claimLive(signal)) return;
+    if (!_isCurrentSession(generation)) return;
+
+    if (showForeground) {
+      try {
+        await _presentation.showForeground(
+          signal,
+          title: message.title,
+          body: message.body,
+        );
+      } catch (_) {}
+    }
+    _wakeController.add(signal);
+  }
+
   @override
   Future<void> unregisterToken() async {
-    try {
-      final token = await _messaging.getToken();
-      if (token != null) {
-        await _dio.post(
-          ApiConstants.firebaseUnregisterToken,
-          data: {'token': token},
-          options: Options(extra: {AuthInterceptor.skipAuthRefreshKey: true}),
-        );
-        debugPrint('[FCM] Token unregistered from backend');
+    _setAuthentication(false);
+    await _queueTokenCleanup(unregisterBackend: true);
+  }
+
+  Future<void> _queueTokenCleanup({required bool unregisterBackend}) {
+    return _enqueueTokenOperation(() async {
+      final persistedToken = await _persistence.getLastSyncedToken();
+      final tokens = <String>{
+        if (persistedToken != null) persistedToken,
+        if (_registeredTokenInMemory != null) _registeredTokenInMemory!,
+      };
+      if (unregisterBackend) {
+        for (final token in tokens) {
+          try {
+            await _backend.unregisterToken(token);
+          } catch (_) {}
+        }
       }
-    } catch (_) {
-      debugPrint('[FCM] Token unregistration failed');
+      _registeredTokenInMemory = null;
+      try {
+        await _native.deleteToken();
+      } catch (_) {}
+      await _persistence.setLastSyncedToken(null);
+      await _persistence.clearPending();
+    });
+  }
+
+  int _setAuthentication(bool authenticated) {
+    if (_authenticated != authenticated) {
+      _sessionGeneration += 1;
+      _authenticated = authenticated;
     }
+    return _sessionGeneration;
   }
 
-  /// Handle foreground messages — show local notification
-  void _handleForegroundMessage(RemoteMessage message) {
-    debugPrint('[FCM] Foreground notification received');
-
-    final notification = message.notification;
-    if (notification == null) return;
-
-    _localNotifications.show(
-      notification.hashCode,
-      notification.title,
-      notification.body,
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          _channel.id,
-          _channel.name,
-          channelDescription: _channel.description,
-          importance: Importance.high,
-          priority: Priority.high,
-          icon: '@mipmap/ic_launcher',
-        ),
-        iOS: const DarwinNotificationDetails(
-          presentAlert: true,
-          presentBadge: true,
-          presentSound: true,
-        ),
-      ),
-      payload: jsonEncode(message.data),
-    );
+  bool _isCurrentSession(int generation) {
+    return _authenticated && generation == _sessionGeneration;
   }
 
-  /// Handle notification tap when app is in background/terminated
-  void _handleMessageOpenedApp(RemoteMessage message) {
-    debugPrint('[FCM] Notification opened');
-    // Navigation sẽ xử lý dựa trên message.data['relatedEntityType']
-    // và message.data['relatedEntityId']
+  Future<void> dispose() async {
+    for (final subscription in _subscriptions) {
+      await subscription.cancel();
+    }
+    _subscriptions.clear();
+    await _wakeController.close();
   }
 }
 
-/// ✅ Riverpod provider for PushNotificationService
-@Riverpod(keepAlive: true)
-PushNotificationService pushNotificationService(Ref ref) {
-  final dio = ref.watch(authenticatedDioProvider);
-  return PushNotificationService(dio);
-}
+final pushNativePortProvider = Provider<PushNativePort>(
+  (ref) => FirebasePushNativeAdapter(),
+);
 
-/// Stable application-facing port. Tests override this provider without
-/// constructing FirebaseMessaging or FlutterLocalNotificationsPlugin.
+final pushTokenBackendPortProvider = Provider<PushTokenBackendPort>((ref) {
+  return DioPushTokenBackendAdapter(ref.watch(authenticatedDioProvider));
+});
+
+final pushPersistencePortProvider = Provider<PushPersistencePort>((ref) {
+  return SharedPreferencesPushPersistence(ref.watch(sharedPreferencesProvider));
+});
+
+final pushPresentationPortProvider = Provider<PushPresentationPort>(
+  (ref) => FlutterLocalPushPresentationAdapter(),
+);
+
 final pushNotificationPortProvider = Provider<PushNotificationPort>((ref) {
-  return ref.watch(pushNotificationServiceProvider);
+  final service = PushNotificationService(
+    native: ref.watch(pushNativePortProvider),
+    backend: ref.watch(pushTokenBackendPortProvider),
+    persistence: ref.watch(pushPersistencePortProvider),
+    presentation: ref.watch(pushPresentationPortProvider),
+  );
+  ref.onDispose(service.dispose);
+  return service;
 });

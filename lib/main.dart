@@ -18,6 +18,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:delivery_app/core/services/push_notification_service.dart';
+import 'package:delivery_app/core/services/push/customer_push_wake_coordinator.dart';
+import 'package:delivery_app/core/services/push/firebase_push_adapters.dart';
 import 'features/auth/presentation/providers/providers.dart';
 
 Future<void> main() async {
@@ -74,12 +76,7 @@ Future<void> main() async {
 }
 
 class MainApp extends ConsumerStatefulWidget {
-  const MainApp({
-    super.key,
-    this.pushInitializationDelay = const Duration(seconds: 1),
-  });
-
-  final Duration pushInitializationDelay;
+  const MainApp({super.key});
 
   @override
   ConsumerState<MainApp> createState() => _MainAppState();
@@ -87,6 +84,7 @@ class MainApp extends ConsumerStatefulWidget {
 
 class _MainAppState extends ConsumerState<MainApp> {
   bool _fcmInitialized = false;
+  StreamSubscription<PushWakeSignal>? _pushWakeSubscription;
 
   @override
   void initState() {
@@ -97,11 +95,12 @@ class _MainAppState extends ConsumerState<MainApp> {
   Future<void> _initFCM() async {
     if (_fcmInitialized) return;
     _fcmInitialized = true;
-    // Delay to allow providers to be ready
-    await Future<void>.delayed(widget.pushInitializationDelay);
-    if (!mounted) return;
     try {
       final pushService = ref.read(pushNotificationPortProvider);
+      _pushWakeSubscription = pushService.wakeSignals.listen((signal) {
+        if (!mounted) return;
+        ref.read(customerPushWakeCoordinatorProvider).handle(signal);
+      });
       await pushService.initialize(
         authenticated: ref.read(authProvider).isAuthenticated,
       );
@@ -110,6 +109,13 @@ class _MainAppState extends ConsumerState<MainApp> {
         '[FCM] Initialization failed; will retry after authentication',
       );
     }
+  }
+
+  @override
+  void dispose() {
+    _pushWakeSubscription?.cancel();
+    _pushWakeSubscription = null;
+    super.dispose();
   }
 
   @override

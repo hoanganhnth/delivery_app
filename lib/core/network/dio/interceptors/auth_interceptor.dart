@@ -25,6 +25,7 @@ class AuthInterceptor extends Interceptor {
     ApiConstants.register,
     ApiConstants.socialLogin,
     ApiConstants.refreshToken,
+    ApiConstants.logout,
   };
 
   final Dio dio;

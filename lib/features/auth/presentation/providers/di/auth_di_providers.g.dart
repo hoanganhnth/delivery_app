@@ -317,3 +317,44 @@ final class SocialLoginUseCaseProvider
 
 String _$socialLoginUseCaseHash() =>
     r'80bd2377770f0a52f2205f00494a1a655e71b7f7';
+
+@ProviderFor(logoutUseCase)
+final logoutUseCaseProvider = LogoutUseCaseProvider._();
+
+final class LogoutUseCaseProvider
+    extends $FunctionalProvider<LogoutUseCase, LogoutUseCase, LogoutUseCase>
+    with $Provider<LogoutUseCase> {
+  LogoutUseCaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'logoutUseCaseProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$logoutUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<LogoutUseCase> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  LogoutUseCase create(Ref ref) {
+    return logoutUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LogoutUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LogoutUseCase>(value),
+    );
+  }
+}
+
+String _$logoutUseCaseHash() => r'6ff8c7afe3d83312ae278dbcdb46cba0d645266f';

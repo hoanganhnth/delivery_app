@@ -8,6 +8,14 @@ class RuntimeConfig {
   RuntimeConfig._();
 
   static const _configuredGateway = String.fromEnvironment('API_BASE_URL');
+  static const voucherCheckoutEnabled = bool.fromEnvironment(
+    'VOUCHER_CHECKOUT_ENABLED',
+    defaultValue: false,
+  );
+  static const flashSaleCheckoutEnabled = bool.fromEnvironment(
+    'FLASHSALE_CHECKOUT_ENABLED',
+    defaultValue: false,
+  );
 
   static String get gatewayBaseUrl => resolveGatewayBaseUrl(
     configuredValue: _configuredGateway,

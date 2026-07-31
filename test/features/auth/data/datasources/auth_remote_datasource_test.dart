@@ -13,20 +13,20 @@ class FakeAuthRemoteDataSource implements AuthRemoteDataSource {
   bool _shouldReturnSuccess = true;
   bool _shouldThrowException = false;
   String? _customErrorMessage;
-  
+
   // Behavior control methods
   void setSuccessResponse() {
     _shouldReturnSuccess = true;
     _shouldThrowException = false;
     _customErrorMessage = null;
   }
-  
+
   void setErrorResponse([String? message]) {
     _shouldReturnSuccess = false;
     _shouldThrowException = false;
     _customErrorMessage = message;
   }
-  
+
   void setNetworkException() {
     _shouldThrowException = true;
     _shouldReturnSuccess = false;
@@ -52,7 +52,9 @@ class FakeAuthRemoteDataSource implements AuthRemoteDataSource {
     }
 
     if (_shouldReturnSuccess) {
-      return _createSuccessfulLoginResponse(request['email'] ?? 'social@user.com');
+      return _createSuccessfulLoginResponse(
+        request['email'] ?? 'social@user.com',
+      );
     } else {
       return _createFailedLoginResponse();
     }
@@ -91,6 +93,7 @@ class FakeAuthRemoteDataSource implements AuthRemoteDataSource {
         message: 'Token refreshed successfully',
         data: const RefreshTokenDataDto(
           accessToken: 'new_access_token_from_refresh',
+          refreshToken: 'new_refresh_token_from_refresh',
         ),
       );
     } else {
@@ -102,19 +105,27 @@ class FakeAuthRemoteDataSource implements AuthRemoteDataSource {
     }
   }
 
+  @override
+  Future<void> logout(String refreshToken) async {
+    if (_shouldThrowException) {
+      throw Exception('Network connection failed');
+    }
+    if (!_shouldReturnSuccess) {
+      throw Exception(_customErrorMessage ?? 'Logout failed');
+    }
+  }
+
   // Helper methods for creating test data
   AuthResponseDto _createSuccessfulLoginResponse(String email) {
     return AuthResponseDto(
       status: 1,
       message: 'Login successful',
       data: AuthDataDto(
-        accessToken: 'fake_access_token_${DateTime.now().millisecondsSinceEpoch}',
-        refreshToken: 'fake_refresh_token_${DateTime.now().millisecondsSinceEpoch}',
-        user: UserDto(
-          id: 123,
-          email: email,
-          name: 'Test User for $email',
-        ),
+        accessToken:
+            'fake_access_token_${DateTime.now().millisecondsSinceEpoch}',
+        refreshToken:
+            'fake_refresh_token_${DateTime.now().millisecondsSinceEpoch}',
+        user: UserDto(id: 123, email: email, name: 'Test User for $email'),
       ),
     );
   }
@@ -146,22 +157,25 @@ void main() {
         ipAddress: '192.168.1.100',
       );
 
-      test('should return successful auth response with valid credentials', () async {
-        // Arrange
-        dataSource.setSuccessResponse();
+      test(
+        'should return successful auth response with valid credentials',
+        () async {
+          // Arrange
+          dataSource.setSuccessResponse();
 
-        // Act
-        final result = await dataSource.login(validLoginRequest);
+          // Act
+          final result = await dataSource.login(validLoginRequest);
 
-        // Assert
-        expect(result.status, 1);
-        expect(result.message, 'Login successful');
-        expect(result.data, isNotNull);
-        expect(result.data!.accessToken, startsWith('fake_access_token_'));
-        expect(result.data!.refreshToken, startsWith('fake_refresh_token_'));
-        expect(result.data!.user!.email, validLoginRequest.email);
-        expect(result.data!.user!.id, 123);
-      });
+          // Assert
+          expect(result.status, 1);
+          expect(result.message, 'Login successful');
+          expect(result.data, isNotNull);
+          expect(result.data!.accessToken, startsWith('fake_access_token_'));
+          expect(result.data!.refreshToken, startsWith('fake_refresh_token_'));
+          expect(result.data!.user!.email, validLoginRequest.email);
+          expect(result.data!.user!.id, 123);
+        },
+      );
 
       test('should return error response with invalid credentials', () async {
         // Arrange
@@ -181,10 +195,7 @@ void main() {
         dataSource.setNetworkException();
 
         // Act & Assert
-        expect(
-          () => dataSource.login(validLoginRequest),
-          throwsException,
-        );
+        expect(() => dataSource.login(validLoginRequest), throwsException);
       });
     });
 
@@ -221,34 +232,40 @@ void main() {
         expect(result.data, false);
       });
 
-      test('should throw exception when network fails during registration', () async {
-        // Arrange
-        dataSource.setNetworkException();
+      test(
+        'should throw exception when network fails during registration',
+        () async {
+          // Arrange
+          dataSource.setNetworkException();
 
-        // Act & Assert
-        expect(
-          () => dataSource.register(validRegisterRequest),
-          throwsException,
-        );
-      });
+          // Act & Assert
+          expect(
+            () => dataSource.register(validRegisterRequest),
+            throwsException,
+          );
+        },
+      );
     });
 
     group('Token Refresh Operation', () {
       const validRefreshToken = 'valid_refresh_token_123';
 
-      test('should return new access token when refresh is successful', () async {
-        // Arrange
-        dataSource.setSuccessResponse();
+      test(
+        'should return new access token when refresh is successful',
+        () async {
+          // Arrange
+          dataSource.setSuccessResponse();
 
-        // Act
-        final result = await dataSource.refreshToken(validRefreshToken);
+          // Act
+          final result = await dataSource.refreshToken(validRefreshToken);
 
-        // Assert
-        expect(result.status, 1);
-        expect(result.message, 'Token refreshed successfully');
-        expect(result.data, isNotNull);
-        expect(result.data!.accessToken, 'new_access_token_from_refresh');
-      });
+          // Assert
+          expect(result.status, 1);
+          expect(result.message, 'Token refreshed successfully');
+          expect(result.data, isNotNull);
+          expect(result.data!.accessToken, 'new_access_token_from_refresh');
+        },
+      );
 
       test('should return error when refresh token is invalid', () async {
         // Arrange
@@ -263,16 +280,19 @@ void main() {
         expect(result.data, isNull);
       });
 
-      test('should throw exception when network fails during token refresh', () async {
-        // Arrange
-        dataSource.setNetworkException();
+      test(
+        'should throw exception when network fails during token refresh',
+        () async {
+          // Arrange
+          dataSource.setNetworkException();
 
-        // Act & Assert
-        expect(
-          () => dataSource.refreshToken(validRefreshToken),
-          throwsException,
-        );
-      });
+          // Act & Assert
+          expect(
+            () => dataSource.refreshToken(validRefreshToken),
+            throwsException,
+          );
+        },
+      );
     });
   });
 }

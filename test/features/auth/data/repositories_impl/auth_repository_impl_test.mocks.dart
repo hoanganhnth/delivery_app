@@ -108,4 +108,13 @@ class MockAuthRemoteDataSource extends _i1.Mock
                 ),
           )
           as _i4.Future<_i2.BaseResponseDto<_i8.RefreshTokenDataDto>>);
+
+  @override
+  _i4.Future<void> logout(String? refreshToken) =>
+      (super.noSuchMethod(
+            Invocation.method(#logout, [refreshToken]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 }

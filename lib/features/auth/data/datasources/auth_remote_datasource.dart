@@ -9,4 +9,5 @@ abstract class AuthRemoteDataSource {
   Future<AuthResponseDto> socialLogin(Map<String, dynamic> request);
   Future<BaseResponseDto<bool>> register(RegisterRequestDto request);
   Future<RefreshTokenResponseDto> refreshToken(String refreshToken);
+  Future<void> logout(String refreshToken);
 }

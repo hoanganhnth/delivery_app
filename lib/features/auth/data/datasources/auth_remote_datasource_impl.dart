@@ -32,6 +32,9 @@ abstract class AuthApiService {
   Future<BaseResponseDto<RefreshTokenDataDto>> refreshToken(
     @Body() Map<String, String> body,
   );
+
+  @POST(ApiConstants.logout)
+  Future<BaseResponseDto<void>> logout(@Body() Map<String, String> body);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -100,11 +103,27 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       AppLogger.i('Token refresh successful');
       return response;
     } on DioException catch (e) {
-      AppLogger.e('Failed to refresh token', e);
+      AppLogger.e('Failed to refresh token');
       throw DioExceptionHandler.mapDioExceptionToException(e);
-    } catch (e) {
-      AppLogger.e('Unexpected error during token refresh', e);
-      throw Exception('Unexpected error: ${e.toString()}');
+    } catch (_) {
+      AppLogger.e('Unexpected error during token refresh');
+      throw Exception('Unexpected token refresh error');
+    }
+  }
+
+  @override
+  Future<void> logout(String refreshToken) async {
+    try {
+      final response = await _apiService.logout({'refreshToken': refreshToken});
+      if (!response.isSuccess) {
+        throw Exception(response.message);
+      }
+    } on DioException catch (e) {
+      AppLogger.e('Failed to revoke auth session');
+      throw DioExceptionHandler.mapDioExceptionToException(e);
+    } catch (_) {
+      AppLogger.e('Unexpected auth session revocation error');
+      throw Exception('Unexpected auth session revocation error');
     }
   }
 }

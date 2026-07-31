@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:delivery_app/core/services/push/customer_push_wake_coordinator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/generated/l10n.dart';
@@ -159,6 +162,12 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<int>(notificationWakeEpochProvider, (previous, next) {
+      if (previous != null && next > previous) {
+        unawaited(_loadNotifications());
+      }
+    });
+
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final s = S.of(context);

@@ -9,7 +9,7 @@ part 'refresh_token_response_dto.g.dart';
 sealed class RefreshTokenDataDto with _$RefreshTokenDataDto {
   const factory RefreshTokenDataDto({
     required String accessToken,
-    String? refreshToken,
+    required String refreshToken,
   }) = _RefreshTokenDataDto;
 
   factory RefreshTokenDataDto.fromJson(Map<String, dynamic> json) =>
@@ -21,10 +21,7 @@ typedef RefreshTokenResponseDto = BaseResponseDto<RefreshTokenDataDto>;
 
 // Extension for conversion to entity
 extension RefreshTokenDataDtoExtension on RefreshTokenDataDto {
-  AuthEntity toEntity([String? originalRefreshToken]) {
-    return AuthEntity(
-      accessToken: accessToken,
-      refreshToken: refreshToken ?? originalRefreshToken ?? '',
-    );
+  AuthEntity toEntity() {
+    return AuthEntity(accessToken: accessToken, refreshToken: refreshToken);
   }
 }

@@ -202,6 +202,8 @@ void main() {
       final state = harness.container.read(authProvider);
       expect(state, isA<AuthStateUnauthenticated>());
       expect(harness.appInitializer.cleanupCalls, 1);
+      expect(harness.authRepository.logoutCalls, 1);
+      expect(harness.authRepository.lastLogoutToken, 'stored-refresh');
       expect(harness.tokenStorage.clearCalls, 1);
       expect(harness.tokenStorage.storedTokens, isNull);
     });
@@ -428,6 +430,8 @@ class _FakeAuthRepository implements AuthRepository {
   String? lastRefreshToken;
   int loginCalls = 0;
   int registerCalls = 0;
+  int logoutCalls = 0;
+  String? lastLogoutToken;
   Completer<Either<Failure, AuthEntity>>? loginCompleter;
   Completer<Either<Failure, bool>>? registerCompleter;
 
@@ -446,6 +450,13 @@ class _FakeAuthRepository implements AuthRepository {
     lastRegisterPassword = password;
     if (registerCompleter != null) return registerCompleter!.future;
     return registerResult;
+  }
+
+  @override
+  Future<Either<Failure, void>> logout(String refreshToken) async {
+    logoutCalls += 1;
+    lastLogoutToken = refreshToken;
+    return const Right(null);
   }
 
   @override

@@ -69,6 +69,7 @@ void main() {
       ApiConstants.register,
       ApiConstants.socialLogin,
       ApiConstants.refreshToken,
+      ApiConstants.logout,
     ]) {
       test('401 from $authPath never starts refresh or logout', () async {
         final storage = _FakeTokenStorage(
@@ -126,6 +127,57 @@ void main() {
         );
         expect(storage.clearCalls, 0);
         expect(unauthorizedCalls, 0);
+      },
+    );
+
+    test(
+      'concurrent 401 responses share one refresh and persist the rotated pair',
+      () async {
+        final storage = _FakeTokenStorage(
+          accessToken: 'expired-access',
+          refreshToken: 'current-refresh',
+        );
+        final refreshGate = Completer<ResponseBody>();
+        final adapter = _ScriptedAdapter((options) {
+          final authorization = options.headers['Authorization'];
+          return authorization == 'Bearer expired-access'
+              ? _jsonResponse(401)
+              : _jsonResponse(200, body: {'data': options.path});
+        });
+        final refreshAdapter = _ScriptedAdapter((_) => refreshGate.future);
+        final dio = _createDio(adapter: adapter);
+        dio.interceptors.add(
+          AuthInterceptor(
+            dio: dio,
+            refreshDio: _createDio(adapter: refreshAdapter),
+            tokenStorage: storage,
+          ),
+        );
+
+        final orders = dio.get<dynamic>('/orders');
+        await refreshAdapter.firstCallStarted.future;
+        final profile = dio.get<dynamic>('/profile');
+        await adapter.secondCallStarted.future;
+        refreshGate.complete(
+          _jsonResponse(
+            200,
+            body: {
+              'data': {
+                'accessToken': 'rotated-access',
+                'refreshToken': 'rotated-refresh',
+              },
+            },
+          ),
+        );
+
+        await Future.wait([orders, profile]);
+        expect(refreshAdapter.callsFor(ApiConstants.refreshToken), 1);
+        expect(adapter.callsFor('/orders'), 2);
+        expect(adapter.callsFor('/profile'), 2);
+        expect(storage.accessToken, 'rotated-access');
+        expect(storage.refreshToken, 'rotated-refresh');
+        expect(storage.saveCalls, 1);
+        expect(storage.clearCalls, 0);
       },
     );
 
@@ -191,8 +243,9 @@ ResponseBody _jsonResponse(
 }
 
 class _ScriptedAdapter implements HttpClientAdapter {
-  final ResponseBody Function(RequestOptions options) respond;
+  final FutureOr<ResponseBody> Function(RequestOptions options) respond;
   final List<RequestOptions> calls = [];
+  final Completer<void> firstCallStarted = Completer<void>();
   final Completer<void> secondCallStarted = Completer<void>();
 
   _ScriptedAdapter(this.respond);
@@ -208,6 +261,7 @@ class _ScriptedAdapter implements HttpClientAdapter {
     Future<void>? cancelFuture,
   ) async {
     calls.add(options);
+    if (!firstCallStarted.isCompleted) firstCallStarted.complete();
     if (calls.length == 2 && !secondCallStarted.isCompleted) {
       secondCallStarted.complete();
     }
@@ -224,6 +278,7 @@ class _FakeTokenStorage implements TokenStorage {
   final Future<void> Function()? onClear;
   final Completer<void> clearStarted = Completer<void>();
   int clearCalls = 0;
+  int saveCalls = 0;
 
   _FakeTokenStorage({this.accessToken, this.refreshToken, this.onClear});
 
@@ -247,6 +302,7 @@ class _FakeTokenStorage implements TokenStorage {
     required String accessToken,
     required String refreshToken,
   }) async {
+    saveCalls++;
     this.accessToken = accessToken;
     this.refreshToken = refreshToken;
   }

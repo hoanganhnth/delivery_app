@@ -47,7 +47,9 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, AuthEntity>> socialLogin(SocialLoginParams params) async {
+  Future<Either<Failure, AuthEntity>> socialLogin(
+    SocialLoginParams params,
+  ) async {
     try {
       final requestJson = {
         'provider': params.provider,
@@ -100,7 +102,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final refreshResponse = await remoteDataSource.refreshToken(refreshToken);
 
       if (refreshResponse.isSuccess && refreshResponse.data != null) {
-        return right(refreshResponse.data!.toEntity(refreshToken));
+        return right(refreshResponse.data!.toEntity());
       } else {
         return left(ServerFailure(refreshResponse.message));
       }
@@ -109,6 +111,18 @@ class AuthRepositoryImpl implements AuthRepository {
       return left(mapExceptionToFailure(e));
     } catch (e) {
       // AppLogger.e('Repository: Unexpected error during token refresh', e);
+      return left(const ServerFailure('Unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> logout(String refreshToken) async {
+    try {
+      await remoteDataSource.logout(refreshToken);
+      return right(null);
+    } on Exception catch (e) {
+      return left(mapExceptionToFailure(e));
+    } catch (_) {
       return left(const ServerFailure('Unexpected error occurred'));
     }
   }

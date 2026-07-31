@@ -10,4 +10,5 @@ abstract class AuthRepository {
   Future<Either<Failure, AuthEntity>> socialLogin(SocialLoginParams params);
   Future<Either<Failure, bool>> register(String email, String password);
   Future<Either<Failure, AuthEntity>> refreshToken(String refreshToken);
+  Future<Either<Failure, void>> logout(String refreshToken);
 }

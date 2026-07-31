@@ -62,4 +62,4 @@ final class AppInitializerServiceProvider
 }
 
 String _$appInitializerServiceHash() =>
-    r'7b77275b5a2a30e967b0b00990df7cec22be7ff0';
+    r'9b04b9a0701bb9be1cfb522307b1038489b0a2e2';

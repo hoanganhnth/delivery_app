@@ -35,8 +35,8 @@ IAppInitializerService appInitializerService(Ref ref) {
         if (!authNotifier.isAuthenticated) return;
         try {
           await pushService.unregisterToken();
-        } catch (e) {
-          AppLogger.w('FCM unregister failed during cleanup: $e');
+        } catch (_) {
+          AppLogger.w('FCM unregister failed during cleanup');
         }
       },
     ],
