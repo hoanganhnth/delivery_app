@@ -22,13 +22,14 @@ class CartItemDtoAdapter extends TypeAdapter<CartItemDto> {
       restaurantName: fields[5] as String,
       imageUrl: fields[6] as String?,
       notes: fields[7] as String?,
+      flashSaleItemId: fields[8] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, CartItemDto obj) {
     writer
-      ..writeByte(8) // number of fields
+      ..writeByte(9) // number of fields
       ..writeByte(0)
       ..write(obj.menuItemId)
       ..writeByte(1)
@@ -44,7 +45,9 @@ class CartItemDtoAdapter extends TypeAdapter<CartItemDto> {
       ..writeByte(6)
       ..write(obj.imageUrl)
       ..writeByte(7)
-      ..write(obj.notes);
+      ..write(obj.notes)
+      ..writeByte(8)
+      ..write(obj.flashSaleItemId);
   }
 
   @override

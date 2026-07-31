@@ -152,7 +152,7 @@ final class SearchDishesResultsProvider
 }
 
 String _$searchDishesResultsHash() =>
-    r'cfb8e1d20aa00b67f4d713225bf36613689e8371';
+    r'4e9e2e5a9d4d9f9920ccfb39e0127ea212e61a14';
 
 @ProviderFor(searchRestaurantsResults)
 final searchRestaurantsResultsProvider = SearchRestaurantsResultsProvider._();
@@ -194,4 +194,4 @@ final class SearchRestaurantsResultsProvider
 }
 
 String _$searchRestaurantsResultsHash() =>
-    r'87f08f4228945e5218f0c33cf097ff615c715a19';
+    r'f957eb9dcc5be3a2995d31ecad7d0576e5425962';

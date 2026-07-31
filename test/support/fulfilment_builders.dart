@@ -55,6 +55,7 @@ CartItemEntity buildCartItem({
   double price = 50000,
   int quantity = 1,
   String? notes,
+  int? flashSaleItemId,
 }) {
   return CartItemEntity(
     menuItemId: menuItemId,
@@ -64,6 +65,7 @@ CartItemEntity buildCartItem({
     restaurantId: restaurantId,
     restaurantName: restaurantName,
     notes: notes,
+    flashSaleItemId: flashSaleItemId,
   );
 }
 

@@ -9,6 +9,7 @@ sealed class OrderItemRequest with _$OrderItemRequest {
     required int menuItemId,
     required int quantity,
     String? notes,
+    int? flashSaleItemId,
   }) = _OrderItemRequest;
 
   factory OrderItemRequest.fromJson(Map<String, dynamic> json) =>
@@ -26,6 +27,7 @@ sealed class CreateOrderRequestDto with _$CreateOrderRequestDto {
     required String customerPhone,
     required String paymentMethod, // COD-only in the current MVP
     String? notes,
+    List<int>? voucherIds,
     required List<OrderItemRequest> items,
   }) = _CreateOrderRequestDto;
 

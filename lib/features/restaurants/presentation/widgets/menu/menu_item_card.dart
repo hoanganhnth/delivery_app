@@ -1,6 +1,7 @@
 import 'package:delivery_app/features/cart/presentation/providers/di/cart_di_providers.dart';
 import 'package:delivery_app/features/cart/presentation/providers/state/cart_notifier.dart';
 import 'package:delivery_app/features/restaurants/domain/entities/menu_item_entity.dart';
+import 'package:delivery_app/features/restaurants/presentation/providers/flash_sale_catalog_provider.dart';
 import 'package:delivery_app/generated/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,11 @@ class MenuItemCard extends ConsumerWidget {
         restaurantId != null &&
         restaurantId > 0;
     final isUnavailable = !menuItem.canAddToCart;
+    final flashSaleItems = hasCanonicalIdentity
+        ? ref.watch(restaurantFlashSaleItemsProvider(restaurantId.toInt()))
+        : null;
+    final flashSaleItem = flashSaleItems?.value?[itemId?.toInt()];
+    final displayedPrice = flashSaleItem?.flashSalePrice ?? menuItem.price;
     final cartNotifier = ref.read(cartProvider.notifier);
     final itemQuantity = hasCanonicalIdentity
         ? ref.watch(menuItemQuantityProvider(itemId))
@@ -66,7 +72,11 @@ class MenuItemCard extends ConsumerWidget {
                 Navigator.of(context).pop();
                 await cartNotifier.clearCart();
                 // Add the item after clearing
-                final cartItem = menuItem.toCartItem(restaurantName);
+                final cartItem = menuItem.toCartItem(
+                  restaurantName,
+                  flashSaleItemId: flashSaleItem?.id,
+                  serverCatalogPrice: flashSaleItem?.flashSalePrice,
+                );
                 await cartNotifier.addItem(cartItem);
               },
               child: Text(S.of(context).clearCurrentCart),
@@ -134,13 +144,27 @@ class MenuItemCard extends ConsumerWidget {
                       SizedBox(height: 8.w),
                       Row(
                         children: [
-                          Text(
-                            '${menuItem.price.toStringAsFixed(0)}đ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.sp,
-                              color: Colors.orange,
-                            ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (flashSaleItem != null)
+                                Text(
+                                  '${menuItem.price.toStringAsFixed(0)}đ',
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    color: ref.colors.textSecondary,
+                                    decoration: TextDecoration.lineThrough,
+                                  ),
+                                ),
+                              Text(
+                                '${displayedPrice.toStringAsFixed(0)}đ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.sp,
+                                  color: Colors.orange,
+                                ),
+                              ),
+                            ],
                           ),
                           const Spacer(),
                           if (isUnavailable)
@@ -230,7 +254,14 @@ class MenuItemCard extends ConsumerWidget {
                                               }
                                               // Add new item to cart
                                               final cartItem = menuItem
-                                                  .toCartItem(restaurantName);
+                                                  .toCartItem(
+                                                    restaurantName,
+                                                    flashSaleItemId:
+                                                        flashSaleItem?.id,
+                                                    serverCatalogPrice:
+                                                        flashSaleItem
+                                                            ?.flashSalePrice,
+                                                  );
                                               await cartNotifier.addItem(
                                                 cartItem,
                                               );

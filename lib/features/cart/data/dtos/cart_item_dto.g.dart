@@ -15,6 +15,7 @@ _CartItemDto _$CartItemDtoFromJson(Map<String, dynamic> json) => _CartItemDto(
   restaurantName: json['restaurantName'] as String,
   imageUrl: json['imageUrl'] as String?,
   notes: json['notes'] as String?,
+  flashSaleItemId: (json['flashSaleItemId'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$CartItemDtoToJson(_CartItemDto instance) =>
@@ -27,4 +28,5 @@ Map<String, dynamic> _$CartItemDtoToJson(_CartItemDto instance) =>
       'restaurantName': instance.restaurantName,
       'imageUrl': instance.imageUrl,
       'notes': instance.notes,
+      'flashSaleItemId': instance.flashSaleItemId,
     };

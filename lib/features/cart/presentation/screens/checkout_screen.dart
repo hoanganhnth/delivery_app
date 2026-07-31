@@ -1,4 +1,5 @@
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
+import 'package:delivery_app/core/config/runtime_config.dart';
 import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/features/cart/presentation/widgets/checkout_empty_state.dart';
 import 'package:delivery_app/features/cart/presentation/widgets/checkout_section_card.dart';
@@ -14,6 +15,7 @@ import '../../../orders/presentation/providers/orders/create_order_async_notifie
 import '../../../user_address/presentation/providers/providers.dart';
 import '../providers/providers.dart';
 import '../providers/checkout_preview_provider.dart';
+import '../widgets/voucher_selector_card.dart';
 import '../utils/checkout_order_builder.dart';
 import '../widgets/widgets.dart';
 import '../../domain/entities/cart_entity.dart';
@@ -28,6 +30,7 @@ class CheckoutScreen extends ConsumerStatefulWidget {
 
 class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   final TextEditingController _notesController = TextEditingController();
+  int? _selectedVoucherId;
 
   @override
   void initState() {
@@ -57,6 +60,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       final request = CheckoutOrderBuilder.buildPreviewRequest(
         cart: cart,
         address: selectedAddress,
+        selectedVoucherId: _selectedVoucherId,
       );
 
       await previewNotifier.loadPreview(request);
@@ -291,6 +295,31 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                         CheckoutSectionCard(child: const PaymentMethodCard()),
                         SizedBox(height: 16.w),
 
+                        if (RuntimeConfig.voucherCheckoutEnabled &&
+                            !cart.items.any(
+                              (item) => item.flashSaleItemId != null,
+                            )) ...[
+                          CheckoutSectionHeader(
+                            title: 'Voucher',
+                            icon: Icons.local_offer_outlined,
+                          ),
+                          SizedBox(height: 8.w),
+                          CheckoutSectionCard(
+                            child: VoucherSelectorCard(
+                              restaurantId: cart.currentRestaurantId!.toInt(),
+                              selectedVoucherId: _selectedVoucherId,
+                              onChanged: (voucherId) {
+                                setState(() => _selectedVoucherId = voucherId);
+                                ref
+                                    .read(checkoutPreviewProvider.notifier)
+                                    .reset();
+                                _loadCheckoutPreview();
+                              },
+                            ),
+                          ),
+                          SizedBox(height: 16.w),
+                        ],
+
                         // Order Items Summary
                         CheckoutSectionHeader(
                           title: s.checkoutOrderDetailsTitle,
@@ -359,6 +388,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         address: selectedAddress,
         preview: preview,
         notes: _notesController.text,
+        selectedVoucherId: _selectedVoucherId,
       );
     } on CheckoutOrderBuildException catch (error) {
       if (!mounted) return;
@@ -376,9 +406,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text(
-              'Giá đơn hàng chưa được xác nhận. Vui lòng thử lại.',
-            ),
+            content: Text('Giá đơn hàng chưa được xác nhận. Vui lòng thử lại.'),
           ),
         );
       }

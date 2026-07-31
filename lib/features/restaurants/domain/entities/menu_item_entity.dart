@@ -29,12 +29,16 @@ extension MenuItemToCartExtension on MenuItemEntity {
     String restaurantName, {
     int quantity = 1,
     String? notes,
+    int? flashSaleItemId,
+    double? serverCatalogPrice,
   }) {
     return CartItemEntity.fromMenuItem(
       this,
       restaurantName,
       quantity: quantity,
       notes: notes,
+      flashSaleItemId: flashSaleItemId,
+      serverCatalogPrice: serverCatalogPrice,
     );
   }
 

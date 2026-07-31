@@ -48,7 +48,7 @@ final class AddressFormNotifierProvider
 }
 
 String _$addressFormNotifierHash() =>
-    r'e091cf4a82733ce1d646bfeca6c88619fbaab61f';
+    r'72f9f3e07dbc96563cf26ac002e1c512c2db4ee6';
 
 /// Notifier cho tạo/cập nhật địa chỉ
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../domain/entities/order_entity.dart';
 import '../../../data/dtos/create_order_request_dto.dart';
@@ -10,7 +12,7 @@ part 'create_order_async_notifiers.g.dart';
 @riverpod
 class CreateOrder extends _$CreateOrder {
   @override
-  OrderEntity? build() {
+  FutureOr<OrderEntity?> build() {
     // Initial state - không có order nào được tạo
     return null;
   }
@@ -52,7 +54,7 @@ class CreateOrder extends _$CreateOrder {
 @riverpod
 class CancelOrder extends _$CancelOrder {
   @override
-  bool? build() {
+  FutureOr<bool?> build() {
     // Initial state
     return null;
   }

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CartItemDto {
 
-@HiveField(0) num get menuItemId;@HiveField(1) String get menuItemName;@HiveField(2) double get price;@HiveField(3) int get quantity;@HiveField(4) num get restaurantId;@HiveField(5) String get restaurantName;@HiveField(6) String? get imageUrl;@HiveField(7) String? get notes;
+@HiveField(0) num get menuItemId;@HiveField(1) String get menuItemName;@HiveField(2) double get price;@HiveField(3) int get quantity;@HiveField(4) num get restaurantId;@HiveField(5) String get restaurantName;@HiveField(6) String? get imageUrl;@HiveField(7) String? get notes;@HiveField(8) int? get flashSaleItemId;
 /// Create a copy of CartItemDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $CartItemDtoCopyWith<CartItemDto> get copyWith => _$CartItemDtoCopyWithImpl<Cart
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CartItemDto&&(identical(other.menuItemId, menuItemId) || other.menuItemId == menuItemId)&&(identical(other.menuItemName, menuItemName) || other.menuItemName == menuItemName)&&(identical(other.price, price) || other.price == price)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.notes, notes) || other.notes == notes));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CartItemDto&&(identical(other.menuItemId, menuItemId) || other.menuItemId == menuItemId)&&(identical(other.menuItemName, menuItemName) || other.menuItemName == menuItemName)&&(identical(other.price, price) || other.price == price)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.flashSaleItemId, flashSaleItemId) || other.flashSaleItemId == flashSaleItemId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,menuItemId,menuItemName,price,quantity,restaurantId,restaurantName,imageUrl,notes);
+int get hashCode => Object.hash(runtimeType,menuItemId,menuItemName,price,quantity,restaurantId,restaurantName,imageUrl,notes,flashSaleItemId);
 
 @override
 String toString() {
-  return 'CartItemDto(menuItemId: $menuItemId, menuItemName: $menuItemName, price: $price, quantity: $quantity, restaurantId: $restaurantId, restaurantName: $restaurantName, imageUrl: $imageUrl, notes: $notes)';
+  return 'CartItemDto(menuItemId: $menuItemId, menuItemName: $menuItemName, price: $price, quantity: $quantity, restaurantId: $restaurantId, restaurantName: $restaurantName, imageUrl: $imageUrl, notes: $notes, flashSaleItemId: $flashSaleItemId)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $CartItemDtoCopyWith<$Res>  {
   factory $CartItemDtoCopyWith(CartItemDto value, $Res Function(CartItemDto) _then) = _$CartItemDtoCopyWithImpl;
 @useResult
 $Res call({
-@HiveField(0) num menuItemId,@HiveField(1) String menuItemName,@HiveField(2) double price,@HiveField(3) int quantity,@HiveField(4) num restaurantId,@HiveField(5) String restaurantName,@HiveField(6) String? imageUrl,@HiveField(7) String? notes
+@HiveField(0) num menuItemId,@HiveField(1) String menuItemName,@HiveField(2) double price,@HiveField(3) int quantity,@HiveField(4) num restaurantId,@HiveField(5) String restaurantName,@HiveField(6) String? imageUrl,@HiveField(7) String? notes,@HiveField(8) int? flashSaleItemId
 });
 
 
@@ -65,7 +65,7 @@ class _$CartItemDtoCopyWithImpl<$Res>
 
 /// Create a copy of CartItemDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? menuItemId = null,Object? menuItemName = null,Object? price = null,Object? quantity = null,Object? restaurantId = null,Object? restaurantName = null,Object? imageUrl = freezed,Object? notes = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? menuItemId = null,Object? menuItemName = null,Object? price = null,Object? quantity = null,Object? restaurantId = null,Object? restaurantName = null,Object? imageUrl = freezed,Object? notes = freezed,Object? flashSaleItemId = freezed,}) {
   return _then(_self.copyWith(
 menuItemId: null == menuItemId ? _self.menuItemId : menuItemId // ignore: cast_nullable_to_non_nullable
 as num,menuItemName: null == menuItemName ? _self.menuItemName : menuItemName // ignore: cast_nullable_to_non_nullable
@@ -75,7 +75,8 @@ as int,restaurantId: null == restaurantId ? _self.restaurantId : restaurantId //
 as num,restaurantName: null == restaurantName ? _self.restaurantName : restaurantName // ignore: cast_nullable_to_non_nullable
 as String,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
 as String?,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,flashSaleItemId: freezed == flashSaleItemId ? _self.flashSaleItemId : flashSaleItemId // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)  num menuItemId, @HiveField(1)  String menuItemName, @HiveField(2)  double price, @HiveField(3)  int quantity, @HiveField(4)  num restaurantId, @HiveField(5)  String restaurantName, @HiveField(6)  String? imageUrl, @HiveField(7)  String? notes)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)  num menuItemId, @HiveField(1)  String menuItemName, @HiveField(2)  double price, @HiveField(3)  int quantity, @HiveField(4)  num restaurantId, @HiveField(5)  String restaurantName, @HiveField(6)  String? imageUrl, @HiveField(7)  String? notes, @HiveField(8)  int? flashSaleItemId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CartItemDto() when $default != null:
-return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity,_that.restaurantId,_that.restaurantName,_that.imageUrl,_that.notes);case _:
+return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity,_that.restaurantId,_that.restaurantName,_that.imageUrl,_that.notes,_that.flashSaleItemId);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)  num menuItemId, @HiveField(1)  String menuItemName, @HiveField(2)  double price, @HiveField(3)  int quantity, @HiveField(4)  num restaurantId, @HiveField(5)  String restaurantName, @HiveField(6)  String? imageUrl, @HiveField(7)  String? notes)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)  num menuItemId, @HiveField(1)  String menuItemName, @HiveField(2)  double price, @HiveField(3)  int quantity, @HiveField(4)  num restaurantId, @HiveField(5)  String restaurantName, @HiveField(6)  String? imageUrl, @HiveField(7)  String? notes, @HiveField(8)  int? flashSaleItemId)  $default,) {final _that = this;
 switch (_that) {
 case _CartItemDto():
-return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity,_that.restaurantId,_that.restaurantName,_that.imageUrl,_that.notes);}
+return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity,_that.restaurantId,_that.restaurantName,_that.imageUrl,_that.notes,_that.flashSaleItemId);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -195,10 +196,10 @@ return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)  num menuItemId, @HiveField(1)  String menuItemName, @HiveField(2)  double price, @HiveField(3)  int quantity, @HiveField(4)  num restaurantId, @HiveField(5)  String restaurantName, @HiveField(6)  String? imageUrl, @HiveField(7)  String? notes)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)  num menuItemId, @HiveField(1)  String menuItemName, @HiveField(2)  double price, @HiveField(3)  int quantity, @HiveField(4)  num restaurantId, @HiveField(5)  String restaurantName, @HiveField(6)  String? imageUrl, @HiveField(7)  String? notes, @HiveField(8)  int? flashSaleItemId)?  $default,) {final _that = this;
 switch (_that) {
 case _CartItemDto() when $default != null:
-return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity,_that.restaurantId,_that.restaurantName,_that.imageUrl,_that.notes);case _:
+return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity,_that.restaurantId,_that.restaurantName,_that.imageUrl,_that.notes,_that.flashSaleItemId);case _:
   return null;
 
 }
@@ -210,7 +211,7 @@ return $default(_that.menuItemId,_that.menuItemName,_that.price,_that.quantity,_
 @JsonSerializable()
 
 class _CartItemDto implements CartItemDto {
-  const _CartItemDto({@HiveField(0) required this.menuItemId, @HiveField(1) required this.menuItemName, @HiveField(2) required this.price, @HiveField(3) required this.quantity, @HiveField(4) required this.restaurantId, @HiveField(5) required this.restaurantName, @HiveField(6) this.imageUrl, @HiveField(7) this.notes});
+  const _CartItemDto({@HiveField(0) required this.menuItemId, @HiveField(1) required this.menuItemName, @HiveField(2) required this.price, @HiveField(3) required this.quantity, @HiveField(4) required this.restaurantId, @HiveField(5) required this.restaurantName, @HiveField(6) this.imageUrl, @HiveField(7) this.notes, @HiveField(8) this.flashSaleItemId});
   factory _CartItemDto.fromJson(Map<String, dynamic> json) => _$CartItemDtoFromJson(json);
 
 @override@HiveField(0) final  num menuItemId;
@@ -221,6 +222,7 @@ class _CartItemDto implements CartItemDto {
 @override@HiveField(5) final  String restaurantName;
 @override@HiveField(6) final  String? imageUrl;
 @override@HiveField(7) final  String? notes;
+@override@HiveField(8) final  int? flashSaleItemId;
 
 /// Create a copy of CartItemDto
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CartItemDto&&(identical(other.menuItemId, menuItemId) || other.menuItemId == menuItemId)&&(identical(other.menuItemName, menuItemName) || other.menuItemName == menuItemName)&&(identical(other.price, price) || other.price == price)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.notes, notes) || other.notes == notes));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CartItemDto&&(identical(other.menuItemId, menuItemId) || other.menuItemId == menuItemId)&&(identical(other.menuItemName, menuItemName) || other.menuItemName == menuItemName)&&(identical(other.price, price) || other.price == price)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.flashSaleItemId, flashSaleItemId) || other.flashSaleItemId == flashSaleItemId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,menuItemId,menuItemName,price,quantity,restaurantId,restaurantName,imageUrl,notes);
+int get hashCode => Object.hash(runtimeType,menuItemId,menuItemName,price,quantity,restaurantId,restaurantName,imageUrl,notes,flashSaleItemId);
 
 @override
 String toString() {
-  return 'CartItemDto(menuItemId: $menuItemId, menuItemName: $menuItemName, price: $price, quantity: $quantity, restaurantId: $restaurantId, restaurantName: $restaurantName, imageUrl: $imageUrl, notes: $notes)';
+  return 'CartItemDto(menuItemId: $menuItemId, menuItemName: $menuItemName, price: $price, quantity: $quantity, restaurantId: $restaurantId, restaurantName: $restaurantName, imageUrl: $imageUrl, notes: $notes, flashSaleItemId: $flashSaleItemId)';
 }
 
 
@@ -255,7 +257,7 @@ abstract mixin class _$CartItemDtoCopyWith<$Res> implements $CartItemDtoCopyWith
   factory _$CartItemDtoCopyWith(_CartItemDto value, $Res Function(_CartItemDto) _then) = __$CartItemDtoCopyWithImpl;
 @override @useResult
 $Res call({
-@HiveField(0) num menuItemId,@HiveField(1) String menuItemName,@HiveField(2) double price,@HiveField(3) int quantity,@HiveField(4) num restaurantId,@HiveField(5) String restaurantName,@HiveField(6) String? imageUrl,@HiveField(7) String? notes
+@HiveField(0) num menuItemId,@HiveField(1) String menuItemName,@HiveField(2) double price,@HiveField(3) int quantity,@HiveField(4) num restaurantId,@HiveField(5) String restaurantName,@HiveField(6) String? imageUrl,@HiveField(7) String? notes,@HiveField(8) int? flashSaleItemId
 });
 
 
@@ -272,7 +274,7 @@ class __$CartItemDtoCopyWithImpl<$Res>
 
 /// Create a copy of CartItemDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? menuItemId = null,Object? menuItemName = null,Object? price = null,Object? quantity = null,Object? restaurantId = null,Object? restaurantName = null,Object? imageUrl = freezed,Object? notes = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? menuItemId = null,Object? menuItemName = null,Object? price = null,Object? quantity = null,Object? restaurantId = null,Object? restaurantName = null,Object? imageUrl = freezed,Object? notes = freezed,Object? flashSaleItemId = freezed,}) {
   return _then(_CartItemDto(
 menuItemId: null == menuItemId ? _self.menuItemId : menuItemId // ignore: cast_nullable_to_non_nullable
 as num,menuItemName: null == menuItemName ? _self.menuItemName : menuItemName // ignore: cast_nullable_to_non_nullable
@@ -282,7 +284,8 @@ as int,restaurantId: null == restaurantId ? _self.restaurantId : restaurantId //
 as num,restaurantName: null == restaurantName ? _self.restaurantName : restaurantName // ignore: cast_nullable_to_non_nullable
 as String,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
 as String?,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,flashSaleItemId: freezed == flashSaleItemId ? _self.flashSaleItemId : flashSaleItemId // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

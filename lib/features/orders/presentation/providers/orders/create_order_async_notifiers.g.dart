@@ -36,7 +36,7 @@ final class CreateOrderProvider
   CreateOrder create() => CreateOrder();
 }
 
-String _$createOrderHash() => r'7257d40879a1d8237a8bf4ac0c73bf95fa0570d9';
+String _$createOrderHash() => r'6147c858525c1bb119fa524aec893fd7a549a4e4';
 
 /// AsyncNotifier cho việc tạo đơn hàng
 
@@ -86,7 +86,7 @@ final class CancelOrderProvider
   CancelOrder create() => CancelOrder();
 }
 
-String _$cancelOrderHash() => r'f489b704942885d1ac8ad6c4ca798547e8d02113';
+String _$cancelOrderHash() => r'f65252a309d30cc836c2b2e86f425b37a33ae465';
 
 /// AsyncNotifier cho việc hủy đơn hàng
 

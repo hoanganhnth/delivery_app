@@ -2,6 +2,7 @@ import '../../domain/entities/cart_entity.dart';
 import '../../../orders/data/dtos/checkout_preview_dto.dart';
 import '../../../orders/data/dtos/create_order_request_dto.dart';
 import '../../../user_address/domain/entities/user_address_entity.dart';
+import '../../../../core/config/runtime_config.dart';
 
 enum CheckoutOrderBuildFailure { invalidInput, invalidPreview }
 
@@ -17,6 +18,7 @@ class CheckoutOrderBuilder {
   static CheckoutPreviewRequest buildPreviewRequest({
     required CartEntity cart,
     required UserAddressEntity? address,
+    int? selectedVoucherId,
   }) {
     final restaurantId = _positiveInt(cart.currentRestaurantId);
     final latitude = address?.latitude;
@@ -32,16 +34,31 @@ class CheckoutOrderBuilder {
         CheckoutOrderBuildFailure.invalidInput,
       );
     }
+    if (selectedVoucherId != null &&
+        (!RuntimeConfig.voucherCheckoutEnabled || selectedVoucherId <= 0)) {
+      throw const CheckoutOrderBuildException(
+        CheckoutOrderBuildFailure.invalidInput,
+      );
+    }
+    final hasFlashSale = cart.items.any((item) => item.flashSaleItemId != null);
+    if ((hasFlashSale && !RuntimeConfig.flashSaleCheckoutEnabled) ||
+        (hasFlashSale && selectedVoucherId != null)) {
+      throw const CheckoutOrderBuildException(
+        CheckoutOrderBuildFailure.invalidInput,
+      );
+    }
 
     return CheckoutPreviewRequest(
       restaurantId: restaurantId,
       deliveryLat: latitude!,
       deliveryLng: longitude!,
+      voucherId: selectedVoucherId,
       items: cart.items
           .map(
             (item) => CheckoutPreviewItemRequest(
               menuItemId: _positiveInt(item.menuItemId)!,
               quantity: item.quantity,
+              flashSaleItemId: item.flashSaleItemId,
             ),
           )
           .toList(growable: false),
@@ -53,8 +70,13 @@ class CheckoutOrderBuilder {
     required UserAddressEntity? address,
     required CheckoutPreviewResponse? preview,
     String? notes,
+    int? selectedVoucherId,
   }) {
-    final previewRequest = buildPreviewRequest(cart: cart, address: address);
+    final previewRequest = buildPreviewRequest(
+      cart: cart,
+      address: address,
+      selectedVoucherId: selectedVoucherId,
+    );
     if (preview == null) {
       throw const CheckoutOrderBuildException(
         CheckoutOrderBuildFailure.invalidPreview,
@@ -77,12 +99,14 @@ class CheckoutOrderBuilder {
       customerPhone: address.phoneNumber,
       paymentMethod: 'COD',
       notes: notes,
+      voucherIds: selectedVoucherId == null ? null : [selectedVoucherId],
       items: cart.items
           .map<OrderItemRequest>(
             (item) => OrderItemRequest(
               menuItemId: _positiveInt(item.menuItemId)!,
               quantity: item.quantity,
               notes: item.notes,
+              flashSaleItemId: item.flashSaleItemId,
             ),
           )
           .toList(growable: false),

@@ -44,7 +44,7 @@ final class SplashControllerProvider
   }
 }
 
-String _$splashControllerHash() => r'470d7437c0c59744dcea36521c770310cfbbc143';
+String _$splashControllerHash() => r'3429e0621aea0a079105f78fe0f235bee0d6681e';
 
 /// Splash controller to handle app initialization
 

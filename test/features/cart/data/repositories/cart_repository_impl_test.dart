@@ -9,37 +9,40 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../../support/fulfilment_builders.dart';
 
 void main() {
-  test('repository rejects cross-restaurant items before mutating storage', () async {
-    final dataSource = _FakeCartLocalDataSource(
-      const CartDto(
-        items: [
-          CartItemDto(
-            menuItemId: 301,
-            menuItemName: 'Cơm test',
-            price: 50000,
-            quantity: 1,
-            restaurantId: 201,
-            restaurantName: 'Bếp test',
-          ),
-        ],
-        currentRestaurantId: 201,
-        currentRestaurantName: 'Bếp test',
-      ),
-    );
-    final repository = CartRepositoryImpl(dataSource);
+  test(
+    'repository rejects cross-restaurant items before mutating storage',
+    () async {
+      final dataSource = _FakeCartLocalDataSource(
+        const CartDto(
+          items: [
+            CartItemDto(
+              menuItemId: 301,
+              menuItemName: 'Cơm test',
+              price: 50000,
+              quantity: 1,
+              restaurantId: 201,
+              restaurantName: 'Bếp test',
+            ),
+          ],
+          currentRestaurantId: 201,
+          currentRestaurantName: 'Bếp test',
+        ),
+      );
+      final repository = CartRepositoryImpl(dataSource);
 
-    final result = await repository.addItem(
-      buildCartItem(menuItemId: 302, restaurantId: 202),
-    );
+      final result = await repository.addItem(
+        buildCartItem(menuItemId: 302, restaurantId: 202),
+      );
 
-    expect(result.isLeft(), isTrue);
-    expect(
-      result.fold((failure) => failure, (_) => null),
-      isA<ValidationFailure>(),
-    );
-    expect(dataSource.addCalls, 0);
-    expect(dataSource.cart.currentRestaurantId, 201);
-  });
+      expect(result.isLeft(), isTrue);
+      expect(
+        result.fold((failure) => failure, (_) => null),
+        isA<ValidationFailure>(),
+      );
+      expect(dataSource.addCalls, 0);
+      expect(dataSource.cart.currentRestaurantId, 201);
+    },
+  );
 
   test('repository still forwards a same-restaurant item', () async {
     final dataSource = _FakeCartLocalDataSource(
@@ -51,11 +54,14 @@ void main() {
     );
     final repository = CartRepositoryImpl(dataSource);
 
-    final result = await repository.addItem(buildCartItem());
+    final result = await repository.addItem(
+      buildCartItem(flashSaleItemId: 8801),
+    );
 
     expect(result.isRight(), isTrue);
     expect(dataSource.addCalls, 1);
     expect(dataSource.cart.items.single.menuItemId, 301);
+    expect(dataSource.cart.items.single.flashSaleItemId, 8801);
   });
 }
 

@@ -17,6 +17,7 @@ sealed class CartItemDto with _$CartItemDto {
     @HiveField(5) required String restaurantName,
     @HiveField(6) String? imageUrl,
     @HiveField(7) String? notes,
+    @HiveField(8) int? flashSaleItemId,
   }) = _CartItemDto;
 
   factory CartItemDto.fromJson(Map<String, dynamic> json) =>

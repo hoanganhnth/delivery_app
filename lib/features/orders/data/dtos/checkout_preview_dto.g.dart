@@ -11,6 +11,7 @@ _CheckoutPreviewItemRequest _$CheckoutPreviewItemRequestFromJson(
 ) => _CheckoutPreviewItemRequest(
   menuItemId: (json['menuItemId'] as num).toInt(),
   quantity: (json['quantity'] as num).toInt(),
+  flashSaleItemId: (json['flashSaleItemId'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$CheckoutPreviewItemRequestToJson(
@@ -18,6 +19,7 @@ Map<String, dynamic> _$CheckoutPreviewItemRequestToJson(
 ) => <String, dynamic>{
   'menuItemId': instance.menuItemId,
   'quantity': instance.quantity,
+  'flashSaleItemId': instance.flashSaleItemId,
 };
 
 _CheckoutPreviewRequest _$CheckoutPreviewRequestFromJson(
@@ -27,6 +29,7 @@ _CheckoutPreviewRequest _$CheckoutPreviewRequestFromJson(
   deliveryLat: (json['deliveryLat'] as num).toDouble(),
   deliveryLng: (json['deliveryLng'] as num).toDouble(),
   couponCode: json['couponCode'] as String?,
+  voucherId: (json['voucherId'] as num?)?.toInt(),
   items: (json['items'] as List<dynamic>)
       .map(
         (e) => CheckoutPreviewItemRequest.fromJson(e as Map<String, dynamic>),
@@ -41,6 +44,7 @@ Map<String, dynamic> _$CheckoutPreviewRequestToJson(
   'deliveryLat': instance.deliveryLat,
   'deliveryLng': instance.deliveryLng,
   'couponCode': instance.couponCode,
+  'voucherId': instance.voucherId,
   'items': instance.items,
 };
 
@@ -94,6 +98,7 @@ _CheckoutPreviewResponse _$CheckoutPreviewResponseFromJson(
   totalPrice: (json['totalPrice'] as num?)?.toDouble(),
   couponCode: json['couponCode'] as String?,
   couponMessage: json['couponMessage'] as String?,
+  voucherId: (json['voucherId'] as num?)?.toInt(),
   priceChanges: (json['priceChanges'] as List<dynamic>?)
       ?.map((e) => PriceChangeInfo.fromJson(e as Map<String, dynamic>))
       .toList(),
@@ -114,6 +119,7 @@ Map<String, dynamic> _$CheckoutPreviewResponseToJson(
   'totalPrice': instance.totalPrice,
   'couponCode': instance.couponCode,
   'couponMessage': instance.couponMessage,
+  'voucherId': instance.voucherId,
   'priceChanges': instance.priceChanges,
   'unavailableItemIds': instance.unavailableItemIds,
 };

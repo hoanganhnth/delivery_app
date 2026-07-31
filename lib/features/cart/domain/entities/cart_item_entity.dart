@@ -15,6 +15,7 @@ sealed class CartItemEntity with _$CartItemEntity {
     required String restaurantName,
     String? imageUrl,
     String? notes,
+    int? flashSaleItemId,
   }) = _CartItemEntity;
 
   const CartItemEntity._();
@@ -25,6 +26,8 @@ sealed class CartItemEntity with _$CartItemEntity {
     String restaurantName, {
     int quantity = 1,
     String? notes,
+    int? flashSaleItemId,
+    double? serverCatalogPrice,
   }) {
     if (!menuItem.canAddToCart) {
       throw ArgumentError(
@@ -34,12 +37,13 @@ sealed class CartItemEntity with _$CartItemEntity {
     return CartItemEntity(
       menuItemId: menuItem.id!,
       menuItemName: menuItem.name,
-      price: menuItem.price,
+      price: serverCatalogPrice ?? menuItem.price,
       quantity: quantity,
       restaurantId: menuItem.restaurantId!,
       restaurantName: restaurantName,
       imageUrl: menuItem.image,
       notes: notes,
+      flashSaleItemId: flashSaleItemId,
     );
   }
 

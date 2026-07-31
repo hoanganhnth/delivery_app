@@ -10,6 +10,7 @@ sealed class CheckoutPreviewItemRequest with _$CheckoutPreviewItemRequest {
   const factory CheckoutPreviewItemRequest({
     required int menuItemId,
     required int quantity,
+    int? flashSaleItemId,
   }) = _CheckoutPreviewItemRequest;
 
   factory CheckoutPreviewItemRequest.fromJson(Map<String, dynamic> json) =>
@@ -23,6 +24,7 @@ sealed class CheckoutPreviewRequest with _$CheckoutPreviewRequest {
     required double deliveryLat,
     required double deliveryLng,
     String? couponCode,
+    int? voucherId,
     required List<CheckoutPreviewItemRequest> items,
   }) = _CheckoutPreviewRequest;
 
@@ -72,6 +74,7 @@ sealed class CheckoutPreviewResponse with _$CheckoutPreviewResponse {
     double? totalPrice,
     String? couponCode,
     String? couponMessage,
+    int? voucherId,
     List<PriceChangeInfo>? priceChanges,
     List<int>? unavailableItemIds,
   }) = _CheckoutPreviewResponse;
@@ -107,6 +110,9 @@ extension CheckoutPreviewResponseContract on CheckoutPreviewResponse {
     if ((couponCode?.trim().isNotEmpty ?? false) ||
         (couponMessage?.trim().isNotEmpty ?? false)) {
       throw const FormatException('Coupon is unsupported in COD MVP');
+    }
+    if (voucherId != request.voucherId) {
+      throw const FormatException('Checkout voucher identity mismatch');
     }
     if (currentItems == null || currentItems.length != request.items.length) {
       throw const FormatException('Checkout item count mismatch');

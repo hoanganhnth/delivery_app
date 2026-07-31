@@ -53,6 +53,7 @@ class CartRepositoryImpl implements CartRepository {
         restaurantName: item.restaurantName,
         imageUrl: item.imageUrl,
         notes: item.notes,
+        flashSaleItemId: item.flashSaleItemId,
       );
 
       final result = await localDataSource.addItem(cartItemDto);
@@ -67,9 +68,15 @@ class CartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<Either<Failure, CartEntity>> updateItemQuantity(num menuItemId, int quantity) async {
+  Future<Either<Failure, CartEntity>> updateItemQuantity(
+    num menuItemId,
+    int quantity,
+  ) async {
     try {
-      final result = await localDataSource.updateItemQuantity(menuItemId, quantity);
+      final result = await localDataSource.updateItemQuantity(
+        menuItemId,
+        quantity,
+      );
 
       return result.fold(
         (exception) => left(mapExceptionToFailure(exception)),
@@ -109,7 +116,10 @@ class CartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<Either<Failure, CartEntity>> updateItemNotes(num menuItemId, String? notes) async {
+  Future<Either<Failure, CartEntity>> updateItemNotes(
+    num menuItemId,
+    String? notes,
+  ) async {
     try {
       final result = await localDataSource.updateItemNotes(menuItemId, notes);
 
@@ -159,6 +169,7 @@ extension CartItemDtoExtension on CartItemDto {
       restaurantName: restaurantName,
       imageUrl: imageUrl,
       notes: notes,
+      flashSaleItemId: flashSaleItemId,
     );
   }
 }
