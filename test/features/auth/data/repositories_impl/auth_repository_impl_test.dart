@@ -3,6 +3,7 @@ import 'package:delivery_app/features/auth/data/datasources/auth_remote_datasour
 import 'package:delivery_app/features/auth/data/dtos/auth_response_dto.dart';
 import 'package:delivery_app/features/auth/data/dtos/login_request_dto.dart';
 import 'package:delivery_app/features/auth/data/dtos/refresh_token_response_dto.dart';
+import 'package:delivery_app/features/auth/data/dtos/register_request_dto.dart';
 import 'package:delivery_app/features/auth/data/repositories_impl/auth_repository_impl.dart';
 import 'package:delivery_app/features/auth/domain/usecases/login_usecase.dart';
 import 'package:delivery_app/core/network/resources/base_response_dto.dart';
@@ -165,18 +166,41 @@ void main() {
 
       test('should return true when registration is successful', () async {
         // Arrange
-        final successResponse = BaseResponseDto<bool>(
+        final successResponse = BaseResponseDto<AuthRegistrationDataDto>(
           status: 1,
           message: 'Registration successful',
-          data: true,
+          data: const AuthRegistrationDataDto(
+            authId: 11,
+            email: testEmail,
+            role: 'USER',
+            provisioningToken: 'opaque-handoff',
+          ),
+        );
+        final profileResponse = BaseResponseDto<UserRegistrationDataDto>(
+          status: 1,
+          message: 'Profile registered',
+          data: const UserRegistrationDataDto(
+            id: 7,
+            authId: 11,
+            email: testEmail,
+            role: 'USER',
+            fullName: 'New User',
+          ),
         );
 
         when(
           mockRemoteDataSource.register(any),
         ).thenAnswer((_) async => successResponse);
+        when(
+          mockRemoteDataSource.registerUserProfile(any),
+        ).thenAnswer((_) async => profileResponse);
 
         // Act
-        final result = await repository.register(testEmail, testPassword);
+        final result = await repository.register(
+          'New User',
+          testEmail,
+          testPassword,
+        );
 
         // Assert
         expect(result.isRight(), true);
@@ -186,14 +210,21 @@ void main() {
         );
 
         verify(mockRemoteDataSource.register(any)).called(1);
+        final captured =
+            verify(
+                  mockRemoteDataSource.registerUserProfile(captureAny),
+                ).captured.single
+                as UserRegistrationRequestDto;
+        expect(captured.provisioningToken, 'opaque-handoff');
+        expect(captured.fullName, 'New User');
       });
 
       test('should return ServerFailure when registration fails', () async {
         // Arrange
-        final errorResponse = BaseResponseDto<bool>(
+        final errorResponse = BaseResponseDto<AuthRegistrationDataDto>(
           status: 0,
           message: 'Email already exists',
-          data: false,
+          data: null,
         );
 
         when(
@@ -201,7 +232,7 @@ void main() {
         ).thenAnswer((_) async => errorResponse);
 
         // Act
-        final result = await repository.register(testEmail, testPassword);
+        final result = await repository.register(null, testEmail, testPassword);
 
         // Assert
         expect(result.isLeft(), true);
@@ -211,6 +242,41 @@ void main() {
         }, (success) => fail('Should not return success'));
 
         verify(mockRemoteDataSource.register(any)).called(1);
+        verifyNever(mockRemoteDataSource.registerUserProfile(any));
+      });
+
+      test('should fail when user profile registration fails', () async {
+        when(mockRemoteDataSource.register(any)).thenAnswer(
+          (_) async => const BaseResponseDto<AuthRegistrationDataDto>(
+            status: 1,
+            message: 'Auth registered',
+            data: AuthRegistrationDataDto(
+              authId: 11,
+              email: testEmail,
+              role: 'USER',
+              provisioningToken: 'opaque-handoff',
+            ),
+          ),
+        );
+        when(mockRemoteDataSource.registerUserProfile(any)).thenAnswer(
+          (_) async => const BaseResponseDto<UserRegistrationDataDto>(
+            status: 0,
+            message: 'Profile unavailable',
+            data: null,
+          ),
+        );
+
+        final result = await repository.register(
+          'New User',
+          testEmail,
+          testPassword,
+        );
+
+        expect(result.isLeft(), true);
+        result.fold(
+          (failure) => expect(failure.message, 'Profile unavailable'),
+          (_) => fail('Should not return success'),
+        );
       });
     });
 

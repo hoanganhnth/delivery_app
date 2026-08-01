@@ -74,15 +74,16 @@ class MockAuthRepository extends _i1.Mock implements _i2.AuthRepository {
 
   @override
   _i3.Future<_i4.Either<_i5.Failure, bool>> register(
+    String? name,
     String? email,
     String? password,
   ) =>
       (super.noSuchMethod(
-            Invocation.method(#register, [email, password]),
+            Invocation.method(#register, [name, email, password]),
             returnValue: _i3.Future<_i4.Either<_i5.Failure, bool>>.value(
               _i8.dummyValue<_i4.Either<_i5.Failure, bool>>(
                 this,
-                Invocation.method(#register, [email, password]),
+                Invocation.method(#register, [name, email, password]),
               ),
             ),
           )

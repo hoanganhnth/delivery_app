@@ -196,7 +196,7 @@ class AuthNotifier extends _$AuthNotifier {
   }
 
   // Register method - simplified
-  Future<void> register({
+  Future<bool> register({
     String? name,
     required String email,
     required String password,
@@ -206,7 +206,7 @@ class AuthNotifier extends _$AuthNotifier {
     String? deviceType,
     String? ipAddress,
   }) async {
-    if (state.isRegisterLoading) return;
+    if (state.isRegisterLoading) return false;
     state = const AuthState.unauthenticated(isRegisterLoading: true);
 
     final params = RegisterParams(
@@ -217,19 +217,16 @@ class AuthNotifier extends _$AuthNotifier {
     );
     final result = await _registerUseCase(params);
 
-    if (!ref.mounted) return;
+    if (!ref.mounted) return false;
 
-    await result.fold(
-      (failure) async {
+    return result.fold(
+      (failure) {
         state = AuthState.unauthenticated(failure: failure);
+        return false;
       },
-      (success) async {
-        // Register successful, now login to get tokens
-        if (success) {
-          await login(email: email, password: password);
-        } else {
-          state = const AuthState.unauthenticated();
-        }
+      (success) {
+        state = const AuthState.unauthenticated();
+        return success;
       },
     );
   }

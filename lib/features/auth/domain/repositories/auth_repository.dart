@@ -8,7 +8,11 @@ import 'package:delivery_app/features/auth/domain/usecases/social_login_usecase.
 abstract class AuthRepository {
   Future<Either<Failure, AuthEntity>> login(LoginParams params);
   Future<Either<Failure, AuthEntity>> socialLogin(SocialLoginParams params);
-  Future<Either<Failure, bool>> register(String email, String password);
+  Future<Either<Failure, bool>> register(
+    String? name,
+    String email,
+    String password,
+  );
   Future<Either<Failure, AuthEntity>> refreshToken(String refreshToken);
   Future<Either<Failure, void>> logout(String refreshToken);
 }

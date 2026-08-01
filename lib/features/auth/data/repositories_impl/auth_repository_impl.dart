@@ -75,7 +75,11 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> register(String email, String password) async {
+  Future<Either<Failure, bool>> register(
+    String? name,
+    String email,
+    String password,
+  ) async {
     try {
       final request = RegisterRequestDto(
         email: email,
@@ -84,11 +88,20 @@ class AuthRepositoryImpl implements AuthRepository {
       );
       final authResponse = await remoteDataSource.register(request);
 
-      if (authResponse.isSuccess && authResponse.data == true) {
-        return right(true);
-      } else {
+      if (!authResponse.isSuccess || authResponse.data == null) {
         return left(ServerFailure(authResponse.message));
       }
+
+      final profileResponse = await remoteDataSource.registerUserProfile(
+        UserRegistrationRequestDto(
+          provisioningToken: authResponse.data!.provisioningToken,
+          fullName: name,
+        ),
+      );
+      if (!profileResponse.isSuccess || profileResponse.data == null) {
+        return left(ServerFailure(profileResponse.message));
+      }
+      return right(true);
     } on Exception catch (e) {
       return left(mapExceptionToFailure(e));
     } catch (e) {

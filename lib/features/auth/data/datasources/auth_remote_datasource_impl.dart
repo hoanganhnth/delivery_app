@@ -26,7 +26,14 @@ abstract class AuthApiService {
   );
 
   @POST(ApiConstants.register)
-  Future<BaseResponseDto<bool>> register(@Body() RegisterRequestDto request);
+  Future<BaseResponseDto<AuthRegistrationDataDto>> register(
+    @Body() RegisterRequestDto request,
+  );
+
+  @POST(ApiConstants.userRegistration)
+  Future<BaseResponseDto<UserRegistrationDataDto>> registerUserProfile(
+    @Body() UserRegistrationRequestDto request,
+  );
 
   @POST(ApiConstants.refreshToken)
   Future<BaseResponseDto<RefreshTokenDataDto>> refreshToken(
@@ -78,7 +85,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<BaseResponseDto<bool>> register(RegisterRequestDto request) async {
+  Future<BaseResponseDto<AuthRegistrationDataDto>> register(
+    RegisterRequestDto request,
+  ) async {
     try {
       AppLogger.d('Attempting registration');
       final response = await _apiService.register(request);
@@ -89,6 +98,24 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error during registration', e);
+      throw Exception('Unexpected error: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<BaseResponseDto<UserRegistrationDataDto>> registerUserProfile(
+    UserRegistrationRequestDto request,
+  ) async {
+    try {
+      AppLogger.d('Creating user profile from auth registration handoff');
+      final response = await _apiService.registerUserProfile(request);
+      AppLogger.i('User profile registration successful');
+      return response;
+    } on DioException catch (e) {
+      AppLogger.e('User profile registration failed');
+      throw DioExceptionHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      AppLogger.e('Unexpected user profile registration error', e);
       throw Exception('Unexpected error: ${e.toString()}');
     }
   }

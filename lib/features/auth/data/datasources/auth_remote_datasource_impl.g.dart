@@ -82,12 +82,14 @@ class _AuthApiService implements AuthApiService {
   }
 
   @override
-  Future<BaseResponseDto<bool>> register(RegisterRequestDto request) async {
+  Future<BaseResponseDto<AuthRegistrationDataDto>> register(
+    RegisterRequestDto request,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = request;
-    final _options = _setStreamType<BaseResponseDto<bool>>(
+    final _options = _setStreamType<BaseResponseDto<AuthRegistrationDataDto>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -98,11 +100,45 @@ class _AuthApiService implements AuthApiService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BaseResponseDto<bool> _value;
+    late BaseResponseDto<AuthRegistrationDataDto> _value;
     try {
-      _value = BaseResponseDto<bool>.fromJson(
+      _value = BaseResponseDto<AuthRegistrationDataDto>.fromJson(
         _result.data!,
-        (json) => json as bool,
+        (json) =>
+            AuthRegistrationDataDto.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<BaseResponseDto<UserRegistrationDataDto>> registerUserProfile(
+    UserRegistrationRequestDto request,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = request;
+    final _options = _setStreamType<BaseResponseDto<UserRegistrationDataDto>>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/users/registrations',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late BaseResponseDto<UserRegistrationDataDto> _value;
+    try {
+      _value = BaseResponseDto<UserRegistrationDataDto>.fromJson(
+        _result.data!,
+        (json) =>
+            UserRegistrationDataDto.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, _result);

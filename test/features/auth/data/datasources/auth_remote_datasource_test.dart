@@ -61,24 +61,55 @@ class FakeAuthRemoteDataSource implements AuthRemoteDataSource {
   }
 
   @override
-  Future<BaseResponseDto<bool>> register(RegisterRequestDto request) async {
+  Future<BaseResponseDto<AuthRegistrationDataDto>> register(
+    RegisterRequestDto request,
+  ) async {
     if (_shouldThrowException) {
       throw Exception('Network connection failed');
     }
 
     if (_shouldReturnSuccess) {
-      return BaseResponseDto<bool>(
+      return BaseResponseDto<AuthRegistrationDataDto>(
         status: 1,
         message: 'Registration successful',
-        data: true,
+        data: AuthRegistrationDataDto(
+          authId: 11,
+          email: request.email,
+          role: request.role ?? 'USER',
+          provisioningToken: 'opaque-handoff',
+        ),
       );
     } else {
-      return BaseResponseDto<bool>(
+      return BaseResponseDto<AuthRegistrationDataDto>(
         status: 0,
         message: _customErrorMessage ?? 'Registration failed',
-        data: false,
+        data: null,
       );
     }
+  }
+
+  @override
+  Future<BaseResponseDto<UserRegistrationDataDto>> registerUserProfile(
+    UserRegistrationRequestDto request,
+  ) async {
+    if (_shouldThrowException) throw Exception('Network connection failed');
+    if (_shouldReturnSuccess) {
+      return const BaseResponseDto<UserRegistrationDataDto>(
+        status: 1,
+        message: 'Profile registered',
+        data: UserRegistrationDataDto(
+          id: 7,
+          authId: 11,
+          email: 'newuser@example.com',
+          role: 'USER',
+        ),
+      );
+    }
+    return BaseResponseDto<UserRegistrationDataDto>(
+      status: 0,
+      message: _customErrorMessage ?? 'Profile registration failed',
+      data: null,
+    );
   }
 
   @override
@@ -216,7 +247,7 @@ void main() {
         // Assert
         expect(result.status, 1);
         expect(result.message, 'Registration successful');
-        expect(result.data, true);
+        expect(result.data?.provisioningToken, 'opaque-handoff');
       });
 
       test('should return error when registration fails', () async {
@@ -229,7 +260,7 @@ void main() {
         // Assert
         expect(result.status, 0);
         expect(result.message, 'Email already exists');
-        expect(result.data, false);
+        expect(result.data, isNull);
       });
 
       test(

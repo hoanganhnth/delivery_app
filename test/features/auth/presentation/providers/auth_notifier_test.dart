@@ -209,7 +209,7 @@ void main() {
     });
 
     test(
-      'register waits for automatic login and retries a backend failure',
+      'register completes both backend steps without automatic login',
       () async {
         final harness = _Harness();
         addTearDown(harness.dispose);
@@ -218,7 +218,7 @@ void main() {
         harness.authRepository.registerResult = const Left(
           ServerFailure('Email đã tồn tại'),
         );
-        await notifier.register(
+        final failed = await notifier.register(
           name: 'Customer Test',
           email: 'customer@test.dev',
           password: 'secret123',
@@ -229,9 +229,10 @@ void main() {
           'Email đã tồn tại',
         );
         expect(harness.authRepository.loginCalls, 0);
+        expect(failed, isFalse);
 
         harness.authRepository.registerResult = const Right(true);
-        await notifier.register(
+        final succeeded = await notifier.register(
           name: 'Customer Test',
           email: 'customer@test.dev',
           password: 'secret123',
@@ -240,8 +241,9 @@ void main() {
 
         expect(harness.authRepository.registerCalls, 2);
         expect(harness.authRepository.lastRegisterEmail, 'customer@test.dev');
-        expect(harness.authRepository.loginCalls, 1);
-        expect(harness.container.read(authProvider).isAuthenticated, isTrue);
+        expect(succeeded, isTrue);
+        expect(harness.authRepository.loginCalls, 0);
+        expect(harness.container.read(authProvider).isAuthenticated, isFalse);
       },
     );
 
@@ -305,7 +307,7 @@ void main() {
     );
 
     testWidgets(
-      'register form validates, disables duplicate submit and awaits auto-login',
+      'register form validates, disables duplicate submit and returns to login',
       (tester) async {
         final harness = _Harness();
         addTearDown(harness.dispose);
@@ -345,8 +347,8 @@ void main() {
           tester.element(find.byType(RegisterForm)),
         );
         expect(harness.authRepository.lastRegisterEmail, 'customer@test.dev');
-        expect(harness.authRepository.loginCalls, 1);
-        expect(container.read(authProvider).isAuthenticated, isTrue);
+        expect(harness.authRepository.loginCalls, 0);
+        expect(container.read(authProvider).isAuthenticated, isFalse);
       },
     );
   });
@@ -444,7 +446,11 @@ class _FakeAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> register(String email, String password) async {
+  Future<Either<Failure, bool>> register(
+    String? name,
+    String email,
+    String password,
+  ) async {
     registerCalls += 1;
     lastRegisterEmail = email;
     lastRegisterPassword = password;

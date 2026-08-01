@@ -42,12 +42,20 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
 
     AppLogger.d('RegisterForm: Attempting registration');
 
-    await authNotifier.register(
+    final success = await authNotifier.register(
       name: _nameController.text.trim(),
       email: _emailController.text.trim(),
       password: _passwordController.text,
       confirmPassword: _confirmPasswordController.text,
     );
+    if (!mounted || !success) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(S.of(context).registerSuccess),
+        backgroundColor: Colors.green,
+      ),
+    );
+    await Navigator.of(context).maybePop();
   }
 
   @override

@@ -79,19 +79,39 @@ class MockAuthRemoteDataSource extends _i1.Mock
           as _i4.Future<_i2.BaseResponseDto<_i5.AuthDataDto>>);
 
   @override
-  _i4.Future<_i2.BaseResponseDto<bool>> register(
+  _i4.Future<_i2.BaseResponseDto<_i7.AuthRegistrationDataDto>> register(
     _i7.RegisterRequestDto? request,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#register, [request]),
-            returnValue: _i4.Future<_i2.BaseResponseDto<bool>>.value(
-              _FakeBaseResponseDto_0<bool>(
-                this,
-                Invocation.method(#register, [request]),
-              ),
-            ),
+            returnValue:
+                _i4.Future<
+                  _i2.BaseResponseDto<_i7.AuthRegistrationDataDto>
+                >.value(
+                  _FakeBaseResponseDto_0<_i7.AuthRegistrationDataDto>(
+                    this,
+                    Invocation.method(#register, [request]),
+                  ),
+                ),
           )
-          as _i4.Future<_i2.BaseResponseDto<bool>>);
+          as _i4.Future<_i2.BaseResponseDto<_i7.AuthRegistrationDataDto>>);
+
+  @override
+  _i4.Future<_i2.BaseResponseDto<_i7.UserRegistrationDataDto>>
+  registerUserProfile(_i7.UserRegistrationRequestDto? request) =>
+      (super.noSuchMethod(
+            Invocation.method(#registerUserProfile, [request]),
+            returnValue:
+                _i4.Future<
+                  _i2.BaseResponseDto<_i7.UserRegistrationDataDto>
+                >.value(
+                  _FakeBaseResponseDto_0<_i7.UserRegistrationDataDto>(
+                    this,
+                    Invocation.method(#registerUserProfile, [request]),
+                  ),
+                ),
+          )
+          as _i4.Future<_i2.BaseResponseDto<_i7.UserRegistrationDataDto>>);
 
   @override
   _i4.Future<_i2.BaseResponseDto<_i8.RefreshTokenDataDto>> refreshToken(

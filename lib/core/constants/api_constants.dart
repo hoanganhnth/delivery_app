@@ -7,6 +7,7 @@ class ApiConstants {
   static const login = "$auth/login";
   static const socialLogin = "$auth/social-login";
   static const register = "$auth/register";
+  static const userRegistration = "/users/registrations";
   static const refreshToken = "$auth/refresh-token";
   static const logout = "$auth/logout";
   static const getProfile = "/users";

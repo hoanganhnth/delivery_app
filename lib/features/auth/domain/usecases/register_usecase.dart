@@ -1,4 +1,3 @@
-
 import 'package:delivery_app/core/usecases/usecase.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:delivery_app/core/utils/validators.dart';
@@ -17,14 +16,20 @@ class RegisterUseCase extends UseCase<bool, RegisterParams> {
     }
 
     if (!Validators.isPasswordValid(params.password)) {
-      return left(const ValidationFailure('Password must be at least 6 characters'));
+      return left(
+        const ValidationFailure('Password must be at least 6 characters'),
+      );
     }
 
     if (params.password != params.confirmPassword) {
       return left(const ValidationFailure('Passwords do not match'));
     }
 
-    return await repository.register(params.email, params.password);
+    return await repository.register(
+      params.name,
+      params.email,
+      params.password,
+    );
   }
 }
 
@@ -60,5 +65,6 @@ class RegisterParams {
   }
 
   @override
-  String toString() => 'RegisterParams(email: $email, name: $name, password: [HIDDEN])';
+  String toString() =>
+      'RegisterParams(email: $email, name: $name, password: [HIDDEN])';
 }

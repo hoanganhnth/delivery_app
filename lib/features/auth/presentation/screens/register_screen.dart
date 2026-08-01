@@ -17,9 +17,6 @@ class RegisterScreen extends ConsumerWidget {
     ref.listen<AuthState>(authProvider, (previous, next) {
       if (next.hasError) {
         _showErrorSnackBar(context, next.failure!);
-      } else if (next.isAuthenticated) {
-        _showSuccessSnackBar(context, S.of(context).registerSuccess);
-        // Navigator.of(context).pop();
       }
     });
 
@@ -29,12 +26,10 @@ class RegisterScreen extends ConsumerWidget {
         children: [
           // Hero Header Section
           RegisterHeader(),
-          
+
           // Main Registration Form
-          Expanded(
-            child: RegisterForm(),
-          ),
-          
+          Expanded(child: RegisterForm()),
+
           // Terms of Service Footer
           AuthFooter(),
         ],
@@ -46,7 +41,7 @@ class RegisterScreen extends ConsumerWidget {
     final s = S.of(context);
     String message;
     Color backgroundColor;
-    
+
     if (failure is ValidationFailure) {
       message = failure.message;
       backgroundColor = Colors.orange;
@@ -67,15 +62,6 @@ class RegisterScreen extends ConsumerWidget {
           textColor: Colors.white,
           onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
         ),
-      ),
-    );
-  }
-
-  void _showSuccessSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
       ),
     );
   }
