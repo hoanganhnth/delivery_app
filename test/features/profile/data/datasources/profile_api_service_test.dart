@@ -4,6 +4,32 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 
 void main() {
+  test('reads the current profile through canonical GET /users', () async {
+    final dio = Dio(BaseOptions(baseUrl: 'http://gateway.test/api'));
+    final adapter = DioAdapter(dio: dio);
+    final service = ProfileApiService(dio);
+
+    adapter.onGet(
+      '/users',
+      (server) => server.reply(200, {
+        'status': 1,
+        'message': 'Success',
+        'data': {
+          'id': 1,
+          'authId': 10,
+          'email': 'customer@test.dev',
+          'role': 'USER',
+          'fullName': 'Khách Test',
+        },
+      }),
+    );
+
+    final response = await service.getUserProfile();
+
+    expect(response.status, 1);
+    expect(response.data?.authId, 10);
+  });
+
   test('updates the current profile through canonical PUT /users', () async {
     final dio = Dio(BaseOptions(baseUrl: 'http://gateway.test/api'));
     final adapter = DioAdapter(dio: dio);

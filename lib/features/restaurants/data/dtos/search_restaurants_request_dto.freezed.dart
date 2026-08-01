@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SearchRestaurantsRequestDto {
 
- String get query; double? get latitude; double? get longitude; String? get category; int? get page; int? get limit;
+ String get keyword; double? get latitude; double? get longitude; String? get category; int? get page; int? get limit;
 /// Create a copy of SearchRestaurantsRequestDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $SearchRestaurantsRequestDtoCopyWith<SearchRestaurantsRequestDto> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SearchRestaurantsRequestDto&&(identical(other.query, query) || other.query == query)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.category, category) || other.category == category)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SearchRestaurantsRequestDto&&(identical(other.keyword, keyword) || other.keyword == keyword)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.category, category) || other.category == category)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,query,latitude,longitude,category,page,limit);
+int get hashCode => Object.hash(runtimeType,keyword,latitude,longitude,category,page,limit);
 
 @override
 String toString() {
-  return 'SearchRestaurantsRequestDto(query: $query, latitude: $latitude, longitude: $longitude, category: $category, page: $page, limit: $limit)';
+  return 'SearchRestaurantsRequestDto(keyword: $keyword, latitude: $latitude, longitude: $longitude, category: $category, page: $page, limit: $limit)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $SearchRestaurantsRequestDtoCopyWith<$Res>  {
   factory $SearchRestaurantsRequestDtoCopyWith(SearchRestaurantsRequestDto value, $Res Function(SearchRestaurantsRequestDto) _then) = _$SearchRestaurantsRequestDtoCopyWithImpl;
 @useResult
 $Res call({
- String query, double? latitude, double? longitude, String? category, int? page, int? limit
+ String keyword, double? latitude, double? longitude, String? category, int? page, int? limit
 });
 
 
@@ -65,9 +65,9 @@ class _$SearchRestaurantsRequestDtoCopyWithImpl<$Res>
 
 /// Create a copy of SearchRestaurantsRequestDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? query = null,Object? latitude = freezed,Object? longitude = freezed,Object? category = freezed,Object? page = freezed,Object? limit = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? keyword = null,Object? latitude = freezed,Object? longitude = freezed,Object? category = freezed,Object? page = freezed,Object? limit = freezed,}) {
   return _then(_self.copyWith(
-query: null == query ? _self.query : query // ignore: cast_nullable_to_non_nullable
+keyword: null == keyword ? _self.keyword : keyword // ignore: cast_nullable_to_non_nullable
 as String,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
@@ -155,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String query,  double? latitude,  double? longitude,  String? category,  int? page,  int? limit)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String keyword,  double? latitude,  double? longitude,  String? category,  int? page,  int? limit)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SearchRestaurantsRequestDto() when $default != null:
-return $default(_that.query,_that.latitude,_that.longitude,_that.category,_that.page,_that.limit);case _:
+return $default(_that.keyword,_that.latitude,_that.longitude,_that.category,_that.page,_that.limit);case _:
   return orElse();
 
 }
@@ -176,10 +176,10 @@ return $default(_that.query,_that.latitude,_that.longitude,_that.category,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String query,  double? latitude,  double? longitude,  String? category,  int? page,  int? limit)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String keyword,  double? latitude,  double? longitude,  String? category,  int? page,  int? limit)  $default,) {final _that = this;
 switch (_that) {
 case _SearchRestaurantsRequestDto():
-return $default(_that.query,_that.latitude,_that.longitude,_that.category,_that.page,_that.limit);}
+return $default(_that.keyword,_that.latitude,_that.longitude,_that.category,_that.page,_that.limit);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -193,10 +193,10 @@ return $default(_that.query,_that.latitude,_that.longitude,_that.category,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String query,  double? latitude,  double? longitude,  String? category,  int? page,  int? limit)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String keyword,  double? latitude,  double? longitude,  String? category,  int? page,  int? limit)?  $default,) {final _that = this;
 switch (_that) {
 case _SearchRestaurantsRequestDto() when $default != null:
-return $default(_that.query,_that.latitude,_that.longitude,_that.category,_that.page,_that.limit);case _:
+return $default(_that.keyword,_that.latitude,_that.longitude,_that.category,_that.page,_that.limit);case _:
   return null;
 
 }
@@ -208,10 +208,10 @@ return $default(_that.query,_that.latitude,_that.longitude,_that.category,_that.
 @JsonSerializable()
 
 class _SearchRestaurantsRequestDto implements SearchRestaurantsRequestDto {
-  const _SearchRestaurantsRequestDto({required this.query, this.latitude, this.longitude, this.category, this.page, this.limit});
+  const _SearchRestaurantsRequestDto({required this.keyword, this.latitude, this.longitude, this.category, this.page, this.limit});
   factory _SearchRestaurantsRequestDto.fromJson(Map<String, dynamic> json) => _$SearchRestaurantsRequestDtoFromJson(json);
 
-@override final  String query;
+@override final  String keyword;
 @override final  double? latitude;
 @override final  double? longitude;
 @override final  String? category;
@@ -231,16 +231,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchRestaurantsRequestDto&&(identical(other.query, query) || other.query == query)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.category, category) || other.category == category)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchRestaurantsRequestDto&&(identical(other.keyword, keyword) || other.keyword == keyword)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.category, category) || other.category == category)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,query,latitude,longitude,category,page,limit);
+int get hashCode => Object.hash(runtimeType,keyword,latitude,longitude,category,page,limit);
 
 @override
 String toString() {
-  return 'SearchRestaurantsRequestDto(query: $query, latitude: $latitude, longitude: $longitude, category: $category, page: $page, limit: $limit)';
+  return 'SearchRestaurantsRequestDto(keyword: $keyword, latitude: $latitude, longitude: $longitude, category: $category, page: $page, limit: $limit)';
 }
 
 
@@ -251,7 +251,7 @@ abstract mixin class _$SearchRestaurantsRequestDtoCopyWith<$Res> implements $Sea
   factory _$SearchRestaurantsRequestDtoCopyWith(_SearchRestaurantsRequestDto value, $Res Function(_SearchRestaurantsRequestDto) _then) = __$SearchRestaurantsRequestDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String query, double? latitude, double? longitude, String? category, int? page, int? limit
+ String keyword, double? latitude, double? longitude, String? category, int? page, int? limit
 });
 
 
@@ -268,9 +268,9 @@ class __$SearchRestaurantsRequestDtoCopyWithImpl<$Res>
 
 /// Create a copy of SearchRestaurantsRequestDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? query = null,Object? latitude = freezed,Object? longitude = freezed,Object? category = freezed,Object? page = freezed,Object? limit = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? keyword = null,Object? latitude = freezed,Object? longitude = freezed,Object? category = freezed,Object? page = freezed,Object? limit = freezed,}) {
   return _then(_SearchRestaurantsRequestDto(
-query: null == query ? _self.query : query // ignore: cast_nullable_to_non_nullable
+keyword: null == keyword ? _self.keyword : keyword // ignore: cast_nullable_to_non_nullable
 as String,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable

@@ -104,7 +104,7 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   }) async {
     try {
       final request = SearchRestaurantsRequestDto(
-        query: query,
+        keyword: query,
         latitude: latitude,
         longitude: longitude,
         category: category,

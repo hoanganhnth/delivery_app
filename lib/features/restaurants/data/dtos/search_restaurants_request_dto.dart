@@ -6,7 +6,7 @@ part 'search_restaurants_request_dto.g.dart';
 @freezed
 sealed class SearchRestaurantsRequestDto with _$SearchRestaurantsRequestDto {
   const factory SearchRestaurantsRequestDto({
-    required String query,
+    required String keyword,
     double? latitude,
     double? longitude,
     String? category,
