@@ -21,4 +21,6 @@ A Flutter delivery application with real-time features.
 
 The `.env` file is used for the Mapbox asset. Firebase files and production
 credentials are injected by the deployment environment and must not be
-committed.
+committed. Android also needs `MAPBOX_ACCESS_TOKEN` as a Gradle property or
+environment variable for the native manifest placeholder; see
+`MAPBOX_SETUP.md`.
