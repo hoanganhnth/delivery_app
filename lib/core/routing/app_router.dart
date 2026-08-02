@@ -10,6 +10,7 @@ library;
 
 import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
 import 'package:delivery_app/features/orders/presentation/screens/order_detail_screen.dart';
+import 'package:delivery_app/features/orders/presentation/screens/refund_status_history_screen.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:delivery_app/features/auth/presentation/screens/login_screen.dart';
@@ -48,6 +49,7 @@ class AppRouterPages {
   Widget profile() => const ProfileScreen();
   Widget settings() => const SettingsScreen();
   Widget orders() => const OrdersScreen();
+  Widget refundHistory() => const RefundStatusHistoryScreen();
   Widget orderDetail(int orderId) => OrderDetailScreen(orderId: orderId);
   Widget restaurants() => const AllRestaurantsScreen();
   Widget restaurantDetail(int restaurantId) =>
@@ -182,6 +184,11 @@ GoRouter createAppRouter({
           ),
         ],
       ),
+      GoRoute(
+        path: AppRoutes.refundHistory,
+        name: 'refund-history',
+        builder: (context, state) => pages.refundHistory(),
+      ),
 
       // Restaurants
       GoRoute(
@@ -265,6 +272,7 @@ extension GoRouterExtension on GoRouter {
   void pushProfile() => pushNamed('profile');
   void pushSettings() => pushNamed('settings');
   void pushOrders() => pushNamed('orders');
+  void pushRefundHistory() => pushNamed('refund-history');
   void pushRestaurants() => pushNamed('restaurants');
   void pushCart() => pushNamed('cart');
 

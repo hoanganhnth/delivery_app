@@ -62,6 +62,10 @@ void main() {
     router.go('/orders/42');
     await tester.pumpAndSettle();
     expect(find.text('ORDER 42'), findsOneWidget);
+
+    router.go('/refunds');
+    await tester.pumpAndSettle();
+    expect(find.text('REFUNDS'), findsOneWidget);
   });
 }
 
@@ -96,6 +100,9 @@ class _TestPages extends AppRouterPages {
 
   @override
   Widget orders() => _page('ORDERS');
+
+  @override
+  Widget refundHistory() => _page('REFUNDS');
 
   @override
   Widget orderDetail(int orderId) => _page('ORDER $orderId');

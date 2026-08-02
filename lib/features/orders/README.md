@@ -28,6 +28,15 @@ Cập nhật hoàn toàn UI cho Orders feature theo Stitch design với Dark Nav
 - CourierInfoCard (conditional - only when delivering)
 - Custom order items card với dashed border
 - Total với primary color
+- Read-only refund-status card when the matching order has a refund case
+
+### 2b. RefundStatusHistoryScreen
+**File:** `screens/refund_status_history_screen.dart`
+
+**Features:**
+- Customer-owned refund history through `GET /api/settlement/refunds/my?limit=50`
+- Per-order status, amount and update time; selecting an item only opens order detail
+- Empty/error/retry states with no customer refund mutation
 
 ### 3. TrackOrderScreen
 **File:** `screens/track_order_screen.dart`  

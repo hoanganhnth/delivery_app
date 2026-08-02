@@ -19,6 +19,7 @@ class AppRoutes {
 
   // Delivery routes
   static const String orders = '/orders';
+  static const String refundHistory = '/refunds';
   static const String orderDetails = '/orders/:orderId';
   static const String trackOrder = '/orders/:orderId/track';
 

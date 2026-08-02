@@ -8,11 +8,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/providers.dart';
 import '../widgets/order_detail/order_customer_info_card.dart';
 import '../widgets/order_detail/order_payment_card.dart';
+import '../widgets/order_detail/customer_refund_status_card.dart';
 import '../widgets/shared/order_action_buttons.dart';
 import '../widgets/shared/order_error_widgets.dart';
 import '../widgets/track_order/delivery_timeline.dart';
 import '../widgets/shared/order_progress_bar.dart';
 import '../widgets/track_order/order_delivery_tracking_card.dart';
+import '../providers/refund_status_providers.dart';
 import '../../../../generated/l10n.dart';
 
 class OrderDetailScreen extends ConsumerStatefulWidget {
@@ -102,6 +104,7 @@ class OrderDetailBody extends ConsumerWidget {
           : RefreshIndicator(
               onRefresh: () async {
                 ref.invalidate(orderDetailProvider(orderId));
+                ref.invalidate(customerRefundCasesProvider);
               },
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -140,11 +143,17 @@ class OrderDetailBody extends ConsumerWidget {
 
                     SizedBox(height: ResponsiveSize.m),
 
+                    CustomerRefundStatusCard(orderId: orderId),
+
+                    SizedBox(height: ResponsiveSize.m),
+
                     // Actions
                     OrderActionButtons(
                       order: order,
-                      onOrderCanceled: () =>
-                          ref.invalidate(orderDetailProvider(orderId)),
+                      onOrderCanceled: () {
+                        ref.invalidate(orderDetailProvider(orderId));
+                        ref.invalidate(customerRefundCasesProvider);
+                      },
                     ),
 
                     SizedBox(height: ResponsiveSize.xl),

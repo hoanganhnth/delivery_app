@@ -94,6 +94,10 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
     context.pushOrderDetail(orderId.toString());
   }
 
+  void _navigateToRefundHistory() {
+    context.push(AppRoutes.refundHistory);
+  }
+
   void _showCancelOrderDialog(OrderEntity order) {
     CancelOrderDialog.show(context, order, onSuccess: _refreshOrders);
   }
@@ -144,7 +148,10 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: OrdersAppBar(colors: colors),
+      appBar: OrdersAppBar(
+        colors: colors,
+        onRefundHistory: _navigateToRefundHistory,
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -208,8 +215,13 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
 
 class OrdersAppBar extends StatelessWidget implements PreferredSizeWidget {
   final AppColors colors;
+  final VoidCallback onRefundHistory;
 
-  const OrdersAppBar({super.key, required this.colors});
+  const OrdersAppBar({
+    super.key,
+    required this.colors,
+    required this.onRefundHistory,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -220,6 +232,13 @@ class OrdersAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: Icon(Icons.arrow_back, color: colors.textPrimary),
         onPressed: () => Navigator.of(context).pop(),
       ),
+      actions: [
+        IconButton(
+          tooltip: 'Lịch sử hoàn tiền',
+          icon: Icon(Icons.receipt_long_outlined, color: colors.textPrimary),
+          onPressed: onRefundHistory,
+        ),
+      ],
     );
   }
 
