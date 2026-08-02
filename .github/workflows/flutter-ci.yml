@@ -24,6 +24,12 @@ jobs:
           flutter-version: "3.32.8"
           cache: true
 
+      # The real .env is intentionally ignored. CI only needs the tracked
+      # placeholder so Flutter can package the dotenv asset without exposing
+      # a Mapbox/Firebase credential.
+      - name: Prepare non-secret environment asset
+        run: cp .env.example .env
+
       # 3️⃣ Lấy dependencies
       - name: Install dependencies
         run: flutter pub get
@@ -37,7 +43,7 @@ jobs:
 
       # 6️⃣ Build APK
       - name: Build debug APK without an emulator
-        run: flutter build apk --debug
+        run: flutter build apk --debug --dart-define=API_BASE_URL=http://10.0.2.2:8079
 
       # 7️⃣ Upload artifact để tải về
       - name: Upload build artifact

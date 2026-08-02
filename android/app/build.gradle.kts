@@ -1,12 +1,16 @@
 plugins {
     id("com.android.application")
-    // START: FlutterFire Configuration
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
-    // END: FlutterFire Configuration
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+}
+
+// Firebase deployment files are intentionally ignored. Local/CI debug builds
+// remain hermetic without them; production builds apply the native plugins
+// when the operator supplies android/app/google-services.json.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+    apply(plugin = "com.google.firebase.crashlytics")
 }
 
 android {
