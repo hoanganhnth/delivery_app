@@ -2,6 +2,17 @@
 
 A Flutter delivery application with real-time features.
 
+## System architecture boundary
+
+This app talks only to the API Gateway origin supplied by API_BASE_URL; the
+runtime adds /api once. It sends Bearer access tokens, refreshes a failed
+protected request once through Auth, and uses the raw Gateway WebSocket only for
+authorized delivery-location updates. It never calls a backend service port or
+sends internal service credentials.
+
+See the editable system diagrams and auth/registration contract in
+[../docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md).
+
 ## Environment Setup
 
 ### Mapbox Configuration
