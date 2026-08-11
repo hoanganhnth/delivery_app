@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:delivery_app/core/error/failures.dart';
-import 'package:delivery_app/features/orders/data/dtos/create_order_request_dto.dart';
+import 'package:delivery_app/features/orders/domain/entities/order_creation_command.dart';
 import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
 import 'package:delivery_app/features/orders/domain/repositories/order_repository.dart';
-import 'package:delivery_app/features/orders/presentation/providers/orders/create_order_async_notifiers.dart';
-import 'package:delivery_app/features/orders/presentation/providers/orders/order_detail_notifier.dart';
-import 'package:delivery_app/features/orders/presentation/providers/orders/order_providers.dart';
-import 'package:delivery_app/features/orders/presentation/providers/orders/orders_list_notifier.dart';
+import 'package:delivery_app/features/orders/application/state/orders/create_order_async_notifiers.dart';
+import 'package:delivery_app/features/orders/application/state/orders/order_detail_notifier.dart';
+import 'package:delivery_app/features/orders/di/order_providers.dart';
+import 'package:delivery_app/features/orders/application/state/orders/orders_list_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
@@ -16,26 +16,29 @@ import '../../../../support/fulfilment_builders.dart';
 
 void main() {
   group('create and cancel order actions', () {
-    test('create is single-submit while loading and converges to the server order', () async {
-      final repository = _FakeOrderRepository();
-      final pending = Completer<Either<Failure, OrderEntity>>();
-      repository.createCompleter = pending;
-      final container = _container(repository);
-      addTearDown(container.dispose);
-      container.listen(createOrderProvider, (_, _) {});
-      final notifier = container.read(createOrderProvider.notifier);
+    test(
+      'create is single-submit while loading and converges to the server order',
+      () async {
+        final repository = _FakeOrderRepository();
+        final pending = Completer<Either<Failure, OrderEntity>>();
+        repository.createCompleter = pending;
+        final container = _container(repository);
+        addTearDown(container.dispose);
+        container.listen(createOrderProvider, (_, _) {});
+        final notifier = container.read(createOrderProvider.notifier);
 
-      final first = notifier.createOrder(buildCreateOrderRequest());
-      final duplicate = await notifier.createOrder(buildCreateOrderRequest());
+        final first = notifier.createOrder(buildCreateOrderRequest());
+        final duplicate = await notifier.createOrder(buildCreateOrderRequest());
 
-      expect(duplicate, isNull);
-      expect(repository.createCalls, 1);
-      expect(container.read(createOrderProvider).isLoading, isTrue);
+        expect(duplicate, isNull);
+        expect(repository.createCalls, 1);
+        expect(container.read(createOrderProvider).isLoading, isTrue);
 
-      pending.complete(Right(buildOrder()));
-      expect((await first)?.id, 601);
-      expect(container.read(createOrderProvider).value?.id, 601);
-    });
+        pending.complete(Right(buildOrder()));
+        expect((await first)?.id, 601);
+        expect(container.read(createOrderProvider).value?.id, 601);
+      },
+    );
 
     test('create and cancel expose failure then allow retry', () async {
       final repository = _FakeOrderRepository();
@@ -46,13 +49,21 @@ void main() {
 
       repository.createResult = const Left(ServerFailure('Không thể đặt đơn'));
       final createNotifier = container.read(createOrderProvider.notifier);
-      expect(await createNotifier.createOrder(buildCreateOrderRequest()), isNull);
+      expect(
+        await createNotifier.createOrder(buildCreateOrderRequest()),
+        isNull,
+      );
       expect(container.read(createOrderProvider).hasError, isTrue);
 
       repository.createResult = Right(buildOrder());
-      expect((await createNotifier.createOrder(buildCreateOrderRequest()))?.id, 601);
+      expect(
+        (await createNotifier.createOrder(buildCreateOrderRequest()))?.id,
+        601,
+      );
 
-      repository.cancelResult = const Left(ServerFailure('Đơn đang được xác nhận'));
+      repository.cancelResult = const Left(
+        ServerFailure('Đơn đang được xác nhận'),
+      );
       final cancelNotifier = container.read(cancelOrderProvider.notifier);
       expect(await cancelNotifier.cancelOrder(601, reason: 'Đổi ý'), isFalse);
       expect(container.read(cancelOrderProvider).hasError, isTrue);
@@ -65,32 +76,35 @@ void main() {
   });
 
   group('orders list and detail', () {
-    test('paginates, preserves rows on load-more error and retries the same page', () async {
-      final repository = _FakeOrderRepository();
-      repository.pageResults[0] = Right(
-        List.generate(20, (index) => buildOrder(id: 600 + index)),
-      );
-      repository.pageResults[1] = const Left(NetworkFailure('Mất trang kế'));
-      final container = _container(repository);
-      addTearDown(container.dispose);
-      container.listen(ordersListProvider, (_, _) {});
+    test(
+      'paginates, preserves rows on load-more error and retries the same page',
+      () async {
+        final repository = _FakeOrderRepository();
+        repository.pageResults[0] = Right(
+          List.generate(20, (index) => buildOrder(id: 600 + index)),
+        );
+        repository.pageResults[1] = const Left(NetworkFailure('Mất trang kế'));
+        final container = _container(repository);
+        addTearDown(container.dispose);
+        container.listen(ordersListProvider, (_, _) {});
 
-      final initial = await container.read(ordersListProvider.future);
-      expect(initial, hasLength(20));
-      final notifier = container.read(ordersListProvider.notifier);
-      await notifier.loadMoreOrders();
-      expect(container.read(ordersListProvider).value, hasLength(20));
+        final initial = await container.read(ordersListProvider.future);
+        expect(initial, hasLength(20));
+        final notifier = container.read(ordersListProvider.notifier);
+        await notifier.loadMoreOrders();
+        expect(container.read(ordersListProvider).value, hasLength(20));
 
-      repository.pageResults[1] = Right([buildOrder(id: 700)]);
-      await notifier.loadMoreOrders();
-      expect(container.read(ordersListProvider).value, hasLength(21));
-      expect(repository.requestedPages, [0, 1, 1]);
+        repository.pageResults[1] = Right([buildOrder(id: 700)]);
+        await notifier.loadMoreOrders();
+        expect(container.read(ordersListProvider).value, hasLength(21));
+        expect(repository.requestedPages, [0, 1, 1]);
 
-      notifier.removeOrder(700);
-      expect(container.read(ordersListProvider).value, hasLength(20));
-      notifier.addOrder(buildOrder(id: 800));
-      expect(container.read(ordersListProvider).value!.first.id, 800);
-    });
+        notifier.removeOrder(700);
+        expect(container.read(ordersListProvider).value, hasLength(20));
+        notifier.addOrder(buildOrder(id: 800));
+        expect(container.read(ordersListProvider).value!.first.id, 800);
+      },
+    );
 
     test('detail failure remains observable and refresh retries', () async {
       final repository = _FakeOrderRepository();
@@ -102,10 +116,7 @@ void main() {
       );
       addTearDown(subscription.close);
 
-      expect(
-        (await container.read(orderDetailProvider(601).future))?.id,
-        601,
-      );
+      expect((await container.read(orderDetailProvider(601).future))?.id, 601);
 
       repository.detailResult = const Left(
         ServerFailure('Không tải được chi tiết'),
@@ -160,7 +171,7 @@ class _FakeOrderRepository implements OrderRepository {
 
   @override
   Future<Either<Failure, OrderEntity>> createOrder(
-    CreateOrderRequestDto request,
+    OrderCreationCommand request,
   ) async {
     createCalls += 1;
     final completer = createCompleter;

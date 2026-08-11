@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:delivery_app/core/error/failures.dart';
-import 'package:delivery_app/features/auth/data/models/token_model.dart';
+import 'package:delivery_app/features/auth/domain/entities/auth_entity.dart';
 import 'package:delivery_app/features/auth/domain/entities/biometric_entity.dart';
 import 'package:delivery_app/features/auth/domain/repositories/biometric_repository.dart';
-import 'package:delivery_app/features/auth/presentation/providers/biometric/biometric_notifier.dart';
-import 'package:delivery_app/features/auth/presentation/providers/di/biometric_di_providers.dart';
+import 'package:delivery_app/features/auth/application/biometric/biometric_notifier.dart';
+import 'package:delivery_app/features/auth/di/biometric_di_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
@@ -50,7 +50,7 @@ class _DelayedBiometricRepository implements BiometricRepository {
       throw UnimplementedError();
 
   @override
-  Future<Either<Failure, TokenModel?>> getAuthSession() =>
+  Future<Either<Failure, AuthEntity?>> getAuthSession() =>
       throw UnimplementedError();
 
   @override

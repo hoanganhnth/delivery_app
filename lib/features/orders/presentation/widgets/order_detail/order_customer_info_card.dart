@@ -6,10 +6,7 @@ import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
 class OrderCustomerInfoCard extends StatelessWidget {
   final OrderEntity order;
 
-  const OrderCustomerInfoCard({
-    super.key,
-    required this.order,
-  });
+  const OrderCustomerInfoCard({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +20,16 @@ class OrderCustomerInfoCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  Icons.person,
-                  color: theme.primaryColor,
-                  size: 24,
-                ),
+                Icon(Icons.person, color: theme.primaryColor, size: 24),
                 SizedBox(width: 8.w),
-                Text(
-                  'Thông tin khách hàng',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Text(
+                    'Thông tin khách hàng',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
@@ -68,7 +65,6 @@ class OrderCustomerInfoCard extends StatelessWidget {
       ),
     );
   }
-
 }
 
 class OrderCustomerInfoRow extends StatelessWidget {
@@ -86,7 +82,7 @@ class OrderCustomerInfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -108,10 +104,7 @@ class OrderCustomerInfoRow extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 2.w),
-              Text(
-                value,
-                style: theme.textTheme.bodyMedium,
-              ),
+              Text(value, style: theme.textTheme.bodyMedium),
             ],
           ),
         ),
@@ -119,4 +112,3 @@ class OrderCustomerInfoRow extends StatelessWidget {
     );
   }
 }
-

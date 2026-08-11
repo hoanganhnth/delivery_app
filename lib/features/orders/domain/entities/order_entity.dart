@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'order_item_entity.dart';
 import '../../../../core/constants/order_constants.dart';
 
@@ -7,6 +6,7 @@ import '../../../../core/constants/order_constants.dart';
 enum OrderStatus {
   pending(OrderStatusConstants.pending),
   delivering(OrderStatusConstants.delivering),
+  shipperNotFound(OrderStatusConstants.shipperNotFound),
   cancelled(OrderStatusConstants.cancelled),
   delivered(OrderStatusConstants.delivered);
 
@@ -40,10 +40,11 @@ enum OrderStatus {
         return OrderStatus.delivered;
 
       // Nhóm "Hủy/Lỗi"
+      case OrderStatusConstants.shipperNotFound:
+        return OrderStatus.shipperNotFound;
       case OrderStatusConstants.cancelled:
       case OrderStatusConstants.paymentFailed:
       case OrderStatusConstants.rejectedByRestaurant:
-      case OrderStatusConstants.shipperNotFound:
         return OrderStatus.cancelled;
 
       default:
@@ -58,24 +59,12 @@ enum OrderStatus {
         return 'Chờ giao hàng';
       case OrderStatus.delivering:
         return 'Đang giao hàng';
+      case OrderStatus.shipperNotFound:
+        return 'Không tìm được shipper';
       case OrderStatus.delivered:
         return 'Thành công';
       case OrderStatus.cancelled:
         return 'Đã huỷ';
-    }
-  }
-
-  /// Màu sắc cho từng trạng thái
-  Color get color {
-    switch (this) {
-      case OrderStatus.pending:
-        return Colors.orange;
-      case OrderStatus.delivering:
-        return Colors.blue;
-      case OrderStatus.delivered:
-        return Colors.green;
-      case OrderStatus.cancelled:
-        return Colors.red;
     }
   }
 }
@@ -181,6 +170,8 @@ class OrderEntity extends Equatable {
         return 'Chờ giao hàng';
       case OrderStatus.delivering:
         return 'Đang giao hàng';
+      case OrderStatus.shipperNotFound:
+        return 'Không tìm được shipper';
       case OrderStatus.delivered:
         return 'Thành công';
       case OrderStatus.cancelled:
@@ -195,6 +186,8 @@ class OrderEntity extends Equatable {
         return '#FF9800'; // Orange
       case OrderStatus.delivering:
         return '#2196F3'; // Blue
+      case OrderStatus.shipperNotFound:
+        return '#E65100'; // Deep orange
       case OrderStatus.delivered:
         return '#4CAF50'; // Green
       case OrderStatus.cancelled:
@@ -204,18 +197,31 @@ class OrderEntity extends Equatable {
 
   bool get canTrackingRealtime =>
       id != null &&
+      status != OrderStatus.shipperNotFound &&
       status != OrderStatus.cancelled &&
       status != OrderStatus.delivered;
 
   /// Check if order can be cancelled
   bool get canCancel {
-    if (status == OrderStatus.pending) return true;
-    if (status == OrderStatus.delivering) {
-      // Allow cancellation if still finding shipper or just assigned
-      return rawBackendStatus == OrderStatusConstants.findingShipper ||
-          rawBackendStatus == OrderStatusConstants.assignedToShipper;
+    final rawStatus = rawBackendStatus?.trim().toUpperCase();
+    // Mirror the server's pre-pickup contract. The server remains the
+    // authority; this only prevents the app from hiding legal cancellation
+    // actions in WAIT_SHIPPER_CONFIRM or ASSIGNED.
+    if (rawStatus == null || rawStatus.isEmpty) {
+      return status == OrderStatus.pending;
     }
-    return false;
+    return switch (rawStatus) {
+      OrderStatusConstants.pending ||
+      OrderStatusConstants.pendingPayment ||
+      OrderStatusConstants.confirmed ||
+      OrderStatusConstants.confirmedByRestaurant ||
+      'READY' ||
+      OrderStatusConstants.findingShipper ||
+      'WAIT_SHIPPER_CONFIRM' ||
+      'ASSIGNED' ||
+      OrderStatusConstants.assignedToShipper => true,
+      _ => false,
+    };
   }
 
   /// Get total items count

@@ -1,4 +1,5 @@
 import 'package:delivery_app/features/orders/data/dtos/order_dto.dart';
+import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -115,5 +116,88 @@ void main() {
       }).toEntity(),
       throwsFormatException,
     );
+  });
+
+  test('keeps no-shipper terminal state distinct from cancellation', () {
+    final base = <String, Object?>{
+      'id': 17,
+      'status': 'SHIPPER_NOT_FOUND',
+      'customerName': 'Khách hàng',
+      'customerPhone': '0900000000',
+      'deliveryAddress': 'Địa chỉ giao hàng',
+      'paymentMethod': 'COD',
+      'subtotalPrice': 100000,
+      'discountAmount': 0,
+      'shippingFee': 18000,
+      'totalPrice': 118000,
+      'createdAt': '2026-07-26T10:00:00',
+      'restaurantId': 4,
+      'restaurantName': 'Quán thật',
+      'items': <Map<String, dynamic>>[
+        {
+          'menuItemId': 8,
+          'menuItemName': 'Cơm gà',
+          'quantity': 2,
+          'price': 50000,
+        },
+      ],
+    };
+
+    final noShipper = OrderDto.fromJson(base).toEntity();
+    final waitForShipper = OrderDto.fromJson({
+      ...base,
+      'status': 'WAIT_SHIPPER_CONFIRM',
+    }).toEntity();
+
+    expect(noShipper.status, OrderStatus.shipperNotFound);
+    expect(noShipper.statusText, 'Không tìm được shipper');
+    expect(noShipper.canTrackingRealtime, isFalse);
+    expect(noShipper.canCancel, isFalse);
+    expect(waitForShipper.canCancel, isTrue);
+  });
+
+  test('keeps cancellation affordance for every server pre-pickup status', () {
+    final base = <String, Object?>{
+      'id': 17,
+      'customerName': 'Khách hàng',
+      'customerPhone': '0900000000',
+      'deliveryAddress': 'Địa chỉ giao hàng',
+      'paymentMethod': 'COD',
+      'subtotalPrice': 100000,
+      'discountAmount': 0,
+      'shippingFee': 18000,
+      'totalPrice': 118000,
+      'createdAt': '2026-07-26T10:00:00',
+      'restaurantId': 4,
+      'restaurantName': 'Quán thật',
+      'items': <Map<String, dynamic>>[
+        {
+          'menuItemId': 8,
+          'menuItemName': 'Cơm gà',
+          'quantity': 2,
+          'price': 50000,
+        },
+      ],
+    };
+    const cancellableStatuses = [
+      'PENDING',
+      'PENDING_PAYMENT',
+      'CONFIRMED',
+      'CONFIRMED_BY_RESTAURANT',
+      'READY',
+      'FINDING_SHIPPER',
+      'WAIT_SHIPPER_CONFIRM',
+      'ASSIGNED',
+      'ASSIGNED_TO_SHIPPER',
+    ];
+
+    for (final status in cancellableStatuses) {
+      expect(OrderDto.fromJson({...base, 'status': status}).toEntity().canCancel, isTrue,
+          reason: '$status must remain cancellable before pickup');
+    }
+    for (final status in ['PICKED_UP', 'DELIVERING', 'DELIVERED', 'CANCELLED', 'SHIPPER_NOT_FOUND']) {
+      expect(OrderDto.fromJson({...base, 'status': status}).toEntity().canCancel, isFalse,
+          reason: '$status must not expose cancellation');
+    }
   });
 }

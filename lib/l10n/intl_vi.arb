@@ -299,6 +299,7 @@
     "notificationMarkAllRead": "Đọc tất cả",
     "notificationEmptyTitle": "Chưa có thông báo nào",
     "notificationEmptyDesc": "Các thông báo sẽ xuất hiện ở đây",
+    "notificationAccountUnavailable": "Không xác định được tài khoản hiện tại. Vui lòng thử lại.",
     "notificationTimeJustNow": "Vừa xong",
     "notificationTimeMinutes": "{minutes} phút trước",
     "notificationTimeHours": "{hours} giờ trước",

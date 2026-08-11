@@ -1,0 +1,450 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:delivery_app/core/utils/logger/app_logger.dart';
+import 'package:delivery_app/features/orders/domain/entities/delivery_tracking_entity.dart';
+import 'package:delivery_app/features/orders/domain/entities/delivery_status.dart';
+import 'package:delivery_app/features/orders/domain/entities/shipper_location_entity.dart';
+import '../services/mapbox_map_service.dart';
+import '../services/i_map_service.dart';
+import '../services/tracking_map_platform.dart';
+import 'package:delivery_app/features/orders/application/state/tracking/delivery_tracking_notifier.dart';
+import 'package:delivery_app/features/orders/application/state/tracking/shipper_location_notifier.dart';
+
+/// Widget tối ưu để hiển thị bản đồ theo dõi delivery với MapBox
+/// Sử dụng vị trí thật từ shipperLocationProvider.
+class OptimizedDeliveryTrackingMapWidget extends ConsumerStatefulWidget {
+  final DeliveryTrackingEntity? deliveryTracking;
+
+  const OptimizedDeliveryTrackingMapWidget({super.key, this.deliveryTracking});
+
+  @override
+  ConsumerState<OptimizedDeliveryTrackingMapWidget> createState() =>
+      _OptimizedDeliveryTrackingMapWidgetState();
+}
+
+class _OptimizedDeliveryTrackingMapWidgetState
+    extends ConsumerState<OptimizedDeliveryTrackingMapWidget> {
+  // Services để tách logic riêng biệt
+  late IMapService<MapboxMap, CameraOptions> _mapService;
+
+  // Map states
+  bool _isExpanded = false;
+  bool _followShipper = true;
+  bool _isMapInitialized = false;
+  ShipperLocationEntity? _previousShipperLocation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // One owned service instance per widget; tests replace the factory.
+    _mapService = ref.read(trackingMapServiceFactoryProvider)();
+
+    // Delay nhỏ để đảm bảo widget được render hoàn toàn trước khi khởi tạo map
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() {
+          _isMapInitialized = true;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _mapService.dispose();
+    // ref.read(shipperLocationProvider.notifier).dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Watch canonical shipper location from the authenticated WebSocket.
+    ShipperLocationEntity? currentShipperLocation;
+    final shipperLocationState = ref.watch(shipperLocationProvider);
+    if (shipperLocationState.currentLocation != null) {
+      currentShipperLocation = shipperLocationState.currentLocation;
+
+      // Cập nhật shipper marker khi có vị trí mới
+      if (_previousShipperLocation != currentShipperLocation) {
+        _previousShipperLocation = currentShipperLocation;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && currentShipperLocation != null) {
+            _onShipperPositionUpdated(currentShipperLocation);
+          }
+        });
+      }
+    }
+
+    // ✅ Lắng nghe và vẽ polyline route
+    final polylinePoints = ref.watch(
+      deliveryTrackingProvider.select((s) => s.polylinePoints),
+    );
+    if (_isMapInitialized && polylinePoints != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _mapService.drawRoute(polylinePoints);
+        }
+      });
+    }
+
+    return _buildAnimatedMapWidget();
+  }
+
+  Widget _buildAnimatedMapWidget() {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // Tính toán kích thước dựa trên trạng thái expanded - đảm bảo tối thiểu 64px cho MapBox
+    final mapHeight = _isExpanded
+        ? (screenHeight * 0.7).clamp(300.0, double.infinity)
+        : 300.0.clamp(64.0, double.infinity);
+
+    final mapWidth = screenWidth.clamp(64.0, double.infinity);
+
+    return Column(
+      children: [
+        // Thông tin bên ngoài khi compact mode (ẩn khi expanded)
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: !_isExpanded && widget.deliveryTracking != null
+              ? Column(
+                  key: const ValueKey('external_info'),
+                  children: [
+                    _buildExternalInfoCard(),
+                    SizedBox(height: 8.w),
+                  ],
+                )
+              : const SizedBox.shrink(key: ValueKey('no_external_info')),
+        ),
+
+        // Map widget với animation kích thước
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOutCubic,
+          height: mapHeight,
+          width: mapWidth,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade300),
+            boxShadow: _isExpanded
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : [],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // Đảm bảo MapWidget có size hợp lệ, tối thiểu 64x64
+                final validWidth = constraints.maxWidth.clamp(
+                  64.0,
+                  double.infinity,
+                );
+                final validHeight = constraints.maxHeight.clamp(
+                  64.0,
+                  double.infinity,
+                );
+
+                return Stack(
+                  children: [
+                    // Single MapWidget instance với constraints chính xác
+                    Positioned.fill(
+                      child: SizedBox(
+                        width: validWidth,
+                        height: validHeight,
+                        child: _isMapInitialized
+                            ? ref
+                                  .read(trackingMapPlatformProvider)
+                                  .buildMap(
+                                    key: const ValueKey('animated_map_widget'),
+                                    onMapCreated: _onMapCreated,
+                                    cameraOptions: _mapService
+                                        .getInitialCameraPosition(
+                                          pickupLat: widget
+                                              .deliveryTracking
+                                              ?.pickupLat,
+                                          pickupLng: widget
+                                              .deliveryTracking
+                                              ?.pickupLng,
+                                          deliveryLat: widget
+                                              .deliveryTracking
+                                              ?.deliveryLat,
+                                          deliveryLng: widget
+                                              .deliveryTracking
+                                              ?.deliveryLng,
+                                        ),
+                                  )
+                            : _buildLoadingState(),
+                      ),
+                    ),
+
+                    // Map controls - trực tiếp trong Stack
+                    if (_isMapInitialized)
+                      Positioned(
+                        top: 12.w,
+                        right: 12.w,
+                        child: _buildMapControls(),
+                      ),
+
+                    // Status overlay - trực tiếp trong Stack với opacity animation
+                    if (_isMapInitialized && _isExpanded)
+                      Positioned(
+                        top: 12.w,
+                        left: 12.w,
+                        child: AnimatedOpacity(
+                          duration: const Duration(milliseconds: 300),
+                          opacity: _isExpanded ? 1.0 : 0.0,
+                          child: _buildStatusOverlay(),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return Container(
+      color: Colors.grey[200],
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 8.w),
+            Text('Đang tải bản đồ...', style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMapControls() {
+    return Column(
+      children: [
+        // Toggle expand/collapse button với animation
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          child: Container(
+            key: ValueKey(_isExpanded ? 'collapse' : 'expand'),
+            child: _buildMapButton(
+              icon: _isExpanded ? Icons.fullscreen_exit : Icons.fullscreen,
+              onPressed: () => setState(() => _isExpanded = !_isExpanded),
+              tooltip: _isExpanded ? 'Thu nhỏ bản đồ' : 'Mở rộng bản đồ',
+            ),
+          ),
+        ),
+        SizedBox(height: 8.w),
+        // Follow shipper toggle
+        _buildMapButton(
+          icon: _followShipper ? Icons.gps_fixed : Icons.gps_not_fixed,
+          onPressed: () => setState(() => _followShipper = !_followShipper),
+          tooltip: _followShipper
+              ? 'Dừng theo dõi shipper'
+              : 'Theo dõi shipper',
+          isActive: _followShipper,
+        ),
+      ],
+    );
+  }
+
+  // ==================== MAP EVENT HANDLERS ====================
+
+  Future<void> _onMapCreated(MapboxMap mapboxMap) async {
+    if (!mounted) return;
+
+    try {
+      // Khởi tạo map service
+      await _mapService.initializeMap(mapboxMap);
+
+      // Thêm markers nếu có delivery tracking với tọa độ hợp lệ
+      if (widget.deliveryTracking != null) {
+        final dt = widget.deliveryTracking!;
+        final hasValidPickup = dt.pickupLat != 0.0 || dt.pickupLng != 0.0;
+        final hasValidDelivery = dt.deliveryLat != 0.0 || dt.deliveryLng != 0.0;
+
+        if (hasValidPickup || hasValidDelivery) {
+          await _mapService.addDeliveryMarkers(
+            pickupLat: dt.pickupLat,
+            pickupLng: dt.pickupLng,
+            deliveryLat: dt.deliveryLat,
+            deliveryLng: dt.deliveryLng,
+          );
+
+          // Fit camera để hiển thị tất cả markers
+          await _mapService.fitBoundsToMarkers(
+            pickupLat: dt.pickupLat,
+            pickupLng: dt.pickupLng,
+            deliveryLat: dt.deliveryLat,
+            deliveryLng: dt.deliveryLng,
+          );
+        }
+      }
+
+      // Khắc phục lỗi Race Condition: Khi Riverpod nhả stream state trước khi MapBox khởi tạo xong.
+      // Ép Map vẽ marker tại vị trí hiện tại ngay sau khi init xong
+      final currentLocation = ref.read(shipperLocationProvider).currentLocation;
+      if (currentLocation != null) {
+        await _mapService.updateShipperMarker(currentLocation);
+      }
+
+      // ✅ Vẽ route ban đầu nếu có sẵn
+      final initialPolyline = ref.read(deliveryTrackingProvider).polylinePoints;
+      if (initialPolyline != null) {
+        await _mapService.drawRoute(initialPolyline);
+      }
+
+      AppLogger.i('Map initialization completed');
+    } catch (e) {
+      AppLogger.e('Error initializing map', e);
+    }
+  }
+
+  void _onShipperPositionUpdated(ShipperLocationEntity location) {
+    if (!mounted) return;
+
+    setState(() {
+      // Cập nhật shipper marker thông qua service
+      _mapService.updateShipperMarker(location);
+
+      // Di chuyển camera theo shipper nếu được bật
+      if (_followShipper || _isExpanded) {
+        _mapService.moveCamera(
+          latitude: location.latitude,
+          longitude: location.longitude,
+          zoom: 14.0, // Zoom level cố định theo yêu cầu
+        );
+      }
+    });
+  }
+
+  // ==================== UI COMPONENTS ====================
+
+  Widget _buildMapButton({
+    required IconData icon,
+    required VoidCallback onPressed,
+    required String tooltip,
+    bool isActive = false,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: IconButton(
+        onPressed: onPressed,
+        icon: Icon(icon),
+        iconSize: 20,
+        color: isActive ? Colors.blue : Colors.grey[700],
+        tooltip: tooltip,
+      ),
+    );
+  }
+
+  Widget _buildExternalInfoCard() {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Order Status
+            if (widget.deliveryTracking != null) ...[
+              Row(
+                children: [
+                  _getStatusIcon(widget.deliveryTracking!.status),
+                  SizedBox(width: 8.w),
+                  Text(
+                    _getStatusTitle(widget.deliveryTracking!.status),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.sp,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 12.w),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusOverlay() {
+    if (widget.deliveryTracking == null) return const SizedBox.shrink();
+
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 12.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          _getStatusIcon(widget.deliveryTracking!.status),
+          SizedBox(width: 8.w),
+          Text(
+            _getStatusTitle(widget.deliveryTracking!.status),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ==================== HELPER METHODS ====================
+
+  Icon _getStatusIcon(DeliveryStatus status) {
+    switch (status) {
+      case DeliveryStatus.pending:
+      case DeliveryStatus.findingShipper:
+      case DeliveryStatus.waitShipperConfirm:
+        return Icon(Icons.access_time, color: Colors.grey);
+      case DeliveryStatus.shipperNotFound:
+        return Icon(Icons.error_outline, color: Colors.red);
+      case DeliveryStatus.assigned:
+        return Icon(Icons.check_circle, color: Colors.green);
+      case DeliveryStatus.pickedUp:
+        return Icon(Icons.directions_bike, color: Colors.blue);
+      case DeliveryStatus.delivering:
+        return Icon(Icons.local_shipping, color: Colors.orange);
+      case DeliveryStatus.delivered:
+        return Icon(Icons.done_all, color: Colors.green);
+      case DeliveryStatus.cancelled:
+        return Icon(Icons.cancel, color: Colors.red);
+    }
+  }
+
+  String _getStatusTitle(DeliveryStatus status) {
+    return status.displayName;
+  }
+}

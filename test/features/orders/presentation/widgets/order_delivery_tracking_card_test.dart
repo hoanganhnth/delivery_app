@@ -4,7 +4,7 @@ import 'package:delivery_app/core/error/failures.dart';
 import 'package:delivery_app/features/orders/domain/entities/delivery_status.dart';
 import 'package:delivery_app/features/orders/domain/entities/delivery_tracking_entity.dart';
 import 'package:delivery_app/features/orders/domain/repositories/delivery_tracking_repository.dart';
-import 'package:delivery_app/features/orders/presentation/providers/delivery_tracking/delivery_tracking_providers.dart';
+import 'package:delivery_app/features/orders/di/delivery_tracking_providers.dart';
 import 'package:delivery_app/features/orders/presentation/widgets/track_order/order_delivery_tracking_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

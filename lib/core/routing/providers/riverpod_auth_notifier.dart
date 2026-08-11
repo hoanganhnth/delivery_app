@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:delivery_app/core/routing/models/i_auth_checker.dart';
-import 'package:delivery_app/features/auth/presentation/providers/providers.dart';
+import 'package:delivery_app/features/auth/application/session/auth_state.dart';
 
 /// Riverpod adapter for [IAuthNotifier].
 ///

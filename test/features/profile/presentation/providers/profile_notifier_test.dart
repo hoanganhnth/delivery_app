@@ -1,8 +1,8 @@
 import 'package:delivery_app/core/error/failures.dart';
 import 'package:delivery_app/features/profile/domain/entities/user_entity.dart';
 import 'package:delivery_app/features/profile/domain/repositories/profile_repository.dart';
-import 'package:delivery_app/features/profile/presentation/providers/profile_notifier.dart';
-import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
+import 'package:delivery_app/features/profile/application/profile_notifier.dart';
+import 'package:delivery_app/features/profile/di/profile_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
@@ -28,29 +28,42 @@ void main() {
     expect(container.read(profileProvider).failure, isNull);
   });
 
-  test('profile update preserves old data on failure then caches successful retry', () async {
-    final repository = _FakeProfileRepository();
-    final container = _container(repository);
-    addTearDown(container.dispose);
-    final notifier = container.read(profileProvider.notifier);
-    await notifier.getUserProfile(forceRefresh: true);
+  test(
+    'profile update preserves old data on failure then caches successful retry',
+    () async {
+      final repository = _FakeProfileRepository();
+      final container = _container(repository);
+      addTearDown(container.dispose);
+      final notifier = container.read(profileProvider.notifier);
+      await notifier.getUserProfile(forceRefresh: true);
 
-    repository.updateResult = const Left(ServerFailure('Số điện thoại đã dùng'));
-    await notifier.updateUserProfile(
-      name: 'Customer Updated',
-      phone: '0900000002',
-    );
-    expect(container.read(profileProvider).user?.fullName, 'Customer Test');
-    expect(container.read(profileProvider).errorMessage, 'Số điện thoại đã dùng');
+      repository.updateResult = const Left(
+        ServerFailure('Số điện thoại đã dùng'),
+      );
+      await notifier.updateUserProfile(
+        name: 'Customer Updated',
+        phone: '0900000002',
+      );
+      expect(container.read(profileProvider).user?.fullName, 'Customer Test');
+      expect(
+        container.read(profileProvider).errorMessage,
+        'Số điện thoại đã dùng',
+      );
 
-    repository.updateResult = Right(buildProfile(fullName: 'Customer Updated'));
-    await notifier.updateUserProfile(
-      name: 'Customer Updated',
-      phone: '0900000002',
-    );
-    expect(container.read(profileProvider).user?.fullName, 'Customer Updated');
-    expect(repository.cachedProfile?.fullName, 'Customer Updated');
-  });
+      repository.updateResult = Right(
+        buildProfile(fullName: 'Customer Updated'),
+      );
+      await notifier.updateUserProfile(
+        name: 'Customer Updated',
+        phone: '0900000002',
+      );
+      expect(
+        container.read(profileProvider).user?.fullName,
+        'Customer Updated',
+      );
+      expect(repository.cachedProfile?.fullName, 'Customer Updated');
+    },
+  );
 
   test('clear cache resets profile only after repository success', () async {
     final repository = _FakeProfileRepository();
@@ -89,8 +102,9 @@ class _FakeProfileRepository implements ProfileRepository {
       Right(cachedProfile);
 
   @override
-  Future<Either<Failure, UserEntity>> updateUserProfile(UserEntity user) async =>
-      updateResult;
+  Future<Either<Failure, UserEntity>> updateUserProfile(
+    UserEntity user,
+  ) async => updateResult;
 
   @override
   Future<Either<Failure, void>> cacheUserProfile(UserEntity user) async {

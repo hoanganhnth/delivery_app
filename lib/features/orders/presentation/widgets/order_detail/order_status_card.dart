@@ -6,15 +6,12 @@ import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
 class OrderStatusCard extends StatelessWidget {
   final OrderEntity order;
 
-  const OrderStatusCard({
-    super.key,
-    required this.order,
-  });
+  const OrderStatusCard({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Card(
       child: Padding(
         padding: EdgeInsets.all(16.w),
@@ -105,6 +102,8 @@ class OrderStatusCard extends StatelessWidget {
         return Icons.schedule;
       case OrderStatus.delivering:
         return Icons.delivery_dining;
+      case OrderStatus.shipperNotFound:
+        return Icons.person_search;
       case OrderStatus.delivered:
         return Icons.check_circle;
       case OrderStatus.cancelled:
@@ -125,6 +124,8 @@ extension OrderStatusExtension on OrderStatus {
         return Colors.orange;
       case OrderStatus.delivering:
         return Colors.blue;
+      case OrderStatus.shipperNotFound:
+        return Colors.deepOrange;
       case OrderStatus.delivered:
         return Colors.green;
       case OrderStatus.cancelled:

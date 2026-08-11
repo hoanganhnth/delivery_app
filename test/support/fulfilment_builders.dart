@@ -1,6 +1,6 @@
 import 'package:delivery_app/features/cart/domain/entities/cart_entity.dart';
 import 'package:delivery_app/features/cart/domain/entities/cart_item_entity.dart';
-import 'package:delivery_app/features/orders/data/dtos/create_order_request_dto.dart';
+import 'package:delivery_app/features/orders/domain/entities/order_creation_command.dart';
 import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
 import 'package:delivery_app/features/orders/domain/entities/order_item_entity.dart';
 import 'package:delivery_app/features/orders/domain/entities/delivery_tracking_entity.dart';
@@ -158,8 +158,8 @@ DeliveryTrackingEntity buildDeliveryTracking({
   );
 }
 
-CreateOrderRequestDto buildCreateOrderRequest() {
-  return const CreateOrderRequestDto(
+OrderCreationCommand buildCreateOrderRequest() {
+  return const OrderCreationCommand(
     restaurantId: 201,
     deliveryAddress: '2 Đường Khách, TP.HCM',
     deliveryLat: 10.78,
@@ -167,7 +167,7 @@ CreateOrderRequestDto buildCreateOrderRequest() {
     customerName: 'Customer Test',
     customerPhone: '0900000002',
     paymentMethod: 'COD',
-    items: [OrderItemRequest(menuItemId: 301, quantity: 1)],
+    items: [OrderCreationItem(menuItemId: 301, quantity: 1)],
   );
 }
 

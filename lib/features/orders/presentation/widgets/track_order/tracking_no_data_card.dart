@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:delivery_app/core/theme/theme_extensions.dart';
-import 'package:delivery_app/features/orders/presentation/providers/providers.dart';
 import 'package:delivery_app/generated/l10n.dart';
 
-class TrackingNoDataCard extends ConsumerWidget {
+class TrackingNoDataCard extends StatelessWidget {
   final int orderId;
   final bool canTrackingRealtime;
+  final VoidCallback? onRetry;
 
   const TrackingNoDataCard({
     super.key,
     required this.orderId,
     required this.canTrackingRealtime,
+    this.onRetry,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -37,7 +36,7 @@ class TrackingNoDataCard extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
-                  color: ref.colors.textSecondary,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
               SizedBox(height: 8.w),
@@ -48,14 +47,7 @@ class TrackingNoDataCard extends ConsumerWidget {
               ),
               SizedBox(height: 16.w),
               ElevatedButton.icon(
-                onPressed: () {
-                  ref
-                      .read(deliveryTrackingProvider.notifier)
-                      .startTrackingOrderSafe(
-                        orderId,
-                        trackingRealtime: canTrackingRealtime,
-                      );
-                },
+                onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
                 label: const Text('Thử lại'),
                 style: ElevatedButton.styleFrom(

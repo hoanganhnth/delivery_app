@@ -29,10 +29,14 @@ class OrderPaymentCard extends StatelessWidget {
                   size: 24,
                 ),
                 SizedBox(width: 8.w),
-                Text(
-                  S.of(context).paymentInfo,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Text(
+                    S.of(context).paymentInfo,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],

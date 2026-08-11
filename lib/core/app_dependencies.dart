@@ -1,8 +1,8 @@
 import 'package:delivery_app/core/network/_riverpod/authenticated_network_providers.dart'
     as core_net;
-import 'package:delivery_app/features/auth/presentation/providers/di/auth_network_providers.dart'
+import 'package:delivery_app/features/auth/di/auth_network_providers.dart'
     as auth_net;
-import 'package:delivery_app/features/auth/presentation/providers/di/storage_di_providers.dart';
+import 'package:delivery_app/features/auth/di/storage_di_providers.dart';
 import 'package:delivery_app/core/theme/theme_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;

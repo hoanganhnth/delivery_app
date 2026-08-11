@@ -5,7 +5,9 @@ import '../entities/notification_entity.dart';
 /// Repository interface for notification management
 abstract class NotificationRepository {
   /// Lấy tất cả thông báo của user
-  Future<Either<Failure, List<NotificationEntity>>> getUserNotifications(int userId);
+  Future<Either<Failure, List<NotificationEntity>>> getUserNotifications(
+    int userId,
+  );
 
   /// Lấy thông báo chưa đọc
   Future<Either<Failure, List<NotificationEntity>>> getUnreadNotifications();

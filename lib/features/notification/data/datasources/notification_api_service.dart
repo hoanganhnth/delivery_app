@@ -34,7 +34,9 @@ abstract class NotificationApiService {
 
   /// Lấy thông báo theo ID
   @GET('${ApiConstants.notifications}/{id}')
-  Future<BaseResponseDto<NotificationDto>> getNotificationById(@Path('id') int id);
+  Future<BaseResponseDto<NotificationDto>> getNotificationById(
+    @Path('id') int id,
+  );
 
   /// Xóa thông báo
   @DELETE('${ApiConstants.notifications}/{id}')

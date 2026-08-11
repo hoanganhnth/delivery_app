@@ -1,5 +1,5 @@
-import 'package:delivery_app/features/cart/presentation/providers/checkout_voucher_provider.dart';
-import 'package:delivery_app/features/restaurants/presentation/providers/flash_sale_catalog_provider.dart';
+import 'package:delivery_app/features/cart/di/checkout_voucher_provider.dart';
+import 'package:delivery_app/features/restaurants/di/flash_sale_catalog_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';

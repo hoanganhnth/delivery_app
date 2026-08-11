@@ -1,6 +1,4 @@
-import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Thanh tiến trình đơn hàng với animation
@@ -9,19 +7,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 /// ```dart
 /// OrderProgressBar(progress: 0.66) // 66% complete
 /// ```
-class OrderProgressBar extends ConsumerStatefulWidget {
+class OrderProgressBar extends StatefulWidget {
   final double progress; // 0.0 to 1.0
 
-  const OrderProgressBar({
-    super.key,
-    required this.progress,
-  }) : assert(progress >= 0.0 && progress <= 1.0);
+  const OrderProgressBar({super.key, required this.progress})
+    : assert(progress >= 0.0 && progress <= 1.0);
 
   @override
-  ConsumerState<OrderProgressBar> createState() => _OrderProgressBarState();
+  State<OrderProgressBar> createState() => _OrderProgressBarState();
 }
 
-class _OrderProgressBarState extends ConsumerState<OrderProgressBar>
+class _OrderProgressBarState extends State<OrderProgressBar>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -33,12 +29,10 @@ class _OrderProgressBarState extends ConsumerState<OrderProgressBar>
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    _animation = Tween<double>(begin: 0.0, end: widget.progress).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOutCubic,
-      ),
-    );
+    _animation = Tween<double>(
+      begin: 0.0,
+      end: widget.progress,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
     _controller.forward();
   }
 
@@ -46,15 +40,13 @@ class _OrderProgressBarState extends ConsumerState<OrderProgressBar>
   void didUpdateWidget(OrderProgressBar oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.progress != widget.progress) {
-      _animation = Tween<double>(
-        begin: oldWidget.progress,
-        end: widget.progress,
-      ).animate(
-        CurvedAnimation(
-          parent: _controller,
-          curve: Curves.easeOutCubic,
-        ),
-      );
+      _animation =
+          Tween<double>(
+            begin: oldWidget.progress,
+            end: widget.progress,
+          ).animate(
+            CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
+          );
       _controller
         ..reset()
         ..forward();
@@ -69,7 +61,7 @@ class _OrderProgressBarState extends ConsumerState<OrderProgressBar>
 
   @override
   Widget build(BuildContext context) {
-    final colors = ref.colors;
+    final colors = Theme.of(context).colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +76,9 @@ class _OrderProgressBarState extends ConsumerState<OrderProgressBar>
                 borderRadius: BorderRadius.circular(100),
                 child: LinearProgressIndicator(
                   value: _animation.value,
-                  backgroundColor: colors.textSecondary.withValues(alpha: 0.1),
+                  backgroundColor: colors.onSurfaceVariant.withValues(
+                    alpha: 0.1,
+                  ),
                   valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
                   minHeight: 6.h,
                 ),
@@ -92,9 +86,9 @@ class _OrderProgressBarState extends ConsumerState<OrderProgressBar>
             },
           ),
         ),
-        
+
         SizedBox(height: 8.h),
-        
+
         // Percentage
         AnimatedBuilder(
           animation: _animation,
@@ -105,7 +99,7 @@ class _OrderProgressBarState extends ConsumerState<OrderProgressBar>
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
-                color: colors.textSecondary,
+                color: colors.onSurfaceVariant,
               ),
             );
           },

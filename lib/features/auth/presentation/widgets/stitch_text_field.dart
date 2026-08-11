@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:delivery_app/core/theme/theme_extensions.dart';
 
 /// Custom text field matching Stitch design (Login screen)
 ///
@@ -10,7 +8,7 @@ import 'package:delivery_app/core/theme/theme_extensions.dart';
 /// - Border with Amber Hearth color scheme
 /// - Icon prefix and optional suffix icon
 /// - Focus states with amber accent
-class StitchTextField extends ConsumerWidget {
+class StitchTextField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
   final String hint;
@@ -18,6 +16,8 @@ class StitchTextField extends ConsumerWidget {
   final bool obscureText;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
+  final String? errorText;
+  final ValueChanged<String>? onChanged;
   final bool enabled;
   final Widget? suffixIcon;
 
@@ -30,12 +30,15 @@ class StitchTextField extends ConsumerWidget {
     this.obscureText = false,
     this.keyboardType,
     this.validator,
+    this.errorText,
+    this.onChanged,
     this.enabled = true,
     this.suffixIcon,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -44,13 +47,13 @@ class StitchTextField extends ConsumerWidget {
           padding: const EdgeInsets.only(left: 16),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            color: ref.colors.background,
+            color: Theme.of(context).scaffoldBackgroundColor,
             child: Text(
               label,
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
-                color: ref.colors.secondary,
+                color: scheme.secondary,
                 letterSpacing: 2,
               ),
             ),
@@ -63,7 +66,7 @@ class StitchTextField extends ConsumerWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFF4EEE7), width: 2),
+            border: Border.all(color: scheme.outlineVariant, width: 2),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.02),
@@ -77,6 +80,7 @@ class StitchTextField extends ConsumerWidget {
             obscureText: obscureText,
             keyboardType: keyboardType,
             validator: validator,
+            onChanged: onChanged,
             enabled: enabled,
             style: const TextStyle(
               fontSize: 15,
@@ -90,8 +94,9 @@ class StitchTextField extends ConsumerWidget {
                 fontWeight: FontWeight.w400,
                 color: Color(0xFFD9C3AE),
               ),
-              prefixIcon: Icon(icon, color: ref.colors.secondary, size: 22),
+              prefixIcon: Icon(icon, color: scheme.secondary, size: 22),
               suffixIcon: suffixIcon,
+              errorText: errorText,
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,

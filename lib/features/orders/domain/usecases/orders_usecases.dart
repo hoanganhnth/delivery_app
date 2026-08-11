@@ -1,8 +1,8 @@
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
+import '../entities/order_creation_command.dart';
 import '../entities/order_entity.dart';
 import '../repositories/order_repository.dart';
-import '../../data/dtos/create_order_request_dto.dart';
 
 /// UseCase để lấy danh sách đơn hàng của người dùng
 class GetUserOrdersUseCase {
@@ -10,7 +10,10 @@ class GetUserOrdersUseCase {
 
   GetUserOrdersUseCase(this.repository);
 
-  Future<Either<Failure, List<OrderEntity>>> call({int page = 0, int size = 20}) async {
+  Future<Either<Failure, List<OrderEntity>>> call({
+    int page = 0,
+    int size = 20,
+  }) async {
     return await repository.getUserOrders(page: page, size: size);
   }
 }
@@ -35,20 +38,22 @@ class CreateOrderUseCase {
 
   CreateOrderUseCase(this.repository);
 
-  Future<Either<Failure, OrderEntity>> call(CreateOrderRequestDto request) async {
+  Future<Either<Failure, OrderEntity>> call(
+    OrderCreationCommand request,
+  ) async {
     // Validate request
     if (request.items.isEmpty) {
       return left(const ValidationFailure('Order must have at least one item'));
     }
-    
+
     if (request.customerName.trim().isEmpty) {
       return left(const ValidationFailure('Customer name is required'));
     }
-    
+
     if (request.customerPhone.trim().isEmpty) {
       return left(const ValidationFailure('Customer phone is required'));
     }
-    
+
     if (request.deliveryAddress.trim().isEmpty) {
       return left(const ValidationFailure('Delivery address is required'));
     }
@@ -67,7 +72,7 @@ class CreateOrderUseCase {
 //     if (params.orderId <= 0) {
 //       return left(const ValidationFailure('Order ID must be greater than 0'));
 //     }
-    
+
 //     return await repository.updateOrderStatus(params.orderId, params.status);
 //   }
 // }
@@ -76,10 +81,7 @@ class UpdateOrderStatusParams {
   final int orderId;
   final OrderStatus status;
 
-  UpdateOrderStatusParams({
-    required this.orderId,
-    required this.status,
-  });
+  UpdateOrderStatusParams({required this.orderId, required this.status});
 }
 
 /// UseCase để hủy đơn hàng
@@ -92,7 +94,7 @@ class CancelOrderUseCase {
     if (orderId <= 0) {
       return left(const ValidationFailure('Order ID must be greater than 0'));
     }
-    
+
     return await repository.cancelOrder(orderId, reason: reason);
   }
 }

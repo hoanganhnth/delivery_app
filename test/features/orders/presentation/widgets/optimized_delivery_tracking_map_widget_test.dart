@@ -1,12 +1,12 @@
 import 'package:delivery_app/features/orders/domain/entities/shipper_location_entity.dart';
-import 'package:delivery_app/features/orders/presentation/providers/delivery_tracking/delivery_tracking_notifier.dart';
-import 'package:delivery_app/features/orders/presentation/providers/delivery_tracking/delivery_tracking_state.dart';
-import 'package:delivery_app/features/orders/presentation/providers/shipper_location/shipper_location_notifier.dart';
-import 'package:delivery_app/features/orders/presentation/providers/shipper_location/shipper_location_state.dart';
+import 'package:delivery_app/features/orders/application/state/tracking/delivery_tracking_notifier.dart';
+import 'package:delivery_app/features/orders/application/state/tracking/delivery_tracking_state.dart';
+import 'package:delivery_app/features/orders/application/state/tracking/shipper_location_notifier.dart';
+import 'package:delivery_app/features/orders/application/state/tracking/shipper_location_state.dart';
 import 'package:delivery_app/features/orders/presentation/services/i_map_service.dart';
 import 'package:delivery_app/features/orders/presentation/services/mapbox_map_service.dart';
 import 'package:delivery_app/features/orders/presentation/services/tracking_map_platform.dart';
-import 'package:delivery_app/features/orders/presentation/widgets/track_order/optimized_delivery_tracking_map_widget.dart';
+import 'package:delivery_app/features/orders/presentation/platform/optimized_delivery_tracking_map_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';

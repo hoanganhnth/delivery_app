@@ -1,7 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
+import '../entities/address_upsert_command.dart';
 import '../entities/user_address_entity.dart';
-import '../../data/dtos/user_address_request_dto.dart';
 
 /// Repository interface for user address management
 abstract class UserAddressRepository {
@@ -14,13 +14,13 @@ abstract class UserAddressRepository {
   /// Tạo địa chỉ mới
   Future<Either<Failure, UserAddressEntity>> createAddress(
     int userId,
-    UserAddressRequestDto request,
+    AddressUpsertCommand request,
   );
 
   /// Cập nhật địa chỉ
   Future<Either<Failure, UserAddressEntity>> updateAddress(
     int addressId,
-    UserAddressRequestDto request,
+    AddressUpsertCommand request,
   );
 
   /// Xóa địa chỉ

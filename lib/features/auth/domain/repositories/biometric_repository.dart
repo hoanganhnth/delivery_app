@@ -1,7 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
 import '../entities/biometric_entity.dart';
-import '../../data/models/token_model.dart';
+import '../entities/auth_entity.dart';
 
 /// Repository interface for biometric authentication
 abstract class BiometricRepository {
@@ -23,7 +23,7 @@ abstract class BiometricRepository {
 
   /// Get saved auth session
   /// Returns null if no session is saved
-  Future<Either<Failure, TokenModel?>> getAuthSession();
+  Future<Either<Failure, AuthEntity?>> getAuthSession();
 
   /// Clear saved auth session
   Future<Either<Failure, void>> clearAuthSession();

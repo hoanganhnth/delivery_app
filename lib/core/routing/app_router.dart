@@ -59,8 +59,8 @@ class AppRouterPages {
   Widget orderConfirmation() => const OrderConfirmationScreen();
   Widget addressList() => const AddressListScreen();
   Widget addAddress() => const AddEditAddressScreen();
-  Widget editAddress(UserAddressEntity? address) =>
-      AddEditAddressScreen(address: address);
+  Widget editAddress(UserAddressEntity? address, {int? addressId}) =>
+      AddEditAddressScreen(address: address, addressId: addressId);
   Widget notFound() => const NotFoundScreen();
   Widget error() => const ErrorScreen();
 }
@@ -243,8 +243,13 @@ GoRouter createAppRouter({
         path: AppRoutes.editAddress,
         name: 'edit-address',
         builder: (context, state) {
-          final address = state.extra as UserAddressEntity?;
-          return pages.editAddress(address);
+          final address = state.extra is UserAddressEntity
+              ? state.extra! as UserAddressEntity
+              : null;
+          final addressId = parsePositiveRouteId(
+            state.uri.queryParameters['addressId'],
+          );
+          return pages.editAddress(address, addressId: addressId);
         },
       ),
 

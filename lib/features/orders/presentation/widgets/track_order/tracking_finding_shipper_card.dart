@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/generated/l10n.dart';
 
-class TrackingFindingShipperCard extends ConsumerWidget {
+class TrackingFindingShipperCard extends StatelessWidget {
   const TrackingFindingShipperCard({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -29,7 +27,7 @@ class TrackingFindingShipperCard extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
-                  color: ref.colors.textPrimary,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               SizedBox(height: 8.w),

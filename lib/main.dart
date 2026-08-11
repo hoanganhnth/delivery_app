@@ -20,7 +20,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:delivery_app/core/services/push_notification_service.dart';
 import 'package:delivery_app/core/services/push/customer_push_wake_coordinator.dart';
 import 'package:delivery_app/core/services/push/firebase_push_adapters.dart';
-import 'features/auth/presentation/providers/providers.dart';
+import 'features/auth/application/session/auth_notifier.dart';
+import 'features/auth/application/session/auth_state.dart';
 
 Future<void> main() async {
   runZonedGuarded<Future<void>>(

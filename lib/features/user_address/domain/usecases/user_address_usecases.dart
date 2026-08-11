@@ -1,8 +1,8 @@
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
+import '../entities/address_upsert_command.dart';
 import '../entities/user_address_entity.dart';
 import '../repositories/user_address_repository.dart';
-import '../../data/dtos/user_address_request_dto.dart';
 
 /// UseCase để lấy danh sách địa chỉ của người dùng
 class GetUserAddressesUseCase {
@@ -40,7 +40,7 @@ class CreateAddressUseCase {
 
   Future<Either<Failure, UserAddressEntity>> call(
     int userId,
-    UserAddressRequestDto request,
+    AddressUpsertCommand request,
   ) async {
     // Validate userId
     if (userId <= 0) {
@@ -65,7 +65,9 @@ class CreateAddressUseCase {
     }
 
     if (request.city.trim().isEmpty) {
-      return left(const ValidationFailure('Tỉnh/Thành phố không được để trống'));
+      return left(
+        const ValidationFailure('Tỉnh/Thành phố không được để trống'),
+      );
     }
 
     return await repository.createAddress(userId, request);
@@ -80,7 +82,7 @@ class UpdateAddressUseCase {
 
   Future<Either<Failure, UserAddressEntity>> call(
     int addressId,
-    UserAddressRequestDto request,
+    AddressUpsertCommand request,
   ) async {
     // Validate addressId
     if (addressId <= 0) {
@@ -105,7 +107,9 @@ class UpdateAddressUseCase {
     }
 
     if (request.city.trim().isEmpty) {
-      return left(const ValidationFailure('Tỉnh/Thành phố không được để trống'));
+      return left(
+        const ValidationFailure('Tỉnh/Thành phố không được để trống'),
+      );
     }
 
     return await repository.updateAddress(addressId, request);

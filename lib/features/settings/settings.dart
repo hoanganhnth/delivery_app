@@ -3,6 +3,11 @@ library;
 
 // Screens
 export 'presentation/screens/settings_screen.dart';
+export 'presentation/pages/settings_page.dart';
+export 'application/settings_effect.dart';
+export 'application/settings_intent.dart';
+export 'application/settings_state.dart';
+export 'application/settings_view_model.dart';
 
 // Add other exports as the feature grows:
 // export 'domain/entities/settings_entity.dart';

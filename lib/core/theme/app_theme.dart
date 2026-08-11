@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'app_colors.dart';
 import 'app_text_styles.dart';
 import 'app_dimensions.dart';
+import '../design_system/theme/app_semantic_colors.dart';
 
 enum AppThemeType {
   light,
@@ -35,6 +36,17 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: _getBrightness(),
+      extensions: <ThemeExtension<dynamic>>[
+        AppSemanticColors(
+          success: colors.success,
+          warning: colors.warning,
+          info: colors.info,
+          onSuccess: colors.onPrimary,
+          onWarning: colors.onPrimary,
+          onInfo: colors.onPrimary,
+          surfaceRaised: colors.cardBackground,
+        ),
+      ],
 
       // Color scheme
       colorScheme: ColorScheme(

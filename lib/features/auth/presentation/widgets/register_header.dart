@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:delivery_app/core/theme/theme_extensions.dart';
-import 'package:delivery_app/core/routing/routing.dart';
 import '../../../../generated/l10n.dart';
 
-class RegisterHeader extends ConsumerWidget {
-  const RegisterHeader({super.key});
+class RegisterHeader extends StatelessWidget {
+  const RegisterHeader({super.key, this.onBack});
+
+  final VoidCallback? onBack;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     final s = S.of(context);
     return SizedBox(
       height: 256,
@@ -22,14 +22,16 @@ class RegisterHeader extends ConsumerWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    ref.colors.primary.withValues(alpha: 0.3),
-                    ref.colors.background.withValues(alpha: 0.9),
+                    scheme.primary.withValues(alpha: 0.3),
+                    Theme.of(
+                      context,
+                    ).scaffoldBackgroundColor.withValues(alpha: 0.9),
                   ],
                 ),
               ),
             ),
           ),
-          
+
           // Gradient overlay
           Positioned.fill(
             child: Container(
@@ -39,13 +41,15 @@ class RegisterHeader extends ConsumerWidget {
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    ref.colors.background.withValues(alpha: 0.9),
+                    Theme.of(
+                      context,
+                    ).scaffoldBackgroundColor.withValues(alpha: 0.9),
                   ],
                 ),
               ),
             ),
           ),
-          
+
           // Back button
           Positioned(
             top: MediaQuery.of(context).padding.top + 16,
@@ -63,11 +67,11 @@ class RegisterHeader extends ConsumerWidget {
               ),
               child: IconButton(
                 icon: const Icon(Icons.arrow_back, color: Color(0xFF1C160D)),
-                onPressed: () => context.goBack(),
+                onPressed: onBack,
               ),
             ),
           ),
-          
+
           // Content
           Positioned(
             bottom: 24,
@@ -82,7 +86,7 @@ class RegisterHeader extends ConsumerWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: ref.colors.primary,
+                    color: scheme.primary,
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(

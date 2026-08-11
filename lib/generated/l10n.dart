@@ -2564,6 +2564,16 @@ class S {
     );
   }
 
+  /// `We couldn't determine your current account. Please try again.`
+  String get notificationAccountUnavailable {
+    return Intl.message(
+      'We couldn\'t determine your current account. Please try again.',
+      name: 'notificationAccountUnavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Just now`
   String get notificationTimeJustNow {
     return Intl.message(

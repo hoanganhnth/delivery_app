@@ -1,12 +1,16 @@
 import 'package:delivery_app/core/error/failures.dart';
 import 'package:delivery_app/core/services/push/customer_push_wake_coordinator.dart';
+import 'package:delivery_app/features/notification/application/notification_effect.dart';
+import 'package:delivery_app/features/notification/application/notification_intent.dart';
+import 'package:delivery_app/features/notification/application/notification_state.dart';
+import 'package:delivery_app/features/notification/application/notification_view_model.dart';
 import 'package:delivery_app/features/notification/domain/entities/notification_entity.dart';
 import 'package:delivery_app/features/notification/domain/repositories/notification_repository.dart';
-import 'package:delivery_app/features/notification/presentation/providers/notification_providers.dart';
+import 'package:delivery_app/features/notification/di/notification_providers.dart';
 import 'package:delivery_app/features/notification/presentation/screens/notification_screen.dart';
 import 'package:delivery_app/features/profile/domain/entities/user_entity.dart';
 import 'package:delivery_app/features/profile/domain/repositories/profile_repository.dart';
-import 'package:delivery_app/features/profile/presentation/providers/profile_providers.dart';
+import 'package:delivery_app/features/profile/di/profile_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,6 +20,38 @@ import '../../../../support/app_harness.dart';
 import '../../../../support/fulfilment_builders.dart';
 
 void main() {
+  test(
+    'view model maps domain rows and queues action failures as effects',
+    () async {
+      final notifications = _FakeNotificationRepository();
+      final container = ProviderContainer(
+        overrides: [
+          profileRepositoryProvider.overrideWithValue(_FakeProfileRepository()),
+          notificationRepositoryProvider.overrideWithValue(notifications),
+        ],
+      );
+      addTearDown(container.dispose);
+      final notifier = container.read(notificationViewModelProvider.notifier);
+
+      await notifier.dispatch(const NotificationLoadRequested());
+      final loaded = container.read(notificationViewModelProvider);
+      expect(loaded.items.first.tone, NotificationTone.delivery);
+      expect(loaded.items.last.tone, NotificationTone.delivery);
+      expect(loaded.unreadCount, 2);
+
+      notifications.markFailure = const ServerFailure('Không thể đánh dấu');
+      await notifier.dispatch(const NotificationReadRequested(901));
+      final failed = container.read(notificationViewModelProvider);
+      expect(failed.effects.single.effect, isA<NotificationShowMessage>());
+      expect(failed.items.first.isRead, isFalse);
+
+      await notifier.dispatch(
+        NotificationEffectConsumed(failed.effects.single.id),
+      );
+      expect(container.read(notificationViewModelProvider).effects, isEmpty);
+    },
+  );
+
   testWidgets(
     'notification actions expose failure and retry without losing rows',
     (tester) async {

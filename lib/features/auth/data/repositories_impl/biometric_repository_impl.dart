@@ -1,6 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/error_mapper.dart';
 import '../../../../core/error/failures.dart';
+import '../../domain/entities/auth_entity.dart';
 import '../../domain/entities/biometric_entity.dart';
 import '../../domain/repositories/biometric_repository.dart';
 import '../datasources/biometric_local_datasource.dart';
@@ -67,10 +68,10 @@ class BiometricRepositoryImpl implements BiometricRepository {
   }
 
   @override
-  Future<Either<Failure, TokenModel?>> getAuthSession() async {
+  Future<Either<Failure, AuthEntity?>> getAuthSession() async {
     try {
       final result = await localDataSource.getAuthSession();
-      return right(result);
+      return right(result?.toEntity());
     } on Exception catch (e) {
       return left(mapExceptionToFailure(e));
     } catch (e) {

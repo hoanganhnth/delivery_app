@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:delivery_app/core/theme/theme_extensions.dart';
 import '../../../../generated/l10n.dart';
 
-class AuthFooter extends ConsumerWidget {
+class AuthFooter extends StatelessWidget {
   const AuthFooter({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     final s = S.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
@@ -15,27 +14,25 @@ class AuthFooter extends ConsumerWidget {
         TextSpan(
           style: TextStyle(
             fontSize: 11,
-            color: ref.colors.secondary.withValues(alpha: 0.6),
+            color: scheme.secondary.withValues(alpha: 0.6),
             height: 1.5,
           ),
           children: [
-            TextSpan(
-              text: s.termsPrefix,
-            ),
+            TextSpan(text: s.termsPrefix),
             TextSpan(
               text: s.termsOfService,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w700,
-                color: Color(0xFF1C160D),
+                color: scheme.onSurface,
                 decoration: TextDecoration.underline,
               ),
             ),
             TextSpan(text: s.termsAnd),
             TextSpan(
               text: s.privacyPolicy,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w700,
-                color: Color(0xFF1C160D),
+                color: scheme.onSurface,
                 decoration: TextDecoration.underline,
               ),
             ),

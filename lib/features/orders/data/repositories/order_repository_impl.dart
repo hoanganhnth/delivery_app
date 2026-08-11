@@ -1,6 +1,7 @@
 import 'package:delivery_app/core/error/error_mapper.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
+import '../../domain/entities/order_creation_command.dart';
 import '../../domain/entities/order_entity.dart';
 import '../../domain/repositories/order_repository.dart';
 import '../datasources/order_remote_datasource.dart';
@@ -44,11 +45,10 @@ class OrderRepositoryImpl implements OrderRepository {
 
   @override
   Future<Either<Failure, OrderEntity>> createOrder(
-    CreateOrderRequestDto request,
+    OrderCreationCommand request,
   ) async {
     try {
-      // Truyền trực tiếp CreateOrderRequestDto lên server
-      final dto = await _remoteDataSource.createOrderWithDto(request);
+      final dto = await _remoteDataSource.createOrderWithDto(_toDto(request));
       return right(dto.toEntity());
     } on Exception catch (e) {
       return left(mapExceptionToFailure(e));
@@ -74,4 +74,27 @@ class OrderRepositoryImpl implements OrderRepository {
       return left(ServerFailure('Không thể hủy đơn hàng'));
     }
   }
+
+  CreateOrderRequestDto _toDto(OrderCreationCommand command) =>
+      CreateOrderRequestDto(
+        restaurantId: command.restaurantId,
+        deliveryAddress: command.deliveryAddress,
+        deliveryLat: command.deliveryLat,
+        deliveryLng: command.deliveryLng,
+        customerName: command.customerName,
+        customerPhone: command.customerPhone,
+        paymentMethod: command.paymentMethod,
+        notes: command.notes,
+        voucherIds: command.voucherIds,
+        items: command.items
+            .map(
+              (item) => OrderItemRequest(
+                menuItemId: item.menuItemId,
+                quantity: item.quantity,
+                notes: item.notes,
+                flashSaleItemId: item.flashSaleItemId,
+              ),
+            )
+            .toList(growable: false),
+      );
 }

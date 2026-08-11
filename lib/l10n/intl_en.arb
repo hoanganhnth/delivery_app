@@ -342,6 +342,7 @@
     "notificationMarkAllRead": "Mark all as read",
     "notificationEmptyTitle": "No notifications",
     "notificationEmptyDesc": "Notifications will appear here",
+    "notificationAccountUnavailable": "We couldn't determine your current account. Please try again.",
     "notificationTimeJustNow": "Just now",
     "notificationTimeMinutes": "{minutes} minutes ago",
     "@notificationTimeMinutes": {

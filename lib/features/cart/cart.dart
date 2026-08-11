@@ -14,8 +14,14 @@ export 'data/dtos/cart_dto.dart';
 export 'data/dtos/cart_item_dto.dart';
 export 'data/repositories_impl/cart_repository_impl.dart';
 
-// Presentation exports
-export 'presentation/providers/providers.dart'; // Barrel export for all providers
+// Application state and dependency wiring
+export 'application/cart_notifier.dart';
+export 'application/cart_state.dart';
+export 'di/cart_di_providers.dart';
+
+// Cross-feature application boundary
+export 'application/cart_commands.dart';
+export 'di/cart_commands_provider.dart';
 
 export 'presentation/screens/cart_screen.dart';
 export 'presentation/screens/checkout_screen.dart';

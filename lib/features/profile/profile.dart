@@ -9,4 +9,4 @@ export 'presentation/screens/profile_screen.dart';
 // export 'domain/usecases/get_profile_usecase.dart';
 // export 'domain/usecases/update_profile_usecase.dart';
 // export 'data/repositories_impl/profile_repository_impl.dart';
-// export 'presentation/providers/profile_providers.dart';
+// Application state and DI stay internal to the feature boundary.

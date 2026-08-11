@@ -1,6 +1,7 @@
 import 'package:delivery_app/core/error/error_mapper.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
+import '../../domain/entities/address_upsert_command.dart';
 import '../../domain/entities/user_address_entity.dart';
 import '../../domain/repositories/user_address_repository.dart';
 import '../datasources/user_address_remote_datasource.dart';
@@ -14,7 +15,9 @@ class UserAddressRepositoryImpl implements UserAddressRepository {
   UserAddressRepositoryImpl(this._remoteDataSource);
 
   @override
-  Future<Either<Failure, List<UserAddressEntity>>> getUserAddresses(int userId) async {
+  Future<Either<Failure, List<UserAddressEntity>>> getUserAddresses(
+    int userId,
+  ) async {
     try {
       final dtos = await _remoteDataSource.getUserAddresses(userId);
       return right(dtos.map((dto) => dto.toEntity()).toList());
@@ -26,7 +29,9 @@ class UserAddressRepositoryImpl implements UserAddressRepository {
   }
 
   @override
-  Future<Either<Failure, UserAddressEntity>> getAddressById(int addressId) async {
+  Future<Either<Failure, UserAddressEntity>> getAddressById(
+    int addressId,
+  ) async {
     try {
       final dto = await _remoteDataSource.getAddressById(addressId);
       return right(dto.toEntity());
@@ -40,10 +45,13 @@ class UserAddressRepositoryImpl implements UserAddressRepository {
   @override
   Future<Either<Failure, UserAddressEntity>> createAddress(
     int userId,
-    UserAddressRequestDto request,
+    AddressUpsertCommand request,
   ) async {
     try {
-      final dto = await _remoteDataSource.createAddress(userId, request);
+      final dto = await _remoteDataSource.createAddress(
+        userId,
+        _toDto(request),
+      );
       return right(dto.toEntity());
     } on Exception catch (e) {
       return left(mapExceptionToFailure(e));
@@ -55,10 +63,13 @@ class UserAddressRepositoryImpl implements UserAddressRepository {
   @override
   Future<Either<Failure, UserAddressEntity>> updateAddress(
     int addressId,
-    UserAddressRequestDto request,
+    AddressUpsertCommand request,
   ) async {
     try {
-      final dto = await _remoteDataSource.updateAddress(addressId, request);
+      final dto = await _remoteDataSource.updateAddress(
+        addressId,
+        _toDto(request),
+      );
       return right(dto.toEntity());
     } on Exception catch (e) {
       return left(mapExceptionToFailure(e));
@@ -80,7 +91,9 @@ class UserAddressRepositoryImpl implements UserAddressRepository {
   }
 
   @override
-  Future<Either<Failure, UserAddressEntity>> setDefaultAddress(int addressId) async {
+  Future<Either<Failure, UserAddressEntity>> setDefaultAddress(
+    int addressId,
+  ) async {
     try {
       final dto = await _remoteDataSource.setDefaultAddress(addressId);
       return right(dto.toEntity());
@@ -90,4 +103,19 @@ class UserAddressRepositoryImpl implements UserAddressRepository {
       return left(ServerFailure('Unexpected error: ${e.toString()}'));
     }
   }
+
+  UserAddressRequestDto _toDto(AddressUpsertCommand command) =>
+      UserAddressRequestDto(
+        label: command.label,
+        recipientName: command.recipientName,
+        phoneNumber: command.phoneNumber,
+        addressLine: command.addressLine,
+        ward: command.ward,
+        district: command.district,
+        city: command.city,
+        postalCode: command.postalCode,
+        latitude: command.latitude,
+        longitude: command.longitude,
+        isDefault: command.isDefault,
+      );
 }

@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:delivery_app/core/theme/theme_extensions.dart';
 import 'package:delivery_app/core/utils/screen_util_extensions.dart';
 import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
 import 'package:delivery_app/generated/l10n.dart';
 
 /// Order Timeline Widget - Hiển thị 4 bước cơ bản của đơn hàng
 /// Đây là trạng thái ĐƠN HÀNG (order), không phải delivery tracking
-class DeliveryTimeline extends ConsumerWidget {
+class DeliveryTimeline extends StatelessWidget {
   final OrderStatus status;
   final String? rawBackendStatus; // Để hiển thị subtitle chi tiết hơn
 
@@ -19,7 +17,7 @@ class DeliveryTimeline extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final currentStepIndex = _getStepIndex(status, rawBackendStatus);
 
     return Column(
@@ -85,6 +83,8 @@ class DeliveryTimeline extends ConsumerWidget {
           return 2; // Đang giao
         case 'DELIVERED':
           return 3; // Thành công
+        case 'SHIPPER_NOT_FOUND':
+          return 0; // Terminal matching failure; detail screen hides timeline.
         default:
           break;
       }
@@ -96,6 +96,8 @@ class DeliveryTimeline extends ConsumerWidget {
         return 0;
       case OrderStatus.delivering:
         return 2;
+      case OrderStatus.shipperNotFound:
+        return 0;
       case OrderStatus.delivered:
         return 3;
       case OrderStatus.cancelled:
@@ -104,7 +106,11 @@ class DeliveryTimeline extends ConsumerWidget {
   }
 
   /// Lấy subtitle phù hợp cho từng step
-  String _getSubtitle(BuildContext context, int stepIndex, int currentStepIndex) {
+  String _getSubtitle(
+    BuildContext context,
+    int stepIndex,
+    int currentStepIndex,
+  ) {
     if (stepIndex > currentStepIndex) {
       // Chưa đến bước này
       return '';
@@ -127,7 +133,7 @@ class DeliveryTimeline extends ConsumerWidget {
 }
 
 /// Single Timeline Step
-class _TimelineStep extends ConsumerWidget {
+class _TimelineStep extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
@@ -147,8 +153,8 @@ class _TimelineStep extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final colors = ref.colors;
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     final iconSize = isLarge ? 40.w : 32.w;
     final titleSize = isLarge ? ResponsiveSize.fontXl : ResponsiveSize.fontM;
 
@@ -163,7 +169,9 @@ class _TimelineStep extends ConsumerWidget {
               width: iconSize,
               height: iconSize,
               decoration: BoxDecoration(
-                color: isCompleted || isActive ? colors.primary : colors.border,
+                color: isCompleted || isActive
+                    ? colors.primary
+                    : colors.outlineVariant,
                 shape: BoxShape.circle,
                 boxShadow: isActive
                     ? [
@@ -185,7 +193,7 @@ class _TimelineStep extends ConsumerWidget {
                 icon,
                 color: isCompleted || isActive
                     ? Colors.white
-                    : colors.textSecondary,
+                    : colors.onSurfaceVariant,
                 size: isLarge ? 20.w : 16.w,
               ),
             ),
@@ -193,7 +201,7 @@ class _TimelineStep extends ConsumerWidget {
               Container(
                 width: 2.w,
                 height: isLarge ? 48.h : 40.h,
-                color: isCompleted ? colors.primary : colors.border,
+                color: isCompleted ? colors.primary : colors.outlineVariant,
               ),
           ],
         ),
@@ -213,8 +221,8 @@ class _TimelineStep extends ConsumerWidget {
                     color: isActive
                         ? colors.primary
                         : isCompleted
-                        ? colors.textPrimary
-                        : colors.textSecondary,
+                        ? colors.onSurface
+                        : colors.onSurfaceVariant,
                     letterSpacing: isActive ? -0.5 : 0,
                   ),
                 ),
@@ -226,8 +234,8 @@ class _TimelineStep extends ConsumerWidget {
                       fontSize: ResponsiveSize.fontS,
                       fontWeight: FontWeight.w500,
                       color: isCompleted
-                          ? colors.textSecondary
-                          : colors.textSecondary.withValues(alpha: 0.5),
+                          ? colors.onSurfaceVariant
+                          : colors.onSurfaceVariant.withValues(alpha: 0.5),
                     ),
                   ),
                 ],

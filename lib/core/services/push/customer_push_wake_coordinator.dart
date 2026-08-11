@@ -1,4 +1,5 @@
-import 'package:delivery_app/features/orders/presentation/providers/providers.dart';
+import 'package:delivery_app/features/orders/application/state/orders/order_detail_notifier.dart';
+import 'package:delivery_app/features/orders/application/state/orders/orders_list_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 

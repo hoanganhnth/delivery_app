@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:delivery_app/core/network/_riverpod/authenticated_network_providers.dart';
-import 'package:delivery_app/features/auth/presentation/providers/di/storage_di_providers.dart';
+import 'package:delivery_app/features/auth/di/storage_di_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'push/firebase_push_adapters.dart';

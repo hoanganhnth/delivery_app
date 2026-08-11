@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:go_router/go_router.dart';
-import 'package:delivery_app/features/auth/presentation/providers/providers.dart';
+import 'package:delivery_app/features/auth/application/session/auth_notifier.dart';
+import 'package:delivery_app/features/auth/application/session/auth_state.dart';
 import 'package:delivery_app/core/routing/app_router.dart';
 import 'package:delivery_app/core/routing/providers/riverpod_auth_notifier.dart';
 import 'package:delivery_app/core/routing/providers/router_config.dart';
@@ -32,10 +33,7 @@ GoRouter router(Ref ref) {
   ref.onDispose(authNotifier.dispose);
 
   // Build the router using pure-Dart factory
-  final router = createAppRouter(
-    authNotifier: authNotifier,
-    config: config,
-  );
+  final router = createAppRouter(authNotifier: authNotifier, config: config);
 
   // Initialise deep links
   ref.read(deepLinkServiceProvider).initialize(router);

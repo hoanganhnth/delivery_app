@@ -1,9 +1,11 @@
 import 'package:delivery_app/core/error/failures.dart';
+import 'package:delivery_app/features/cart/application/cart_commands.dart';
+import 'package:delivery_app/features/cart/di/cart_commands_provider.dart';
 import 'package:delivery_app/features/cart/domain/entities/cart_entity.dart';
 import 'package:delivery_app/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:delivery_app/features/cart/domain/repositories/cart_repository.dart';
-import 'package:delivery_app/features/cart/presentation/providers/di/cart_di_providers.dart';
-import 'package:delivery_app/features/cart/presentation/providers/state/cart_notifier.dart';
+import 'package:delivery_app/features/cart/di/cart_di_providers.dart';
+import 'package:delivery_app/features/cart/application/cart_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
@@ -11,6 +13,25 @@ import 'package:fpdart/fpdart.dart';
 import '../../../../support/fulfilment_builders.dart';
 
 void main() {
+  test('public cart command port preserves CartNotifier invariants', () async {
+    final repository = _InMemoryCartRepository();
+    final container = _container(repository);
+    addTearDown(container.dispose);
+    await container.read(cartProvider.future);
+    final commands = container.read(cartCommandsProvider);
+
+    await commands.addItem(buildCartItem());
+    await expectLater(
+      commands.addItem(buildCartItem(menuItemId: 302, restaurantId: 202)),
+      throwsA(isA<ValidationFailure>()),
+    );
+    await commands.updateItemQuantity(301, 2);
+
+    expect(commands, isA<CartCommands>());
+    expect(container.read(cartProvider).value?.totalItems, 2);
+    expect(container.read(cartProvider).value?.currentRestaurantId, 201);
+  });
+
   test('cart actions add, update notes/quantity, remove and clear', () async {
     final repository = _InMemoryCartRepository();
     final container = _container(repository);
@@ -40,32 +61,33 @@ void main() {
     expect(container.read(cartProvider).value?.isEmpty, isTrue);
   });
 
-  test('cross-restaurant and storage failures preserve the current cart for retry', () async {
-    final repository = _InMemoryCartRepository();
-    final container = _container(repository);
-    addTearDown(container.dispose);
-    await container.read(cartProvider.future);
-    final notifier = container.read(cartProvider.notifier);
-    await notifier.addItem(buildCartItem());
+  test(
+    'cross-restaurant and storage failures preserve the current cart for retry',
+    () async {
+      final repository = _InMemoryCartRepository();
+      final container = _container(repository);
+      addTearDown(container.dispose);
+      await container.read(cartProvider.future);
+      final notifier = container.read(cartProvider.notifier);
+      await notifier.addItem(buildCartItem());
 
-    await expectLater(
-      notifier.addItem(
-        buildCartItem(menuItemId: 302, restaurantId: 202),
-      ),
-      throwsA(isA<ValidationFailure>()),
-    );
-    expect(container.read(cartProvider).value?.items.single.menuItemId, 301);
+      await expectLater(
+        notifier.addItem(buildCartItem(menuItemId: 302, restaurantId: 202)),
+        throwsA(isA<ValidationFailure>()),
+      );
+      expect(container.read(cartProvider).value?.items.single.menuItemId, 301);
 
-    repository.nextFailure = const CacheFailure('Không ghi được giỏ hàng');
-    await expectLater(
-      notifier.updateItemQuantity(301, 2),
-      throwsA(isA<CacheFailure>()),
-    );
-    expect(container.read(cartProvider).value?.items.single.quantity, 1);
+      repository.nextFailure = const CacheFailure('Không ghi được giỏ hàng');
+      await expectLater(
+        notifier.updateItemQuantity(301, 2),
+        throwsA(isA<CacheFailure>()),
+      );
+      expect(container.read(cartProvider).value?.items.single.quantity, 1);
 
-    await notifier.updateItemQuantity(301, 2);
-    expect(container.read(cartProvider).value?.items.single.quantity, 2);
-  });
+      await notifier.updateItemQuantity(301, 2);
+      expect(container.read(cartProvider).value?.items.single.quantity, 2);
+    },
+  );
 }
 
 ProviderContainer _container(_InMemoryCartRepository repository) {
@@ -171,7 +193,6 @@ class _InMemoryCartRepository implements CartRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> canAddFromRestaurant(
-    num restaurantId,
-  ) async => Right(cart.canAddFromRestaurant(restaurantId));
+  Future<Either<Failure, bool>> canAddFromRestaurant(num restaurantId) async =>
+      Right(cart.canAddFromRestaurant(restaurantId));
 }

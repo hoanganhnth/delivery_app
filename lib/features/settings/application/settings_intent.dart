@@ -1,0 +1,17 @@
+sealed class SettingsIntent {
+  const SettingsIntent();
+}
+
+final class SettingsThemeToggled extends SettingsIntent {
+  const SettingsThemeToggled();
+}
+
+final class SettingsAboutRequested extends SettingsIntent {
+  const SettingsAboutRequested();
+}
+
+final class SettingsEffectConsumed extends SettingsIntent {
+  const SettingsEffectConsumed(this.effectId);
+
+  final int effectId;
+}

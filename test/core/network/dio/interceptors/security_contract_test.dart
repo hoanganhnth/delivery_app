@@ -14,22 +14,31 @@ void main() {
     expect(source, isNot(contains('response?.data')));
   });
 
-  test('expired-session callback cannot invoke authenticated logout cleanup', () {
-    final wiring = File(
-      'lib/features/auth/presentation/providers/di/auth_network_providers.dart',
-    ).readAsStringSync();
-    final profile = File(
-      'lib/features/profile/presentation/pages/profile_page.dart',
-    ).readAsStringSync();
-    final pushBackend = File(
-      'lib/core/services/push/firebase_push_adapters.dart',
-    ).readAsStringSync();
+  test(
+    'expired-session callback cannot invoke authenticated logout cleanup',
+    () {
+      final wiring = File(
+        'lib/features/auth/di/auth_network_providers.dart',
+      ).readAsStringSync();
+      final profile = File(
+        'lib/features/profile/presentation/pages/profile_page.dart',
+      ).readAsStringSync();
+      final pushBackend = File(
+        'lib/core/services/push/firebase_push_adapters.dart',
+      ).readAsStringSync();
 
-    expect(wiring, contains('onUnauthorized: authNotifier.handleUnauthorized'));
-    expect(wiring, isNot(contains('onUnauthorized: authNotifier.logout')));
-    expect(profile, isNot(contains('appInitializerServiceProvider).cleanup')));
-    expect(pushBackend, contains('AuthInterceptor.skipAuthRefreshKey'));
-  });
+      expect(
+        wiring,
+        contains('onUnauthorized: authNotifier.handleUnauthorized'),
+      );
+      expect(wiring, isNot(contains('onUnauthorized: authNotifier.logout')));
+      expect(
+        profile,
+        isNot(contains('appInitializerServiceProvider).cleanup')),
+      );
+      expect(pushBackend, contains('AuthInterceptor.skipAuthRefreshKey'));
+    },
+  );
 
   test('auth, socket, map and order logs never include user payloads', () {
     final auth = File(

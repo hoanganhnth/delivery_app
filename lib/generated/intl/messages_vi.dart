@@ -477,6 +477,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "noTrackingInfo": MessageLookupByLibrary.simpleMessage(
       "Chưa có thông tin theo dõi",
     ),
+    "notificationAccountUnavailable": MessageLookupByLibrary.simpleMessage(
+      "Không xác định được tài khoản hiện tại. Vui lòng thử lại.",
+    ),
     "notificationEmptyDesc": MessageLookupByLibrary.simpleMessage(
       "Các thông báo sẽ xuất hiện ở đây",
     ),

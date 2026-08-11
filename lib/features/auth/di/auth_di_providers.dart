@@ -1,0 +1,69 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import 'package:delivery_app/core/network/_riverpod/network_providers.dart';
+import 'package:delivery_app/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:delivery_app/features/auth/data/datasources/auth_remote_datasource_impl.dart';
+import 'package:delivery_app/features/auth/data/repositories_impl/auth_repository_impl.dart';
+import 'package:delivery_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:delivery_app/features/auth/domain/usecases/login_usecase.dart';
+import 'package:delivery_app/features/auth/domain/usecases/register_usecase.dart';
+import 'package:delivery_app/features/auth/domain/usecases/refresh_token_usecase.dart';
+import 'package:delivery_app/features/auth/domain/usecases/social_login_usecase.dart';
+import 'package:delivery_app/features/auth/domain/usecases/logout_usecase.dart';
+
+part 'auth_di_providers.g.dart';
+
+// Use the global Dio provider from core
+// Auth endpoints don't need authentication, so we use the basic dio
+
+// API service provider (for auth endpoints - no auth required)
+@Riverpod(keepAlive: true)
+AuthApiService authApiService(Ref ref) {
+  final dio = ref.watch(dioProvider);
+  return AuthApiService(dio);
+}
+
+// Data source provider
+@Riverpod(keepAlive: true)
+AuthRemoteDataSource authRemoteDataSource(Ref ref) {
+  final apiService = ref.watch(authApiServiceProvider);
+  return AuthRemoteDataSourceImpl(apiService);
+}
+
+// Repository provider
+@Riverpod(keepAlive: true)
+AuthRepository authRepository(Ref ref) {
+  final remoteDataSource = ref.watch(authRemoteDataSourceProvider);
+  return AuthRepositoryImpl(remoteDataSource);
+}
+
+// Use cases providers
+@Riverpod(keepAlive: true)
+LoginUseCase loginUseCase(Ref ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return LoginUseCase(repository);
+}
+
+@Riverpod(keepAlive: true)
+RegisterUseCase registerUseCase(Ref ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return RegisterUseCase(repository);
+}
+
+@Riverpod(keepAlive: true)
+RefreshTokenUseCase refreshTokenUseCase(Ref ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return RefreshTokenUseCase(repository);
+}
+
+@Riverpod(keepAlive: true)
+SocialLoginUseCase socialLoginUseCase(Ref ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return SocialLoginUseCase(repository);
+}
+
+@Riverpod(keepAlive: true)
+LogoutUseCase logoutUseCase(Ref ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return LogoutUseCase(repository);
+}

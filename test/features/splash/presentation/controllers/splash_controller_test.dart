@@ -1,21 +1,22 @@
-import 'package:delivery_app/core/routing/constants/app_routes.dart';
 import 'package:delivery_app/core/services/app_initializer/_riverpod/app_initializer_provider.dart';
 import 'package:delivery_app/core/services/app_initializer/i_app_initializer_service.dart';
-import 'package:delivery_app/features/auth/presentation/providers/session/auth_notifier.dart';
-import 'package:delivery_app/features/auth/presentation/providers/session/auth_state.dart';
-import 'package:delivery_app/features/splash/presentation/controllers/splash_controller.dart';
-import 'package:flutter/material.dart';
+import 'package:delivery_app/features/auth/application/session/auth_notifier.dart';
+import 'package:delivery_app/features/auth/application/session/auth_state.dart';
+import 'package:delivery_app/features/splash/application/splash_delay.dart';
+import 'package:delivery_app/features/splash/application/splash_effect.dart';
+import 'package:delivery_app/features/splash/application/splash_intent.dart';
+import 'package:delivery_app/features/splash/application/splash_state.dart';
+import 'package:delivery_app/features/splash/application/splash_view_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:go_router/go_router.dart';
 
 void main() {
   test(
-    'authenticated initialization waits through the port and navigates main',
+    'authenticated startup waits through the port then emits main navigation',
     () async {
       final delay = _FakeSplashDelay();
       final initializer = _FakeAppInitializer();
-      final harness = _Harness(
+      final container = _container(
         authState: const AuthState.authenticated(
           accessToken: 'access',
           refreshToken: 'refresh',
@@ -23,98 +24,67 @@ void main() {
         delay: delay,
         initializer: initializer,
       );
-      addTearDown(harness.dispose);
+      addTearDown(container.dispose);
+      container.listen(splashViewModelProvider, (_, _) {});
 
-      await harness.controller.initializeApp(harness.router);
+      await container
+          .read(splashViewModelProvider.notifier)
+          .dispatch(const SplashStartRequested());
 
       expect(delay.durations, [const Duration(seconds: 2)]);
       expect(initializer.initializeCalls, 1);
-      expect(harness.controller.state, SplashState.navigating);
-      expect(harness.location, AppRoutes.main);
+      expect(
+        container.read(splashViewModelProvider).phase,
+        SplashPhase.navigating,
+      );
+      expect(
+        container.read(splashViewModelProvider).effects.single.effect,
+        isA<SplashNavigateToMain>(),
+      );
     },
   );
-
-  test('unauthenticated initialization navigates login', () async {
-    final harness = _Harness(
-      authState: const AuthState.unauthenticated(),
-      delay: _FakeSplashDelay(),
-      initializer: _FakeAppInitializer(),
-    );
-    addTearDown(harness.dispose);
-
-    await harness.controller.initializeApp(harness.router);
-
-    expect(harness.location, AppRoutes.login);
-  });
 
   test(
-    'initialization exception exposes error and retry can converge',
+    'failed startup retains an observable error and emits login navigation',
     () async {
-      final initializer = _FakeAppInitializer()..failuresRemaining = 1;
-      final harness = _Harness(
+      final container = _container(
         authState: const AuthState.unauthenticated(),
         delay: _FakeSplashDelay(),
-        initializer: initializer,
+        initializer: _FakeAppInitializer()..failuresRemaining = 1,
       );
-      addTearDown(harness.dispose);
+      addTearDown(container.dispose);
+      container.listen(splashViewModelProvider, (_, _) {});
 
-      await harness.controller.initializeApp(harness.router);
-      expect(harness.controller.state, SplashState.error);
-      expect(harness.location, AppRoutes.login);
+      await container
+          .read(splashViewModelProvider.notifier)
+          .dispatch(const SplashStartRequested());
 
-      await harness.controller.initializeApp(harness.router);
-      expect(harness.controller.state, SplashState.navigating);
-      expect(initializer.initializeCalls, 2);
+      expect(container.read(splashViewModelProvider).phase, SplashPhase.error);
+      expect(
+        container.read(splashViewModelProvider).effects.single.effect,
+        isA<SplashNavigateToLogin>(),
+      );
     },
   );
 }
 
-class _Harness {
-  _Harness({
-    required AuthState authState,
-    required SplashDelayPort delay,
-    required IAppInitializerService initializer,
-  }) {
-    router = GoRouter(
-      initialLocation: AppRoutes.splash,
-      routes: [
-        GoRoute(path: AppRoutes.splash, builder: (_, _) => const SizedBox()),
-        GoRoute(path: AppRoutes.login, builder: (_, _) => const SizedBox()),
-        GoRoute(path: AppRoutes.main, builder: (_, _) => const SizedBox()),
-      ],
-    );
-    container = ProviderContainer(
-      overrides: [
-        authProvider.overrideWithValue(authState),
-        splashDelayProvider.overrideWithValue(delay),
-        appInitializerServiceProvider.overrideWithValue(initializer),
-      ],
-    );
-    subscription = container.listen(splashControllerProvider, (_, _) {});
-  }
-
-  late final GoRouter router;
-  late final ProviderContainer container;
-  late final ProviderSubscription<SplashState> subscription;
-
-  SplashController get controller =>
-      container.read(splashControllerProvider.notifier);
-  String get location => router.routeInformationProvider.value.uri.path;
-
-  void dispose() {
-    subscription.close();
-    container.dispose();
-    router.dispose();
-  }
-}
+ProviderContainer _container({
+  required AuthState authState,
+  required SplashDelayPort delay,
+  required IAppInitializerService initializer,
+}) => ProviderContainer(
+  overrides: [
+    authProvider.overrideWithValue(authState),
+    splashDelayProvider.overrideWithValue(delay),
+    appInitializerServiceProvider.overrideWithValue(initializer),
+  ],
+);
 
 class _FakeSplashDelay implements SplashDelayPort {
   final List<Duration> durations = [];
 
   @override
-  Future<void> wait(Duration duration) async {
-    durations.add(duration);
-  }
+  Future<void> wait(Duration duration) async => durations.add(duration);
 }
 
 class _FakeAppInitializer implements IAppInitializerService {

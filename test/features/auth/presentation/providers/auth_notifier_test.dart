@@ -7,21 +7,22 @@ import 'package:delivery_app/features/auth/domain/repositories/auth_repository.d
 import 'package:delivery_app/features/auth/domain/repositories/token_storage_repository.dart';
 import 'package:delivery_app/features/auth/domain/usecases/login_usecase.dart';
 import 'package:delivery_app/features/auth/domain/usecases/social_login_usecase.dart';
-import 'package:delivery_app/features/auth/presentation/providers/di/auth_di_providers.dart';
-import 'package:delivery_app/features/auth/presentation/providers/di/storage_di_providers.dart';
-import 'package:delivery_app/features/auth/presentation/providers/session/auth_notifier.dart';
-import 'package:delivery_app/features/auth/presentation/providers/session/auth_state.dart';
+import 'package:delivery_app/features/auth/di/auth_di_providers.dart';
+import 'package:delivery_app/features/auth/di/storage_di_providers.dart';
+import 'package:delivery_app/features/auth/application/session/auth_notifier.dart';
+import 'package:delivery_app/features/auth/application/session/auth_state.dart';
 import 'package:delivery_app/core/services/app_initializer/_riverpod/app_initializer_provider.dart';
 import 'package:delivery_app/features/auth/services/auth_platform_ports.dart';
-import 'package:delivery_app/features/auth/presentation/widgets/login_form.dart';
-import 'package:delivery_app/features/auth/presentation/widgets/register_form.dart';
-import 'package:flutter/material.dart';
+import 'package:delivery_app/features/auth/application/login/login_effect.dart';
+import 'package:delivery_app/features/auth/application/login/login_intent.dart';
+import 'package:delivery_app/features/auth/application/login/login_view_model.dart';
+import 'package:delivery_app/features/auth/application/register/register_effect.dart';
+import 'package:delivery_app/features/auth/application/register/register_intent.dart';
+import 'package:delivery_app/features/auth/application/register/register_view_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
-
-import '../../../../support/app_harness.dart';
 
 void main() {
   group('AuthNotifier', () {
@@ -246,111 +247,67 @@ void main() {
         expect(harness.container.read(authProvider).isAuthenticated, isFalse);
       },
     );
+  });
 
-    testWidgets(
-      'login form validates, stays single-submit and invokes Google through ports',
-      (tester) async {
+  group('LoginViewModel', () {
+    test(
+      'owns validation, dispatches login and queues a success effect',
+      () async {
         final harness = _Harness();
         addTearDown(harness.dispose);
-        final loginCompleter = Completer<Either<Failure, AuthEntity>>();
-        harness.authRepository.loginCompleter = loginCompleter;
-
-        await pumpTestApp(
-          tester,
-          overrides: harness.overrides,
-          child: const LoginForm(),
+        final state = harness.container.read(loginViewModelProvider);
+        final notifier = harness.container.read(
+          loginViewModelProvider.notifier,
         );
 
-        await tester.tap(find.byKey(const Key('login_button')));
-        await tester.pump();
+        expect(state.emailError, isNull);
+        await notifier.dispatch(const LoginSubmitted());
         expect(harness.authRepository.loginCalls, 0);
 
-        await tester.enterText(
-          find.byType(TextFormField).at(0),
+        await notifier.dispatch(const LoginEmailChanged(' customer@test.dev '));
+        await notifier.dispatch(const LoginPasswordChanged('secret123'));
+        await notifier.dispatch(const LoginSubmitted());
+
+        expect(harness.authRepository.loginCalls, 1);
+        expect(
+          harness.authRepository.lastLoginParams?.email,
           'customer@test.dev',
         );
-        await tester.enterText(find.byType(TextFormField).at(1), 'secret123');
-        await tester.tap(find.byKey(const Key('login_button')));
-        await tester.pump();
-
-        expect(harness.authRepository.loginCalls, 1);
         expect(
-          tester.widget<ElevatedButton>(find.byType(ElevatedButton)).onPressed,
-          isNull,
-        );
-        await tester.tap(find.byKey(const Key('login_button')));
-        expect(harness.authRepository.loginCalls, 1);
-
-        loginCompleter.complete(
-          Right(
-            AuthEntity(
-              accessToken: 'form-access',
-              refreshToken: 'form-refresh',
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        final container = ProviderScope.containerOf(
-          tester.element(find.byType(LoginForm)),
-        );
-        expect(container.read(authProvider).isAuthenticated, isTrue);
-
-        await tester.tap(find.byIcon(Icons.g_mobiledata));
-        await tester.pumpAndSettle();
-        expect(harness.socialIdentity.calls, 1);
-        expect(
-          harness.authRepository.lastSocialLoginParams?.token,
-          'google-id-token',
+          harness.container.read(loginViewModelProvider).effects.single.effect,
+          isA<LoginAuthenticationSucceeded>(),
         );
       },
     );
+  });
 
-    testWidgets(
-      'register form validates, disables duplicate submit and returns to login',
-      (tester) async {
-        final harness = _Harness();
-        addTearDown(harness.dispose);
-        final registerCompleter = Completer<Either<Failure, bool>>();
-        harness.authRepository.registerCompleter = registerCompleter;
+  group('RegisterViewModel', () {
+    test('owns validation, submits canonical data and emits success', () async {
+      final harness = _Harness();
+      addTearDown(harness.dispose);
+      harness.container.read(registerViewModelProvider);
+      final notifier = harness.container.read(
+        registerViewModelProvider.notifier,
+      );
 
-        await pumpTestApp(
-          tester,
-          overrides: harness.overrides,
-          child: const RegisterForm(),
-        );
+      await notifier.dispatch(const RegisterSubmitted());
+      expect(harness.authRepository.registerCalls, 0);
 
-        await tester.tap(find.byType(ElevatedButton));
-        await tester.pump();
-        expect(harness.authRepository.registerCalls, 0);
+      await notifier.dispatch(const RegisterNameChanged(' Customer Test '));
+      await notifier.dispatch(
+        const RegisterEmailChanged(' customer@test.dev '),
+      );
+      await notifier.dispatch(const RegisterPasswordChanged('secret123'));
+      await notifier.dispatch(const RegisterConfirmationChanged('secret123'));
+      await notifier.dispatch(const RegisterSubmitted());
 
-        final fields = find.byType(TextFormField);
-        await tester.enterText(fields.at(0), ' Customer Test ');
-        await tester.enterText(fields.at(1), ' customer@test.dev ');
-        await tester.enterText(fields.at(2), 'secret123');
-        await tester.enterText(fields.at(3), 'secret123');
-        await tester.tap(find.byType(ElevatedButton));
-        await tester.pump();
-
-        expect(harness.authRepository.registerCalls, 1);
-        expect(
-          tester.widget<ElevatedButton>(find.byType(ElevatedButton)).onPressed,
-          isNull,
-        );
-        await tester.tap(find.byType(ElevatedButton));
-        expect(harness.authRepository.registerCalls, 1);
-
-        registerCompleter.complete(const Right(true));
-        await tester.pumpAndSettle();
-
-        final container = ProviderScope.containerOf(
-          tester.element(find.byType(RegisterForm)),
-        );
-        expect(harness.authRepository.lastRegisterEmail, 'customer@test.dev');
-        expect(harness.authRepository.loginCalls, 0);
-        expect(container.read(authProvider).isAuthenticated, isFalse);
-      },
-    );
+      expect(harness.authRepository.registerCalls, 1);
+      expect(harness.authRepository.lastRegisterEmail, 'customer@test.dev');
+      expect(
+        harness.container.read(registerViewModelProvider).effects.single.effect,
+        isA<RegisterSucceeded>(),
+      );
+    });
   });
 }
 

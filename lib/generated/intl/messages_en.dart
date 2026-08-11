@@ -485,6 +485,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "noTrackingInfo": MessageLookupByLibrary.simpleMessage(
       "No Tracking Information",
     ),
+    "notificationAccountUnavailable": MessageLookupByLibrary.simpleMessage(
+      "We couldn\'t determine your current account. Please try again.",
+    ),
     "notificationEmptyDesc": MessageLookupByLibrary.simpleMessage(
       "Notifications will appear here",
     ),

@@ -43,7 +43,7 @@ final class ThemeProvider extends $NotifierProvider<Theme, AppTheme> {
   }
 }
 
-String _$themeHash() => r'63ca0e9c250d589a3efe900a18d8b69269cfa881';
+String _$themeHash() => r'e06704e0db6136f32ade301f202816f48f6f8602';
 
 /// Theme provider to manage app theme state
 
