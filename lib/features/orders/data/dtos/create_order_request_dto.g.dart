@@ -25,6 +25,7 @@ Map<String, dynamic> _$OrderItemRequestToJson(_OrderItemRequest instance) =>
 _CreateOrderRequestDto _$CreateOrderRequestDtoFromJson(
   Map<String, dynamic> json,
 ) => _CreateOrderRequestDto(
+  quoteId: json['quoteId'] as String?,
   restaurantId: (json['restaurantId'] as num).toInt(),
   deliveryAddress: json['deliveryAddress'] as String,
   deliveryLat: (json['deliveryLat'] as num).toDouble(),
@@ -44,6 +45,7 @@ _CreateOrderRequestDto _$CreateOrderRequestDtoFromJson(
 Map<String, dynamic> _$CreateOrderRequestDtoToJson(
   _CreateOrderRequestDto instance,
 ) => <String, dynamic>{
+  'quoteId': instance.quoteId,
   'restaurantId': instance.restaurantId,
   'deliveryAddress': instance.deliveryAddress,
   'deliveryLat': instance.deliveryLat,

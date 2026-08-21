@@ -19,6 +19,9 @@ sealed class OrderItemRequest with _$OrderItemRequest {
 @freezed
 sealed class CreateOrderRequestDto with _$CreateOrderRequestDto {
   const factory CreateOrderRequestDto({
+    String? quoteId,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    String? idempotencyKey,
     required int restaurantId,
     required String deliveryAddress,
     required double deliveryLat,

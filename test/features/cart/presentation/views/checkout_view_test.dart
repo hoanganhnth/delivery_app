@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:delivery_app/core/error/failures.dart';
 import 'package:delivery_app/features/cart/application/checkout_effect.dart';
 import 'package:delivery_app/features/cart/application/checkout_intent.dart';
@@ -101,6 +103,236 @@ void main() {
     },
   );
 
+  test(
+    'reuses the pending idempotency key after a retryable create failure',
+    () async {
+      final orders = _ScriptedOrderRepository([
+        const Left(NetworkFailure('timeout')),
+        Right(buildOrder()),
+      ]);
+      final container = ProviderContainer(
+        overrides: [
+          cartProvider.overrideWith(_TestCartNotifier.new),
+          userAddressListProvider.overrideWith(_SelectedAddressNotifier.new),
+          checkoutPreviewGatewayProvider.overrideWithValue(
+            _FakePreviewGateway(_preview),
+          ),
+          orderRepositoryProvider.overrideWithValue(orders),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(checkoutViewModelProvider);
+      await container.read(cartProvider.future);
+      await container
+          .read(checkoutViewModelProvider.notifier)
+          .dispatch(const CheckoutLoadRequested());
+
+      await container
+          .read(checkoutViewModelProvider.notifier)
+          .dispatch(const CheckoutPlaceOrderRequested());
+      await container
+          .read(checkoutViewModelProvider.notifier)
+          .dispatch(const CheckoutPlaceOrderRequested());
+
+      expect(orders.requests, hasLength(2));
+      expect(orders.requests.first.idempotencyKey, isNotNull);
+      expect(
+        orders.requests.last.idempotencyKey,
+        orders.requests.first.idempotencyKey,
+      );
+    },
+  );
+
+  test(
+    'reuses the pending idempotency key when the server reports an in-flight create',
+    () async {
+      final orders = _ScriptedOrderRepository([
+        const Left(
+          ConflictFailure(
+            'IDEMPOTENCY_IN_PROGRESS',
+            'Yêu cầu đặt đơn đang được xử lý',
+          ),
+        ),
+        Right(buildOrder()),
+      ]);
+      final container = ProviderContainer(
+        overrides: [
+          cartProvider.overrideWith(_TestCartNotifier.new),
+          userAddressListProvider.overrideWith(_SelectedAddressNotifier.new),
+          checkoutPreviewGatewayProvider.overrideWithValue(
+            _FakePreviewGateway(_preview),
+          ),
+          orderRepositoryProvider.overrideWithValue(orders),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(checkoutViewModelProvider);
+      await container.read(cartProvider.future);
+      await container
+          .read(checkoutViewModelProvider.notifier)
+          .dispatch(const CheckoutLoadRequested());
+
+      await container
+          .read(checkoutViewModelProvider.notifier)
+          .dispatch(const CheckoutPlaceOrderRequested());
+      await container
+          .read(checkoutViewModelProvider.notifier)
+          .dispatch(const CheckoutPlaceOrderRequested());
+
+      expect(orders.requests, hasLength(2));
+      expect(orders.requests.first.idempotencyKey, isNotNull);
+      expect(
+        orders.requests.last.idempotencyKey,
+        orders.requests.first.idempotencyKey,
+      );
+    },
+  );
+
+  test(
+    'changing an item note invalidates the pending idempotency key',
+    () async {
+      final cart = _TestCartNotifier();
+      final orders = _ScriptedOrderRepository([
+        const Left(NetworkFailure('timeout')),
+        Right(buildOrder()),
+      ]);
+      final container = ProviderContainer(
+        overrides: [
+          cartProvider.overrideWith(() => cart),
+          userAddressListProvider.overrideWith(_SelectedAddressNotifier.new),
+          checkoutPreviewGatewayProvider.overrideWithValue(
+            _FakePreviewGateway(_preview),
+          ),
+          orderRepositoryProvider.overrideWithValue(orders),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(checkoutViewModelProvider);
+      await container.read(cartProvider.future);
+      await container
+          .read(checkoutViewModelProvider.notifier)
+          .dispatch(const CheckoutLoadRequested());
+      await container
+          .read(checkoutViewModelProvider.notifier)
+          .dispatch(const CheckoutPlaceOrderRequested());
+
+      cart.replaceCart(buildCart(items: [buildCartItem(notes: 'Ít cay')]));
+      await Future<void>.delayed(Duration.zero);
+      await container
+          .read(checkoutViewModelProvider.notifier)
+          .dispatch(const CheckoutPlaceOrderRequested());
+
+      expect(orders.requests, hasLength(2));
+      expect(
+        orders.requests.last.idempotencyKey,
+        isNot(orders.requests.first.idempotencyKey),
+      );
+    },
+  );
+
+  test(
+    'PRICE_CHANGED requires acceptance and submits the fresh quote with a new key',
+    () async {
+      final orders = _ScriptedOrderRepository([
+        Left(
+          Failure.conflict('PRICE_CHANGED', 'Giá đã thay đổi', {
+            'quote': _wireQuote(_changedPreview),
+          }),
+        ),
+        Right(buildOrder()),
+      ]);
+      final container = ProviderContainer(
+        overrides: [
+          cartProvider.overrideWith(_TestCartNotifier.new),
+          userAddressListProvider.overrideWith(_SelectedAddressNotifier.new),
+          checkoutPreviewGatewayProvider.overrideWithValue(
+            _FakePreviewGateway(_preview),
+          ),
+          orderRepositoryProvider.overrideWithValue(orders),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(checkoutViewModelProvider);
+      await container.read(cartProvider.future);
+      await container
+          .read(checkoutViewModelProvider.notifier)
+          .dispatch(const CheckoutLoadRequested());
+
+      await container
+          .read(checkoutViewModelProvider.notifier)
+          .dispatch(const CheckoutPlaceOrderRequested());
+      expect(
+        container
+            .read(checkoutViewModelProvider)
+            .effects
+            .map((envelope) => envelope.effect)
+            .whereType<CheckoutPriceChanged>(),
+        isNotEmpty,
+      );
+
+      await container
+          .read(checkoutViewModelProvider.notifier)
+          .dispatch(const CheckoutPriceChangeAccepted());
+
+      expect(orders.requests, hasLength(2));
+      expect(orders.requests.last.quoteId, _changedPreview.quoteId);
+      expect(orders.requests.last.idempotencyKey, isNotNull);
+      expect(
+        orders.requests.last.idempotencyKey,
+        isNot(orders.requests.first.idempotencyKey),
+      );
+    },
+  );
+
+  test(
+    'QUOTE_EXPIRED refreshes preview and discards the previous idempotency key',
+    () async {
+      final orders = _ScriptedOrderRepository([
+        const Left(ConflictFailure('QUOTE_EXPIRED', 'Báo giá đã hết hạn')),
+        Right(buildOrder()),
+      ]);
+      final container = ProviderContainer(
+        overrides: [
+          cartProvider.overrideWith(_TestCartNotifier.new),
+          userAddressListProvider.overrideWith(_SelectedAddressNotifier.new),
+          checkoutPreviewGatewayProvider.overrideWithValue(
+            _FakePreviewGateway(_preview),
+          ),
+          orderRepositoryProvider.overrideWithValue(orders),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(checkoutViewModelProvider);
+      await container.read(cartProvider.future);
+      await container
+          .read(checkoutViewModelProvider.notifier)
+          .dispatch(const CheckoutLoadRequested());
+
+      await container
+          .read(checkoutViewModelProvider.notifier)
+          .dispatch(const CheckoutPlaceOrderRequested());
+      await Future<void>.delayed(Duration.zero);
+      expect(
+        container
+            .read(checkoutViewModelProvider)
+            .effects
+            .map((envelope) => envelope.effect)
+            .whereType<CheckoutQuoteExpired>(),
+        isNotEmpty,
+      );
+
+      await container
+          .read(checkoutViewModelProvider.notifier)
+          .dispatch(const CheckoutPlaceOrderRequested());
+
+      expect(orders.requests, hasLength(2));
+      expect(
+        orders.requests.last.idempotencyKey,
+        isNot(orders.requests.first.idempotencyKey),
+      );
+    },
+  );
+
   testWidgets(
     'checkout view emits typed address, notes and place-order intents',
     (tester) async {
@@ -176,6 +408,10 @@ class _TestCartNotifier extends CartNotifier {
       ),
     );
   }
+
+  void replaceCart(CartEntity cart) {
+    state = AsyncData(cart);
+  }
 }
 
 class _SelectedAddressNotifier extends UserAddressListNotifier {
@@ -229,7 +465,40 @@ class _FakeOrderRepository implements OrderRepository {
   }) async => const Right([]);
 }
 
-const _preview = CheckoutPreviewResponse(
+class _ScriptedOrderRepository implements OrderRepository {
+  _ScriptedOrderRepository(this._results);
+
+  final List<Either<Failure, OrderEntity>> _results;
+  final List<OrderCreationCommand> requests = [];
+
+  @override
+  Future<Either<Failure, bool>> cancelOrder(
+    int orderId, {
+    String? reason,
+  }) async => const Right(true);
+
+  @override
+  Future<Either<Failure, OrderEntity>> createOrder(
+    OrderCreationCommand request,
+  ) async {
+    requests.add(request);
+    return _results.removeAt(0);
+  }
+
+  @override
+  Future<Either<Failure, OrderEntity>> getOrderById(num orderId) async =>
+      Right(buildOrder(id: orderId.toInt()));
+
+  @override
+  Future<Either<Failure, List<OrderEntity>>> getUserOrders({
+    int page = 0,
+    int size = 20,
+  }) async => const Right([]);
+}
+
+final _preview = CheckoutPreviewResponse(
+  quoteId: '00000000-0000-0000-0000-000000000001',
+  expiresAt: _futureExpiry,
   restaurantId: 201,
   restaurantName: 'Bếp test',
   items: [
@@ -247,3 +516,29 @@ const _preview = CheckoutPreviewResponse(
   totalPrice: 65000,
   unavailableItemIds: [],
 );
+
+final _futureExpiry = DateTime.utc(2099, 1, 1);
+
+final _changedPreview = CheckoutPreviewResponse(
+  quoteId: '00000000-0000-0000-0000-000000000002',
+  expiresAt: _futureExpiry,
+  restaurantId: 201,
+  restaurantName: 'Bếp test',
+  items: const [
+    PreviewItemDetail(
+      menuItemId: 301,
+      menuItemName: 'Cơm test',
+      unitPrice: 60000,
+      quantity: 1,
+      lineTotal: 60000,
+    ),
+  ],
+  subtotal: 60000,
+  shippingFee: 15000,
+  discountAmount: 0,
+  totalPrice: 75000,
+  unavailableItemIds: const [],
+);
+
+Map<String, dynamic> _wireQuote(CheckoutPreviewResponse preview) =>
+    Map<String, dynamic>.from(jsonDecode(jsonEncode(preview)) as Map);

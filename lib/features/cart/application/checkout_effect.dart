@@ -36,6 +36,23 @@ final class CheckoutShowUnavailableItems extends CheckoutEffect {
   List<Object?> get props => [itemIds];
 }
 
+final class CheckoutPriceChanged extends CheckoutEffect {
+  const CheckoutPriceChanged({required this.oldTotal, required this.newTotal});
+
+  final double oldTotal;
+  final double newTotal;
+
+  @override
+  List<Object?> get props => [oldTotal, newTotal];
+}
+
+final class CheckoutQuoteExpired extends CheckoutEffect {
+  const CheckoutQuoteExpired();
+
+  @override
+  List<Object?> get props => const [];
+}
+
 final class CheckoutOrderPlaced extends CheckoutEffect {
   const CheckoutOrderPlaced({required this.isSuccess, this.message});
 

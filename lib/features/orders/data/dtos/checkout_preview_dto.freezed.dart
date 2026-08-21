@@ -1094,7 +1094,7 @@ as double?,
 /// @nodoc
 mixin _$CheckoutPreviewResponse {
 
- int? get restaurantId; String? get restaurantName; List<PreviewItemDetail>? get items; double? get subtotal; double? get shippingFee; double? get discountAmount; double? get totalPrice; String? get couponCode; String? get couponMessage; int? get voucherId; List<PriceChangeInfo>? get priceChanges; List<int>? get unavailableItemIds;
+ String? get quoteId; DateTime? get expiresAt; int? get restaurantId; String? get restaurantName; List<PreviewItemDetail>? get items; double? get subtotal; double? get shippingFee; double? get discountAmount; double? get totalPrice; String? get couponCode; String? get couponMessage; int? get voucherId; List<PriceChangeInfo>? get priceChanges; List<int>? get unavailableItemIds;
 /// Create a copy of CheckoutPreviewResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1107,16 +1107,16 @@ $CheckoutPreviewResponseCopyWith<CheckoutPreviewResponse> get copyWith => _$Chec
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CheckoutPreviewResponse&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.shippingFee, shippingFee) || other.shippingFee == shippingFee)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.totalPrice, totalPrice) || other.totalPrice == totalPrice)&&(identical(other.couponCode, couponCode) || other.couponCode == couponCode)&&(identical(other.couponMessage, couponMessage) || other.couponMessage == couponMessage)&&(identical(other.voucherId, voucherId) || other.voucherId == voucherId)&&const DeepCollectionEquality().equals(other.priceChanges, priceChanges)&&const DeepCollectionEquality().equals(other.unavailableItemIds, unavailableItemIds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CheckoutPreviewResponse&&(identical(other.quoteId, quoteId) || other.quoteId == quoteId)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.shippingFee, shippingFee) || other.shippingFee == shippingFee)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.totalPrice, totalPrice) || other.totalPrice == totalPrice)&&(identical(other.couponCode, couponCode) || other.couponCode == couponCode)&&(identical(other.couponMessage, couponMessage) || other.couponMessage == couponMessage)&&(identical(other.voucherId, voucherId) || other.voucherId == voucherId)&&const DeepCollectionEquality().equals(other.priceChanges, priceChanges)&&const DeepCollectionEquality().equals(other.unavailableItemIds, unavailableItemIds));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,restaurantId,restaurantName,const DeepCollectionEquality().hash(items),subtotal,shippingFee,discountAmount,totalPrice,couponCode,couponMessage,voucherId,const DeepCollectionEquality().hash(priceChanges),const DeepCollectionEquality().hash(unavailableItemIds));
+int get hashCode => Object.hash(runtimeType,quoteId,expiresAt,restaurantId,restaurantName,const DeepCollectionEquality().hash(items),subtotal,shippingFee,discountAmount,totalPrice,couponCode,couponMessage,voucherId,const DeepCollectionEquality().hash(priceChanges),const DeepCollectionEquality().hash(unavailableItemIds));
 
 @override
 String toString() {
-  return 'CheckoutPreviewResponse(restaurantId: $restaurantId, restaurantName: $restaurantName, items: $items, subtotal: $subtotal, shippingFee: $shippingFee, discountAmount: $discountAmount, totalPrice: $totalPrice, couponCode: $couponCode, couponMessage: $couponMessage, voucherId: $voucherId, priceChanges: $priceChanges, unavailableItemIds: $unavailableItemIds)';
+  return 'CheckoutPreviewResponse(quoteId: $quoteId, expiresAt: $expiresAt, restaurantId: $restaurantId, restaurantName: $restaurantName, items: $items, subtotal: $subtotal, shippingFee: $shippingFee, discountAmount: $discountAmount, totalPrice: $totalPrice, couponCode: $couponCode, couponMessage: $couponMessage, voucherId: $voucherId, priceChanges: $priceChanges, unavailableItemIds: $unavailableItemIds)';
 }
 
 
@@ -1127,7 +1127,7 @@ abstract mixin class $CheckoutPreviewResponseCopyWith<$Res>  {
   factory $CheckoutPreviewResponseCopyWith(CheckoutPreviewResponse value, $Res Function(CheckoutPreviewResponse) _then) = _$CheckoutPreviewResponseCopyWithImpl;
 @useResult
 $Res call({
- int? restaurantId, String? restaurantName, List<PreviewItemDetail>? items, double? subtotal, double? shippingFee, double? discountAmount, double? totalPrice, String? couponCode, String? couponMessage, int? voucherId, List<PriceChangeInfo>? priceChanges, List<int>? unavailableItemIds
+ String? quoteId, DateTime? expiresAt, int? restaurantId, String? restaurantName, List<PreviewItemDetail>? items, double? subtotal, double? shippingFee, double? discountAmount, double? totalPrice, String? couponCode, String? couponMessage, int? voucherId, List<PriceChangeInfo>? priceChanges, List<int>? unavailableItemIds
 });
 
 
@@ -1144,9 +1144,11 @@ class _$CheckoutPreviewResponseCopyWithImpl<$Res>
 
 /// Create a copy of CheckoutPreviewResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? restaurantId = freezed,Object? restaurantName = freezed,Object? items = freezed,Object? subtotal = freezed,Object? shippingFee = freezed,Object? discountAmount = freezed,Object? totalPrice = freezed,Object? couponCode = freezed,Object? couponMessage = freezed,Object? voucherId = freezed,Object? priceChanges = freezed,Object? unavailableItemIds = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? quoteId = freezed,Object? expiresAt = freezed,Object? restaurantId = freezed,Object? restaurantName = freezed,Object? items = freezed,Object? subtotal = freezed,Object? shippingFee = freezed,Object? discountAmount = freezed,Object? totalPrice = freezed,Object? couponCode = freezed,Object? couponMessage = freezed,Object? voucherId = freezed,Object? priceChanges = freezed,Object? unavailableItemIds = freezed,}) {
   return _then(_self.copyWith(
-restaurantId: freezed == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
+quoteId: freezed == quoteId ? _self.quoteId : quoteId // ignore: cast_nullable_to_non_nullable
+as String?,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,restaurantId: freezed == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
 as int?,restaurantName: freezed == restaurantName ? _self.restaurantName : restaurantName // ignore: cast_nullable_to_non_nullable
 as String?,items: freezed == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<PreviewItemDetail>?,subtotal: freezed == subtotal ? _self.subtotal : subtotal // ignore: cast_nullable_to_non_nullable
@@ -1240,10 +1242,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? restaurantId,  String? restaurantName,  List<PreviewItemDetail>? items,  double? subtotal,  double? shippingFee,  double? discountAmount,  double? totalPrice,  String? couponCode,  String? couponMessage,  int? voucherId,  List<PriceChangeInfo>? priceChanges,  List<int>? unavailableItemIds)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? quoteId,  DateTime? expiresAt,  int? restaurantId,  String? restaurantName,  List<PreviewItemDetail>? items,  double? subtotal,  double? shippingFee,  double? discountAmount,  double? totalPrice,  String? couponCode,  String? couponMessage,  int? voucherId,  List<PriceChangeInfo>? priceChanges,  List<int>? unavailableItemIds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CheckoutPreviewResponse() when $default != null:
-return $default(_that.restaurantId,_that.restaurantName,_that.items,_that.subtotal,_that.shippingFee,_that.discountAmount,_that.totalPrice,_that.couponCode,_that.couponMessage,_that.voucherId,_that.priceChanges,_that.unavailableItemIds);case _:
+return $default(_that.quoteId,_that.expiresAt,_that.restaurantId,_that.restaurantName,_that.items,_that.subtotal,_that.shippingFee,_that.discountAmount,_that.totalPrice,_that.couponCode,_that.couponMessage,_that.voucherId,_that.priceChanges,_that.unavailableItemIds);case _:
   return orElse();
 
 }
@@ -1261,10 +1263,10 @@ return $default(_that.restaurantId,_that.restaurantName,_that.items,_that.subtot
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? restaurantId,  String? restaurantName,  List<PreviewItemDetail>? items,  double? subtotal,  double? shippingFee,  double? discountAmount,  double? totalPrice,  String? couponCode,  String? couponMessage,  int? voucherId,  List<PriceChangeInfo>? priceChanges,  List<int>? unavailableItemIds)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? quoteId,  DateTime? expiresAt,  int? restaurantId,  String? restaurantName,  List<PreviewItemDetail>? items,  double? subtotal,  double? shippingFee,  double? discountAmount,  double? totalPrice,  String? couponCode,  String? couponMessage,  int? voucherId,  List<PriceChangeInfo>? priceChanges,  List<int>? unavailableItemIds)  $default,) {final _that = this;
 switch (_that) {
 case _CheckoutPreviewResponse():
-return $default(_that.restaurantId,_that.restaurantName,_that.items,_that.subtotal,_that.shippingFee,_that.discountAmount,_that.totalPrice,_that.couponCode,_that.couponMessage,_that.voucherId,_that.priceChanges,_that.unavailableItemIds);}
+return $default(_that.quoteId,_that.expiresAt,_that.restaurantId,_that.restaurantName,_that.items,_that.subtotal,_that.shippingFee,_that.discountAmount,_that.totalPrice,_that.couponCode,_that.couponMessage,_that.voucherId,_that.priceChanges,_that.unavailableItemIds);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -1278,10 +1280,10 @@ return $default(_that.restaurantId,_that.restaurantName,_that.items,_that.subtot
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? restaurantId,  String? restaurantName,  List<PreviewItemDetail>? items,  double? subtotal,  double? shippingFee,  double? discountAmount,  double? totalPrice,  String? couponCode,  String? couponMessage,  int? voucherId,  List<PriceChangeInfo>? priceChanges,  List<int>? unavailableItemIds)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? quoteId,  DateTime? expiresAt,  int? restaurantId,  String? restaurantName,  List<PreviewItemDetail>? items,  double? subtotal,  double? shippingFee,  double? discountAmount,  double? totalPrice,  String? couponCode,  String? couponMessage,  int? voucherId,  List<PriceChangeInfo>? priceChanges,  List<int>? unavailableItemIds)?  $default,) {final _that = this;
 switch (_that) {
 case _CheckoutPreviewResponse() when $default != null:
-return $default(_that.restaurantId,_that.restaurantName,_that.items,_that.subtotal,_that.shippingFee,_that.discountAmount,_that.totalPrice,_that.couponCode,_that.couponMessage,_that.voucherId,_that.priceChanges,_that.unavailableItemIds);case _:
+return $default(_that.quoteId,_that.expiresAt,_that.restaurantId,_that.restaurantName,_that.items,_that.subtotal,_that.shippingFee,_that.discountAmount,_that.totalPrice,_that.couponCode,_that.couponMessage,_that.voucherId,_that.priceChanges,_that.unavailableItemIds);case _:
   return null;
 
 }
@@ -1293,9 +1295,11 @@ return $default(_that.restaurantId,_that.restaurantName,_that.items,_that.subtot
 @JsonSerializable()
 
 class _CheckoutPreviewResponse implements CheckoutPreviewResponse {
-  const _CheckoutPreviewResponse({this.restaurantId, this.restaurantName, final  List<PreviewItemDetail>? items, this.subtotal, this.shippingFee, this.discountAmount, this.totalPrice, this.couponCode, this.couponMessage, this.voucherId, final  List<PriceChangeInfo>? priceChanges, final  List<int>? unavailableItemIds}): _items = items,_priceChanges = priceChanges,_unavailableItemIds = unavailableItemIds;
+  const _CheckoutPreviewResponse({this.quoteId, this.expiresAt, this.restaurantId, this.restaurantName, final  List<PreviewItemDetail>? items, this.subtotal, this.shippingFee, this.discountAmount, this.totalPrice, this.couponCode, this.couponMessage, this.voucherId, final  List<PriceChangeInfo>? priceChanges, final  List<int>? unavailableItemIds}): _items = items,_priceChanges = priceChanges,_unavailableItemIds = unavailableItemIds;
   factory _CheckoutPreviewResponse.fromJson(Map<String, dynamic> json) => _$CheckoutPreviewResponseFromJson(json);
 
+@override final  String? quoteId;
+@override final  DateTime? expiresAt;
 @override final  int? restaurantId;
 @override final  String? restaurantName;
  final  List<PreviewItemDetail>? _items;
@@ -1346,16 +1350,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CheckoutPreviewResponse&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.shippingFee, shippingFee) || other.shippingFee == shippingFee)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.totalPrice, totalPrice) || other.totalPrice == totalPrice)&&(identical(other.couponCode, couponCode) || other.couponCode == couponCode)&&(identical(other.couponMessage, couponMessage) || other.couponMessage == couponMessage)&&(identical(other.voucherId, voucherId) || other.voucherId == voucherId)&&const DeepCollectionEquality().equals(other._priceChanges, _priceChanges)&&const DeepCollectionEquality().equals(other._unavailableItemIds, _unavailableItemIds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CheckoutPreviewResponse&&(identical(other.quoteId, quoteId) || other.quoteId == quoteId)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.restaurantName, restaurantName) || other.restaurantName == restaurantName)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.shippingFee, shippingFee) || other.shippingFee == shippingFee)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.totalPrice, totalPrice) || other.totalPrice == totalPrice)&&(identical(other.couponCode, couponCode) || other.couponCode == couponCode)&&(identical(other.couponMessage, couponMessage) || other.couponMessage == couponMessage)&&(identical(other.voucherId, voucherId) || other.voucherId == voucherId)&&const DeepCollectionEquality().equals(other._priceChanges, _priceChanges)&&const DeepCollectionEquality().equals(other._unavailableItemIds, _unavailableItemIds));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,restaurantId,restaurantName,const DeepCollectionEquality().hash(_items),subtotal,shippingFee,discountAmount,totalPrice,couponCode,couponMessage,voucherId,const DeepCollectionEquality().hash(_priceChanges),const DeepCollectionEquality().hash(_unavailableItemIds));
+int get hashCode => Object.hash(runtimeType,quoteId,expiresAt,restaurantId,restaurantName,const DeepCollectionEquality().hash(_items),subtotal,shippingFee,discountAmount,totalPrice,couponCode,couponMessage,voucherId,const DeepCollectionEquality().hash(_priceChanges),const DeepCollectionEquality().hash(_unavailableItemIds));
 
 @override
 String toString() {
-  return 'CheckoutPreviewResponse(restaurantId: $restaurantId, restaurantName: $restaurantName, items: $items, subtotal: $subtotal, shippingFee: $shippingFee, discountAmount: $discountAmount, totalPrice: $totalPrice, couponCode: $couponCode, couponMessage: $couponMessage, voucherId: $voucherId, priceChanges: $priceChanges, unavailableItemIds: $unavailableItemIds)';
+  return 'CheckoutPreviewResponse(quoteId: $quoteId, expiresAt: $expiresAt, restaurantId: $restaurantId, restaurantName: $restaurantName, items: $items, subtotal: $subtotal, shippingFee: $shippingFee, discountAmount: $discountAmount, totalPrice: $totalPrice, couponCode: $couponCode, couponMessage: $couponMessage, voucherId: $voucherId, priceChanges: $priceChanges, unavailableItemIds: $unavailableItemIds)';
 }
 
 
@@ -1366,7 +1370,7 @@ abstract mixin class _$CheckoutPreviewResponseCopyWith<$Res> implements $Checkou
   factory _$CheckoutPreviewResponseCopyWith(_CheckoutPreviewResponse value, $Res Function(_CheckoutPreviewResponse) _then) = __$CheckoutPreviewResponseCopyWithImpl;
 @override @useResult
 $Res call({
- int? restaurantId, String? restaurantName, List<PreviewItemDetail>? items, double? subtotal, double? shippingFee, double? discountAmount, double? totalPrice, String? couponCode, String? couponMessage, int? voucherId, List<PriceChangeInfo>? priceChanges, List<int>? unavailableItemIds
+ String? quoteId, DateTime? expiresAt, int? restaurantId, String? restaurantName, List<PreviewItemDetail>? items, double? subtotal, double? shippingFee, double? discountAmount, double? totalPrice, String? couponCode, String? couponMessage, int? voucherId, List<PriceChangeInfo>? priceChanges, List<int>? unavailableItemIds
 });
 
 
@@ -1383,9 +1387,11 @@ class __$CheckoutPreviewResponseCopyWithImpl<$Res>
 
 /// Create a copy of CheckoutPreviewResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? restaurantId = freezed,Object? restaurantName = freezed,Object? items = freezed,Object? subtotal = freezed,Object? shippingFee = freezed,Object? discountAmount = freezed,Object? totalPrice = freezed,Object? couponCode = freezed,Object? couponMessage = freezed,Object? voucherId = freezed,Object? priceChanges = freezed,Object? unavailableItemIds = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? quoteId = freezed,Object? expiresAt = freezed,Object? restaurantId = freezed,Object? restaurantName = freezed,Object? items = freezed,Object? subtotal = freezed,Object? shippingFee = freezed,Object? discountAmount = freezed,Object? totalPrice = freezed,Object? couponCode = freezed,Object? couponMessage = freezed,Object? voucherId = freezed,Object? priceChanges = freezed,Object? unavailableItemIds = freezed,}) {
   return _then(_CheckoutPreviewResponse(
-restaurantId: freezed == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
+quoteId: freezed == quoteId ? _self.quoteId : quoteId // ignore: cast_nullable_to_non_nullable
+as String?,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,restaurantId: freezed == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
 as int?,restaurantName: freezed == restaurantName ? _self.restaurantName : restaurantName // ignore: cast_nullable_to_non_nullable
 as String?,items: freezed == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
 as List<PreviewItemDetail>?,subtotal: freezed == subtotal ? _self.subtotal : subtotal // ignore: cast_nullable_to_non_nullable

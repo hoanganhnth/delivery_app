@@ -147,7 +147,9 @@ void main() {
   });
 }
 
-const _preview = CheckoutPreviewResponse(
+final _preview = CheckoutPreviewResponse(
+  quoteId: '00000000-0000-0000-0000-000000000001',
+  expiresAt: _futureExpiry,
   restaurantId: 201,
   restaurantName: 'Bếp test',
   items: [
@@ -165,3 +167,5 @@ const _preview = CheckoutPreviewResponse(
   totalPrice: 65000,
   unavailableItemIds: [],
 );
+
+final _futureExpiry = DateTime.utc(2099, 1, 1);

@@ -75,7 +75,7 @@ class RegisterViewModel extends Notifier<RegisterViewState> {
       clearPasswordError: true,
       clearConfirmationError: true,
     );
-    final success = await ref
+    final registration = await ref
         .read(authProvider.notifier)
         .register(
           name: state.name.trim(),
@@ -86,8 +86,15 @@ class RegisterViewModel extends Notifier<RegisterViewState> {
     if (!ref.mounted) return;
 
     state = state.copyWith(isSubmitting: false);
-    if (success) {
+    if (registration?.profileCreated == true) {
       _emit(const RegisterSucceeded());
+    } else if (registration != null) {
+      _emit(
+        RegisterShowError(
+          registration.recoveryMessage ??
+              'Registration is still being completed. Please submit again.',
+        ),
+      );
     } else {
       final message = ref.read(authProvider).errorMessage;
       if (message != null && message.isNotEmpty) {

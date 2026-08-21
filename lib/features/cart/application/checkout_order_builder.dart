@@ -75,13 +75,16 @@ class CheckoutOrderBuilder {
     required CheckoutPreviewResponse? preview,
     String? notes,
     int? selectedVoucherId,
+    String? idempotencyKey,
   }) {
     final previewRequest = buildPreviewRequest(
       cart: cart,
       address: address,
       selectedVoucherId: selectedVoucherId,
     );
-    if (preview == null) {
+    if (preview == null ||
+        preview.quoteId == null ||
+        preview.quoteId!.isEmpty) {
       throw const CheckoutOrderBuildException(
         CheckoutOrderBuildFailure.invalidPreview,
       );
@@ -95,6 +98,8 @@ class CheckoutOrderBuilder {
     }
 
     return OrderCreationCommand(
+      quoteId: preview.quoteId,
+      idempotencyKey: idempotencyKey,
       restaurantId: previewRequest.restaurantId,
       deliveryAddress: address!.fullAddress,
       deliveryLat: previewRequest.deliveryLat,

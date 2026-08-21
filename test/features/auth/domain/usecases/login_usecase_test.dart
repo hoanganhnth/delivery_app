@@ -16,9 +16,7 @@ void main() {
   late MockAuthRepository mockRepository;
 
   // Provide dummy for Either type
-  provideDummy<Either<Failure, AuthEntity>>(
-    left(const ServerFailure('dummy')),
-  );
+  provideDummy<Either<Failure, AuthEntity>>(left(const ServerFailure('dummy')));
 
   setUp(() {
     mockRepository = MockAuthRepository();
@@ -41,70 +39,75 @@ void main() {
     );
 
     group('Business Logic Tests', () {
-      test('should return AuthEntity when credentials are valid and login succeeds', () async {
-        // Arrange
-        when(mockRepository.login(any))
-            .thenAnswer((_) async => right(validAuthEntity));
+      test(
+        'should return AuthEntity when credentials are valid and login succeeds',
+        () async {
+          // Arrange
+          when(
+            mockRepository.login(any),
+          ).thenAnswer((_) async => right(validAuthEntity));
 
-        // Act
-        final result = await usecase(validLoginParams);
+          // Act
+          final result = await usecase(validLoginParams);
 
-        // Assert
-        expect(result.isRight(), true);
-        result.fold(
-          (failure) => fail('Should not return failure'),
-          (authEntity) {
+          // Assert
+          expect(result.isRight(), true);
+          result.fold((failure) => fail('Should not return failure'), (
+            authEntity,
+          ) {
             expect(authEntity.accessToken, 'access_token_123');
             expect(authEntity.refreshToken, 'refresh_token_123');
-          },
-        );
+          });
 
-        verify(mockRepository.login(validLoginParams)).called(1);
-      });
+          verify(mockRepository.login(validLoginParams)).called(1);
+        },
+      );
 
-      test('should return ServerFailure when repository returns failure', () async {
-        // Arrange
-        const serverFailure = ServerFailure('Invalid credentials');
-        when(mockRepository.login(any))
-            .thenAnswer((_) async => left(serverFailure));
+      test(
+        'should return ServerFailure when repository returns failure',
+        () async {
+          // Arrange
+          const serverFailure = ServerFailure('Invalid credentials');
+          when(
+            mockRepository.login(any),
+          ).thenAnswer((_) async => left(serverFailure));
 
-        // Act
-        final result = await usecase(validLoginParams);
+          // Act
+          final result = await usecase(validLoginParams);
 
-        // Assert
-        expect(result.isLeft(), true);
-        result.fold(
-          (failure) {
+          // Assert
+          expect(result.isLeft(), true);
+          result.fold((failure) {
             expect(failure, isA<ServerFailure>());
             expect(failure.message, 'Invalid credentials');
-          },
-          (authEntity) => fail('Should not return auth entity'),
-        );
+          }, (authEntity) => fail('Should not return auth entity'));
 
-        verify(mockRepository.login(validLoginParams)).called(1);
-      });
+          verify(mockRepository.login(validLoginParams)).called(1);
+        },
+      );
 
-      test('should return NetworkFailure when repository returns network error', () async {
-        // Arrange
-        const networkFailure = NetworkFailure('No internet connection');
-        when(mockRepository.login(any))
-            .thenAnswer((_) async => left(networkFailure));
+      test(
+        'should return NetworkFailure when repository returns network error',
+        () async {
+          // Arrange
+          const networkFailure = NetworkFailure('No internet connection');
+          when(
+            mockRepository.login(any),
+          ).thenAnswer((_) async => left(networkFailure));
 
-        // Act
-        final result = await usecase(validLoginParams);
+          // Act
+          final result = await usecase(validLoginParams);
 
-        // Assert
-        expect(result.isLeft(), true);
-        result.fold(
-          (failure) {
+          // Assert
+          expect(result.isLeft(), true);
+          result.fold((failure) {
             expect(failure, isA<NetworkFailure>());
             expect(failure.message, 'No internet connection');
-          },
-          (authEntity) => fail('Should not return auth entity'),
-        );
+          }, (authEntity) => fail('Should not return auth entity'));
 
-        verify(mockRepository.login(validLoginParams)).called(1);
-      });
+          verify(mockRepository.login(validLoginParams)).called(1);
+        },
+      );
     });
 
     group('Edge Cases', () {
@@ -116,8 +119,9 @@ void main() {
           // No device info provided
         );
 
-        when(mockRepository.login(any))
-            .thenAnswer((_) async => right(validAuthEntity));
+        when(
+          mockRepository.login(any),
+        ).thenAnswer((_) async => right(validAuthEntity));
 
         // Act
         final result = await usecase(paramsWithoutDevice);
@@ -127,21 +131,27 @@ void main() {
         verify(mockRepository.login(paramsWithoutDevice)).called(1);
       });
 
-      test('should validate required fields are passed to repository', () async {
-        // Arrange
-        when(mockRepository.login(any))
-            .thenAnswer((_) async => right(validAuthEntity));
+      test(
+        'should validate required fields are passed to repository',
+        () async {
+          // Arrange
+          when(
+            mockRepository.login(any),
+          ).thenAnswer((_) async => right(validAuthEntity));
 
-        // Act
-        final result = await usecase(validLoginParams);
+          // Act
+          final result = await usecase(validLoginParams);
 
-        // Assert
-        expect(result.isRight(), true);
-        final captured = verify(mockRepository.login(captureAny)).captured.single as LoginParams;
-        expect(captured.email, 'test@example.com');
-        expect(captured.password, 'password123');
-        expect(captured.deviceId, 'device-123');
-      });
+          // Assert
+          expect(result.isRight(), true);
+          final captured =
+              verify(mockRepository.login(captureAny)).captured.single
+                  as LoginParams;
+          expect(captured.email, 'test@example.com');
+          expect(captured.password, 'password123');
+          expect(captured.deviceId, 'device-123');
+        },
+      );
     });
   });
 }

@@ -5,6 +5,8 @@ import '../dtos/create_order_request_dto.dart';
 import 'order_api_service.dart';
 import 'order_remote_datasource.dart';
 import '../../../../core/error/dio_exception_handler.dart';
+import '../../../../core/error/failures.dart';
+import '../../../../core/error/exceptions.dart';
 import '../../../../core/network/resources/base_response_dto.dart';
 import '../../../../core/utils/logger/app_logger.dart';
 
@@ -63,7 +65,10 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
   Future<OrderDto> createOrderWithDto(CreateOrderRequestDto request) async {
     try {
       AppLogger.d('Creating new order with DTO');
-      final response = await _apiService.createOrderWithDto(request);
+      final response = await _apiService.createOrderWithDto(
+        request,
+        request.idempotencyKey,
+      );
       AppLogger.i('Successfully created order with DTO');
 
       if (response.isSuccess && response.data != null) {
@@ -73,6 +78,14 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
       }
     } on DioException catch (e) {
       AppLogger.e('Failed to create order with DTO', e);
+      final failure = DioExceptionHandler.handleException(e);
+      if (failure is ConflictFailure) {
+        throw CheckoutConflictException(
+          failure.code,
+          failure.message,
+          failure.details,
+        );
+      }
       throw DioExceptionHandler.mapDioExceptionToException(e);
     } catch (e) {
       AppLogger.e('Unexpected error creating order with DTO', e);

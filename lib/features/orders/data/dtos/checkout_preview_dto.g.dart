@@ -87,6 +87,10 @@ Map<String, dynamic> _$PriceChangeInfoToJson(_PriceChangeInfo instance) =>
 _CheckoutPreviewResponse _$CheckoutPreviewResponseFromJson(
   Map<String, dynamic> json,
 ) => _CheckoutPreviewResponse(
+  quoteId: json['quoteId'] as String?,
+  expiresAt: json['expiresAt'] == null
+      ? null
+      : DateTime.parse(json['expiresAt'] as String),
   restaurantId: (json['restaurantId'] as num?)?.toInt(),
   restaurantName: json['restaurantName'] as String?,
   items: (json['items'] as List<dynamic>?)
@@ -110,6 +114,8 @@ _CheckoutPreviewResponse _$CheckoutPreviewResponseFromJson(
 Map<String, dynamic> _$CheckoutPreviewResponseToJson(
   _CheckoutPreviewResponse instance,
 ) => <String, dynamic>{
+  'quoteId': instance.quoteId,
+  'expiresAt': instance.expiresAt?.toIso8601String(),
   'restaurantId': instance.restaurantId,
   'restaurantName': instance.restaurantName,
   'items': instance.items,

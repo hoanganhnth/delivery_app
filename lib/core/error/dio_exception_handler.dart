@@ -12,8 +12,22 @@ class DioExceptionHandler {
 
       case DioExceptionType.badResponse:
         final statusCode = exception.response?.statusCode;
-        final message = exception.response?.data?['message'];
-        
+        final payload = exception.response?.data;
+        final message = payload is Map ? payload['message'] : null;
+        final rawError = payload is Map ? payload['error'] : null;
+        final error = rawError is Map
+            ? Map<String, dynamic>.from(rawError)
+            : null;
+        final code = error?['code'];
+        final rawDetails = error?['details'];
+        if (statusCode == 409 && code is String && code.isNotEmpty) {
+          return Failure.conflict(
+            code,
+            message is String ? message : 'Request conflict',
+            rawDetails is Map ? Map<String, dynamic>.from(rawDetails) : null,
+          );
+        }
+
         if (message is String) {
           if (statusCode == 401) return Failure.unauthorized(message);
           if (statusCode == 404) return Failure.notFound(message);
@@ -64,6 +78,7 @@ class DioExceptionHandler {
       biometric: (msg) => AppException.server(msg), // Fallback
       notFound: (msg) => AppException.server(msg), // Fallback
       unexpected: (msg) => AppException.server(msg),
+      conflict: (code, msg, details) => AppException.server('$code: $msg'),
     );
   }
 }

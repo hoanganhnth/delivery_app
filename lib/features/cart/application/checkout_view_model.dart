@@ -18,6 +18,8 @@ import 'package:delivery_app/features/user_address/domain/entities/user_address_
 import 'package:delivery_app/features/user_address/application/address_list_notifier.dart';
 import 'package:delivery_app/features/user_address/application/address_store_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
+import 'package:delivery_app/core/error/failures.dart';
 
 final checkoutViewModelProvider =
     NotifierProvider<CheckoutViewModel, CheckoutViewState>(
@@ -46,6 +48,7 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
   bool _isVoucherLoading = false;
   bool _hasVoucherError = false;
   bool _isPlacingOrder = false;
+  String? _pendingIdempotencyKey;
 
   @override
   CheckoutViewState build() {
@@ -89,9 +92,12 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
         await _loadVouchers(force: true);
       case CheckoutNotesChanged(:final notes):
         _notes = notes;
+        _pendingIdempotencyKey = null;
         _publish();
       case CheckoutPlaceOrderRequested():
         await _placeOrder();
+      case CheckoutPriceChangeAccepted():
+        await _placeOrder(forceNewKey: true);
       case CheckoutBackRequested():
         _emit(const CheckoutNavigateBack());
       case CheckoutEffectConsumed(:final effectId):
@@ -223,7 +229,7 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
     await _refreshPreview();
   }
 
-  Future<void> _placeOrder() async {
+  Future<void> _placeOrder({bool forceNewKey = false}) async {
     if (_isPlacingOrder) return;
     final cart = _cartValue?.value;
     try {
@@ -232,12 +238,16 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
           CheckoutOrderBuildFailure.invalidInput,
         );
       }
+      if (forceNewKey || _pendingIdempotencyKey == null) {
+        _pendingIdempotencyKey = const Uuid().v4();
+      }
       final request = CheckoutOrderBuilder.buildOrderRequest(
         cart: cart,
         address: _address,
         preview: _confirmedPreview,
         notes: _notes.trim().isEmpty ? null : _notes.trim(),
         selectedVoucherId: _selectedVoucherId,
+        idempotencyKey: _pendingIdempotencyKey,
       );
       _isPlacingOrder = true;
       _publish();
@@ -246,6 +256,44 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
       await result.fold(
         (failure) async {
           _isPlacingOrder = false;
+          if (failure is ConflictFailure && failure.code == 'PRICE_CHANGED') {
+            final rawQuote = failure.details?['quote'];
+            if (rawQuote is Map) {
+              try {
+                final previewRequest = CheckoutOrderBuilder.buildPreviewRequest(
+                  cart: cart,
+                  address: _address,
+                  selectedVoucherId: _selectedVoucherId,
+                );
+                final changed = CheckoutPreviewResponse.fromJson(
+                  Map<String, dynamic>.from(rawQuote),
+                ).validateFor(previewRequest);
+                final oldTotal = _confirmedPreview?.totalPrice ?? 0;
+                _confirmedPreview = changed;
+                _confirmedPreviewKey = _previewKey(previewRequest);
+                _activePreviewKey = null;
+                _pendingIdempotencyKey = null;
+                _publish();
+                _emit(
+                  CheckoutPriceChanged(
+                    oldTotal: oldTotal,
+                    newTotal: changed.totalPrice ?? 0,
+                  ),
+                );
+                return;
+              } on FormatException {
+                // Fall through to the generic safe error below.
+              }
+            }
+          }
+          if (failure is ConflictFailure && failure.code == 'QUOTE_EXPIRED') {
+            _pendingIdempotencyKey = null;
+            _clearPreview();
+            _publish();
+            _emit(const CheckoutQuoteExpired());
+            unawaited(_refreshPreview(force: true));
+            return;
+          }
           _publish();
           _emit(
             CheckoutOrderPlaced(isSuccess: false, message: failure.message),
@@ -295,6 +343,7 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
 
   void _invalidatePreview() {
     _previewEpoch++;
+    _pendingIdempotencyKey = null;
     _clearPreview();
   }
 
@@ -408,7 +457,7 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
     return [
       cart.currentRestaurantId,
       for (final item in cart.items)
-        '${item.menuItemId}:${item.quantity}:${item.flashSaleItemId ?? ''}',
+        '${item.menuItemId}:${item.quantity}:${item.flashSaleItemId ?? ''}:${item.notes ?? ''}',
     ].join('|');
   }
 

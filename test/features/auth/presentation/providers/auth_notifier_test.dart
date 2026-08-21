@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:delivery_app/core/error/failures.dart';
 import 'package:delivery_app/core/services/app_initializer/i_app_initializer_service.dart';
 import 'package:delivery_app/features/auth/domain/entities/auth_entity.dart';
+import 'package:delivery_app/features/auth/domain/entities/registration_result.dart';
 import 'package:delivery_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:delivery_app/features/auth/domain/repositories/token_storage_repository.dart';
 import 'package:delivery_app/features/auth/domain/usecases/login_usecase.dart';
@@ -230,9 +231,11 @@ void main() {
           'Email đã tồn tại',
         );
         expect(harness.authRepository.loginCalls, 0);
-        expect(failed, isFalse);
+        expect(failed, isNull);
 
-        harness.authRepository.registerResult = const Right(true);
+        harness.authRepository.registerResult = const Right(
+          RegistrationResult(principalId: 11, profileCreated: true),
+        );
         final succeeded = await notifier.register(
           name: 'Customer Test',
           email: 'customer@test.dev',
@@ -242,7 +245,7 @@ void main() {
 
         expect(harness.authRepository.registerCalls, 2);
         expect(harness.authRepository.lastRegisterEmail, 'customer@test.dev');
-        expect(succeeded, isTrue);
+        expect(succeeded?.profileCreated, isTrue);
         expect(harness.authRepository.loginCalls, 0);
         expect(harness.container.read(authProvider).isAuthenticated, isFalse);
       },
@@ -374,7 +377,9 @@ class _FakeAuthRepository implements AuthRepository {
   Either<Failure, AuthEntity> loginResult = Right(
     AuthEntity(accessToken: 'access', refreshToken: 'refresh'),
   );
-  Either<Failure, bool> registerResult = const Right(true);
+  Either<Failure, RegistrationResult> registerResult = const Right(
+    RegistrationResult(principalId: 11, profileCreated: true),
+  );
   Either<Failure, AuthEntity> refreshResult = Right(
     AuthEntity(accessToken: 'new-access', refreshToken: 'new-refresh'),
   );
@@ -392,7 +397,7 @@ class _FakeAuthRepository implements AuthRepository {
   int logoutCalls = 0;
   String? lastLogoutToken;
   Completer<Either<Failure, AuthEntity>>? loginCompleter;
-  Completer<Either<Failure, bool>>? registerCompleter;
+  Completer<Either<Failure, RegistrationResult>>? registerCompleter;
 
   @override
   Future<Either<Failure, AuthEntity>> login(LoginParams params) async {
@@ -403,7 +408,7 @@ class _FakeAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> register(
+  Future<Either<Failure, RegistrationResult>> register(
     String? name,
     String email,
     String password,

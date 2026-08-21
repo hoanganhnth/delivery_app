@@ -20,13 +20,31 @@ sealed class RegisterRequestDto with _$RegisterRequestDto {
 sealed class AuthRegistrationDataDto with _$AuthRegistrationDataDto {
   const factory AuthRegistrationDataDto({
     required int authId,
+    int? principalId,
     required String email,
     required String role,
     required String provisioningToken,
+    String? registrationHandle,
+    DateTime? expiresAt,
+    String? lifecycleStatus,
   }) = _AuthRegistrationDataDto;
 
   factory AuthRegistrationDataDto.fromJson(Map<String, dynamic> json) =>
       _$AuthRegistrationDataDtoFromJson(json);
+}
+
+@freezed
+sealed class RegistrationStatusDataDto with _$RegistrationStatusDataDto {
+  const factory RegistrationStatusDataDto({
+    required int principalId,
+    required String status,
+    required String nextAction,
+    bool? profileLinked,
+    DateTime? expiresAt,
+  }) = _RegistrationStatusDataDto;
+
+  factory RegistrationStatusDataDto.fromJson(Map<String, dynamic> json) =>
+      _$RegistrationStatusDataDtoFromJson(json);
 }
 
 @freezed

@@ -30,6 +30,11 @@ abstract class AuthApiService {
     @Body() RegisterRequestDto request,
   );
 
+  @GET(ApiConstants.registrationStatus)
+  Future<BaseResponseDto<RegistrationStatusDataDto>> registrationStatus(
+    @Path('handle') String handle,
+  );
+
   @POST(ApiConstants.userRegistration)
   Future<BaseResponseDto<UserRegistrationDataDto>> registerUserProfile(
     @Body() UserRegistrationRequestDto request,
@@ -99,6 +104,21 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } catch (e) {
       AppLogger.e('Unexpected error during registration', e);
       throw Exception('Unexpected error: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<BaseResponseDto<RegistrationStatusDataDto>> registrationStatus(
+    String handle,
+  ) async {
+    try {
+      return await _apiService.registrationStatus(handle);
+    } on DioException catch (e) {
+      throw DioExceptionHandler.mapDioExceptionToException(e);
+    } catch (e) {
+      throw Exception(
+        'Unexpected registration recovery status error: ${e.toString()}',
+      );
     }
   }
 

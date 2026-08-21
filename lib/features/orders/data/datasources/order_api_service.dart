@@ -28,6 +28,7 @@ abstract class OrderApiService {
   @POST(ApiConstants.order)
   Future<BaseResponseDto<OrderDto>> createOrderWithDto(
     @Body() CreateOrderRequestDto request,
+    @Header('Idempotency-Key') String? idempotencyKey,
   );
 
   // /// Cập nhật trạng thái đơn hàng

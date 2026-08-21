@@ -1,5 +1,6 @@
 import 'package:delivery_app/core/error/failures.dart';
 import 'package:delivery_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:delivery_app/features/auth/domain/entities/registration_result.dart';
 import 'package:delivery_app/features/auth/domain/usecases/register_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
@@ -15,7 +16,9 @@ void main() {
   late MockAuthRepository mockRepository;
 
   // Provide dummy for Either type
-  provideDummy<Either<Failure, bool>>(left(const ServerFailure('dummy')));
+  provideDummy<Either<Failure, RegistrationResult>>(
+    left(const ServerFailure('dummy')),
+  );
 
   setUp(() {
     mockRepository = MockAuthRepository();
@@ -102,30 +105,35 @@ void main() {
     });
 
     group('Business Logic Tests', () {
-      test('should return true when registration is successful', () async {
-        // Arrange
-        when(
-          mockRepository.register(any, any, any),
-        ).thenAnswer((_) async => right(true));
+      test(
+        'should return a completed registration when registration succeeds',
+        () async {
+          // Arrange
+          when(mockRepository.register(any, any, any)).thenAnswer(
+            (_) async => right(
+              const RegistrationResult(principalId: 11, profileCreated: true),
+            ),
+          );
 
-        // Act
-        final result = await usecase(validRegisterParams);
+          // Act
+          final result = await usecase(validRegisterParams);
 
-        // Assert
-        expect(result.isRight(), true);
-        result.fold(
-          (failure) => fail('Should not return failure'),
-          (success) => expect(success, true),
-        );
+          // Assert
+          expect(result.isRight(), true);
+          result.fold(
+            (failure) => fail('Should not return failure'),
+            (success) => expect(success.profileCreated, isTrue),
+          );
 
-        verify(
-          mockRepository.register(
-            'Test User',
-            'test@example.com',
-            'password123',
-          ),
-        ).called(1);
-      });
+          verify(
+            mockRepository.register(
+              'Test User',
+              'test@example.com',
+              'password123',
+            ),
+          ).called(1);
+        },
+      );
 
       test(
         'should return ServerFailure when repository returns failure',
@@ -196,9 +204,11 @@ void main() {
           // No name provided
         );
 
-        when(
-          mockRepository.register(any, any, any),
-        ).thenAnswer((_) async => right(true));
+        when(mockRepository.register(any, any, any)).thenAnswer(
+          (_) async => right(
+            const RegistrationResult(principalId: 11, profileCreated: true),
+          ),
+        );
 
         // Act
         final result = await usecase(paramsWithoutName);

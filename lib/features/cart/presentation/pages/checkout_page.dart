@@ -78,6 +78,23 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
         }
       case CheckoutShowUnavailableItems(:final itemIds):
         if (mounted) await _showUnavailableItems(itemIds);
+      case CheckoutPriceChanged(:final oldTotal, :final newTotal):
+        if (mounted) {
+          final accepted = await _showPriceChanged(oldTotal, newTotal);
+          if (accepted == true && mounted) {
+            await ref
+                .read(checkoutViewModelProvider.notifier)
+                .dispatch(const CheckoutPriceChangeAccepted());
+          }
+        }
+      case CheckoutQuoteExpired():
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Báo giá đã hết hạn, giá mới đã được cập nhật.'),
+            ),
+          );
+        }
       case CheckoutOrderPlaced(:final isSuccess, :final message):
         if (mounted) {
           if (isSuccess) {
@@ -119,4 +136,31 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
       ),
     );
   }
+
+  Future<bool?> _showPriceChanged(double oldTotal, double newTotal) {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialog) => AlertDialog(
+        title: const Text('Giá đơn hàng đã thay đổi'),
+        content: Text(
+          'Giá cũ: ${_formatVnd(oldTotal)}\n'
+          'Giá mới: ${_formatVnd(newTotal)}\n\n'
+          'Bạn có muốn tiếp tục đặt đơn với giá mới không?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialog).pop(false),
+            child: const Text('Hủy'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialog).pop(true),
+            child: const Text('Xác nhận giá mới'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatVnd(double value) => '${value.toStringAsFixed(0)}đ';
 }

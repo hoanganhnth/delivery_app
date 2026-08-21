@@ -9,6 +9,7 @@ void main() {
 
       // Act
       final createOrderRequest = CreateOrderRequestDto(
+        quoteId: '00000000-0000-0000-0000-000000000001',
         restaurantId: 1,
         deliveryAddress: '456 Đường XYZ, Quận 1, TP.HCM',
         deliveryLat: 10.78,
@@ -39,6 +40,7 @@ void main() {
 
       // Act
       final createOrderRequest = CreateOrderRequestDto(
+        quoteId: '00000000-0000-0000-0000-000000000002',
         restaurantId: 1,
         deliveryAddress: '456 Đường XYZ',
         deliveryLat: 10.78,

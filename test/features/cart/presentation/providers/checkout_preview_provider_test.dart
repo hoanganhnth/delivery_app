@@ -26,7 +26,7 @@ void main() {
       expect(container.read(checkoutPreviewProvider).isLoading, isTrue);
 
       pending.complete(
-        const BaseResponseDto(status: 1, message: 'ok', data: _preview),
+        BaseResponseDto(status: 1, message: 'ok', data: _preview),
       );
       final result = await first;
 
@@ -53,7 +53,7 @@ void main() {
       contains('Không thể tính phí giao hàng'),
     );
 
-    response = const BaseResponseDto(status: 1, message: 'ok', data: _preview);
+    response = BaseResponseDto(status: 1, message: 'ok', data: _preview);
     expect((await notifier.loadPreview(_request))?.totalPrice, 65000);
     expect(container.read(checkoutPreviewProvider).hasValue, isTrue);
     expect(service.calls, 2);
@@ -101,7 +101,9 @@ const _request = CheckoutPreviewRequest(
   items: [CheckoutPreviewItemRequest(menuItemId: 301, quantity: 1)],
 );
 
-const _preview = CheckoutPreviewResponse(
+final _preview = CheckoutPreviewResponse(
+  quoteId: '00000000-0000-0000-0000-000000000001',
+  expiresAt: _futureExpiry,
   restaurantId: 201,
   restaurantName: 'Bếp test',
   items: [
@@ -119,6 +121,8 @@ const _preview = CheckoutPreviewResponse(
   totalPrice: 65000,
   unavailableItemIds: [],
 );
+
+final _futureExpiry = DateTime.utc(2099, 1, 1);
 
 ProviderContainer _container(_FakeOrderApiService service) {
   return ProviderContainer(

@@ -8,6 +8,8 @@ import 'dart:async' as _i3;
 import 'package:delivery_app/core/error/failures.dart' as _i5;
 import 'package:delivery_app/features/auth/domain/entities/auth_entity.dart'
     as _i6;
+import 'package:delivery_app/features/auth/domain/entities/registration_result.dart'
+    as _i10;
 import 'package:delivery_app/features/auth/domain/repositories/auth_repository.dart'
     as _i2;
 import 'package:delivery_app/features/auth/domain/usecases/login_usecase.dart'
@@ -73,21 +75,26 @@ class MockAuthRepository extends _i1.Mock implements _i2.AuthRepository {
           as _i3.Future<_i4.Either<_i5.Failure, _i6.AuthEntity>>);
 
   @override
-  _i3.Future<_i4.Either<_i5.Failure, bool>> register(
+  _i3.Future<_i4.Either<_i5.Failure, _i10.RegistrationResult>> register(
     String? name,
     String? email,
     String? password,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#register, [name, email, password]),
-            returnValue: _i3.Future<_i4.Either<_i5.Failure, bool>>.value(
-              _i8.dummyValue<_i4.Either<_i5.Failure, bool>>(
-                this,
-                Invocation.method(#register, [name, email, password]),
-              ),
-            ),
+            returnValue:
+                _i3.Future<
+                  _i4.Either<_i5.Failure, _i10.RegistrationResult>
+                >.value(
+                  _i8.dummyValue<
+                    _i4.Either<_i5.Failure, _i10.RegistrationResult>
+                  >(
+                    this,
+                    Invocation.method(#register, [name, email, password]),
+                  ),
+                ),
           )
-          as _i3.Future<_i4.Either<_i5.Failure, bool>>);
+          as _i3.Future<_i4.Either<_i5.Failure, _i10.RegistrationResult>>);
 
   @override
   _i3.Future<_i4.Either<_i5.Failure, _i6.AuthEntity>> refreshToken(

@@ -13,6 +13,7 @@ import 'package:delivery_app/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:delivery_app/features/auth/application/session/auth_state.dart';
 import 'package:delivery_app/features/auth/di/auth_di_providers.dart';
 import 'package:delivery_app/features/auth/di/storage_di_providers.dart';
+import 'package:delivery_app/features/auth/domain/entities/registration_result.dart';
 import 'package:delivery_app/features/auth/services/auth_platform_ports.dart';
 import 'package:delivery_app/core/services/app_initializer/_riverpod/app_initializer_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -196,7 +197,7 @@ class AuthNotifier extends _$AuthNotifier {
   }
 
   // Register method - simplified
-  Future<bool> register({
+  Future<RegistrationResult?> register({
     String? name,
     required String email,
     required String password,
@@ -206,7 +207,7 @@ class AuthNotifier extends _$AuthNotifier {
     String? deviceType,
     String? ipAddress,
   }) async {
-    if (state.isRegisterLoading) return false;
+    if (state.isRegisterLoading) return null;
     state = const AuthState.unauthenticated(isRegisterLoading: true);
 
     final params = RegisterParams(
@@ -217,16 +218,16 @@ class AuthNotifier extends _$AuthNotifier {
     );
     final result = await _registerUseCase(params);
 
-    if (!ref.mounted) return false;
+    if (!ref.mounted) return null;
 
     return result.fold(
       (failure) {
         state = AuthState.unauthenticated(failure: failure);
-        return false;
+        return null;
       },
-      (success) {
+      (registration) {
         state = const AuthState.unauthenticated();
-        return success;
+        return registration;
       },
     );
   }

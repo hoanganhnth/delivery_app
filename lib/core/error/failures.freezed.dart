@@ -86,7 +86,7 @@ extension FailurePatterns on Failure {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ServerFailure value)?  server,TResult Function( UnauthorizedFailure value)?  unauthorized,TResult Function( ValidationFailure value)?  validation,TResult Function( NetworkFailure value)?  network,TResult Function( CacheFailure value)?  cache,TResult Function( LocationFailure value)?  location,TResult Function( BiometricFailure value)?  biometric,TResult Function( NotFoundFailure value)?  notFound,TResult Function( UnexpectedFailure value)?  unexpected,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ServerFailure value)?  server,TResult Function( UnauthorizedFailure value)?  unauthorized,TResult Function( ValidationFailure value)?  validation,TResult Function( NetworkFailure value)?  network,TResult Function( CacheFailure value)?  cache,TResult Function( LocationFailure value)?  location,TResult Function( BiometricFailure value)?  biometric,TResult Function( NotFoundFailure value)?  notFound,TResult Function( UnexpectedFailure value)?  unexpected,TResult Function( ConflictFailure value)?  conflict,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
@@ -98,7 +98,8 @@ return cache(_that);case LocationFailure() when location != null:
 return location(_that);case BiometricFailure() when biometric != null:
 return biometric(_that);case NotFoundFailure() when notFound != null:
 return notFound(_that);case UnexpectedFailure() when unexpected != null:
-return unexpected(_that);case _:
+return unexpected(_that);case ConflictFailure() when conflict != null:
+return conflict(_that);case _:
   return orElse();
 
 }
@@ -116,7 +117,7 @@ return unexpected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ServerFailure value)  server,required TResult Function( UnauthorizedFailure value)  unauthorized,required TResult Function( ValidationFailure value)  validation,required TResult Function( NetworkFailure value)  network,required TResult Function( CacheFailure value)  cache,required TResult Function( LocationFailure value)  location,required TResult Function( BiometricFailure value)  biometric,required TResult Function( NotFoundFailure value)  notFound,required TResult Function( UnexpectedFailure value)  unexpected,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ServerFailure value)  server,required TResult Function( UnauthorizedFailure value)  unauthorized,required TResult Function( ValidationFailure value)  validation,required TResult Function( NetworkFailure value)  network,required TResult Function( CacheFailure value)  cache,required TResult Function( LocationFailure value)  location,required TResult Function( BiometricFailure value)  biometric,required TResult Function( NotFoundFailure value)  notFound,required TResult Function( UnexpectedFailure value)  unexpected,required TResult Function( ConflictFailure value)  conflict,}){
 final _that = this;
 switch (_that) {
 case ServerFailure():
@@ -128,7 +129,8 @@ return cache(_that);case LocationFailure():
 return location(_that);case BiometricFailure():
 return biometric(_that);case NotFoundFailure():
 return notFound(_that);case UnexpectedFailure():
-return unexpected(_that);}
+return unexpected(_that);case ConflictFailure():
+return conflict(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -142,7 +144,7 @@ return unexpected(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ServerFailure value)?  server,TResult? Function( UnauthorizedFailure value)?  unauthorized,TResult? Function( ValidationFailure value)?  validation,TResult? Function( NetworkFailure value)?  network,TResult? Function( CacheFailure value)?  cache,TResult? Function( LocationFailure value)?  location,TResult? Function( BiometricFailure value)?  biometric,TResult? Function( NotFoundFailure value)?  notFound,TResult? Function( UnexpectedFailure value)?  unexpected,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ServerFailure value)?  server,TResult? Function( UnauthorizedFailure value)?  unauthorized,TResult? Function( ValidationFailure value)?  validation,TResult? Function( NetworkFailure value)?  network,TResult? Function( CacheFailure value)?  cache,TResult? Function( LocationFailure value)?  location,TResult? Function( BiometricFailure value)?  biometric,TResult? Function( NotFoundFailure value)?  notFound,TResult? Function( UnexpectedFailure value)?  unexpected,TResult? Function( ConflictFailure value)?  conflict,}){
 final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
@@ -154,7 +156,8 @@ return cache(_that);case LocationFailure() when location != null:
 return location(_that);case BiometricFailure() when biometric != null:
 return biometric(_that);case NotFoundFailure() when notFound != null:
 return notFound(_that);case UnexpectedFailure() when unexpected != null:
-return unexpected(_that);case _:
+return unexpected(_that);case ConflictFailure() when conflict != null:
+return conflict(_that);case _:
   return null;
 
 }
@@ -171,7 +174,7 @@ return unexpected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String message)?  server,TResult Function( String message)?  unauthorized,TResult Function( String message)?  validation,TResult Function( String message)?  network,TResult Function( String message)?  cache,TResult Function( String message)?  location,TResult Function( String message)?  biometric,TResult Function( String message)?  notFound,TResult Function( String message)?  unexpected,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String message)?  server,TResult Function( String message)?  unauthorized,TResult Function( String message)?  validation,TResult Function( String message)?  network,TResult Function( String message)?  cache,TResult Function( String message)?  location,TResult Function( String message)?  biometric,TResult Function( String message)?  notFound,TResult Function( String message)?  unexpected,TResult Function( String code,  String message,  Map<String, dynamic>? details)?  conflict,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
 return server(_that.message);case UnauthorizedFailure() when unauthorized != null:
@@ -182,7 +185,8 @@ return cache(_that.message);case LocationFailure() when location != null:
 return location(_that.message);case BiometricFailure() when biometric != null:
 return biometric(_that.message);case NotFoundFailure() when notFound != null:
 return notFound(_that.message);case UnexpectedFailure() when unexpected != null:
-return unexpected(_that.message);case _:
+return unexpected(_that.message);case ConflictFailure() when conflict != null:
+return conflict(_that.code,_that.message,_that.details);case _:
   return orElse();
 
 }
@@ -200,7 +204,7 @@ return unexpected(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String message)  server,required TResult Function( String message)  unauthorized,required TResult Function( String message)  validation,required TResult Function( String message)  network,required TResult Function( String message)  cache,required TResult Function( String message)  location,required TResult Function( String message)  biometric,required TResult Function( String message)  notFound,required TResult Function( String message)  unexpected,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String message)  server,required TResult Function( String message)  unauthorized,required TResult Function( String message)  validation,required TResult Function( String message)  network,required TResult Function( String message)  cache,required TResult Function( String message)  location,required TResult Function( String message)  biometric,required TResult Function( String message)  notFound,required TResult Function( String message)  unexpected,required TResult Function( String code,  String message,  Map<String, dynamic>? details)  conflict,}) {final _that = this;
 switch (_that) {
 case ServerFailure():
 return server(_that.message);case UnauthorizedFailure():
@@ -211,7 +215,8 @@ return cache(_that.message);case LocationFailure():
 return location(_that.message);case BiometricFailure():
 return biometric(_that.message);case NotFoundFailure():
 return notFound(_that.message);case UnexpectedFailure():
-return unexpected(_that.message);}
+return unexpected(_that.message);case ConflictFailure():
+return conflict(_that.code,_that.message,_that.details);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -225,7 +230,7 @@ return unexpected(_that.message);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String message)?  server,TResult? Function( String message)?  unauthorized,TResult? Function( String message)?  validation,TResult? Function( String message)?  network,TResult? Function( String message)?  cache,TResult? Function( String message)?  location,TResult? Function( String message)?  biometric,TResult? Function( String message)?  notFound,TResult? Function( String message)?  unexpected,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String message)?  server,TResult? Function( String message)?  unauthorized,TResult? Function( String message)?  validation,TResult? Function( String message)?  network,TResult? Function( String message)?  cache,TResult? Function( String message)?  location,TResult? Function( String message)?  biometric,TResult? Function( String message)?  notFound,TResult? Function( String message)?  unexpected,TResult? Function( String code,  String message,  Map<String, dynamic>? details)?  conflict,}) {final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
 return server(_that.message);case UnauthorizedFailure() when unauthorized != null:
@@ -236,7 +241,8 @@ return cache(_that.message);case LocationFailure() when location != null:
 return location(_that.message);case BiometricFailure() when biometric != null:
 return biometric(_that.message);case NotFoundFailure() when notFound != null:
 return notFound(_that.message);case UnexpectedFailure() when unexpected != null:
-return unexpected(_that.message);case _:
+return unexpected(_that.message);case ConflictFailure() when conflict != null:
+return conflict(_that.code,_that.message,_that.details);case _:
   return null;
 
 }
@@ -249,7 +255,7 @@ return unexpected(_that.message);case _:
 
 class ServerFailure implements Failure {
   const ServerFailure([this.message = 'Server Failure']);
-  
+
 
 @override@JsonKey() final  String message;
 
@@ -832,6 +838,84 @@ class _$UnexpectedFailureCopyWithImpl<$Res>
   return _then(UnexpectedFailure(
 null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class ConflictFailure implements Failure {
+  const ConflictFailure(this.code, [this.message = 'Request conflict', final  Map<String, dynamic>? details]): _details = details;
+
+
+ final  String code;
+@override@JsonKey() final  String message;
+ final  Map<String, dynamic>? _details;
+ Map<String, dynamic>? get details {
+  final value = _details;
+  if (value == null) return null;
+  if (_details is EqualUnmodifiableMapView) return _details;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(value);
+}
+
+
+/// Create a copy of Failure
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ConflictFailureCopyWith<ConflictFailure> get copyWith => _$ConflictFailureCopyWithImpl<ConflictFailure>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ConflictFailure&&(identical(other.code, code) || other.code == code)&&(identical(other.message, message) || other.message == message)&&const DeepCollectionEquality().equals(other._details, _details));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,code,message,const DeepCollectionEquality().hash(_details));
+
+@override
+String toString() {
+  return 'Failure.conflict(code: $code, message: $message, details: $details)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ConflictFailureCopyWith<$Res> implements $FailureCopyWith<$Res> {
+  factory $ConflictFailureCopyWith(ConflictFailure value, $Res Function(ConflictFailure) _then) = _$ConflictFailureCopyWithImpl;
+@override @useResult
+$Res call({
+ String code, String message, Map<String, dynamic>? details
+});
+
+
+
+
+}
+/// @nodoc
+class _$ConflictFailureCopyWithImpl<$Res>
+    implements $ConflictFailureCopyWith<$Res> {
+  _$ConflictFailureCopyWithImpl(this._self, this._then);
+
+  final ConflictFailure _self;
+  final $Res Function(ConflictFailure) _then;
+
+/// Create a copy of Failure
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? message = null,Object? details = freezed,}) {
+  return _then(ConflictFailure(
+null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,freezed == details ? _self._details : details // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>?,
   ));
 }
 

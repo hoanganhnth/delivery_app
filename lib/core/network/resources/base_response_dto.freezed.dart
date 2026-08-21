@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BaseResponseDto<T> {
 
- int get status; String get message; T? get data;
+ int get status; String get message; T? get data; Map<String, dynamic>? get error;
 /// Create a copy of BaseResponseDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $BaseResponseDtoCopyWith<T, BaseResponseDto<T>> get copyWith => _$BaseResponseDt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BaseResponseDto<T>&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message)&&const DeepCollectionEquality().equals(other.data, data));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BaseResponseDto<T>&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message)&&const DeepCollectionEquality().equals(other.data, data)&&const DeepCollectionEquality().equals(other.error, error));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,status,message,const DeepCollectionEquality().hash(data));
+int get hashCode => Object.hash(runtimeType,status,message,const DeepCollectionEquality().hash(data),const DeepCollectionEquality().hash(error));
 
 @override
 String toString() {
-  return 'BaseResponseDto<$T>(status: $status, message: $message, data: $data)';
+  return 'BaseResponseDto<$T>(status: $status, message: $message, data: $data, error: $error)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $BaseResponseDtoCopyWith<T,$Res>  {
   factory $BaseResponseDtoCopyWith(BaseResponseDto<T> value, $Res Function(BaseResponseDto<T>) _then) = _$BaseResponseDtoCopyWithImpl;
 @useResult
 $Res call({
- int status, String message, T? data
+ int status, String message, T? data, Map<String, dynamic>? error
 });
 
 
@@ -65,12 +65,13 @@ class _$BaseResponseDtoCopyWithImpl<T,$Res>
 
 /// Create a copy of BaseResponseDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? message = null,Object? data = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? message = null,Object? data = freezed,Object? error = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as int,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
-as T?,
+as T?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>?,
   ));
 }
 
@@ -155,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int status,  String message,  T? data)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int status,  String message,  T? data,  Map<String, dynamic>? error)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BaseResponseDto() when $default != null:
-return $default(_that.status,_that.message,_that.data);case _:
+return $default(_that.status,_that.message,_that.data,_that.error);case _:
   return orElse();
 
 }
@@ -176,10 +177,10 @@ return $default(_that.status,_that.message,_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int status,  String message,  T? data)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int status,  String message,  T? data,  Map<String, dynamic>? error)  $default,) {final _that = this;
 switch (_that) {
 case _BaseResponseDto():
-return $default(_that.status,_that.message,_that.data);case _:
+return $default(_that.status,_that.message,_that.data,_that.error);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +197,10 @@ return $default(_that.status,_that.message,_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int status,  String message,  T? data)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int status,  String message,  T? data,  Map<String, dynamic>? error)?  $default,) {final _that = this;
 switch (_that) {
 case _BaseResponseDto() when $default != null:
-return $default(_that.status,_that.message,_that.data);case _:
+return $default(_that.status,_that.message,_that.data,_that.error);case _:
   return null;
 
 }
@@ -211,12 +212,21 @@ return $default(_that.status,_that.message,_that.data);case _:
 @JsonSerializable(genericArgumentFactories: true)
 
 class _BaseResponseDto<T> implements BaseResponseDto<T> {
-  const _BaseResponseDto({required this.status, required this.message, this.data});
+  const _BaseResponseDto({required this.status, required this.message, this.data, final  Map<String, dynamic>? error}): _error = error;
   factory _BaseResponseDto.fromJson(Map<String, dynamic> json,T Function(Object?) fromJsonT) => _$BaseResponseDtoFromJson(json,fromJsonT);
 
 @override final  int status;
 @override final  String message;
 @override final  T? data;
+ final  Map<String, dynamic>? _error;
+@override Map<String, dynamic>? get error {
+  final value = _error;
+  if (value == null) return null;
+  if (_error is EqualUnmodifiableMapView) return _error;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(value);
+}
+
 
 /// Create a copy of BaseResponseDto
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +241,16 @@ Map<String, dynamic> toJson(Object? Function(T) toJsonT) {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BaseResponseDto<T>&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message)&&const DeepCollectionEquality().equals(other.data, data));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BaseResponseDto<T>&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message)&&const DeepCollectionEquality().equals(other.data, data)&&const DeepCollectionEquality().equals(other._error, _error));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,status,message,const DeepCollectionEquality().hash(data));
+int get hashCode => Object.hash(runtimeType,status,message,const DeepCollectionEquality().hash(data),const DeepCollectionEquality().hash(_error));
 
 @override
 String toString() {
-  return 'BaseResponseDto<$T>(status: $status, message: $message, data: $data)';
+  return 'BaseResponseDto<$T>(status: $status, message: $message, data: $data, error: $error)';
 }
 
 
@@ -251,7 +261,7 @@ abstract mixin class _$BaseResponseDtoCopyWith<T,$Res> implements $BaseResponseD
   factory _$BaseResponseDtoCopyWith(_BaseResponseDto<T> value, $Res Function(_BaseResponseDto<T>) _then) = __$BaseResponseDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int status, String message, T? data
+ int status, String message, T? data, Map<String, dynamic>? error
 });
 
 
@@ -268,12 +278,13 @@ class __$BaseResponseDtoCopyWithImpl<T,$Res>
 
 /// Create a copy of BaseResponseDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? message = null,Object? data = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? message = null,Object? data = freezed,Object? error = freezed,}) {
   return _then(_BaseResponseDto<T>(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as int,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
-as T?,
+as T?,error: freezed == error ? _self._error : error // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>?,
   ));
 }
 

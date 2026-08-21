@@ -34,6 +34,10 @@ final class CheckoutPlaceOrderRequested extends CheckoutIntent {
   const CheckoutPlaceOrderRequested();
 }
 
+final class CheckoutPriceChangeAccepted extends CheckoutIntent {
+  const CheckoutPriceChangeAccepted();
+}
+
 final class CheckoutBackRequested extends CheckoutIntent {
   const CheckoutBackRequested();
 }

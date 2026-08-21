@@ -10,6 +10,9 @@ abstract class AuthRemoteDataSource {
   Future<BaseResponseDto<AuthRegistrationDataDto>> register(
     RegisterRequestDto request,
   );
+  Future<BaseResponseDto<RegistrationStatusDataDto>> registrationStatus(
+    String handle,
+  );
   Future<BaseResponseDto<UserRegistrationDataDto>> registerUserProfile(
     UserRegistrationRequestDto request,
   );

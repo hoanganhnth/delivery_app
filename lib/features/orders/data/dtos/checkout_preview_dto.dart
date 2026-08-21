@@ -65,6 +65,8 @@ sealed class PriceChangeInfo with _$PriceChangeInfo {
 @freezed
 sealed class CheckoutPreviewResponse with _$CheckoutPreviewResponse {
   const factory CheckoutPreviewResponse({
+    String? quoteId,
+    DateTime? expiresAt,
     int? restaurantId,
     String? restaurantName,
     List<PreviewItemDetail>? items,
@@ -98,6 +100,13 @@ extension CheckoutPreviewResponseContract on CheckoutPreviewResponse {
     final currentShippingFee = shippingFee;
     final currentDiscount = discountAmount;
     final currentTotal = totalPrice;
+
+    if (quoteId == null || quoteId!.trim().isEmpty || expiresAt == null) {
+      throw const FormatException('Checkout preview quote is missing');
+    }
+    if (!expiresAt!.toUtc().isAfter(DateTime.now().toUtc())) {
+      throw const FormatException('Checkout preview quote has expired');
+    }
 
     if (currentRestaurantId != request.restaurantId ||
         currentRestaurantName == null ||

@@ -24,6 +24,9 @@ Failure mapExceptionToFailure(Object e) {
   if (e is ValidationException) {
     return Failure.validation(e.message);
   }
+  if (e is CheckoutConflictException) {
+    return Failure.conflict(e.code, e.message, e.details);
+  }
 
   // Handle other common exception types
   if (e is FormatException) {

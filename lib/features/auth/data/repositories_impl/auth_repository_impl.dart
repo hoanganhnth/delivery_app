@@ -1,6 +1,7 @@
 import 'package:delivery_app/core/network/resources/base_response_dto.dart';
 import 'package:delivery_app/features/auth/data/dtos/auth_response_dto.dart';
 import 'package:delivery_app/features/auth/domain/entities/auth_entity.dart';
+import 'package:delivery_app/features/auth/domain/entities/registration_result.dart';
 import 'package:delivery_app/features/auth/domain/usecases/login_usecase.dart';
 import 'package:delivery_app/features/auth/domain/usecases/social_login_usecase.dart';
 import 'package:fpdart/fpdart.dart';
@@ -75,7 +76,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> register(
+  Future<Either<Failure, RegistrationResult>> register(
     String? name,
     String email,
     String password,
@@ -92,22 +93,90 @@ class AuthRepositoryImpl implements AuthRepository {
         return left(ServerFailure(authResponse.message));
       }
 
-      final profileResponse = await remoteDataSource.registerUserProfile(
-        UserRegistrationRequestDto(
-          provisioningToken: authResponse.data!.provisioningToken,
-          fullName: name,
-        ),
-      );
-      if (!profileResponse.isSuccess || profileResponse.data == null) {
-        return left(ServerFailure(profileResponse.message));
+      final authRegistration = authResponse.data!;
+      try {
+        final profileResponse = await remoteDataSource.registerUserProfile(
+          UserRegistrationRequestDto(
+            provisioningToken: authRegistration.provisioningToken,
+            fullName: name,
+          ),
+        );
+        if (profileResponse.isSuccess && profileResponse.data != null) {
+          return right(
+            _registrationResult(authRegistration, profileCreated: true),
+          );
+        }
+        return right(
+          await _recoverRegistration(authRegistration, profileResponse.message),
+        );
+      } on Exception catch (_) {
+        return right(
+          await _recoverRegistration(
+            authRegistration,
+            'Could not confirm profile creation. Please submit registration again.',
+          ),
+        );
       }
-      return right(true);
     } on Exception catch (e) {
       return left(mapExceptionToFailure(e));
     } catch (e) {
       return left(const ServerFailure('Unexpected error occurred'));
     }
   }
+
+  Future<RegistrationResult> _recoverRegistration(
+    AuthRegistrationDataDto registration,
+    String fallbackMessage,
+  ) async {
+    final handle = registration.registrationHandle;
+    if (handle == null || handle.isEmpty) {
+      return _registrationResult(
+        registration,
+        profileCreated: false,
+        recoveryMessage: fallbackMessage,
+      );
+    }
+
+    try {
+      final statusResponse = await remoteDataSource.registrationStatus(handle);
+      final status = statusResponse.data;
+      if (statusResponse.isSuccess && status != null) {
+        // Lifecycle is Auth-owned and can be BLOCKED before a User profile is
+        // created. Only Auth's explicit linkage fact can confirm completion.
+        final profileCreated = status.profileLinked == true;
+        return RegistrationResult(
+          principalId: status.principalId,
+          profileCreated: profileCreated,
+          registrationHandle: handle,
+          expiresAt: status.expiresAt ?? registration.expiresAt,
+          lifecycleStatus: status.status,
+          recoveryMessage: profileCreated ? null : fallbackMessage,
+        );
+      }
+    } on Exception {
+      // The Auth status endpoint is a best-effort recovery probe. The normal
+      // retry remains idempotent even when the probe cannot be reached.
+    }
+
+    return _registrationResult(
+      registration,
+      profileCreated: false,
+      recoveryMessage: fallbackMessage,
+    );
+  }
+
+  RegistrationResult _registrationResult(
+    AuthRegistrationDataDto registration, {
+    required bool profileCreated,
+    String? recoveryMessage,
+  }) => RegistrationResult(
+    principalId: registration.principalId ?? registration.authId,
+    profileCreated: profileCreated,
+    registrationHandle: registration.registrationHandle,
+    expiresAt: registration.expiresAt,
+    lifecycleStatus: registration.lifecycleStatus,
+    recoveryMessage: recoveryMessage,
+  );
 
   @override
   Future<Either<Failure, AuthEntity>> refreshToken(String refreshToken) async {

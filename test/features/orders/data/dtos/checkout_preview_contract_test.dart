@@ -10,6 +10,8 @@ void main() {
   );
 
   CheckoutPreviewResponse preview({
+    String? quoteId = '00000000-0000-0000-0000-000000000001',
+    DateTime? expiresAt,
     int? restaurantId = 7,
     String? restaurantName = 'Quán thật',
     double? unitPrice = 45000,
@@ -22,6 +24,8 @@ void main() {
     List<int>? unavailableItemIds = const [],
   }) {
     return CheckoutPreviewResponse(
+      quoteId: quoteId,
+      expiresAt: expiresAt ?? _futureExpiry,
       restaurantId: restaurantId,
       restaurantName: restaurantName,
       items: [
@@ -68,3 +72,5 @@ void main() {
     );
   });
 }
+
+final _futureExpiry = DateTime.utc(2099, 1, 1);

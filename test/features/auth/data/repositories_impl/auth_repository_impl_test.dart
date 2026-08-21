@@ -206,7 +206,7 @@ void main() {
         expect(result.isRight(), true);
         result.fold(
           (failure) => fail('Should not return failure'),
-          (success) => expect(success, true),
+          (success) => expect(success.profileCreated, isTrue),
         );
 
         verify(mockRemoteDataSource.register(any)).called(1);
@@ -245,39 +245,58 @@ void main() {
         verifyNever(mockRemoteDataSource.registerUserProfile(any));
       });
 
-      test('should fail when user profile registration fails', () async {
-        when(mockRemoteDataSource.register(any)).thenAnswer(
-          (_) async => const BaseResponseDto<AuthRegistrationDataDto>(
-            status: 1,
-            message: 'Auth registered',
-            data: AuthRegistrationDataDto(
-              authId: 11,
-              email: testEmail,
-              role: 'USER',
-              provisioningToken: 'opaque-handoff',
+      test(
+        'should return a recoverable result when user profile registration fails',
+        () async {
+          when(mockRemoteDataSource.register(any)).thenAnswer(
+            (_) async => const BaseResponseDto<AuthRegistrationDataDto>(
+              status: 1,
+              message: 'Auth registered',
+              data: AuthRegistrationDataDto(
+                authId: 11,
+                email: testEmail,
+                role: 'USER',
+                provisioningToken: 'opaque-handoff',
+                registrationHandle: 'opaque-recovery-handle',
+              ),
             ),
-          ),
-        );
-        when(mockRemoteDataSource.registerUserProfile(any)).thenAnswer(
-          (_) async => const BaseResponseDto<UserRegistrationDataDto>(
-            status: 0,
-            message: 'Profile unavailable',
-            data: null,
-          ),
-        );
+          );
+          when(mockRemoteDataSource.registerUserProfile(any)).thenAnswer(
+            (_) async => const BaseResponseDto<UserRegistrationDataDto>(
+              status: 0,
+              message: 'Profile unavailable',
+              data: null,
+            ),
+          );
+          when(mockRemoteDataSource.registrationStatus(any)).thenAnswer(
+            (_) async => const BaseResponseDto<RegistrationStatusDataDto>(
+              status: 1,
+              message: 'Pending profile',
+              data: RegistrationStatusDataDto(
+                principalId: 11,
+                status: 'PENDING_PROFILE',
+                nextAction: 'CREATE_PROFILE',
+                profileLinked: false,
+              ),
+            ),
+          );
 
-        final result = await repository.register(
-          'New User',
-          testEmail,
-          testPassword,
-        );
+          final result = await repository.register(
+            'New User',
+            testEmail,
+            testPassword,
+          );
 
-        expect(result.isLeft(), true);
-        result.fold(
-          (failure) => expect(failure.message, 'Profile unavailable'),
-          (_) => fail('Should not return success'),
-        );
-      });
+          expect(result.isRight(), true);
+          result.fold((_) => fail('Should return a recovery result'), (
+            registration,
+          ) {
+            expect(registration.profileCreated, isFalse);
+            expect(registration.registrationHandle, 'opaque-recovery-handle');
+            expect(registration.recoveryMessage, 'Profile unavailable');
+          });
+        },
+      );
     });
 
     group('Refresh Token Operation', () {

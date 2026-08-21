@@ -80,9 +80,13 @@ void main() {
           200,
           _response({
             'authId': 10,
+            'principalId': 10,
             'email': 'new@test.dev',
             'role': 'USER',
             'provisioningToken': 'opaque-handoff',
+            'registrationHandle': 'opaque-recovery-handle',
+            'expiresAt': '2026-08-14T12:15:00',
+            'lifecycleStatus': 'PENDING_PROFILE',
           }),
         ),
         data: registerRequest,
@@ -106,9 +110,34 @@ void main() {
       final profile = await service.registerUserProfile(profileRequest);
 
       expect(auth.data?.provisioningToken, 'opaque-handoff');
+      expect(auth.data?.principalId, 10);
+      expect(auth.data?.registrationHandle, 'opaque-recovery-handle');
+      expect(auth.data?.lifecycleStatus, 'PENDING_PROFILE');
       expect(profile.data?.authId, 10);
     },
   );
+
+  test('uses the Auth registration status route only for recovery', () async {
+    adapter.onGet(
+      '/auth/registrations/opaque-recovery-handle',
+      (server) => server.reply(
+        200,
+        _response({
+          'principalId': 10,
+          'status': 'PENDING_PROFILE',
+          'nextAction': 'CREATE_PROFILE',
+          'profileLinked': false,
+          'expiresAt': '2026-08-14T12:15:00',
+        }),
+      ),
+    );
+
+    final status = await service.registrationStatus('opaque-recovery-handle');
+
+    expect(status.data?.principalId, 10);
+    expect(status.data?.nextAction, 'CREATE_PROFILE');
+    expect(status.data?.profileLinked, isFalse);
+  });
 
   test('uses rotated refresh-token and logout routes', () async {
     final refreshRequest = {'refreshToken': 'refresh-token'};

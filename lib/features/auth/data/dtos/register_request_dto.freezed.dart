@@ -281,7 +281,7 @@ as String?,
 /// @nodoc
 mixin _$AuthRegistrationDataDto {
 
- int get authId; String get email; String get role; String get provisioningToken;
+ int get authId; int? get principalId; String get email; String get role; String get provisioningToken; String? get registrationHandle; DateTime? get expiresAt; String? get lifecycleStatus;
 /// Create a copy of AuthRegistrationDataDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -294,16 +294,16 @@ $AuthRegistrationDataDtoCopyWith<AuthRegistrationDataDto> get copyWith => _$Auth
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthRegistrationDataDto&&(identical(other.authId, authId) || other.authId == authId)&&(identical(other.email, email) || other.email == email)&&(identical(other.role, role) || other.role == role)&&(identical(other.provisioningToken, provisioningToken) || other.provisioningToken == provisioningToken));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthRegistrationDataDto&&(identical(other.authId, authId) || other.authId == authId)&&(identical(other.principalId, principalId) || other.principalId == principalId)&&(identical(other.email, email) || other.email == email)&&(identical(other.role, role) || other.role == role)&&(identical(other.provisioningToken, provisioningToken) || other.provisioningToken == provisioningToken)&&(identical(other.registrationHandle, registrationHandle) || other.registrationHandle == registrationHandle)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.lifecycleStatus, lifecycleStatus) || other.lifecycleStatus == lifecycleStatus));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,authId,email,role,provisioningToken);
+int get hashCode => Object.hash(runtimeType,authId,principalId,email,role,provisioningToken,registrationHandle,expiresAt,lifecycleStatus);
 
 @override
 String toString() {
-  return 'AuthRegistrationDataDto(authId: $authId, email: $email, role: $role, provisioningToken: $provisioningToken)';
+  return 'AuthRegistrationDataDto(authId: $authId, principalId: $principalId, email: $email, role: $role, provisioningToken: $provisioningToken, registrationHandle: $registrationHandle, expiresAt: $expiresAt, lifecycleStatus: $lifecycleStatus)';
 }
 
 
@@ -314,7 +314,7 @@ abstract mixin class $AuthRegistrationDataDtoCopyWith<$Res>  {
   factory $AuthRegistrationDataDtoCopyWith(AuthRegistrationDataDto value, $Res Function(AuthRegistrationDataDto) _then) = _$AuthRegistrationDataDtoCopyWithImpl;
 @useResult
 $Res call({
- int authId, String email, String role, String provisioningToken
+ int authId, int? principalId, String email, String role, String provisioningToken, String? registrationHandle, DateTime? expiresAt, String? lifecycleStatus
 });
 
 
@@ -331,13 +331,17 @@ class _$AuthRegistrationDataDtoCopyWithImpl<$Res>
 
 /// Create a copy of AuthRegistrationDataDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? authId = null,Object? email = null,Object? role = null,Object? provisioningToken = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? authId = null,Object? principalId = freezed,Object? email = null,Object? role = null,Object? provisioningToken = null,Object? registrationHandle = freezed,Object? expiresAt = freezed,Object? lifecycleStatus = freezed,}) {
   return _then(_self.copyWith(
 authId: null == authId ? _self.authId : authId // ignore: cast_nullable_to_non_nullable
-as int,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as int,principalId: freezed == principalId ? _self.principalId : principalId // ignore: cast_nullable_to_non_nullable
+as int?,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as String,provisioningToken: null == provisioningToken ? _self.provisioningToken : provisioningToken // ignore: cast_nullable_to_non_nullable
-as String,
+as String,registrationHandle: freezed == registrationHandle ? _self.registrationHandle : registrationHandle // ignore: cast_nullable_to_non_nullable
+as String?,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,lifecycleStatus: freezed == lifecycleStatus ? _self.lifecycleStatus : lifecycleStatus // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -419,10 +423,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int authId,  String email,  String role,  String provisioningToken)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int authId,  int? principalId,  String email,  String role,  String provisioningToken,  String? registrationHandle,  DateTime? expiresAt,  String? lifecycleStatus)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AuthRegistrationDataDto() when $default != null:
-return $default(_that.authId,_that.email,_that.role,_that.provisioningToken);case _:
+return $default(_that.authId,_that.principalId,_that.email,_that.role,_that.provisioningToken,_that.registrationHandle,_that.expiresAt,_that.lifecycleStatus);case _:
   return orElse();
 
 }
@@ -440,10 +444,10 @@ return $default(_that.authId,_that.email,_that.role,_that.provisioningToken);cas
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int authId,  String email,  String role,  String provisioningToken)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int authId,  int? principalId,  String email,  String role,  String provisioningToken,  String? registrationHandle,  DateTime? expiresAt,  String? lifecycleStatus)  $default,) {final _that = this;
 switch (_that) {
 case _AuthRegistrationDataDto():
-return $default(_that.authId,_that.email,_that.role,_that.provisioningToken);}
+return $default(_that.authId,_that.principalId,_that.email,_that.role,_that.provisioningToken,_that.registrationHandle,_that.expiresAt,_that.lifecycleStatus);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -457,10 +461,10 @@ return $default(_that.authId,_that.email,_that.role,_that.provisioningToken);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int authId,  String email,  String role,  String provisioningToken)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int authId,  int? principalId,  String email,  String role,  String provisioningToken,  String? registrationHandle,  DateTime? expiresAt,  String? lifecycleStatus)?  $default,) {final _that = this;
 switch (_that) {
 case _AuthRegistrationDataDto() when $default != null:
-return $default(_that.authId,_that.email,_that.role,_that.provisioningToken);case _:
+return $default(_that.authId,_that.principalId,_that.email,_that.role,_that.provisioningToken,_that.registrationHandle,_that.expiresAt,_that.lifecycleStatus);case _:
   return null;
 
 }
@@ -472,13 +476,17 @@ return $default(_that.authId,_that.email,_that.role,_that.provisioningToken);cas
 @JsonSerializable()
 
 class _AuthRegistrationDataDto implements AuthRegistrationDataDto {
-  const _AuthRegistrationDataDto({required this.authId, required this.email, required this.role, required this.provisioningToken});
+  const _AuthRegistrationDataDto({required this.authId, this.principalId, required this.email, required this.role, required this.provisioningToken, this.registrationHandle, this.expiresAt, this.lifecycleStatus});
   factory _AuthRegistrationDataDto.fromJson(Map<String, dynamic> json) => _$AuthRegistrationDataDtoFromJson(json);
 
 @override final  int authId;
+@override final  int? principalId;
 @override final  String email;
 @override final  String role;
 @override final  String provisioningToken;
+@override final  String? registrationHandle;
+@override final  DateTime? expiresAt;
+@override final  String? lifecycleStatus;
 
 /// Create a copy of AuthRegistrationDataDto
 /// with the given fields replaced by the non-null parameter values.
@@ -493,16 +501,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AuthRegistrationDataDto&&(identical(other.authId, authId) || other.authId == authId)&&(identical(other.email, email) || other.email == email)&&(identical(other.role, role) || other.role == role)&&(identical(other.provisioningToken, provisioningToken) || other.provisioningToken == provisioningToken));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AuthRegistrationDataDto&&(identical(other.authId, authId) || other.authId == authId)&&(identical(other.principalId, principalId) || other.principalId == principalId)&&(identical(other.email, email) || other.email == email)&&(identical(other.role, role) || other.role == role)&&(identical(other.provisioningToken, provisioningToken) || other.provisioningToken == provisioningToken)&&(identical(other.registrationHandle, registrationHandle) || other.registrationHandle == registrationHandle)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.lifecycleStatus, lifecycleStatus) || other.lifecycleStatus == lifecycleStatus));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,authId,email,role,provisioningToken);
+int get hashCode => Object.hash(runtimeType,authId,principalId,email,role,provisioningToken,registrationHandle,expiresAt,lifecycleStatus);
 
 @override
 String toString() {
-  return 'AuthRegistrationDataDto(authId: $authId, email: $email, role: $role, provisioningToken: $provisioningToken)';
+  return 'AuthRegistrationDataDto(authId: $authId, principalId: $principalId, email: $email, role: $role, provisioningToken: $provisioningToken, registrationHandle: $registrationHandle, expiresAt: $expiresAt, lifecycleStatus: $lifecycleStatus)';
 }
 
 
@@ -513,7 +521,7 @@ abstract mixin class _$AuthRegistrationDataDtoCopyWith<$Res> implements $AuthReg
   factory _$AuthRegistrationDataDtoCopyWith(_AuthRegistrationDataDto value, $Res Function(_AuthRegistrationDataDto) _then) = __$AuthRegistrationDataDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int authId, String email, String role, String provisioningToken
+ int authId, int? principalId, String email, String role, String provisioningToken, String? registrationHandle, DateTime? expiresAt, String? lifecycleStatus
 });
 
 
@@ -530,13 +538,286 @@ class __$AuthRegistrationDataDtoCopyWithImpl<$Res>
 
 /// Create a copy of AuthRegistrationDataDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? authId = null,Object? email = null,Object? role = null,Object? provisioningToken = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? authId = null,Object? principalId = freezed,Object? email = null,Object? role = null,Object? provisioningToken = null,Object? registrationHandle = freezed,Object? expiresAt = freezed,Object? lifecycleStatus = freezed,}) {
   return _then(_AuthRegistrationDataDto(
 authId: null == authId ? _self.authId : authId // ignore: cast_nullable_to_non_nullable
-as int,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as int,principalId: freezed == principalId ? _self.principalId : principalId // ignore: cast_nullable_to_non_nullable
+as int?,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as String,provisioningToken: null == provisioningToken ? _self.provisioningToken : provisioningToken // ignore: cast_nullable_to_non_nullable
-as String,
+as String,registrationHandle: freezed == registrationHandle ? _self.registrationHandle : registrationHandle // ignore: cast_nullable_to_non_nullable
+as String?,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,lifecycleStatus: freezed == lifecycleStatus ? _self.lifecycleStatus : lifecycleStatus // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$RegistrationStatusDataDto {
+
+ int get principalId; String get status; String get nextAction; bool? get profileLinked; DateTime? get expiresAt;
+/// Create a copy of RegistrationStatusDataDto
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RegistrationStatusDataDtoCopyWith<RegistrationStatusDataDto> get copyWith => _$RegistrationStatusDataDtoCopyWithImpl<RegistrationStatusDataDto>(this as RegistrationStatusDataDto, _$identity);
+
+  /// Serializes this RegistrationStatusDataDto to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegistrationStatusDataDto&&(identical(other.principalId, principalId) || other.principalId == principalId)&&(identical(other.status, status) || other.status == status)&&(identical(other.nextAction, nextAction) || other.nextAction == nextAction)&&(identical(other.profileLinked, profileLinked) || other.profileLinked == profileLinked)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,principalId,status,nextAction,profileLinked,expiresAt);
+
+@override
+String toString() {
+  return 'RegistrationStatusDataDto(principalId: $principalId, status: $status, nextAction: $nextAction, profileLinked: $profileLinked, expiresAt: $expiresAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $RegistrationStatusDataDtoCopyWith<$Res>  {
+  factory $RegistrationStatusDataDtoCopyWith(RegistrationStatusDataDto value, $Res Function(RegistrationStatusDataDto) _then) = _$RegistrationStatusDataDtoCopyWithImpl;
+@useResult
+$Res call({
+ int principalId, String status, String nextAction, bool? profileLinked, DateTime? expiresAt
+});
+
+
+
+
+}
+/// @nodoc
+class _$RegistrationStatusDataDtoCopyWithImpl<$Res>
+    implements $RegistrationStatusDataDtoCopyWith<$Res> {
+  _$RegistrationStatusDataDtoCopyWithImpl(this._self, this._then);
+
+  final RegistrationStatusDataDto _self;
+  final $Res Function(RegistrationStatusDataDto) _then;
+
+/// Create a copy of RegistrationStatusDataDto
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? principalId = null,Object? status = null,Object? nextAction = null,Object? profileLinked = freezed,Object? expiresAt = freezed,}) {
+  return _then(_self.copyWith(
+principalId: null == principalId ? _self.principalId : principalId // ignore: cast_nullable_to_non_nullable
+as int,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,nextAction: null == nextAction ? _self.nextAction : nextAction // ignore: cast_nullable_to_non_nullable
+as String,profileLinked: freezed == profileLinked ? _self.profileLinked : profileLinked // ignore: cast_nullable_to_non_nullable
+as bool?,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [RegistrationStatusDataDto].
+extension RegistrationStatusDataDtoPatterns on RegistrationStatusDataDto {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _RegistrationStatusDataDto value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _RegistrationStatusDataDto() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _RegistrationStatusDataDto value)  $default,){
+final _that = this;
+switch (_that) {
+case _RegistrationStatusDataDto():
+return $default(_that);}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _RegistrationStatusDataDto value)?  $default,){
+final _that = this;
+switch (_that) {
+case _RegistrationStatusDataDto() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int principalId,  String status,  String nextAction,  bool? profileLinked,  DateTime? expiresAt)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _RegistrationStatusDataDto() when $default != null:
+return $default(_that.principalId,_that.status,_that.nextAction,_that.profileLinked,_that.expiresAt);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int principalId,  String status,  String nextAction,  bool? profileLinked,  DateTime? expiresAt)  $default,) {final _that = this;
+switch (_that) {
+case _RegistrationStatusDataDto():
+return $default(_that.principalId,_that.status,_that.nextAction,_that.profileLinked,_that.expiresAt);}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int principalId,  String status,  String nextAction,  bool? profileLinked,  DateTime? expiresAt)?  $default,) {final _that = this;
+switch (_that) {
+case _RegistrationStatusDataDto() when $default != null:
+return $default(_that.principalId,_that.status,_that.nextAction,_that.profileLinked,_that.expiresAt);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _RegistrationStatusDataDto implements RegistrationStatusDataDto {
+  const _RegistrationStatusDataDto({required this.principalId, required this.status, required this.nextAction, this.profileLinked, this.expiresAt});
+  factory _RegistrationStatusDataDto.fromJson(Map<String, dynamic> json) => _$RegistrationStatusDataDtoFromJson(json);
+
+@override final  int principalId;
+@override final  String status;
+@override final  String nextAction;
+@override final  bool? profileLinked;
+@override final  DateTime? expiresAt;
+
+/// Create a copy of RegistrationStatusDataDto
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$RegistrationStatusDataDtoCopyWith<_RegistrationStatusDataDto> get copyWith => __$RegistrationStatusDataDtoCopyWithImpl<_RegistrationStatusDataDto>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$RegistrationStatusDataDtoToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegistrationStatusDataDto&&(identical(other.principalId, principalId) || other.principalId == principalId)&&(identical(other.status, status) || other.status == status)&&(identical(other.nextAction, nextAction) || other.nextAction == nextAction)&&(identical(other.profileLinked, profileLinked) || other.profileLinked == profileLinked)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,principalId,status,nextAction,profileLinked,expiresAt);
+
+@override
+String toString() {
+  return 'RegistrationStatusDataDto(principalId: $principalId, status: $status, nextAction: $nextAction, profileLinked: $profileLinked, expiresAt: $expiresAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$RegistrationStatusDataDtoCopyWith<$Res> implements $RegistrationStatusDataDtoCopyWith<$Res> {
+  factory _$RegistrationStatusDataDtoCopyWith(_RegistrationStatusDataDto value, $Res Function(_RegistrationStatusDataDto) _then) = __$RegistrationStatusDataDtoCopyWithImpl;
+@override @useResult
+$Res call({
+ int principalId, String status, String nextAction, bool? profileLinked, DateTime? expiresAt
+});
+
+
+
+
+}
+/// @nodoc
+class __$RegistrationStatusDataDtoCopyWithImpl<$Res>
+    implements _$RegistrationStatusDataDtoCopyWith<$Res> {
+  __$RegistrationStatusDataDtoCopyWithImpl(this._self, this._then);
+
+  final _RegistrationStatusDataDto _self;
+  final $Res Function(_RegistrationStatusDataDto) _then;
+
+/// Create a copy of RegistrationStatusDataDto
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? principalId = null,Object? status = null,Object? nextAction = null,Object? profileLinked = freezed,Object? expiresAt = freezed,}) {
+  return _then(_RegistrationStatusDataDto(
+principalId: null == principalId ? _self.principalId : principalId // ignore: cast_nullable_to_non_nullable
+as int,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,nextAction: null == nextAction ? _self.nextAction : nextAction // ignore: cast_nullable_to_non_nullable
+as String,profileLinked: freezed == profileLinked ? _self.profileLinked : profileLinked // ignore: cast_nullable_to_non_nullable
+as bool?,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

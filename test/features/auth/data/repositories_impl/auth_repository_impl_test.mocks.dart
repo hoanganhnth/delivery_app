@@ -97,6 +97,23 @@ class MockAuthRemoteDataSource extends _i1.Mock
           as _i4.Future<_i2.BaseResponseDto<_i7.AuthRegistrationDataDto>>);
 
   @override
+  _i4.Future<_i2.BaseResponseDto<_i7.RegistrationStatusDataDto>>
+  registrationStatus(String? handle) =>
+      (super.noSuchMethod(
+            Invocation.method(#registrationStatus, [handle]),
+            returnValue:
+                _i4.Future<
+                  _i2.BaseResponseDto<_i7.RegistrationStatusDataDto>
+                >.value(
+                  _FakeBaseResponseDto_0<_i7.RegistrationStatusDataDto>(
+                    this,
+                    Invocation.method(#registrationStatus, [handle]),
+                  ),
+                ),
+          )
+          as _i4.Future<_i2.BaseResponseDto<_i7.RegistrationStatusDataDto>>);
+
+  @override
   _i4.Future<_i2.BaseResponseDto<_i7.UserRegistrationDataDto>>
   registerUserProfile(_i7.UserRegistrationRequestDto? request) =>
       (super.noSuchMethod(

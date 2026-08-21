@@ -4,6 +4,8 @@
 /// Orders data adapter.
 final class OrderCreationCommand {
   const OrderCreationCommand({
+    this.quoteId,
+    this.idempotencyKey,
     required this.restaurantId,
     required this.deliveryAddress,
     required this.deliveryLat,
@@ -16,6 +18,8 @@ final class OrderCreationCommand {
     required this.items,
   });
 
+  final String? quoteId;
+  final String? idempotencyKey;
   final int restaurantId;
   final String deliveryAddress;
   final double deliveryLat;

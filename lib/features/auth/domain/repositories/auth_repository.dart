@@ -1,4 +1,5 @@
 import 'package:delivery_app/features/auth/domain/entities/auth_entity.dart';
+import 'package:delivery_app/features/auth/domain/entities/registration_result.dart';
 import 'package:delivery_app/features/auth/domain/usecases/login_usecase.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
@@ -8,7 +9,7 @@ import 'package:delivery_app/features/auth/domain/usecases/social_login_usecase.
 abstract class AuthRepository {
   Future<Either<Failure, AuthEntity>> login(LoginParams params);
   Future<Either<Failure, AuthEntity>> socialLogin(SocialLoginParams params);
-  Future<Either<Failure, bool>> register(
+  Future<Either<Failure, RegistrationResult>> register(
     String? name,
     String email,
     String password,

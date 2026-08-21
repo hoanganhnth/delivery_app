@@ -89,6 +89,30 @@ class FakeAuthRemoteDataSource implements AuthRemoteDataSource {
   }
 
   @override
+  Future<BaseResponseDto<RegistrationStatusDataDto>> registrationStatus(
+    String handle,
+  ) async {
+    if (_shouldThrowException) throw Exception('Network connection failed');
+    if (_shouldReturnSuccess) {
+      return const BaseResponseDto<RegistrationStatusDataDto>(
+        status: 1,
+        message: 'Registration status',
+        data: RegistrationStatusDataDto(
+          principalId: 11,
+          status: 'PENDING_PROFILE',
+          nextAction: 'CREATE_PROFILE',
+          profileLinked: false,
+        ),
+      );
+    }
+    return BaseResponseDto<RegistrationStatusDataDto>(
+      status: 0,
+      message: _customErrorMessage ?? 'Registration status unavailable',
+      data: null,
+    );
+  }
+
+  @override
   Future<BaseResponseDto<UserRegistrationDataDto>> registerUserProfile(
     UserRegistrationRequestDto request,
   ) async {

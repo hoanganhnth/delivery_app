@@ -9,13 +9,13 @@ abstract class BaseResponseDto<T> with _$BaseResponseDto<T> {
     required int status,
     required String message,
     T? data,
+    Map<String, dynamic>? error,
   }) = _BaseResponseDto<T>;
 
   factory BaseResponseDto.fromJson(
     Map<String, dynamic> json,
     T Function(Object? json) fromJsonT,
-  ) =>
-      _$BaseResponseDtoFromJson(json, fromJsonT);
+  ) => _$BaseResponseDtoFromJson(json, fromJsonT);
 }
 
 extension BaseResponseDtoExtension<T> on BaseResponseDto<T> {
