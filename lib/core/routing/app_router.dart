@@ -12,6 +12,7 @@ import 'package:delivery_app/features/home/presentation/pages/home_page.dart';
 import 'package:delivery_app/features/orders/presentation/screens/order_detail_screen.dart';
 import 'package:delivery_app/features/orders/presentation/screens/refund_status_history_screen.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:delivery_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:delivery_app/features/auth/presentation/screens/register_screen.dart';
@@ -20,6 +21,7 @@ import 'package:delivery_app/features/search/presentation/screens/search_screen.
 import 'package:delivery_app/features/main/presentation/pages/main_screen.dart';
 import 'package:delivery_app/features/profile/profile.dart';
 import 'package:delivery_app/features/settings/settings.dart';
+import 'package:delivery_app/features/debug/debug.dart';
 import 'package:delivery_app/features/orders/orders.dart';
 import 'package:delivery_app/features/restaurants/restaurants.dart';
 import 'package:delivery_app/features/cart/cart.dart';
@@ -48,6 +50,7 @@ class AppRouterPages {
   Widget home() => const HomePage();
   Widget profile() => const ProfileScreen();
   Widget settings() => const SettingsScreen();
+  Widget debugTools() => const DebugToolsScreen();
   Widget orders() => const OrdersScreen();
   Widget refundHistory() => const RefundStatusHistoryScreen();
   Widget orderDetail(int orderId) => OrderDetailScreen(orderId: orderId);
@@ -149,6 +152,12 @@ GoRouter createAppRouter({
         name: 'settings',
         builder: (context, state) => pages.settings(),
       ),
+      if (kDebugMode)
+        GoRoute(
+          path: AppRoutes.debugTools,
+          name: 'debug-tools',
+          builder: (context, state) => pages.debugTools(),
+        ),
 
       // Orders
       GoRoute(
@@ -276,6 +285,7 @@ extension GoRouterExtension on GoRouter {
   void pushHome() => pushNamed('home');
   void pushProfile() => pushNamed('profile');
   void pushSettings() => pushNamed('settings');
+  void pushDebugTools() => pushNamed('debug-tools');
   void pushOrders() => pushNamed('orders');
   void pushRefundHistory() => pushNamed('refund-history');
   void pushRestaurants() => pushNamed('restaurants');

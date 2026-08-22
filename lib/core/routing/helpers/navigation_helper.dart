@@ -101,6 +101,11 @@ class NavigationHelper {
     context.push(AppRoutes.settings);
   }
 
+  /// Push development-only debug tools.
+  static void pushDebugTools(BuildContext context) {
+    context.push(AppRoutes.debugTools);
+  }
+
   /// Push order details screen
   static void pushOrderDetails(BuildContext context, String orderId) {
     context.push(AppRoutes.orderDetailsPath(orderId));
@@ -245,6 +250,7 @@ extension NavigationExtension on BuildContext {
   void pushRegister() => NavigationHelper.pushRegister(this);
   void pushProfile() => NavigationHelper.pushProfile(this);
   void pushSettings() => NavigationHelper.pushSettings(this);
+  void pushDebugTools() => NavigationHelper.pushDebugTools(this);
   void pushCart() => NavigationHelper.pushCart(this);
   void pushOrders() => NavigationHelper.pushOrders(this);
   void pushToRestaurantDetails(String restaurantId) =>

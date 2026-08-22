@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:delivery_app/generated/l10n.dart';
 import 'package:delivery_app/core/design_system/design_system.dart';
 
@@ -95,6 +96,31 @@ class SettingsView extends StatelessWidget {
                     onTap: () => onIntent(const SettingsAboutRequested()),
                   ),
                 ),
+                if (kDebugMode) ...[
+                  const SizedBox(height: AppSpacing.lg),
+                  const AppSectionHeading(title: 'Developer'),
+                  const SizedBox(height: AppSpacing.xs),
+                  AppSurfaceCard(
+                    padding: EdgeInsets.zero,
+                    child: ListTile(
+                      minVerticalPadding: 12,
+                      leading: _IconTile(
+                        icon: Icons.bug_report_outlined,
+                        color: scheme.primary,
+                      ),
+                      title: const Text(
+                        'Debug tools',
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                      subtitle: const Text(
+                        'Xem log, API call và đổi backend URL',
+                      ),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () =>
+                          onIntent(const SettingsDebugToolsRequested()),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

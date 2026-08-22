@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:delivery_app/core/network/dio/dio_client.dart';
 import 'package:delivery_app/core/network/dio/token_storage.dart';
+import 'package:delivery_app/core/config/api_endpoint_controller.dart';
 import 'package:delivery_app/core/usecases/usecase.dart';
 import 'package:delivery_app/features/auth/application/session/auth_notifier.dart';
 import 'package:delivery_app/features/auth/di/storage_di_providers.dart';
@@ -49,6 +50,8 @@ Dio authAwareDio(Ref ref) {
   final dioClient = DioClient(
     tokenStorage: _AuthTokenStorage(ref),
     onUnauthorized: authNotifier.handleUnauthorized,
+    endpointController: ref.watch(apiEndpointControllerProvider),
   );
+  ref.onDispose(dioClient.dispose);
   return dioClient.dio;
 }

@@ -10,6 +10,10 @@ final class SettingsAboutRequested extends SettingsIntent {
   const SettingsAboutRequested();
 }
 
+final class SettingsDebugToolsRequested extends SettingsIntent {
+  const SettingsDebugToolsRequested();
+}
+
 final class SettingsEffectConsumed extends SettingsIntent {
   const SettingsEffectConsumed(this.effectId);
 

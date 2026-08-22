@@ -34,6 +34,8 @@ class SettingsViewModel extends Notifier<SettingsViewState> {
         await _toggleTheme();
       case SettingsAboutRequested():
         _emit(const SettingsShowAbout());
+      case SettingsDebugToolsRequested():
+        _emit(const SettingsOpenDebugTools());
       case SettingsEffectConsumed(:final effectId):
         state = state.copyWith(
           effects: consumeUiEffect(state.effects, effectId),

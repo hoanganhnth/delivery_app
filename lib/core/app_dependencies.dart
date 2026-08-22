@@ -1,5 +1,7 @@
 import 'package:delivery_app/core/network/_riverpod/authenticated_network_providers.dart'
     as core_net;
+import 'package:delivery_app/core/config/api_endpoint_controller.dart';
+import 'package:delivery_app/core/config/runtime_config.dart';
 import 'package:delivery_app/features/auth/di/auth_network_providers.dart'
     as auth_net;
 import 'package:delivery_app/features/auth/di/storage_di_providers.dart';
@@ -17,6 +19,12 @@ abstract final class AppDependencies {
   }) {
     return [
       sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+      apiEndpointControllerProvider.overrideWithValue(
+        ApiEndpointController(
+          defaultGatewayOrigin: RuntimeConfig.gatewayBaseUrl,
+          preferences: sharedPreferences,
+        ),
+      ),
       themeStorageProvider.overrideWithValue(
         SharedPreferencesThemeStorage(sharedPreferences),
       ),

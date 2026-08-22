@@ -1,6 +1,7 @@
 // import 'package:delivery_app/core/constants/api_constants.dart';
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../config/api_endpoint_controller.dart';
 import '../dio/dio_client.dart';
 
 part 'network_providers.g.dart';
@@ -10,7 +11,10 @@ part 'network_providers.g.dart';
 @Riverpod(keepAlive: true)
 Dio dio(Ref ref) {
   // Create DioClient without auth dependencies to avoid circular reference
-  final dioClient = DioClient();
+  final dioClient = DioClient(
+    endpointController: ref.watch(apiEndpointControllerProvider),
+  );
+  ref.onDispose(dioClient.dispose);
   return dioClient.dio;
 }
 

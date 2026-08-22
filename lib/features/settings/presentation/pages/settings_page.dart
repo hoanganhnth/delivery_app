@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/generated/l10n.dart';
 
 import '../../application/settings_effect.dart';
@@ -53,6 +54,8 @@ class SettingsPage extends ConsumerWidget {
             ],
           ),
         );
+      case SettingsOpenDebugTools():
+        if (context.mounted) context.pushDebugTools();
     }
 
     await ref
