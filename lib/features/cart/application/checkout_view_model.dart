@@ -42,11 +42,14 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
   String? _activePreviewKey;
   List<CheckoutVoucher> _vouchers = const [];
   int? _selectedVoucherId;
+  List<int> _selectedVoucherIds = const <int>[];
+  String _selectionMode = 'AUTO';
   String _notes = '';
   bool _isPreviewLoading = false;
   bool _hasPreviewError = false;
   bool _isVoucherLoading = false;
   bool _hasVoucherError = false;
+  bool _stackingCapabilityEnabled = false;
   bool _isPlacingOrder = false;
   String? _pendingIdempotencyKey;
 
@@ -81,6 +84,7 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
   Future<void> dispatch(CheckoutIntent intent) async {
     switch (intent) {
       case CheckoutLoadRequested():
+        await _loadStackingCapability();
         await Future.wait([_refreshPreview(), _loadVouchers()]);
       case CheckoutPreviewRetryRequested():
         await _refreshPreview(force: true);
@@ -88,6 +92,12 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
         _emit(const CheckoutNavigateToAddresses());
       case CheckoutVoucherChanged(:final voucherId):
         await _changeVoucher(voucherId);
+      case CheckoutVoucherSelectionChanged(:final voucherIds):
+        await _changeVoucherSelection(voucherIds);
+      case CheckoutVoucherModeChanged(:final mode):
+        await _changeVoucherMode(mode);
+      case CheckoutVoucherCodeSubmitted(:final code):
+        await _collectVoucher(code);
       case CheckoutVoucherRetryRequested():
         await _loadVouchers(force: true);
       case CheckoutNotesChanged(:final notes):
@@ -120,6 +130,8 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
         cart: cart,
         address: _address,
         selectedVoucherId: _selectedVoucherId,
+        selectedVoucherIds: _stackingEnabled ? _selectedVoucherIds : null,
+        selectionMode: _stackingEnabled ? _selectionMode : null,
       );
     } on CheckoutOrderBuildException {
       _clearPreview();
@@ -175,9 +187,11 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
 
   Future<void> _loadVouchers({bool force = false}) async {
     if (!_isVoucherAvailable) {
-      final wasSelected = _selectedVoucherId != null;
+      final wasSelected = _selectedVoucherIds.isNotEmpty ||
+          _selectedVoucherId != null;
       _vouchers = const [];
       _selectedVoucherId = null;
+      _selectedVoucherIds = const <int>[];
       _isVoucherLoading = false;
       _hasVoucherError = false;
       if (wasSelected) _invalidatePreview();
@@ -201,11 +215,13 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
                 (voucher) => voucher.appliesToRestaurant(restaurantId),
               ),
             );
-      final didClearSelection =
-          !_vouchers.any((voucher) => voucher.id == _selectedVoucherId) &&
-          _selectedVoucherId != null;
+      final validIds = _selectedVoucherIds
+          .where((id) => _vouchers.any((voucher) => voucher.id == id))
+          .toList(growable: false);
+      final didClearSelection = validIds.length != _selectedVoucherIds.length;
       if (didClearSelection) {
-        _selectedVoucherId = null;
+        _selectedVoucherIds = validIds;
+        _selectedVoucherId = validIds.isEmpty ? null : validIds.first;
         _invalidatePreview();
       }
       _isVoucherLoading = false;
@@ -220,13 +236,88 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
     }
   }
 
+  Future<void> _loadStackingCapability() async {
+    if (!RuntimeConfig.voucherStackingEnabled) {
+      _stackingCapabilityEnabled = false;
+      return;
+    }
+    try {
+      final capability = await ref
+          .read(checkoutVoucherGatewayProvider)
+          .getCapability();
+      if (ref.mounted) {
+        _stackingCapabilityEnabled = capability.enabled &&
+            capability.maxVouchers >= 3 &&
+            capability.layers.contains('SHOP_DISCOUNT') &&
+            capability.layers.contains('PLATFORM_DISCOUNT') &&
+            capability.layers.contains('FREESHIP');
+      }
+    } catch (_) {
+      _stackingCapabilityEnabled = false;
+    }
+  }
+
   Future<void> _changeVoucher(int? voucherId) async {
     final next = voucherId != null && voucherId > 0 ? voucherId : null;
-    if (next == _selectedVoucherId) return;
+    final nextIds = next == null ? const <int>[] : <int>[next];
+    if (next == _selectedVoucherId &&
+        nextIds.length == _selectedVoucherIds.length) {
+      return;
+    }
     _selectedVoucherId = next;
+    _selectedVoucherIds = nextIds;
+    _selectionMode = 'MANUAL';
     _invalidatePreview();
     _publish();
     await _refreshPreview();
+  }
+
+  Future<void> _changeVoucherSelection(List<int> voucherIds) async {
+    final selected = <int>[];
+    final layers = <String>{};
+    for (final id in voucherIds) {
+      if (selected.length >= 3 || selected.contains(id)) continue;
+      CheckoutVoucher? voucher;
+      for (final candidate in _vouchers) {
+        if (candidate.id == id) {
+          voucher = candidate;
+          break;
+        }
+      }
+      if (voucher == null || !layers.add(voucher.layer)) continue;
+      selected.add(id);
+    }
+    _selectedVoucherIds = List<int>.unmodifiable(selected);
+    _selectedVoucherId = selected.isEmpty ? null : selected.first;
+    _selectionMode = 'MANUAL';
+    _invalidatePreview();
+    _publish();
+    await _refreshPreview();
+  }
+
+  Future<void> _changeVoucherMode(String mode) async {
+    final next = mode.toUpperCase() == 'MANUAL' ? 'MANUAL' : 'AUTO';
+    if (next == _selectionMode) return;
+    _selectionMode = next;
+    if (next == 'AUTO') {
+      _selectedVoucherIds = const <int>[];
+      _selectedVoucherId = null;
+    }
+    _invalidatePreview();
+    _publish();
+    await _refreshPreview();
+  }
+
+  Future<void> _collectVoucher(String code) async {
+    try {
+      await ref.read(checkoutVoucherGatewayProvider).collect(code);
+      await _loadVouchers(force: true);
+      _emit(const CheckoutShowMessage('Đã lưu voucher vào ví.'));
+    } catch (_) {
+      _emit(const CheckoutShowMessage(
+        'Mã voucher không hợp lệ hoặc đã được lưu.',
+      ));
+    }
   }
 
   Future<void> _placeOrder({bool forceNewKey = false}) async {
@@ -247,6 +338,8 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
         preview: _confirmedPreview,
         notes: _notes.trim().isEmpty ? null : _notes.trim(),
         selectedVoucherId: _selectedVoucherId,
+        selectedVoucherIds: _stackingEnabled ? _selectedVoucherIds : null,
+        selectionMode: _stackingEnabled ? _selectionMode : null,
         idempotencyKey: _pendingIdempotencyKey,
       );
       _isPlacingOrder = true;
@@ -264,6 +357,9 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
                   cart: cart,
                   address: _address,
                   selectedVoucherId: _selectedVoucherId,
+                  selectedVoucherIds:
+                      _stackingEnabled ? _selectedVoucherIds : null,
+                  selectionMode: _stackingEnabled ? _selectionMode : null,
                 );
                 final changed = CheckoutPreviewResponse.fromJson(
                   Map<String, dynamic>.from(rawQuote),
@@ -334,7 +430,7 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
 
   bool get _isVoucherAvailable {
     final cart = _cartValue?.value;
-    return RuntimeConfig.voucherCheckoutEnabled &&
+    return (_stackingEnabled || RuntimeConfig.voucherCheckoutEnabled) &&
         cart != null &&
         cart.currentRestaurantId != null &&
         cart.currentRestaurantId! > 0 &&
@@ -421,6 +517,21 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
               shippingFee: preview.shippingFee!,
               discountAmount: preview.discountAmount!,
               total: preview.totalPrice!,
+              itemDiscount: preview.itemDiscount,
+              shippingDiscount: preview.shippingDiscount,
+              customerShippingFee: preview.customerShippingFee,
+              platformSubsidy: preview.platformSubsidy,
+              appliedVouchers: (preview.appliedVouchers ?? const [])
+                  .where((item) =>
+                      item.code != null &&
+                      item.layer != null &&
+                      item.discountAmount != null)
+                  .map((item) => CheckoutAppliedVoucherViewData(
+                        code: item.code!,
+                        layer: item.layer!,
+                        discountAmount: item.discountAmount!,
+                      ))
+                  .toList(growable: false),
             ),
       isVoucherAvailable: _isVoucherAvailable,
       isVoucherLoading: _isVoucherLoading,
@@ -432,22 +543,30 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
               code: voucher.code,
               name: voucher.name,
               displayBenefit: voucher.displayBenefit,
+              layer: voucher.layer,
               minimumOrderValue: voucher.minOrderValue,
             ),
           )
           .toList(growable: false),
       selectedVoucherId: _selectedVoucherId,
+      selectedVoucherIds: List<int>.unmodifiable(_selectedVoucherIds),
+      selectionMode: _selectionMode,
       notes: _notes,
       isPlacingOrder: _isPlacingOrder,
       effects: effects,
     );
   }
 
+  bool get _stackingEnabled =>
+      RuntimeConfig.voucherStackingEnabled && _stackingCapabilityEnabled;
+
   String _previewKey(CheckoutPreviewRequest request) => [
     request.restaurantId,
     request.deliveryLat,
     request.deliveryLng,
     request.voucherId,
+    request.selectionMode,
+    ...(request.selectedVoucherIds ?? const <int>[]).toList()..sort(),
     for (final item in request.items)
       '${item.menuItemId}:${item.quantity}:${item.flashSaleItemId ?? ''}',
   ].join('|');

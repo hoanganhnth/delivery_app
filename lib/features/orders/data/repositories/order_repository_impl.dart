@@ -88,6 +88,7 @@ class OrderRepositoryImpl implements OrderRepository {
         paymentMethod: command.paymentMethod,
         notes: command.notes,
         voucherIds: command.voucherIds,
+        selectionMode: command.selectionMode,
         items: command.items
             .map(
               (item) => OrderItemRequest(

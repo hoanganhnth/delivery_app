@@ -15,6 +15,7 @@ final class OrderCreationCommand {
     required this.paymentMethod,
     this.notes,
     this.voucherIds,
+    this.selectionMode,
     required this.items,
   });
 
@@ -29,6 +30,7 @@ final class OrderCreationCommand {
   final String paymentMethod;
   final String? notes;
   final List<int>? voucherIds;
+  final String? selectionMode;
   final List<OrderCreationItem> items;
 }
 

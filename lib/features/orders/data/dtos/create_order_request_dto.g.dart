@@ -37,6 +37,7 @@ _CreateOrderRequestDto _$CreateOrderRequestDtoFromJson(
   voucherIds: (json['voucherIds'] as List<dynamic>?)
       ?.map((e) => (e as num).toInt())
       .toList(),
+  selectionMode: json['selectionMode'] as String?,
   items: (json['items'] as List<dynamic>)
       .map((e) => OrderItemRequest.fromJson(e as Map<String, dynamic>))
       .toList(),
@@ -55,5 +56,6 @@ Map<String, dynamic> _$CreateOrderRequestDtoToJson(
   'paymentMethod': instance.paymentMethod,
   'notes': instance.notes,
   'voucherIds': instance.voucherIds,
+  'selectionMode': instance.selectionMode,
   'items': instance.items,
 };

@@ -22,6 +22,9 @@ class ApiConstants {
   static const delivery = "/deliveries";
   static const promotion = "/promotions";
   static const myVouchers = "$promotion/my-vouchers";
+  static const voucherCapability = "$promotion/capability";
+  static String collectVoucher(String code) =>
+      "$promotion/collect/${Uri.encodeComponent(code)}";
   static const flashSales = "/flashsales";
   static const activeFlashSaleCampaigns = "$flashSales/public/campaigns";
   static String flashSaleCampaignItems(int campaignId) =>

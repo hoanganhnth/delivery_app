@@ -23,6 +23,8 @@ class CheckoutOrderBuilder {
     required CartEntity cart,
     required UserAddressEntity? address,
     int? selectedVoucherId,
+    List<int>? selectedVoucherIds,
+    String? selectionMode,
   }) {
     final restaurantId = _positiveInt(cart.currentRestaurantId);
     final latitude = address?.latitude;
@@ -38,15 +40,21 @@ class CheckoutOrderBuilder {
         CheckoutOrderBuildFailure.invalidInput,
       );
     }
-    if (selectedVoucherId != null &&
-        (!RuntimeConfig.voucherCheckoutEnabled || selectedVoucherId <= 0)) {
+    final voucherIds = selectedVoucherIds ??
+        (selectedVoucherId == null ? const <int>[] : [selectedVoucherId]);
+    if (voucherIds.length > 3 ||
+        voucherIds.any((id) => id <= 0) ||
+        voucherIds.toSet().length != voucherIds.length ||
+        (voucherIds.isNotEmpty &&
+            !RuntimeConfig.voucherCheckoutEnabled &&
+            !RuntimeConfig.voucherStackingEnabled)) {
       throw const CheckoutOrderBuildException(
         CheckoutOrderBuildFailure.invalidInput,
       );
     }
     final hasFlashSale = cart.items.any((item) => item.flashSaleItemId != null);
     if ((hasFlashSale && !RuntimeConfig.flashSaleCheckoutEnabled) ||
-        (hasFlashSale && selectedVoucherId != null)) {
+        (hasFlashSale && voucherIds.isNotEmpty)) {
       throw const CheckoutOrderBuildException(
         CheckoutOrderBuildFailure.invalidInput,
       );
@@ -57,6 +65,8 @@ class CheckoutOrderBuilder {
       deliveryLat: latitude!,
       deliveryLng: longitude!,
       voucherId: selectedVoucherId,
+      selectedVoucherIds: voucherIds.isEmpty ? null : voucherIds,
+      selectionMode: selectionMode,
       items: cart.items
           .map(
             (item) => CheckoutPreviewItemRequest(
@@ -75,12 +85,18 @@ class CheckoutOrderBuilder {
     required CheckoutPreviewResponse? preview,
     String? notes,
     int? selectedVoucherId,
+    List<int>? selectedVoucherIds,
+    String? selectionMode,
     String? idempotencyKey,
   }) {
+    final voucherIds = selectedVoucherIds ??
+        (selectedVoucherId == null ? const <int>[] : [selectedVoucherId]);
     final previewRequest = buildPreviewRequest(
       cart: cart,
       address: address,
       selectedVoucherId: selectedVoucherId,
+      selectedVoucherIds: selectedVoucherIds,
+      selectionMode: selectionMode,
     );
     if (preview == null ||
         preview.quoteId == null ||
@@ -108,7 +124,8 @@ class CheckoutOrderBuilder {
       customerPhone: address.phoneNumber,
       paymentMethod: 'COD',
       notes: notes,
-      voucherIds: selectedVoucherId == null ? null : [selectedVoucherId],
+      voucherIds: voucherIds.isEmpty ? null : voucherIds,
+      selectionMode: selectionMode,
       items: cart.items
           .map<OrderCreationItem>(
             (item) => OrderCreationItem(

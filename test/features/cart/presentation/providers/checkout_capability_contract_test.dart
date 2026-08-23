@@ -41,6 +41,29 @@ void main() {
     expect(wallet.single.appliesToRestaurant(8), isFalse);
   });
 
+  test('voucher stacking capability uses the authenticated Gateway contract',
+      () async {
+    adapter.onGet(
+      '/promotions/capability',
+      (server) => server.reply(200, {
+        'status': 1,
+        'data': {
+          'enabled': true,
+          'maxVouchers': 3,
+          'layers': ['SHOP_DISCOUNT', 'PLATFORM_DISCOUNT', 'FREESHIP'],
+          'selectionModes': ['AUTO', 'MANUAL'],
+          'conflictsWithFlashSale': true,
+        },
+      }),
+    );
+
+    final capability = await CheckoutVoucherClient(dio).getCapability();
+
+    expect(capability.enabled, isTrue);
+    expect(capability.maxVouchers, 3);
+    expect(capability.layers, contains('FREESHIP'));
+  });
+
   test(
     'flash catalog is the only source of checkout flash-sale identity',
     () async {

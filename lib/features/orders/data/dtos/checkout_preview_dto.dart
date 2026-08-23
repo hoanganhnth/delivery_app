@@ -25,6 +25,8 @@ sealed class CheckoutPreviewRequest with _$CheckoutPreviewRequest {
     required double deliveryLng,
     String? couponCode,
     int? voucherId,
+    List<int>? selectedVoucherIds,
+    String? selectionMode,
     required List<CheckoutPreviewItemRequest> items,
   }) = _CheckoutPreviewRequest;
 
@@ -63,6 +65,21 @@ sealed class PriceChangeInfo with _$PriceChangeInfo {
 }
 
 @freezed
+sealed class AppliedVoucherInfo with _$AppliedVoucherInfo {
+  const factory AppliedVoucherInfo({
+    int? voucherId,
+    String? code,
+    String? layer,
+    String? fundingSource,
+    double? discountBase,
+    double? discountAmount,
+  }) = _AppliedVoucherInfo;
+
+  factory AppliedVoucherInfo.fromJson(Map<String, dynamic> json) =>
+      _$AppliedVoucherInfoFromJson(json);
+}
+
+@freezed
 sealed class CheckoutPreviewResponse with _$CheckoutPreviewResponse {
   const factory CheckoutPreviewResponse({
     String? quoteId,
@@ -77,6 +94,15 @@ sealed class CheckoutPreviewResponse with _$CheckoutPreviewResponse {
     String? couponCode,
     String? couponMessage,
     int? voucherId,
+    List<int>? selectedVoucherIds,
+    String? selectionMode,
+    double? itemDiscount,
+    double? shippingDiscount,
+    double? customerShippingFee,
+    double? grossShippingFee,
+    double? platformSubsidy,
+    double? shopDiscount,
+    List<AppliedVoucherInfo>? appliedVouchers,
     List<PriceChangeInfo>? priceChanges,
     List<int>? unavailableItemIds,
   }) = _CheckoutPreviewResponse;
@@ -123,6 +149,22 @@ extension CheckoutPreviewResponseContract on CheckoutPreviewResponse {
     if (voucherId != request.voucherId) {
       throw const FormatException('Checkout voucher identity mismatch');
     }
+    final requestedVoucherIds = (request.selectedVoucherIds ??
+            (request.voucherId == null ? const <int>[] : [request.voucherId!]))
+        .toList()
+      ..sort();
+    final responseVoucherIds = (selectedVoucherIds ??
+            (voucherId == null ? const <int>[] : [voucherId!]))
+        .toList()
+      ..sort();
+    final mode = request.selectionMode?.trim().toUpperCase();
+    if (responseVoucherIds.length > 3 ||
+        responseVoucherIds.toSet().length != responseVoucherIds.length ||
+        (mode == 'MANUAL' &&
+            (requestedVoucherIds.length != responseVoucherIds.length ||
+                !requestedVoucherIds.every(responseVoucherIds.contains)))) {
+      throw const FormatException('Checkout voucher selection mismatch');
+    }
     if (currentItems == null || currentItems.length != request.items.length) {
       throw const FormatException('Checkout item count mismatch');
     }
@@ -164,17 +206,34 @@ extension CheckoutPreviewResponseContract on CheckoutPreviewResponse {
       calculatedSubtotal += lineTotal;
     }
 
+    final additiveTotalsAvailable = itemDiscount != null ||
+        shippingDiscount != null || customerShippingFee != null;
+    final expectedTotal = currentSubtotal == null || currentShippingFee == null
+        ? null
+        : additiveTotalsAvailable
+            ? currentSubtotal - (itemDiscount ?? 0) +
+                (customerShippingFee ??
+                    currentShippingFee - (shippingDiscount ?? 0))
+            : currentSubtotal + currentShippingFee - (currentDiscount ?? 0);
     if (!_isNonNegativeMoney(currentSubtotal) ||
         !_isNonNegativeMoney(currentShippingFee) ||
         !_isNonNegativeMoney(currentDiscount) ||
         currentTotal == null ||
         !currentTotal.isFinite ||
         currentTotal <= 0 ||
+        expectedTotal == null ||
         !_sameMoney(currentSubtotal!, calculatedSubtotal) ||
         !_sameMoney(
           currentTotal,
-          currentSubtotal + currentShippingFee! - currentDiscount!,
-        )) {
+          expectedTotal,
+        ) ||
+        (additiveTotalsAvailable &&
+            (!_isNonNegativeMoney(itemDiscount) ||
+                !_isNonNegativeMoney(shippingDiscount) ||
+                !_isNonNegativeMoney(customerShippingFee) ||
+                !_sameMoney(
+                    currentDiscount!,
+                    (itemDiscount ?? 0) + (shippingDiscount ?? 0))))) {
       throw const FormatException('Invalid checkout preview totals');
     }
 

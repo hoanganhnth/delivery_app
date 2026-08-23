@@ -31,6 +31,7 @@ sealed class CreateOrderRequestDto with _$CreateOrderRequestDto {
     required String paymentMethod, // COD-only in the current MVP
     String? notes,
     List<int>? voucherIds,
+    String? selectionMode,
     required List<OrderItemRequest> items,
   }) = _CreateOrderRequestDto;
 

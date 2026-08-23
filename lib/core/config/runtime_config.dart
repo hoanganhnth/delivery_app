@@ -12,6 +12,10 @@ class RuntimeConfig {
     'VOUCHER_CHECKOUT_ENABLED',
     defaultValue: false,
   );
+  static const voucherStackingEnabled = bool.fromEnvironment(
+    'VOUCHER_STACKING_ENABLED',
+    defaultValue: false,
+  );
   static const flashSaleCheckoutEnabled = bool.fromEnvironment(
     'FLASHSALE_CHECKOUT_ENABLED',
     defaultValue: false,

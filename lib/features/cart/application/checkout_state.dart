@@ -54,6 +54,7 @@ final class CheckoutVoucherViewData extends Equatable {
     required this.code,
     required this.name,
     required this.displayBenefit,
+    required this.layer,
     this.minimumOrderValue,
   });
 
@@ -61,6 +62,7 @@ final class CheckoutVoucherViewData extends Equatable {
   final String code;
   final String name;
   final String displayBenefit;
+  final String layer;
   final double? minimumOrderValue;
 
   @override
@@ -70,6 +72,7 @@ final class CheckoutVoucherViewData extends Equatable {
     name,
     displayBenefit,
     minimumOrderValue,
+    layer,
   ];
 }
 
@@ -79,15 +82,50 @@ final class CheckoutPriceViewData extends Equatable {
     required this.shippingFee,
     required this.discountAmount,
     required this.total,
+    this.itemDiscount,
+    this.shippingDiscount,
+    this.customerShippingFee,
+    this.platformSubsidy,
+    this.appliedVouchers = const <CheckoutAppliedVoucherViewData>[],
   });
 
   final double subtotal;
   final double shippingFee;
   final double discountAmount;
   final double total;
+  final double? itemDiscount;
+  final double? shippingDiscount;
+  final double? customerShippingFee;
+  final double? platformSubsidy;
+  final List<CheckoutAppliedVoucherViewData> appliedVouchers;
 
   @override
-  List<Object?> get props => [subtotal, shippingFee, discountAmount, total];
+  List<Object?> get props => [
+    subtotal,
+    shippingFee,
+    discountAmount,
+    total,
+    itemDiscount,
+    shippingDiscount,
+    customerShippingFee,
+    platformSubsidy,
+    appliedVouchers,
+  ];
+}
+
+final class CheckoutAppliedVoucherViewData extends Equatable {
+  const CheckoutAppliedVoucherViewData({
+    required this.code,
+    required this.layer,
+    required this.discountAmount,
+  });
+
+  final String code;
+  final String layer;
+  final double discountAmount;
+
+  @override
+  List<Object?> get props => [code, layer, discountAmount];
 }
 
 final class CheckoutViewState extends Equatable {
@@ -106,6 +144,8 @@ final class CheckoutViewState extends Equatable {
     this.hasVoucherError = false,
     this.vouchers = const <CheckoutVoucherViewData>[],
     this.selectedVoucherId,
+    this.selectedVoucherIds = const <int>[],
+    this.selectionMode = 'AUTO',
     this.notes = '',
     this.isPlacingOrder = false,
     this.effects = const <UiEffectEnvelope<CheckoutEffect>>[],
@@ -125,6 +165,8 @@ final class CheckoutViewState extends Equatable {
   final bool hasVoucherError;
   final List<CheckoutVoucherViewData> vouchers;
   final int? selectedVoucherId;
+  final List<int> selectedVoucherIds;
+  final String selectionMode;
   final String notes;
   final bool isPlacingOrder;
   final List<UiEffectEnvelope<CheckoutEffect>> effects;
@@ -135,6 +177,7 @@ final class CheckoutViewState extends Equatable {
       !isPreviewLoading &&
       !isPlacingOrder &&
       !hasCartError &&
+      (selectionMode != 'MANUAL' || selectedVoucherIds.isNotEmpty) &&
       !isEmpty;
 
   CheckoutViewState copyWith({
@@ -156,6 +199,8 @@ final class CheckoutViewState extends Equatable {
     List<CheckoutVoucherViewData>? vouchers,
     int? selectedVoucherId,
     bool clearSelectedVoucher = false,
+    List<int>? selectedVoucherIds,
+    String? selectionMode,
     String? notes,
     bool? isPlacingOrder,
     List<UiEffectEnvelope<CheckoutEffect>>? effects,
@@ -181,6 +226,8 @@ final class CheckoutViewState extends Equatable {
       selectedVoucherId: clearSelectedVoucher
           ? null
           : (selectedVoucherId ?? this.selectedVoucherId),
+      selectedVoucherIds: selectedVoucherIds ?? this.selectedVoucherIds,
+      selectionMode: selectionMode ?? this.selectionMode,
       notes: notes ?? this.notes,
       isPlacingOrder: isPlacingOrder ?? this.isPlacingOrder,
       effects: effects ?? this.effects,
@@ -203,6 +250,8 @@ final class CheckoutViewState extends Equatable {
     hasVoucherError,
     vouchers,
     selectedVoucherId,
+    selectedVoucherIds,
+    selectionMode,
     notes,
     isPlacingOrder,
     effects,

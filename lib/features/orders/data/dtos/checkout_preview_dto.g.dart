@@ -30,6 +30,10 @@ _CheckoutPreviewRequest _$CheckoutPreviewRequestFromJson(
   deliveryLng: (json['deliveryLng'] as num).toDouble(),
   couponCode: json['couponCode'] as String?,
   voucherId: (json['voucherId'] as num?)?.toInt(),
+  selectedVoucherIds: (json['selectedVoucherIds'] as List<dynamic>?)
+      ?.map((e) => (e as num).toInt())
+      .toList(),
+  selectionMode: json['selectionMode'] as String?,
   items: (json['items'] as List<dynamic>)
       .map(
         (e) => CheckoutPreviewItemRequest.fromJson(e as Map<String, dynamic>),
@@ -45,6 +49,8 @@ Map<String, dynamic> _$CheckoutPreviewRequestToJson(
   'deliveryLng': instance.deliveryLng,
   'couponCode': instance.couponCode,
   'voucherId': instance.voucherId,
+  'selectedVoucherIds': instance.selectedVoucherIds,
+  'selectionMode': instance.selectionMode,
   'items': instance.items,
 };
 
@@ -84,6 +90,26 @@ Map<String, dynamic> _$PriceChangeInfoToJson(_PriceChangeInfo instance) =>
       'newPrice': instance.newPrice,
     };
 
+_AppliedVoucherInfo _$AppliedVoucherInfoFromJson(Map<String, dynamic> json) =>
+    _AppliedVoucherInfo(
+      voucherId: (json['voucherId'] as num?)?.toInt(),
+      code: json['code'] as String?,
+      layer: json['layer'] as String?,
+      fundingSource: json['fundingSource'] as String?,
+      discountBase: (json['discountBase'] as num?)?.toDouble(),
+      discountAmount: (json['discountAmount'] as num?)?.toDouble(),
+    );
+
+Map<String, dynamic> _$AppliedVoucherInfoToJson(_AppliedVoucherInfo instance) =>
+    <String, dynamic>{
+      'voucherId': instance.voucherId,
+      'code': instance.code,
+      'layer': instance.layer,
+      'fundingSource': instance.fundingSource,
+      'discountBase': instance.discountBase,
+      'discountAmount': instance.discountAmount,
+    };
+
 _CheckoutPreviewResponse _$CheckoutPreviewResponseFromJson(
   Map<String, dynamic> json,
 ) => _CheckoutPreviewResponse(
@@ -103,6 +129,19 @@ _CheckoutPreviewResponse _$CheckoutPreviewResponseFromJson(
   couponCode: json['couponCode'] as String?,
   couponMessage: json['couponMessage'] as String?,
   voucherId: (json['voucherId'] as num?)?.toInt(),
+  selectedVoucherIds: (json['selectedVoucherIds'] as List<dynamic>?)
+      ?.map((e) => (e as num).toInt())
+      .toList(),
+  selectionMode: json['selectionMode'] as String?,
+  itemDiscount: (json['itemDiscount'] as num?)?.toDouble(),
+  shippingDiscount: (json['shippingDiscount'] as num?)?.toDouble(),
+  customerShippingFee: (json['customerShippingFee'] as num?)?.toDouble(),
+  grossShippingFee: (json['grossShippingFee'] as num?)?.toDouble(),
+  platformSubsidy: (json['platformSubsidy'] as num?)?.toDouble(),
+  shopDiscount: (json['shopDiscount'] as num?)?.toDouble(),
+  appliedVouchers: (json['appliedVouchers'] as List<dynamic>?)
+      ?.map((e) => AppliedVoucherInfo.fromJson(e as Map<String, dynamic>))
+      .toList(),
   priceChanges: (json['priceChanges'] as List<dynamic>?)
       ?.map((e) => PriceChangeInfo.fromJson(e as Map<String, dynamic>))
       .toList(),
@@ -126,6 +165,15 @@ Map<String, dynamic> _$CheckoutPreviewResponseToJson(
   'couponCode': instance.couponCode,
   'couponMessage': instance.couponMessage,
   'voucherId': instance.voucherId,
+  'selectedVoucherIds': instance.selectedVoucherIds,
+  'selectionMode': instance.selectionMode,
+  'itemDiscount': instance.itemDiscount,
+  'shippingDiscount': instance.shippingDiscount,
+  'customerShippingFee': instance.customerShippingFee,
+  'grossShippingFee': instance.grossShippingFee,
+  'platformSubsidy': instance.platformSubsidy,
+  'shopDiscount': instance.shopDiscount,
+  'appliedVouchers': instance.appliedVouchers,
   'priceChanges': instance.priceChanges,
   'unavailableItemIds': instance.unavailableItemIds,
 };

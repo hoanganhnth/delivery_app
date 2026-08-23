@@ -20,6 +20,24 @@ final class CheckoutVoucherChanged extends CheckoutIntent {
   final int? voucherId;
 }
 
+final class CheckoutVoucherSelectionChanged extends CheckoutIntent {
+  const CheckoutVoucherSelectionChanged(this.voucherIds);
+
+  final List<int> voucherIds;
+}
+
+final class CheckoutVoucherModeChanged extends CheckoutIntent {
+  const CheckoutVoucherModeChanged(this.mode);
+
+  final String mode;
+}
+
+final class CheckoutVoucherCodeSubmitted extends CheckoutIntent {
+  const CheckoutVoucherCodeSubmitted(this.code);
+
+  final String code;
+}
+
 final class CheckoutVoucherRetryRequested extends CheckoutIntent {
   const CheckoutVoucherRetryRequested();
 }

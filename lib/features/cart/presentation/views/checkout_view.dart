@@ -405,32 +405,58 @@ class _VoucherSelector extends StatelessWidget {
         ],
       );
     }
-    final hasSelection = state.vouchers.any(
-      (voucher) => voucher.id == state.selectedVoucherId,
-    );
-    return DropdownButtonFormField<int?>(
+    return Column(
       key: const Key('checkout_voucher_selector'),
-      value: hasSelection ? state.selectedVoucherId : null,
-      decoration: const InputDecoration(
-        labelText: 'Chọn voucher',
-        border: OutlineInputBorder(borderRadius: AppRadii.control),
-      ),
-      items: [
-        const DropdownMenuItem<int?>(
-          value: null,
-          child: Text('Không dùng voucher'),
-        ),
-        ...state.vouchers.map(
-          (voucher) => DropdownMenuItem<int?>(
-            value: voucher.id,
-            child: Text(
-              '${voucher.code} · ${voucher.displayBenefit}',
-              overflow: TextOverflow.ellipsis,
-            ),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          key: const Key('checkout_voucher_code'),
+          textCapitalization: TextCapitalization.characters,
+          onSubmitted: (code) => onIntent(CheckoutVoucherCodeSubmitted(code)),
+          decoration: const InputDecoration(
+            labelText: 'Nhập mã để lưu vào ví',
+            helperText: 'Nhấn Enter để lưu voucher',
+            border: OutlineInputBorder(borderRadius: AppRadii.control),
           ),
         ),
+        const SizedBox(height: AppSpacing.sm),
+        SegmentedButton<String>(
+          segments: const [
+            ButtonSegment<String>(value: 'AUTO', label: Text('Tự động')),
+            ButtonSegment<String>(value: 'MANUAL', label: Text('Tự chọn')),
+          ],
+          selected: {state.selectionMode},
+          onSelectionChanged: (value) => onIntent(
+            CheckoutVoucherModeChanged(value.first),
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        if (state.selectionMode == 'AUTO')
+          const Text('Hệ thống chọn tổ hợp có lợi nhất, tối đa 3 voucher.')
+        else ...[
+          for (final voucher in state.vouchers)
+            CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              value: state.selectedVoucherIds.contains(voucher.id),
+              title: Text('${voucher.code} · ${voucher.displayBenefit}'),
+              subtitle: Text(voucher.layer),
+              onChanged: (checked) {
+                final ids = [...state.selectedVoucherIds];
+                if (checked == true) {
+                  ids.add(voucher.id);
+                } else {
+                  ids.remove(voucher.id);
+                }
+                onIntent(CheckoutVoucherSelectionChanged(ids));
+              },
+            ),
+          if (state.vouchers.isEmpty)
+            const Text('Ví voucher hiện chưa có mã phù hợp với nhà hàng này.'),
+        ],
+        const SizedBox(height: AppSpacing.xs),
+        const Text('Voucher không dùng chung với Flash Sale.'),
       ],
-      onChanged: (id) => onIntent(CheckoutVoucherChanged(id)),
     );
   }
 }
@@ -472,6 +498,15 @@ class _OrderSummary extends StatelessWidget {
             value: -price.discountAmount,
             isDiscount: true,
           ),
+        ],
+        if (price != null && price.appliedVouchers.isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.xs),
+          for (final voucher in price.appliedVouchers)
+            _PriceRow(
+              label: '${voucher.code} · ${voucher.layer}',
+              value: voucher.discountAmount,
+              isDiscount: true,
+            ),
         ],
         const Divider(),
         _PriceRow(
