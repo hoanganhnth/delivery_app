@@ -40,14 +40,18 @@ class CheckoutOrderBuilder {
         CheckoutOrderBuildFailure.invalidInput,
       );
     }
-    final voucherIds = selectedVoucherIds ??
-        (selectedVoucherId == null ? const <int>[] : [selectedVoucherId]);
+    final usesStackingContract =
+        selectedVoucherIds != null || selectionMode != null;
+    final voucherIds = usesStackingContract
+        ? (selectedVoucherIds ?? const <int>[])
+        : (selectedVoucherId == null ? const <int>[] : [selectedVoucherId]);
+    final voucherContractDisabled = usesStackingContract
+        ? !RuntimeConfig.voucherStackingEnabled
+        : voucherIds.isNotEmpty && !RuntimeConfig.voucherCheckoutEnabled;
     if (voucherIds.length > 3 ||
         voucherIds.any((id) => id <= 0) ||
         voucherIds.toSet().length != voucherIds.length ||
-        (voucherIds.isNotEmpty &&
-            !RuntimeConfig.voucherCheckoutEnabled &&
-            !RuntimeConfig.voucherStackingEnabled)) {
+        voucherContractDisabled) {
       throw const CheckoutOrderBuildException(
         CheckoutOrderBuildFailure.invalidInput,
       );
@@ -64,9 +68,9 @@ class CheckoutOrderBuilder {
       restaurantId: restaurantId,
       deliveryLat: latitude!,
       deliveryLng: longitude!,
-      voucherId: selectedVoucherId,
-      selectedVoucherIds: voucherIds.isEmpty ? null : voucherIds,
-      selectionMode: selectionMode,
+      voucherId: usesStackingContract ? null : selectedVoucherId,
+      selectedVoucherIds: usesStackingContract ? voucherIds : null,
+      selectionMode: usesStackingContract ? selectionMode : null,
       items: cart.items
           .map(
             (item) => CheckoutPreviewItemRequest(
@@ -89,8 +93,11 @@ class CheckoutOrderBuilder {
     String? selectionMode,
     String? idempotencyKey,
   }) {
-    final voucherIds = selectedVoucherIds ??
-        (selectedVoucherId == null ? const <int>[] : [selectedVoucherId]);
+    final usesStackingContract =
+        selectedVoucherIds != null || selectionMode != null;
+    final voucherIds = usesStackingContract
+        ? (selectedVoucherIds ?? const <int>[])
+        : (selectedVoucherId == null ? const <int>[] : [selectedVoucherId]);
     final previewRequest = buildPreviewRequest(
       cart: cart,
       address: address,
@@ -124,8 +131,10 @@ class CheckoutOrderBuilder {
       customerPhone: address.phoneNumber,
       paymentMethod: 'COD',
       notes: notes,
-      voucherIds: voucherIds.isEmpty ? null : voucherIds,
-      selectionMode: selectionMode,
+      voucherIds: usesStackingContract
+          ? voucherIds
+          : (voucherIds.isEmpty ? null : voucherIds),
+      selectionMode: usesStackingContract ? selectionMode : null,
       items: cart.items
           .map<OrderCreationItem>(
             (item) => OrderCreationItem(

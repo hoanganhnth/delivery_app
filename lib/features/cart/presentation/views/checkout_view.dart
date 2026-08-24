@@ -420,36 +420,53 @@ class _VoucherSelector extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.sm),
-        SegmentedButton<String>(
-          segments: const [
-            ButtonSegment<String>(value: 'AUTO', label: Text('Tự động')),
-            ButtonSegment<String>(value: 'MANUAL', label: Text('Tự chọn')),
-          ],
-          selected: {state.selectionMode},
-          onSelectionChanged: (value) => onIntent(
-            CheckoutVoucherModeChanged(value.first),
+        if (state.isVoucherStackingAvailable) ...[
+          SegmentedButton<String>(
+            segments: const [
+              ButtonSegment<String>(value: 'AUTO', label: Text('Tự động')),
+              ButtonSegment<String>(value: 'MANUAL', label: Text('Tự chọn')),
+            ],
+            selected: {state.selectionMode},
+            onSelectionChanged: (value) =>
+                onIntent(CheckoutVoucherModeChanged(value.first)),
           ),
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        if (state.selectionMode == 'AUTO')
-          const Text('Hệ thống chọn tổ hợp có lợi nhất, tối đa 3 voucher.')
-        else ...[
+          const SizedBox(height: AppSpacing.xs),
+          if (state.selectionMode == 'AUTO')
+            const Text('Hệ thống chọn tổ hợp có lợi nhất, tối đa 3 voucher.')
+          else ...[
+            for (final voucher in state.vouchers)
+              CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                value: state.selectedVoucherIds.contains(voucher.id),
+                title: Text('${voucher.code} · ${voucher.displayBenefit}'),
+                subtitle: Text(voucher.layer),
+                onChanged: (checked) {
+                  final ids = [...state.selectedVoucherIds];
+                  if (checked == true) {
+                    ids.add(voucher.id);
+                  } else {
+                    ids.remove(voucher.id);
+                  }
+                  onIntent(CheckoutVoucherSelectionChanged(ids));
+                },
+              ),
+            if (state.vouchers.isEmpty)
+              const Text(
+                'Ví voucher hiện chưa có mã phù hợp với nhà hàng này.',
+              ),
+          ],
+        ] else ...[
+          const Text('Chọn một voucher để áp dụng cho đơn hàng.'),
           for (final voucher in state.vouchers)
-            CheckboxListTile(
+            RadioListTile<int>(
               contentPadding: EdgeInsets.zero,
               dense: true,
-              value: state.selectedVoucherIds.contains(voucher.id),
+              value: voucher.id,
+              groupValue: state.selectedVoucherId,
               title: Text('${voucher.code} · ${voucher.displayBenefit}'),
               subtitle: Text(voucher.layer),
-              onChanged: (checked) {
-                final ids = [...state.selectedVoucherIds];
-                if (checked == true) {
-                  ids.add(voucher.id);
-                } else {
-                  ids.remove(voucher.id);
-                }
-                onIntent(CheckoutVoucherSelectionChanged(ids));
-              },
+              onChanged: (value) => onIntent(CheckoutVoucherChanged(value)),
             ),
           if (state.vouchers.isEmpty)
             const Text('Ví voucher hiện chưa có mã phù hợp với nhà hàng này.'),

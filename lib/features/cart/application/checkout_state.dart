@@ -140,6 +140,7 @@ final class CheckoutViewState extends Equatable {
     this.hasPreviewError = false,
     this.price,
     this.isVoucherAvailable = false,
+    this.isVoucherStackingAvailable = false,
     this.isVoucherLoading = false,
     this.hasVoucherError = false,
     this.vouchers = const <CheckoutVoucherViewData>[],
@@ -161,6 +162,7 @@ final class CheckoutViewState extends Equatable {
   final bool hasPreviewError;
   final CheckoutPriceViewData? price;
   final bool isVoucherAvailable;
+  final bool isVoucherStackingAvailable;
   final bool isVoucherLoading;
   final bool hasVoucherError;
   final List<CheckoutVoucherViewData> vouchers;
@@ -194,6 +196,7 @@ final class CheckoutViewState extends Equatable {
     CheckoutPriceViewData? price,
     bool clearPrice = false,
     bool? isVoucherAvailable,
+    bool? isVoucherStackingAvailable,
     bool? isVoucherLoading,
     bool? hasVoucherError,
     List<CheckoutVoucherViewData>? vouchers,
@@ -220,6 +223,8 @@ final class CheckoutViewState extends Equatable {
       hasPreviewError: hasPreviewError ?? this.hasPreviewError,
       price: clearPrice ? null : (price ?? this.price),
       isVoucherAvailable: isVoucherAvailable ?? this.isVoucherAvailable,
+      isVoucherStackingAvailable:
+          isVoucherStackingAvailable ?? this.isVoucherStackingAvailable,
       isVoucherLoading: isVoucherLoading ?? this.isVoucherLoading,
       hasVoucherError: hasVoucherError ?? this.hasVoucherError,
       vouchers: vouchers ?? this.vouchers,
@@ -246,6 +251,7 @@ final class CheckoutViewState extends Equatable {
     hasPreviewError,
     price,
     isVoucherAvailable,
+    isVoucherStackingAvailable,
     isVoucherLoading,
     hasVoucherError,
     vouchers,

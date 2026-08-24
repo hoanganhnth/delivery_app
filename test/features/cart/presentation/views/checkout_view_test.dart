@@ -6,6 +6,7 @@ import 'package:delivery_app/features/cart/application/checkout_intent.dart';
 import 'package:delivery_app/features/cart/application/checkout_preview_gateway.dart';
 import 'package:delivery_app/features/cart/application/checkout_state.dart';
 import 'package:delivery_app/features/cart/application/checkout_view_model.dart';
+import 'package:delivery_app/features/cart/application/checkout_voucher.dart';
 import 'package:delivery_app/features/cart/di/checkout_providers.dart';
 import 'package:delivery_app/features/cart/domain/entities/cart_entity.dart';
 import 'package:delivery_app/features/cart/application/cart_notifier.dart';
@@ -37,6 +38,9 @@ void main() {
           cartProvider.overrideWith(() => cart),
           userAddressListProvider.overrideWith(_SelectedAddressNotifier.new),
           checkoutPreviewGatewayProvider.overrideWithValue(preview),
+          checkoutVoucherGatewayProvider.overrideWithValue(
+            _FakeVoucherGateway(),
+          ),
           orderRepositoryProvider.overrideWithValue(orders),
         ],
       );
@@ -80,6 +84,9 @@ void main() {
               _preview.copyWith(unavailableItemIds: const [301]),
             ),
           ),
+          checkoutVoucherGatewayProvider.overrideWithValue(
+            _FakeVoucherGateway(),
+          ),
           orderRepositoryProvider.overrideWithValue(_FakeOrderRepository()),
         ],
       );
@@ -103,6 +110,34 @@ void main() {
     },
   );
 
+  test('collecting a voucher forces a fresh checkout preview', () async {
+    final preview = _FakePreviewGateway(_preview);
+    final vouchers = _FakeVoucherGateway();
+    final container = ProviderContainer(
+      overrides: [
+        cartProvider.overrideWith(_TestCartNotifier.new),
+        userAddressListProvider.overrideWith(_SelectedAddressNotifier.new),
+        checkoutPreviewGatewayProvider.overrideWithValue(preview),
+        checkoutVoucherGatewayProvider.overrideWithValue(vouchers),
+        orderRepositoryProvider.overrideWithValue(_FakeOrderRepository()),
+      ],
+    );
+    addTearDown(container.dispose);
+    container.read(checkoutViewModelProvider);
+    await container.read(cartProvider.future);
+    await container
+        .read(checkoutViewModelProvider.notifier)
+        .dispatch(const CheckoutLoadRequested());
+    final initialPreviewCount = preview.requests.length;
+
+    await container
+        .read(checkoutViewModelProvider.notifier)
+        .dispatch(const CheckoutVoucherCodeSubmitted('SAVE10'));
+
+    expect(vouchers.collectedCodes, ['SAVE10']);
+    expect(preview.requests, hasLength(initialPreviewCount + 1));
+  });
+
   test(
     'reuses the pending idempotency key after a retryable create failure',
     () async {
@@ -116,6 +151,9 @@ void main() {
           userAddressListProvider.overrideWith(_SelectedAddressNotifier.new),
           checkoutPreviewGatewayProvider.overrideWithValue(
             _FakePreviewGateway(_preview),
+          ),
+          checkoutVoucherGatewayProvider.overrideWithValue(
+            _FakeVoucherGateway(),
           ),
           orderRepositoryProvider.overrideWithValue(orders),
         ],
@@ -162,6 +200,9 @@ void main() {
           checkoutPreviewGatewayProvider.overrideWithValue(
             _FakePreviewGateway(_preview),
           ),
+          checkoutVoucherGatewayProvider.overrideWithValue(
+            _FakeVoucherGateway(),
+          ),
           orderRepositoryProvider.overrideWithValue(orders),
         ],
       );
@@ -202,6 +243,9 @@ void main() {
           userAddressListProvider.overrideWith(_SelectedAddressNotifier.new),
           checkoutPreviewGatewayProvider.overrideWithValue(
             _FakePreviewGateway(_preview),
+          ),
+          checkoutVoucherGatewayProvider.overrideWithValue(
+            _FakeVoucherGateway(),
           ),
           orderRepositoryProvider.overrideWithValue(orders),
         ],
@@ -247,6 +291,9 @@ void main() {
           userAddressListProvider.overrideWith(_SelectedAddressNotifier.new),
           checkoutPreviewGatewayProvider.overrideWithValue(
             _FakePreviewGateway(_preview),
+          ),
+          checkoutVoucherGatewayProvider.overrideWithValue(
+            _FakeVoucherGateway(),
           ),
           orderRepositoryProvider.overrideWithValue(orders),
         ],
@@ -297,6 +344,9 @@ void main() {
           userAddressListProvider.overrideWith(_SelectedAddressNotifier.new),
           checkoutPreviewGatewayProvider.overrideWithValue(
             _FakePreviewGateway(_preview),
+          ),
+          checkoutVoucherGatewayProvider.overrideWithValue(
+            _FakeVoucherGateway(),
           ),
           orderRepositoryProvider.overrideWithValue(orders),
         ],
@@ -389,6 +439,46 @@ void main() {
       expect(intents[2], isA<CheckoutPlaceOrderRequested>());
     },
   );
+
+  testWidgets('single-voucher rollout renders one-choice selection', (
+    tester,
+  ) async {
+    final intents = <CheckoutIntent>[];
+    await pumpTestApp(
+      tester,
+      child: CheckoutView(
+        state: const CheckoutViewState(
+          isCartLoading: false,
+          restaurantName: 'Bếp test',
+          itemCount: 1,
+          lines: [
+            CheckoutLineViewData(
+              menuItemId: 301,
+              name: 'Cơm test',
+              quantity: 1,
+              lineTotal: 50000,
+            ),
+          ],
+          isVoucherAvailable: true,
+          isVoucherStackingAvailable: false,
+          vouchers: [
+            CheckoutVoucherViewData(
+              id: 55,
+              code: 'SAVE10',
+              name: 'Giảm 10%',
+              displayBenefit: '-10%',
+              layer: 'PLATFORM_DISCOUNT',
+            ),
+          ],
+        ),
+        onIntent: intents.add,
+      ),
+    );
+
+    expect(find.byType(SegmentedButton<String>), findsNothing);
+    expect(find.byType(RadioListTile<int>), findsOneWidget);
+    expect(intents, isEmpty);
+  });
 }
 
 class _TestCartNotifier extends CartNotifier {
@@ -435,6 +525,28 @@ class _FakePreviewGateway implements CheckoutPreviewGateway {
     requests.add(request);
     return response;
   }
+}
+
+class _FakeVoucherGateway implements CheckoutVoucherGateway {
+  final List<String> collectedCodes = [];
+
+  @override
+  Future<void> collect(String code) async {
+    collectedCodes.add(code);
+  }
+
+  @override
+  Future<CheckoutVoucherCapability> getCapability() async =>
+      const CheckoutVoucherCapability(
+        enabled: true,
+        maxVouchers: 3,
+        layers: ['SHOP_DISCOUNT', 'PLATFORM_DISCOUNT', 'FREESHIP'],
+        selectionModes: ['AUTO', 'MANUAL'],
+        conflictsWithFlashSale: true,
+      );
+
+  @override
+  Future<List<CheckoutVoucher>> getWallet() async => const [];
 }
 
 class _FakeOrderRepository implements OrderRepository {

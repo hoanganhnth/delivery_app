@@ -187,8 +187,8 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
 
   Future<void> _loadVouchers({bool force = false}) async {
     if (!_isVoucherAvailable) {
-      final wasSelected = _selectedVoucherIds.isNotEmpty ||
-          _selectedVoucherId != null;
+      final wasSelected =
+          _selectedVoucherIds.isNotEmpty || _selectedVoucherId != null;
       _vouchers = const [];
       _selectedVoucherId = null;
       _selectedVoucherIds = const <int>[];
@@ -246,7 +246,8 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
           .read(checkoutVoucherGatewayProvider)
           .getCapability();
       if (ref.mounted) {
-        _stackingCapabilityEnabled = capability.enabled &&
+        _stackingCapabilityEnabled =
+            capability.enabled &&
             capability.maxVouchers >= 3 &&
             capability.layers.contains('SHOP_DISCOUNT') &&
             capability.layers.contains('PLATFORM_DISCOUNT') &&
@@ -273,6 +274,10 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
   }
 
   Future<void> _changeVoucherSelection(List<int> voucherIds) async {
+    if (!_stackingEnabled) {
+      await _changeVoucher(voucherIds.isEmpty ? null : voucherIds.first);
+      return;
+    }
     final selected = <int>[];
     final layers = <String>{};
     for (final id in voucherIds) {
@@ -296,6 +301,7 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
   }
 
   Future<void> _changeVoucherMode(String mode) async {
+    if (!_stackingEnabled) return;
     final next = mode.toUpperCase() == 'MANUAL' ? 'MANUAL' : 'AUTO';
     if (next == _selectionMode) return;
     _selectionMode = next;
@@ -312,11 +318,14 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
     try {
       await ref.read(checkoutVoucherGatewayProvider).collect(code);
       await _loadVouchers(force: true);
+      _invalidatePreview();
+      _publish();
+      await _refreshPreview(force: true);
       _emit(const CheckoutShowMessage('Đã lưu voucher vào ví.'));
     } catch (_) {
-      _emit(const CheckoutShowMessage(
-        'Mã voucher không hợp lệ hoặc đã được lưu.',
-      ));
+      _emit(
+        const CheckoutShowMessage('Mã voucher không hợp lệ hoặc đã được lưu.'),
+      );
     }
   }
 
@@ -357,8 +366,9 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
                   cart: cart,
                   address: _address,
                   selectedVoucherId: _selectedVoucherId,
-                  selectedVoucherIds:
-                      _stackingEnabled ? _selectedVoucherIds : null,
+                  selectedVoucherIds: _stackingEnabled
+                      ? _selectedVoucherIds
+                      : null,
                   selectionMode: _stackingEnabled ? _selectionMode : null,
                 );
                 final changed = CheckoutPreviewResponse.fromJson(
@@ -522,18 +532,23 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
               customerShippingFee: preview.customerShippingFee,
               platformSubsidy: preview.platformSubsidy,
               appliedVouchers: (preview.appliedVouchers ?? const [])
-                  .where((item) =>
-                      item.code != null &&
-                      item.layer != null &&
-                      item.discountAmount != null)
-                  .map((item) => CheckoutAppliedVoucherViewData(
-                        code: item.code!,
-                        layer: item.layer!,
-                        discountAmount: item.discountAmount!,
-                      ))
+                  .where(
+                    (item) =>
+                        item.code != null &&
+                        item.layer != null &&
+                        item.discountAmount != null,
+                  )
+                  .map(
+                    (item) => CheckoutAppliedVoucherViewData(
+                      code: item.code!,
+                      layer: item.layer!,
+                      discountAmount: item.discountAmount!,
+                    ),
+                  )
                   .toList(growable: false),
             ),
       isVoucherAvailable: _isVoucherAvailable,
+      isVoucherStackingAvailable: _stackingEnabled,
       isVoucherLoading: _isVoucherLoading,
       hasVoucherError: _hasVoucherError,
       vouchers: _vouchers

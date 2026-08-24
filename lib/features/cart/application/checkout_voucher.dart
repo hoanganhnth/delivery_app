@@ -58,16 +58,20 @@ class CheckoutVoucher {
       );
     }
     final minOrderValue = json['minOrderValue'];
-    final rewardLayer = json['layer'] is String
+    final rewardLayer = json['layerCode'] is String
+        ? json['layerCode'] as String
+        : json['layer'] is String
         ? json['layer'] as String
         : rewardType == 'FREESHIP'
-            ? 'FREESHIP'
-            : creatorType == 'SHOP' || scopeType == 'SHOP'
-                ? 'SHOP_DISCOUNT'
-                : 'PLATFORM_DISCOUNT';
+        ? 'FREESHIP'
+        : creatorType == 'SHOP' || scopeType == 'SHOP'
+        ? 'SHOP_DISCOUNT'
+        : 'PLATFORM_DISCOUNT';
     final fundingSource = json['fundingSource'] is String
         ? json['fundingSource'] as String
-        : rewardLayer == 'SHOP_DISCOUNT' ? 'SHOP' : 'PLATFORM';
+        : rewardLayer == 'SHOP_DISCOUNT'
+        ? 'SHOP'
+        : 'PLATFORM';
     if (!const {
       'SHOP_DISCOUNT',
       'PLATFORM_DISCOUNT',
@@ -133,7 +137,9 @@ class CheckoutVoucherCapability {
       enabled: enabled,
       maxVouchers: maxVouchers.toInt(),
       layers: layers.whereType<String>().toList(growable: false),
-      selectionModes: selectionModes.whereType<String>().toList(growable: false),
+      selectionModes: selectionModes.whereType<String>().toList(
+        growable: false,
+      ),
       conflictsWithFlashSale: conflicts,
     );
   }
@@ -156,7 +162,9 @@ class CheckoutVoucherClient implements CheckoutVoucherGateway {
       ApiConstants.voucherCapability,
     );
     final envelope = response.data;
-    if (envelope == null || envelope['status'] != 1 || envelope['data'] is! Map) {
+    if (envelope == null ||
+        envelope['status'] != 1 ||
+        envelope['data'] is! Map) {
       throw const FormatException('Invalid voucher capability envelope');
     }
     return CheckoutVoucherCapability.fromJson(

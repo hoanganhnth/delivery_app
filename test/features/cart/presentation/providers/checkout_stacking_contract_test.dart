@@ -3,6 +3,23 @@ import 'package:delivery_app/features/orders/data/dtos/checkout_preview_dto.dart
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  test('wallet voucher parser reads the canonical layerCode field', () {
+    final voucher = CheckoutVoucher.fromJson({
+      'id': 6,
+      'code': 'PLATFORM10',
+      'name': 'Platform discount',
+      'creatorType': 'PLATFORM',
+      'rewardType': 'PERCENTAGE',
+      'discountValue': 10,
+      'scopeType': 'ALL',
+      'layerCode': 'PLATFORM_DISCOUNT',
+      'fundingSource': 'PLATFORM',
+    });
+
+    expect(voucher.layer, 'PLATFORM_DISCOUNT');
+    expect(voucher.fundingSource, 'PLATFORM');
+  });
+
   test('accepts shop-funded wallet vouchers and derives the shop layer', () {
     final voucher = CheckoutVoucher.fromJson({
       'id': 7,

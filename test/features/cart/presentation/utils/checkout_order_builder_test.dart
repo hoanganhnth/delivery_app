@@ -117,6 +117,38 @@ void main() {
     },
   );
 
+  test('single and stacked voucher payloads stay on separate contracts', () {
+    legacyAction() => CheckoutOrderBuilder.buildPreviewRequest(
+      cart: buildCart(),
+      address: buildAddress(),
+      selectedVoucherId: 55,
+    );
+    if (RuntimeConfig.voucherCheckoutEnabled) {
+      final legacy = legacyAction();
+      expect(legacy.voucherId, 55);
+      expect(legacy.selectedVoucherIds, isNull);
+      expect(legacy.selectionMode, isNull);
+    } else {
+      expect(legacyAction, throwsA(isA<CheckoutOrderBuildException>()));
+    }
+
+    stackedAction() => CheckoutOrderBuilder.buildPreviewRequest(
+      cart: buildCart(),
+      address: buildAddress(),
+      selectedVoucherId: 55,
+      selectedVoucherIds: const [55],
+      selectionMode: 'MANUAL',
+    );
+    if (RuntimeConfig.voucherStackingEnabled) {
+      final stacked = stackedAction();
+      expect(stacked.voucherId, isNull);
+      expect(stacked.selectedVoucherIds, [55]);
+      expect(stacked.selectionMode, 'MANUAL');
+    } else {
+      expect(stackedAction, throwsA(isA<CheckoutOrderBuildException>()));
+    }
+  });
+
   test('rollout flags gate authoritative flash-sale item identity', () {
     final cart = buildCart(items: [buildCartItem(flashSaleItemId: 88)]);
     action() => CheckoutOrderBuilder.buildOrderRequest(
