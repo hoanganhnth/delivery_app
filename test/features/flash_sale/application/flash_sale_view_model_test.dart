@@ -48,6 +48,28 @@ void main() {
     expect(state.campaign?.id, 11);
     expect(state.items.map((item) => item.id), [71, 72]);
   });
+
+  test(
+    'keeps successful campaign items when another campaign fetch fails',
+    () async {
+      final repository = _PartiallyFailingCampaignsRepository();
+      final container = ProviderContainer(
+        overrides: [
+          flashSaleCheckoutEnabledProvider.overrideWithValue(true),
+          flashSaleRepositoryProvider.overrideWithValue(repository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(flashSaleViewModelProvider.notifier).load();
+
+      final state = container.read(flashSaleViewModelProvider);
+      expect(repository.requestedCampaignIds, [11, 12]);
+      expect(state.errorMessage, isNull);
+      expect(state.partialErrorMessage, 'Dinner inventory unavailable');
+      expect(state.items.map((item) => item.id), [71]);
+    },
+  );
 }
 
 class _FailingFlashSaleRepository implements FlashSaleRepository {
@@ -117,4 +139,30 @@ class _MultipleCampaignsRepository implements FlashSaleRepository {
   Future<Either<Failure, List<FlashSaleItemEntity>>> getRestaurantItems(
     int restaurantId,
   ) => throw UnimplementedError();
+}
+
+class _PartiallyFailingCampaignsRepository
+    extends _MultipleCampaignsRepository {
+  @override
+  Future<Either<Failure, List<FlashSaleItemEntity>>> getCampaignItems(
+    int campaignId,
+  ) async {
+    requestedCampaignIds.add(campaignId);
+    if (campaignId == 12) {
+      return left(const ServerFailure('Dinner inventory unavailable'));
+    }
+    return right(const [
+      FlashSaleItemEntity(
+        id: 71,
+        campaignId: 11,
+        restaurantId: 201,
+        menuItemId: 301,
+        originalPrice: 50000,
+        flashSalePrice: 30000,
+        stockQuantity: 10,
+        soldQuantity: 2,
+        status: 'APPROVED',
+      ),
+    ]);
+  }
 }

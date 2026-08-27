@@ -57,19 +57,24 @@ class FlashSaleViewModel extends Notifier<FlashSaleViewState> {
       );
       if (!ref.mounted) return;
       final items = <FlashSaleItemEntity>[];
+      String? partialErrorMessage;
       for (final result in itemsResults) {
         result.fold(
-          (failure) =>
-              state = FlashSaleViewState(errorMessage: failure.message),
+          (failure) => partialErrorMessage ??= failure.message,
           items.addAll,
         );
-        if (state.hasError) return;
+      }
+      final availableItems = List<FlashSaleItemEntity>.unmodifiable(
+        items.where((item) => item.isApproved && item.hasStock),
+      );
+      if (availableItems.isEmpty && partialErrorMessage != null) {
+        state = FlashSaleViewState(errorMessage: partialErrorMessage);
+        return;
       }
       state = FlashSaleViewState(
         campaign: activeCampaigns.first,
-        items: List<FlashSaleItemEntity>.unmodifiable(
-          items.where((item) => item.isApproved && item.hasStock),
-        ),
+        items: availableItems,
+        partialErrorMessage: partialErrorMessage,
       );
     } finally {
       _isLoading = false;

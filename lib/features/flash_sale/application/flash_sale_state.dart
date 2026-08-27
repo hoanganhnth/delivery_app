@@ -9,16 +9,25 @@ final class FlashSaleViewState extends Equatable {
     this.items = const <FlashSaleItemEntity>[],
     this.isLoading = false,
     this.errorMessage,
+    this.partialErrorMessage,
   });
 
   final FlashSaleCampaignEntity? campaign;
   final List<FlashSaleItemEntity> items;
   final bool isLoading;
   final String? errorMessage;
+  final String? partialErrorMessage;
 
   bool get isVisible => campaign?.isActive == true && items.isNotEmpty;
   bool get hasError => errorMessage != null;
+  bool get hasPartialError => partialErrorMessage != null;
 
   @override
-  List<Object?> get props => [campaign, items, isLoading, errorMessage];
+  List<Object?> get props => [
+    campaign,
+    items,
+    isLoading,
+    errorMessage,
+    partialErrorMessage,
+  ];
 }
