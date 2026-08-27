@@ -40,6 +40,12 @@ class FlashSaleBannerView extends StatelessWidget {
         ),
       );
     }
+    if (campaign?.isActive == true && state.items.isEmpty) {
+      return const _FlashSaleStatusCard(
+        key: Key('flash_sale_empty'),
+        child: Text('Hiện chưa có món Flash Sale khả dụng'),
+      );
+    }
     if (!state.isVisible || campaign == null) return const SizedBox.shrink();
     final endAt = campaign.endAt();
     if (endAt == null) return const SizedBox.shrink();

@@ -30,6 +30,24 @@ void main() {
       );
     },
   );
+
+  test('loads and keeps available items from every active campaign', () async {
+    final repository = _MultipleCampaignsRepository();
+    final container = ProviderContainer(
+      overrides: [
+        flashSaleCheckoutEnabledProvider.overrideWithValue(true),
+        flashSaleRepositoryProvider.overrideWithValue(repository),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(flashSaleViewModelProvider.notifier).load();
+
+    final state = container.read(flashSaleViewModelProvider);
+    expect(repository.requestedCampaignIds, [11, 12]);
+    expect(state.campaign?.id, 11);
+    expect(state.items.map((item) => item.id), [71, 72]);
+  });
 }
 
 class _FailingFlashSaleRepository implements FlashSaleRepository {
@@ -44,6 +62,56 @@ class _FailingFlashSaleRepository implements FlashSaleRepository {
   Future<Either<Failure, List<FlashSaleItemEntity>>> getCampaignItems(
     int campaignId,
   ) => throw UnimplementedError();
+
+  @override
+  Future<Either<Failure, List<FlashSaleItemEntity>>> getRestaurantItems(
+    int restaurantId,
+  ) => throw UnimplementedError();
+}
+
+class _MultipleCampaignsRepository implements FlashSaleRepository {
+  final List<int> requestedCampaignIds = [];
+
+  @override
+  Future<Either<Failure, List<FlashSaleCampaignEntity>>>
+  getActiveCampaigns() async => right(const [
+    FlashSaleCampaignEntity(
+      id: 11,
+      name: 'Lunch',
+      isRecurring: true,
+      startTime: '11:00:00',
+      endTime: '14:00:00',
+      status: 'ACTIVE',
+    ),
+    FlashSaleCampaignEntity(
+      id: 12,
+      name: 'Dinner',
+      isRecurring: true,
+      startTime: '17:00:00',
+      endTime: '20:00:00',
+      status: 'ACTIVE',
+    ),
+  ]);
+
+  @override
+  Future<Either<Failure, List<FlashSaleItemEntity>>> getCampaignItems(
+    int campaignId,
+  ) async {
+    requestedCampaignIds.add(campaignId);
+    return right([
+      FlashSaleItemEntity(
+        id: campaignId == 11 ? 71 : 72,
+        campaignId: campaignId,
+        restaurantId: 201,
+        menuItemId: campaignId == 11 ? 301 : 302,
+        originalPrice: 50000,
+        flashSalePrice: 30000,
+        stockQuantity: 10,
+        soldQuantity: 2,
+        status: 'APPROVED',
+      ),
+    ]);
+  }
 
   @override
   Future<Either<Failure, List<FlashSaleItemEntity>>> getRestaurantItems(

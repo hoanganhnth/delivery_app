@@ -67,6 +67,30 @@ void main() {
     expect(find.byKey(const Key('flash_sale_banner')), findsNothing);
   });
 
+  testWidgets('shows an empty state for an active campaign with no items', (
+    tester,
+  ) async {
+    await pumpTestApp(
+      tester,
+      child: const FlashSaleBannerView(
+        state: FlashSaleViewState(
+          campaign: FlashSaleCampaignEntity(
+            id: 11,
+            name: 'Bữa trưa siêu sale',
+            isRecurring: true,
+            startTime: '00:00:00',
+            endTime: '23:59:59',
+            status: 'ACTIVE',
+          ),
+        ),
+        onRestaurantSelected: _ignoreRestaurant,
+        onRefreshRequested: _ignoreRefresh,
+      ),
+    );
+
+    expect(find.byKey(const Key('flash_sale_empty')), findsOneWidget);
+  });
+
   testWidgets('shows a loading state while the catalog is loading', (
     tester,
   ) async {

@@ -41,21 +41,34 @@ class FlashSaleViewModel extends Notifier<FlashSaleViewState> {
         state = const FlashSaleViewState();
         return;
       }
-      final campaign = campaigns.firstWhere(
-        (candidate) => candidate.isActive,
-        orElse: () => campaigns.first,
+      final activeCampaigns = campaigns
+          .where((campaign) => campaign.isActive)
+          .toList(growable: false);
+      if (activeCampaigns.isEmpty) {
+        state = const FlashSaleViewState();
+        return;
+      }
+      final itemsResults = await Future.wait(
+        activeCampaigns.map(
+          (campaign) => ref
+              .read(getFlashSaleCampaignItemsUseCaseProvider)
+              .call(GetFlashSaleCampaignItemsParams(campaignId: campaign.id)),
+        ),
       );
-      final itemsResult = await ref
-          .read(getFlashSaleCampaignItemsUseCaseProvider)
-          .call(GetFlashSaleCampaignItemsParams(campaignId: campaign.id));
       if (!ref.mounted) return;
-      itemsResult.fold(
-        (failure) => state = FlashSaleViewState(errorMessage: failure.message),
-        (items) => state = FlashSaleViewState(
-          campaign: campaign,
-          items: List<FlashSaleItemEntity>.unmodifiable(
-            items.where((item) => item.isApproved && item.hasStock),
-          ),
+      final items = <FlashSaleItemEntity>[];
+      for (final result in itemsResults) {
+        result.fold(
+          (failure) =>
+              state = FlashSaleViewState(errorMessage: failure.message),
+          items.addAll,
+        );
+        if (state.hasError) return;
+      }
+      state = FlashSaleViewState(
+        campaign: activeCampaigns.first,
+        items: List<FlashSaleItemEntity>.unmodifiable(
+          items.where((item) => item.isApproved && item.hasStock),
         ),
       );
     } finally {
