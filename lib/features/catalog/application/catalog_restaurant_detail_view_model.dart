@@ -8,18 +8,18 @@ import 'package:delivery_app/features/restaurants/domain/entities/menu_item_enti
 import 'package:delivery_app/features/restaurants/domain/entities/restaurant_entity.dart';
 import 'package:delivery_app/features/restaurants/application/detail/restaurant_detail_notifier.dart';
 import 'package:delivery_app/features/restaurants/application/detail/restaurant_detail_state.dart';
-import 'package:delivery_app/features/restaurants/di/flash_sale_catalog_provider.dart';
+import 'package:delivery_app/features/flash_sale/di/flash_sale_providers.dart';
+import 'package:delivery_app/features/flash_sale/domain/entities/flash_sale_item_entity.dart';
 
 import 'catalog_restaurant_detail_effect.dart';
 import 'catalog_restaurant_detail_intent.dart';
 import 'catalog_restaurant_detail_state.dart';
 
-final catalogRestaurantDetailViewModelProvider =
-    NotifierProvider.family<
-      CatalogRestaurantDetailViewModel,
-      CatalogRestaurantDetailViewState,
-      num
-    >((restaurantId) => CatalogRestaurantDetailViewModel(restaurantId));
+final catalogRestaurantDetailViewModelProvider = NotifierProvider.family<
+  CatalogRestaurantDetailViewModel,
+  CatalogRestaurantDetailViewState,
+  num
+>((restaurantId) => CatalogRestaurantDetailViewModel(restaurantId));
 
 /// Transitional catalog detail orchestrator. It adapts the legacy restaurant,
 /// cart and flash-sale providers while keeping all user actions out of the UI.
@@ -31,7 +31,7 @@ class CatalogRestaurantDetailViewModel
   final num _restaurantId;
   RestaurantDetailState? _detail;
   CartEntity? _cart;
-  Map<int, CatalogFlashSaleItem> _flashSales = const {};
+  Map<int, FlashSaleItemEntity> _flashSales = const {};
   final Map<num, MenuItemEntity> _menuItemsById = {};
   bool _cartCommandRunning = false;
 
@@ -54,7 +54,7 @@ class CatalogRestaurantDetailViewModel
       _cart = next.value;
       _publish();
     });
-    ref.listen<AsyncValue<Map<int, CatalogFlashSaleItem>>>(
+    ref.listen<AsyncValue<Map<int, FlashSaleItemEntity>>>(
       restaurantFlashSaleItemsProvider(_asPositiveInt(_restaurantId)),
       (_, next) {
         _flashSales = next.value ?? const {};
@@ -191,9 +191,10 @@ class CatalogRestaurantDetailViewModel
       );
     final cart = _cart;
     return CatalogRestaurantDetailViewState(
-      restaurant: detail.restaurant == null
-          ? null
-          : _restaurantData(detail.restaurant!),
+      restaurant:
+          detail.restaurant == null
+              ? null
+              : _restaurantData(detail.restaurant!),
       menuItems: detail.menuItems.map(_menuItemData).toList(growable: false),
       isLoading: detail.isLoading,
       errorMessage: detail.errorMessage,

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/routing/routing.dart';
+import 'package:delivery_app/features/flash_sale/presentation/pages/flash_sale_banner_page.dart';
 
 import '../../application/catalog_home_effect.dart';
 import '../../application/catalog_home_intent.dart';
@@ -50,9 +51,11 @@ class _CatalogHomePageState extends ConsumerState<CatalogHomePage> {
 
     return CatalogHomeView(
       state: ref.watch(catalogHomeViewModelProvider),
-      onIntent: (intent) => unawaited(
-        ref.read(catalogHomeViewModelProvider.notifier).dispatch(intent),
-      ),
+      flashSaleBanner: const FlashSaleBannerPage(),
+      onIntent:
+          (intent) => unawaited(
+            ref.read(catalogHomeViewModelProvider.notifier).dispatch(intent),
+          ),
     );
   }
 

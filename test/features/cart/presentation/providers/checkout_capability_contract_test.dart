@@ -41,28 +41,30 @@ void main() {
     expect(wallet.single.appliesToRestaurant(8), isFalse);
   });
 
-  test('voucher stacking capability uses the authenticated Gateway contract',
-      () async {
-    adapter.onGet(
-      '/promotions/capability',
-      (server) => server.reply(200, {
-        'status': 1,
-        'data': {
-          'enabled': true,
-          'maxVouchers': 3,
-          'layers': ['SHOP_DISCOUNT', 'PLATFORM_DISCOUNT', 'FREESHIP'],
-          'selectionModes': ['AUTO', 'MANUAL'],
-          'conflictsWithFlashSale': true,
-        },
-      }),
-    );
+  test(
+    'voucher stacking capability uses the authenticated Gateway contract',
+    () async {
+      adapter.onGet(
+        '/promotions/capability',
+        (server) => server.reply(200, {
+          'status': 1,
+          'data': {
+            'enabled': true,
+            'maxVouchers': 3,
+            'layers': ['SHOP_DISCOUNT', 'PLATFORM_DISCOUNT', 'FREESHIP'],
+            'selectionModes': ['AUTO', 'MANUAL'],
+            'conflictsWithFlashSale': true,
+          },
+        }),
+      );
 
-    final capability = await CheckoutVoucherClient(dio).getCapability();
+      final capability = await CheckoutVoucherClient(dio).getCapability();
 
-    expect(capability.enabled, isTrue);
-    expect(capability.maxVouchers, 3);
-    expect(capability.layers, contains('FREESHIP'));
-  });
+      expect(capability.enabled, isTrue);
+      expect(capability.maxVouchers, 3);
+      expect(capability.layers, contains('FREESHIP'));
+    },
+  );
 
   test(
     'flash catalog is the only source of checkout flash-sale identity',
@@ -72,7 +74,14 @@ void main() {
         (server) => server.reply(200, {
           'status': 1,
           'data': [
-            {'id': 3, 'name': 'Lunch'},
+            {
+              'id': 3,
+              'name': 'Lunch',
+              'isRecurring': true,
+              'startTime': '11:00:00',
+              'endTime': '14:00:00',
+              'status': 'ACTIVE',
+            },
           ],
         }),
       );
@@ -85,6 +94,7 @@ void main() {
               'id': 88,
               'restaurantId': 7,
               'menuItemId': 9,
+              'originalPrice': 100000,
               'flashSalePrice': 60000,
               'stockQuantity': 10,
               'soldQuantity': 2,
@@ -107,8 +117,22 @@ void main() {
       (server) => server.reply(200, {
         'status': 1,
         'data': [
-          {'id': 3},
-          {'id': 4},
+          {
+            'id': 3,
+            'name': 'Lunch',
+            'isRecurring': true,
+            'startTime': '11:00:00',
+            'endTime': '14:00:00',
+            'status': 'ACTIVE',
+          },
+          {
+            'id': 4,
+            'name': 'Dinner',
+            'isRecurring': true,
+            'startTime': '17:00:00',
+            'endTime': '20:00:00',
+            'status': 'ACTIVE',
+          },
         ],
       }),
     );
@@ -122,6 +146,7 @@ void main() {
               'id': 80 + campaignId,
               'restaurantId': 7,
               'menuItemId': 9,
+              'originalPrice': 100000,
               'flashSalePrice': 60000,
               'stockQuantity': 10,
               'soldQuantity': 2,

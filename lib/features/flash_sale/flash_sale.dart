@@ -1,0 +1,11 @@
+export 'application/flash_sale_state.dart';
+export 'application/flash_sale_view_model.dart';
+export 'data/repositories/flash_sale_repository_impl.dart';
+export 'di/flash_sale_providers.dart';
+export 'domain/entities/flash_sale_campaign_entity.dart';
+export 'domain/entities/flash_sale_item_entity.dart';
+export 'domain/repositories/flash_sale_repository.dart';
+export 'presentation/pages/flash_sale_banner_page.dart';
+export 'presentation/views/flash_sale_banner_view.dart';
+export 'presentation/widgets/countdown_timer.dart';
+export 'presentation/widgets/flash_sale_item_card.dart';

@@ -13,10 +13,12 @@ class CatalogHomeView extends StatelessWidget {
     super.key,
     required this.state,
     required this.onIntent,
+    this.flashSaleBanner,
   });
 
   final CatalogHomeViewState state;
   final ValueChanged<CatalogHomeIntent> onIntent;
+  final Widget? flashSaleBanner;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,8 @@ class CatalogHomeView extends StatelessWidget {
               ),
             ),
           ),
+          if (flashSaleBanner != null)
+            SliverToBoxAdapter(child: flashSaleBanner),
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 12.w),
@@ -55,8 +59,10 @@ class CatalogHomeView extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () =>
-                        onIntent(const CatalogHomeAllRestaurantsRequested()),
+                    onPressed:
+                        () => onIntent(
+                          const CatalogHomeAllRestaurantsRequested(),
+                        ),
                     child: const Text('Xem tất cả'),
                   ),
                 ],
@@ -127,8 +133,8 @@ class _Header extends StatelessWidget {
           ),
           GlassActionButton(
             icon: Icons.notifications_outlined,
-            onPressed: () =>
-                onIntent(const CatalogHomeNotificationsRequested()),
+            onPressed:
+                () => onIntent(const CatalogHomeNotificationsRequested()),
           ),
           SizedBox(width: 8.w),
           GlassActionButton(
@@ -212,17 +218,19 @@ class _RestaurantContent extends StatelessWidget {
               name: restaurant.name,
               imageUrl: restaurant.imageUrl,
               rating: restaurant.rating,
-              deliveryTime: restaurant.deliveryTimeMinutes == null
-                  ? null
-                  : '${restaurant.deliveryTimeMinutes} phút',
+              deliveryTime:
+                  restaurant.deliveryTimeMinutes == null
+                      ? null
+                      : '${restaurant.deliveryTimeMinutes} phút',
               category: restaurant.category,
-              distance: restaurant.distanceKm == null
-                  ? null
-                  : '${restaurant.distanceKm!.toStringAsFixed(1)} km',
+              distance:
+                  restaurant.distanceKm == null
+                      ? null
+                      : '${restaurant.distanceKm!.toStringAsFixed(1)} km',
               deliveryFee: _deliveryFee(restaurant.deliveryFee),
               isFreeDelivery: restaurant.deliveryFee == 0,
-              onTap: () =>
-                  onIntent(CatalogHomeRestaurantRequested(restaurant.id)),
+              onTap:
+                  () => onIntent(CatalogHomeRestaurantRequested(restaurant.id)),
             ),
           );
         }, childCount: state.restaurants.length),
