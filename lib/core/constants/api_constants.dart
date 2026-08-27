@@ -19,6 +19,9 @@ class ApiConstants {
   static const order = "/orders";
   static const getOrdersByUser = "$order/my-orders";
   static const customerRefundCases = "/settlement/refunds/my";
+  static const customerPaymentCreate = "/settlement/payments/create";
+  static String customerPaymentByReference(String paymentRef) =>
+      '/settlement/payments/ref/${Uri.encodeComponent(paymentRef)}';
   static const delivery = "/deliveries";
   static const promotion = "/promotions";
   static const myVouchers = "$promotion/my-vouchers";

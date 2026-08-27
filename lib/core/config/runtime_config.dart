@@ -20,6 +20,10 @@ class RuntimeConfig {
     'FLASHSALE_CHECKOUT_ENABLED',
     defaultValue: false,
   );
+  static const vnpayPaymentEnabled = bool.fromEnvironment(
+    'VNPAY_PAYMENT_ENABLED',
+    defaultValue: false,
+  );
 
   static String get gatewayBaseUrl => resolveGatewayBaseUrl(
     configuredValue: _configuredGateway,
