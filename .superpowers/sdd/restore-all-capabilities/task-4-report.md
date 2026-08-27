@@ -112,6 +112,39 @@ git diff --check (each repo)
 Result: passed.
 ```
 
+## Fix round 2 — shared payment return coordinator
+
+Review found that `routerProvider` used `paymentReturnCoordinatorProvider`,
+but `PaymentReturnPage` constructed a second `PaymentReturnCoordinator` from the
+status refresher. The page now reads the provider-backed coordinator directly;
+the provider remains the sole source of the canonical configured
+`RuntimeConfig.vnpayReturnUri`, and the page no longer accepts a caller-supplied
+return URI.
+
+The coordinator test now sends the same valid callback through WebView and
+app-link entry points concurrently and proves one terminal outcome is a
+duplicate and only one Gateway status refresh occurs. The disabled page test
+also observes initialization of `paymentReturnCoordinatorProvider`, proving the
+presentation boundary uses the same provider-backed instance used by router
+composition. Callback validation and the default-off WebView guard are
+unchanged.
+
+Fix-round-2 validation:
+
+```text
+fvm flutter test test/features/payments/presentation/payment_return_page_test.dart
+Result: 1 test passed (after the expected red compile failure before page wiring).
+
+fvm flutter test test/features/payments
+Result: 13 tests passed.
+
+fvm flutter analyze lib/core/config/runtime_config.dart lib/core/routing/providers/router_provider.dart lib/features/payments test/features/payments
+Result: no issues found.
+
+git diff --check
+Result: passed.
+```
+
 ## Commits
 
 - `backend_delivery`: `716985bc30c032d23437d10f0940b898dac161b3`

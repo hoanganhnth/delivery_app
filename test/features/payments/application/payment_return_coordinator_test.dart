@@ -67,6 +67,41 @@ void main() {
     expect(refresher.references, ['PAY-125']);
   });
 
+  test('WebView and app-link callbacks share terminal state', () async {
+    final refresher = _RecordingRefresher(
+      const PaymentOrder(
+        paymentRef: 'PAY-128',
+        status: PaymentStatus.succeeded,
+      ),
+    );
+    final coordinator = PaymentReturnCoordinator(
+      expectedReturnUrl: Uri.parse(expectedReturn),
+      statusRefresher: refresher,
+    );
+    final callback = Uri.parse(
+      '$expectedReturn?vnp_TxnRef=PAY-128&vnp_ResponseCode=00',
+    );
+
+    final outcomes = await Future.wait([
+      coordinator.handleWebViewNavigation(callback),
+      coordinator.handleDeepLink(callback),
+    ]);
+
+    expect(
+      outcomes.where(
+        (outcome) => outcome.kind == PaymentReturnOutcomeKind.duplicate,
+      ),
+      hasLength(1),
+    );
+    expect(
+      outcomes.where(
+        (outcome) => outcome.kind == PaymentReturnOutcomeKind.succeeded,
+      ),
+      hasLength(1),
+    );
+    expect(refresher.references, ['PAY-128']);
+  });
+
   test('malformed callback performs no status refresh', () async {
     final refresher = _RecordingRefresher(
       const PaymentOrder(

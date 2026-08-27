@@ -15,12 +15,10 @@ class PaymentReturnPage extends ConsumerStatefulWidget {
   const PaymentReturnPage({
     super.key,
     required this.paymentUrl,
-    required this.expectedReturnUrl,
     this.onOutcome,
   });
 
   final Uri paymentUrl;
-  final Uri expectedReturnUrl;
   final ValueChanged<PaymentReturnOutcome>? onOutcome;
 
   @override
@@ -35,10 +33,7 @@ class _PaymentReturnPageState extends ConsumerState<PaymentReturnPage> {
   @override
   void initState() {
     super.initState();
-    _coordinator = PaymentReturnCoordinator(
-      expectedReturnUrl: widget.expectedReturnUrl,
-      statusRefresher: ref.read(customerPaymentStatusRefresherProvider),
-    );
+    _coordinator = ref.read(paymentReturnCoordinatorProvider);
     if (!RuntimeConfig.vnpayPaymentEnabled) return;
     _webViewController = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
