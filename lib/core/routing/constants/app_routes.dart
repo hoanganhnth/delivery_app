@@ -8,6 +8,8 @@ class AppRoutes {
   // Auth routes
   static const String login = '/login';
   static const String register = '/register';
+  static const String forgotPassword = '/forgot-password';
+  static const String resetPassword = '/reset-password';
 
   // Main app routes
   static const String main = '/main';
@@ -27,6 +29,7 @@ class AppRoutes {
   // Restaurant routes
   static const String restaurants = '/restaurants';
   static const String restaurantDetails = '/restaurants/:restaurantId';
+  static const String livestreamViewer = '/livestreams/:livestreamId';
 
   // Cart and checkout
   static const String cart = '/cart';
@@ -47,4 +50,6 @@ class AppRoutes {
   static String trackOrderPath(String orderId) => '/orders/$orderId/track';
   static String restaurantDetailsPath(String restaurantId) =>
       '/restaurants/$restaurantId';
+  static String livestreamViewerPath(String livestreamId) =>
+      '/livestreams/$livestreamId';
 }

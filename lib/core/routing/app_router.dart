@@ -16,6 +16,8 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:delivery_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:delivery_app/features/auth/presentation/screens/register_screen.dart';
+import 'package:delivery_app/features/auth/presentation/pages/forgot_password_page.dart';
+import 'package:delivery_app/features/auth/presentation/pages/reset_password_page.dart';
 import 'package:delivery_app/features/notification/presentation/screens/notification_screen.dart';
 import 'package:delivery_app/features/search/presentation/screens/search_screen.dart';
 import 'package:delivery_app/features/main/presentation/pages/main_screen.dart';
@@ -24,6 +26,7 @@ import 'package:delivery_app/features/settings/settings.dart';
 import 'package:delivery_app/features/debug/debug.dart';
 import 'package:delivery_app/features/orders/orders.dart';
 import 'package:delivery_app/features/restaurants/restaurants.dart';
+import 'package:delivery_app/features/livestream/presentation/livestream_viewer_page.dart';
 import 'package:delivery_app/features/cart/cart.dart';
 import 'package:delivery_app/features/user_address/presentation/screens/address_list_screen.dart';
 import 'package:delivery_app/features/user_address/presentation/screens/add_edit_address_screen.dart';
@@ -35,6 +38,10 @@ import 'package:delivery_app/core/routing/models/app_router_config.dart';
 import 'package:delivery_app/core/routing/models/i_auth_checker.dart';
 import 'package:delivery_app/core/routing/guards/guard_manager.dart';
 
+final _livestreamUuid = RegExp(
+  r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$',
+);
+
 /// Replaceable screen factory for router tests and previews. Production keeps
 /// the concrete pages below; tests can verify redirects and route parameters
 /// without constructing network, storage, Firebase or Mapbox dependencies.
@@ -44,6 +51,8 @@ class AppRouterPages {
   Widget splash() => const SplashScreen();
   Widget login() => const LoginScreen();
   Widget register() => const RegisterScreen();
+  Widget forgotPassword() => const ForgotPasswordPage();
+  Widget resetPassword(String token) => ResetPasswordPage(token: token);
   Widget main() => const MainScreen();
   Widget search() => const SearchScreen();
   Widget notifications() => const NotificationScreen();
@@ -57,6 +66,8 @@ class AppRouterPages {
   Widget restaurants() => const AllRestaurantsScreen();
   Widget restaurantDetail(int restaurantId) =>
       RestaurantDetailScreen(restaurantId: restaurantId);
+  Widget livestreamViewer(String livestreamId) =>
+      LivestreamViewerPage(livestreamId: livestreamId);
   Widget cart() => const CartScreen();
   Widget checkout() => const CheckoutScreen();
   Widget orderConfirmation() => const OrderConfirmationScreen();
@@ -84,13 +95,14 @@ GoRouter createAppRouter({
     refreshListenable: authNotifier,
     initialLocation: config.initialLocation,
     debugLogDiagnostics: config.debugLogDiagnostics,
-    redirect: config.enableRedirects
-        ? (context, state) {
-            // Splash handles its own navigation — skip guard
-            if (state.uri.path == AppRoutes.splash) return null;
-            return guardManager.applyAuthGuard(context, state);
-          }
-        : null,
+    redirect:
+        config.enableRedirects
+            ? (context, state) {
+              // Splash handles its own navigation — skip guard
+              if (state.uri.path == AppRoutes.splash) return null;
+              return guardManager.applyAuthGuard(context, state);
+            }
+            : null,
     routes: [
       // Root route — redirect to splash
       GoRoute(
@@ -116,6 +128,18 @@ GoRouter createAppRouter({
         path: AppRoutes.register,
         name: 'register',
         builder: (context, state) => pages.register(),
+      ),
+      GoRoute(
+        path: AppRoutes.forgotPassword,
+        name: 'forgot-password',
+        builder: (context, state) => pages.forgotPassword(),
+      ),
+      GoRoute(
+        path: AppRoutes.resetPassword,
+        name: 'reset-password',
+        builder:
+            (context, state) =>
+                pages.resetPassword(state.uri.queryParameters['token'] ?? ''),
       ),
       // Main navigation
       GoRoute(
@@ -236,6 +260,16 @@ GoRouter createAppRouter({
         name: 'order-confirmation',
         builder: (context, state) => pages.orderConfirmation(),
       ),
+      GoRoute(
+        path: AppRoutes.livestreamViewer,
+        name: 'livestream-viewer',
+        builder: (context, state) {
+          final livestreamId = state.pathParameters['livestreamId'] ?? '';
+          return _livestreamUuid.hasMatch(livestreamId)
+              ? pages.livestreamViewer(livestreamId)
+              : pages.notFound();
+        },
+      ),
 
       // Address management
       GoRoute(
@@ -252,9 +286,10 @@ GoRouter createAppRouter({
         path: AppRoutes.editAddress,
         name: 'edit-address',
         builder: (context, state) {
-          final address = state.extra is UserAddressEntity
-              ? state.extra! as UserAddressEntity
-              : null;
+          final address =
+              state.extra is UserAddressEntity
+                  ? state.extra! as UserAddressEntity
+                  : null;
           final addressId = parsePositiveRouteId(
             state.uri.queryParameters['addressId'],
           );
@@ -282,6 +317,9 @@ int? parsePositiveRouteId(String? rawValue) {
 extension GoRouterExtension on GoRouter {
   void pushLogin() => pushNamed('login');
   void pushRegister() => pushNamed('register');
+  void pushForgotPassword() => pushNamed('forgot-password');
+  void pushResetPassword(String token) =>
+      pushNamed('reset-password', queryParameters: {'token': token});
   void pushHome() => pushNamed('home');
   void pushProfile() => pushNamed('profile');
   void pushSettings() => pushNamed('settings');
