@@ -131,3 +131,54 @@ Result: passed.
   `delivery-service`; it is unrelated to this task. `identity-contracts` was
   installed locally only so Settlement's focused test module could resolve its
   normal workspace dependency.
+
+## Fix round 1 — production deep-link wiring and HTTP contract regeneration
+
+The app's production `routerProvider` now composes the existing
+`IDeepLinkService` with the payment-owned handler. A matching configured
+`VNPAY_RETURN_URI` is consumed by `PaymentReturnCoordinator.handleDeepLink`; the
+handler remains inert for payment callbacks while `VNPAY_PAYMENT_ENABLED` is
+false, and non-payment links retain the existing router fallback. The same
+coordinator instance remains the terminal/idempotent boundary, so a WebView and
+app-link copy cannot cause a second refresh.
+
+The reachable composition test reads the real `routerProvider`, verifies that
+the app's deep-link service is initialized with the payment handler, and proves
+the default-off callback performs no refresh. The focused payment wiring suite
+also covers enabled callback forwarding and non-payment fallback. Existing
+coordinator tests explicitly cover success, cancel/failure, duplicate delivery,
+malformed callbacks, and refresh failure; the payment return view tests cover
+the flag-off deep-link/WebView boundary.
+
+The backend HTTP contract was regenerated with the canonical generator after
+bringing the dirty inventory's six existing simulator/delivery rows into its
+declared count (220 → 226). The generated manifest/catalog now contains the
+customer boundary mappings, current `/internal` legacy PaymentController
+mappings, and source-derived callback/IPN/fake operations without treating them
+as Gateway routes. The operator example now includes
+`PAYMENT_CLIENT_API_ENABLED=false`; processing and client route flags remain
+false in all checked-in defaults.
+
+The inventory count adjustment and its pre-existing simulator/delivery rows
+remain unstaged in `backend_delivery` so unrelated working-tree work is not
+committed; the generator check above was run against that current worktree.
+
+Fix-round validation:
+
+```text
+fvm flutter test test/features/payments/application/payment_deep_link_wiring_test.dart
+Result: 4 tests passed (after an intentional red compile failure for the new fallback/provider assertions).
+
+fvm flutter test test/features/payments test/features/cart/presentation/views/checkout_view_test.dart test/features/cart/presentation/providers/checkout_capability_contract_test.dart
+Result: 26 tests passed.
+
+fvm flutter analyze lib/core/config/runtime_config.dart lib/core/routing/providers/router_provider.dart lib/features/payments test/features/payments
+Result: no issues found.
+
+node docs/platform/system/api/generate-http-contract.mjs --write
+node docs/platform/system/api/generate-http-contract.mjs --check
+Result: wrote and checked 226 operations and 202 source schemas.
+
+git diff --check (each repo)
+Result: passed.
+```

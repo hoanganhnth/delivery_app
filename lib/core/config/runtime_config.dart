@@ -24,6 +24,12 @@ class RuntimeConfig {
     'VNPAY_PAYMENT_ENABLED',
     defaultValue: false,
   );
+  static const _vnpayReturnUri = String.fromEnvironment(
+    'VNPAY_RETURN_URI',
+    defaultValue: 'delivery://payments/vnpay-return',
+  );
+
+  static Uri get vnpayReturnUri => Uri.parse(_vnpayReturnUri);
 
   static String get gatewayBaseUrl => resolveGatewayBaseUrl(
     configuredValue: _configuredGateway,

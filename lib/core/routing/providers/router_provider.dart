@@ -6,6 +6,9 @@ import 'package:delivery_app/core/routing/app_router.dart';
 import 'package:delivery_app/core/routing/providers/riverpod_auth_notifier.dart';
 import 'package:delivery_app/core/routing/providers/router_config.dart';
 import 'package:delivery_app/core/services/deep_link/_riverpod/deep_link_provider.dart';
+import 'package:delivery_app/core/config/runtime_config.dart';
+import 'package:delivery_app/features/payments/application/payment_deep_link_handler.dart';
+import 'package:delivery_app/features/payments/di/payment_providers.dart';
 
 part 'router_provider.g.dart';
 
@@ -35,8 +38,17 @@ GoRouter router(Ref ref) {
   // Build the router using pure-Dart factory
   final router = createAppRouter(authNotifier: authNotifier, config: config);
 
-  // Initialise deep links
-  ref.read(deepLinkServiceProvider).initialize(router);
+  // Initialise the domain-agnostic service with the payment feature callback.
+  // The handler itself is inert when VNPAY_PAYMENT_ENABLED is false.
+  initializePaymentDeepLinks(
+    deepLinkService: ref.read(deepLinkServiceProvider),
+    router: router,
+    handler: PaymentDeepLinkHandler(
+      enabled: RuntimeConfig.vnpayPaymentEnabled,
+      coordinator: ref.read(paymentReturnCoordinatorProvider),
+      onUnhandledLink: (uri) => router.go(uri.path),
+    ),
+  );
 
   return router;
 }
