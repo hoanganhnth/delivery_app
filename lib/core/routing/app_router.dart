@@ -27,6 +27,8 @@ import 'package:delivery_app/features/debug/debug.dart';
 import 'package:delivery_app/features/orders/orders.dart';
 import 'package:delivery_app/features/restaurants/restaurants.dart';
 import 'package:delivery_app/features/livestream/presentation/livestream_viewer_page.dart';
+import 'package:delivery_app/features/entitlements/presentation/entitlement_status_page.dart';
+import 'package:delivery_app/features/support/presentation/support_page.dart';
 import 'package:delivery_app/features/cart/cart.dart';
 import 'package:delivery_app/features/user_address/presentation/screens/address_list_screen.dart';
 import 'package:delivery_app/features/user_address/presentation/screens/add_edit_address_screen.dart';
@@ -59,6 +61,8 @@ class AppRouterPages {
   Widget home() => const HomePage();
   Widget profile() => const ProfileScreen();
   Widget settings() => const SettingsScreen();
+  Widget entitlements() => const EntitlementStatusPage();
+  Widget support() => const SupportPage();
   Widget debugTools() => const DebugToolsScreen();
   Widget orders() => const OrdersScreen();
   Widget refundHistory() => const RefundStatusHistoryScreen();
@@ -175,6 +179,16 @@ GoRouter createAppRouter({
         path: AppRoutes.settings,
         name: 'settings',
         builder: (context, state) => pages.settings(),
+      ),
+      GoRoute(
+        path: AppRoutes.entitlements,
+        name: 'entitlements',
+        builder: (context, state) => pages.entitlements(),
+      ),
+      GoRoute(
+        path: AppRoutes.support,
+        name: 'support',
+        builder: (context, state) => pages.support(),
       ),
       if (kDebugMode)
         GoRoute(
@@ -323,6 +337,8 @@ extension GoRouterExtension on GoRouter {
   void pushHome() => pushNamed('home');
   void pushProfile() => pushNamed('profile');
   void pushSettings() => pushNamed('settings');
+  void pushEntitlements() => pushNamed('entitlements');
+  void pushSupport() => pushNamed('support');
   void pushDebugTools() => pushNamed('debug-tools');
   void pushOrders() => pushNamed('orders');
   void pushRefundHistory() => pushNamed('refund-history');

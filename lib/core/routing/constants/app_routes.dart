@@ -16,6 +16,8 @@ class AppRoutes {
   static const String home = '/home';
   static const String profile = '/profile';
   static const String settings = '/settings';
+  static const String entitlements = '/entitlements';
+  static const String support = '/support';
   static const String debugTools = '/debug-tools';
   static const String search = '/search';
   static const String notifications = '/notifications';
