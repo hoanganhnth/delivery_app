@@ -32,6 +32,10 @@ class RuntimeConfig {
     'IAP_ENTITLEMENTS_ENABLED',
     defaultValue: false,
   );
+  static const supportChatEnabled = bool.fromEnvironment(
+    'SUPPORT_CHAT_ENABLED',
+    defaultValue: false,
+  );
   static const _vnpayReturnUri = String.fromEnvironment(
     'VNPAY_RETURN_URI',
     defaultValue: 'delivery://payments/vnpay-return',
