@@ -28,6 +28,10 @@ class RuntimeConfig {
     'VNPAY_PAYMENT_ENABLED',
     defaultValue: false,
   );
+  static const iapEntitlementsEnabled = bool.fromEnvironment(
+    'IAP_ENTITLEMENTS_ENABLED',
+    defaultValue: false,
+  );
   static const _vnpayReturnUri = String.fromEnvironment(
     'VNPAY_RETURN_URI',
     defaultValue: 'delivery://payments/vnpay-return',
