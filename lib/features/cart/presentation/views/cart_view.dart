@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
+import 'package:delivery_app/core/widgets/restaurant_header_card.dart';
 import 'package:delivery_app/features/cart/presentation/widgets/amber_cart_item_widget.dart';
-import 'package:delivery_app/features/restaurants/presentation/widgets/restaurant_detail/restaurant_header_card.dart';
 import '../../application/cart_view_intent.dart';
 import '../../application/cart_view_state.dart';
 
