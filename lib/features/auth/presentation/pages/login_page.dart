@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/core/widgets/feedback/toast/toast_extensions.dart';
 import 'package:delivery_app/generated/l10n.dart';
-import 'package:delivery_app/features/profile/application/profile_notifier.dart';
 
 import '../../application/login/login_effect.dart';
 import '../../application/login/login_intent.dart';
@@ -46,17 +45,14 @@ class LoginPage extends ConsumerWidget {
   ) async {
     switch (effect) {
       case LoginAuthenticationSucceeded():
-        unawaited(
-          ref
-              .read(profileProvider.notifier)
-              .getUserProfile(forceRefresh: true, useCache: false),
-        );
         if (context.mounted) {
           context.showSuccessToast(S.of(context).loginSuccess);
           context.goToMain();
         }
       case LoginNavigateToRegister():
         if (context.mounted) context.pushRegister();
+      case LoginNavigateToForgotPassword():
+        if (context.mounted) context.pushForgotPassword();
       case LoginShowError(:final message):
         if (context.mounted) context.showErrorToast(message);
     }

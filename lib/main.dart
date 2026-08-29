@@ -22,6 +22,7 @@ import 'package:delivery_app/core/services/push/customer_push_wake_coordinator.d
 import 'package:delivery_app/core/services/push/firebase_push_adapters.dart';
 import 'features/auth/application/session/auth_notifier.dart';
 import 'features/auth/application/session/auth_state.dart';
+import 'features/profile/application/profile_notifier.dart';
 
 Future<void> main() async {
   runZonedGuarded<Future<void>>(
@@ -127,6 +128,13 @@ class _MainAppState extends ConsumerState<MainApp> {
           ref
               .read(pushNotificationPortProvider)
               .updateAuthentication(next.isAuthenticated),
+        );
+      }
+      if (next.isAuthenticated && previous?.isAuthenticated != true) {
+        unawaited(
+          ref
+              .read(profileProvider.notifier)
+              .getUserProfile(forceRefresh: true, useCache: false),
         );
       }
     });
