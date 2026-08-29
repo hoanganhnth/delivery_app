@@ -1,7 +1,6 @@
 import 'package:delivery_app/core/presentation/mvvm/mvvm.dart';
-import 'package:delivery_app/features/restaurants/domain/entities/restaurant_entity.dart';
-import 'package:delivery_app/features/restaurants/application/list/restaurants_notifier.dart';
-import 'package:delivery_app/features/restaurants/application/list/restaurants_state.dart';
+import 'package:delivery_app/core/contracts/catalog_contract.dart';
+import 'package:delivery_app/core/contracts/catalog_port_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'catalog_all_restaurants_effect.dart';
@@ -19,15 +18,10 @@ final catalogAllRestaurantsViewModelProvider =
 class CatalogAllRestaurantsViewModel
     extends Notifier<CatalogAllRestaurantsViewState> {
   int _nextEffectId = 0;
+  bool _loading = false;
 
   @override
-  CatalogAllRestaurantsViewState build() {
-    final restaurants = ref.read(restaurantsProvider);
-    ref.listen<RestaurantsState>(restaurantsProvider, (_, next) {
-      if (ref.mounted) state = _fromRestaurants(next, effects: state.effects);
-    });
-    return _fromRestaurants(restaurants);
-  }
+  CatalogAllRestaurantsViewState build() => const CatalogAllRestaurantsViewState();
 
   Future<void> dispatch(CatalogAllRestaurantsIntent intent) async {
     switch (intent) {
@@ -51,31 +45,33 @@ class CatalogAllRestaurantsViewModel
     }
   }
 
-  Future<void> _load() =>
-      ref.read(restaurantsProvider.notifier).loadRestaurants();
+  Future<void> _load() async {
+    if (_loading) return;
+    _loading = true;
+    state = state.copyWith(isLoading: true, clearError: true);
+    final result = await ref.read(catalogBrowsePortProvider).loadRestaurants();
+    if (!ref.mounted) return;
+    _loading = false;
+    state = state.copyWith(
+      restaurants: result.restaurants.map(_toViewData).toList(growable: false),
+      isLoading: false,
+      errorMessage: result.errorMessage,
+      clearError: result.errorMessage == null,
+    );
+  }
 
-  CatalogAllRestaurantsViewState _fromRestaurants(
-    RestaurantsState source, {
-    List<UiEffectEnvelope<CatalogAllRestaurantsEffect>> effects = const [],
-  }) => CatalogAllRestaurantsViewState(
-    restaurants: source.restaurants.map(_toViewData).toList(growable: false),
-    isLoading: source.isLoading,
-    errorMessage: source.errorMessage,
-    effects: effects,
-  );
-
-  CatalogRestaurantViewData _toViewData(RestaurantEntity restaurant) =>
+  CatalogRestaurantViewData _toViewData(CatalogRestaurantSnapshot restaurant) =>
       CatalogRestaurantViewData(
         id: restaurant.id,
         name: restaurant.name,
-        imageUrl: restaurant.image,
+        imageUrl: restaurant.imageUrl,
         description: restaurant.description,
         address: restaurant.address,
         rating: restaurant.rating,
         reviewCount: restaurant.reviewCount,
-        deliveryTimeMinutes: restaurant.deliveryTime,
+        deliveryTimeMinutes: restaurant.deliveryTimeMinutes,
         category: restaurant.category,
-        distanceKm: restaurant.distance,
+        distanceKm: restaurant.distanceKm,
         deliveryFee: restaurant.deliveryFee,
       );
 

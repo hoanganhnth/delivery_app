@@ -1,14 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:delivery_app/core/contracts/catalog_contract.dart';
+import 'package:delivery_app/core/contracts/catalog_port_provider.dart';
 import 'package:delivery_app/core/presentation/mvvm/mvvm.dart';
 import 'package:delivery_app/features/cart/application/cart_commands.dart';
 import 'package:delivery_app/features/cart/di/cart_commands_provider.dart';
 import 'package:delivery_app/features/cart/domain/entities/cart_entity.dart';
 import 'package:delivery_app/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:delivery_app/features/cart/application/cart_notifier.dart';
-import 'package:delivery_app/features/restaurants/domain/entities/menu_item_entity.dart';
-import 'package:delivery_app/features/restaurants/domain/entities/restaurant_entity.dart';
-import 'package:delivery_app/features/restaurants/application/detail/restaurant_detail_notifier.dart';
-import 'package:delivery_app/features/restaurants/application/detail/restaurant_detail_state.dart';
 import 'package:delivery_app/features/flash_sale/di/flash_sale_providers.dart';
 import 'package:delivery_app/features/flash_sale/domain/entities/flash_sale_item_entity.dart';
 
@@ -23,23 +21,23 @@ final catalogRestaurantDetailViewModelProvider =
       num
     >((restaurantId) => CatalogRestaurantDetailViewModel(restaurantId));
 
-/// Transitional catalog detail orchestrator. It adapts the legacy restaurant,
-/// cart and flash-sale providers while keeping all user actions out of the UI.
+/// Catalog detail orchestrator. Restaurant data enters through the neutral
+/// browse port; cart and gated flash-sale ports remain separate seams.
 class CatalogRestaurantDetailViewModel
     extends Notifier<CatalogRestaurantDetailViewState> {
   CatalogRestaurantDetailViewModel(this._restaurantId);
 
   int _nextEffectId = 0;
   final num _restaurantId;
-  RestaurantDetailState? _detail;
+  CatalogDetailResult? _detail;
   CartEntity? _cart;
   Map<int, FlashSaleItemEntity> _flashSales = const {};
-  final Map<num, MenuItemEntity> _menuItemsById = {};
+  final Map<num, CatalogMenuSnapshot> _menuItemsById = {};
   bool _cartCommandRunning = false;
+  bool _loading = false;
 
   @override
   CatalogRestaurantDetailViewState build() {
-    _detail = ref.read(restaurantDetailProvider);
     _cart = ref.read(cartProvider).value;
     _flashSales =
         ref
@@ -48,10 +46,6 @@ class CatalogRestaurantDetailViewModel
             )
             .value ??
         const {};
-    ref.listen<RestaurantDetailState>(restaurantDetailProvider, (_, next) {
-      _detail = next;
-      _publish();
-    });
     ref.listen<AsyncValue<CartEntity>>(cartProvider, (_, next) {
       _cart = next.value;
       _publish();
@@ -76,9 +70,16 @@ class CatalogRestaurantDetailViewModel
           );
           return;
         }
-        await ref
-            .read(restaurantDetailProvider.notifier)
-            .loadRestaurantDetail(_restaurantId);
+        if (_loading) return;
+        _loading = true;
+        state = state.copyWith(isLoading: true, clearError: true);
+        final detail = await ref
+            .read(catalogBrowsePortProvider)
+            .loadDetail(_restaurantId.toInt());
+        if (!ref.mounted) return;
+        _loading = false;
+        _detail = detail;
+        _publish();
       case CatalogRestaurantDetailBackRequested():
         _emit(const CatalogRestaurantDetailNavigateBack());
       case CatalogRestaurantDetailCartRequested():
@@ -184,7 +185,7 @@ class CatalogRestaurantDetailViewModel
   CatalogRestaurantDetailViewState _compose({
     List<UiEffectEnvelope<CatalogRestaurantDetailEffect>> effects = const [],
   }) {
-    final detail = _detail ?? const RestaurantDetailState();
+    final detail = _detail ?? const CatalogDetailResult();
     _menuItemsById
       ..clear()
       ..addEntries(
@@ -198,7 +199,7 @@ class CatalogRestaurantDetailViewModel
           ? null
           : _restaurantData(detail.restaurant!),
       menuItems: detail.menuItems.map(_menuItemData).toList(growable: false),
-      isLoading: detail.isLoading,
+      isLoading: _loading,
       errorMessage: detail.errorMessage,
       cartItemsCount: cart?.totalItems ?? 0,
       cartTotalAmount: cart?.totalAmount ?? 0,
@@ -206,23 +207,25 @@ class CatalogRestaurantDetailViewModel
     );
   }
 
-  CatalogRestaurantDetailData _restaurantData(RestaurantEntity restaurant) {
+  CatalogRestaurantDetailData _restaurantData(
+    CatalogRestaurantSnapshot restaurant,
+  ) {
     return CatalogRestaurantDetailData(
       id: restaurant.id,
       name: restaurant.name,
-      address: restaurant.address,
+      address: restaurant.address ?? '',
       description: restaurant.description,
-      imageUrl: restaurant.image,
+      imageUrl: restaurant.imageUrl,
       rating: restaurant.rating,
       reviewCount: restaurant.reviewCount,
-      deliveryTimeMinutes: restaurant.deliveryTime,
+      deliveryTimeMinutes: restaurant.deliveryTimeMinutes?.toInt(),
       openingHour: restaurant.openingHour,
       closingHour: restaurant.closingHour,
       isOpen: restaurant.isOpen,
     );
   }
 
-  CatalogMenuItemViewData _menuItemData(MenuItemEntity item) {
+  CatalogMenuItemViewData _menuItemData(CatalogMenuSnapshot item) {
     final flash = item.id == null ? null : _flashSales[item.id!.toInt()];
     return CatalogMenuItemViewData(
       id: item.id,
@@ -230,11 +233,11 @@ class CatalogRestaurantDetailViewModel
       description: item.description,
       catalogPrice: item.price,
       availability: switch (item.status) {
-        MenuItemStatus.available => CatalogMenuAvailability.available,
-        MenuItemStatus.unavailable => CatalogMenuAvailability.unavailable,
-        MenuItemStatus.soldOut => CatalogMenuAvailability.soldOut,
+        CatalogMenuStatus.available => CatalogMenuAvailability.available,
+        CatalogMenuStatus.unavailable => CatalogMenuAvailability.unavailable,
+        CatalogMenuStatus.soldOut => CatalogMenuAvailability.soldOut,
       },
-      imageUrl: item.image,
+      imageUrl: item.imageUrl,
       flashSaleItemId: flash?.id,
       flashSalePrice: flash?.flashSalePrice,
       quantity: item.id == null ? 0 : (_cart?.getItemQuantity(item.id!) ?? 0),

@@ -1,8 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:delivery_app/core/contracts/catalog_contract.dart';
+import 'package:delivery_app/core/contracts/catalog_port_provider.dart';
 import 'package:delivery_app/core/presentation/mvvm/mvvm.dart';
-import 'package:delivery_app/features/restaurants/domain/entities/restaurant_entity.dart';
-import 'package:delivery_app/features/restaurants/application/list/restaurants_notifier.dart';
-import 'package:delivery_app/features/restaurants/application/list/restaurants_state.dart';
 
 import 'catalog_home_effect.dart';
 import 'catalog_home_intent.dart';
@@ -20,21 +19,26 @@ final catalogHomeViewModelProvider =
 /// repository port without changing the view or its intent contract.
 class CatalogHomeViewModel extends Notifier<CatalogHomeViewState> {
   int _nextEffectId = 0;
+  bool _loading = false;
 
   @override
-  CatalogHomeViewState build() {
-    final restaurants = ref.read(restaurantsProvider);
-    ref.listen<RestaurantsState>(restaurantsProvider, (_, next) {
-      if (!ref.mounted) return;
-      state = _fromRestaurants(next, effects: state.effects);
-    });
-    return _fromRestaurants(restaurants);
-  }
+  CatalogHomeViewState build() => const CatalogHomeViewState();
 
   Future<void> dispatch(CatalogHomeIntent intent) async {
     switch (intent) {
       case CatalogHomeLoadRequested():
-        await ref.read(restaurantsProvider.notifier).loadFeaturedRestaurants();
+        if (_loading) return;
+        _loading = true;
+        state = state.copyWith(isLoading: true, clearError: true);
+        final result = await ref.read(catalogBrowsePortProvider).loadFeatured();
+        if (!ref.mounted) return;
+        _loading = false;
+        state = state.copyWith(
+          restaurants: result.restaurants.map(_toViewData).toList(growable: false),
+          isLoading: false,
+          errorMessage: result.errorMessage,
+          clearError: result.errorMessage == null,
+        );
       case CatalogHomeSearchRequested():
         _emit(const CatalogHomeNavigateToSearch());
       case CatalogHomeAllRestaurantsRequested():
@@ -54,32 +58,18 @@ class CatalogHomeViewModel extends Notifier<CatalogHomeViewState> {
     }
   }
 
-  CatalogHomeViewState _fromRestaurants(
-    RestaurantsState restaurants, {
-    List<UiEffectEnvelope<CatalogHomeEffect>> effects = const [],
-  }) {
-    return CatalogHomeViewState(
-      restaurants: restaurants.restaurants
-          .map(_toViewData)
-          .toList(growable: false),
-      isLoading: restaurants.isLoading || restaurants.isFeaturedLoading,
-      errorMessage: restaurants.errorMessage,
-      effects: effects,
-    );
-  }
-
-  CatalogRestaurantViewData _toViewData(RestaurantEntity restaurant) {
+  CatalogRestaurantViewData _toViewData(CatalogRestaurantSnapshot restaurant) {
     return CatalogRestaurantViewData(
       id: restaurant.id,
       name: restaurant.name,
-      imageUrl: restaurant.image,
+      imageUrl: restaurant.imageUrl,
       description: restaurant.description,
       address: restaurant.address,
       rating: restaurant.rating,
       reviewCount: restaurant.reviewCount,
-      deliveryTimeMinutes: restaurant.deliveryTime,
+      deliveryTimeMinutes: restaurant.deliveryTimeMinutes,
       category: restaurant.category,
-      distanceKm: restaurant.distance,
+      distanceKm: restaurant.distanceKm,
       deliveryFee: restaurant.deliveryFee,
     );
   }
