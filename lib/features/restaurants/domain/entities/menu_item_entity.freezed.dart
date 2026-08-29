@@ -208,8 +208,8 @@ return $default(_that.id,_that.restaurantId,_that.name,_that.description,_that.p
 /// @nodoc
 @JsonSerializable()
 
-class _MenuItemEntity implements MenuItemEntity {
-  const _MenuItemEntity({this.id, this.restaurantId, required this.name, required this.description, required this.price, this.image, @MenuItemStatusConverter() required this.status});
+class _MenuItemEntity extends MenuItemEntity {
+  const _MenuItemEntity({this.id, this.restaurantId, required this.name, required this.description, required this.price, this.image, @MenuItemStatusConverter() required this.status}): super._();
   factory _MenuItemEntity.fromJson(Map<String, dynamic> json) => _$MenuItemEntityFromJson(json);
 
 @override final  num? id;

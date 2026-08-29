@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../../restaurants/domain/entities/menu_item_entity.dart';
+import 'package:delivery_app/core/contracts/cart_contract.dart';
 
 part 'cart_item_entity.freezed.dart';
 
@@ -22,7 +22,7 @@ sealed class CartItemEntity with _$CartItemEntity {
 
   /// Factory method to create CartItem from MenuItem
   factory CartItemEntity.fromMenuItem(
-    MenuItemEntity menuItem,
+    CartLineSource menuItem,
     String restaurantName, {
     int quantity = 1,
     String? notes,
@@ -61,7 +61,7 @@ sealed class CartItemEntity with _$CartItemEntity {
   }
 
   /// Check if this cart item matches a menu item
-  bool matchesMenuItem(MenuItemEntity menuItem) {
+  bool matchesMenuItem(CartLineSource menuItem) {
     return menuItemId == menuItem.id &&
         menuItemName == menuItem.name &&
         price == menuItem.price &&
@@ -69,7 +69,7 @@ sealed class CartItemEntity with _$CartItemEntity {
   }
 
   /// Update cart item with latest menu item data (for price changes, etc.)
-  CartItemEntity updateFromMenuItem(MenuItemEntity menuItem) {
+  CartItemEntity updateFromMenuItem(CartLineSource menuItem) {
     if (!matchesMenuItem(menuItem)) {
       throw ArgumentError('MenuItem does not match this CartItem');
     }

@@ -3,6 +3,7 @@ import 'package:delivery_app/core/presentation/mvvm/mvvm.dart';
 import 'package:delivery_app/features/cart/application/cart_commands.dart';
 import 'package:delivery_app/features/cart/di/cart_commands_provider.dart';
 import 'package:delivery_app/features/cart/domain/entities/cart_entity.dart';
+import 'package:delivery_app/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:delivery_app/features/cart/application/cart_notifier.dart';
 import 'package:delivery_app/features/restaurants/domain/entities/menu_item_entity.dart';
 import 'package:delivery_app/features/restaurants/domain/entities/restaurant_entity.dart';
@@ -15,11 +16,12 @@ import 'catalog_restaurant_detail_effect.dart';
 import 'catalog_restaurant_detail_intent.dart';
 import 'catalog_restaurant_detail_state.dart';
 
-final catalogRestaurantDetailViewModelProvider = NotifierProvider.family<
-  CatalogRestaurantDetailViewModel,
-  CatalogRestaurantDetailViewState,
-  num
->((restaurantId) => CatalogRestaurantDetailViewModel(restaurantId));
+final catalogRestaurantDetailViewModelProvider =
+    NotifierProvider.family<
+      CatalogRestaurantDetailViewModel,
+      CatalogRestaurantDetailViewState,
+      num
+    >((restaurantId) => CatalogRestaurantDetailViewModel(restaurantId));
 
 /// Transitional catalog detail orchestrator. It adapts the legacy restaurant,
 /// cart and flash-sale providers while keeping all user actions out of the UI.
@@ -125,7 +127,8 @@ class CatalogRestaurantDetailViewModel
       } else {
         final flash = _flashSales[menuItemId.toInt()];
         await commands.addItem(
-          menuItem.toCartItem(
+          CartItemEntity.fromMenuItem(
+            menuItem,
             restaurant.name,
             flashSaleItemId: flash?.id,
             serverCatalogPrice: flash?.flashSalePrice,
@@ -191,10 +194,9 @@ class CatalogRestaurantDetailViewModel
       );
     final cart = _cart;
     return CatalogRestaurantDetailViewState(
-      restaurant:
-          detail.restaurant == null
-              ? null
-              : _restaurantData(detail.restaurant!),
+      restaurant: detail.restaurant == null
+          ? null
+          : _restaurantData(detail.restaurant!),
       menuItems: detail.menuItems.map(_menuItemData).toList(growable: false),
       isLoading: detail.isLoading,
       errorMessage: detail.errorMessage,
