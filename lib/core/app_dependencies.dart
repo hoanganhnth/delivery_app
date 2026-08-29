@@ -1,9 +1,13 @@
 import 'package:delivery_app/core/network/_riverpod/authenticated_network_providers.dart'
     as core_net;
+import 'package:delivery_app/core/contracts/session_port_provider.dart'
+    as session_contract;
 import 'package:delivery_app/core/config/api_endpoint_controller.dart';
 import 'package:delivery_app/core/config/runtime_config.dart';
 import 'package:delivery_app/features/auth/di/auth_network_providers.dart'
     as auth_net;
+import 'package:delivery_app/features/auth/di/session_port_provider.dart'
+    as auth_session;
 import 'package:delivery_app/features/auth/di/storage_di_providers.dart';
 import 'package:delivery_app/core/theme/theme_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,6 +34,9 @@ abstract final class AppDependencies {
       ),
       core_net.authenticatedDioProvider.overrideWith((ref) {
         return ref.watch(auth_net.authAwareDioProvider);
+      }),
+      session_contract.sessionPortProvider.overrideWith((ref) {
+        return ref.watch(auth_session.authSessionPortProvider);
       }),
     ];
   }

@@ -1,5 +1,5 @@
 import 'package:delivery_app/core/presentation/mvvm/mvvm.dart';
-import 'package:delivery_app/features/profile/application/profile_notifier.dart';
+import 'package:delivery_app/core/contracts/session_port_provider.dart';
 import 'package:delivery_app/features/user_address/domain/entities/user_address_entity.dart';
 import 'package:delivery_app/features/user_address/application/address_list_notifier.dart';
 import 'package:delivery_app/features/user_address/application/address_store_state.dart';
@@ -58,7 +58,7 @@ class AddressListViewModel extends Notifier<AddressListViewState> {
   }
 
   Future<void> _load() async {
-    final userId = ref.read(profileProvider).user?.id;
+    final userId = ref.read(sessionPortProvider).current.profileId;
     if (userId == null || userId <= 0) return;
     final notifier = ref.read(userAddressListProvider.notifier);
     await notifier.loadAddresses(userId);

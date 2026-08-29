@@ -16,6 +16,9 @@ abstract interface class AccessTokenProvider {
 /// [SessionPort], never on this mutable sink.
 abstract interface class SessionIdentitySink {
   void updateIdentity({int? authId, int? profileId, Set<String>? roles});
+
+  /// Clears profile-derived identity after logout or account removal.
+  void clearIdentity();
 }
 
 final class SessionSnapshot {

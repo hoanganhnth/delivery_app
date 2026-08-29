@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:delivery_app/core/contracts/session_port_provider.dart';
 import 'package:delivery_app/core/presentation/mvvm/mvvm.dart';
 import 'package:delivery_app/features/notification/di/notification_providers.dart';
 import 'package:delivery_app/features/notification/domain/entities/notification_entity.dart';
-import 'package:delivery_app/features/profile/application/profile_notifier.dart';
 
 import 'notification_effect.dart';
 import 'notification_intent.dart';
@@ -15,8 +15,8 @@ final notificationViewModelProvider =
 
 /// Owns notification use cases and all optimistic UI state transitions.
 ///
-/// Profile and repository providers are temporary transition seams while those
-/// legacy providers move into feature DI. No presentation view accesses them.
+/// The ViewModel consumes only neutral contracts and feature-local gateways;
+/// identity enrichment is supplied by app composition through SessionPort.
 class NotificationViewModel extends Notifier<NotificationViewState> {
   int _nextEffectId = 0;
   Future<void>? _activeLoad;
@@ -65,19 +65,12 @@ class NotificationViewModel extends Notifier<NotificationViewState> {
       clearErrorMessage: true,
     );
 
-    var profile = ref.read(profileProvider);
-    if (profile.user == null) {
-      await ref.read(profileProvider.notifier).getUserProfile();
-      if (!ref.mounted) return;
-      profile = ref.read(profileProvider);
-    }
-
-    final userId = profile.user?.authId;
+    final session = ref.read(sessionPortProvider).current;
+    final userId = session.authId;
     if (userId == null) {
       state = state.copyWith(
         isLoading: false,
         loadError: NotificationLoadError.accountUnavailable,
-        errorMessage: profile.errorMessage,
       );
       return;
     }

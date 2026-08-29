@@ -6,8 +6,11 @@ import '../application/session/session_port_adapter.dart';
 
 import 'package:delivery_app/core/contracts/session_contract.dart';
 
-/// Composition provider for the auth-owned neutral session boundary.
-final sessionPortProvider = Provider<SessionPort>((ref) {
+/// Auth implementation of the neutral session boundary.
+///
+/// Feature code must consume `core/contracts/session_port_provider.dart`.
+/// This provider is only referenced from the application composition root.
+final authSessionPortProvider = Provider<SessionPort>((ref) {
   final adapter = AuthSessionPort(ref.read(authProvider));
   ref.listen<AuthState>(authProvider, (_, next) {
     adapter.updateAuthState(next);

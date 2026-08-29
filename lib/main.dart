@@ -20,8 +20,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:delivery_app/core/services/push_notification_service.dart';
 import 'package:delivery_app/core/services/push/customer_push_wake_coordinator.dart';
 import 'package:delivery_app/core/services/push/firebase_push_adapters.dart';
+import 'package:delivery_app/core/contracts/session_contract.dart';
+import 'package:delivery_app/core/contracts/session_port_provider.dart';
 import 'features/auth/application/session/auth_notifier.dart';
 import 'features/auth/application/session/auth_state.dart';
+import 'features/profile/application/profile_data_state.dart';
 import 'features/profile/application/profile_notifier.dart';
 
 Future<void> main() async {
@@ -122,6 +125,10 @@ class _MainAppState extends ConsumerState<MainApp> {
 
   @override
   Widget build(BuildContext context) {
+    _syncSessionIdentity(ref.read(profileProvider));
+    ref.listen<ProfileState>(profileProvider, (_, next) {
+      _syncSessionIdentity(next);
+    });
     ref.listen<AuthState>(authProvider, (previous, next) {
       if (previous?.isAuthenticated != next.isAuthenticated) {
         unawaited(
@@ -136,6 +143,10 @@ class _MainAppState extends ConsumerState<MainApp> {
               .read(profileProvider.notifier)
               .getUserProfile(forceRefresh: true, useCache: false),
         );
+      }
+      if (!next.isAuthenticated && previous?.isAuthenticated == true) {
+        final session = ref.read(sessionPortProvider);
+        if (session is SessionIdentitySink) session.clearIdentity();
       }
     });
 
@@ -172,6 +183,21 @@ class _MainAppState extends ConsumerState<MainApp> {
           debugShowCheckedModeBanner: false,
         );
       },
+    );
+  }
+
+  void _syncSessionIdentity(ProfileState profile) {
+    final session = ref.read(sessionPortProvider);
+    if (session is! SessionIdentitySink) return;
+    final user = profile.user;
+    if (user == null) {
+      if (!ref.read(authProvider).isAuthenticated) session.clearIdentity();
+      return;
+    }
+    session.updateIdentity(
+      authId: user.authId,
+      profileId: user.id,
+      roles: {user.role},
     );
   }
 }

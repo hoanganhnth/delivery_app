@@ -1,6 +1,6 @@
 import 'package:delivery_app/core/presentation/mvvm/mvvm.dart';
 import 'package:delivery_app/core/services/location/_riverpod/location_service_provider.dart';
-import 'package:delivery_app/features/profile/application/profile_notifier.dart';
+import 'package:delivery_app/core/contracts/session_port_provider.dart';
 import 'package:delivery_app/features/user_address/domain/entities/address_upsert_command.dart';
 import 'package:delivery_app/features/user_address/domain/entities/user_address_entity.dart';
 import 'package:delivery_app/features/user_address/di/user_address_di_providers.dart';
@@ -158,7 +158,7 @@ class AddressFormViewModel extends Notifier<AddressFormViewState> {
     final request = _requestFrom(state.draft);
     final addressId = state.addressId;
     if (addressId == null) {
-      final userId = ref.read(profileProvider).user?.id;
+      final userId = ref.read(sessionPortProvider).current.profileId;
       if (userId == null || userId <= 0) {
         _submitFailure(AddressFormOperation.create);
         return;
@@ -249,7 +249,7 @@ class AddressFormViewModel extends Notifier<AddressFormViewState> {
   }
 
   void _reloadLegacyProjection({int? clearSelectionForAddressId}) {
-    final userId = ref.read(profileProvider).user?.id;
+    final userId = ref.read(sessionPortProvider).current.profileId;
     if (userId == null || userId <= 0) return;
     final notifier = ref.read(userAddressListProvider.notifier);
     if (clearSelectionForAddressId != null &&

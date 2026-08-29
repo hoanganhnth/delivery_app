@@ -43,6 +43,14 @@ final class AuthSessionPort implements SessionPort, SessionIdentitySink {
     _publish(_toSnapshot(_authState));
   }
 
+  @override
+  void clearIdentity() {
+    _authId = null;
+    _profileId = null;
+    _roles = const <String>{};
+    _publish(_toSnapshot(_authState));
+  }
+
   Future<void> dispose() => _changes.close();
 
   void _publish(SessionSnapshot next) {
