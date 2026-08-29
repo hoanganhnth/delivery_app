@@ -19,10 +19,12 @@ final class _UnavailableCatalogBrowsePort
   static const instance = _UnavailableCatalogBrowsePort._();
 
   @override
-  Future<CatalogBrowseResult> loadFeatured() async => const CatalogBrowseResult();
+  Future<CatalogBrowseResult> loadFeatured() async =>
+      const CatalogBrowseResult();
 
   @override
-  Future<CatalogBrowseResult> loadRestaurants() async => const CatalogBrowseResult();
+  Future<CatalogBrowseResult> loadRestaurants() async =>
+      const CatalogBrowseResult();
 
   @override
   Future<CatalogDetailResult> loadDetail(int restaurantId) async =>

@@ -88,9 +88,8 @@ final class _RestaurantsCatalogAdapter
     final result = await getMenuItems(restaurantId);
     return result.fold(
       (_) => const <CatalogMenuSnapshot>[],
-      (rows) => rows
-          .map((item) => _menu(item, restaurantId))
-          .toList(growable: false),
+      (rows) =>
+          rows.map((item) => _menu(item, restaurantId)).toList(growable: false),
     );
   }
 
@@ -112,17 +111,18 @@ final class _RestaurantsCatalogAdapter
         isOpen: value.isOpen,
       );
 
-  static CatalogMenuSnapshot _menu(MenuItemEntity value, num restaurantId) => CatalogMenuSnapshot(
-    id: value.id,
-    restaurantId: value.restaurantId ?? restaurantId,
-    name: value.name,
-    description: value.description,
-    price: value.price,
-    status: switch (value.status) {
-      MenuItemStatus.available => CatalogMenuStatus.available,
-      MenuItemStatus.unavailable => CatalogMenuStatus.unavailable,
-      MenuItemStatus.soldOut => CatalogMenuStatus.soldOut,
-    },
-    imageUrl: value.image,
-  );
+  static CatalogMenuSnapshot _menu(MenuItemEntity value, num restaurantId) =>
+      CatalogMenuSnapshot(
+        id: value.id,
+        restaurantId: value.restaurantId ?? restaurantId,
+        name: value.name,
+        description: value.description,
+        price: value.price,
+        status: switch (value.status) {
+          MenuItemStatus.available => CatalogMenuStatus.available,
+          MenuItemStatus.unavailable => CatalogMenuStatus.unavailable,
+          MenuItemStatus.soldOut => CatalogMenuStatus.soldOut,
+        },
+        imageUrl: value.image,
+      );
 }

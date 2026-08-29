@@ -128,16 +128,18 @@ class CatalogRestaurantDetailViewModel
         await commands.setQuantity(menuItemId.toInt(), quantity + 1);
       } else {
         final flash = _flashSales[menuItemId.toInt()];
-        await commands.addLine(CartLineInput(
-          menuItemId: menuItem.id!.toInt(),
-          restaurantId: menuItem.restaurantId!.toInt(),
-          restaurantName: restaurant.name,
-          name: menuItem.name,
-          unitPrice: flash?.flashSalePrice ?? menuItem.price,
-          quantity: 1,
-          imageUrl: menuItem.image,
-          flashSaleItemId: flash?.id,
-        ));
+        await commands.addLine(
+          CartLineInput(
+            menuItemId: menuItem.id!.toInt(),
+            restaurantId: menuItem.restaurantId!.toInt(),
+            restaurantName: restaurant.name,
+            name: menuItem.name,
+            unitPrice: flash?.flashSalePrice ?? menuItem.price,
+            quantity: 1,
+            imageUrl: menuItem.image,
+            flashSaleItemId: flash?.id,
+          ),
+        );
       }
       _cart = ref.read(cartReaderPortProvider).current;
       _publish();
@@ -254,7 +256,10 @@ class CatalogRestaurantDetailViewModel
   int _asPositiveInt(num value) => value > 0 ? value.toInt() : 0;
 
   int _quantityFor(num menuItemId) =>
-      _cart?.lines.where((line) => line.menuItemId == menuItemId.toInt()).fold<int>(0, (sum, line) => sum + line.quantity) ?? 0;
+      _cart?.lines
+          .where((line) => line.menuItemId == menuItemId.toInt())
+          .fold<int>(0, (sum, line) => sum + line.quantity) ??
+      0;
 
   void _emit(CatalogRestaurantDetailEffect effect) {
     state = state.copyWith(

@@ -25,7 +25,11 @@ final class CatalogBrowseResult {
 }
 
 final class CatalogDetailResult {
-  const CatalogDetailResult({this.restaurant, this.menuItems = const [], this.errorMessage});
+  const CatalogDetailResult({
+    this.restaurant,
+    this.menuItems = const [],
+    this.errorMessage,
+  });
 
   final CatalogRestaurantSnapshot? restaurant;
   final List<CatalogMenuSnapshot> menuItems;

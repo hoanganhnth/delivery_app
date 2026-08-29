@@ -5,11 +5,13 @@ import 'package:delivery_app/features/cart/application/cart_notifier.dart';
 import 'package:delivery_app/features/cart/domain/entities/cart_entity.dart';
 import 'package:delivery_app/features/cart/domain/entities/cart_item_entity.dart';
 
-final cartCommandsPortOverrideProvider = Provider<CartCommands>((ref) =>
-    _CartPortAdapter(ref));
+final cartCommandsPortOverrideProvider = Provider<CartCommands>(
+  (ref) => _CartPortAdapter(ref),
+);
 
-final cartReaderPortOverrideProvider = Provider<CartReader>((ref) =>
-    _CartPortAdapter(ref));
+final cartReaderPortOverrideProvider = Provider<CartReader>(
+  (ref) => _CartPortAdapter(ref),
+);
 
 final class _CartPortAdapter implements CartCommands, CartReader {
   _CartPortAdapter(this._ref) {
@@ -35,10 +37,15 @@ final class _CartPortAdapter implements CartCommands, CartReader {
   @override
   Future<void> addLine(CartLineInput input) => _ref
       .read(cartProvider.notifier)
-      .addItem(CartItemEntity.fromMenuItem(_Source(input), input.restaurantName,
+      .addItem(
+        CartItemEntity.fromMenuItem(
+          _Source(input),
+          input.restaurantName,
           quantity: input.quantity,
           notes: input.notes,
-          flashSaleItemId: input.flashSaleItemId));
+          flashSaleItemId: input.flashSaleItemId,
+        ),
+      );
 
   @override
   Future<void> setQuantity(int menuItemId, int quantity) =>
@@ -56,17 +63,19 @@ final class _CartPortAdapter implements CartCommands, CartReader {
     return CartSnapshot(
       restaurantId: cart.currentRestaurantId?.toInt(),
       restaurantName: cart.currentRestaurantName,
-      lines: cart.items.map((item) => CartLineSnapshot(
-            menuItemId: item.menuItemId.toInt(),
-            restaurantId: item.restaurantId.toInt(),
-            restaurantName: item.restaurantName,
-            name: item.menuItemName,
-            unitPrice: item.price,
-            quantity: item.quantity,
-            imageUrl: item.imageUrl,
-            notes: item.notes,
-            flashSaleItemId: item.flashSaleItemId,
-          )),
+      lines: cart.items.map(
+        (item) => CartLineSnapshot(
+          menuItemId: item.menuItemId.toInt(),
+          restaurantId: item.restaurantId.toInt(),
+          restaurantName: item.restaurantName,
+          name: item.menuItemName,
+          unitPrice: item.price,
+          quantity: item.quantity,
+          imageUrl: item.imageUrl,
+          notes: item.notes,
+          flashSaleItemId: item.flashSaleItemId,
+        ),
+      ),
     );
   }
 }
@@ -74,10 +83,16 @@ final class _CartPortAdapter implements CartCommands, CartReader {
 final class _Source implements CartLineSource {
   const _Source(this.input);
   final CartLineInput input;
-  @override num get id => input.menuItemId;
-  @override num get restaurantId => input.restaurantId;
-  @override String get name => input.name;
-  @override double get price => input.unitPrice;
-  @override String? get image => input.imageUrl;
-  @override bool get canAddToCart => true;
+  @override
+  num get id => input.menuItemId;
+  @override
+  num get restaurantId => input.restaurantId;
+  @override
+  String get name => input.name;
+  @override
+  double get price => input.unitPrice;
+  @override
+  String? get image => input.imageUrl;
+  @override
+  bool get canAddToCart => true;
 }

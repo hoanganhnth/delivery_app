@@ -125,49 +125,49 @@ class CartNotifier extends _$CartNotifier {
     }
 
     try {
-        final serverMenuItems = await ref
-            .read(catalogMenuLookupPortProvider)
-            .menuItems(cart.currentRestaurantId!.toInt());
-        final serverMap = <num, CatalogMenuSnapshot>{};
-        for (final item in serverMenuItems) {
-          if (item.id != null) serverMap[item.id!] = item;
+      final serverMenuItems = await ref
+          .read(catalogMenuLookupPortProvider)
+          .menuItems(cart.currentRestaurantId!.toInt());
+      final serverMap = <num, CatalogMenuSnapshot>{};
+      for (final item in serverMenuItems) {
+        if (item.id != null) serverMap[item.id!] = item;
+      }
+
+      final priceChanges = <PriceChange>[];
+      final unavailableIds = <num>[];
+
+      for (final cartItem in cart.items) {
+        final serverItem = serverMap[cartItem.menuItemId];
+
+        if (serverItem == null) {
+          // Món không còn tồn tại trên server
+          unavailableIds.add(cartItem.menuItemId);
+          continue;
         }
 
-        final priceChanges = <PriceChange>[];
-        final unavailableIds = <num>[];
-
-        for (final cartItem in cart.items) {
-          final serverItem = serverMap[cartItem.menuItemId];
-
-          if (serverItem == null) {
-            // Món không còn tồn tại trên server
-            unavailableIds.add(cartItem.menuItemId);
-            continue;
-          }
-
-          if (serverItem.status != CatalogMenuStatus.available) {
-            // Món đã hết / unavailable
-            unavailableIds.add(cartItem.menuItemId);
-            continue;
-          }
-
-          // So sánh giá
-          if ((serverItem.price - cartItem.price).abs() > 0.01) {
-            priceChanges.add(
-              PriceChange(
-                menuItemId: cartItem.menuItemId,
-                itemName: cartItem.menuItemName,
-                oldPrice: cartItem.price,
-                newPrice: serverItem.price,
-              ),
-            );
-          }
+        if (serverItem.status != CatalogMenuStatus.available) {
+          // Món đã hết / unavailable
+          unavailableIds.add(cartItem.menuItemId);
+          continue;
         }
 
-        return PriceSyncResult(
-          priceChanges: priceChanges,
-          unavailableItemIds: unavailableIds,
-        );
+        // So sánh giá
+        if ((serverItem.price - cartItem.price).abs() > 0.01) {
+          priceChanges.add(
+            PriceChange(
+              menuItemId: cartItem.menuItemId,
+              itemName: cartItem.menuItemName,
+              oldPrice: cartItem.price,
+              newPrice: serverItem.price,
+            ),
+          );
+        }
+      }
+
+      return PriceSyncResult(
+        priceChanges: priceChanges,
+        unavailableItemIds: unavailableIds,
+      );
     } catch (_) {
       return const PriceSyncResult();
     }
