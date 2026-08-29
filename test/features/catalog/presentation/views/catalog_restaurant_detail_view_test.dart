@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:delivery_app/core/error/failures.dart';
 import 'package:delivery_app/core/contracts/catalog_contract.dart';
 import 'package:delivery_app/core/contracts/catalog_port_provider.dart';
+import 'package:delivery_app/core/contracts/cart_contract.dart';
+import 'package:delivery_app/core/contracts/cart_port_provider.dart';
 import 'package:delivery_app/features/cart/domain/entities/cart_entity.dart';
 import 'package:delivery_app/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:delivery_app/features/cart/domain/repositories/cart_repository.dart';
@@ -29,12 +33,15 @@ void main() {
     () async {
       final restaurants = _FakeRestaurantRepository();
       final cart = _FakeCartRepository();
+      final cartPort = _FakeCartPort(cart);
       final container = ProviderContainer(
         overrides: [
           restaurantRepositoryProvider.overrideWithValue(restaurants),
           catalogBrowsePortProvider.overrideWithValue(
             _FakeCatalogBrowsePort(restaurants),
           ),
+          cartCommandsPortProvider.overrideWithValue(cartPort),
+          cartReaderPortProvider.overrideWithValue(cartPort),
           cartRepositoryProvider.overrideWithValue(cart),
           restaurantFlashSaleItemsProvider(
             201,
@@ -74,15 +81,18 @@ void main() {
   test(
     'detail ViewModel confirms before replacing a different restaurant cart',
     () async {
+      final restaurants = _FakeRestaurantRepository();
+      final cart = _FakeCartRepository();
+      final cartPort = _FakeCartPort(cart);
       final container = ProviderContainer(
         overrides: [
-          restaurantRepositoryProvider.overrideWithValue(
-            _FakeRestaurantRepository(),
-          ),
+          restaurantRepositoryProvider.overrideWithValue(restaurants),
           catalogBrowsePortProvider.overrideWithValue(
-            _FakeCatalogBrowsePort(_FakeRestaurantRepository()),
+            _FakeCatalogBrowsePort(restaurants),
           ),
-          cartRepositoryProvider.overrideWithValue(_FakeCartRepository()),
+          cartCommandsPortProvider.overrideWithValue(cartPort),
+          cartReaderPortProvider.overrideWithValue(cartPort),
+          cartRepositoryProvider.overrideWithValue(cart),
           restaurantFlashSaleItemsProvider(
             201,
           ).overrideWith((ref) async => const {}),
@@ -241,12 +251,84 @@ class _FakeCatalogBrowsePort implements CatalogBrowsePort {
   }
 }
 
+class _FakeCartPort implements CartCommands, CartReader {
+  _FakeCartPort(this.repository) {
+    _snapshot = _toSnapshot(repository._cart);
+  }
+
+  final _FakeCartRepository repository;
+  late CartSnapshot _snapshot;
+  final _changes = StreamController<CartSnapshot>.broadcast();
+
+  @override
+  CartSnapshot get current => _snapshot;
+
+  @override
+  Stream<CartSnapshot> get changes => _changes.stream;
+
+  @override
+  Future<void> addLine(CartLineInput input) async {
+    await repository.addItem(CartItemEntity(
+      menuItemId: input.menuItemId,
+      menuItemName: input.name,
+      price: input.unitPrice,
+      quantity: input.quantity,
+      restaurantId: input.restaurantId,
+      restaurantName: input.restaurantName,
+      imageUrl: input.imageUrl,
+      notes: input.notes,
+      flashSaleItemId: input.flashSaleItemId,
+    ));
+    _publish();
+  }
+
+  @override
+  Future<void> setQuantity(int menuItemId, int quantity) async {
+    await repository.updateItemQuantity(menuItemId, quantity);
+    _publish();
+  }
+
+  @override
+  Future<void> removeLine(int menuItemId) async {
+    await repository.removeItem(menuItemId);
+    _publish();
+  }
+
+  @override
+  Future<void> clear() async {
+    await repository.clearCart();
+    _publish();
+  }
+
+  void _publish() {
+    _snapshot = _toSnapshot(repository._cart);
+    _changes.add(_snapshot);
+  }
+
+  CartSnapshot _toSnapshot(CartEntity cart) => CartSnapshot(
+    restaurantId: cart.currentRestaurantId?.toInt(),
+    restaurantName: cart.currentRestaurantName,
+    lines: cart.items.map((item) => CartLineSnapshot(
+      menuItemId: item.menuItemId.toInt(),
+      restaurantId: item.restaurantId.toInt(),
+      restaurantName: item.restaurantName,
+      name: item.menuItemName,
+      unitPrice: item.price,
+      quantity: item.quantity,
+      imageUrl: item.imageUrl,
+      notes: item.notes,
+      flashSaleItemId: item.flashSaleItemId,
+    )),
+  );
+}
+
 class _FakeCartRepository implements CartRepository {
   CartEntity _cart = const CartEntity(
     items: [],
     currentRestaurantId: null,
     currentRestaurantName: null,
   );
+
 
   @override
   Future<Either<Failure, CartEntity>> addItem(CartItemEntity item) async {

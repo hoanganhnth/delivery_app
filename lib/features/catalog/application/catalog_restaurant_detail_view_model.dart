@@ -1,12 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/contracts/catalog_contract.dart';
 import 'package:delivery_app/core/contracts/catalog_port_provider.dart';
+import 'package:delivery_app/core/contracts/cart_contract.dart';
+import 'package:delivery_app/core/contracts/cart_port_provider.dart';
 import 'package:delivery_app/core/presentation/mvvm/mvvm.dart';
-import 'package:delivery_app/features/cart/application/cart_commands.dart';
-import 'package:delivery_app/features/cart/di/cart_commands_provider.dart';
-import 'package:delivery_app/features/cart/domain/entities/cart_entity.dart';
-import 'package:delivery_app/features/cart/domain/entities/cart_item_entity.dart';
-import 'package:delivery_app/features/cart/application/cart_notifier.dart';
 import 'package:delivery_app/features/flash_sale/di/flash_sale_providers.dart';
 import 'package:delivery_app/features/flash_sale/domain/entities/flash_sale_item_entity.dart';
 
@@ -30,7 +27,7 @@ class CatalogRestaurantDetailViewModel
   int _nextEffectId = 0;
   final num _restaurantId;
   CatalogDetailResult? _detail;
-  CartEntity? _cart;
+  CartSnapshot? _cart;
   Map<int, FlashSaleItemEntity> _flashSales = const {};
   final Map<num, CatalogMenuSnapshot> _menuItemsById = {};
   bool _cartCommandRunning = false;
@@ -38,7 +35,8 @@ class CatalogRestaurantDetailViewModel
 
   @override
   CatalogRestaurantDetailViewState build() {
-    _cart = ref.read(cartProvider).value;
+    final reader = ref.read(cartReaderPortProvider);
+    _cart = reader.current;
     _flashSales =
         ref
             .read(
@@ -46,10 +44,12 @@ class CatalogRestaurantDetailViewModel
             )
             .value ??
         const {};
-    ref.listen<AsyncValue<CartEntity>>(cartProvider, (_, next) {
-      _cart = next.value;
+    final cartSubscription = reader.changes.listen((next) {
+      if (!ref.mounted) return;
+      _cart = next;
       _publish();
     });
+    ref.onDispose(cartSubscription.cancel);
     ref.listen<AsyncValue<Map<int, FlashSaleItemEntity>>>(
       restaurantFlashSaleItemsProvider(_asPositiveInt(_restaurantId)),
       (_, next) {
@@ -113,29 +113,34 @@ class CatalogRestaurantDetailViewModel
     final currentCart = _cart;
     if (!replaceRestaurant &&
         currentCart != null &&
-        !currentCart.canAddFromRestaurant(restaurant.id)) {
+        currentCart.isNotEmpty &&
+        currentCart.restaurantId != restaurant.id.toInt()) {
       _emit(CatalogRestaurantDetailConfirmRestaurantChange(menuItemId));
       return;
     }
 
     _cartCommandRunning = true;
     try {
-      final commands = ref.read(cartCommandsProvider);
-      if (replaceRestaurant) await commands.clearCart();
-      final quantity = currentCart?.getItemQuantity(menuItemId) ?? 0;
+      final commands = ref.read(cartCommandsPortProvider);
+      if (replaceRestaurant) await commands.clear();
+      final quantity = _quantityFor(menuItemId);
       if (quantity > 0 && !replaceRestaurant) {
-        await commands.updateItemQuantity(menuItemId, quantity + 1);
+        await commands.setQuantity(menuItemId.toInt(), quantity + 1);
       } else {
         final flash = _flashSales[menuItemId.toInt()];
-        await commands.addItem(
-          CartItemEntity.fromMenuItem(
-            menuItem,
-            restaurant.name,
-            flashSaleItemId: flash?.id,
-            serverCatalogPrice: flash?.flashSalePrice,
-          ),
-        );
+        await commands.addLine(CartLineInput(
+          menuItemId: menuItem.id!.toInt(),
+          restaurantId: menuItem.restaurantId!.toInt(),
+          restaurantName: restaurant.name,
+          name: menuItem.name,
+          unitPrice: flash?.flashSalePrice ?? menuItem.price,
+          quantity: 1,
+          imageUrl: menuItem.image,
+          flashSaleItemId: flash?.id,
+        ));
       }
+      _cart = ref.read(cartReaderPortProvider).current;
+      _publish();
     } catch (_) {
       _emit(
         const CatalogRestaurantDetailShowError(
@@ -151,19 +156,21 @@ class CatalogRestaurantDetailViewModel
     if (_cartCommandRunning) {
       return;
     }
-    final quantity = _cart?.getItemQuantity(menuItemId) ?? 0;
+    final quantity = _quantityFor(menuItemId);
     if (quantity <= 0) {
       return;
     }
 
     _cartCommandRunning = true;
     try {
-      final CartCommands commands = ref.read(cartCommandsProvider);
+      final commands = ref.read(cartCommandsPortProvider);
       if (quantity == 1) {
-        await commands.removeItem(menuItemId);
+        await commands.removeLine(menuItemId.toInt());
       } else {
-        await commands.updateItemQuantity(menuItemId, quantity - 1);
+        await commands.setQuantity(menuItemId.toInt(), quantity - 1);
       }
+      _cart = ref.read(cartReaderPortProvider).current;
+      _publish();
     } catch (_) {
       _emit(
         const CatalogRestaurantDetailShowError(
@@ -240,11 +247,14 @@ class CatalogRestaurantDetailViewModel
       imageUrl: item.imageUrl,
       flashSaleItemId: flash?.id,
       flashSalePrice: flash?.flashSalePrice,
-      quantity: item.id == null ? 0 : (_cart?.getItemQuantity(item.id!) ?? 0),
+      quantity: item.id == null ? 0 : _quantityFor(item.id!),
     );
   }
 
   int _asPositiveInt(num value) => value > 0 ? value.toInt() : 0;
+
+  int _quantityFor(num menuItemId) =>
+      _cart?.lines.where((line) => line.menuItemId == menuItemId.toInt()).fold<int>(0, (sum, line) => sum + line.quantity) ?? 0;
 
   void _emit(CatalogRestaurantDetailEffect effect) {
     state = state.copyWith(
