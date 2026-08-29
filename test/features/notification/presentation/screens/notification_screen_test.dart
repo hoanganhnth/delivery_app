@@ -1,4 +1,6 @@
 import 'package:delivery_app/core/error/failures.dart';
+import 'package:delivery_app/core/contracts/session_contract.dart';
+import 'package:delivery_app/core/contracts/session_port_provider.dart';
 import 'package:delivery_app/core/services/push/customer_push_wake_coordinator.dart';
 import 'package:delivery_app/features/notification/application/notification_effect.dart';
 import 'package:delivery_app/features/notification/application/notification_intent.dart';
@@ -27,6 +29,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           profileRepositoryProvider.overrideWithValue(_FakeProfileRepository()),
+          sessionPortProvider.overrideWithValue(_FakeSessionPort()),
           notificationRepositoryProvider.overrideWithValue(notifications),
         ],
       );
@@ -61,6 +64,7 @@ void main() {
         child: const NotificationScreen(),
         overrides: [
           profileRepositoryProvider.overrideWithValue(_FakeProfileRepository()),
+          sessionPortProvider.overrideWithValue(_FakeSessionPort()),
           notificationRepositoryProvider.overrideWithValue(notifications),
         ],
       );
@@ -121,6 +125,7 @@ void main() {
       child: const NotificationScreen(),
       overrides: [
         profileRepositoryProvider.overrideWithValue(_FakeProfileRepository()),
+        sessionPortProvider.overrideWithValue(_FakeSessionPort()),
         notificationRepositoryProvider.overrideWithValue(notifications),
       ],
     );
@@ -144,6 +149,7 @@ void main() {
       child: const NotificationScreen(),
       overrides: [
         profileRepositoryProvider.overrideWithValue(_FakeProfileRepository()),
+        sessionPortProvider.overrideWithValue(_FakeSessionPort()),
         notificationRepositoryProvider.overrideWithValue(notifications),
       ],
     );
@@ -158,6 +164,22 @@ void main() {
 
     expect(notifications.loadCalls, 2);
   });
+}
+
+class _FakeSessionPort implements SessionPort {
+  @override
+  SessionSnapshot get current => SessionSnapshot(
+    isAuthenticated: true,
+    authId: 501,
+    profileId: 501,
+    accessToken: 'test-token',
+  );
+
+  @override
+  Stream<SessionSnapshot> get changes => const Stream<SessionSnapshot>.empty();
+
+  @override
+  String? get accessToken => current.accessToken;
 }
 
 class _FakeNotificationRepository implements NotificationRepository {
