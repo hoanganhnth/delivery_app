@@ -1,11 +1,11 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:delivery_app/core/usecases/usecase.dart';
+import 'package:delivery_app/core/contracts/catalog_contract.dart';
+import 'package:delivery_app/core/contracts/catalog_port_provider.dart';
 import 'package:delivery_app/features/cart/di/cart_di_providers.dart';
 import 'package:delivery_app/features/cart/domain/entities/cart_entity.dart';
 import 'package:delivery_app/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:delivery_app/features/cart/domain/usecases/cart_usecases.dart';
-import 'package:delivery_app/features/restaurants/domain/entities/menu_item_entity.dart';
-import 'package:delivery_app/features/restaurants/di/restaurant_di_providers.dart';
 
 part 'cart_notifier.g.dart';
 
@@ -124,13 +124,11 @@ class CartNotifier extends _$CartNotifier {
       return const PriceSyncResult();
     }
 
-    final getMenuItemsUseCase = ref.read(getMenuItemsUseCaseProvider);
-    final result = await getMenuItemsUseCase(cart.currentRestaurantId!);
-
-    return result.fold(
-      (_) => const PriceSyncResult(), // API fail → no changes
-      (serverMenuItems) {
-        final serverMap = <num, MenuItemEntity>{};
+    try {
+        final serverMenuItems = await ref
+            .read(catalogMenuLookupPortProvider)
+            .menuItems(cart.currentRestaurantId!.toInt());
+        final serverMap = <num, CatalogMenuSnapshot>{};
         for (final item in serverMenuItems) {
           if (item.id != null) serverMap[item.id!] = item;
         }
@@ -147,7 +145,7 @@ class CartNotifier extends _$CartNotifier {
             continue;
           }
 
-          if (serverItem.status != MenuItemStatus.available) {
+          if (serverItem.status != CatalogMenuStatus.available) {
             // Món đã hết / unavailable
             unavailableIds.add(cartItem.menuItemId);
             continue;
@@ -170,8 +168,9 @@ class CartNotifier extends _$CartNotifier {
           priceChanges: priceChanges,
           unavailableItemIds: unavailableIds,
         );
-      },
-    );
+    } catch (_) {
+      return const PriceSyncResult();
+    }
   }
 
   /// Đồng bộ giá thủ công (gọi từ UI, ví dụ khi mở màn hình giỏ hàng)

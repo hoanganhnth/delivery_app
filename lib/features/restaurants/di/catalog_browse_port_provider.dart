@@ -16,7 +16,16 @@ final catalogBrowsePortProvider = Provider<CatalogBrowsePort>((ref) {
   );
 });
 
-final class _RestaurantsCatalogAdapter implements CatalogBrowsePort {
+final catalogMenuLookupPortProvider = Provider<CatalogMenuLookupPort>((ref) {
+  return _RestaurantsCatalogAdapter(
+    getRestaurants: ref.watch(getRestaurantsUseCaseProvider),
+    getRestaurant: ref.watch(getRestaurantByIdUseCaseProvider),
+    getMenuItems: ref.watch(getMenuItemsUseCaseProvider),
+  );
+});
+
+final class _RestaurantsCatalogAdapter
+    implements CatalogBrowsePort, CatalogMenuLookupPort {
   const _RestaurantsCatalogAdapter({
     required this.getRestaurants,
     required this.getRestaurant,
@@ -71,6 +80,17 @@ final class _RestaurantsCatalogAdapter implements CatalogBrowsePort {
           ),
         );
       },
+    );
+  }
+
+  @override
+  Future<List<CatalogMenuSnapshot>> menuItems(int restaurantId) async {
+    final result = await getMenuItems(restaurantId);
+    return result.fold(
+      (_) => const <CatalogMenuSnapshot>[],
+      (rows) => rows
+          .map((item) => _menu(item, restaurantId))
+          .toList(growable: false),
     );
   }
 

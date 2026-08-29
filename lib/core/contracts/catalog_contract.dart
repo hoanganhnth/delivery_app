@@ -10,6 +10,10 @@ abstract interface class CatalogBrowsePort {
   Future<CatalogDetailResult> loadDetail(int restaurantId);
 }
 
+abstract interface class CatalogMenuLookupPort {
+  Future<List<CatalogMenuSnapshot>> menuItems(int restaurantId);
+}
+
 final class CatalogBrowseResult {
   const CatalogBrowseResult({
     this.restaurants = const <CatalogRestaurantSnapshot>[],

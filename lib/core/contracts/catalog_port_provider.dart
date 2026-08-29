@@ -8,7 +8,12 @@ final catalogBrowsePortProvider = Provider<CatalogBrowsePort>((ref) {
   return _UnavailableCatalogBrowsePort.instance;
 });
 
-final class _UnavailableCatalogBrowsePort implements CatalogBrowsePort {
+final catalogMenuLookupPortProvider = Provider<CatalogMenuLookupPort>((ref) {
+  return _UnavailableCatalogBrowsePort.instance;
+});
+
+final class _UnavailableCatalogBrowsePort
+    implements CatalogBrowsePort, CatalogMenuLookupPort {
   const _UnavailableCatalogBrowsePort._();
 
   static const instance = _UnavailableCatalogBrowsePort._();
@@ -22,4 +27,8 @@ final class _UnavailableCatalogBrowsePort implements CatalogBrowsePort {
   @override
   Future<CatalogDetailResult> loadDetail(int restaurantId) async =>
       const CatalogDetailResult();
+
+  @override
+  Future<List<CatalogMenuSnapshot>> menuItems(int restaurantId) async =>
+      const <CatalogMenuSnapshot>[];
 }
