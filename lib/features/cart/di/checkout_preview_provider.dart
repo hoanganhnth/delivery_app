@@ -1,4 +1,4 @@
-import 'package:delivery_app/features/auth/di/auth_network_providers.dart';
+import 'package:delivery_app/core/network/_riverpod/authenticated_network_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:delivery_app/features/orders/data/datasources/order_api_service.dart';
 import 'package:delivery_app/features/orders/data/dtos/checkout_preview_dto.dart';
@@ -8,7 +8,7 @@ part 'checkout_preview_provider.g.dart';
 /// Compatibility state adapter for the checkout-preview contract.
 @Riverpod(keepAlive: true)
 OrderApiService checkoutOrderApiService(Ref ref) {
-  final dio = ref.watch(authAwareDioProvider);
+  final dio = ref.watch(authenticatedDioProvider);
   return OrderApiService(dio);
 }
 
