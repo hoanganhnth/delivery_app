@@ -36,4 +36,16 @@ void main() {
     expect(port.current.profileId, 22);
     expect(port.current.roles, contains('USER'));
   });
+
+  test('clears profile identity when the authenticated session ends', () {
+    final port = AuthSessionPort(const AuthState.initial());
+    addTearDown(port.dispose);
+
+    port.updateIdentity(authId: 10, profileId: 22, roles: {'USER'});
+    port.clearIdentity();
+
+    expect(port.current.authId, isNull);
+    expect(port.current.profileId, isNull);
+    expect(port.current.roles, isEmpty);
+  });
 }
