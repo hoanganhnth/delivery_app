@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:delivery_app/features/auth/application/session/auth_state.dart';

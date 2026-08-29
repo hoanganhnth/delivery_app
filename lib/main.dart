@@ -146,7 +146,9 @@ class _MainAppState extends ConsumerState<MainApp> {
       }
       if (!next.isAuthenticated && previous?.isAuthenticated == true) {
         final session = ref.read(sessionPortProvider);
-        if (session is SessionIdentitySink) session.clearIdentity();
+        if (session is SessionIdentitySink) {
+          (session as SessionIdentitySink).clearIdentity();
+        }
       }
     });
 
@@ -189,12 +191,13 @@ class _MainAppState extends ConsumerState<MainApp> {
   void _syncSessionIdentity(ProfileState profile) {
     final session = ref.read(sessionPortProvider);
     if (session is! SessionIdentitySink) return;
+    final sink = session as SessionIdentitySink;
     final user = profile.user;
     if (user == null) {
-      if (!ref.read(authProvider).isAuthenticated) session.clearIdentity();
+      if (!ref.read(authProvider).isAuthenticated) sink.clearIdentity();
       return;
     }
-    session.updateIdentity(
+    sink.updateIdentity(
       authId: user.authId,
       profileId: user.id,
       roles: {user.role},
