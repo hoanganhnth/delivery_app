@@ -1,6 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:delivery_app/core/network/_riverpod/network_providers.dart';
 import 'package:delivery_app/features/catalog/domain/catalog_search_repository.dart';
-import 'package:delivery_app/features/search/data/datasources/search_remote_datasource.dart';
 
 abstract interface class CatalogSearchDelayPort {
   Future<void> wait();
@@ -18,20 +19,18 @@ final catalogSearchDelayProvider = Provider<CatalogSearchDelayPort>((ref) {
   return const DefaultCatalogSearchDelay();
 });
 
-/// Catalog composition adapter over the Gateway search datasource. Data DTOs
-/// stop here; the application layer consumes only catalog domain results.
+/// Catalog-owned Gateway adapter. Search DTOs are decoded at this boundary so
+/// the catalog application layer never depends on the legacy Search feature.
 final catalogSearchRepositoryProvider = Provider<CatalogSearchRepository>((
   ref,
 ) {
-  return _RemoteCatalogSearchRepository(
-    ref.watch(searchRemoteDataSourceProvider),
-  );
+  return _CatalogSearchRepository(ref.watch(dioProvider));
 });
 
-class _RemoteCatalogSearchRepository implements CatalogSearchRepository {
-  const _RemoteCatalogSearchRepository(this._delegate);
+final class _CatalogSearchRepository implements CatalogSearchRepository {
+  const _CatalogSearchRepository(this._dio);
 
-  final SearchRemoteDataSource _delegate;
+  final Dio _dio;
 
   @override
   Future<List<CatalogDishSearchResult>> searchDishes(
@@ -39,16 +38,16 @@ class _RemoteCatalogSearchRepository implements CatalogSearchRepository {
     int page = 0,
     int size = 20,
   }) async {
-    final rows = await _delegate.searchDishes(query, page: page, size: size);
+    final rows = await _request('/search/dishes', query, page, size);
     return rows
         .map(
           (row) => CatalogDishSearchResult(
-            id: row.id,
-            name: row.name,
-            description: row.description,
-            price: row.price,
-            restaurantId: row.restaurantId,
-            imageUrl: row.imageUrl,
+            id: _string(row['id']),
+            name: _string(row['name']),
+            description: _nullableString(row['description']),
+            price: _double(row['price']),
+            restaurantId: _nullableString(row['restaurantId']),
+            imageUrl: _nullableString(row['imageUrl'] ?? row['image']),
           ),
         )
         .toList(growable: false);
@@ -60,22 +59,59 @@ class _RemoteCatalogSearchRepository implements CatalogSearchRepository {
     int page = 0,
     int size = 20,
   }) async {
-    final rows = await _delegate.searchRestaurants(
-      query,
-      page: page,
-      size: size,
-    );
+    final rows = await _request('/search/restaurants', query, page, size);
     return rows
         .map(
           (row) => CatalogRestaurantSearchResult(
-            id: row.id,
-            name: row.name,
-            description: row.description,
-            cuisine: row.cuisine,
-            rating: row.rating,
-            imageUrl: row.imageUrl,
+            id: _string(row['id']),
+            name: _string(row['name']),
+            description: _nullableString(row['description']),
+            cuisine: _nullableString(row['cuisine']),
+            rating: _double(row['rating']),
+            imageUrl: _nullableString(row['imageUrl'] ?? row['image']),
           ),
         )
         .toList(growable: false);
   }
+
+  Future<List<Map<String, dynamic>>> _request(
+    String path,
+    String query,
+    int page,
+    int size,
+  ) async {
+    final response = await _dio.get(
+      path,
+      queryParameters: {'q': query, 'page': page, 'size': size},
+    );
+    final envelope = response.data;
+    if (envelope is! Map<String, dynamic> ||
+        envelope['status'] != 1 ||
+        !envelope.containsKey('message') ||
+        !envelope.containsKey('data')) {
+      throw const FormatException('Search response is invalid');
+    }
+    final data = envelope['data'];
+    final items = data is Map<String, dynamic> ? data['items'] : null;
+    if (items is! List) {
+      throw const FormatException('Search response page is invalid');
+    }
+    return items
+        .whereType<Map>()
+        .map((row) => Map<String, dynamic>.from(row))
+        .toList(growable: false);
+  }
+
+  static String _string(Object? value) => value?.toString().trim() ?? '';
+
+  static String? _nullableString(Object? value) {
+    final text = value?.toString().trim();
+    return text == null || text.isEmpty ? null : text;
+  }
+
+  static double? _double(Object? value) => switch (value) {
+    num number => number.toDouble(),
+    String text => double.tryParse(text),
+    _ => null,
+  };
 }
