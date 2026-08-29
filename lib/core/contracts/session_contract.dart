@@ -2,14 +2,20 @@
 ///
 /// Feature code must not depend on AuthNotifier/AuthState. Auth owns the
 /// implementation and app composition injects it through this port.
-abstract interface class SessionPort {
+abstract interface class SessionPort extends AccessTokenProvider {
   SessionSnapshot get current;
   Stream<SessionSnapshot> get changes;
-  String? get accessToken;
 }
 
 abstract interface class AccessTokenProvider {
   String? get accessToken;
+}
+
+/// App composition may enrich the auth-owned session with the profile
+/// identity returned by the profile feature. Feature consumers only depend on
+/// [SessionPort], never on this mutable sink.
+abstract interface class SessionIdentitySink {
+  void updateIdentity({int? authId, int? profileId, Set<String>? roles});
 }
 
 final class SessionSnapshot {
