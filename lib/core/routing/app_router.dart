@@ -19,13 +19,14 @@ import 'package:delivery_app/features/auth/presentation/screens/register_screen.
 import 'package:delivery_app/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:delivery_app/features/auth/presentation/pages/reset_password_page.dart';
 import 'package:delivery_app/features/notification/presentation/screens/notification_screen.dart';
-import 'package:delivery_app/features/search/presentation/screens/search_screen.dart';
+import 'package:delivery_app/features/catalog/presentation/pages/catalog_search_page.dart';
+import 'package:delivery_app/features/catalog/presentation/pages/catalog_all_restaurants_page.dart';
+import 'package:delivery_app/features/catalog/presentation/pages/catalog_restaurant_detail_page.dart';
 import 'package:delivery_app/features/main/presentation/pages/main_screen.dart';
 import 'package:delivery_app/features/profile/profile.dart';
 import 'package:delivery_app/features/settings/settings.dart';
 import 'package:delivery_app/features/debug/debug.dart';
 import 'package:delivery_app/features/orders/orders.dart';
-import 'package:delivery_app/features/restaurants/restaurants.dart';
 import 'package:delivery_app/features/livestream/presentation/livestream_viewer_page.dart';
 import 'package:delivery_app/features/entitlements/presentation/entitlement_status_page.dart';
 import 'package:delivery_app/features/support/presentation/support_page.dart';
@@ -56,7 +57,7 @@ class AppRouterPages {
   Widget forgotPassword() => const ForgotPasswordPage();
   Widget resetPassword(String token) => ResetPasswordPage(token: token);
   Widget main() => const MainScreen();
-  Widget search() => const SearchScreen();
+  Widget search() => const CatalogSearchPage();
   Widget notifications() => const NotificationScreen();
   Widget home() => const HomePage();
   Widget profile() => const ProfileScreen();
@@ -67,9 +68,9 @@ class AppRouterPages {
   Widget orders() => const OrdersScreen();
   Widget refundHistory() => const RefundStatusHistoryScreen();
   Widget orderDetail(int orderId) => OrderDetailScreen(orderId: orderId);
-  Widget restaurants() => const AllRestaurantsScreen();
+  Widget restaurants() => const CatalogAllRestaurantsPage();
   Widget restaurantDetail(int restaurantId) =>
-      RestaurantDetailScreen(restaurantId: restaurantId);
+      CatalogRestaurantDetailPage(restaurantId: restaurantId);
   Widget livestreamViewer(String livestreamId) =>
       LivestreamViewerPage(livestreamId: livestreamId);
   Widget cart() => const CartScreen();

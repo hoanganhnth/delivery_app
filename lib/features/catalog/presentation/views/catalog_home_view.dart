@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
-import 'package:delivery_app/features/restaurants/presentation/widgets/shared/restaurant_card.dart';
 
 import '../../application/catalog_home_intent.dart';
 import '../../application/catalog_home_state.dart';
@@ -59,10 +58,8 @@ class CatalogHomeView extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed:
-                        () => onIntent(
-                          const CatalogHomeAllRestaurantsRequested(),
-                        ),
+                    onPressed: () =>
+                        onIntent(const CatalogHomeAllRestaurantsRequested()),
                     child: const Text('Xem tất cả'),
                   ),
                 ],
@@ -133,8 +130,8 @@ class _Header extends StatelessWidget {
           ),
           GlassActionButton(
             icon: Icons.notifications_outlined,
-            onPressed:
-                () => onIntent(const CatalogHomeNotificationsRequested()),
+            onPressed: () =>
+                onIntent(const CatalogHomeNotificationsRequested()),
           ),
           SizedBox(width: 8.w),
           GlassActionButton(
@@ -214,23 +211,21 @@ class _RestaurantContent extends StatelessWidget {
           final restaurant = state.restaurants[index];
           return Padding(
             padding: EdgeInsets.only(bottom: 16.w),
-            child: RestaurantCard(
+            child: _CatalogRestaurantCard(
               name: restaurant.name,
               imageUrl: restaurant.imageUrl,
               rating: restaurant.rating,
-              deliveryTime:
-                  restaurant.deliveryTimeMinutes == null
-                      ? null
-                      : '${restaurant.deliveryTimeMinutes} phút',
+              deliveryTime: restaurant.deliveryTimeMinutes == null
+                  ? null
+                  : '${restaurant.deliveryTimeMinutes} phút',
               category: restaurant.category,
-              distance:
-                  restaurant.distanceKm == null
-                      ? null
-                      : '${restaurant.distanceKm!.toStringAsFixed(1)} km',
+              distance: restaurant.distanceKm == null
+                  ? null
+                  : '${restaurant.distanceKm!.toStringAsFixed(1)} km',
               deliveryFee: _deliveryFee(restaurant.deliveryFee),
               isFreeDelivery: restaurant.deliveryFee == 0,
-              onTap:
-                  () => onIntent(CatalogHomeRestaurantRequested(restaurant.id)),
+              onTap: () =>
+                  onIntent(CatalogHomeRestaurantRequested(restaurant.id)),
             ),
           );
         }, childCount: state.restaurants.length),
@@ -243,4 +238,72 @@ class _RestaurantContent extends StatelessWidget {
     if (fee == 0) return 'Miễn phí giao hàng';
     return '${fee.toStringAsFixed(0)}đ';
   }
+}
+
+class _CatalogRestaurantCard extends StatelessWidget {
+  const _CatalogRestaurantCard({
+    required this.name,
+    this.imageUrl,
+    this.rating,
+    this.deliveryTime,
+    this.category,
+    this.distance,
+    this.deliveryFee,
+    this.isFreeDelivery = false,
+    required this.onTap,
+  });
+
+  final String name;
+  final String? imageUrl;
+  final double? rating;
+  final String? deliveryTime;
+  final String? category;
+  final String? distance;
+  final String? deliveryFee;
+  final bool isFreeDelivery;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Card(
+    clipBehavior: Clip.antiAlias,
+    child: InkWell(
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (imageUrl != null)
+            Image.network(
+              imageUrl!,
+              height: 150,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            )
+          else
+            const SizedBox(
+              height: 80,
+              child: Center(child: Icon(Icons.restaurant, size: 48)),
+            ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(name, style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 4),
+                Text(
+                  [
+                    if (rating != null) '★ ${rating!.toStringAsFixed(1)}',
+                    if (deliveryTime != null) deliveryTime!,
+                    if (category != null) category!,
+                    if (distance != null) distance!,
+                    if (deliveryFee != null) deliveryFee!,
+                  ].join(' • '),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }

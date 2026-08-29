@@ -1,10 +1,6 @@
 /// Restaurants feature barrel file
 library;
 
-// Screens
-export 'presentation/screens/all_restaurants_screen.dart';
-export 'presentation/screens/restaurant_detail_screen.dart';
-
 // Providers
 export 'application/detail/restaurant_detail_notifier.dart';
 export 'application/detail/restaurant_detail_state.dart';
