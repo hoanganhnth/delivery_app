@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/config/runtime_config.dart';
-import 'package:delivery_app/features/auth/di/auth_network_providers.dart';
+import 'package:delivery_app/core/network/_riverpod/authenticated_network_providers.dart';
 
 import '../data/livestream_gateway.dart';
 import '../data/livestream_repository_impl.dart';
@@ -43,7 +43,7 @@ final class LivestreamViewerState {
 
 final livestreamRepositoryProvider = Provider<LivestreamRepository>(
   (ref) => LivestreamRepositoryImpl(
-    LivestreamGateway(ref.watch(authAwareDioProvider)),
+    LivestreamGateway(ref.watch(authenticatedDioProvider)),
   ),
 );
 final joinLivestreamUseCaseProvider = Provider<JoinLivestreamUseCase>(
@@ -84,7 +84,9 @@ class LivestreamViewerViewModel extends Notifier<LivestreamViewerState> {
     if (!ref.read(livestreamEnabledProvider)) return;
     state = const LivestreamViewerState(phase: LivestreamViewerPhase.loading);
     try {
-      final session = await ref.read(joinLivestreamUseCaseProvider)(_livestreamId);
+      final session = await ref.read(joinLivestreamUseCaseProvider)(
+        _livestreamId,
+      );
       if (_disposed) return;
       try {
         await ref.read(livestreamMediaPortProvider).join(session);
