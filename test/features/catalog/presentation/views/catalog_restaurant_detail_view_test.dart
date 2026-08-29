@@ -1,4 +1,6 @@
 import 'package:delivery_app/core/error/failures.dart';
+import 'package:delivery_app/core/contracts/catalog_contract.dart';
+import 'package:delivery_app/core/contracts/catalog_port_provider.dart';
 import 'package:delivery_app/features/cart/domain/entities/cart_entity.dart';
 import 'package:delivery_app/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:delivery_app/features/cart/domain/repositories/cart_repository.dart';
@@ -30,6 +32,9 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           restaurantRepositoryProvider.overrideWithValue(restaurants),
+          catalogBrowsePortProvider.overrideWithValue(
+            _FakeCatalogBrowsePort(restaurants),
+          ),
           cartRepositoryProvider.overrideWithValue(cart),
           restaurantFlashSaleItemsProvider(
             201,
@@ -73,6 +78,9 @@ void main() {
         overrides: [
           restaurantRepositoryProvider.overrideWithValue(
             _FakeRestaurantRepository(),
+          ),
+          catalogBrowsePortProvider.overrideWithValue(
+            _FakeCatalogBrowsePort(_FakeRestaurantRepository()),
           ),
           cartRepositoryProvider.overrideWithValue(_FakeCartRepository()),
           restaurantFlashSaleItemsProvider(
@@ -183,6 +191,54 @@ class _FakeRestaurantRepository implements RestaurantRepository {
     double? latitude,
     double? longitude,
   }) async => Right([buildRestaurant()]);
+}
+
+class _FakeCatalogBrowsePort implements CatalogBrowsePort {
+  _FakeCatalogBrowsePort(this.repository);
+  final RestaurantRepository repository;
+
+  @override
+  Future<CatalogBrowseResult> loadFeatured() async => const CatalogBrowseResult();
+
+  @override
+  Future<CatalogBrowseResult> loadRestaurants() async => const CatalogBrowseResult();
+
+  @override
+  Future<CatalogDetailResult> loadDetail(int restaurantId) async {
+    final restaurant = await repository.getRestaurantById(restaurantId);
+    return restaurant.fold(
+      (failure) => CatalogDetailResult(errorMessage: failure.message),
+      (value) async {
+        final menu = await repository.getMenuItems(restaurantId);
+        return menu.fold(
+          (failure) => CatalogDetailResult(
+            restaurant: CatalogRestaurantSnapshot(id: value.id, name: value.name),
+            errorMessage: failure.message,
+          ),
+          (items) => CatalogDetailResult(
+            restaurant: CatalogRestaurantSnapshot(id: value.id, name: value.name),
+            menuItems: items
+                .map(
+                  (item) => CatalogMenuSnapshot(
+                    id: item.id,
+                    restaurantId: item.restaurantId ?? value.id,
+                    name: item.name,
+                    description: item.description,
+                    price: item.price,
+                    status: switch (item.status) {
+                      MenuItemStatus.available => CatalogMenuStatus.available,
+                      MenuItemStatus.unavailable => CatalogMenuStatus.unavailable,
+                      MenuItemStatus.soldOut => CatalogMenuStatus.soldOut,
+                    },
+                    imageUrl: item.image,
+                  ),
+                )
+                .toList(),
+          ),
+        );
+      },
+    );
+  }
 }
 
 class _FakeCartRepository implements CartRepository {

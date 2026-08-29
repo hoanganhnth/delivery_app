@@ -1,4 +1,6 @@
 import 'package:delivery_app/core/error/failures.dart';
+import 'package:delivery_app/core/contracts/catalog_contract.dart';
+import 'package:delivery_app/core/contracts/catalog_port_provider.dart';
 import 'package:delivery_app/features/catalog/application/catalog_home_effect.dart';
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
 import 'package:delivery_app/features/catalog/application/catalog_home_intent.dart';
@@ -23,7 +25,12 @@ void main() {
     () async {
       final repository = _FakeRestaurantRepository();
       final container = ProviderContainer(
-        overrides: [restaurantRepositoryProvider.overrideWithValue(repository)],
+        overrides: [
+          restaurantRepositoryProvider.overrideWithValue(repository),
+          catalogBrowsePortProvider.overrideWithValue(
+            _FakeCatalogBrowsePort(repository),
+          ),
+        ],
       );
       addTearDown(container.dispose);
       final notifier = container.read(catalogHomeViewModelProvider.notifier);
@@ -122,4 +129,30 @@ class _FakeRestaurantRepository implements RestaurantRepository {
     double? latitude,
     double? longitude,
   }) async => Right([buildRestaurant()]);
+}
+
+class _FakeCatalogBrowsePort implements CatalogBrowsePort {
+  _FakeCatalogBrowsePort(this.repository);
+  final RestaurantRepository repository;
+
+  @override
+  Future<CatalogBrowseResult> loadFeatured() async {
+    final result = await repository.getRestaurants(page: 1, limit: 6);
+    return result.fold(
+      (failure) => CatalogBrowseResult(errorMessage: failure.message),
+      (rows) => CatalogBrowseResult(
+        restaurants: rows
+            .take(3)
+            .map((row) => CatalogRestaurantSnapshot(id: row.id, name: row.name))
+            .toList(),
+      ),
+    );
+  }
+
+  @override
+  Future<CatalogBrowseResult> loadRestaurants() async => loadFeatured();
+
+  @override
+  Future<CatalogDetailResult> loadDetail(int restaurantId) async =>
+      const CatalogDetailResult();
 }
