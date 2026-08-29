@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'architecture_graph.dart';
+
 /// Lightweight dependency-direction guard for the customer app.
 ///
 /// During migration the default mode checks only new view/component folders.
@@ -16,6 +18,21 @@ void main(List<String> arguments) {
   }
 
   final violations = <String>[];
+  if (strict) {
+    final report = analyzeArchitecture(root);
+    for (final violation in report.violations) {
+      violations.add('${violation.path}: ${violation.message}');
+    }
+    for (final edge in report.featureEdges) {
+      stderr.writeln('Feature dependency: $edge');
+    }
+    for (final cycle in report.cycles) {
+      stderr.writeln('Feature cycle: ${cycle.join(' -> ')}');
+      violations.add(
+        'features/${cycle.join(' <-> ')}: feature dependency cycle',
+      );
+    }
+  }
   for (final file in _dartFiles(root)) {
     final path = _relative(file.path);
     if (_isGenerated(path)) continue;
