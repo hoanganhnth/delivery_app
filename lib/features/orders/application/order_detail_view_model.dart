@@ -1,5 +1,5 @@
 import 'package:delivery_app/core/presentation/mvvm/mvvm.dart';
-import 'package:delivery_app/features/cart/di/cart_commands_provider.dart';
+import 'package:delivery_app/core/contracts/cart_port_provider.dart';
 import 'package:delivery_app/features/orders/application/order_reorder_builder.dart';
 import 'package:delivery_app/features/orders/application/restaurant_rating_submission.dart';
 import 'package:delivery_app/features/orders/di/restaurant_rating_submission_provider.dart';
@@ -177,10 +177,10 @@ class OrderDetailViewModel extends Notifier<OrderDetailViewState> {
     state = state.copyWith(activeAction: OrderDetailAction.reorder);
     try {
       final items = buildReorderCartItems(order);
-      final cart = ref.read(cartCommandsProvider);
-      await cart.clearCart();
+      final cart = ref.read(cartCommandsPortProvider);
+      await cart.clear();
       for (final item in items) {
-        await cart.addItem(item);
+        await cart.addLine(item);
       }
       if (ref.mounted) _emit(const OrderDetailNavigateToCart());
     } on FormatException {

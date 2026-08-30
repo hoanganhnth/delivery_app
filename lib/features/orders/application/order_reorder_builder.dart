@@ -1,9 +1,9 @@
-import 'package:delivery_app/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:delivery_app/core/contracts/cart_contract.dart';
 import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
 
 /// Converts a historical, server-owned order back into cart lines only when
 /// every commercial identity is still usable by the cart boundary.
-List<CartItemEntity> buildReorderCartItems(OrderEntity order) {
+List<CartLineInput> buildReorderCartItems(OrderEntity order) {
   final restaurantId = order.restaurantId;
   final restaurantName = order.restaurantName?.trim();
 
@@ -28,13 +28,13 @@ List<CartItemEntity> buildReorderCartItems(OrderEntity order) {
           throw const FormatException('Order contains an invalid menu item');
         }
 
-        return CartItemEntity(
+        return CartLineInput(
           menuItemId: item.menuItemId,
-          menuItemName: menuItemName,
-          price: item.price,
-          quantity: item.quantity,
           restaurantId: restaurantId,
           restaurantName: restaurantName,
+          name: menuItemName,
+          unitPrice: item.price,
+          quantity: item.quantity,
           notes: item.notes,
         );
       })

@@ -1,7 +1,6 @@
 import 'package:delivery_app/core/error/failures.dart';
-import 'package:delivery_app/features/cart/application/cart_commands.dart';
-import 'package:delivery_app/features/cart/di/cart_commands_provider.dart';
-import 'package:delivery_app/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:delivery_app/core/contracts/cart_contract.dart';
+import 'package:delivery_app/core/contracts/cart_port_provider.dart';
 import 'package:delivery_app/features/orders/application/orders_list_effect.dart';
 import 'package:delivery_app/features/orders/application/orders_list_intent.dart';
 import 'package:delivery_app/features/orders/application/orders_list_state.dart';
@@ -29,7 +28,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           orderRepositoryProvider.overrideWithValue(orders),
-          cartCommandsProvider.overrideWithValue(cart),
+          cartCommandsPortProvider.overrideWithValue(cart),
         ],
       );
       addTearDown(container.dispose);
@@ -124,19 +123,19 @@ void main() {
 
 class _FakeCartCommands implements CartCommands {
   int clearCalls = 0;
-  final List<CartItemEntity> added = [];
+  final List<CartLineInput> added = [];
 
   @override
-  Future<void> addItem(CartItemEntity item) async => added.add(item);
+  Future<void> addLine(CartLineInput input) async => added.add(input);
 
   @override
-  Future<void> clearCart() async => clearCalls += 1;
+  Future<void> clear() async => clearCalls += 1;
 
   @override
-  Future<void> removeItem(num menuItemId) async {}
+  Future<void> removeLine(int menuItemId) async {}
 
   @override
-  Future<void> updateItemQuantity(num menuItemId, int quantity) async {}
+  Future<void> setQuantity(int menuItemId, int quantity) async {}
 }
 
 class _FakeOrderRepository implements OrderRepository {
