@@ -18,4 +18,6 @@ abstract class AuthRemoteDataSource {
   );
   Future<RefreshTokenResponseDto> refreshToken(String refreshToken);
   Future<void> logout(String refreshToken);
+  Future<void> requestPasswordReset(String email);
+  Future<void> resetPassword(String token, String newPassword);
 }

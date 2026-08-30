@@ -67,6 +67,58 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('REFUNDS'), findsOneWidget);
   });
+
+  testWidgets('guests can open the password recovery route', (tester) async {
+    final router = createAppRouter(
+      authNotifier: _FakeAuthNotifier(),
+      config: const AppRouterConfig(initialLocation: '/forgot-password'),
+      pages: const _TestPages(),
+    );
+    addTearDown(router.dispose);
+
+    await pumpTestRouter(tester, router: router);
+    await tester.pumpAndSettle();
+
+    expect(find.text('FORGOT PASSWORD'), findsOneWidget);
+  });
+
+  testWidgets('guests can open the password reset route with a token', (
+    tester,
+  ) async {
+    final router = createAppRouter(
+      authNotifier: _FakeAuthNotifier(),
+      config: const AppRouterConfig(
+        initialLocation:
+            '/reset-password?token=abcdefghijklmnopqrstuvwxyzABCDEFGH',
+      ),
+      pages: const _TestPages(),
+    );
+    addTearDown(router.dispose);
+
+    await pumpTestRouter(tester, router: router);
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const Key('reset_password_new_password')),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('authenticated users can open client capability pages', (tester) async {
+    final router = createAppRouter(
+      authNotifier: _FakeAuthNotifier(authenticated: true),
+      config: const AppRouterConfig(initialLocation: '/entitlements'),
+    );
+    addTearDown(router.dispose);
+
+    await pumpTestRouter(tester, router: router);
+    await tester.pumpAndSettle();
+    expect(find.text('Entitlement unavailable'), findsOneWidget);
+
+    router.go('/support');
+    await tester.pumpAndSettle();
+    expect(find.text('Support unavailable'), findsOneWidget);
+  });
 }
 
 class _FakeAuthNotifier extends ChangeNotifier implements IAuthNotifier {
@@ -94,6 +146,19 @@ class _TestPages extends AppRouterPages {
 
   @override
   Widget login() => _page('LOGIN');
+
+  @override
+  Widget forgotPassword() => _page('FORGOT PASSWORD');
+
+  @override
+  Widget resetPassword(String token) => Scaffold(
+    body: Center(
+      child: SizedBox(
+        key: const Key('reset_password_new_password'),
+        child: Text('RESET PASSWORD ${token.isEmpty ? 'MISSING' : 'READY'}'),
+      ),
+    ),
+  );
 
   @override
   Widget home() => _page('HOME');

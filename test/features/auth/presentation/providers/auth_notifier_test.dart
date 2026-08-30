@@ -440,6 +440,19 @@ class _FakeAuthRepository implements AuthRepository {
     lastSocialLoginParams = params;
     return socialLoginResult;
   }
+
+  @override
+  Future<Either<Failure, void>> requestPasswordReset(String email) async {
+    return const Right(null);
+  }
+
+  @override
+  Future<Either<Failure, void>> resetPassword(
+    String token,
+    String newPassword,
+  ) async {
+    return const Right(null);
+  }
 }
 
 class _FakeTokenStorageRepository implements TokenStorageRepository {

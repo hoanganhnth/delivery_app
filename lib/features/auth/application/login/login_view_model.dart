@@ -44,6 +44,8 @@ class LoginViewModel extends Notifier<LoginViewState> {
         );
       case LoginPasswordVisibilityToggled():
         state = state.copyWith(obscurePassword: !state.obscurePassword);
+      case LoginForgotPasswordRequested():
+        _emit(const LoginNavigateToForgotPassword());
       case LoginSubmitted():
         await _submit();
       case LoginGoogleRequested():

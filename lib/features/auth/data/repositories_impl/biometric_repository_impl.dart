@@ -18,10 +18,8 @@ class BiometricRepositoryImpl implements BiometricRepository {
     try {
       final result = await localDataSource.canCheckBiometrics();
       return right(result);
-    } on Exception catch (e) {
-      return left(mapExceptionToFailure(e));
     } catch (e) {
-      return left(const CacheFailure('Unexpected error occurred'));
+      return left(mapExceptionToFailure(e));
     }
   }
 
@@ -30,10 +28,8 @@ class BiometricRepositoryImpl implements BiometricRepository {
     try {
       final result = await localDataSource.getAvailableBiometrics();
       return right(result);
-    } on Exception catch (e) {
-      return left(mapExceptionToFailure(e));
     } catch (e) {
-      return left(const CacheFailure('Unexpected error occurred'));
+      return left(mapExceptionToFailure(e));
     }
   }
 
@@ -42,10 +38,8 @@ class BiometricRepositoryImpl implements BiometricRepository {
     try {
       final result = await localDataSource.authenticate(reason);
       return right(result);
-    } on Exception catch (e) {
-      return left(mapExceptionToFailure(e));
     } catch (e) {
-      return left(const CacheFailure('Biometric authentication failed'));
+      return left(mapExceptionToFailure(e));
     }
   }
 
@@ -60,10 +54,8 @@ class BiometricRepositoryImpl implements BiometricRepository {
         refreshToken: refreshToken,
       );
       return right(null);
-    } on Exception catch (e) {
-      return left(mapExceptionToFailure(e));
     } catch (e) {
-      return left(const CacheFailure('Failed to save auth session'));
+      return left(mapExceptionToFailure(e));
     }
   }
 
@@ -72,10 +64,8 @@ class BiometricRepositoryImpl implements BiometricRepository {
     try {
       final result = await localDataSource.getAuthSession();
       return right(result?.toEntity());
-    } on Exception catch (e) {
-      return left(mapExceptionToFailure(e));
     } catch (e) {
-      return left(const CacheFailure('Failed to get auth session'));
+      return left(mapExceptionToFailure(e));
     }
   }
 
@@ -84,10 +74,8 @@ class BiometricRepositoryImpl implements BiometricRepository {
     try {
       await localDataSource.clearSession();
       return right(null);
-    } on Exception catch (e) {
-      return left(mapExceptionToFailure(e));
     } catch (e) {
-      return left(const CacheFailure('Failed to clear auth session'));
+      return left(mapExceptionToFailure(e));
     }
   }
 
@@ -96,10 +84,8 @@ class BiometricRepositoryImpl implements BiometricRepository {
     try {
       final result = await localDataSource.isBiometricEnabled();
       return right(result);
-    } on Exception catch (e) {
-      return left(mapExceptionToFailure(e));
     } catch (e) {
-      return left(const CacheFailure('Failed to check biometric status'));
+      return left(mapExceptionToFailure(e));
     }
   }
 
@@ -108,10 +94,8 @@ class BiometricRepositoryImpl implements BiometricRepository {
     try {
       await localDataSource.setBiometricEnabled(enabled);
       return right(null);
-    } on Exception catch (e) {
-      return left(mapExceptionToFailure(e));
     } catch (e) {
-      return left(const CacheFailure('Failed to set biometric status'));
+      return left(mapExceptionToFailure(e));
     }
   }
 }

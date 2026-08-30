@@ -18,6 +18,13 @@ final class LoginNavigateToRegister extends LoginEffect {
   List<Object?> get props => const [];
 }
 
+final class LoginNavigateToForgotPassword extends LoginEffect {
+  const LoginNavigateToForgotPassword();
+
+  @override
+  List<Object?> get props => const [];
+}
+
 final class LoginShowError extends LoginEffect {
   const LoginShowError(this.message);
 

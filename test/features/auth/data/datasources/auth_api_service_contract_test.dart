@@ -166,4 +166,31 @@ void main() {
     expect(refreshed.data?.refreshToken, 'rotated-refresh-token');
     expect(loggedOut.status, 1);
   });
+
+  test(
+    'uses public password recovery routes with exact request bodies',
+    () async {
+      final forgotBody = {'email': 'customer@test.dev'};
+      final resetBody = {
+        'token': 'abcdefghijklmnopqrstuvwxyzABCDEFGH',
+        'newPassword': 'ChangedPassword1!',
+      };
+      adapter.onPost(
+        '/auth/forgot-password',
+        (server) => server.reply(202, _response(null)),
+        data: forgotBody,
+      );
+      adapter.onPost(
+        '/auth/reset-password',
+        (server) => server.reply(200, _response(null)),
+        data: resetBody,
+      );
+
+      final forgot = await service.requestPasswordReset(forgotBody);
+      final reset = await service.resetPassword(resetBody);
+
+      expect(forgot.status, 1);
+      expect(reset.status, 1);
+    },
+  );
 }

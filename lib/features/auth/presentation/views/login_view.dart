@@ -111,8 +111,9 @@ class _LoginViewState extends State<LoginView> {
                               strings,
                               widget.state.emailError,
                             ),
-                            onChanged: (value) =>
-                                widget.onIntent(LoginEmailChanged(value)),
+                            onChanged:
+                                (value) =>
+                                    widget.onIntent(LoginEmailChanged(value)),
                           ),
                           const SizedBox(height: 24),
                           StitchTextField(
@@ -127,23 +128,40 @@ class _LoginViewState extends State<LoginView> {
                               strings,
                               widget.state.passwordError,
                             ),
-                            onChanged: (value) =>
-                                widget.onIntent(LoginPasswordChanged(value)),
+                            onChanged:
+                                (value) => widget.onIntent(
+                                  LoginPasswordChanged(value),
+                                ),
                             suffixIcon: IconButton(
-                              tooltip: widget.state.obscurePassword
-                                  ? 'Show password'
-                                  : 'Hide password',
+                              tooltip:
+                                  widget.state.obscurePassword
+                                      ? 'Show password'
+                                      : 'Hide password',
                               icon: Icon(
                                 widget.state.obscurePassword
                                     ? Icons.visibility_outlined
                                     : Icons.visibility_off_outlined,
                                 color: scheme.secondary,
                               ),
-                              onPressed: widget.state.isSubmitting
-                                  ? null
-                                  : () => widget.onIntent(
-                                      const LoginPasswordVisibilityToggled(),
-                                    ),
+                              onPressed:
+                                  widget.state.isSubmitting
+                                      ? null
+                                      : () => widget.onIntent(
+                                        const LoginPasswordVisibilityToggled(),
+                                      ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              key: const Key('forgot_password_button'),
+                              onPressed:
+                                  widget.state.isSubmitting
+                                      ? null
+                                      : () => widget.onIntent(
+                                        const LoginForgotPasswordRequested(),
+                                      ),
+                              child: Text(strings.forgotPassword),
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -151,30 +169,34 @@ class _LoginViewState extends State<LoginView> {
                             height: 56,
                             child: ElevatedButton(
                               key: const Key('login_button'),
-                              onPressed: widget.state.isSubmitting
-                                  ? null
-                                  : () =>
-                                        widget.onIntent(const LoginSubmitted()),
-                              child: widget.state.isSubmitting
-                                  ? const SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
+                              onPressed:
+                                  widget.state.isSubmitting
+                                      ? null
+                                      : () => widget.onIntent(
+                                        const LoginSubmitted(),
                                       ),
-                                    )
-                                  : Text(strings.signIn),
+                              child:
+                                  widget.state.isSubmitting
+                                      ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                      : Text(strings.signIn),
                             ),
                           ),
                           const SizedBox(height: 24),
                           SizedBox(
                             height: 56,
                             child: OutlinedButton.icon(
-                              onPressed: widget.state.isSubmitting
-                                  ? null
-                                  : () => widget.onIntent(
-                                      const LoginGoogleRequested(),
-                                    ),
+                              onPressed:
+                                  widget.state.isSubmitting
+                                      ? null
+                                      : () => widget.onIntent(
+                                        const LoginGoogleRequested(),
+                                      ),
                               icon: const Icon(
                                 Icons.g_mobiledata,
                                 size: 32,
@@ -196,11 +218,12 @@ class _LoginViewState extends State<LoginView> {
                                   ),
                                 ),
                                 TextButton(
-                                  onPressed: widget.state.isSubmitting
-                                      ? null
-                                      : () => widget.onIntent(
-                                          const LoginRegisterRequested(),
-                                        ),
+                                  onPressed:
+                                      widget.state.isSubmitting
+                                          ? null
+                                          : () => widget.onIntent(
+                                            const LoginRegisterRequested(),
+                                          ),
                                   child: Text(strings.register),
                                 ),
                               ],

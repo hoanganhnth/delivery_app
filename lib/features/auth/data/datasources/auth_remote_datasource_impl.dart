@@ -47,6 +47,16 @@ abstract class AuthApiService {
 
   @POST(ApiConstants.logout)
   Future<BaseResponseDto<void>> logout(@Body() Map<String, String> body);
+
+  @POST(ApiConstants.forgotPassword)
+  Future<BaseResponseDto<void>> requestPasswordReset(
+    @Body() Map<String, String> body,
+  );
+
+  @POST(ApiConstants.resetPassword)
+  Future<BaseResponseDto<void>> resetPassword(
+    @Body() Map<String, String> body,
+  );
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -171,6 +181,33 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } catch (_) {
       AppLogger.e('Unexpected auth session revocation error');
       throw Exception('Unexpected auth session revocation error');
+    }
+  }
+
+  @override
+  Future<void> requestPasswordReset(String email) async {
+    try {
+      final response = await _apiService.requestPasswordReset({'email': email});
+      if (!response.isSuccess) throw Exception(response.message);
+    } on DioException catch (e) {
+      throw DioExceptionHandler.mapDioExceptionToException(e);
+    } catch (_) {
+      throw Exception('Password reset request failed');
+    }
+  }
+
+  @override
+  Future<void> resetPassword(String token, String newPassword) async {
+    try {
+      final response = await _apiService.resetPassword({
+        'token': token,
+        'newPassword': newPassword,
+      });
+      if (!response.isSuccess) throw Exception(response.message);
+    } on DioException catch (e) {
+      throw DioExceptionHandler.mapDioExceptionToException(e);
+    } catch (_) {
+      throw Exception('Password reset failed');
     }
   }
 }

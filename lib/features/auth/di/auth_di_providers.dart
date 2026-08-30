@@ -10,6 +10,7 @@ import 'package:delivery_app/features/auth/domain/usecases/register_usecase.dart
 import 'package:delivery_app/features/auth/domain/usecases/refresh_token_usecase.dart';
 import 'package:delivery_app/features/auth/domain/usecases/social_login_usecase.dart';
 import 'package:delivery_app/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:delivery_app/features/auth/domain/usecases/password_recovery_usecases.dart';
 
 part 'auth_di_providers.g.dart';
 
@@ -66,4 +67,14 @@ SocialLoginUseCase socialLoginUseCase(Ref ref) {
 LogoutUseCase logoutUseCase(Ref ref) {
   final repository = ref.watch(authRepositoryProvider);
   return LogoutUseCase(repository);
+}
+
+@Riverpod(keepAlive: true)
+RequestPasswordResetUseCase requestPasswordResetUseCase(Ref ref) {
+  return RequestPasswordResetUseCase(ref.watch(authRepositoryProvider));
+}
+
+@Riverpod(keepAlive: true)
+ResetPasswordUseCase resetPasswordUseCase(Ref ref) {
+  return ResetPasswordUseCase(ref.watch(authRepositoryProvider));
 }

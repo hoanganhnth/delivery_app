@@ -170,6 +170,26 @@ class FakeAuthRemoteDataSource implements AuthRemoteDataSource {
     }
   }
 
+  @override
+  Future<void> requestPasswordReset(String email) async {
+    if (_shouldThrowException) {
+      throw Exception('Network connection failed');
+    }
+    if (!_shouldReturnSuccess) {
+      throw Exception(_customErrorMessage ?? 'Password reset request failed');
+    }
+  }
+
+  @override
+  Future<void> resetPassword(String token, String newPassword) async {
+    if (_shouldThrowException) {
+      throw Exception('Network connection failed');
+    }
+    if (!_shouldReturnSuccess) {
+      throw Exception(_customErrorMessage ?? 'Password reset failed');
+    }
+  }
+
   // Helper methods for creating test data
   AuthResponseDto _createSuccessfulLoginResponse(String email) {
     return AuthResponseDto(
@@ -348,6 +368,26 @@ void main() {
           );
         },
       );
+    });
+
+    group('Password Recovery Operation', () {
+      test('accepts a successful password reset request', () async {
+        dataSource.setSuccessResponse();
+
+        await expectLater(
+          dataSource.requestPasswordReset('customer@example.com'),
+          completes,
+        );
+      });
+
+      test('surfaces reset failures from the remote data source', () async {
+        dataSource.setErrorResponse('Reset unavailable');
+
+        await expectLater(
+          dataSource.resetPassword('a' * 32, 'ChangedPassword1!'),
+          throwsA(isA<Exception>()),
+        );
+      });
     });
   });
 }

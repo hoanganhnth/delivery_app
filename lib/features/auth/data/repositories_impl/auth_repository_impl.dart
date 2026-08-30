@@ -38,12 +38,8 @@ class AuthRepositoryImpl implements AuthRepository {
       } else {
         return left(ServerFailure(authResponse.message));
       }
-    } on Exception catch (e) {
-      // AppLogger.e('Repository: Login failed', e);
-      return left(mapExceptionToFailure(e));
     } catch (e) {
-      // AppLogger.e('Repository: Unexpected error during login', e);
-      return left(const ServerFailure('Unexpected error occurred'));
+      return left(mapExceptionToFailure(e));
     }
   }
 
@@ -68,10 +64,8 @@ class AuthRepositoryImpl implements AuthRepository {
       } else {
         return left(ServerFailure(authResponse.message));
       }
-    } on Exception catch (e) {
-      return left(mapExceptionToFailure(e));
     } catch (e) {
-      return left(const ServerFailure('Unexpected error occurred'));
+      return left(mapExceptionToFailure(e));
     }
   }
 
@@ -117,10 +111,8 @@ class AuthRepositoryImpl implements AuthRepository {
           ),
         );
       }
-    } on Exception catch (e) {
-      return left(mapExceptionToFailure(e));
     } catch (e) {
-      return left(const ServerFailure('Unexpected error occurred'));
+      return left(mapExceptionToFailure(e));
     }
   }
 
@@ -188,12 +180,8 @@ class AuthRepositoryImpl implements AuthRepository {
       } else {
         return left(ServerFailure(refreshResponse.message));
       }
-    } on Exception catch (e) {
-      // AppLogger.e('Repository: Token refresh failed', e);
-      return left(mapExceptionToFailure(e));
     } catch (e) {
-      // AppLogger.e('Repository: Unexpected error during token refresh', e);
-      return left(const ServerFailure('Unexpected error occurred'));
+      return left(mapExceptionToFailure(e));
     }
   }
 
@@ -202,10 +190,31 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       await remoteDataSource.logout(refreshToken);
       return right(null);
-    } on Exception catch (e) {
+    } catch (e) {
       return left(mapExceptionToFailure(e));
-    } catch (_) {
-      return left(const ServerFailure('Unexpected error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> requestPasswordReset(String email) async {
+    try {
+      await remoteDataSource.requestPasswordReset(email);
+      return right(null);
+    } catch (e) {
+      return left(mapExceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> resetPassword(
+    String token,
+    String newPassword,
+  ) async {
+    try {
+      await remoteDataSource.resetPassword(token, newPassword);
+      return right(null);
+    } catch (e) {
+      return left(mapExceptionToFailure(e));
     }
   }
 }

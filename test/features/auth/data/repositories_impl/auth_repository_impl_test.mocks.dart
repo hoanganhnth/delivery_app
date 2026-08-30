@@ -154,4 +154,22 @@ class MockAuthRemoteDataSource extends _i1.Mock
             returnValueForMissingStub: _i4.Future<void>.value(),
           )
           as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> requestPasswordReset(String? email) =>
+      (super.noSuchMethod(
+            Invocation.method(#requestPasswordReset, [email]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> resetPassword(String? token, String? newPassword) =>
+      (super.noSuchMethod(
+            Invocation.method(#resetPassword, [token, newPassword]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 }

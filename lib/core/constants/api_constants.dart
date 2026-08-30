@@ -11,6 +11,8 @@ class ApiConstants {
   static const userRegistration = "/users/registrations";
   static const refreshToken = "$auth/refresh-token";
   static const logout = "$auth/logout";
+  static const forgotPassword = "$auth/forgot-password";
+  static const resetPassword = "$auth/reset-password";
   static const getProfile = "/users";
 
   static const getRestaurant = "/restaurants";

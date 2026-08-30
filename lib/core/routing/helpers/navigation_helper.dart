@@ -91,6 +91,18 @@ class NavigationHelper {
     context.push(AppRoutes.register);
   }
 
+  /// Push password recovery screen.
+  static void pushForgotPassword(BuildContext context) {
+    context.push(AppRoutes.forgotPassword);
+  }
+
+  /// Push password reset screen with the one-time token from the deep link.
+  static void pushResetPassword(BuildContext context, String token) {
+    context.push(
+      '${AppRoutes.resetPassword}?token=${Uri.encodeQueryComponent(token)}',
+    );
+  }
+
   /// Push profile screen
   static void pushProfile(BuildContext context) {
     context.push(AppRoutes.profile);
@@ -203,19 +215,21 @@ class NavigationHelper {
   }) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(content),
-        actions: actions.map((action) {
-          return TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              action.onPressed?.call();
-            },
-            child: Text(action.label),
-          );
-        }).toList(),
-      ),
+      builder:
+          (context) => AlertDialog(
+            title: Text(title),
+            content: Text(content),
+            actions:
+                actions.map((action) {
+                  return TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      action.onPressed?.call();
+                    },
+                    child: Text(action.label),
+                  );
+                }).toList(),
+          ),
     );
   }
 }
@@ -248,6 +262,9 @@ extension NavigationExtension on BuildContext {
       NavigationHelper.goToRestaurantDetails(this, restaurantId);
   void pushLogin() => NavigationHelper.pushLogin(this);
   void pushRegister() => NavigationHelper.pushRegister(this);
+  void pushForgotPassword() => NavigationHelper.pushForgotPassword(this);
+  void pushResetPassword(String token) =>
+      NavigationHelper.pushResetPassword(this, token);
   void pushProfile() => NavigationHelper.pushProfile(this);
   void pushSettings() => NavigationHelper.pushSettings(this);
   void pushDebugTools() => NavigationHelper.pushDebugTools(this);

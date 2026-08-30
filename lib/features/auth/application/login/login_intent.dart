@@ -18,6 +18,10 @@ final class LoginPasswordVisibilityToggled extends LoginIntent {
   const LoginPasswordVisibilityToggled();
 }
 
+final class LoginForgotPasswordRequested extends LoginIntent {
+  const LoginForgotPasswordRequested();
+}
+
 final class LoginSubmitted extends LoginIntent {
   const LoginSubmitted();
 }
