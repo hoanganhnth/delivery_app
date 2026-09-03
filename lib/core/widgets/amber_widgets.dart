@@ -1,8 +1,18 @@
 /// Core widgets barrel file
-/// 
+///
 /// Exports all generic, reusable UI components built for the Amber Hearth design system.
 /// Feature-specific widgets (like CartItems or RestaurantCards) are located in their respective feature folders.
 library;
+
+// Canonical token-driven primitives. Legacy Amber widgets remain exported
+// below while callers migrate incrementally.
+export '../design_system/components/app_button.dart';
+export '../design_system/components/app_feedback.dart';
+export '../design_system/components/app_fields.dart';
+export '../design_system/components/app_image.dart';
+export '../design_system/components/app_indicators.dart';
+export '../design_system/components/app_navigation.dart';
+export '../design_system/components/app_surface.dart';
 
 // Layout & Structure
 export 'layout/amber_bottom_nav_bar.dart';
