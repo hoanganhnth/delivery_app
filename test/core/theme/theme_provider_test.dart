@@ -144,6 +144,72 @@ void main() {
     await storage.migrationComplete;
     expect(writes, 2);
   });
+
+  test('explicit dark write supersedes a pending ocean migration', () async {
+    SharedPreferences.setMockInitialValues({
+      SharedPreferencesThemeStorage.themeKey: 'ocean',
+    });
+    final preferences = await SharedPreferences.getInstance();
+    var migrationWrites = 0;
+    final storage = SharedPreferencesThemeStorage(
+      preferences,
+      writePreference: (_, _) {
+        migrationWrites++;
+        return Future<bool>.error(StateError('disk unavailable'));
+      },
+    );
+
+    expect(storage.readTheme(), design.AppThemeType.light);
+    await storage.migrationComplete;
+
+    await storage.writeTheme(design.AppThemeType.dark);
+    expect(storage.readTheme(), design.AppThemeType.dark);
+    await storage.migrationComplete;
+    expect(migrationWrites, 1);
+    expect(
+      preferences.getString(SharedPreferencesThemeStorage.themeKey),
+      'dark',
+    );
+  });
+
+  test(
+    'explicit dark write immediately supersedes a failed pending ocean migration',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        SharedPreferencesThemeStorage.themeKey: 'ocean',
+      });
+      final preferences = await SharedPreferences.getInstance();
+      var migrationWrites = 0;
+      final storage = SharedPreferencesThemeStorage(
+        preferences,
+        writePreference: (key, value) async {
+          migrationWrites++;
+          await preferences.setString(key, value);
+          return false;
+        },
+      );
+
+      expect(storage.readTheme(), design.AppThemeType.light);
+      await storage.migrationComplete;
+      expect(migrationWrites, 1);
+      expect(
+        preferences.getString(SharedPreferencesThemeStorage.themeKey),
+        'light',
+      );
+
+      final writeTheme = storage.writeTheme(design.AppThemeType.dark);
+      expect(storage.readTheme(), design.AppThemeType.dark);
+      await writeTheme;
+
+      expect(storage.readTheme(), design.AppThemeType.dark);
+      await storage.migrationComplete;
+      expect(migrationWrites, 1);
+      expect(
+        preferences.getString(SharedPreferencesThemeStorage.themeKey),
+        'dark',
+      );
+    },
+  );
 }
 
 class _FakeThemeStorage implements ThemeStoragePort {

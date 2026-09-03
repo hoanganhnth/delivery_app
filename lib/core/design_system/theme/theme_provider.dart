@@ -28,6 +28,7 @@ class SharedPreferencesThemeStorage implements ThemeStoragePort {
   Future<void> _migrationComplete = Future<void>.value();
   bool _legacyThemeMigrationPending = false;
   bool _legacyThemeMigrationInFlight = false;
+  AppThemeType? _legacyMigrationThemeOverride;
 
   /// Completes after the latest legacy preference rewrite has settled.
   ///
@@ -38,6 +39,15 @@ class SharedPreferencesThemeStorage implements ThemeStoragePort {
 
   @override
   AppThemeType? readTheme() {
+    final explicitTheme = _legacyMigrationThemeOverride;
+    if (explicitTheme != null) {
+      if (_preferences.getString(themeKey) == explicitTheme.name) {
+        _legacyMigrationThemeOverride = null;
+      } else {
+        return explicitTheme;
+      }
+    }
+
     final stored = _preferences.getString(themeKey);
     if (stored == null) return null;
 
@@ -85,7 +95,23 @@ class SharedPreferencesThemeStorage implements ThemeStoragePort {
 
   @override
   Future<void> writeTheme(AppThemeType themeType) async {
+    final supersedesLegacyMigration =
+        _legacyThemeMigrationPending || _legacyThemeMigrationInFlight;
+    if (supersedesLegacyMigration) {
+      _legacyMigrationThemeOverride = themeType;
+    }
+
+    _legacyThemeMigrationPending = false;
+
+    // A current user choice supersedes legacy normalization. Wait for any
+    // already-started Light rewrite so the explicit preference is written last.
+    await _migrationComplete;
     await _preferences.setString(themeKey, themeType.name);
+
+    if (_legacyMigrationThemeOverride == themeType &&
+        _preferences.getString(themeKey) == themeType.name) {
+      _legacyMigrationThemeOverride = null;
+    }
   }
 }
 
