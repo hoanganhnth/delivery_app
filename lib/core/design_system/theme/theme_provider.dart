@@ -26,6 +26,8 @@ class SharedPreferencesThemeStorage implements ThemeStoragePort {
   final SharedPreferences _preferences;
   final ThemePreferenceWriter _writePreference;
   Future<void> _migrationComplete = Future<void>.value();
+  bool _legacyThemeMigrationPending = false;
+  bool _legacyThemeMigrationInFlight = false;
 
   /// Completes after the latest legacy preference rewrite has settled.
   ///
@@ -42,8 +44,11 @@ class SharedPreferencesThemeStorage implements ThemeStoragePort {
     // Ocean was removed from the customer theme set. Normalize the legacy
     // persisted value immediately so subsequent launches read canonical data.
     if (stored == 'ocean') {
-      _migrationComplete = _persistCanonicalLight();
-      unawaited(_migrationComplete);
+      _legacyThemeMigrationPending = true;
+    }
+
+    if (_legacyThemeMigrationPending) {
+      _startCanonicalLightMigration();
       return AppThemeType.light;
     }
 
@@ -53,12 +58,28 @@ class SharedPreferencesThemeStorage implements ThemeStoragePort {
     return null;
   }
 
+  void _startCanonicalLightMigration() {
+    if (_legacyThemeMigrationInFlight) return;
+
+    _legacyThemeMigrationInFlight = true;
+    _migrationComplete = _persistCanonicalLight();
+    unawaited(_migrationComplete);
+  }
+
   Future<void> _persistCanonicalLight() async {
     try {
-      await _writePreference(themeKey, AppThemeType.light.name);
+      final persisted = await _writePreference(
+        themeKey,
+        AppThemeType.light.name,
+      );
+      if (persisted) {
+        _legacyThemeMigrationPending = false;
+      }
     } catch (_) {
       // Persistence can fail independently of the visible theme. Future reads
       // still normalize `ocean` to Light and retry the canonical rewrite.
+    } finally {
+      _legacyThemeMigrationInFlight = false;
     }
   }
 

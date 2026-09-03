@@ -113,6 +113,37 @@ void main() {
     await storage.migrationComplete;
     expect(writes, 2);
   });
+
+  test('false ocean rewrite result remains pending and retries', () async {
+    SharedPreferences.setMockInitialValues({
+      SharedPreferencesThemeStorage.themeKey: 'ocean',
+    });
+    final preferences = await SharedPreferences.getInstance();
+    var writes = 0;
+    final storage = SharedPreferencesThemeStorage(
+      preferences,
+      writePreference: (key, value) async {
+        writes++;
+        await preferences.setString(key, value);
+        return writes > 1;
+      },
+    );
+
+    expect(storage.readTheme(), design.AppThemeType.light);
+    await storage.migrationComplete;
+    expect(
+      preferences.getString(SharedPreferencesThemeStorage.themeKey),
+      'light',
+    );
+
+    expect(storage.readTheme(), design.AppThemeType.light);
+    await storage.migrationComplete;
+    expect(writes, 2);
+
+    expect(storage.readTheme(), design.AppThemeType.light);
+    await storage.migrationComplete;
+    expect(writes, 2);
+  });
 }
 
 class _FakeThemeStorage implements ThemeStoragePort {
