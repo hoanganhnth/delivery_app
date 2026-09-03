@@ -130,3 +130,26 @@ hunks.
    baseline info diagnostics; Task 2 introduced no new analyzer diagnostics.
 3. This task gates the remaining rollout. It does not migrate other customer
    surfaces or change application capabilities, routing, or backend contracts.
+
+## Review fix — restore restaurant sticky-cart total
+
+Review-fix commit:
+`92e9eca7a7796950aff938488c22019681f02586`
+(`fix(ui): restore restaurant cart total`)
+
+The pilot migration retained `CatalogRestaurantCartButton.totalAmount` but
+dropped the value from the sticky cart CTA. The button now displays the total
+beside the item count when the cart is non-empty and includes both values in
+its semantic label. The empty state, callback behavior, `AppStickyAction`
+boundary, and `AppButton` primitive remain unchanged.
+
+TDD and focused validation:
+
+- RED: the focused restaurant widget test failed because
+  `Xem giỏ hàng (1) · 50000 ₫` was absent.
+- GREEN: all `3/3` restaurant-detail tests passed, including visible and
+  semantic-label assertions for the restored total.
+- The affected Restaurant Dark/English golden was regenerated, visually
+  inspected, and passed normal comparison (`1/1`).
+- Formatter reported the production component unchanged; `git diff --check`
+  and staged diff inspection passed.
