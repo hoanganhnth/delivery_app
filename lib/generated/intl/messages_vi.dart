@@ -46,11 +46,24 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(minutes) => "${minutes} phút trước";
 
-  static String m12(price) => "\$${price}";
+  static String m12(distinctCount, itemCount) =>
+      "${distinctCount} món · ${itemCount} sản phẩm";
 
-  static String m13(rating) => "${rating}";
+  static String m13(name) => "Thêm ${name} vào giỏ";
 
-  static String m14(message) => "Lỗi: ${message}";
+  static String m14(name) => "Ảnh của ${name}";
+
+  static String m15(name) => "Bớt một ${name}";
+
+  static String m16(count) => "Xem giỏ hàng, ${count} món";
+
+  static String m17(count) => "Xem giỏ hàng (${count})";
+
+  static String m18(price) => "\$${price}";
+
+  static String m19(rating) => "${rating}";
+
+  static String m20(message) => "Lỗi: ${message}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -519,6 +532,104 @@ class MessageLookup extends MessageLookupByLibrary {
       "Phương thức thanh toán",
     ),
     "pending": MessageLookupByLibrary.simpleMessage("Chờ xác nhận"),
+    "pilotCheckoutCartEmpty": MessageLookupByLibrary.simpleMessage(
+      "Giỏ hàng trống",
+    ),
+    "pilotCheckoutCartEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "Hãy thêm ít nhất một món hàng để tiếp tục.",
+    ),
+    "pilotCheckoutCash": MessageLookupByLibrary.simpleMessage("Tiền mặt (COD)"),
+    "pilotCheckoutCashMessage": MessageLookupByLibrary.simpleMessage(
+      "Thanh toán khi nhận hàng",
+    ),
+    "pilotCheckoutClose": MessageLookupByLibrary.simpleMessage(
+      "Đóng thanh toán",
+    ),
+    "pilotCheckoutDefault": MessageLookupByLibrary.simpleMessage("Mặc định"),
+    "pilotCheckoutLoadError": MessageLookupByLibrary.simpleMessage(
+      "Không thể tải thông tin thanh toán",
+    ),
+    "pilotCheckoutNotesHint": MessageLookupByLibrary.simpleMessage(
+      "Thêm ghi chú giao hàng hoặc chế biến món",
+    ),
+    "pilotCheckoutPlaceOrder": MessageLookupByLibrary.simpleMessage("Đặt hàng"),
+    "pilotCheckoutRestaurant": MessageLookupByLibrary.simpleMessage("Nhà hàng"),
+    "pilotCheckoutRestaurantItems": m12,
+    "pilotCheckoutSelectAddress": MessageLookupByLibrary.simpleMessage(
+      "Chọn địa chỉ giao hàng",
+    ),
+    "pilotCheckoutSelectAddressMessage": MessageLookupByLibrary.simpleMessage(
+      "Chọn địa chỉ để tính phí giao hàng.",
+    ),
+    "pilotCheckoutVoucher": MessageLookupByLibrary.simpleMessage("Voucher"),
+    "pilotCheckoutVoucherAuto": MessageLookupByLibrary.simpleMessage("Tự động"),
+    "pilotCheckoutVoucherAutoMessage": MessageLookupByLibrary.simpleMessage(
+      "Hệ thống chọn tổ hợp có lợi nhất, tối đa 3 voucher.",
+    ),
+    "pilotCheckoutVoucherEmpty": MessageLookupByLibrary.simpleMessage(
+      "Chưa có voucher phù hợp với nhà hàng này.",
+    ),
+    "pilotCheckoutVoucherError": MessageLookupByLibrary.simpleMessage(
+      "Không thể tải ví voucher.",
+    ),
+    "pilotCheckoutVoucherFlashSale": MessageLookupByLibrary.simpleMessage(
+      "Voucher không dùng chung với Flash Sale.",
+    ),
+    "pilotCheckoutVoucherHelper": MessageLookupByLibrary.simpleMessage(
+      "Nhấn Enter để lưu voucher",
+    ),
+    "pilotCheckoutVoucherInput": MessageLookupByLibrary.simpleMessage(
+      "Lưu mã voucher",
+    ),
+    "pilotCheckoutVoucherManual": MessageLookupByLibrary.simpleMessage(
+      "Tự chọn",
+    ),
+    "pilotCheckoutVoucherSingleMessage": MessageLookupByLibrary.simpleMessage(
+      "Chọn một voucher cho đơn hàng này.",
+    ),
+    "pilotHomeDeliverTo": MessageLookupByLibrary.simpleMessage("Giao đến"),
+    "pilotHomeFeatured": MessageLookupByLibrary.simpleMessage(
+      "Nhà hàng nổi bật",
+    ),
+    "pilotHomeNoRestaurants": MessageLookupByLibrary.simpleMessage(
+      "Chưa có nhà hàng gần bạn",
+    ),
+    "pilotHomeNoRestaurantsMessage": MessageLookupByLibrary.simpleMessage(
+      "Hãy thử lại sau hoặc khám phá khu vực khác.",
+    ),
+    "pilotHomeOpenCart": MessageLookupByLibrary.simpleMessage("Mở giỏ hàng"),
+    "pilotHomeOpenNotifications": MessageLookupByLibrary.simpleMessage(
+      "Mở thông báo",
+    ),
+    "pilotHomeSearchHint": MessageLookupByLibrary.simpleMessage(
+      "Bạn muốn ăn gì hôm nay?",
+    ),
+    "pilotHomeSeeAll": MessageLookupByLibrary.simpleMessage("Xem tất cả"),
+    "pilotHomeSelectAddress": MessageLookupByLibrary.simpleMessage(
+      "Chọn địa chỉ giao hàng",
+    ),
+    "pilotRestaurantAddItem": m13,
+    "pilotRestaurantClosed": MessageLookupByLibrary.simpleMessage(
+      "Đã đóng cửa",
+    ),
+    "pilotRestaurantDetailsTitle": MessageLookupByLibrary.simpleMessage(
+      "Chi tiết nhà hàng",
+    ),
+    "pilotRestaurantEmptyCart": MessageLookupByLibrary.simpleMessage(
+      "Chưa có món trong giỏ",
+    ),
+    "pilotRestaurantImage": m14,
+    "pilotRestaurantMenu": MessageLookupByLibrary.simpleMessage("Thực đơn"),
+    "pilotRestaurantNotFound": MessageLookupByLibrary.simpleMessage(
+      "Không tìm thấy nhà hàng",
+    ),
+    "pilotRestaurantOpen": MessageLookupByLibrary.simpleMessage("Đang mở cửa"),
+    "pilotRestaurantOpeningUnknown": MessageLookupByLibrary.simpleMessage(
+      "Giờ mở cửa chưa được cập nhật",
+    ),
+    "pilotRestaurantRemoveItem": m15,
+    "pilotRestaurantViewCart": m16,
+    "pilotRestaurantViewCartLabel": m17,
     "pinnedUppercase": MessageLookupByLibrary.simpleMessage("ĐANG GHIM"),
     "pizza": MessageLookupByLibrary.simpleMessage("Pizza"),
     "pleaseSelectAddress": MessageLookupByLibrary.simpleMessage(
@@ -526,7 +637,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "popularNearYou": MessageLookupByLibrary.simpleMessage("Phổ Biến Gần Bạn"),
     "preparing": MessageLookupByLibrary.simpleMessage("Đang chuẩn bị"),
-    "price": m12,
+    "price": m18,
     "privacyPolicy": MessageLookupByLibrary.simpleMessage("Chính sách Bảo mật"),
     "proceedToCheckout": MessageLookupByLibrary.simpleMessage(
       "Tiến hành thanh toán",
@@ -581,7 +692,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "rateShipperTitle": MessageLookupByLibrary.simpleMessage(
       "Đánh giá Shipper",
     ),
-    "rating": m13,
+    "rating": m19,
     "ratingError": MessageLookupByLibrary.simpleMessage("Có lỗi xảy ra"),
     "ratingHint": MessageLookupByLibrary.simpleMessage(
       "Nhận xét của bạn (không bắt buộc)",
@@ -601,7 +712,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "restaurantsAllTitle": MessageLookupByLibrary.simpleMessage(
       "Tất cả nhà hàng",
     ),
-    "restaurantsError": m14,
+    "restaurantsError": m20,
     "restaurantsFilterAll": MessageLookupByLibrary.simpleMessage("Tất cả"),
     "restaurantsFilterFastDelivery": MessageLookupByLibrary.simpleMessage(
       "Giao nhanh",

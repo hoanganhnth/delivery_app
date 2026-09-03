@@ -9,6 +9,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.title,
     this.onBack,
+    this.leadingKey,
     this.backTooltip,
     this.close = false,
     this.actions = const [],
@@ -16,6 +17,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
 
   final String title;
   final VoidCallback? onBack;
+  final Key? leadingKey;
   final String? backTooltip;
   final bool close;
   final List<Widget> actions;
@@ -29,6 +31,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
     leading: onBack == null
         ? null
         : AppIconButton(
+            key: leadingKey,
             tooltip:
                 backTooltip ??
                 (close

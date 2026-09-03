@@ -3493,6 +3493,441 @@ class S {
       args: [message],
     );
   }
+
+  /// `Deliver to`
+  String get pilotHomeDeliverTo {
+    return Intl.message(
+      'Deliver to',
+      name: 'pilotHomeDeliverTo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose a delivery address`
+  String get pilotHomeSelectAddress {
+    return Intl.message(
+      'Choose a delivery address',
+      name: 'pilotHomeSelectAddress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What are you craving today?`
+  String get pilotHomeSearchHint {
+    return Intl.message(
+      'What are you craving today?',
+      name: 'pilotHomeSearchHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Featured restaurants`
+  String get pilotHomeFeatured {
+    return Intl.message(
+      'Featured restaurants',
+      name: 'pilotHomeFeatured',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `See all`
+  String get pilotHomeSeeAll {
+    return Intl.message('See all', name: 'pilotHomeSeeAll', desc: '', args: []);
+  }
+
+  /// `Open notifications`
+  String get pilotHomeOpenNotifications {
+    return Intl.message(
+      'Open notifications',
+      name: 'pilotHomeOpenNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open cart`
+  String get pilotHomeOpenCart {
+    return Intl.message(
+      'Open cart',
+      name: 'pilotHomeOpenCart',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No restaurants nearby`
+  String get pilotHomeNoRestaurants {
+    return Intl.message(
+      'No restaurants nearby',
+      name: 'pilotHomeNoRestaurants',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Try again later or explore another area.`
+  String get pilotHomeNoRestaurantsMessage {
+    return Intl.message(
+      'Try again later or explore another area.',
+      name: 'pilotHomeNoRestaurantsMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restaurant details`
+  String get pilotRestaurantDetailsTitle {
+    return Intl.message(
+      'Restaurant details',
+      name: 'pilotRestaurantDetailsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restaurant not found`
+  String get pilotRestaurantNotFound {
+    return Intl.message(
+      'Restaurant not found',
+      name: 'pilotRestaurantNotFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Menu`
+  String get pilotRestaurantMenu {
+    return Intl.message(
+      'Menu',
+      name: 'pilotRestaurantMenu',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Opening hours unavailable`
+  String get pilotRestaurantOpeningUnknown {
+    return Intl.message(
+      'Opening hours unavailable',
+      name: 'pilotRestaurantOpeningUnknown',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open now`
+  String get pilotRestaurantOpen {
+    return Intl.message(
+      'Open now',
+      name: 'pilotRestaurantOpen',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Closed`
+  String get pilotRestaurantClosed {
+    return Intl.message(
+      'Closed',
+      name: 'pilotRestaurantClosed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Photo of {name}`
+  String pilotRestaurantImage(String name) {
+    return Intl.message(
+      'Photo of $name',
+      name: 'pilotRestaurantImage',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Add {name} to cart`
+  String pilotRestaurantAddItem(String name) {
+    return Intl.message(
+      'Add $name to cart',
+      name: 'pilotRestaurantAddItem',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Remove one {name}`
+  String pilotRestaurantRemoveItem(String name) {
+    return Intl.message(
+      'Remove one $name',
+      name: 'pilotRestaurantRemoveItem',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Your cart is empty`
+  String get pilotRestaurantEmptyCart {
+    return Intl.message(
+      'Your cart is empty',
+      name: 'pilotRestaurantEmptyCart',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View cart, {count} items`
+  String pilotRestaurantViewCart(int count) {
+    return Intl.message(
+      'View cart, $count items',
+      name: 'pilotRestaurantViewCart',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `View cart ({count})`
+  String pilotRestaurantViewCartLabel(int count) {
+    return Intl.message(
+      'View cart ($count)',
+      name: 'pilotRestaurantViewCartLabel',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Close checkout`
+  String get pilotCheckoutClose {
+    return Intl.message(
+      'Close checkout',
+      name: 'pilotCheckoutClose',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restaurant`
+  String get pilotCheckoutRestaurant {
+    return Intl.message(
+      'Restaurant',
+      name: 'pilotCheckoutRestaurant',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{distinctCount} dishes · {itemCount} items`
+  String pilotCheckoutRestaurantItems(int distinctCount, int itemCount) {
+    return Intl.message(
+      '$distinctCount dishes · $itemCount items',
+      name: 'pilotCheckoutRestaurantItems',
+      desc: '',
+      args: [distinctCount, itemCount],
+    );
+  }
+
+  /// `Unable to load checkout details`
+  String get pilotCheckoutLoadError {
+    return Intl.message(
+      'Unable to load checkout details',
+      name: 'pilotCheckoutLoadError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your cart is empty`
+  String get pilotCheckoutCartEmpty {
+    return Intl.message(
+      'Your cart is empty',
+      name: 'pilotCheckoutCartEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add at least one item before continuing.`
+  String get pilotCheckoutCartEmptyMessage {
+    return Intl.message(
+      'Add at least one item before continuing.',
+      name: 'pilotCheckoutCartEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose a delivery address`
+  String get pilotCheckoutSelectAddress {
+    return Intl.message(
+      'Choose a delivery address',
+      name: 'pilotCheckoutSelectAddress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose an address to calculate the delivery fee.`
+  String get pilotCheckoutSelectAddressMessage {
+    return Intl.message(
+      'Choose an address to calculate the delivery fee.',
+      name: 'pilotCheckoutSelectAddressMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Default`
+  String get pilotCheckoutDefault {
+    return Intl.message(
+      'Default',
+      name: 'pilotCheckoutDefault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cash on delivery`
+  String get pilotCheckoutCash {
+    return Intl.message(
+      'Cash on delivery',
+      name: 'pilotCheckoutCash',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pay when your order arrives`
+  String get pilotCheckoutCashMessage {
+    return Intl.message(
+      'Pay when your order arrives',
+      name: 'pilotCheckoutCashMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Voucher`
+  String get pilotCheckoutVoucher {
+    return Intl.message(
+      'Voucher',
+      name: 'pilotCheckoutVoucher',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unable to load your voucher wallet.`
+  String get pilotCheckoutVoucherError {
+    return Intl.message(
+      'Unable to load your voucher wallet.',
+      name: 'pilotCheckoutVoucherError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save a voucher code`
+  String get pilotCheckoutVoucherInput {
+    return Intl.message(
+      'Save a voucher code',
+      name: 'pilotCheckoutVoucherInput',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Press Enter to save this voucher`
+  String get pilotCheckoutVoucherHelper {
+    return Intl.message(
+      'Press Enter to save this voucher',
+      name: 'pilotCheckoutVoucherHelper',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Automatic`
+  String get pilotCheckoutVoucherAuto {
+    return Intl.message(
+      'Automatic',
+      name: 'pilotCheckoutVoucherAuto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose manually`
+  String get pilotCheckoutVoucherManual {
+    return Intl.message(
+      'Choose manually',
+      name: 'pilotCheckoutVoucherManual',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We select the best combination of up to 3 vouchers.`
+  String get pilotCheckoutVoucherAutoMessage {
+    return Intl.message(
+      'We select the best combination of up to 3 vouchers.',
+      name: 'pilotCheckoutVoucherAutoMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose one voucher for this order.`
+  String get pilotCheckoutVoucherSingleMessage {
+    return Intl.message(
+      'Choose one voucher for this order.',
+      name: 'pilotCheckoutVoucherSingleMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No voucher currently applies to this restaurant.`
+  String get pilotCheckoutVoucherEmpty {
+    return Intl.message(
+      'No voucher currently applies to this restaurant.',
+      name: 'pilotCheckoutVoucherEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vouchers cannot be combined with Flash Sale.`
+  String get pilotCheckoutVoucherFlashSale {
+    return Intl.message(
+      'Vouchers cannot be combined with Flash Sale.',
+      name: 'pilotCheckoutVoucherFlashSale',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add delivery or food preparation notes`
+  String get pilotCheckoutNotesHint {
+    return Intl.message(
+      'Add delivery or food preparation notes',
+      name: 'pilotCheckoutNotesHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Place order`
+  String get pilotCheckoutPlaceOrder {
+    return Intl.message(
+      'Place order',
+      name: 'pilotCheckoutPlaceOrder',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

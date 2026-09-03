@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../design_system/design_system.dart';
+
 /// Amber Hearth style search bar
 ///
 /// Features:
@@ -48,18 +50,11 @@ class AmberSearchBar extends StatefulWidget {
 
 class _AmberSearchBarState extends State<AmberSearchBar> {
   late TextEditingController _controller;
-  final FocusNode _focusNode = FocusNode();
-  bool _isFocused = false;
 
   @override
   void initState() {
     super.initState();
     _controller = widget.controller ?? TextEditingController();
-    _focusNode.addListener(() {
-      setState(() {
-        _isFocused = _focusNode.hasFocus;
-      });
-    });
   }
 
   @override
@@ -67,112 +62,37 @@ class _AmberSearchBarState extends State<AmberSearchBar> {
     if (widget.controller == null) {
       _controller.dispose();
     }
-    _focusNode.dispose();
     super.dispose();
   }
 
   void _handleSearch() {
     widget.onSearch?.call(_controller.text);
-    _focusNode.unfocus();
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 56,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+    return Row(
+      children: [
+        Expanded(
+          child: AppSearchField(
+            controller: _controller,
+            hintText: widget.placeholder,
+            semanticLabel: widget.placeholder,
+            readOnly: widget.onTap != null,
+            onTap: widget.onTap,
+            onChanged: (value) {
+              widget.onChanged?.call(value);
+              setState(() {});
+            },
+            onSubmitted: (_) => _handleSearch(),
           ),
+        ),
+        if (widget.showButton) ...[
+          const SizedBox(width: AppSpacing.xs),
+          AppButton(label: widget.buttonText, onPressed: _handleSearch),
         ],
-        border: _isFocused
-            ? Border.all(
-                color: const Color(0xFFF49D25).withValues(alpha: 0.5),
-                width: 2,
-              )
-            : null,
-      ),
-      child: Row(
-        children: [
-          // Search icon
-          const Padding(
-            padding: EdgeInsets.only(left: 16),
-            child: Icon(Icons.search, color: Color(0xFFF49D25), size: 24),
-          ),
-
-          // Text field
-          Expanded(
-            child: TextField(
-              controller: _controller,
-              focusNode: _focusNode,
-              readOnly: widget.onTap != null,
-              onTap: widget.onTap,
-              onChanged: widget.onChanged,
-              onSubmitted: (value) => _handleSearch(),
-              style: const TextStyle(
-                fontFamily: 'Plus Jakarta Sans',
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                color: Color(0xFF1C160D),
-              ),
-              decoration: InputDecoration(
-                hintText: widget.placeholder,
-                hintStyle: TextStyle(
-                  fontFamily: 'Plus Jakarta Sans',
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF9C7A49).withValues(alpha: 0.5),
-                ),
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 16,
-                ),
-              ),
-            ),
-          ),
-
-          // Find button
-          if (widget.showButton)
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: GestureDetector(
-                onTap: _handleSearch,
-                child: Container(
-                  height: 40,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF49D25),
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFF49D25).withValues(alpha: 0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      widget.buttonText,
-                      style: const TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
+      ],
     );
   }
 }

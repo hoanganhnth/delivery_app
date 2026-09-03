@@ -1,9 +1,9 @@
+import 'package:delivery_app/core/design_system/design_system.dart';
+import 'package:delivery_app/features/catalog/application/catalog_home_intent.dart';
+import 'package:delivery_app/features/catalog/application/catalog_home_state.dart';
+import 'package:delivery_app/features/catalog/presentation/components/catalog_home_components.dart';
+import 'package:delivery_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:delivery_app/core/widgets/amber_widgets.dart';
-
-import '../../application/catalog_home_intent.dart';
-import '../../application/catalog_home_state.dart';
 
 /// Pure rendering for the catalog landing tab. Navigation and restaurant I/O
 /// are represented exclusively by [CatalogHomeIntent]s.
@@ -21,289 +21,46 @@ class CatalogHomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-
-    return SafeArea(
-      bottom: false,
-      child: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(child: _Header(onIntent: onIntent)),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(16.w, 8.w, 16.w, 16.w),
-              child: AmberSearchBar(
-                placeholder: 'Bạn muốn ăn gì hôm nay?',
-                showButton: false,
-                onTap: () => onIntent(const CatalogHomeSearchRequested()),
-              ),
+    final strings = S.of(context);
+    return Scaffold(
+      body: SafeArea(
+        bottom: false,
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: CatalogHomeHeader(onIntent: onIntent),
             ),
-          ),
-          if (flashSaleBanner != null)
-            SliverToBoxAdapter(child: flashSaleBanner),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 12.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Nhà hàng nổi bật',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () =>
-                        onIntent(const CatalogHomeAllRestaurantsRequested()),
-                    child: const Text('Xem tất cả'),
-                  ),
-                ],
-              ),
+            SliverToBoxAdapter(
+              child: CatalogHomeSearchLauncher(onIntent: onIntent),
             ),
-          ),
-          _RestaurantContent(state: state, onIntent: onIntent, scheme: scheme),
-          SliverToBoxAdapter(child: SizedBox(height: 140.w)),
-        ],
-      ),
-    );
-  }
-}
-
-class _Header extends StatelessWidget {
-  const _Header({required this.onIntent});
-
-  final ValueChanged<CatalogHomeIntent> onIntent;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16.w, 12.w, 16.w, 8.w),
-      child: Row(
-        children: [
-          Expanded(
-            child: InkWell(
-              onTap: () => onIntent(const CatalogHomeAddressRequested()),
-              borderRadius: BorderRadius.circular(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on,
-                        color: scheme.primary,
-                        size: 20.w,
-                      ),
-                      SizedBox(width: 4.w),
-                      Text(
-                        'Giao đến',
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          color: scheme.onSurfaceVariant,
-                        ),
-                      ),
-                      Icon(
-                        Icons.keyboard_arrow_down,
-                        color: scheme.onSurfaceVariant,
-                        size: 18.w,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 2.w),
-                  Text(
-                    'Chọn địa chỉ giao hàng',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+            if (flashSaleBanner != null)
+              SliverToBoxAdapter(child: flashSaleBanner),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.page,
+                AppSpacing.md,
+                AppSpacing.page,
+                AppSpacing.sm,
               ),
-            ),
-          ),
-          GlassActionButton(
-            icon: Icons.notifications_outlined,
-            onPressed: () =>
-                onIntent(const CatalogHomeNotificationsRequested()),
-          ),
-          SizedBox(width: 8.w),
-          GlassActionButton(
-            icon: Icons.shopping_cart_outlined,
-            onPressed: () => onIntent(const CatalogHomeCartRequested()),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _RestaurantContent extends StatelessWidget {
-  const _RestaurantContent({
-    required this.state,
-    required this.onIntent,
-    required this.scheme,
-  });
-
-  final CatalogHomeViewState state;
-  final ValueChanged<CatalogHomeIntent> onIntent;
-  final ColorScheme scheme;
-
-  @override
-  Widget build(BuildContext context) {
-    if (state.isLoading) {
-      return SliverToBoxAdapter(
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.all(32.w),
-            child: CircularProgressIndicator(color: scheme.primary),
-          ),
-        ),
-      );
-    }
-    if (state.hasError) {
-      return SliverToBoxAdapter(
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.all(32.w),
-            child: Column(
-              children: [
-                Icon(Icons.error_outline, color: scheme.error, size: 48.w),
-                SizedBox(height: 12.w),
-                Text(
-                  'Lỗi: ${state.errorMessage}',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(color: scheme.error),
-                  textAlign: TextAlign.center,
+              sliver: SliverToBoxAdapter(
+                child: AppSectionHeading(
+                  title: strings.pilotHomeFeatured,
+                  actionLabel: strings.pilotHomeSeeAll,
+                  onAction: () =>
+                      onIntent(const CatalogHomeAllRestaurantsRequested()),
                 ),
-              ],
+              ),
             ),
-          ),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
+              sliver: SliverToBoxAdapter(
+                child: CatalogRestaurantList(state: state, onIntent: onIntent),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 120)),
+          ],
         ),
-      );
-    }
-    if (state.restaurants.isEmpty) {
-      return SliverToBoxAdapter(
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.all(32.w),
-            child: Text(
-              'Không có nhà hàng nào',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
-            ),
-          ),
-        ),
-      );
-    }
-    return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      sliver: SliverList(
-        delegate: SliverChildBuilderDelegate((context, index) {
-          final restaurant = state.restaurants[index];
-          return Padding(
-            padding: EdgeInsets.only(bottom: 16.w),
-            child: _CatalogRestaurantCard(
-              name: restaurant.name,
-              imageUrl: restaurant.imageUrl,
-              rating: restaurant.rating,
-              deliveryTime: restaurant.deliveryTimeMinutes == null
-                  ? null
-                  : '${restaurant.deliveryTimeMinutes} phút',
-              category: restaurant.category,
-              distance: restaurant.distanceKm == null
-                  ? null
-                  : '${restaurant.distanceKm!.toStringAsFixed(1)} km',
-              deliveryFee: _deliveryFee(restaurant.deliveryFee),
-              isFreeDelivery: restaurant.deliveryFee == 0,
-              onTap: () =>
-                  onIntent(CatalogHomeRestaurantRequested(restaurant.id)),
-            ),
-          );
-        }, childCount: state.restaurants.length),
       ),
     );
   }
-
-  String? _deliveryFee(double? fee) {
-    if (fee == null) return null;
-    if (fee == 0) return 'Miễn phí giao hàng';
-    return '${fee.toStringAsFixed(0)}đ';
-  }
-}
-
-class _CatalogRestaurantCard extends StatelessWidget {
-  const _CatalogRestaurantCard({
-    required this.name,
-    this.imageUrl,
-    this.rating,
-    this.deliveryTime,
-    this.category,
-    this.distance,
-    this.deliveryFee,
-    this.isFreeDelivery = false,
-    required this.onTap,
-  });
-
-  final String name;
-  final String? imageUrl;
-  final double? rating;
-  final String? deliveryTime;
-  final String? category;
-  final String? distance;
-  final String? deliveryFee;
-  final bool isFreeDelivery;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) => Card(
-    clipBehavior: Clip.antiAlias,
-    child: InkWell(
-      onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (imageUrl != null)
-            Image.network(
-              imageUrl!,
-              height: 150,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            )
-          else
-            const SizedBox(
-              height: 80,
-              child: Center(child: Icon(Icons.restaurant, size: 48)),
-            ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name, style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 4),
-                Text(
-                  [
-                    if (rating != null) '★ ${rating!.toStringAsFixed(1)}',
-                    if (deliveryTime != null) deliveryTime!,
-                    if (category != null) category!,
-                    if (distance != null) distance!,
-                    if (deliveryFee != null) deliveryFee!,
-                  ].join(' • '),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
 }

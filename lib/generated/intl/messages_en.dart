@@ -46,11 +46,24 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(minutes) => "${minutes} minutes ago";
 
-  static String m12(price) => "\$${price}";
+  static String m12(distinctCount, itemCount) =>
+      "${distinctCount} dishes · ${itemCount} items";
 
-  static String m13(rating) => "${rating}";
+  static String m13(name) => "Add ${name} to cart";
 
-  static String m14(message) => "Error: ${message}";
+  static String m14(name) => "Photo of ${name}";
+
+  static String m15(name) => "Remove one ${name}";
+
+  static String m16(count) => "View cart, ${count} items";
+
+  static String m17(count) => "View cart (${count})";
+
+  static String m18(price) => "\$${price}";
+
+  static String m19(rating) => "${rating}";
+
+  static String m20(message) => "Error: ${message}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -527,6 +540,110 @@ class MessageLookup extends MessageLookupByLibrary {
     "paymentInfo": MessageLookupByLibrary.simpleMessage("Payment Information"),
     "paymentMethodText": MessageLookupByLibrary.simpleMessage("Payment Method"),
     "pending": MessageLookupByLibrary.simpleMessage("Pending"),
+    "pilotCheckoutCartEmpty": MessageLookupByLibrary.simpleMessage(
+      "Your cart is empty",
+    ),
+    "pilotCheckoutCartEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "Add at least one item before continuing.",
+    ),
+    "pilotCheckoutCash": MessageLookupByLibrary.simpleMessage(
+      "Cash on delivery",
+    ),
+    "pilotCheckoutCashMessage": MessageLookupByLibrary.simpleMessage(
+      "Pay when your order arrives",
+    ),
+    "pilotCheckoutClose": MessageLookupByLibrary.simpleMessage(
+      "Close checkout",
+    ),
+    "pilotCheckoutDefault": MessageLookupByLibrary.simpleMessage("Default"),
+    "pilotCheckoutLoadError": MessageLookupByLibrary.simpleMessage(
+      "Unable to load checkout details",
+    ),
+    "pilotCheckoutNotesHint": MessageLookupByLibrary.simpleMessage(
+      "Add delivery or food preparation notes",
+    ),
+    "pilotCheckoutPlaceOrder": MessageLookupByLibrary.simpleMessage(
+      "Place order",
+    ),
+    "pilotCheckoutRestaurant": MessageLookupByLibrary.simpleMessage(
+      "Restaurant",
+    ),
+    "pilotCheckoutRestaurantItems": m12,
+    "pilotCheckoutSelectAddress": MessageLookupByLibrary.simpleMessage(
+      "Choose a delivery address",
+    ),
+    "pilotCheckoutSelectAddressMessage": MessageLookupByLibrary.simpleMessage(
+      "Choose an address to calculate the delivery fee.",
+    ),
+    "pilotCheckoutVoucher": MessageLookupByLibrary.simpleMessage("Voucher"),
+    "pilotCheckoutVoucherAuto": MessageLookupByLibrary.simpleMessage(
+      "Automatic",
+    ),
+    "pilotCheckoutVoucherAutoMessage": MessageLookupByLibrary.simpleMessage(
+      "We select the best combination of up to 3 vouchers.",
+    ),
+    "pilotCheckoutVoucherEmpty": MessageLookupByLibrary.simpleMessage(
+      "No voucher currently applies to this restaurant.",
+    ),
+    "pilotCheckoutVoucherError": MessageLookupByLibrary.simpleMessage(
+      "Unable to load your voucher wallet.",
+    ),
+    "pilotCheckoutVoucherFlashSale": MessageLookupByLibrary.simpleMessage(
+      "Vouchers cannot be combined with Flash Sale.",
+    ),
+    "pilotCheckoutVoucherHelper": MessageLookupByLibrary.simpleMessage(
+      "Press Enter to save this voucher",
+    ),
+    "pilotCheckoutVoucherInput": MessageLookupByLibrary.simpleMessage(
+      "Save a voucher code",
+    ),
+    "pilotCheckoutVoucherManual": MessageLookupByLibrary.simpleMessage(
+      "Choose manually",
+    ),
+    "pilotCheckoutVoucherSingleMessage": MessageLookupByLibrary.simpleMessage(
+      "Choose one voucher for this order.",
+    ),
+    "pilotHomeDeliverTo": MessageLookupByLibrary.simpleMessage("Deliver to"),
+    "pilotHomeFeatured": MessageLookupByLibrary.simpleMessage(
+      "Featured restaurants",
+    ),
+    "pilotHomeNoRestaurants": MessageLookupByLibrary.simpleMessage(
+      "No restaurants nearby",
+    ),
+    "pilotHomeNoRestaurantsMessage": MessageLookupByLibrary.simpleMessage(
+      "Try again later or explore another area.",
+    ),
+    "pilotHomeOpenCart": MessageLookupByLibrary.simpleMessage("Open cart"),
+    "pilotHomeOpenNotifications": MessageLookupByLibrary.simpleMessage(
+      "Open notifications",
+    ),
+    "pilotHomeSearchHint": MessageLookupByLibrary.simpleMessage(
+      "What are you craving today?",
+    ),
+    "pilotHomeSeeAll": MessageLookupByLibrary.simpleMessage("See all"),
+    "pilotHomeSelectAddress": MessageLookupByLibrary.simpleMessage(
+      "Choose a delivery address",
+    ),
+    "pilotRestaurantAddItem": m13,
+    "pilotRestaurantClosed": MessageLookupByLibrary.simpleMessage("Closed"),
+    "pilotRestaurantDetailsTitle": MessageLookupByLibrary.simpleMessage(
+      "Restaurant details",
+    ),
+    "pilotRestaurantEmptyCart": MessageLookupByLibrary.simpleMessage(
+      "Your cart is empty",
+    ),
+    "pilotRestaurantImage": m14,
+    "pilotRestaurantMenu": MessageLookupByLibrary.simpleMessage("Menu"),
+    "pilotRestaurantNotFound": MessageLookupByLibrary.simpleMessage(
+      "Restaurant not found",
+    ),
+    "pilotRestaurantOpen": MessageLookupByLibrary.simpleMessage("Open now"),
+    "pilotRestaurantOpeningUnknown": MessageLookupByLibrary.simpleMessage(
+      "Opening hours unavailable",
+    ),
+    "pilotRestaurantRemoveItem": m15,
+    "pilotRestaurantViewCart": m16,
+    "pilotRestaurantViewCartLabel": m17,
     "pinnedUppercase": MessageLookupByLibrary.simpleMessage("PINNED"),
     "pizza": MessageLookupByLibrary.simpleMessage("Pizza"),
     "pleaseSelectAddress": MessageLookupByLibrary.simpleMessage(
@@ -534,7 +651,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "popularNearYou": MessageLookupByLibrary.simpleMessage("Popular Near You"),
     "preparing": MessageLookupByLibrary.simpleMessage("Preparing"),
-    "price": m12,
+    "price": m18,
     "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
     "proceedToCheckout": MessageLookupByLibrary.simpleMessage(
       "Proceed to Checkout",
@@ -583,7 +700,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "quantity": MessageLookupByLibrary.simpleMessage("Qty"),
     "rateShipperBtn": MessageLookupByLibrary.simpleMessage("Rate Shipper"),
     "rateShipperTitle": MessageLookupByLibrary.simpleMessage("Rate Shipper"),
-    "rating": m13,
+    "rating": m19,
     "ratingError": MessageLookupByLibrary.simpleMessage("An error occurred"),
     "ratingHint": MessageLookupByLibrary.simpleMessage(
       "Your comment (optional)",
@@ -603,7 +720,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "restaurantsAllTitle": MessageLookupByLibrary.simpleMessage(
       "All Restaurants",
     ),
-    "restaurantsError": m14,
+    "restaurantsError": m20,
     "restaurantsFilterAll": MessageLookupByLibrary.simpleMessage("All"),
     "restaurantsFilterFastDelivery": MessageLookupByLibrary.simpleMessage(
       "Fast Delivery",

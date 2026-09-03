@@ -61,6 +61,7 @@ void main() {
     final intents = <CatalogHomeIntent>[];
     await pumpTestApp(
       tester,
+      locale: const Locale('vi'),
       child: CatalogHomeView(
         state: const CatalogHomeViewState(
           restaurants: [

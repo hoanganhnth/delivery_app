@@ -467,5 +467,80 @@
     "restaurantsFilterTopRated": "Top Rated",
     "restaurantsFilterNearby": "Nearby",
     "restaurantsFreeDelivery": "Free",
-    "restaurantsError": "Error: {message}"
+    "restaurantsError": "Error: {message}",
+    "pilotHomeDeliverTo": "Deliver to",
+    "pilotHomeSelectAddress": "Choose a delivery address",
+    "pilotHomeSearchHint": "What are you craving today?",
+    "pilotHomeFeatured": "Featured restaurants",
+    "pilotHomeSeeAll": "See all",
+    "pilotHomeOpenNotifications": "Open notifications",
+    "pilotHomeOpenCart": "Open cart",
+    "pilotHomeNoRestaurants": "No restaurants nearby",
+    "pilotHomeNoRestaurantsMessage": "Try again later or explore another area.",
+    "pilotRestaurantDetailsTitle": "Restaurant details",
+    "pilotRestaurantNotFound": "Restaurant not found",
+    "pilotRestaurantMenu": "Menu",
+    "pilotRestaurantOpeningUnknown": "Opening hours unavailable",
+    "pilotRestaurantOpen": "Open now",
+    "pilotRestaurantClosed": "Closed",
+    "pilotRestaurantImage": "Photo of {name}",
+    "@pilotRestaurantImage": {
+        "placeholders": {
+            "name": {"type": "String"}
+        }
+    },
+    "pilotRestaurantAddItem": "Add {name} to cart",
+    "@pilotRestaurantAddItem": {
+        "placeholders": {
+            "name": {"type": "String"}
+        }
+    },
+    "pilotRestaurantRemoveItem": "Remove one {name}",
+    "@pilotRestaurantRemoveItem": {
+        "placeholders": {
+            "name": {"type": "String"}
+        }
+    },
+    "pilotRestaurantEmptyCart": "Your cart is empty",
+    "pilotRestaurantViewCart": "View cart, {count} items",
+    "@pilotRestaurantViewCart": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "pilotRestaurantViewCartLabel": "View cart ({count})",
+    "@pilotRestaurantViewCartLabel": {
+        "placeholders": {
+            "count": {"type": "int"}
+        }
+    },
+    "pilotCheckoutClose": "Close checkout",
+    "pilotCheckoutRestaurant": "Restaurant",
+    "pilotCheckoutRestaurantItems": "{distinctCount} dishes · {itemCount} items",
+    "@pilotCheckoutRestaurantItems": {
+        "placeholders": {
+            "distinctCount": {"type": "int"},
+            "itemCount": {"type": "int"}
+        }
+    },
+    "pilotCheckoutLoadError": "Unable to load checkout details",
+    "pilotCheckoutCartEmpty": "Your cart is empty",
+    "pilotCheckoutCartEmptyMessage": "Add at least one item before continuing.",
+    "pilotCheckoutSelectAddress": "Choose a delivery address",
+    "pilotCheckoutSelectAddressMessage": "Choose an address to calculate the delivery fee.",
+    "pilotCheckoutDefault": "Default",
+    "pilotCheckoutCash": "Cash on delivery",
+    "pilotCheckoutCashMessage": "Pay when your order arrives",
+    "pilotCheckoutVoucher": "Voucher",
+    "pilotCheckoutVoucherError": "Unable to load your voucher wallet.",
+    "pilotCheckoutVoucherInput": "Save a voucher code",
+    "pilotCheckoutVoucherHelper": "Press Enter to save this voucher",
+    "pilotCheckoutVoucherAuto": "Automatic",
+    "pilotCheckoutVoucherManual": "Choose manually",
+    "pilotCheckoutVoucherAutoMessage": "We select the best combination of up to 3 vouchers.",
+    "pilotCheckoutVoucherSingleMessage": "Choose one voucher for this order.",
+    "pilotCheckoutVoucherEmpty": "No voucher currently applies to this restaurant.",
+    "pilotCheckoutVoucherFlashSale": "Vouchers cannot be combined with Flash Sale.",
+    "pilotCheckoutNotesHint": "Add delivery or food preparation notes",
+    "pilotCheckoutPlaceOrder": "Place order"
 }

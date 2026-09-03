@@ -21,6 +21,7 @@ Future<void> pumpTestApp(
   List<Override> overrides = const [],
   Size viewport = testPhoneSize,
   ThemeData? theme,
+  Locale? locale,
 }) async {
   useTestPhoneViewport(tester, size: viewport);
   await tester.pumpWidget(
@@ -32,6 +33,7 @@ Future<void> pumpTestApp(
         splitScreenMode: true,
         builder: (_, _) => MaterialApp(
           theme: theme,
+          locale: locale,
           localizationsDelegates: const [
             S.delegate,
             GlobalMaterialLocalizations.delegate,
