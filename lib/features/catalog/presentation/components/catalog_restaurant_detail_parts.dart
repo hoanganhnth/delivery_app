@@ -309,14 +309,16 @@ class CatalogRestaurantCartButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final strings = S.of(context);
     final isEmpty = itemCount == 0;
+    final formattedTotal = '${totalAmount.toStringAsFixed(0)} ₫';
     return AppStickyAction(
       child: AppButton(
         label: isEmpty
             ? strings.pilotRestaurantEmptyCart
-            : strings.pilotRestaurantViewCartLabel(itemCount),
+            : '${strings.pilotRestaurantViewCartLabel(itemCount)} · '
+                  '$formattedTotal',
         semanticLabel: isEmpty
             ? strings.pilotRestaurantEmptyCart
-            : strings.pilotRestaurantViewCart(itemCount),
+            : '${strings.pilotRestaurantViewCart(itemCount)}, $formattedTotal',
         icon: Icons.shopping_bag_outlined,
         onPressed: isEmpty ? null : onPressed,
         expand: true,

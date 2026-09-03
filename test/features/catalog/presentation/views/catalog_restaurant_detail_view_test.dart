@@ -163,9 +163,14 @@ void main() {
         ),
       );
 
+      expect(find.text('Xem giỏ hàng (1) · 50000 ₫'), findsOneWidget);
+      expect(
+        find.bySemanticsLabel('Xem giỏ hàng, 1 món, 50000 ₫'),
+        findsOneWidget,
+      );
       await tester.tap(find.byKey(const Key('menu_increment_301')));
       await tester.tap(find.byKey(const Key('menu_decrement_301')));
-      await tester.tap(find.text('Xem giỏ hàng (1)'));
+      await tester.tap(find.text('Xem giỏ hàng (1) · 50000 ₫'));
       await tester.tap(find.byIcon(Icons.arrow_back).first);
 
       expect(intents[0], isA<CatalogRestaurantDetailIncrementRequested>());
