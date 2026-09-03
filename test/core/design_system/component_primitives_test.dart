@@ -112,7 +112,10 @@ void main() {
                   AppBadge(label: 'New'),
                 ],
               ),
-              const AppImage(imageUrl: null, semanticLabel: 'Restaurant image'),
+              const AppContentImage(
+                imageUrl: null,
+                semanticLabel: 'Restaurant image',
+              ),
               AppStateFeedback.empty(
                 title: 'Nothing here',
                 message: 'Try another filter',

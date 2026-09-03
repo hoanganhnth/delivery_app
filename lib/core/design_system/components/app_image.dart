@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../foundations/app_radii.dart';
 
-class AppImage extends StatelessWidget {
-  const AppImage({
+class AppContentImage extends StatelessWidget {
+  const AppContentImage({
     super.key,
     required this.imageUrl,
     required this.semanticLabel,
