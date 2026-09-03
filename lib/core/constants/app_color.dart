@@ -1,7 +1,2 @@
-import 'dart:ui';
-
-class AppColors {
-  static const primary = Color(0xFF007AFF);
-  static const secondary = Color(0xFF34C759);
-  static const error = Color(0xFFFF3B30);
-}
+// Compatibility export. New code imports `core/design_system/design_system.dart`.
+export '../design_system/compatibility/legacy_app_colors.dart';

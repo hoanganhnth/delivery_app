@@ -1,6 +1,11 @@
 export 'foundations/app_breakpoints.dart';
+export 'foundations/app_dimensions.dart' hide AppSpacing;
 export 'foundations/app_motion.dart';
 export 'foundations/app_radii.dart';
 export 'foundations/app_spacing.dart';
+export 'theme/app_colors.dart';
+export 'theme/app_text_styles.dart';
+export 'theme/app_theme.dart';
 export 'theme/app_semantic_colors.dart';
+export 'theme/theme_extensions.dart';
 export 'components/app_surface.dart';
