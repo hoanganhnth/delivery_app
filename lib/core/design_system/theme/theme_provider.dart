@@ -13,11 +13,26 @@ abstract interface class ThemeStoragePort {
   Future<void> writeTheme(AppThemeType themeType);
 }
 
+typedef ThemePreferenceWriter = Future<bool> Function(String key, String value);
+
 class SharedPreferencesThemeStorage implements ThemeStoragePort {
-  SharedPreferencesThemeStorage(this._preferences);
+  SharedPreferencesThemeStorage(
+    SharedPreferences preferences, {
+    ThemePreferenceWriter? writePreference,
+  }) : _preferences = preferences,
+       _writePreference = writePreference ?? preferences.setString;
 
   static const themeKey = 'app_theme';
   final SharedPreferences _preferences;
+  final ThemePreferenceWriter _writePreference;
+  Future<void> _migrationComplete = Future<void>.value();
+
+  /// Completes after the latest legacy preference rewrite has settled.
+  ///
+  /// Callers do not need to await this for a safe visible theme: an `ocean`
+  /// value always reads as Light. Tests and lifecycle owners may await it when
+  /// they need persistence completion as an observable boundary.
+  Future<void> get migrationComplete => _migrationComplete;
 
   @override
   AppThemeType? readTheme() {
@@ -27,11 +42,8 @@ class SharedPreferencesThemeStorage implements ThemeStoragePort {
     // Ocean was removed from the customer theme set. Normalize the legacy
     // persisted value immediately so subsequent launches read canonical data.
     if (stored == 'ocean') {
-      unawaited(
-        _preferences
-            .setString(themeKey, AppThemeType.light.name)
-            .then<void>((_) {}),
-      );
+      _migrationComplete = _persistCanonicalLight();
+      unawaited(_migrationComplete);
       return AppThemeType.light;
     }
 
@@ -39,6 +51,15 @@ class SharedPreferencesThemeStorage implements ThemeStoragePort {
       if (themeType.name == stored) return themeType;
     }
     return null;
+  }
+
+  Future<void> _persistCanonicalLight() async {
+    try {
+      await _writePreference(themeKey, AppThemeType.light.name);
+    } catch (_) {
+      // Persistence can fail independently of the visible theme. Future reads
+      // still normalize `ocean` to Light and retry the canonical rewrite.
+    }
   }
 
   @override

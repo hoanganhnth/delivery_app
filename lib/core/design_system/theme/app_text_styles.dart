@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 /// Text styles for the app - Amber Hearth Design System
 ///
-/// Plus Jakarta Sans remains the preferred family. The repository does not
-/// contain a licensed font asset, so platform sans-serif fonts are the safe
-/// offline fallback until a font source is checked in deliberately.
+/// Plus Jakarta Sans is bundled under the SIL Open Font License. Platform
+/// sans-serif fonts remain fallbacks for glyphs outside the bundled family.
 class AppTextStyles {
   static const String fontFamily = 'Plus Jakarta Sans';
   static const List<String> fontFamilyFallback = <String>[
@@ -15,7 +14,7 @@ class AppTextStyles {
   // Display & Large Headlines - Black/ExtraBold for editorial impact
   static TextStyle get display => TextStyle(
     fontSize: 36, // logical pixels
-    fontWeight: FontWeight.w900, // Black weight
+    fontWeight: FontWeight.w800, // Highest weight supplied by the family
     height: 1.2,
     letterSpacing: -0.02, // Negative spacing for compact feel
     fontFamily: fontFamily,

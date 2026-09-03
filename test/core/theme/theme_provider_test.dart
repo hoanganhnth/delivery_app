@@ -78,7 +78,7 @@ void main() {
     expect(design.AppTextStyles.navigationLabel.height, 1.33);
   });
 
-  test('stored ocean preference migrates to light', () async {
+  test('stored ocean preference migrates and persists light', () async {
     SharedPreferences.setMockInitialValues({
       SharedPreferencesThemeStorage.themeKey: 'ocean',
     });
@@ -86,10 +86,32 @@ void main() {
     final storage = SharedPreferencesThemeStorage(preferences);
 
     expect(storage.readTheme(), design.AppThemeType.light);
+    await storage.migrationComplete;
     expect(
       preferences.getString(SharedPreferencesThemeStorage.themeKey),
       'light',
     );
+  });
+
+  test('failed ocean rewrite stays light without an unhandled error', () async {
+    SharedPreferences.setMockInitialValues({
+      SharedPreferencesThemeStorage.themeKey: 'ocean',
+    });
+    final preferences = await SharedPreferences.getInstance();
+    var writes = 0;
+    final storage = SharedPreferencesThemeStorage(
+      preferences,
+      writePreference: (_, _) {
+        writes++;
+        return Future<bool>.error(StateError('disk unavailable'));
+      },
+    );
+
+    expect(storage.readTheme(), design.AppThemeType.light);
+    await storage.migrationComplete;
+    expect(storage.readTheme(), design.AppThemeType.light);
+    await storage.migrationComplete;
+    expect(writes, 2);
   });
 }
 
