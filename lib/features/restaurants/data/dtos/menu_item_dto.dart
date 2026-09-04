@@ -10,7 +10,7 @@ sealed class MenuItemDto with _$MenuItemDto {
     num? id,
     num? restaurantId,
     required String name,
-    required String description,
+    @JsonKey(defaultValue: '') required String description,
     required double price,
     String? image,
     @MenuItemStatusConverter() required MenuItemStatus status,

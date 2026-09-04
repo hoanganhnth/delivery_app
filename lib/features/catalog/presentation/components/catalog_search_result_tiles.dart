@@ -1,3 +1,6 @@
+import 'package:delivery_app/core/design_system/components/app_image.dart';
+import 'package:delivery_app/core/design_system/foundations/app_radii.dart';
+import 'package:delivery_app/core/design_system/foundations/app_spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -15,20 +18,41 @@ class CatalogDishSearchResultTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     return ListTile(
-      leading: CircleAvatar(
-        backgroundImage: item.imageUrl == null
-            ? null
-            : NetworkImage(item.imageUrl!),
-        child: item.imageUrl == null ? const Icon(Icons.fastfood) : null,
+      leading: AppContentImage(
+        imageUrl: item.imageUrl,
+        semanticLabel: item.name,
+        width: 48,
+        height: 48,
+        borderRadius: AppRadii.control,
+        placeholderIcon: Icons.fastfood_outlined,
       ),
-      title: Text(item.name),
+      title: Text(
+        item.name,
+        style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+      ),
       subtitle: item.description?.trim().isNotEmpty == true
-          ? Text(item.description!.trim())
+          ? Text(
+              item.description!.trim(),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
+            )
           : null,
       trailing: item.price == null
           ? null
-          : Text('${NumberFormat('#,###', 'vi_VN').format(item.price)}đ'),
+          : Text(
+              '${NumberFormat('#,###', 'vi_VN').format(item.price)} ₫',
+              style: theme.textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+                color: scheme.primary,
+              ),
+            ),
       onTap: onTap,
     );
   }
@@ -46,34 +70,45 @@ class CatalogRestaurantSearchResultTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     return ListTile(
-      leading: Container(
-        width: 50,
-        height: 50,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          image: item.imageUrl == null
-              ? null
-              : DecorationImage(
-                  image: NetworkImage(item.imageUrl!),
-                  fit: BoxFit.cover,
-                ),
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        ),
-        child: item.imageUrl == null ? const Icon(Icons.store) : null,
+      leading: AppContentImage(
+        imageUrl: item.imageUrl,
+        semanticLabel: item.name,
+        width: 48,
+        height: 48,
+        borderRadius: AppRadii.control,
+        placeholderIcon: Icons.storefront_outlined,
       ),
-      title: Text(item.name),
+      title: Text(
+        item.name,
+        style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+      ),
       subtitle: item.cuisine?.trim().isNotEmpty == true
-          ? Text(item.cuisine!.trim())
+          ? Text(
+              item.cuisine!.trim(),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
+            )
           : null,
       trailing: item.rating == null
           ? null
           : Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.star, color: Colors.orange, size: 16),
-                const SizedBox(width: 4),
-                Text(item.rating!.toStringAsFixed(1)),
+                Icon(Icons.star_rounded, color: scheme.primary, size: 18),
+                const SizedBox(width: AppSpacing.xxs),
+                Text(
+                  item.rating!.toStringAsFixed(1),
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ],
             ),
       onTap: onTap,

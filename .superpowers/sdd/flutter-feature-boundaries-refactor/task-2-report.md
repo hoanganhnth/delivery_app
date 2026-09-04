@@ -2,7 +2,7 @@
 
 ## Status
 
-`DONE_WITH_CONCERNS`
+`COMPLETE` (Approved)
 
 Implementation commits:
 
@@ -12,6 +12,8 @@ Implementation commits:
   (`fix(ui): preserve legacy app image export`)
 - `ffe39cc02ea6ab85a54f41922fb6339627534dd9`
   (`feat(ui): migrate customer pilot screens`)
+- `92e9ecae380f2aba9886be2cc31d0beefed4712d`
+  (`fix(ui): restore restaurant cart total`)
 
 ## Outcome
 
@@ -153,3 +155,11 @@ TDD and focused validation:
   inspected, and passed normal comparison (`1/1`).
 - Formatter reported the production component unchanged; `git diff --check`
   and staged diff inspection passed.
+
+## Review verdict
+
+- Total amount displayed on sticky cart: Verified (`Xem giỏ hàng (1) · 50000 ₫`).
+- Semantics label contains item count and total amount: Verified (`Xem giỏ hàng, 1 món, 50000 ₫`).
+- Restaurant detail golden test: Verified and passing (`3/3`).
+- Dirty worktree preserved: Verified unchanged.
+- Task 2 status: **Approved / Complete**.

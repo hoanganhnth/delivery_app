@@ -61,6 +61,8 @@ class AppTheme {
         backgroundColor: colors.surface,
         foregroundColor: colors.onSurface,
         elevation: 0,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
         titleTextStyle: AppTextStyles.withColor(
           AppTextStyles.h6,
           colors.textPrimary,

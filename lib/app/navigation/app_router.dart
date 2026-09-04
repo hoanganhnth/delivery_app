@@ -76,7 +76,8 @@ class AppRouterPages {
   Widget cart() => const CartScreen();
   Widget checkout() => const CheckoutScreen();
   Widget orderConfirmation() => const OrderConfirmationScreen();
-  Widget addressList() => const AddressListScreen();
+  Widget addressList({bool isSelectMode = false}) =>
+      AddressListScreen(isSelectMode: isSelectMode);
   Widget addAddress() => const AddEditAddressScreen();
   Widget editAddress(UserAddressEntity? address, {int? addressId}) =>
       AddEditAddressScreen(address: address, addressId: addressId);
@@ -161,18 +162,16 @@ GoRouter createAppRouter({
         builder: (context, state) => pages.notifications(),
       ),
 
-      // Home with nested profile
+      // Home route redirects to main navigation shell
       GoRoute(
         path: AppRoutes.home,
         name: 'home',
-        builder: (context, state) => pages.home(),
-        routes: [
-          GoRoute(
-            path: 'profile',
-            name: 'profile',
-            builder: (context, state) => pages.profile(),
-          ),
-        ],
+        redirect: (context, state) => AppRoutes.main,
+      ),
+      GoRoute(
+        path: AppRoutes.profile,
+        name: 'profile',
+        builder: (context, state) => pages.profile(),
       ),
       GoRoute(
         path: AppRoutes.settings,
@@ -288,7 +287,14 @@ GoRouter createAppRouter({
       GoRoute(
         path: AppRoutes.addressList,
         name: 'address-list',
-        builder: (context, state) => pages.addressList(),
+        builder: (context, state) {
+          final selectMode =
+              state.uri.queryParameters['selectMode'] == 'true' ||
+              state.extra == true ||
+              (state.extra is Map &&
+                  (state.extra as Map)['selectMode'] == true);
+          return pages.addressList(isSelectMode: selectMode);
+        },
       ),
       GoRoute(
         path: AppRoutes.addAddress,

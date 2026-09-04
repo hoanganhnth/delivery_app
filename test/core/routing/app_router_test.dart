@@ -24,7 +24,7 @@ void main() {
 
     auth.authenticate();
     await tester.pumpAndSettle();
-    expect(find.text('HOME'), findsOneWidget);
+    expect(find.text('MAIN'), findsOneWidget);
   });
 
   testWidgets('router redirects authenticated users away from guest pages', (
@@ -40,7 +40,7 @@ void main() {
 
     await pumpTestRouter(tester, router: router);
     await tester.pumpAndSettle();
-    expect(find.text('HOME'), findsOneWidget);
+    expect(find.text('MAIN'), findsOneWidget);
     expect(find.text('LOGIN'), findsNothing);
   });
 
@@ -104,7 +104,9 @@ void main() {
     );
   });
 
-  testWidgets('authenticated users can open client capability pages', (tester) async {
+  testWidgets('authenticated users can open client capability pages', (
+    tester,
+  ) async {
     final router = createAppRouter(
       authNotifier: _FakeAuthNotifier(authenticated: true),
       config: const AppRouterConfig(initialLocation: '/entitlements'),
@@ -118,6 +120,24 @@ void main() {
     router.go('/support');
     await tester.pumpAndSettle();
     expect(find.text('Support unavailable'), findsOneWidget);
+  });
+
+  testWidgets('named profile shortcut resolves the declared profile route', (
+    tester,
+  ) async {
+    final router = createAppRouter(
+      authNotifier: _FakeAuthNotifier(authenticated: true),
+      config: const AppRouterConfig(initialLocation: '/main'),
+      pages: const _TestPages(),
+    );
+    addTearDown(router.dispose);
+
+    await pumpTestRouter(tester, router: router);
+    await tester.pumpAndSettle();
+    router.pushProfile();
+    await tester.pumpAndSettle();
+
+    expect(find.text('PROFILE'), findsOneWidget);
   });
 }
 
@@ -162,6 +182,12 @@ class _TestPages extends AppRouterPages {
 
   @override
   Widget home() => _page('HOME');
+
+  @override
+  Widget main() => _page('MAIN');
+
+  @override
+  Widget profile() => _page('PROFILE');
 
   @override
   Widget orders() => _page('ORDERS');

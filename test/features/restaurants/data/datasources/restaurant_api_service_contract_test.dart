@@ -1,6 +1,7 @@
 import 'package:delivery_app/features/restaurants/data/datasources/restaurant_remote_datasource_impl.dart';
 import 'package:delivery_app/features/restaurants/data/dtos/get_restaurants_request_dto.dart';
 import 'package:delivery_app/features/restaurants/data/dtos/search_restaurants_request_dto.dart';
+import 'package:delivery_app/features/restaurants/domain/entities/menu_item_entity.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
@@ -83,4 +84,22 @@ void main() {
 
     expect(response.data?.single.id, 11);
   });
+
+  test(
+    'accepts discontinued items and null descriptions from the backend',
+    () async {
+      final item = _menuItem()
+        ..['status'] = 'DISCONTINUED'
+        ..['description'] = null;
+      adapter.onGet(
+        '/menu-items/restaurant/11',
+        (server) => server.reply(200, _response([item])),
+      );
+
+      final response = await service.getMenuItems(11);
+
+      expect(response.data?.single.status, MenuItemStatus.unavailable);
+      expect(response.data?.single.description, isEmpty);
+    },
+  );
 }

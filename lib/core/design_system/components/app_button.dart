@@ -116,6 +116,8 @@ class AppIconButton extends StatelessWidget {
     required this.onPressed,
     this.isLoading = false,
     this.isSelected = false,
+    this.hasBackground = false,
+    this.backgroundColor,
   });
 
   final String tooltip;
@@ -123,6 +125,8 @@ class AppIconButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isLoading;
   final bool isSelected;
+  final bool hasBackground;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -144,9 +148,15 @@ class AppIconButton extends StatelessWidget {
               backgroundColor: WidgetStateProperty.resolveWith((states) {
                 if (isSelected) return scheme.primaryContainer;
                 if (states.contains(WidgetState.pressed)) {
-                  return scheme.primaryContainer.withValues(alpha: 0.7);
+                  return hasBackground || backgroundColor != null
+                      ? scheme.primaryContainer.withValues(alpha: 0.7)
+                      : scheme.primary.withValues(alpha: 0.12);
                 }
-                return scheme.surfaceContainerHighest.withValues(alpha: 0.7);
+                if (backgroundColor != null) return backgroundColor;
+                if (hasBackground) {
+                  return scheme.surfaceContainerHighest.withValues(alpha: 0.7);
+                }
+                return Colors.transparent;
               }),
               foregroundColor: WidgetStateProperty.resolveWith((states) {
                 if (states.contains(WidgetState.disabled)) {
@@ -154,8 +164,10 @@ class AppIconButton extends StatelessWidget {
                 }
                 return isSelected ? scheme.primary : scheme.onSurface;
               }),
-              shape: const WidgetStatePropertyAll(
-                RoundedRectangleBorder(borderRadius: AppRadii.control),
+              shape: WidgetStatePropertyAll(
+                hasBackground || backgroundColor != null
+                    ? const RoundedRectangleBorder(borderRadius: AppRadii.control)
+                    : const CircleBorder(),
               ),
             ),
             icon: isLoading

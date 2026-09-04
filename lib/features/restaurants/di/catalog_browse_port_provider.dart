@@ -6,13 +6,19 @@ import 'package:delivery_app/features/restaurants/domain/entities/restaurant_ent
 import 'package:delivery_app/features/restaurants/domain/usecases/get_restaurant_by_id_usecase.dart';
 import 'package:delivery_app/features/restaurants/domain/usecases/get_restaurants_usecase.dart';
 import 'package:delivery_app/features/restaurants/domain/usecases/get_menu_items_usecase.dart';
+import 'package:delivery_app/features/user_address/application/address_list_notifier.dart';
 
 /// Adapter that keeps Restaurant entities behind the neutral Catalog port.
 final catalogBrowsePortProvider = Provider<CatalogBrowsePort>((ref) {
+  final addressState = ref.watch(userAddressListProvider);
+  final activeAddress =
+      addressState.selectedAddress ?? addressState.defaultAddress;
   return _RestaurantsCatalogAdapter(
     getRestaurants: ref.watch(getRestaurantsUseCaseProvider),
     getRestaurant: ref.watch(getRestaurantByIdUseCaseProvider),
     getMenuItems: ref.watch(getMenuItemsUseCaseProvider),
+    latitude: activeAddress?.latitude,
+    longitude: activeAddress?.longitude,
   );
 });
 
@@ -30,28 +36,52 @@ final class _RestaurantsCatalogAdapter
     required this.getRestaurants,
     required this.getRestaurant,
     required this.getMenuItems,
+    this.latitude,
+    this.longitude,
   });
 
   final GetRestaurantsUseCase getRestaurants;
   final GetRestaurantByIdUseCase getRestaurant;
   final GetMenuItemsUseCase getMenuItems;
+  final double? latitude;
+  final double? longitude;
 
   @override
   Future<CatalogBrowseResult> loadFeatured() async {
     final result = await getRestaurants(
-      GetRestaurantsParams(page: 1, limit: 6),
+      GetRestaurantsParams(
+        latitude: latitude,
+        longitude: longitude,
+        page: 1,
+        limit: 6,
+      ),
     );
     return result.fold(
       (failure) => CatalogBrowseResult(errorMessage: failure.message),
-      (rows) => CatalogBrowseResult(
-        restaurants: rows.take(3).map(_restaurant).toList(growable: false),
-      ),
+      (rows) {
+        // The REST list is currently ordered by insertion/ID. Prefer the
+        // newest entries for the home spotlight so a newly created restaurant
+        // is immediately discoverable without changing the public API.
+        final featured =
+            rows.toList()..sort((left, right) => right.id.compareTo(left.id));
+        return CatalogBrowseResult(
+          restaurants: featured
+              .take(3)
+              .map(_restaurant)
+              .toList(growable: false),
+        );
+      },
     );
   }
 
   @override
   Future<CatalogBrowseResult> loadRestaurants() async {
-    final result = await getRestaurants(GetRestaurantsParams());
+    final result = await getRestaurants(
+      GetRestaurantsParams(
+        latitude: latitude,
+        longitude: longitude,
+      ),
+    );
     return result.fold(
       (failure) => CatalogBrowseResult(errorMessage: failure.message),
       (rows) => CatalogBrowseResult(

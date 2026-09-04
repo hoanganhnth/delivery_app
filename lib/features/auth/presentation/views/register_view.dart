@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:delivery_app/core/design_system/components/app_button.dart';
+import 'package:delivery_app/core/design_system/components/app_fields.dart';
+import 'package:delivery_app/core/design_system/components/app_navigation.dart';
+import 'package:delivery_app/core/design_system/foundations/app_spacing.dart';
 import 'package:delivery_app/generated/l10n.dart';
 
 import '../../application/register/register_intent.dart';
 import '../../application/register/register_state.dart';
-import '../widgets/auth_footer.dart';
-import '../widgets/register_header.dart';
-import '../widgets/stitch_register_field.dart';
+import '../widgets/auth_components.dart';
 
+/// Pure register view styled with canonical design system primitives.
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key, required this.state, required this.onIntent});
 
@@ -60,170 +63,138 @@ class _RegisterViewState extends State<RegisterView> {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      body: Column(
-        children: [
-          RegisterHeader(
-            onBack: widget.state.isSubmitting
-                ? null
-                : () => widget.onIntent(const RegisterBackRequested()),
+      appBar: AppTopBar(
+        title: strings.register,
+        onBack: widget.state.isSubmitting
+            ? null
+            : () => widget.onIntent(const RegisterBackRequested()),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.page,
+            vertical: AppSpacing.lg,
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 448),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      strings.registerSubtitle,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: scheme.secondary,
-                        fontWeight: FontWeight.w500,
-                        height: 1.5,
-                      ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 480),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    strings.registerSubtitle,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                      height: 1.5,
                     ),
-                    const SizedBox(height: 32),
-                    StitchRegisterField(
-                      controller: _nameController,
-                      label: strings.fullName,
-                      hint: strings.fullNameHint,
-                      icon: Icons.person_outline,
-                      enabled: !widget.state.isSubmitting,
-                      onChanged: (value) =>
-                          widget.onIntent(RegisterNameChanged(value)),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AppTextField(
+                    key: const Key('register_name_field'),
+                    controller: _nameController,
+                    label: strings.fullName,
+                    hintText: strings.fullNameHint,
+                    prefixIcon: const Icon(Icons.person_outline),
+                    textInputAction: TextInputAction.next,
+                    enabled: !widget.state.isSubmitting,
+                    onChanged: (value) =>
+                        widget.onIntent(RegisterNameChanged(value)),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  AppTextField(
+                    key: const Key('register_email_field'),
+                    controller: _emailController,
+                    label: strings.emailAddress,
+                    hintText: strings.emailHint,
+                    prefixIcon: const Icon(Icons.mail_outline),
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    enabled: !widget.state.isSubmitting,
+                    errorText: _emailError(strings, widget.state.emailError),
+                    onChanged: (value) =>
+                        widget.onIntent(RegisterEmailChanged(value)),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  AuthPasswordField(
+                    key: const Key('register_password_field'),
+                    controller: _passwordController,
+                    label: strings.password,
+                    hint: strings.passwordHint,
+                    obscurePassword: widget.state.obscurePassword,
+                    enabled: !widget.state.isSubmitting,
+                    errorText:
+                        _passwordError(strings, widget.state.passwordError),
+                    onChanged: (value) =>
+                        widget.onIntent(RegisterPasswordChanged(value)),
+                    textInputAction: TextInputAction.next,
+                    onToggleVisibility: () => widget.onIntent(
+                      const RegisterPasswordVisibilityToggled(),
                     ),
-                    const SizedBox(height: 24),
-                    StitchRegisterField(
-                      controller: _emailController,
-                      label: strings.emailAddress,
-                      hint: strings.emailHint,
-                      icon: Icons.mail_outline,
-                      keyboardType: TextInputType.emailAddress,
-                      enabled: !widget.state.isSubmitting,
-                      errorText: _emailError(strings, widget.state.emailError),
-                      onChanged: (value) =>
-                          widget.onIntent(RegisterEmailChanged(value)),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  AuthPasswordField(
+                    key: const Key('register_confirmation_field'),
+                    controller: _confirmationController,
+                    label: strings.confirmPassword,
+                    hint: strings.passwordHint,
+                    obscurePassword: widget.state.obscureConfirmation,
+                    enabled: !widget.state.isSubmitting,
+                    errorText: _confirmationError(
+                      strings,
+                      widget.state.confirmationError,
                     ),
-                    const SizedBox(height: 24),
-                    StitchRegisterField(
-                      controller: _passwordController,
-                      label: strings.password,
-                      hint: strings.passwordHint,
-                      icon: Icons.lock_outline,
-                      obscureText: widget.state.obscurePassword,
-                      enabled: !widget.state.isSubmitting,
-                      helperText: strings.passwordHelper,
-                      errorText: _passwordError(
-                        strings,
-                        widget.state.passwordError,
-                      ),
-                      onChanged: (value) =>
-                          widget.onIntent(RegisterPasswordChanged(value)),
-                      suffixIcon: IconButton(
-                        tooltip: widget.state.obscurePassword
-                            ? 'Show password'
-                            : 'Hide password',
-                        icon: Icon(
-                          widget.state.obscurePassword
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
-                          color: scheme.secondary,
+                    onChanged: (value) =>
+                        widget.onIntent(RegisterConfirmationChanged(value)),
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) {
+                      if (!widget.state.isSubmitting) {
+                        widget.onIntent(const RegisterSubmitted());
+                      }
+                    },
+                    onToggleVisibility: () => widget.onIntent(
+                      const RegisterConfirmationVisibilityToggled(),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                  AppButton(
+                    key: const Key('register_button'),
+                    label: strings.createAccountBtn,
+                    icon: Icons.arrow_forward,
+                    expand: true,
+                    isLoading: widget.state.isSubmitting,
+                    onPressed: widget.state.isSubmitting
+                        ? null
+                        : () => widget.onIntent(const RegisterSubmitted()),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Text(
+                        strings.alreadyHaveAccount,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: scheme.onSurfaceVariant,
                         ),
+                      ),
+                      TextButton(
                         onPressed: widget.state.isSubmitting
                             ? null
                             : () => widget.onIntent(
-                                const RegisterPasswordVisibilityToggled(),
-                              ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    StitchRegisterField(
-                      controller: _confirmationController,
-                      label: strings.confirmPassword,
-                      hint: strings.passwordHint,
-                      icon: Icons.lock_outline,
-                      obscureText: widget.state.obscureConfirmation,
-                      enabled: !widget.state.isSubmitting,
-                      errorText: _confirmationError(
-                        strings,
-                        widget.state.confirmationError,
-                      ),
-                      onChanged: (value) =>
-                          widget.onIntent(RegisterConfirmationChanged(value)),
-                      suffixIcon: IconButton(
-                        tooltip: widget.state.obscureConfirmation
-                            ? 'Show password'
-                            : 'Hide password',
-                        icon: Icon(
-                          widget.state.obscureConfirmation
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
-                          color: scheme.secondary,
-                        ),
-                        onPressed: widget.state.isSubmitting
-                            ? null
-                            : () => widget.onIntent(
-                                const RegisterConfirmationVisibilityToggled(),
-                              ),
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-                    SizedBox(
-                      height: 56,
-                      child: ElevatedButton(
-                        key: const Key('register_button'),
-                        onPressed: widget.state.isSubmitting
-                            ? null
-                            : () => widget.onIntent(const RegisterSubmitted()),
-                        child: widget.state.isSubmitting
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
+                                  const RegisterBackRequested(),
                                 ),
-                              )
-                            : Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(strings.createAccountBtn),
-                                  const SizedBox(width: 8),
-                                  const Icon(Icons.arrow_forward, size: 20),
-                                ],
-                              ),
+                        child: Text(
+                          strings.backToLogin,
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 24),
-                    Center(
-                      child: Wrap(
-                        alignment: WrapAlignment.center,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          Text(
-                            strings.alreadyHaveAccount,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: scheme.secondary,
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: widget.state.isSubmitting
-                                ? null
-                                : () => widget.onIntent(
-                                    const RegisterBackRequested(),
-                                  ),
-                            child: Text(strings.backToLogin),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
-          const AuthFooter(),
-        ],
+        ),
       ),
     );
   }

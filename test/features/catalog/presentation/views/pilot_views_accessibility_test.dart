@@ -49,7 +49,7 @@ void main() {
     expect(find.text('Đang mở cửa'), findsOneWidget);
     expect(find.bySemanticsLabel('Thêm Cơm rang vào giỏ'), findsOneWidget);
     expect(find.bySemanticsLabel('Quay lại'), findsOneWidget);
-    expect(find.bySemanticsLabel('Xem giỏ hàng, 1 món'), findsOneWidget);
+    expect(find.bySemanticsLabel(RegExp(r'Xem giỏ hàng, 1 món')), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

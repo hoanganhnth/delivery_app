@@ -9,25 +9,41 @@ part 'address_list_notifier.g.dart';
 /// Notifier cho quản lý danh sách địa chỉ
 @riverpod
 class UserAddressListNotifier extends _$UserAddressListNotifier {
+  int _loadGeneration = 0;
+
   @override
   UserAddressListState build() {
     return const UserAddressListState();
   }
 
   /// Load danh sách địa chỉ của user
-  Future<void> loadAddresses(int userId) async {
-    state = state.copyWith(isLoading: true, clearError: true);
+  Future<bool> loadAddresses(int userId) async {
+    if (userId <= 0) {
+      clear();
+      return false;
+    }
+
+    final generation = ++_loadGeneration;
+    // A new identity must never render the previous identity's addresses while
+    // the request is in flight.
+    state = const UserAddressListState(isLoading: true);
 
     final getUserAddressesUseCase = ref.read(getUserAddressesUseCaseProvider);
     final result = await getUserAddressesUseCase(userId);
 
-    result.fold(
-      (failure) => state = state.copyWith(
-        isLoading: false,
-        errorMessage: failure.message,
-      ),
-      (addresses) =>
-          state = state.copyWith(isLoading: false, addresses: addresses),
+    if (!ref.mounted || generation != _loadGeneration) {
+      return false;
+    }
+
+    return result.fold<bool>(
+      (failure) {
+        state = state.copyWith(isLoading: false, errorMessage: failure.message);
+        return false;
+      },
+      (addresses) {
+        state = state.copyWith(isLoading: false, addresses: addresses);
+        return true;
+      },
     );
   }
 
@@ -58,6 +74,9 @@ class UserAddressListNotifier extends _$UserAddressListNotifier {
               .toList();
           state = state.copyWith(
             addresses: updatedAddresses,
+            selectedAddress: state.selectedAddress?.id == addressId
+                ? null
+                : state.selectedAddress,
             lastOperation: OperationResult(
               type: 'delete',
               isSuccess: true,
@@ -127,6 +146,12 @@ class UserAddressListNotifier extends _$UserAddressListNotifier {
     await loadAddresses(userId);
   }
 
+  /// Clear identity-scoped state after logout or before another profile loads.
+  void clear() {
+    _loadGeneration += 1;
+    state = const UserAddressListState();
+  }
+
   /// Clear error
   void clearError() {
     state = state.copyWith(clearError: true);
@@ -144,13 +169,17 @@ class UserAddressListNotifier extends _$UserAddressListNotifier {
 
   /// Auto select default address if no address is selected
   void autoSelectDefaultAddress() {
-    if (state.selectedAddress == null) {
-      final defaultAddress = state.addresses
-          .where((addr) => addr.isDefault)
-          .firstOrNull;
-      if (defaultAddress != null) {
-        state = state.copyWith(selectedAddress: defaultAddress);
-      }
+    final selectedId = state.selectedAddress?.id;
+    final selectedIsCurrent =
+        selectedId != null &&
+        state.addresses.any((address) => address.id == selectedId);
+    if (selectedIsCurrent) {
+      return;
     }
+
+    final defaultAddress = state.addresses
+        .where((addr) => addr.isDefault)
+        .firstOrNull;
+    state = state.copyWith(selectedAddress: defaultAddress);
   }
 }

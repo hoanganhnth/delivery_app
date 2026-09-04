@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:delivery_app/core/error/failures.dart';
 import 'package:delivery_app/features/user_address/domain/entities/address_upsert_command.dart';
 import 'package:delivery_app/features/user_address/application/address_list_intent.dart';
@@ -100,6 +102,57 @@ void main() {
   );
 
   group('address list journey', () {
+    test(
+      'isolates address state by profile and ignores stale responses',
+      () async {
+        final repository = _FakeAddressRepository();
+        final container = _container(repository);
+        addTearDown(container.dispose);
+        container.listen(userAddressListProvider, (_, _) {});
+        final notifier = container.read(userAddressListProvider.notifier);
+        final home = buildAddress(id: 401, isDefault: true);
+        final office = buildAddress(id: 402, label: 'Công ty', isDefault: true);
+        final firstResponse =
+            Completer<Either<Failure, List<UserAddressEntity>>>();
+        final secondResponse =
+            Completer<Either<Failure, List<UserAddressEntity>>>();
+        repository.addressesLoader = (userId) =>
+            userId == 501 ? firstResponse.future : secondResponse.future;
+
+        final firstLoad = notifier.loadAddresses(501);
+        final secondLoad = notifier.loadAddresses(502);
+        secondResponse.complete(Right([office]));
+        await secondLoad;
+
+        expect(container.read(userAddressListProvider).addresses, [office]);
+        expect(container.read(userAddressListProvider).selectedAddress, isNull);
+
+        firstResponse.complete(Right([home]));
+        await firstLoad;
+
+        expect(container.read(userAddressListProvider).addresses, [office]);
+        expect(container.read(userAddressListProvider).selectedAddress, isNull);
+      },
+    );
+
+    test('allows a failed profile load to be retried', () async {
+      final repository = _FakeAddressRepository();
+      final container = _container(repository);
+      addTearDown(container.dispose);
+      container.listen(userAddressListProvider, (_, _) {});
+      final notifier = container.read(userAddressListProvider.notifier);
+
+      repository.addressesResult = const Left(
+        ServerFailure('Không thể tải địa chỉ'),
+      );
+      expect(await notifier.loadAddresses(501), isFalse);
+      expect(container.read(userAddressListProvider).addresses, isEmpty);
+
+      repository.addressesResult = Right([buildAddress()]);
+      expect(await notifier.loadAddresses(501), isTrue);
+      expect(container.read(userAddressListProvider).addresses, hasLength(1));
+    });
+
     test('loads, auto-selects default, changes default and deletes', () async {
       final repository = _FakeAddressRepository();
       final container = _container(repository);
@@ -260,6 +313,8 @@ class _FakeAddressRepository implements UserAddressRepository {
   Either<Failure, UserAddressEntity> addressResult = Right(buildAddress());
   Either<Failure, bool> deleteResult = const Right(true);
   Either<Failure, UserAddressEntity> defaultResult = Right(buildAddress());
+  Future<Either<Failure, List<UserAddressEntity>>> Function(int userId)?
+  addressesLoader;
 
   int createCalls = 0;
   int? lastCreateUserId;
@@ -269,7 +324,7 @@ class _FakeAddressRepository implements UserAddressRepository {
   @override
   Future<Either<Failure, List<UserAddressEntity>>> getUserAddresses(
     int userId,
-  ) async => addressesResult;
+  ) => addressesLoader?.call(userId) ?? Future.value(addressesResult);
 
   @override
   Future<Either<Failure, UserAddressEntity>> getAddressById(

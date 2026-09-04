@@ -8,9 +8,19 @@ import '../../application/cart_view_state.dart';
 
 /// Pure cart rendering. All persistence, price sync and navigation are intents.
 class CartView extends StatelessWidget {
-  const CartView({super.key, required this.state, required this.onIntent});
+  const CartView({
+    super.key,
+    required this.state,
+    required this.onIntent,
+    this.isTab = false,
+    this.showBackButton = true,
+  });
+
   final CartViewState state;
   final ValueChanged<CartViewIntent> onIntent;
+  final bool isTab;
+  final bool showBackButton;
+
   @override
   Widget build(BuildContext context) => Scaffold(
     body: SafeArea(
@@ -19,9 +29,11 @@ class CartView extends StatelessWidget {
         children: [
           GlassAppBar(
             titleText: 'Giỏ hàng',
-            leading: GlassBackButton(
-              onPressed: () => onIntent(const CartBackRequested()),
-            ),
+            leading: showBackButton
+                ? GlassBackButton(
+                    onPressed: () => onIntent(const CartBackRequested()),
+                  )
+                : null,
             actions: [
               if (!state.isEmpty)
                 GlassActionButton(
@@ -35,6 +47,7 @@ class CartView extends StatelessWidget {
       ),
     ),
   );
+
   Widget _body(BuildContext context) {
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -56,8 +69,14 @@ class CartView extends StatelessWidget {
         ),
       );
     }
+
+    final bottomPadding = MediaQuery.paddingOf(context).bottom;
+    final bottomNavHeight = isTab ? (96.w + bottomPadding) : bottomPadding;
+    final checkoutButtonBottom = bottomNavHeight + 16.w;
+
     if (state.isEmpty) {
       return _EmptyCart(
+        bottomOffset: bottomNavHeight,
         onBrowse: () => onIntent(const CartBrowseRestaurantsRequested()),
       );
     }
@@ -117,13 +136,13 @@ class CartView extends StatelessWidget {
               ),
             ),
             SliverToBoxAdapter(child: _Summary(totalAmount: state.totalAmount)),
-            SliverToBoxAdapter(child: SizedBox(height: 100.w)),
+            SliverToBoxAdapter(child: SizedBox(height: checkoutButtonBottom + 56.w)),
           ],
         ),
         Positioned(
           left: 16.w,
           right: 16.w,
-          bottom: 16.w,
+          bottom: checkoutButtonBottom,
           child: ElevatedButton(
             onPressed: () => onIntent(const CartCheckoutRequested()),
             child: Row(
@@ -144,12 +163,14 @@ class CartView extends StatelessWidget {
 }
 
 class _EmptyCart extends StatelessWidget {
-  const _EmptyCart({required this.onBrowse});
+  const _EmptyCart({required this.onBrowse, this.bottomOffset = 0});
   final VoidCallback onBrowse;
+  final double bottomOffset;
+
   @override
   Widget build(BuildContext context) => Center(
     child: Padding(
-      padding: const EdgeInsets.all(32),
+      padding: EdgeInsets.fromLTRB(32, 32, 32, 32 + bottomOffset),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

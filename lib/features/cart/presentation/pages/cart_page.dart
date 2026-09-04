@@ -10,7 +10,15 @@ import '../../application/cart_view_model.dart';
 import '../views/cart_view.dart';
 
 class CartPage extends ConsumerStatefulWidget {
-  const CartPage({super.key});
+  const CartPage({
+    super.key,
+    this.isTab = false,
+    this.showBackButton,
+  });
+
+  final bool isTab;
+  final bool? showBackButton;
+
   @override
   ConsumerState<CartPage> createState() => _CartPageState();
 }
@@ -42,8 +50,12 @@ class _CartPageState extends ConsumerState<CartPage> {
         }
       }
     });
+    final shouldShowBack =
+        widget.showBackButton ?? (!widget.isTab && context.canPop());
     return CartView(
       state: ref.watch(cartViewModelProvider),
+      isTab: widget.isTab,
+      showBackButton: shouldShowBack,
       onIntent: (intent) =>
           unawaited(ref.read(cartViewModelProvider.notifier).dispatch(intent)),
     );

@@ -71,11 +71,16 @@ void main() {
               deliveryFee: 0,
             ),
           ],
+          deliveryAddress: '456 Nguyễn Huệ, Bến Nghé, Quận 1, TP.HCM',
         ),
         onIntent: intents.add,
       ),
     );
 
+    expect(
+      find.text('456 Nguyễn Huệ, Bến Nghé, Quận 1, TP.HCM'),
+      findsOneWidget,
+    );
     tester.widget<AmberSearchBar>(find.byType(AmberSearchBar)).onTap!();
     await tester.tap(find.text('Giao đến'));
     await tester.tap(find.byIcon(Icons.notifications_outlined));

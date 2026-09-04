@@ -1,5 +1,8 @@
+import 'package:delivery_app/core/design_system/components/app_button.dart';
+import 'package:delivery_app/core/design_system/foundations/app_spacing.dart';
 import 'package:delivery_app/features/splash/application/splash_intent.dart';
 import 'package:delivery_app/features/splash/application/splash_state.dart';
+import 'package:delivery_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
 /// Pure Amber Hearth startup visual. It only animates and emits retry intent.
@@ -29,6 +32,9 @@ class _SplashViewState extends State<SplashView>
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final strings = S.of(context);
+    final retryLabel = strings.authRetry;
+
     return Scaffold(
       body: DecoratedBox(
         decoration: BoxDecoration(
@@ -38,7 +44,7 @@ class _SplashViewState extends State<SplashView>
             colors: [
               scheme.primary,
               scheme.primaryContainer,
-              const Color(0xFFD97706),
+              scheme.surfaceContainerHighest,
             ],
           ),
         ),
@@ -50,7 +56,7 @@ class _SplashViewState extends State<SplashView>
             ),
             child: Center(
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(AppSpacing.page),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -58,11 +64,11 @@ class _SplashViewState extends State<SplashView>
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.18),
                         shape: BoxShape.circle,
-                        boxShadow: const [
+                        boxShadow: [
                           BoxShadow(
-                            color: Color(0x55000000),
+                            color: Colors.black.withValues(alpha: 0.25),
                             blurRadius: 24,
-                            offset: Offset(0, 8),
+                            offset: const Offset(0, 8),
                           ),
                         ],
                       ),
@@ -76,7 +82,7 @@ class _SplashViewState extends State<SplashView>
                         ),
                       ),
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: AppSpacing.xxl),
                     const Text(
                       'Delivery',
                       style: TextStyle(
@@ -85,7 +91,7 @@ class _SplashViewState extends State<SplashView>
                         color: Colors.white,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.xxs),
                     Text(
                       'URBAN HEARTH',
                       style: TextStyle(
@@ -94,7 +100,7 @@ class _SplashViewState extends State<SplashView>
                         letterSpacing: 2.5,
                       ),
                     ),
-                    const SizedBox(height: 72),
+                    const SizedBox(height: 56),
                     if (widget.state.hasError)
                       const Icon(
                         Icons.error_outline_rounded,
@@ -107,7 +113,7 @@ class _SplashViewState extends State<SplashView>
                         width: 32,
                         child: CircularProgressIndicator(color: Colors.white),
                       ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.sm),
                     Text(
                       widget.state.loadingMessage,
                       style: const TextStyle(
@@ -116,14 +122,14 @@ class _SplashViewState extends State<SplashView>
                       ),
                     ),
                     if (widget.state.hasError) ...[
-                      const SizedBox(height: 24),
-                      ElevatedButton(
+                      const SizedBox(height: AppSpacing.md),
+                      AppButton(
+                        label: retryLabel,
                         onPressed: () =>
                             widget.onIntent(const SplashRetryRequested()),
-                        child: const Text('Retry'),
                       ),
                     ],
-                    const SizedBox(height: 48),
+                    const SizedBox(height: AppSpacing.xxl),
                     Text(
                       'Fast • Fresh • Delivered',
                       style: TextStyle(

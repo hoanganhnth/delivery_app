@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:delivery_app/core/utils/screen_util_extensions.dart';
+import 'package:delivery_app/core/design_system/foundations/app_spacing.dart';
 import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
 import 'package:delivery_app/generated/l10n.dart';
 
@@ -155,8 +154,9 @@ class _TimelineStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final iconSize = isLarge ? 40.w : 32.w;
-    final titleSize = isLarge ? ResponsiveSize.fontXl : ResponsiveSize.fontM;
+    final reduceMotion = MediaQuery.of(context).disableAnimations;
+    final iconSize = isLarge ? 40.0 : 32.0;
+    final titleSize = isLarge ? 16.0 : 14.0;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,7 +165,7 @@ class _TimelineStep extends StatelessWidget {
         Column(
           children: [
             AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
+              duration: reduceMotion ? Duration.zero : const Duration(milliseconds: 300),
               width: iconSize,
               height: iconSize,
               decoration: BoxDecoration(
@@ -194,22 +194,22 @@ class _TimelineStep extends StatelessWidget {
                 color: isCompleted || isActive
                     ? Colors.white
                     : colors.onSurfaceVariant,
-                size: isLarge ? 20.w : 16.w,
+                size: isLarge ? 20.0 : 16.0,
               ),
             ),
             if (!isLast)
               Container(
-                width: 2.w,
-                height: isLarge ? 48.h : 40.h,
+                width: 2.0,
+                height: isLarge ? 48.0 : 40.0,
                 color: isCompleted ? colors.primary : colors.outlineVariant,
               ),
           ],
         ),
-        SizedBox(width: ResponsiveSize.m),
+        const SizedBox(width: AppSpacing.sm),
         // Text
         Expanded(
           child: Padding(
-            padding: EdgeInsets.only(bottom: isLast ? 0 : ResponsiveSize.m),
+            padding: EdgeInsets.only(bottom: isLast ? 0 : AppSpacing.md),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -227,11 +227,11 @@ class _TimelineStep extends StatelessWidget {
                   ),
                 ),
                 if (subtitle.isNotEmpty) ...[
-                  SizedBox(height: 2.h),
+                  const SizedBox(height: 2),
                   Text(
                     subtitle,
                     style: TextStyle(
-                      fontSize: ResponsiveSize.fontS,
+                      fontSize: 12,
                       fontWeight: FontWeight.w500,
                       color: isCompleted
                           ? colors.onSurfaceVariant

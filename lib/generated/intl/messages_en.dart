@@ -153,6 +153,18 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "anonymous": MessageLookupByLibrary.simpleMessage("Anonymous"),
     "appTitle": MessageLookupByLibrary.simpleMessage("Delivery App"),
+    "authConfirmPassword": MessageLookupByLibrary.simpleMessage(
+      "Confirm password",
+    ),
+    "authConfirmPasswordHint": MessageLookupByLibrary.simpleMessage(
+      "Re-enter your password",
+    ),
+    "authName": MessageLookupByLibrary.simpleMessage("Full name"),
+    "authNameHint": MessageLookupByLibrary.simpleMessage(
+      "Enter your full name",
+    ),
+    "authRetry": MessageLookupByLibrary.simpleMessage("Retry"),
+    "backToHome": MessageLookupByLibrary.simpleMessage("Back to Home"),
     "backToLogin": MessageLookupByLibrary.simpleMessage("Back to Login"),
     "browseRestaurants": MessageLookupByLibrary.simpleMessage(
       "Browse Restaurants",
@@ -325,6 +337,21 @@ class MessageLookup extends MessageLookupByLibrary {
       "Finding Delivery Driver",
     ),
     "forgotPassword": MessageLookupByLibrary.simpleMessage("Forgot Password?"),
+    "forgotPasswordInstruction": MessageLookupByLibrary.simpleMessage(
+      "If the account exists, we will send password reset instructions.",
+    ),
+    "forgotPasswordPrompt": MessageLookupByLibrary.simpleMessage(
+      "Enter account email",
+    ),
+    "forgotPasswordSent": MessageLookupByLibrary.simpleMessage(
+      "If the account exists, instructions have been sent. Please check your inbox.",
+    ),
+    "forgotPasswordSubmit": MessageLookupByLibrary.simpleMessage(
+      "Send instructions",
+    ),
+    "forgotPasswordTitle": MessageLookupByLibrary.simpleMessage(
+      "Forgot password",
+    ),
     "freeDelivery": MessageLookupByLibrary.simpleMessage("Free Delivery"),
     "fullName": MessageLookupByLibrary.simpleMessage("FULL NAME"),
     "fullNameHint": MessageLookupByLibrary.simpleMessage("Johnathan Doe"),
@@ -335,6 +362,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "hideOrderDetails": MessageLookupByLibrary.simpleMessage(
       "Hide Order Details",
     ),
+    "hidePassword": MessageLookupByLibrary.simpleMessage("Hide password"),
     "home": MessageLookupByLibrary.simpleMessage("Home"),
     "iapAllFeatures": MessageLookupByLibrary.simpleMessage("🎯 All Features"),
     "iapAllFeaturesUnlocked": MessageLookupByLibrary.simpleMessage(
@@ -482,6 +510,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "mexican": MessageLookupByLibrary.simpleMessage("Mexican"),
     "min": MessageLookupByLibrary.simpleMessage("min"),
     "myAddresses": MessageLookupByLibrary.simpleMessage("My Addresses"),
+    "navAccount": MessageLookupByLibrary.simpleMessage("Account"),
+    "navCart": MessageLookupByLibrary.simpleMessage("Cart"),
+    "navHome": MessageLookupByLibrary.simpleMessage("Home"),
+    "navOrders": MessageLookupByLibrary.simpleMessage("Orders"),
+    "navSearch": MessageLookupByLibrary.simpleMessage("Search"),
     "newConversationStarted": MessageLookupByLibrary.simpleMessage(
       "New conversation started",
     ),
@@ -518,6 +551,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "order": MessageLookupByLibrary.simpleMessage("Order"),
     "orderCancelled": MessageLookupByLibrary.simpleMessage(
       "Order cancelled successfully",
+    ),
+    "orderConfirmed": MessageLookupByLibrary.simpleMessage("Order Confirmed!"),
+    "orderConfirmedSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Your order will be delivered in 25-30 minutes",
     ),
     "orderHistory": MessageLookupByLibrary.simpleMessage("Order History"),
     "orderSummary": MessageLookupByLibrary.simpleMessage("Order Summary"),
@@ -716,6 +753,24 @@ class MessageLookup extends MessageLookupByLibrary {
       "Registration successful!",
     ),
     "remove": MessageLookupByLibrary.simpleMessage("Remove"),
+    "resetPasswordConfirm": MessageLookupByLibrary.simpleMessage(
+      "Confirm password",
+    ),
+    "resetPasswordNewPassword": MessageLookupByLibrary.simpleMessage(
+      "New password",
+    ),
+    "resetPasswordPrompt": MessageLookupByLibrary.simpleMessage(
+      "Create a new password",
+    ),
+    "resetPasswordSubmit": MessageLookupByLibrary.simpleMessage(
+      "Update password",
+    ),
+    "resetPasswordSuccess": MessageLookupByLibrary.simpleMessage(
+      "Your password has been updated successfully.",
+    ),
+    "resetPasswordTitle": MessageLookupByLibrary.simpleMessage(
+      "Reset password",
+    ),
     "restaurants": MessageLookupByLibrary.simpleMessage("Restaurants"),
     "restaurantsAllTitle": MessageLookupByLibrary.simpleMessage(
       "All Restaurants",
@@ -825,6 +880,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "showOrderDetails": MessageLookupByLibrary.simpleMessage(
       "Show Order Details",
     ),
+    "showPassword": MessageLookupByLibrary.simpleMessage("Show password"),
     "signIn": MessageLookupByLibrary.simpleMessage("SIGN IN"),
     "signInWithGoogle": MessageLookupByLibrary.simpleMessage(
       "Sign in with Google",
@@ -910,6 +966,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "total": MessageLookupByLibrary.simpleMessage("Total"),
     "trackDelivery": MessageLookupByLibrary.simpleMessage("Track Delivery"),
+    "trackOrder": MessageLookupByLibrary.simpleMessage("Track Order"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
     "unavailable": MessageLookupByLibrary.simpleMessage("Unavailable"),
     "unexpectedError": MessageLookupByLibrary.simpleMessage(

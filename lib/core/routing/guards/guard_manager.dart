@@ -33,7 +33,7 @@ class GuardManager {
         (currentPath == AppRoutes.login ||
             currentPath == AppRoutes.register ||
             currentPath == AppRoutes.forgotPassword)) {
-      return AppRoutes.home;
+      return AppRoutes.main;
     }
 
     return null;
@@ -42,7 +42,7 @@ class GuardManager {
   /// Apply guest guard to a route
   String? applyGuestGuard(BuildContext context, GoRouterState state) {
     if (_authChecker.isAuthenticated) {
-      return AppRoutes.home;
+      return AppRoutes.main;
     }
     return null;
   }

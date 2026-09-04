@@ -18,6 +18,7 @@ void main() {
     await pumpTestApp(
       tester,
       child: AddressListView(
+        isSelectMode: true,
         state: const AddressListViewState(
           isLoading: false,
           selectedAddressId: 401,

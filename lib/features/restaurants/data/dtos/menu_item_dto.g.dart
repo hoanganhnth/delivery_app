@@ -10,7 +10,7 @@ _MenuItemDto _$MenuItemDtoFromJson(Map<String, dynamic> json) => _MenuItemDto(
   id: json['id'] as num?,
   restaurantId: json['restaurantId'] as num?,
   name: json['name'] as String,
-  description: json['description'] as String,
+  description: json['description'] as String? ?? '',
   price: (json['price'] as num).toDouble(),
   image: json['image'] as String?,
   status: const MenuItemStatusConverter().fromJson(json['status'] as String),

@@ -31,6 +31,9 @@ class ProfileView extends StatelessWidget {
             SliverAppBar(
               expandedHeight: 220,
               pinned: true,
+              elevation: 0,
+              scrolledUnderElevation: 0,
+              surfaceTintColor: Colors.transparent,
               backgroundColor: scheme.primary,
               foregroundColor: scheme.onPrimary,
               flexibleSpace: FlexibleSpaceBar(

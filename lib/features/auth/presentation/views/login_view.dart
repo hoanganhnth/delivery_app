@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:delivery_app/core/design_system/components/app_button.dart';
+import 'package:delivery_app/core/design_system/components/app_fields.dart';
+import 'package:delivery_app/core/design_system/foundations/app_spacing.dart';
 import 'package:delivery_app/generated/l10n.dart';
 
 import '../../application/login/login_intent.dart';
 import '../../application/login/login_state.dart';
-import '../widgets/login_header.dart';
-import '../widgets/stitch_text_field.dart';
+import '../widgets/auth_components.dart';
 
-/// Pure login view. Controllers/focus are local rendering mechanics; every
-/// meaningful value change and action is emitted as a typed intent.
+/// Pure login view styled with canonical design system primitives.
+///
+/// Handles soft keyboard clearance, accessible semantics, light/dark themes,
+/// and typed user intents.
 class LoginView extends StatefulWidget {
   const LoginView({super.key, required this.state, required this.onIntent});
 
@@ -51,193 +55,140 @@ class _LoginViewState extends State<LoginView> {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      body: Stack(
-        children: [
-          Positioned(
-            bottom: -64,
-            left: -64,
-            child: _AmbientCircle(
-              color: scheme.primary.withValues(alpha: 0.05),
-              size: 192,
-            ),
-          ),
-          Positioned(
-            top: MediaQuery.sizeOf(context).height / 2,
-            right: -80,
-            child: _AmbientCircle(
-              color: scheme.primaryContainer.withValues(alpha: 0.35),
-              size: 256,
-            ),
-          ),
-          Center(
-            child: Container(
-              width: double.infinity,
-              constraints: const BoxConstraints(maxWidth: 448),
-              color: theme.scaffoldBackgroundColor,
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 480),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const LoginHeader(),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(32, 40, 32, 48),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(
-                            strings.welcomeBack,
-                            style: theme.textTheme.displaySmall?.copyWith(
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: -0.5,
-                            ),
+                  const AuthHeader(),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.page,
+                      AppSpacing.lg,
+                      AppSpacing.page,
+                      AppSpacing.xxl,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          strings.welcomeBack,
+                          style: theme.textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.5,
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            strings.loginSubtitle,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: scheme.secondary,
-                              fontWeight: FontWeight.w500,
-                            ),
+                        ),
+                        const SizedBox(height: AppSpacing.xxs),
+                        Text(
+                          strings.loginSubtitle,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: scheme.onSurfaceVariant,
                           ),
-                          const SizedBox(height: 40),
-                          StitchTextField(
-                            key: const Key('email_field'),
-                            controller: _emailController,
-                            label: strings.emailAddress,
-                            hint: strings.emailHint,
-                            icon: Icons.mail_outline,
-                            keyboardType: TextInputType.emailAddress,
-                            enabled: !widget.state.isSubmitting,
-                            errorText: _emailError(
-                              strings,
-                              widget.state.emailError,
-                            ),
-                            onChanged:
-                                (value) =>
-                                    widget.onIntent(LoginEmailChanged(value)),
+                        ),
+                        const SizedBox(height: AppSpacing.lg),
+                        AppTextField(
+                          key: const Key('email_field'),
+                          controller: _emailController,
+                          label: strings.emailAddress,
+                          hintText: strings.emailHint,
+                          prefixIcon: const Icon(Icons.mail_outline),
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          enabled: !widget.state.isSubmitting,
+                          errorText: _emailError(strings, widget.state.emailError),
+                          onChanged: (value) =>
+                              widget.onIntent(LoginEmailChanged(value)),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        AuthPasswordField(
+                          key: const Key('password_field'),
+                          controller: _passwordController,
+                          label: strings.password,
+                          hint: strings.passwordHint,
+                          obscurePassword: widget.state.obscurePassword,
+                          enabled: !widget.state.isSubmitting,
+                          errorText:
+                              _passwordError(strings, widget.state.passwordError),
+                          onChanged: (value) =>
+                              widget.onIntent(LoginPasswordChanged(value)),
+                          textInputAction: TextInputAction.done,
+                          onSubmitted: (_) {
+                            if (!widget.state.isSubmitting) {
+                              widget.onIntent(const LoginSubmitted());
+                            }
+                          },
+                          onToggleVisibility: () => widget.onIntent(
+                            const LoginPasswordVisibilityToggled(),
                           ),
-                          const SizedBox(height: 24),
-                          StitchTextField(
-                            key: const Key('password_field'),
-                            controller: _passwordController,
-                            label: strings.password,
-                            hint: strings.passwordHint,
-                            icon: Icons.lock_outline,
-                            obscureText: widget.state.obscurePassword,
-                            enabled: !widget.state.isSubmitting,
-                            errorText: _passwordError(
-                              strings,
-                              widget.state.passwordError,
-                            ),
-                            onChanged:
-                                (value) => widget.onIntent(
-                                  LoginPasswordChanged(value),
-                                ),
-                            suffixIcon: IconButton(
-                              tooltip:
-                                  widget.state.obscurePassword
-                                      ? 'Show password'
-                                      : 'Hide password',
-                              icon: Icon(
-                                widget.state.obscurePassword
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined,
-                                color: scheme.secondary,
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            key: const Key('forgot_password_button'),
+                            onPressed: widget.state.isSubmitting
+                                ? null
+                                : () => widget.onIntent(
+                                      const LoginForgotPasswordRequested(),
+                                    ),
+                            child: Text(strings.forgotPassword),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        AppButton(
+                          key: const Key('login_button'),
+                          label: strings.signIn,
+                          expand: true,
+                          isLoading: widget.state.isSubmitting,
+                          onPressed: widget.state.isSubmitting
+                              ? null
+                              : () => widget.onIntent(const LoginSubmitted()),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        AppButton(
+                          variant: AppButtonVariant.secondary,
+                          label: strings.signInWithGoogle,
+                          icon: Icons.g_mobiledata,
+                          expand: true,
+                          onPressed: widget.state.isSubmitting
+                              ? null
+                              : () => widget.onIntent(const LoginGoogleRequested()),
+                        ),
+                        const SizedBox(height: AppSpacing.lg),
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            Text(
+                              strings.dontHaveAccount,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: scheme.onSurfaceVariant,
                               ),
-                              onPressed:
-                                  widget.state.isSubmitting
-                                      ? null
-                                      : () => widget.onIntent(
-                                        const LoginPasswordVisibilityToggled(),
-                                      ),
                             ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              key: const Key('forgot_password_button'),
-                              onPressed:
-                                  widget.state.isSubmitting
-                                      ? null
-                                      : () => widget.onIntent(
-                                        const LoginForgotPasswordRequested(),
+                            TextButton(
+                              onPressed: widget.state.isSubmitting
+                                  ? null
+                                  : () => widget.onIntent(
+                                        const LoginRegisterRequested(),
                                       ),
-                              child: Text(strings.forgotPassword),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          SizedBox(
-                            height: 56,
-                            child: ElevatedButton(
-                              key: const Key('login_button'),
-                              onPressed:
-                                  widget.state.isSubmitting
-                                      ? null
-                                      : () => widget.onIntent(
-                                        const LoginSubmitted(),
-                                      ),
-                              child:
-                                  widget.state.isSubmitting
-                                      ? const SizedBox(
-                                        height: 20,
-                                        width: 20,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                        ),
-                                      )
-                                      : Text(strings.signIn),
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                          SizedBox(
-                            height: 56,
-                            child: OutlinedButton.icon(
-                              onPressed:
-                                  widget.state.isSubmitting
-                                      ? null
-                                      : () => widget.onIntent(
-                                        const LoginGoogleRequested(),
-                                      ),
-                              icon: const Icon(
-                                Icons.g_mobiledata,
-                                size: 32,
-                                color: Colors.blue,
+                              child: Text(
+                                strings.register,
+                                style: const TextStyle(fontWeight: FontWeight.w700),
                               ),
-                              label: Text(strings.signInWithGoogle),
                             ),
-                          ),
-                          const SizedBox(height: 32),
-                          Center(
-                            child: Wrap(
-                              alignment: WrapAlignment.center,
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: [
-                                Text(
-                                  strings.dontHaveAccount,
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: scheme.secondary,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed:
-                                      widget.state.isSubmitting
-                                          ? null
-                                          : () => widget.onIntent(
-                                            const LoginRegisterRequested(),
-                                          ),
-                                  child: Text(strings.register),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -264,21 +215,6 @@ class _LoginViewState extends State<LoginView> {
       text: value,
       selection: TextSelection.collapsed(offset: value.length),
       composing: TextRange.empty,
-    );
-  }
-}
-
-class _AmbientCircle extends StatelessWidget {
-  const _AmbientCircle({required this.color, required this.size});
-
-  final Color color;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-      child: SizedBox.square(dimension: size),
     );
   }
 }

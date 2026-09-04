@@ -10,7 +10,7 @@ sealed class MenuItemEntity with _$MenuItemEntity implements CartLineSource {
     num? id,
     num? restaurantId,
     required String name,
-    required String description,
+    @JsonKey(defaultValue: '') required String description,
     required double price,
     String? image,
     @MenuItemStatusConverter() required MenuItemStatus status,
@@ -62,6 +62,8 @@ class MenuItemStatusConverter implements JsonConverter<MenuItemStatus, String> {
         return MenuItemStatus.unavailable;
       case 'SOLD_OUT':
         return MenuItemStatus.soldOut;
+      case 'DISCONTINUED':
+        return MenuItemStatus.unavailable;
       default:
         throw ArgumentError('Invalid MenuItemStatus: $json');
     }

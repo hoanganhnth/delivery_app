@@ -22,6 +22,7 @@ class ForgotPasswordPage extends ConsumerWidget {
       state: state,
       onEmailChanged: viewModel.setEmail,
       onSubmit: viewModel.submit,
+      onBack: () => Navigator.of(context).maybePop(),
     );
   }
 }

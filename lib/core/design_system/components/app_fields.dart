@@ -20,6 +20,8 @@ class AppTextField extends StatelessWidget {
     this.maxLines = 1,
     this.enabled = true,
     this.readOnly = false,
+    this.obscureText = false,
+    this.errorText,
     this.onTap,
   });
 
@@ -27,6 +29,7 @@ class AppTextField extends StatelessWidget {
   final String? label;
   final String? hintText;
   final String? helperText;
+  final String? errorText;
   final String? semanticLabel;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -38,6 +41,7 @@ class AppTextField extends StatelessWidget {
   final int maxLines;
   final bool enabled;
   final bool readOnly;
+  final bool obscureText;
   final VoidCallback? onTap;
 
   @override
@@ -46,6 +50,7 @@ class AppTextField extends StatelessWidget {
       controller: controller,
       enabled: enabled,
       readOnly: readOnly,
+      obscureText: obscureText,
       onTap: onTap,
       onChanged: onChanged,
       onSubmitted: onSubmitted,
@@ -57,6 +62,7 @@ class AppTextField extends StatelessWidget {
         labelText: label,
         hintText: hintText,
         helperText: helperText,
+        errorText: errorText,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         border: const OutlineInputBorder(borderRadius: AppRadii.control),

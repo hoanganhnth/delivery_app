@@ -19,6 +19,7 @@ class ResetPasswordPage extends ConsumerWidget {
       onNewPasswordChanged: viewModel.setNewPassword,
       onConfirmPasswordChanged: viewModel.setConfirmPassword,
       onSubmit: viewModel.submit,
+      onBack: () => Navigator.of(context).maybePop(),
     );
   }
 }

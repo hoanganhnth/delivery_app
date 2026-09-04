@@ -1,11 +1,14 @@
+import 'package:delivery_app/core/design_system/components/app_button.dart';
+import 'package:delivery_app/core/design_system/components/app_feedback.dart';
+import 'package:delivery_app/core/design_system/foundations/app_radii.dart';
+import 'package:delivery_app/core/design_system/foundations/app_spacing.dart';
 import 'package:flutter/material.dart';
 
 import '../../application/catalog_search_intent.dart';
 import '../../application/catalog_search_state.dart';
 import '../components/catalog_search_result_tiles.dart';
 
-/// Pure search rendering. It manages only the TextEditingController needed for
-/// paint/focus; query, debouncing, API work and navigation stay outside it.
+/// Pure search rendering using canonical design system foundations.
 class CatalogSearchView extends StatefulWidget {
   const CatalogSearchView({
     super.key,
@@ -48,46 +51,83 @@ class _CatalogSearchViewState extends State<CatalogSearchView> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: TextField(
-          key: const Key('catalog_search_input'),
-          controller: _controller,
-          autofocus: true,
-          decoration: InputDecoration(
-            hintText: 'Search dishes, restaurants...',
-            border: InputBorder.none,
-            hintStyle: TextStyle(color: scheme.outline),
+        titleSpacing: AppSpacing.page,
+        title: Container(
+          height: 44,
+          decoration: BoxDecoration(
+            color: scheme.surfaceContainerHighest.withValues(alpha: 0.5),
+            borderRadius: AppRadii.control,
           ),
-          onChanged: (value) =>
-              widget.onIntent(CatalogSearchQueryChanged(value)),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+          child: Row(
+            children: [
+              Icon(Icons.search, color: scheme.onSurfaceVariant, size: 20),
+              const SizedBox(width: AppSpacing.xs),
+              Expanded(
+                child: TextField(
+                  key: const Key('catalog_search_input'),
+                  controller: _controller,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    hintText: 'Search dishes, restaurants...',
+                    border: InputBorder.none,
+                    isDense: true,
+                    hintStyle: TextStyle(
+                      color: scheme.onSurfaceVariant.withValues(alpha: 0.7),
+                      fontSize: 14,
+                    ),
+                  ),
+                  onChanged: (value) =>
+                      widget.onIntent(CatalogSearchQueryChanged(value)),
+                ),
+              ),
+            ],
+          ),
         ),
         actions: [
-          IconButton(
+          AppIconButton(
             key: const Key('catalog_search_clear'),
-            icon: const Icon(Icons.clear),
-            onPressed: () => widget.onIntent(const CatalogSearchCleared()),
+            tooltip: 'Clear search',
+            icon: Icons.clear,
+            onPressed: () {
+              _controller.clear();
+              widget.onIntent(const CatalogSearchCleared());
+            },
           ),
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _SearchTab(
-                title: 'Dishes',
-                tab: CatalogSearchTab.dishes,
-                selected: widget.state.tab,
-                onTap: widget.onIntent,
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: scheme.outlineVariant.withValues(alpha: 0.3),
+                ),
               ),
-              _SearchTab(
-                title: 'Restaurants',
-                tab: CatalogSearchTab.restaurants,
-                selected: widget.state.tab,
-                onTap: widget.onIntent,
-              ),
-            ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _SearchTab(
+                  title: 'Dishes',
+                  tab: CatalogSearchTab.dishes,
+                  selected: widget.state.tab,
+                  onTap: widget.onIntent,
+                ),
+                _SearchTab(
+                  title: 'Restaurants',
+                  tab: CatalogSearchTab.restaurants,
+                  selected: widget.state.tab,
+                  onTap: widget.onIntent,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -113,23 +153,32 @@ class _SearchTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final isSelected = tab == selected;
     final scheme = Theme.of(context).colorScheme;
-    return InkWell(
-      onTap: () => onTap(CatalogSearchTabSelected(tab)),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: isSelected ? scheme.primary : Colors.transparent,
-              width: 2,
+
+    return Semantics(
+      selected: isSelected,
+      button: true,
+      label: title,
+      child: InkWell(
+        onTap: () => onTap(CatalogSearchTabSelected(tab)),
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            vertical: AppSpacing.sm,
+            horizontal: AppSpacing.page,
+          ),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: isSelected ? scheme.primary : Colors.transparent,
+                width: 2.5,
+              ),
             ),
           ),
-        ),
-        child: Text(
-          title,
-          style: TextStyle(
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            color: isSelected ? scheme.primary : scheme.outline,
+          child: Text(
+            title,
+            style: TextStyle(
+              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+              color: isSelected ? scheme.primary : scheme.onSurfaceVariant,
+            ),
           ),
         ),
       ),
@@ -147,22 +196,30 @@ class _SearchResults extends StatelessWidget {
   Widget build(BuildContext context) {
     if (state.isQueryEmpty) {
       return Center(
-        child: Text(
-          state.tab == CatalogSearchTab.dishes
+        child: AppStateFeedback.empty(
+          title: state.tab == CatalogSearchTab.dishes
               ? 'Nhập tên món ăn để tìm kiếm'
               : 'Nhập tên nhà hàng để tìm kiếm',
+          message: 'Khám phá hàng ngàn món ăn ngon và nhà hàng phong phú.',
+          icon: Icons.search,
         ),
       );
     }
     if (state.isSearching) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(
+        child: AppStateFeedback.loading(title: 'Đang tìm kiếm...'),
+      );
     }
     if (state.hasVisibleError) {
       return Center(
-        child: Text(
-          state.tab == CatalogSearchTab.dishes
+        child: AppStateFeedback.error(
+          title: state.tab == CatalogSearchTab.dishes
               ? 'Không thể tải kết quả món ăn'
               : 'Không thể tải kết quả nhà hàng',
+          message: 'Vui lòng kiểm tra kết nối mạng và thử lại.',
+          actionLabel: 'Thử lại',
+          onAction: () =>
+              onIntent(CatalogSearchQueryChanged(state.query)),
         ),
       );
     }
@@ -188,10 +245,17 @@ class _DishResults extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (dishes.isEmpty) {
-      return const Center(child: Text('Không tìm thấy món ăn'));
+      return const Center(
+        child: AppStateFeedback.empty(
+          title: 'Không tìm thấy món ăn',
+          message: 'Hãy thử tìm bằng từ khóa khác hoặc kiểm tra lại chính tả.',
+          icon: Icons.restaurant_menu,
+        ),
+      );
     }
-    return ListView.builder(
+    return ListView.separated(
       itemCount: dishes.length,
+      separatorBuilder: (_, _) => const Divider(height: 1, indent: 72),
       itemBuilder: (context, index) {
         final dish = dishes[index];
         return CatalogDishSearchResultTile(
@@ -214,10 +278,17 @@ class _RestaurantResults extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (restaurants.isEmpty) {
-      return const Center(child: Text('Không tìm thấy nhà hàng'));
+      return const Center(
+        child: AppStateFeedback.empty(
+          title: 'Không tìm thấy nhà hàng',
+          message: 'Hãy thử tìm với tên nhà hàng hoặc địa điểm khác.',
+          icon: Icons.storefront_outlined,
+        ),
+      );
     }
-    return ListView.builder(
+    return ListView.separated(
       itemCount: restaurants.length,
+      separatorBuilder: (_, _) => const Divider(height: 1, indent: 72),
       itemBuilder: (context, index) {
         final restaurant = restaurants[index];
         return CatalogRestaurantSearchResultTile(

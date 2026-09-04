@@ -12,10 +12,12 @@ class AddressListView extends StatelessWidget {
     super.key,
     required this.state,
     required this.onIntent,
+    this.isSelectMode = false,
   });
 
   final AddressListViewState state;
   final ValueChanged<AddressListIntent> onIntent;
+  final bool isSelectMode;
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +71,7 @@ class AddressListView extends StatelessWidget {
             address: address,
             isSelected: state.selectedAddressId == address.id,
             isBusy: state.operationInProgressId == address.id,
+            isSelectMode: isSelectMode,
             onSelect: () => onIntent(AddressListSelectRequested(address.id)),
             onEdit: () => onIntent(AddressListEditRequested(address.id)),
             onSetDefault: () =>

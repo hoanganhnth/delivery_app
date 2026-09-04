@@ -11,6 +11,7 @@ import 'package:delivery_app/features/cart/di/cart_commands_provider.dart';
 import 'package:delivery_app/features/cart/di/checkout_providers.dart';
 import 'package:delivery_app/features/cart/domain/entities/cart_entity.dart';
 import 'package:delivery_app/features/cart/application/cart_notifier.dart';
+import 'package:delivery_app/core/contracts/session_port_provider.dart';
 import 'package:delivery_app/features/orders/data/dtos/checkout_preview_dto.dart';
 import 'package:delivery_app/features/orders/di/order_providers.dart';
 import 'package:delivery_app/features/orders/application/state/orders/orders_list_notifier.dart';
@@ -84,6 +85,7 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
   Future<void> dispatch(CheckoutIntent intent) async {
     switch (intent) {
       case CheckoutLoadRequested():
+        await _loadAddressesForCurrentSession();
         await _loadStackingCapability();
         await Future.wait([_refreshPreview(), _loadVouchers()]);
       case CheckoutPreviewRetryRequested():
@@ -183,6 +185,23 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
       _hasPreviewError = true;
       _publish();
     }
+  }
+
+  Future<void> _loadAddressesForCurrentSession() async {
+    final profileId = ref.read(sessionPortProvider).current.profileId;
+    if (profileId == null || profileId <= 0) return;
+
+    final notifier = ref.read(userAddressListProvider.notifier);
+    final loaded = await notifier.loadAddresses(profileId);
+    if (!ref.mounted) return;
+
+    if (loaded) notifier.autoSelectDefaultAddress();
+    final selected = _selectedAddress(ref.read(userAddressListProvider));
+    if (selected == _address) return;
+
+    _address = selected;
+    _invalidatePreview();
+    _publish();
   }
 
   Future<void> _loadVouchers({bool force = false}) async {

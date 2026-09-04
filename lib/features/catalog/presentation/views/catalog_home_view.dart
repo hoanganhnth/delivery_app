@@ -13,11 +13,13 @@ class CatalogHomeView extends StatelessWidget {
     required this.state,
     required this.onIntent,
     this.flashSaleBanner,
+    this.deliveryAddress,
   });
 
   final CatalogHomeViewState state;
   final ValueChanged<CatalogHomeIntent> onIntent;
   final Widget? flashSaleBanner;
+  final String? deliveryAddress;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,10 @@ class CatalogHomeView extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: CatalogHomeHeader(onIntent: onIntent),
+              child: CatalogHomeHeader(
+                onIntent: onIntent,
+                deliveryAddress: deliveryAddress ?? state.deliveryAddress,
+              ),
             ),
             SliverToBoxAdapter(
               child: CatalogHomeSearchLauncher(onIntent: onIntent),

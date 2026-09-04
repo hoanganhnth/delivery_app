@@ -14,7 +14,9 @@ import '../views/address_list_view.dart';
 
 /// Riverpod, lifecycle, navigation and dialog adapter for [AddressListView].
 class AddressListPage extends ConsumerStatefulWidget {
-  const AddressListPage({super.key});
+  const AddressListPage({super.key, this.isSelectMode = false});
+
+  final bool isSelectMode;
 
   @override
   ConsumerState<AddressListPage> createState() => _AddressListPageState();
@@ -65,6 +67,7 @@ class _AddressListPageState extends ConsumerState<AddressListPage>
     });
     return AddressListView(
       state: ref.watch(addressListViewModelProvider),
+      isSelectMode: widget.isSelectMode,
       onIntent: (intent) => unawaited(
         ref.read(addressListViewModelProvider.notifier).dispatch(intent),
       ),

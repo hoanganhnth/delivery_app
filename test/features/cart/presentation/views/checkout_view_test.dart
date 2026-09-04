@@ -11,6 +11,8 @@ import 'package:delivery_app/features/cart/di/checkout_providers.dart';
 import 'package:delivery_app/features/cart/domain/entities/cart_entity.dart';
 import 'package:delivery_app/features/cart/application/cart_notifier.dart';
 import 'package:delivery_app/features/cart/presentation/views/checkout_view.dart';
+import 'package:delivery_app/core/contracts/session_contract.dart';
+import 'package:delivery_app/core/contracts/session_port_provider.dart';
 import 'package:delivery_app/features/orders/data/dtos/checkout_preview_dto.dart';
 import 'package:delivery_app/features/orders/domain/entities/order_creation_command.dart';
 import 'package:delivery_app/features/orders/domain/entities/order_entity.dart';
@@ -18,6 +20,10 @@ import 'package:delivery_app/features/orders/domain/repositories/order_repositor
 import 'package:delivery_app/features/orders/di/order_providers.dart';
 import 'package:delivery_app/features/user_address/application/address_list_notifier.dart';
 import 'package:delivery_app/features/user_address/application/address_store_state.dart';
+import 'package:delivery_app/features/user_address/di/user_address_di_providers.dart';
+import 'package:delivery_app/features/user_address/domain/entities/address_upsert_command.dart';
+import 'package:delivery_app/features/user_address/domain/entities/user_address_entity.dart';
+import 'package:delivery_app/features/user_address/domain/repositories/user_address_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -27,6 +33,45 @@ import '../../../../support/app_harness.dart';
 import '../../../../support/fulfilment_builders.dart';
 
 void main() {
+  test(
+    'CheckoutLoadRequested loads the current profile address and selects its default',
+    () async {
+      final repository = _FakeCheckoutAddressRepository()
+        ..addressesResult = Right([
+          buildAddress(id: 401, isDefault: false),
+          buildAddress(id: 402, label: 'Công ty', isDefault: true),
+        ]);
+      final container = ProviderContainer(
+        overrides: [
+          cartProvider.overrideWith(_TestCartNotifier.new),
+          userAddressRepositoryProvider.overrideWithValue(repository),
+          sessionPortProvider.overrideWithValue(_FakeSessionPort(501)),
+          checkoutPreviewGatewayProvider.overrideWithValue(
+            _FakePreviewGateway(_preview),
+          ),
+          checkoutVoucherGatewayProvider.overrideWithValue(
+            _FakeVoucherGateway(),
+          ),
+          orderRepositoryProvider.overrideWithValue(_FakeOrderRepository()),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(checkoutViewModelProvider);
+      await container.read(cartProvider.future);
+
+      await container
+          .read(checkoutViewModelProvider.notifier)
+          .dispatch(const CheckoutLoadRequested());
+
+      expect(repository.requestedUserId, 501);
+      expect(container.read(userAddressListProvider).addresses, hasLength(2));
+      expect(
+        container.read(checkoutViewModelProvider).selectedAddress?.id,
+        402,
+      );
+    },
+  );
+
   test(
     'CheckoutViewModel validates a server preview before creating an order',
     () async {
@@ -510,6 +555,59 @@ class _SelectedAddressNotifier extends UserAddressListNotifier {
     final address = buildAddress();
     return UserAddressListState(addresses: [address], selectedAddress: address);
   }
+}
+
+class _FakeSessionPort implements SessionPort {
+  const _FakeSessionPort(this.profileId);
+
+  final int profileId;
+
+  @override
+  SessionSnapshot get current =>
+      SessionSnapshot(isAuthenticated: true, profileId: profileId);
+
+  @override
+  Stream<SessionSnapshot> get changes => const Stream<SessionSnapshot>.empty();
+
+  @override
+  String? get accessToken => 'test-token';
+}
+
+class _FakeCheckoutAddressRepository implements UserAddressRepository {
+  Either<Failure, List<UserAddressEntity>> addressesResult = Right([]);
+  int? requestedUserId;
+
+  @override
+  Future<Either<Failure, List<UserAddressEntity>>> getUserAddresses(
+    int userId,
+  ) async {
+    requestedUserId = userId;
+    return addressesResult;
+  }
+
+  @override
+  Future<Either<Failure, UserAddressEntity>> getAddressById(int addressId) =>
+      throw UnimplementedError();
+
+  @override
+  Future<Either<Failure, UserAddressEntity>> createAddress(
+    int userId,
+    AddressUpsertCommand request,
+  ) => throw UnimplementedError();
+
+  @override
+  Future<Either<Failure, UserAddressEntity>> updateAddress(
+    int addressId,
+    AddressUpsertCommand request,
+  ) => throw UnimplementedError();
+
+  @override
+  Future<Either<Failure, bool>> deleteAddress(int addressId) =>
+      throw UnimplementedError();
+
+  @override
+  Future<Either<Failure, UserAddressEntity>> setDefaultAddress(int addressId) =>
+      throw UnimplementedError();
 }
 
 class _FakePreviewGateway implements CheckoutPreviewGateway {

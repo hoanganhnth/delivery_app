@@ -357,7 +357,7 @@ class S {
     final String ratingString = ratingNumberFormat.format(rating);
 
     return Intl.message(
-      ratingString,
+      '$ratingString',
       name: 'rating',
       desc: '',
       args: [ratingString],
@@ -3927,6 +3927,231 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Home`
+  String get navHome {
+    return Intl.message('Home', name: 'navHome', desc: '', args: []);
+  }
+
+  /// `Search`
+  String get navSearch {
+    return Intl.message('Search', name: 'navSearch', desc: '', args: []);
+  }
+
+  /// `Orders`
+  String get navOrders {
+    return Intl.message('Orders', name: 'navOrders', desc: '', args: []);
+  }
+
+  /// `Account`
+  String get navAccount {
+    return Intl.message('Account', name: 'navAccount', desc: '', args: []);
+  }
+
+  /// `Cart`
+  String get navCart {
+    return Intl.message('Cart', name: 'navCart', desc: '', args: []);
+  }
+
+  /// `Show password`
+  String get showPassword {
+    return Intl.message(
+      'Show password',
+      name: 'showPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hide password`
+  String get hidePassword {
+    return Intl.message(
+      'Hide password',
+      name: 'hidePassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Full name`
+  String get authName {
+    return Intl.message('Full name', name: 'authName', desc: '', args: []);
+  }
+
+  /// `Enter your full name`
+  String get authNameHint {
+    return Intl.message(
+      'Enter your full name',
+      name: 'authNameHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm password`
+  String get authConfirmPassword {
+    return Intl.message(
+      'Confirm password',
+      name: 'authConfirmPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Re-enter your password`
+  String get authConfirmPasswordHint {
+    return Intl.message(
+      'Re-enter your password',
+      name: 'authConfirmPasswordHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Retry`
+  String get authRetry {
+    return Intl.message('Retry', name: 'authRetry', desc: '', args: []);
+  }
+
+  /// `Forgot password`
+  String get forgotPasswordTitle {
+    return Intl.message(
+      'Forgot password',
+      name: 'forgotPasswordTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter account email`
+  String get forgotPasswordPrompt {
+    return Intl.message(
+      'Enter account email',
+      name: 'forgotPasswordPrompt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If the account exists, we will send password reset instructions.`
+  String get forgotPasswordInstruction {
+    return Intl.message(
+      'If the account exists, we will send password reset instructions.',
+      name: 'forgotPasswordInstruction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send instructions`
+  String get forgotPasswordSubmit {
+    return Intl.message(
+      'Send instructions',
+      name: 'forgotPasswordSubmit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If the account exists, instructions have been sent. Please check your inbox.`
+  String get forgotPasswordSent {
+    return Intl.message(
+      'If the account exists, instructions have been sent. Please check your inbox.',
+      name: 'forgotPasswordSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset password`
+  String get resetPasswordTitle {
+    return Intl.message(
+      'Reset password',
+      name: 'resetPasswordTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create a new password`
+  String get resetPasswordPrompt {
+    return Intl.message(
+      'Create a new password',
+      name: 'resetPasswordPrompt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New password`
+  String get resetPasswordNewPassword {
+    return Intl.message(
+      'New password',
+      name: 'resetPasswordNewPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm password`
+  String get resetPasswordConfirm {
+    return Intl.message(
+      'Confirm password',
+      name: 'resetPasswordConfirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update password`
+  String get resetPasswordSubmit {
+    return Intl.message(
+      'Update password',
+      name: 'resetPasswordSubmit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your password has been updated successfully.`
+  String get resetPasswordSuccess {
+    return Intl.message(
+      'Your password has been updated successfully.',
+      name: 'resetPasswordSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Order Confirmed!`
+  String get orderConfirmed {
+    return Intl.message(
+      'Order Confirmed!',
+      name: 'orderConfirmed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your order will be delivered in 25-30 minutes`
+  String get orderConfirmedSubtitle {
+    return Intl.message(
+      'Your order will be delivered in 25-30 minutes',
+      name: 'orderConfirmedSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Track Order`
+  String get trackOrder {
+    return Intl.message('Track Order', name: 'trackOrder', desc: '', args: []);
+  }
+
+  /// `Back to Home`
+  String get backToHome {
+    return Intl.message('Back to Home', name: 'backToHome', desc: '', args: []);
   }
 }
 

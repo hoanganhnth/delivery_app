@@ -27,6 +27,9 @@ class SettingsView extends StatelessWidget {
           SliverAppBar(
             expandedHeight: 120,
             pinned: true,
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            surfaceTintColor: Colors.transparent,
             backgroundColor: scheme.primary,
             foregroundColor: scheme.onPrimary,
             flexibleSpace: FlexibleSpaceBar(

@@ -30,6 +30,7 @@ class OrderConfirmationPage extends ConsumerWidget {
       onIntent: (intent) => ref
           .read(orderConfirmationViewModelProvider.notifier)
           .dispatch(intent),
+      onHome: () => Navigator.of(context).popUntil((r) => r.isFirst),
     );
   }
 

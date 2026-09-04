@@ -10,6 +10,7 @@ class AddressListCard extends StatelessWidget {
     required this.address,
     required this.isSelected,
     required this.isBusy,
+    this.isSelectMode = false,
     required this.onSelect,
     required this.onEdit,
     required this.onSetDefault,
@@ -19,6 +20,7 @@ class AddressListCard extends StatelessWidget {
   final AddressListItemViewData address;
   final bool isSelected;
   final bool isBusy;
+  final bool isSelectMode;
   final VoidCallback onSelect;
   final VoidCallback onEdit;
   final VoidCallback onSetDefault;
@@ -27,20 +29,23 @@ class AddressListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final active = isSelectMode && isSelected;
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: AppRadii.card,
         side: BorderSide(
-          color: address.isDefault || isSelected
-              ? scheme.primary
-              : scheme.outlineVariant,
-          width: address.isDefault || isSelected ? 2 : 1,
+          color: active ? scheme.primary : scheme.outlineVariant,
+          width: active ? 2 : 1,
         ),
       ),
       child: InkWell(
-        onTap: isBusy ? null : onSelect,
+        onTap: isBusy
+            ? null
+            : isSelectMode
+                ? onSelect
+                : onEdit,
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.card),
           child: Row(
@@ -51,7 +56,7 @@ class AddressListCard extends StatelessWidget {
               Expanded(
                 child: _AddressDetails(
                   address: address,
-                  isSelected: isSelected,
+                  isSelected: active,
                 ),
               ),
               if (isBusy)

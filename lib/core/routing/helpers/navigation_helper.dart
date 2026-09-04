@@ -16,7 +16,7 @@ class NavigationHelper {
 
   /// Navigate to home screen
   static void goToHome(BuildContext context) {
-    context.go(AppRoutes.home);
+    context.go(AppRoutes.main);
   }
 
   /// Navigate to profile screen
@@ -155,13 +155,13 @@ class NavigationHelper {
 
   // Address management navigation methods
   /// Navigate to address list screen
-  static void goToAddressList(BuildContext context) {
-    context.go(AppRoutes.addressList);
+  static void goToAddressList(BuildContext context, {bool selectMode = false}) {
+    context.go(selectMode ? '${AppRoutes.addressList}?selectMode=true' : AppRoutes.addressList);
   }
 
   /// Push address list screen
-  static void pushAddressList(BuildContext context) {
-    context.push(AppRoutes.addressList);
+  static void pushAddressList(BuildContext context, {bool selectMode = false}) {
+    context.push(selectMode ? '${AppRoutes.addressList}?selectMode=true' : AppRoutes.addressList);
   }
 
   /// Push add address screen

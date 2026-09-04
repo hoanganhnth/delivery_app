@@ -151,6 +151,18 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "anonymous": MessageLookupByLibrary.simpleMessage("Ẩn danh"),
     "appTitle": MessageLookupByLibrary.simpleMessage("Ứng dụng Giao Hàng"),
+    "authConfirmPassword": MessageLookupByLibrary.simpleMessage(
+      "Xác nhận mật khẩu",
+    ),
+    "authConfirmPasswordHint": MessageLookupByLibrary.simpleMessage(
+      "Nhập lại mật khẩu",
+    ),
+    "authName": MessageLookupByLibrary.simpleMessage("Họ và tên"),
+    "authNameHint": MessageLookupByLibrary.simpleMessage(
+      "Nhập họ và tên của bạn",
+    ),
+    "authRetry": MessageLookupByLibrary.simpleMessage("Thử lại"),
+    "backToHome": MessageLookupByLibrary.simpleMessage("Về trang chủ"),
     "backToLogin": MessageLookupByLibrary.simpleMessage("Quay lại đăng nhập"),
     "browseRestaurants": MessageLookupByLibrary.simpleMessage("Duyệt Nhà Hàng"),
     "cancel": MessageLookupByLibrary.simpleMessage("Hủy"),
@@ -319,6 +331,21 @@ class MessageLookup extends MessageLookupByLibrary {
       "Đang tìm tài xế giao hàng",
     ),
     "forgotPassword": MessageLookupByLibrary.simpleMessage("Quên mật khẩu?"),
+    "forgotPasswordInstruction": MessageLookupByLibrary.simpleMessage(
+      "Nếu email tồn tại, hệ thống sẽ gửi hướng dẫn đặt lại mật khẩu.",
+    ),
+    "forgotPasswordPrompt": MessageLookupByLibrary.simpleMessage(
+      "Nhập email tài khoản",
+    ),
+    "forgotPasswordSent": MessageLookupByLibrary.simpleMessage(
+      "Nếu email tồn tại, chúng tôi đã gửi hướng dẫn đặt lại mật khẩu. Vui lòng kiểm tra hộp thư.",
+    ),
+    "forgotPasswordSubmit": MessageLookupByLibrary.simpleMessage(
+      "Gửi hướng dẫn",
+    ),
+    "forgotPasswordTitle": MessageLookupByLibrary.simpleMessage(
+      "Khôi phục mật khẩu",
+    ),
     "freeDelivery": MessageLookupByLibrary.simpleMessage("Miễn Phí Giao Hàng"),
     "fullName": MessageLookupByLibrary.simpleMessage("HỌ VÀ TÊN"),
     "fullNameHint": MessageLookupByLibrary.simpleMessage("Nguyễn Văn A"),
@@ -329,6 +356,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "hideOrderDetails": MessageLookupByLibrary.simpleMessage(
       "Ẩn Chi Tiết Đơn Hàng",
     ),
+    "hidePassword": MessageLookupByLibrary.simpleMessage("Ẩn mật khẩu"),
     "home": MessageLookupByLibrary.simpleMessage("Trang Chủ"),
     "iapAllFeatures": MessageLookupByLibrary.simpleMessage("🎯 Tất cả"),
     "iapAllFeaturesUnlocked": MessageLookupByLibrary.simpleMessage(
@@ -470,6 +498,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "mexican": MessageLookupByLibrary.simpleMessage("Món Mexico"),
     "min": MessageLookupByLibrary.simpleMessage("phút"),
     "myAddresses": MessageLookupByLibrary.simpleMessage("Địa chỉ của tôi"),
+    "navAccount": MessageLookupByLibrary.simpleMessage("Tài khoản"),
+    "navCart": MessageLookupByLibrary.simpleMessage("Giỏ hàng"),
+    "navHome": MessageLookupByLibrary.simpleMessage("Trang chủ"),
+    "navOrders": MessageLookupByLibrary.simpleMessage("Đơn hàng"),
+    "navSearch": MessageLookupByLibrary.simpleMessage("Tìm kiếm"),
     "newConversationStarted": MessageLookupByLibrary.simpleMessage(
       "Đã bắt đầu hội thoại mới",
     ),
@@ -510,6 +543,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "order": MessageLookupByLibrary.simpleMessage("Đơn hàng"),
     "orderCancelled": MessageLookupByLibrary.simpleMessage(
       "Đơn hàng đã được hủy thành công",
+    ),
+    "orderConfirmed": MessageLookupByLibrary.simpleMessage(
+      "Đặt hàng thành công!",
+    ),
+    "orderConfirmedSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Đơn hàng của bạn sẽ được giao trong 25-30 phút",
     ),
     "orderHistory": MessageLookupByLibrary.simpleMessage("Lịch Sử Đơn Hàng"),
     "orderSummary": MessageLookupByLibrary.simpleMessage("Tóm Tắt Đơn Hàng"),
@@ -708,6 +747,24 @@ class MessageLookup extends MessageLookupByLibrary {
       "Đăng ký thành công!",
     ),
     "remove": MessageLookupByLibrary.simpleMessage("Xóa"),
+    "resetPasswordConfirm": MessageLookupByLibrary.simpleMessage(
+      "Xác nhận mật khẩu",
+    ),
+    "resetPasswordNewPassword": MessageLookupByLibrary.simpleMessage(
+      "Mật khẩu mới",
+    ),
+    "resetPasswordPrompt": MessageLookupByLibrary.simpleMessage(
+      "Tạo mật khẩu mới",
+    ),
+    "resetPasswordSubmit": MessageLookupByLibrary.simpleMessage(
+      "Cập nhật mật khẩu",
+    ),
+    "resetPasswordSuccess": MessageLookupByLibrary.simpleMessage(
+      "Mật khẩu đã được cập nhật thành công.",
+    ),
+    "resetPasswordTitle": MessageLookupByLibrary.simpleMessage(
+      "Đặt lại mật khẩu",
+    ),
     "restaurants": MessageLookupByLibrary.simpleMessage("Nhà Hàng"),
     "restaurantsAllTitle": MessageLookupByLibrary.simpleMessage(
       "Tất cả nhà hàng",
@@ -823,6 +880,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "showOrderDetails": MessageLookupByLibrary.simpleMessage(
       "Hiện Chi Tiết Đơn Hàng",
     ),
+    "showPassword": MessageLookupByLibrary.simpleMessage("Hiện mật khẩu"),
     "signIn": MessageLookupByLibrary.simpleMessage("ĐĂNG NHẬP"),
     "signInWithGoogle": MessageLookupByLibrary.simpleMessage(
       "Đăng nhập với Google",
@@ -904,6 +962,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "top_restaurants": MessageLookupByLibrary.simpleMessage("Nhà hàng nổi bật"),
     "total": MessageLookupByLibrary.simpleMessage("Tổng cộng"),
     "trackDelivery": MessageLookupByLibrary.simpleMessage("Theo dõi giao hàng"),
+    "trackOrder": MessageLookupByLibrary.simpleMessage("Theo dõi đơn hàng"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Thử Lại"),
     "unavailable": MessageLookupByLibrary.simpleMessage("Không có sẵn"),
     "unexpectedError": MessageLookupByLibrary.simpleMessage(

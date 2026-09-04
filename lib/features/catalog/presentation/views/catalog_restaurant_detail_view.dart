@@ -48,6 +48,9 @@ class CatalogRestaurantDetailView extends StatelessWidget {
           SliverAppBar(
             expandedHeight: 264,
             pinned: true,
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            surfaceTintColor: Colors.transparent,
             automaticallyImplyLeading: false,
             leading: AppIconButton(
               tooltip: MaterialLocalizations.of(context).backButtonTooltip,

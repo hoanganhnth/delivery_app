@@ -51,12 +51,14 @@ final class CatalogRestaurantViewData extends Equatable {
 final class CatalogHomeViewState extends Equatable {
   const CatalogHomeViewState({
     this.restaurants = const <CatalogRestaurantViewData>[],
+    this.deliveryAddress,
     this.isLoading = false,
     this.errorMessage,
     this.effects = const <UiEffectEnvelope<CatalogHomeEffect>>[],
   });
 
   final List<CatalogRestaurantViewData> restaurants;
+  final String? deliveryAddress;
   final bool isLoading;
   final String? errorMessage;
   final List<UiEffectEnvelope<CatalogHomeEffect>> effects;
@@ -65,6 +67,7 @@ final class CatalogHomeViewState extends Equatable {
 
   CatalogHomeViewState copyWith({
     List<CatalogRestaurantViewData>? restaurants,
+    String? deliveryAddress,
     bool? isLoading,
     String? errorMessage,
     bool clearError = false,
@@ -72,6 +75,7 @@ final class CatalogHomeViewState extends Equatable {
   }) {
     return CatalogHomeViewState(
       restaurants: restaurants ?? this.restaurants,
+      deliveryAddress: deliveryAddress ?? this.deliveryAddress,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       effects: effects ?? this.effects,
@@ -79,5 +83,11 @@ final class CatalogHomeViewState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [restaurants, isLoading, errorMessage, effects];
+  List<Object?> get props => [
+    restaurants,
+    deliveryAddress,
+    isLoading,
+    errorMessage,
+    effects,
+  ];
 }
