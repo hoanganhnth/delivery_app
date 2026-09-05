@@ -1,18 +1,33 @@
+import 'address_list_context.dart';
+
 sealed class AddressListIntent {
   const AddressListIntent();
 }
 
 final class AddressListLoadRequested extends AddressListIntent {
-  const AddressListLoadRequested();
+  const AddressListLoadRequested({
+    this.context = AddressListContext.management,
+  });
+
+  final AddressListContext context;
 }
 
 final class AddressListRefreshRequested extends AddressListIntent {
-  const AddressListRefreshRequested();
+  const AddressListRefreshRequested({
+    this.context = AddressListContext.management,
+  });
+
+  final AddressListContext context;
 }
 
 final class AddressListSelectRequested extends AddressListIntent {
-  const AddressListSelectRequested(this.addressId);
+  const AddressListSelectRequested(
+    this.addressId, {
+    this.context = AddressListContext.home,
+  });
+
   final int addressId;
+  final AddressListContext context;
 }
 
 final class AddressListSetDefaultRequested extends AddressListIntent {

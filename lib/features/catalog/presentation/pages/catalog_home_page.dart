@@ -134,7 +134,7 @@ class _CatalogHomePageState extends ConsumerState<CatalogHomePage> {
       case CatalogHomeNavigateToAllRestaurants():
         context.pushToRestaurants();
       case CatalogHomeNavigateToAddresses():
-        await context.push('${AppRoutes.addressList}?selectMode=true');
+        await context.push('${AppRoutes.addressList}?context=home');
         if (mounted) {
           unawaited(
             ref

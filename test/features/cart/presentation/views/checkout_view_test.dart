@@ -34,6 +34,46 @@ import '../../../../support/fulfilment_builders.dart';
 
 void main() {
   test(
+    'Checkout selection is temporary and never overwrites Home selection',
+    () async {
+      final container = ProviderContainer(
+        overrides: [
+          cartProvider.overrideWith(_TestCartNotifier.new),
+          userAddressListProvider.overrideWith(_TwoAddressNotifier.new),
+          checkoutPreviewGatewayProvider.overrideWithValue(
+            _FakePreviewGateway(_preview),
+          ),
+          checkoutVoucherGatewayProvider.overrideWithValue(
+            _FakeVoucherGateway(),
+          ),
+          orderRepositoryProvider.overrideWithValue(_FakeOrderRepository()),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(checkoutViewModelProvider);
+      await container.read(cartProvider.future);
+      await container
+          .read(checkoutViewModelProvider.notifier)
+          .dispatch(const CheckoutLoadRequested());
+
+      final office = container
+          .read(userAddressListProvider)
+          .addresses
+          .firstWhere((address) => address.id == 402);
+      container
+          .read(userAddressListProvider.notifier)
+          .selectCheckoutAddress(office);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(
+        container.read(checkoutViewModelProvider).selectedAddress?.id,
+        402,
+      );
+      expect(container.read(userAddressListProvider).selectedAddress?.id, 401);
+    },
+  );
+
+  test(
     'CheckoutLoadRequested loads the current profile address and selects its default',
     () async {
       final repository = _FakeCheckoutAddressRepository()
@@ -96,6 +136,7 @@ void main() {
       await container
           .read(checkoutViewModelProvider.notifier)
           .dispatch(const CheckoutLoadRequested());
+      container.read(userAddressListProvider.notifier).beginCheckoutSelection();
       expect(container.read(checkoutViewModelProvider).price?.total, 65000);
       expect(container.read(checkoutViewModelProvider).canPlaceOrder, isTrue);
       expect(preview.requests, isNotEmpty);
@@ -114,6 +155,11 @@ void main() {
         container.read(checkoutViewModelProvider).effects.last.effect,
         const CheckoutOrderPlaced(isSuccess: true),
       );
+      expect(
+        container.read(userAddressListProvider).checkoutSelectedAddress,
+        isNull,
+      );
+      expect(container.read(userAddressListProvider).selectedAddress?.id, 401);
     },
   );
 
@@ -554,6 +600,18 @@ class _SelectedAddressNotifier extends UserAddressListNotifier {
   UserAddressListState build() {
     final address = buildAddress();
     return UserAddressListState(addresses: [address], selectedAddress: address);
+  }
+}
+
+class _TwoAddressNotifier extends UserAddressListNotifier {
+  @override
+  UserAddressListState build() {
+    final home = buildAddress(id: 401, isDefault: true);
+    final office = buildAddress(id: 402, label: 'Công ty', isDefault: false);
+    return UserAddressListState(
+      addresses: [home, office],
+      selectedAddress: home,
+    );
   }
 }
 

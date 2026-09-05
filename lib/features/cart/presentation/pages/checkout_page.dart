@@ -63,7 +63,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
         }
       case CheckoutNavigateToAddresses():
         if (mounted) {
-          await context.push('${AppRoutes.addressList}?selectMode=true');
+          await context.push('${AppRoutes.addressList}?context=checkout');
           if (mounted) {
             await ref
                 .read(checkoutViewModelProvider.notifier)

@@ -75,7 +75,7 @@ class _CatalogSearchViewState extends State<CatalogSearchView> {
                   controller: _controller,
                   autofocus: true,
                   decoration: InputDecoration(
-                    hintText: 'Search dishes, restaurants...',
+                    hintText: 'Tìm món ăn, quán ăn...',
                     border: InputBorder.none,
                     isDense: true,
                     hintStyle: TextStyle(
@@ -93,7 +93,7 @@ class _CatalogSearchViewState extends State<CatalogSearchView> {
         actions: [
           AppIconButton(
             key: const Key('catalog_search_clear'),
-            tooltip: 'Clear search',
+            tooltip: 'Xóa tìm kiếm',
             icon: Icons.clear,
             onPressed: () {
               _controller.clear();
@@ -115,13 +115,13 @@ class _CatalogSearchViewState extends State<CatalogSearchView> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _SearchTab(
-                  title: 'Dishes',
+                  title: 'Món ăn',
                   tab: CatalogSearchTab.dishes,
                   selected: widget.state.tab,
                   onTap: widget.onIntent,
                 ),
                 _SearchTab(
-                  title: 'Restaurants',
+                  title: 'Quán ăn',
                   tab: CatalogSearchTab.restaurants,
                   selected: widget.state.tab,
                   onTap: widget.onIntent,

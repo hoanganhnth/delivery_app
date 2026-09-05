@@ -78,7 +78,7 @@ void main() {
         find.byKey(const Key('catalog_search_input')),
         'cơm sườn',
       );
-      await tester.tap(find.text('Restaurants'));
+      await tester.tap(find.text('Quán ăn'));
       await tester.tap(find.text('Cơm test'));
       await tester.tap(find.byKey(const Key('catalog_search_clear')));
 

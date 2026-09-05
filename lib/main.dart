@@ -173,6 +173,7 @@ class _MainAppState extends ConsumerState<MainApp> {
           theme: theme.themeData,
 
           // Localization configuration
+          locale: const Locale('vi'),
           localizationsDelegates: const [
             S.delegate, // Delegate sinh ra từ intl_utils
             GlobalMaterialLocalizations.delegate,

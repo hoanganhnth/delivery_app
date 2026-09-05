@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:delivery_app/core/widgets/amber_widgets.dart';
+import 'package:delivery_app/core/design_system/design_system.dart';
 import 'package:delivery_app/core/widgets/restaurant_header_card.dart';
 import 'package:delivery_app/features/cart/presentation/widgets/amber_cart_item_widget.dart';
 import '../../application/cart_view_intent.dart';
@@ -23,29 +23,22 @@ class CartView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    body: SafeArea(
-      bottom: false,
-      child: Column(
-        children: [
-          GlassAppBar(
-            titleText: 'Giỏ hàng',
-            leading: showBackButton
-                ? GlassBackButton(
-                    onPressed: () => onIntent(const CartBackRequested()),
-                  )
-                : null,
-            actions: [
-              if (!state.isEmpty)
-                GlassActionButton(
-                  icon: Icons.delete_outline,
-                  onPressed: () => onIntent(const CartClearRequested()),
-                ),
-            ],
+    appBar: AppTopBar(
+      title: 'Giỏ hàng',
+      leadingKey: const Key('cart_back'),
+      backTooltip: 'Quay lại',
+      onBack: showBackButton ? () => onIntent(const CartBackRequested()) : null,
+      actions: [
+        if (!state.isEmpty)
+          AppIconButton(
+            key: const Key('cart_clear'),
+            tooltip: 'Xóa giỏ hàng',
+            icon: Icons.delete_outline,
+            onPressed: () => onIntent(const CartClearRequested()),
           ),
-          Expanded(child: _body(context)),
-        ],
-      ),
+      ],
     ),
+    body: _body(context),
   );
 
   Widget _body(BuildContext context) {

@@ -188,14 +188,25 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
   }
 
   Future<void> _loadAddressesForCurrentSession() async {
+    final notifier = ref.read(userAddressListProvider.notifier);
+    if (ref.read(userAddressListProvider).checkoutSelectedAddress != null) {
+      notifier.clearCheckoutSelection();
+    }
+
+    final homeAddress = _homeAddress(ref.read(userAddressListProvider));
+    if (homeAddress != _address) {
+      _address = homeAddress;
+      _invalidatePreview();
+      _publish();
+    }
+
     final profileId = ref.read(sessionPortProvider).current.profileId;
     if (profileId == null || profileId <= 0) return;
 
-    final notifier = ref.read(userAddressListProvider.notifier);
     final loaded = await notifier.loadAddresses(profileId);
     if (!ref.mounted) return;
 
-    if (loaded) notifier.autoSelectDefaultAddress();
+    if (loaded) notifier.beginCheckoutSelection();
     final selected = _selectedAddress(ref.read(userAddressListProvider));
     if (selected == _address) return;
 
@@ -433,6 +444,8 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
             // persisted cart available for the next startup price sync.
           }
           if (!ref.mounted) return;
+          ref.read(userAddressListProvider.notifier).clearCheckoutSelection();
+          _address = _homeAddress(ref.read(userAddressListProvider));
           ref.invalidate(ordersListProvider);
           _publish();
           _emit(const CheckoutOrderPlaced(isSuccess: true));
@@ -455,6 +468,9 @@ class CheckoutViewModel extends Notifier<CheckoutViewState> {
   }
 
   UserAddressEntity? _selectedAddress(UserAddressListState addresses) =>
+      addresses.checkoutSelectedAddress ?? _homeAddress(addresses);
+
+  UserAddressEntity? _homeAddress(UserAddressListState addresses) =>
       addresses.selectedAddress ?? addresses.defaultAddress;
 
   bool get _isVoucherAvailable {

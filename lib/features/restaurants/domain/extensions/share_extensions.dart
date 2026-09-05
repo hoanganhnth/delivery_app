@@ -10,7 +10,8 @@ extension RestaurantShareX on IShareService {
     required String baseUrl,
   }) async {
     final url = '$baseUrl/restaurant?id=$restaurantId';
-    final message = 'Check out $restaurantName on our delivery app!';
+    final message =
+        'Khám phá quán ăn $restaurantName trên ứng dụng giao đồ ăn!';
 
     await shareLink(
       url: url,
@@ -26,12 +27,12 @@ extension RestaurantShareX on IShareService {
     required String baseUrl,
   }) async {
     final url = '$baseUrl/promo?code=$promoCode';
-    final message = 'Use promo code $promoCode for $description';
+    final message = 'Sử dụng mã khuyến mãi $promoCode để nhận $description';
 
     await shareLink(
       url: url,
       message: message,
-      subject: 'Promo: $promoCode',
+      subject: 'Khuyến mãi: $promoCode',
     );
   }
 
@@ -39,7 +40,7 @@ extension RestaurantShareX on IShareService {
   Future<void> shareAppDownload({required String baseUrl}) async {
     await shareLink(
       url: baseUrl,
-      message: 'Download our delivery app!',
+      message: 'Tải ngay ứng dụng giao đồ ăn!',
     );
   }
 }

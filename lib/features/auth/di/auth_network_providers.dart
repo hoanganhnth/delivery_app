@@ -30,7 +30,7 @@ class _AuthTokenStorage implements TokenStorage {
   }) async {
     await ref
         .read(authProvider.notifier)
-        .loginWithTokens(accessToken: accessToken, refreshToken: refreshToken);
+        .updateTokens(accessToken: accessToken, refreshToken: refreshToken);
   }
 
   @override

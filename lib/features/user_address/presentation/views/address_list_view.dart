@@ -2,6 +2,7 @@ import 'package:delivery_app/core/design_system/design_system.dart';
 import 'package:delivery_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
+import '../../application/address_list_context.dart';
 import '../../application/address_list_intent.dart';
 import '../../application/address_list_state.dart';
 import '../components/address_list_card.dart';
@@ -12,12 +13,20 @@ class AddressListView extends StatelessWidget {
     super.key,
     required this.state,
     required this.onIntent,
-    this.isSelectMode = false,
+    this.selectionContext = AddressListContext.management,
+    this.isSelectMode,
   });
 
   final AddressListViewState state;
   final ValueChanged<AddressListIntent> onIntent;
-  final bool isSelectMode;
+  final AddressListContext selectionContext;
+  final bool? isSelectMode;
+
+  AddressListContext get _effectiveSelectionContext => isSelectMode == null
+      ? selectionContext
+      : isSelectMode == true
+      ? AddressListContext.home
+      : AddressListContext.management;
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +54,15 @@ class AddressListView extends StatelessWidget {
   }
 
   Widget _body(BuildContext context) {
+    final selectionContext = _effectiveSelectionContext;
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
     if (state.hasLoadError) {
       return _AddressLoadError(
         message: state.errorMessage!,
-        onRetry: () => onIntent(const AddressListLoadRequested()),
+        onRetry: () =>
+            onIntent(AddressListLoadRequested(context: selectionContext)),
       );
     }
     if (state.isEmpty) {
@@ -60,7 +71,8 @@ class AddressListView extends StatelessWidget {
       );
     }
     return RefreshIndicator(
-      onRefresh: () async => onIntent(const AddressListRefreshRequested()),
+      onRefresh: () async =>
+          onIntent(AddressListRefreshRequested(context: selectionContext)),
       child: ListView.separated(
         padding: const EdgeInsets.all(AppSpacing.page),
         itemCount: state.items.length,
@@ -69,10 +81,14 @@ class AddressListView extends StatelessWidget {
           final address = state.items[index];
           return AddressListCard(
             address: address,
-            isSelected: state.selectedAddressId == address.id,
+            isSelected:
+                selectionContext != AddressListContext.management &&
+                state.selectedAddressId == address.id,
             isBusy: state.operationInProgressId == address.id,
-            isSelectMode: isSelectMode,
-            onSelect: () => onIntent(AddressListSelectRequested(address.id)),
+            isSelectMode: selectionContext != AddressListContext.management,
+            onSelect: () => onIntent(
+              AddressListSelectRequested(address.id, context: selectionContext),
+            ),
             onEdit: () => onIntent(AddressListEditRequested(address.id)),
             onSetDefault: () =>
                 onIntent(AddressListSetDefaultRequested(address.id)),

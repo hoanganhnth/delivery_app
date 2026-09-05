@@ -42,14 +42,14 @@ class OrdersListView extends StatelessWidget {
             AppSpacing.xs,
           ),
           child: Text(
-            'Your Orders',
+            'Đơn hàng của bạn',
             style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900),
           ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
           child: Text(
-            'Track your current cravings and past delights.',
+            'Theo dõi các món ăn đang giao và lịch sử đặt hàng.',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),

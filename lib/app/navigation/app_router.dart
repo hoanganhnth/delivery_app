@@ -32,6 +32,7 @@ import 'package:delivery_app/features/entitlements/presentation/entitlement_stat
 import 'package:delivery_app/features/support/presentation/support_page.dart';
 import 'package:delivery_app/features/cart/cart.dart';
 import 'package:delivery_app/features/user_address/presentation/screens/address_list_screen.dart';
+import 'package:delivery_app/features/user_address/application/address_list_context.dart';
 import 'package:delivery_app/features/user_address/presentation/screens/add_edit_address_screen.dart';
 import 'package:delivery_app/features/user_address/domain/entities/user_address_entity.dart';
 import 'package:delivery_app/features/splash/presentation/screens/splash_screen.dart';
@@ -76,8 +77,13 @@ class AppRouterPages {
   Widget cart() => const CartScreen();
   Widget checkout() => const CheckoutScreen();
   Widget orderConfirmation() => const OrderConfirmationScreen();
-  Widget addressList({bool isSelectMode = false}) =>
-      AddressListScreen(isSelectMode: isSelectMode);
+  Widget addressList({
+    AddressListContext selectionContext = AddressListContext.management,
+    bool? isSelectMode,
+  }) => AddressListScreen(
+    selectionContext: selectionContext,
+    isSelectMode: isSelectMode,
+  );
   Widget addAddress() => const AddEditAddressScreen();
   Widget editAddress(UserAddressEntity? address, {int? addressId}) =>
       AddEditAddressScreen(address: address, addressId: addressId);
@@ -288,12 +294,24 @@ GoRouter createAppRouter({
         path: AppRoutes.addressList,
         name: 'address-list',
         builder: (context, state) {
-          final selectMode =
+          final extra = state.extra;
+          final legacySelectMode =
               state.uri.queryParameters['selectMode'] == 'true' ||
               state.extra == true ||
-              (state.extra is Map &&
-                  (state.extra as Map)['selectMode'] == true);
-          return pages.addressList(isSelectMode: selectMode);
+              (extra is Map && extra['selectMode'] == true);
+          final contextValue =
+              state.uri.queryParameters['context'] ??
+              (extra is Map ? extra['context']?.toString() : null);
+          final selectionContext = switch (contextValue) {
+            'home' => AddressListContext.home,
+            'checkout' => AddressListContext.checkout,
+            _ => AddressListContext.management,
+          };
+          return pages.addressList(
+            selectionContext: legacySelectMode
+                ? AddressListContext.home
+                : selectionContext,
+          );
         },
       ),
       GoRoute(

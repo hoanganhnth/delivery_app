@@ -21,7 +21,13 @@ class UserAddressListState {
   static const _unset = Object();
   final bool isLoading;
   final List<UserAddressEntity> addresses;
+
+  /// Home's persistent-in-session selection. Kept under the legacy name so
+  /// existing catalog consumers continue to read the Home contract.
   final UserAddressEntity? selectedAddress;
+
+  /// Checkout-only selection. It must never overwrite [selectedAddress].
+  final UserAddressEntity? checkoutSelectedAddress;
   final String? errorMessage;
   final OperationResult? lastOperation;
 
@@ -29,6 +35,7 @@ class UserAddressListState {
     this.isLoading = false,
     this.addresses = const [],
     this.selectedAddress,
+    this.checkoutSelectedAddress,
     this.errorMessage,
     this.lastOperation,
   });
@@ -37,17 +44,27 @@ class UserAddressListState {
     bool? isLoading,
     List<UserAddressEntity>? addresses,
     Object? selectedAddress = _unset,
+    Object? checkoutSelectedAddress = _unset,
     String? errorMessage,
     OperationResult? lastOperation,
     bool clearError = false,
     bool clearOperation = false,
+    bool clearSelectedAddress = false,
+    bool clearCheckoutSelectedAddress = false,
   }) {
     return UserAddressListState(
       isLoading: isLoading ?? this.isLoading,
       addresses: addresses ?? this.addresses,
-      selectedAddress: identical(selectedAddress, _unset)
+      selectedAddress: clearSelectedAddress
+          ? null
+          : identical(selectedAddress, _unset)
           ? this.selectedAddress
           : selectedAddress as UserAddressEntity?,
+      checkoutSelectedAddress: clearCheckoutSelectedAddress
+          ? null
+          : identical(checkoutSelectedAddress, _unset)
+          ? this.checkoutSelectedAddress
+          : checkoutSelectedAddress as UserAddressEntity?,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       lastOperation: clearOperation
           ? null

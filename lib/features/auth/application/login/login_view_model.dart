@@ -16,6 +16,7 @@ class LoginViewModel extends Notifier<LoginViewState> {
   int _nextEffectId = 0;
   bool _wasAuthenticated = false;
   String? _lastError;
+  bool _isExplicitSubmission = false;
 
   @override
   LoginViewState build() {
@@ -71,6 +72,7 @@ class LoginViewModel extends Notifier<LoginViewState> {
       return;
     }
 
+    _isExplicitSubmission = true;
     state = state.copyWith(
       isSubmitting: true,
       clearEmailError: true,
@@ -84,12 +86,14 @@ class LoginViewModel extends Notifier<LoginViewState> {
 
   Future<void> _googleLogin() async {
     if (state.isSubmitting) return;
+    _isExplicitSubmission = true;
     state = state.copyWith(isSubmitting: true, clearAuthError: true);
     await ref.read(authProvider.notifier).loginWithGoogle();
   }
 
   void _onAuthChanged(AuthState next) {
     if (!ref.mounted) return;
+    final wasSubmitting = state.isSubmitting || _isExplicitSubmission;
     state = state.copyWith(
       isSubmitting: next.isLoginLoading,
       authError: next.errorMessage,
@@ -99,9 +103,11 @@ class LoginViewModel extends Notifier<LoginViewState> {
     final error = next.errorMessage;
     if (error != null && !next.isLoginLoading && error != _lastError) {
       _lastError = error;
+      _isExplicitSubmission = false;
       _emit(LoginShowError(error));
     }
-    if (next.isAuthenticated && !_wasAuthenticated) {
+    if (next.isAuthenticated && !_wasAuthenticated && wasSubmitting) {
+      _isExplicitSubmission = false;
       _emit(const LoginAuthenticationSucceeded());
     }
     if (error == null) _lastError = null;

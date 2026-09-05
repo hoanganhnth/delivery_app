@@ -10,7 +10,7 @@ class NotFoundScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Page Not Found'),
+        title: const Text('Không tìm thấy trang'),
       ),
       body: Center(
         child: Column(
@@ -31,18 +31,18 @@ class NotFoundScreen extends StatelessWidget {
             ),
             SizedBox(height: 8.w),
             Text(
-              'Page Not Found',
+              'Không tìm thấy trang',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             SizedBox(height: 16.w),
             const Text(
-              'The page you are looking for does not exist.',
+              'Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.',
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 32.w),
             ElevatedButton(
               onPressed: () => context.go('/'),
-              child: const Text('Go Home'),
+              child: const Text('Về trang chủ'),
             ),
           ],
         ),
@@ -59,7 +59,7 @@ class ErrorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Error'),
+        title: const Text('Đã có lỗi xảy ra'),
       ),
       body: Center(
         child: Padding(
@@ -74,13 +74,13 @@ class ErrorScreen extends StatelessWidget {
               ),
               SizedBox(height: 16.w),
               Text(
-                'Oops! Something went wrong',
+                'Rất tiếc! Đã xảy ra sự cố',
                 style: Theme.of(context).textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 16.w),
               const Text(
-                'Please try again or contact support if the problem persists.',
+                'Vui lòng thử lại hoặc liên hệ hỗ trợ nếu sự cố vẫn tiếp diễn.',
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 32.w),
@@ -89,7 +89,7 @@ class ErrorScreen extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () => context.go('/'),
-                    child: const Text('Go Home'),
+                    child: const Text('Về trang chủ'),
                   ),
                   SizedBox(width: 16.w),
                   OutlinedButton(
@@ -97,7 +97,7 @@ class ErrorScreen extends StatelessWidget {
                       // Refresh the current page
                       context.go(GoRouterState.of(context).uri.toString());
                     },
-                    child: const Text('Retry'),
+                    child: const Text('Thử lại'),
                   ),
                 ],
               ),

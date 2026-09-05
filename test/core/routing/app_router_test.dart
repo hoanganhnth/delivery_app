@@ -1,6 +1,7 @@
 import 'package:delivery_app/core/routing/app_router.dart';
 import 'package:delivery_app/core/routing/models/app_router_config.dart';
 import 'package:delivery_app/core/routing/models/i_auth_checker.dart';
+import 'package:delivery_app/features/user_address/application/address_list_context.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -139,6 +140,31 @@ void main() {
 
     expect(find.text('PROFILE'), findsOneWidget);
   });
+
+  testWidgets('address route keeps the requested selection context', (
+    tester,
+  ) async {
+    final router = createAppRouter(
+      authNotifier: _FakeAuthNotifier(authenticated: true),
+      config: const AppRouterConfig(
+        initialLocation: '/address-list?context=checkout',
+      ),
+      pages: const _TestPages(),
+    );
+    addTearDown(router.dispose);
+
+    await pumpTestRouter(tester, router: router);
+    await tester.pumpAndSettle();
+    expect(find.text('ADDRESS checkout'), findsOneWidget);
+
+    router.go('/address-list?context=home');
+    await tester.pumpAndSettle();
+    expect(find.text('ADDRESS home'), findsOneWidget);
+
+    router.go('/address-list');
+    await tester.pumpAndSettle();
+    expect(find.text('ADDRESS management'), findsOneWidget);
+  });
 }
 
 class _FakeAuthNotifier extends ChangeNotifier implements IAuthNotifier {
@@ -188,6 +214,14 @@ class _TestPages extends AppRouterPages {
 
   @override
   Widget profile() => _page('PROFILE');
+
+  @override
+  Widget addressList({
+    AddressListContext selectionContext = AddressListContext.management,
+    bool? isSelectMode,
+  }) => _page(
+    'ADDRESS ${isSelectMode == true ? AddressListContext.home.name : selectionContext.name}',
+  );
 
   @override
   Widget orders() => _page('ORDERS');

@@ -196,6 +196,42 @@ class AuthNotifier extends _$AuthNotifier {
     );
   }
 
+  /// Silently updates tokens in local storage and runtime state without
+  /// resetting authentication status. Used by background token refresh.
+  Future<void> updateTokens({
+    required String accessToken,
+    required String refreshToken,
+  }) async {
+    AppLogger.d('AuthNotifier: Updating tokens silently');
+
+    // Store tokens locally
+    final storeResult = await _storeTokensUseCase(
+      StoreTokensParams(
+        tokens: AuthEntity(
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        ),
+      ),
+    );
+
+    if (!ref.mounted) return;
+
+    storeResult.fold(
+      (failure) {
+        AppLogger.e(
+          'AuthNotifier: Failed to store updated tokens - ${failure.message}',
+        );
+      },
+      (_) {
+        AppLogger.d('AuthNotifier: Tokens updated successfully');
+        state = AuthState.authenticated(
+          refreshToken: refreshToken,
+          accessToken: accessToken,
+        );
+      },
+    );
+  }
+
   // Register method - simplified
   Future<RegistrationResult?> register({
     String? name,

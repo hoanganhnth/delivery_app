@@ -10,6 +10,7 @@ part 'address_list_notifier.g.dart';
 @riverpod
 class UserAddressListNotifier extends _$UserAddressListNotifier {
   int _loadGeneration = 0;
+  int? _loadedProfileId;
 
   @override
   UserAddressListState build() {
@@ -24,9 +25,17 @@ class UserAddressListNotifier extends _$UserAddressListNotifier {
     }
 
     final generation = ++_loadGeneration;
+    final preserveSelections = _loadedProfileId == userId;
+    final previous = state;
     // A new identity must never render the previous identity's addresses while
     // the request is in flight.
-    state = const UserAddressListState(isLoading: true);
+    state = UserAddressListState(
+      isLoading: true,
+      selectedAddress: preserveSelections ? previous.selectedAddress : null,
+      checkoutSelectedAddress: preserveSelections
+          ? previous.checkoutSelectedAddress
+          : null,
+    );
 
     final getUserAddressesUseCase = ref.read(getUserAddressesUseCaseProvider);
     final result = await getUserAddressesUseCase(userId);
@@ -41,7 +50,16 @@ class UserAddressListNotifier extends _$UserAddressListNotifier {
         return false;
       },
       (addresses) {
-        state = state.copyWith(isLoading: false, addresses: addresses);
+        _loadedProfileId = userId;
+        state = state.copyWith(
+          isLoading: false,
+          addresses: addresses,
+          selectedAddress: _addressInList(addresses, state.selectedAddress),
+          checkoutSelectedAddress: _addressInList(
+            addresses,
+            state.checkoutSelectedAddress,
+          ),
+        );
         return true;
       },
     );
@@ -74,9 +92,9 @@ class UserAddressListNotifier extends _$UserAddressListNotifier {
               .toList();
           state = state.copyWith(
             addresses: updatedAddresses,
-            selectedAddress: state.selectedAddress?.id == addressId
-                ? null
-                : state.selectedAddress,
+            clearSelectedAddress: state.selectedAddress?.id == addressId,
+            clearCheckoutSelectedAddress:
+                state.checkoutSelectedAddress?.id == addressId,
             lastOperation: OperationResult(
               type: 'delete',
               isSuccess: true,
@@ -130,6 +148,14 @@ class UserAddressListNotifier extends _$UserAddressListNotifier {
 
         state = state.copyWith(
           addresses: updatedAddresses,
+          selectedAddress: _addressInList(
+            updatedAddresses,
+            state.selectedAddress,
+          ),
+          checkoutSelectedAddress: _addressInList(
+            updatedAddresses,
+            state.checkoutSelectedAddress,
+          ),
           lastOperation: OperationResult(
             type: 'setDefault',
             isSuccess: true,
@@ -149,6 +175,7 @@ class UserAddressListNotifier extends _$UserAddressListNotifier {
   /// Clear identity-scoped state after logout or before another profile loads.
   void clear() {
     _loadGeneration += 1;
+    _loadedProfileId = null;
     state = const UserAddressListState();
   }
 
@@ -164,11 +191,45 @@ class UserAddressListNotifier extends _$UserAddressListNotifier {
 
   /// Select address
   void selectAddress(UserAddressEntity? address) {
+    selectHomeAddress(address);
+  }
+
+  /// Select the address used by Home and catalog browsing.
+  void selectHomeAddress(UserAddressEntity? address) {
     state = state.copyWith(selectedAddress: address);
   }
 
-  /// Auto select default address if no address is selected
+  /// Select an address only for the current Checkout session.
+  void selectCheckoutAddress(UserAddressEntity? address) {
+    state = state.copyWith(checkoutSelectedAddress: address);
+  }
+
+  /// Drop the temporary Checkout selection without changing Home.
+  void clearCheckoutSelection() {
+    if (state.checkoutSelectedAddress == null) return;
+    state = state.copyWith(clearCheckoutSelectedAddress: true);
+  }
+
+  /// Start/restart Checkout from Home's current selection.
+  void beginCheckoutSelection() {
+    final homeSelection = _addressInList(
+      state.addresses,
+      state.selectedAddress,
+    );
+    final address = homeSelection ?? state.defaultAddress;
+    if (address == null) {
+      clearCheckoutSelection();
+      return;
+    }
+    state = state.copyWith(checkoutSelectedAddress: address);
+  }
+
+  /// Auto select Home's default address if Home has no valid selection.
   void autoSelectDefaultAddress() {
+    ensureHomeSelection();
+  }
+
+  void ensureHomeSelection() {
     final selectedId = state.selectedAddress?.id;
     final selectedIsCurrent =
         selectedId != null &&
@@ -181,5 +242,14 @@ class UserAddressListNotifier extends _$UserAddressListNotifier {
         .where((addr) => addr.isDefault)
         .firstOrNull;
     state = state.copyWith(selectedAddress: defaultAddress);
+  }
+
+  UserAddressEntity? _addressInList(
+    List<UserAddressEntity> addresses,
+    UserAddressEntity? candidate,
+  ) {
+    final candidateId = candidate?.id;
+    if (candidateId == null) return null;
+    return addresses.where((address) => address.id == candidateId).firstOrNull;
   }
 }

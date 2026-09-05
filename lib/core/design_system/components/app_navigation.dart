@@ -13,6 +13,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
     this.backTooltip,
     this.close = false,
     this.actions = const [],
+    this.backgroundColor,
   });
 
   final String title;
@@ -21,6 +22,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
   final String? backTooltip;
   final bool close;
   final List<Widget> actions;
+  final Color? backgroundColor;
 
   @override
   Size get preferredSize => const Size.fromHeight(AppSizes.appBarHeight);
@@ -31,6 +33,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
     elevation: 0,
     scrolledUnderElevation: 0,
     surfaceTintColor: Colors.transparent,
+    backgroundColor: backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
     leading: onBack == null
         ? null
         : AppIconButton(

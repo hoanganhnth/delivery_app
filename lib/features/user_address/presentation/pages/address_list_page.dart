@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../application/address_list_effect.dart';
+import '../../application/address_list_context.dart';
 import '../../application/address_list_intent.dart';
 import '../../application/address_list_state.dart';
 import '../../application/address_list_view_model.dart';
@@ -14,9 +15,20 @@ import '../views/address_list_view.dart';
 
 /// Riverpod, lifecycle, navigation and dialog adapter for [AddressListView].
 class AddressListPage extends ConsumerStatefulWidget {
-  const AddressListPage({super.key, this.isSelectMode = false});
+  const AddressListPage({
+    super.key,
+    this.selectionContext = AddressListContext.management,
+    this.isSelectMode,
+  });
 
-  final bool isSelectMode;
+  final AddressListContext selectionContext;
+  final bool? isSelectMode;
+
+  AddressListContext get effectiveSelectionContext => isSelectMode == null
+      ? selectionContext
+      : isSelectMode == true
+      ? AddressListContext.home
+      : AddressListContext.management;
 
   @override
   ConsumerState<AddressListPage> createState() => _AddressListPageState();
@@ -28,6 +40,9 @@ class _AddressListPageState extends ConsumerState<AddressListPage>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    ref
+        .read(addressListViewModelProvider.notifier)
+        .activateContext(widget.effectiveSelectionContext);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _load();
     });
@@ -47,7 +62,9 @@ class _AddressListPageState extends ConsumerState<AddressListPage>
   void _load() => unawaited(
     ref
         .read(addressListViewModelProvider.notifier)
-        .dispatch(const AddressListLoadRequested()),
+        .dispatch(
+          AddressListLoadRequested(context: widget.effectiveSelectionContext),
+        ),
   );
 
   @override
@@ -67,7 +84,7 @@ class _AddressListPageState extends ConsumerState<AddressListPage>
     });
     return AddressListView(
       state: ref.watch(addressListViewModelProvider),
-      isSelectMode: widget.isSelectMode,
+      selectionContext: widget.effectiveSelectionContext,
       onIntent: (intent) => unawaited(
         ref.read(addressListViewModelProvider.notifier).dispatch(intent),
       ),

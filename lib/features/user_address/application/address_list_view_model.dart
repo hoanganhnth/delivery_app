@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'address_list_effect.dart';
 import 'address_list_intent.dart';
 import 'address_list_state.dart';
+import 'address_list_context.dart';
 
 final addressListViewModelProvider =
     NotifierProvider<AddressListViewModel, AddressListViewState>(
@@ -21,6 +22,7 @@ final addressListViewModelProvider =
 /// seam into presentation-safe data, so no new page or view reads it directly.
 class AddressListViewModel extends Notifier<AddressListViewState> {
   int _nextEffectId = 0;
+  AddressListContext _selectionContext = AddressListContext.management;
   final Set<int> _runningOperationIds = <int>{};
 
   @override
@@ -32,12 +34,29 @@ class AddressListViewModel extends Notifier<AddressListViewState> {
     return _fromLegacy(initial);
   }
 
+  /// Activate the route-specific selection contract before the first frame.
+  void activateContext(AddressListContext context) {
+    _selectionContext = context;
+    final notifier = ref.read(userAddressListProvider.notifier);
+    switch (context) {
+      case AddressListContext.home:
+        notifier.autoSelectDefaultAddress();
+      case AddressListContext.checkout:
+        notifier.beginCheckoutSelection();
+      case AddressListContext.management:
+        break;
+    }
+    _publish(ref.read(userAddressListProvider));
+  }
+
   Future<void> dispatch(AddressListIntent intent) async {
     switch (intent) {
-      case AddressListLoadRequested() || AddressListRefreshRequested():
-        await _load();
-      case AddressListSelectRequested(:final addressId):
-        _select(addressId);
+      case AddressListLoadRequested(:final context):
+        await _load(context);
+      case AddressListRefreshRequested(:final context):
+        await _load(context);
+      case AddressListSelectRequested(:final addressId, :final context):
+        _select(addressId, context);
       case AddressListSetDefaultRequested(:final addressId):
         await _setDefault(addressId);
       case AddressListDeleteRequested(:final addressId):
@@ -57,19 +76,36 @@ class AddressListViewModel extends Notifier<AddressListViewState> {
     }
   }
 
-  Future<void> _load() async {
+  Future<void> _load(AddressListContext context) async {
+    _selectionContext = context;
     final userId = ref.read(sessionPortProvider).current.profileId;
     if (userId == null || userId <= 0) return;
     final notifier = ref.read(userAddressListProvider.notifier);
     await notifier.loadAddresses(userId);
     if (!ref.mounted) return;
-    notifier.autoSelectDefaultAddress();
+    switch (context) {
+      case AddressListContext.home:
+        notifier.autoSelectDefaultAddress();
+      case AddressListContext.checkout:
+        notifier.beginCheckoutSelection();
+      case AddressListContext.management:
+        break;
+    }
   }
 
-  void _select(int addressId) {
+  void _select(int addressId, AddressListContext context) {
     final address = _findLegacyAddress(addressId);
     if (address == null) return;
-    ref.read(userAddressListProvider.notifier).selectAddress(address);
+    _selectionContext = context;
+    final notifier = ref.read(userAddressListProvider.notifier);
+    switch (context) {
+      case AddressListContext.home:
+        notifier.selectHomeAddress(address);
+      case AddressListContext.checkout:
+        notifier.selectCheckoutAddress(address);
+      case AddressListContext.management:
+        return;
+    }
     _emit(const AddressListNavigateBack());
   }
 
@@ -107,10 +143,6 @@ class AddressListViewModel extends Notifier<AddressListViewState> {
       if (!ref.mounted) return;
       final legacy = ref.read(userAddressListProvider);
       final operation = legacy.lastOperation;
-      if (operation?.isSuccess == true &&
-          legacy.selectedAddress?.id == addressId) {
-        notifier.selectAddress(null);
-      }
       _emit(
         AddressListShowOperationFeedback(
           operation: AddressListOperation.delete,
@@ -156,13 +188,18 @@ class AddressListViewModel extends Notifier<AddressListViewState> {
     List<UiEffectEnvelope<AddressListEffect>> effects = const [],
     int? operationInProgressId,
   }) {
+    final selectedAddress = switch (_selectionContext) {
+      AddressListContext.home => legacy.selectedAddress,
+      AddressListContext.checkout => legacy.checkoutSelectedAddress,
+      AddressListContext.management => null,
+    };
     return AddressListViewState(
       items: List<AddressListItemViewData>.unmodifiable(
         legacy.addresses
             .where((address) => address.id != null)
             .map(_toViewData),
       ),
-      selectedAddressId: legacy.selectedAddress?.id,
+      selectedAddressId: selectedAddress?.id,
       isLoading: legacy.isLoading,
       errorMessage: legacy.errorMessage,
       operationInProgressId: operationInProgressId,

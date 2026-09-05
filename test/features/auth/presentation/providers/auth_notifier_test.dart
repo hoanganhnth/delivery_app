@@ -250,6 +250,41 @@ void main() {
         expect(harness.container.read(authProvider).isAuthenticated, isFalse);
       },
     );
+
+    test(
+      'updateTokens silently persists tokens and updates state without dropping auth',
+      () async {
+        final harness = _Harness();
+        addTearDown(harness.dispose);
+
+        final notifier = harness.container.read(authProvider.notifier);
+        await notifier.login(
+          email: 'user@example.com',
+          password: 'password123',
+          deviceId: 'test-device',
+        );
+
+        expect(harness.container.read(authProvider).isAuthenticated, isTrue);
+
+        await notifier.updateTokens(
+          accessToken: 'silent-access-token',
+          refreshToken: 'silent-refresh-token',
+        );
+
+        final state = harness.container.read(authProvider);
+        expect(state.isAuthenticated, isTrue);
+        expect(state.accessToken, 'silent-access-token');
+        expect(state.refreshToken, 'silent-refresh-token');
+        expect(
+          harness.tokenStorage.storedTokens?.accessToken,
+          'silent-access-token',
+        );
+        expect(
+          harness.tokenStorage.storedTokens?.refreshToken,
+          'silent-refresh-token',
+        );
+      },
+    );
   });
 
   group('LoginViewModel', () {
@@ -279,6 +314,43 @@ void main() {
         expect(
           harness.container.read(loginViewModelProvider).effects.single.effect,
           isA<LoginAuthenticationSucceeded>(),
+        );
+      },
+    );
+
+    test(
+      'does not emit success effect when session is restored or updated without submission',
+      () async {
+        final harness = _Harness(
+          storedTokens: AuthEntity(
+            accessToken: 'stored-access',
+            refreshToken: 'stored-refresh',
+          ),
+        );
+        addTearDown(harness.dispose);
+
+        // Read loginViewModel first so it listens to authProvider
+        harness.container.read(loginViewModelProvider);
+
+        // Restore auth status without user submitting login form
+        final authNotifier = harness.container.read(authProvider.notifier);
+        await authNotifier.checkAuthStatus();
+
+        expect(harness.container.read(authProvider).isAuthenticated, isTrue);
+        expect(
+          harness.container.read(loginViewModelProvider).effects,
+          isEmpty,
+        );
+
+        // Silently update tokens
+        await authNotifier.updateTokens(
+          accessToken: 'new-silent-access',
+          refreshToken: 'new-silent-refresh',
+        );
+
+        expect(
+          harness.container.read(loginViewModelProvider).effects,
+          isEmpty,
         );
       },
     );

@@ -33,24 +33,24 @@ class _LivestreamViewerPageState extends ConsumerState<LivestreamViewerPage> {
       body: Center(
         child: switch (state.phase) {
           LivestreamViewerPhase.disabled => const Text(
-            'Livestream is currently unavailable',
+            'Livestream hiện không khả dụng',
           ),
           LivestreamViewerPhase.loading => const CircularProgressIndicator(),
           LivestreamViewerPhase.mediaUnavailable => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('Media unavailable on this device'),
-              TextButton(onPressed: retry, child: const Text('Retry')),
+              const Text('Thiết bị không hỗ trợ phát livestream'),
+              TextButton(onPressed: retry, child: const Text('Thử lại')),
             ],
           ),
           LivestreamViewerPhase.error => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(state.message ?? 'Unable to join'),
-              TextButton(onPressed: retry, child: const Text('Retry')),
+              Text(state.message ?? 'Không thể tham gia'),
+              TextButton(onPressed: retry, child: const Text('Thử lại')),
             ],
           ),
-          _ => Text(state.session?.title ?? 'Ready to join livestream'),
+          _ => Text(state.session?.title ?? 'Sẵn sàng tham gia livestream'),
         },
       ),
     );

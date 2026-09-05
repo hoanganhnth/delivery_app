@@ -13,6 +13,7 @@ import 'package:delivery_app/features/user_address/domain/repositories/user_addr
 import 'package:delivery_app/features/user_address/di/user_address_di_providers.dart';
 import 'package:delivery_app/features/user_address/application/address_list_notifier.dart';
 import 'package:delivery_app/features/user_address/application/address_form_notifier.dart';
+import 'package:delivery_app/features/user_address/application/address_list_context.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
@@ -102,6 +103,121 @@ void main() {
   );
 
   group('address list journey', () {
+    test(
+      'routes Home and Checkout selection through separate contexts',
+      () async {
+        final repository = _FakeAddressRepository();
+        final container = _container(repository);
+        addTearDown(container.dispose);
+        container.listen(userAddressListProvider, (_, _) {});
+        final addressNotifier = container.read(
+          userAddressListProvider.notifier,
+        );
+        final viewModel = container.read(addressListViewModelProvider.notifier);
+        final home = buildAddress(id: 401, isDefault: true);
+        final office = buildAddress(
+          id: 402,
+          label: 'Công ty',
+          isDefault: false,
+        );
+        repository.addressesResult = Right([home, office]);
+
+        await addressNotifier.loadAddresses(501);
+        addressNotifier.autoSelectDefaultAddress();
+        viewModel.activateContext(AddressListContext.home);
+
+        await viewModel.dispatch(
+          const AddressListSelectRequested(
+            402,
+            context: AddressListContext.home,
+          ),
+        );
+        expect(
+          container.read(userAddressListProvider).selectedAddress?.id,
+          402,
+        );
+        expect(
+          container.read(userAddressListProvider).checkoutSelectedAddress,
+          isNull,
+        );
+
+        await viewModel.dispatch(
+          const AddressListSelectRequested(
+            401,
+            context: AddressListContext.checkout,
+          ),
+        );
+        expect(
+          container.read(userAddressListProvider).selectedAddress?.id,
+          402,
+        );
+        expect(
+          container.read(userAddressListProvider).checkoutSelectedAddress?.id,
+          401,
+        );
+        expect(
+          container.read(addressListViewModelProvider).selectedAddressId,
+          401,
+        );
+      },
+    );
+
+    test('keeps Home selection independent from Checkout selection', () async {
+      final repository = _FakeAddressRepository();
+      final container = _container(repository);
+      addTearDown(container.dispose);
+      container.listen(userAddressListProvider, (_, _) {});
+      final notifier = container.read(userAddressListProvider.notifier);
+      final home = buildAddress(id: 401, isDefault: true);
+      final office = buildAddress(id: 402, label: 'Công ty', isDefault: false);
+      repository.addressesResult = Right([home, office]);
+
+      await notifier.loadAddresses(501);
+      notifier.autoSelectDefaultAddress();
+      notifier.beginCheckoutSelection();
+      notifier.selectCheckoutAddress(office);
+
+      var state = container.read(userAddressListProvider);
+      expect(state.selectedAddress?.id, 401);
+      expect(state.checkoutSelectedAddress?.id, 402);
+
+      notifier.beginCheckoutSelection();
+      state = container.read(userAddressListProvider);
+      expect(state.checkoutSelectedAddress?.id, 401);
+    });
+
+    test(
+      'rebinds both selections to the latest address records on refresh',
+      () async {
+        final repository = _FakeAddressRepository();
+        final container = _container(repository);
+        addTearDown(container.dispose);
+        container.listen(userAddressListProvider, (_, _) {});
+        final notifier = container.read(userAddressListProvider.notifier);
+        final home = buildAddress(id: 401, isDefault: true);
+        final office = buildAddress(
+          id: 402,
+          label: 'Công ty',
+          isDefault: false,
+        );
+        repository.addressesResult = Right([home, office]);
+
+        await notifier.loadAddresses(501);
+        notifier.autoSelectDefaultAddress();
+        notifier.beginCheckoutSelection();
+        notifier.selectCheckoutAddress(office);
+
+        final refreshedHome = home.copyWith(addressLine: 'Địa chỉ Nhà mới');
+        final refreshedOffice = office.copyWith(addressLine: 'Văn phòng mới');
+        repository.addressesResult = Right([refreshedHome, refreshedOffice]);
+        await notifier.loadAddresses(501);
+
+        final state = container.read(userAddressListProvider);
+        expect(state.selectedAddress, same(refreshedHome));
+        expect(state.checkoutSelectedAddress, same(refreshedOffice));
+      },
+    );
+
     test(
       'isolates address state by profile and ignores stale responses',
       () async {
