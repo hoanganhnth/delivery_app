@@ -23,6 +23,7 @@ class CartView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+    backgroundColor: const Color(0xFFF7F8FA),
     appBar: AppTopBar(
       title: 'Giỏ hàng',
       leadingKey: const Key('cart_back'),
@@ -194,42 +195,70 @@ class _Summary extends StatelessWidget {
   const _Summary({required this.totalAmount});
   final double totalAmount;
   @override
-  Widget build(BuildContext context) => Card(
+  Widget build(BuildContext context) => Container(
     margin: const EdgeInsets.all(16),
-    child: Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Tổng đơn hàng', style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Tạm tính'),
-              Text('${totalAmount.toStringAsFixed(0)}đ'),
-            ],
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: AppRadii.container,
+      border: Border.all(color: const Color(0xFFEDEFF2), width: 1),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.02),
+          blurRadius: 10,
+          offset: const Offset(0, 3),
+        ),
+      ],
+    ),
+    padding: const EdgeInsets.all(20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Tổng đơn hàng',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w800,
+            color: const Color(0xFF1A1D20),
           ),
-          const SizedBox(height: 12),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('Phí giao hàng'), Text('Tính ở bước thanh toán')],
-          ),
-          const Divider(height: 32),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Tạm tính', style: Theme.of(context).textTheme.titleMedium),
-              Text(
-                '${totalAmount.toStringAsFixed(0)}đ',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('Tạm tính', style: TextStyle(color: Color(0xFF757F8A))),
+            Text(
+              '${totalAmount.toStringAsFixed(0)}đ',
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Phí giao hàng', style: TextStyle(color: Color(0xFF757F8A))),
+            Text('Tính ở bước thanh toán', style: TextStyle(color: Color(0xFF757F8A))),
+          ],
+        ),
+        const Divider(color: Color(0xFFEDEFF2), height: 32),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Tạm tính',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w800,
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+            Text(
+              '${totalAmount.toStringAsFixed(0)}đ',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ],
+        ),
+      ],
     ),
   );
 }

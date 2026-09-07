@@ -43,6 +43,10 @@ class CatalogHomeViewModel extends Notifier<CatalogHomeViewState> {
         _emit(const CatalogHomeNavigateToSearch());
       case CatalogHomeAllRestaurantsRequested():
         _emit(const CatalogHomeNavigateToAllRestaurants());
+      case CatalogHomeVouchersRequested():
+        _emit(const CatalogHomeNavigateToVouchers());
+      case CatalogHomeLivestreamRequested():
+        _emit(const CatalogHomeNavigateToLivestream());
       case CatalogHomeAddressRequested():
         _emit(const CatalogHomeNavigateToAddresses());
       case CatalogHomeNotificationsRequested():

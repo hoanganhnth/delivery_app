@@ -21,6 +21,7 @@ class AppRoutes {
   static const String debugTools = '/debug-tools';
   static const String search = '/search';
   static const String notifications = '/notifications';
+  static const String vouchers = '/vouchers';
 
   // Delivery routes
   static const String orders = '/orders';

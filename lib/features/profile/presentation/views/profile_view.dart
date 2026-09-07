@@ -29,7 +29,7 @@ class ProfileView extends StatelessWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             SliverAppBar(
-              expandedHeight: 220,
+              expandedHeight: 140,
               pinned: true,
               elevation: 0,
               scrolledUnderElevation: 0,
@@ -50,7 +50,7 @@ class ProfileView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CircleAvatar(
-                          radius: 50,
+                          radius: 30,
                           backgroundColor: scheme.onPrimary.withValues(
                             alpha: 0.18,
                           ),
@@ -58,26 +58,27 @@ class ProfileView extends StatelessWidget {
                             data.initial ?? '?',
                             style: TextStyle(
                               color: scheme.onPrimary,
-                              fontSize: 36,
+                              fontSize: 22,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
                         ),
-                        const SizedBox(height: AppSpacing.md),
+                        const SizedBox(height: 6),
                         Text(
                           displayName,
                           style: TextStyle(
                             color: scheme.onPrimary,
-                            fontSize: 24,
+                            fontSize: 18,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
                         if (data.email?.isNotEmpty == true) ...[
-                          const SizedBox(height: AppSpacing.xs),
+                          const SizedBox(height: 2),
                           Text(
                             data.email!,
                             style: TextStyle(
                               color: scheme.onPrimary.withValues(alpha: 0.82),
+                              fontSize: 12,
                             ),
                           ),
                         ],
@@ -88,7 +89,7 @@ class ProfileView extends StatelessWidget {
               ),
             ),
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 24, 16, 40),
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
               sliver: SliverList.list(
                 children: [
                   AppSectionHeading(title: strings.profileTitle),
@@ -105,11 +106,35 @@ class ProfileView extends StatelessWidget {
                         ),
                         const Divider(height: 1),
                         _ProfileAction(
+                          icon: Icons.confirmation_number_outlined,
+                          title: 'Ví Voucher & Khuyến mãi',
+                          subtitle: 'Mã giảm giá, Freeship của bạn',
+                          onTap: () =>
+                              onIntent(const ProfileVouchersRequested()),
+                        ),
+                        const Divider(height: 1),
+                        _ProfileAction(
                           icon: Icons.location_on_outlined,
                           title: strings.profileMyAddresses,
                           subtitle: strings.profileMyAddressesDesc,
                           onTap: () =>
                               onIntent(const ProfileAddressesRequested()),
+                        ),
+                        const Divider(height: 1),
+                        _ProfileAction(
+                          icon: Icons.headset_mic_outlined,
+                          title: 'Trung tâm Hỗ trợ & CSKH',
+                          subtitle: 'Hotline 24/7, trợ giúp & liên hệ',
+                          onTap: () =>
+                              onIntent(const ProfileSupportRequested()),
+                        ),
+                        const Divider(height: 1),
+                        _ProfileAction(
+                          icon: Icons.live_tv_rounded,
+                          title: 'Livestream Săn Deal',
+                          subtitle: 'Phát trực tiếp & ưu đãi độc quyền',
+                          onTap: () =>
+                              onIntent(const ProfileLivestreamRequested()),
                         ),
                         const Divider(height: 1),
                         _ProfileAction(
@@ -122,7 +147,7 @@ class ProfileView extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.lg),
+                  const SizedBox(height: AppSpacing.sm),
                   OutlinedButton.icon(
                     onPressed: state.isLoggingOut
                         ? null
@@ -138,7 +163,7 @@ class ProfileView extends StatelessWidget {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: scheme.error,
                       side: BorderSide(color: scheme.error),
-                      minimumSize: const Size.fromHeight(52),
+                      minimumSize: const Size.fromHeight(44),
                     ),
                   ),
                 ],
@@ -168,21 +193,23 @@ class _ProfileAction extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return ListTile(
-      minVerticalPadding: 12,
+      dense: true,
+      visualDensity: VisualDensity.compact,
+      minVerticalPadding: 6,
       leading: DecoratedBox(
         decoration: BoxDecoration(
           color: scheme.primary.withValues(alpha: 0.12),
           borderRadius: AppRadii.control,
         ),
         child: SizedBox(
-          width: 44,
-          height: 44,
-          child: Icon(icon, color: scheme.primary),
+          width: 36,
+          height: 36,
+          child: Icon(icon, color: scheme.primary, size: 20),
         ),
       ),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
-      subtitle: Text(subtitle),
-      trailing: const Icon(Icons.chevron_right),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+      subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
+      trailing: const Icon(Icons.chevron_right, size: 20),
       onTap: onTap,
     );
   }

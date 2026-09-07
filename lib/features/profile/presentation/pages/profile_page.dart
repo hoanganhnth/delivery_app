@@ -49,6 +49,19 @@ class ProfilePage extends ConsumerWidget {
         if (context.mounted) context.pushAddressList();
       case ProfileNavigateSettings():
         if (context.mounted) context.pushSettings();
+      case ProfileNavigateVouchers():
+        if (context.mounted) context.pushNamed('vouchers');
+      case ProfileNavigateSupport():
+        if (context.mounted) context.pushSupport();
+      case ProfileNavigateLivestream():
+        if (context.mounted) {
+          context.pushNamed(
+            'livestream-viewer',
+            pathParameters: {
+              'livestreamId': '00000000-0000-0000-0000-000000000001',
+            },
+          );
+        }
       case ProfileNavigateLogin():
         if (context.mounted) context.goToLogin();
       case ProfileShowError(:final message):

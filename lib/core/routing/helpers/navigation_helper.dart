@@ -267,6 +267,8 @@ extension NavigationExtension on BuildContext {
       NavigationHelper.pushResetPassword(this, token);
   void pushProfile() => NavigationHelper.pushProfile(this);
   void pushSettings() => NavigationHelper.pushSettings(this);
+  void pushSupport() => push(AppRoutes.support);
+  void pushVouchers() => push(AppRoutes.vouchers);
   void pushDebugTools() => NavigationHelper.pushDebugTools(this);
   void pushCart() => NavigationHelper.pushCart(this);
   void pushOrders() => NavigationHelper.pushOrders(this);

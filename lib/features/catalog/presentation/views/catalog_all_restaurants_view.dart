@@ -17,6 +17,7 @@ class CatalogAllRestaurantsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+    backgroundColor: const Color(0xFFF7F8FA),
     appBar: AppTopBar(
       title: 'Tất cả nhà hàng',
       onBack: () => onIntent(const CatalogAllRestaurantsBackRequested()),

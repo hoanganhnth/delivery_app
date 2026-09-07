@@ -34,7 +34,7 @@ class AddressListViewModel extends Notifier<AddressListViewState> {
     return _fromLegacy(initial);
   }
 
-  /// Activate the route-specific selection contract before the first frame.
+  /// Activate the route-specific selection contract upon route entry.
   void activateContext(AddressListContext context) {
     _selectionContext = context;
     final notifier = ref.read(userAddressListProvider.notifier);

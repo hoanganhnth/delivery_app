@@ -25,6 +25,15 @@ void main() {
     );
 
     expect(find.text('Customer Test'), findsOneWidget);
+    await tester.tap(find.text('Ví Voucher & Khuyến mãi'));
+    expect(intents.last, isA<ProfileVouchersRequested>());
+
+    await tester.tap(find.text('Trung tâm Hỗ trợ & CSKH'));
+    expect(intents.last, isA<ProfileSupportRequested>());
+
+    await tester.tap(find.text('Livestream Săn Deal'));
+    expect(intents.last, isA<ProfileLivestreamRequested>());
+
     await tester.tap(find.text('My Addresses'));
     expect(intents.last, isA<ProfileAddressesRequested>());
 

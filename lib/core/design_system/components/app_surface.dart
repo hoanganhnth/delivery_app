@@ -27,13 +27,20 @@ class AppSurfaceCard extends StatelessWidget {
     final card = Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
-      shape: const RoundedRectangleBorder(borderRadius: AppRadii.card),
+      shape: const RoundedRectangleBorder(
+        borderRadius: AppRadii.container,
+        side: BorderSide(color: Color(0xFFEDEFF2), width: 1),
+      ),
       elevation: 0,
       color: scheme.surface,
       surfaceTintColor: scheme.surface,
       child: onTap == null
           ? content
-          : InkWell(onTap: onTap, borderRadius: AppRadii.card, child: content),
+          : InkWell(
+              onTap: onTap,
+              borderRadius: AppRadii.container,
+              child: content,
+            ),
     );
     if (semanticLabel == null) return card;
     return Semantics(

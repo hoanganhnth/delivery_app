@@ -46,6 +46,7 @@ class _CheckoutViewState extends State<CheckoutView> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+    backgroundColor: const Color(0xFFF7F8FA),
     appBar: AppTopBar(
       title: S.of(context).checkoutTitle,
       leadingKey: const Key('checkout_back'),

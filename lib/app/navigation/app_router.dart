@@ -29,6 +29,7 @@ import 'package:delivery_app/features/debug/debug.dart';
 import 'package:delivery_app/features/orders/orders.dart';
 import 'package:delivery_app/features/livestream/presentation/livestream_viewer_page.dart';
 import 'package:delivery_app/features/entitlements/presentation/entitlement_status_page.dart';
+import 'package:delivery_app/features/promotion/presentation/pages/voucher_wallet_page.dart';
 import 'package:delivery_app/features/support/presentation/support_page.dart';
 import 'package:delivery_app/features/cart/cart.dart';
 import 'package:delivery_app/features/user_address/presentation/screens/address_list_screen.dart';
@@ -64,6 +65,7 @@ class AppRouterPages {
   Widget profile() => const ProfileScreen();
   Widget settings() => const SettingsScreen();
   Widget entitlements() => const EntitlementStatusPage();
+  Widget vouchers() => const VoucherWalletPage();
   Widget support() => const SupportPage();
   Widget debugTools() => const DebugToolsScreen();
   Widget orders() => const OrdersScreen();
@@ -193,6 +195,11 @@ GoRouter createAppRouter({
         path: AppRoutes.support,
         name: 'support',
         builder: (context, state) => pages.support(),
+      ),
+      GoRoute(
+        path: AppRoutes.vouchers,
+        name: 'vouchers',
+        builder: (context, state) => pages.vouchers(),
       ),
       if (kDebugMode)
         GoRoute(
@@ -360,6 +367,7 @@ extension GoRouterExtension on GoRouter {
   void pushProfile() => pushNamed('profile');
   void pushSettings() => pushNamed('settings');
   void pushEntitlements() => pushNamed('entitlements');
+  void pushVouchers() => pushNamed('vouchers');
   void pushSupport() => pushNamed('support');
   void pushDebugTools() => pushNamed('debug-tools');
   void pushOrders() => pushNamed('orders');
@@ -373,6 +381,11 @@ extension GoRouterExtension on GoRouter {
   void pushRestaurantDetails(String restaurantId) => pushNamed(
     'restaurant-details',
     pathParameters: {'restaurantId': restaurantId},
+  );
+
+  void pushLivestream(String livestreamId) => pushNamed(
+    'livestream-viewer',
+    pathParameters: {'livestreamId': livestreamId},
   );
 
   void pushAddressList() => pushNamed('address-list');

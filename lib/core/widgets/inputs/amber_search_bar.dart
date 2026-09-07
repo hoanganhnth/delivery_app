@@ -72,6 +72,55 @@ class _AmberSearchBarState extends State<AmberSearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.onTap != null) {
+      return GestureDetector(
+        onTap: widget.onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          height: 50,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: AppRadii.pillRadius,
+            border: Border.all(color: const Color(0xFFEDEFF2), width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              const Icon(
+                Icons.search_rounded,
+                color: Color(0xFF8C939D),
+                size: 22,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  widget.placeholder,
+                  style: const TextStyle(
+                    color: Color(0xFF8C939D),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const Icon(
+                Icons.mic_none_rounded,
+                color: Color(0xFF8C939D),
+                size: 20,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
     return Row(
       children: [
         Expanded(

@@ -182,14 +182,17 @@ class CheckoutRestaurantSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Row(
     children: [
-      DecoratedBox(
+      Container(
+        width: 46,
+        height: 46,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer,
-          borderRadius: AppRadii.control,
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(14),
         ),
-        child: const SizedBox.square(
-          dimension: 48,
-          child: Icon(Icons.restaurant_outlined),
+        child: Icon(
+          Icons.storefront_rounded,
+          color: Theme.of(context).colorScheme.primary,
+          size: 24,
         ),
       ),
       const SizedBox(width: AppSpacing.sm),
@@ -199,16 +202,19 @@ class CheckoutRestaurantSummary extends StatelessWidget {
           children: [
             Text(
               name,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w800,
+                color: const Color(0xFF1A1D20),
+              ),
             ),
-            const SizedBox(height: AppSpacing.xxs),
+            const SizedBox(height: 2),
             Text(
               S
                   .of(context)
                   .pilotCheckoutRestaurantItems(distinctItems, itemCount),
-              style: Theme.of(context).textTheme.bodySmall,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: const Color(0xFF757F8A),
+              ),
             ),
           ],
         ),
@@ -243,9 +249,18 @@ class CheckoutDeliveryAddress extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
-                Icons.location_on_outlined,
-                color: Theme.of(context).colorScheme.primary,
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.location_on_rounded,
+                  color: Theme.of(context).colorScheme.primary,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: AppSpacing.sm),
               Expanded(
@@ -255,42 +270,73 @@ class CheckoutDeliveryAddress extends StatelessWidget {
                         children: [
                           Text(
                             strings.pilotCheckoutSelectAddress,
-                            style: const TextStyle(fontWeight: FontWeight.w700),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 15,
+                              color: Color(0xFF1A1D20),
+                            ),
                           ),
                           const SizedBox(height: AppSpacing.xxs),
-                          Text(strings.pilotCheckoutSelectAddressMessage),
+                          Text(
+                            strings.pilotCheckoutSelectAddressMessage,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFF757F8A),
+                            ),
+                          ),
                         ],
                       )
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Wrap(
-                            spacing: AppSpacing.xs,
-                            runSpacing: AppSpacing.xxs,
-                            crossAxisAlignment: WrapCrossAlignment.center,
+                          Row(
                             children: [
                               Text(
                                 value.label,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w800,
+                                  fontSize: 15,
+                                  color: Color(0xFF1A1D20),
                                 ),
                               ),
-                              if (value.isDefault)
+                              if (value.isDefault) ...[
+                                const SizedBox(width: AppSpacing.xs),
                                 AppBadge(
                                   label: strings.pilotCheckoutDefault,
                                   tone: AppBadgeTone.accent,
                                 ),
+                              ],
                             ],
                           ),
-                          const SizedBox(height: AppSpacing.xxs),
-                          Text('${value.recipientName} · ${value.phoneNumber}'),
-                          const SizedBox(height: AppSpacing.xxs),
-                          Text(value.fullAddress),
+                          const SizedBox(height: 2),
+                          Text(
+                            '${value.recipientName} · ${value.phoneNumber}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                              color: Color(0xFF555B62),
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            value.fullAddress,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFF757F8A),
+                            ),
+                          ),
                         ],
                       ),
               ),
               const SizedBox(width: AppSpacing.xs),
-              const Icon(Icons.chevron_right),
+              const Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Icon(
+                  Icons.chevron_right_rounded,
+                  color: Color(0xFF9EA7B2),
+                  size: 20,
+                ),
+              ),
             ],
           ),
         ),
@@ -307,7 +353,19 @@ class CheckoutPaymentMethod extends StatelessWidget {
     final strings = S.of(context);
     return Row(
       children: [
-        const Icon(Icons.payments_outlined),
+        Container(
+          width: 36,
+          height: 36,
+          decoration: const BoxDecoration(
+            color: Color(0xFFE8F8F5),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(
+            Icons.payments_rounded,
+            color: Color(0xFF27AE60),
+            size: 20,
+          ),
+        ),
         const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: Column(
@@ -315,13 +373,28 @@ class CheckoutPaymentMethod extends StatelessWidget {
             children: [
               Text(
                 strings.pilotCheckoutCash,
-                style: const TextStyle(fontWeight: FontWeight.w700),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                  color: Color(0xFF1A1D20),
+                ),
               ),
-              Text(strings.pilotCheckoutCashMessage),
+              const SizedBox(height: 2),
+              Text(
+                strings.pilotCheckoutCashMessage,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Color(0xFF757F8A),
+                ),
+              ),
             ],
           ),
         ),
-        Icon(Icons.check_circle, color: context.semanticColors.success),
+        const Icon(
+          Icons.check_circle_rounded,
+          color: Color(0xFF27AE60),
+          size: 22,
+        ),
       ],
     );
   }
@@ -481,19 +554,47 @@ class CheckoutOrderSummary extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: AppSpacing.xs),
             child: Row(
               children: [
-                Text(
-                  '${line.quantity}×',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 7,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF0F2F5),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    '${line.quantity}×',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                 ),
-                const SizedBox(width: AppSpacing.xs),
-                Expanded(child: Text(line.name)),
-                Text(_currency(line.lineTotal)),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: Text(
+                    line.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: Color(0xFF1A1D20),
+                    ),
+                  ),
+                ),
+                Text(
+                  _currency(line.lineTotal),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                    color: Color(0xFF1A1D20),
+                  ),
+                ),
               ],
             ),
           ),
-        const Divider(),
+        const Divider(color: Color(0xFFEDEFF2), height: 20, thickness: 1),
         CheckoutPriceRow(
           label: strings.checkoutSubtotal,
           value: price?.subtotal,
@@ -520,7 +621,7 @@ class CheckoutOrderSummary extends StatelessWidget {
               isDiscount: true,
             ),
           ],
-        const Divider(),
+        const Divider(color: Color(0xFFEDEFF2), height: 20, thickness: 1),
         CheckoutPriceRow(
           label: strings.checkoutTotal,
           value: price?.total,
@@ -553,8 +654,15 @@ class CheckoutPriceRow extends StatelessWidget {
         child: Text(
           label,
           style: isEmphasized
-              ? const TextStyle(fontWeight: FontWeight.w800)
-              : null,
+              ? const TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                  color: Color(0xFF1A1D20),
+                )
+              : const TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF757F8A),
+                ),
         ),
       ),
       const SizedBox(width: AppSpacing.sm),
@@ -563,8 +671,11 @@ class CheckoutPriceRow extends StatelessWidget {
             ? '—'
             : '${isDiscount ? '−' : ''}${_currency(value!.abs())}',
         style: TextStyle(
-          fontWeight: isEmphasized ? FontWeight.w800 : FontWeight.w500,
-          color: isDiscount ? context.semanticColors.success : null,
+          fontWeight: isEmphasized ? FontWeight.w800 : FontWeight.w700,
+          fontSize: isEmphasized ? 17 : 14,
+          color: isDiscount
+              ? const Color(0xFF27AE60)
+              : const Color(0xFF1A1D20),
         ),
       ),
     ],
@@ -589,17 +700,23 @@ class CheckoutStickyAction extends StatelessWidget {
       summary: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            strings.checkoutTotal,
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+          Expanded(
+            child: Text(
+              strings.checkoutTotal,
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 15,
+                color: Color(0xFF555B62),
+              ),
+            ),
           ),
+          const SizedBox(width: AppSpacing.sm),
           Text(
             price == null ? '—' : _currency(price.total),
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               color: Theme.of(context).colorScheme.primary,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w900,
+              fontSize: 20,
             ),
           ),
         ],

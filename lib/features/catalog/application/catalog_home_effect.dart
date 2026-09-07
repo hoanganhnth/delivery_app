@@ -18,6 +18,20 @@ final class CatalogHomeNavigateToAllRestaurants extends CatalogHomeEffect {
   List<Object?> get props => const [];
 }
 
+final class CatalogHomeNavigateToVouchers extends CatalogHomeEffect {
+  const CatalogHomeNavigateToVouchers();
+
+  @override
+  List<Object?> get props => const [];
+}
+
+final class CatalogHomeNavigateToLivestream extends CatalogHomeEffect {
+  const CatalogHomeNavigateToLivestream();
+
+  @override
+  List<Object?> get props => const [];
+}
+
 final class CatalogHomeNavigateToAddresses extends CatalogHomeEffect {
   const CatalogHomeNavigateToAddresses();
 

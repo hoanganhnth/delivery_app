@@ -10,19 +10,19 @@ class RuntimeConfig {
   static const _configuredGateway = String.fromEnvironment('API_BASE_URL');
   static const voucherCheckoutEnabled = bool.fromEnvironment(
     'VOUCHER_CHECKOUT_ENABLED',
-    defaultValue: false,
+    defaultValue: true,
   );
   static const voucherStackingEnabled = bool.fromEnvironment(
     'VOUCHER_STACKING_ENABLED',
-    defaultValue: false,
+    defaultValue: true,
   );
   static const flashSaleCheckoutEnabled = bool.fromEnvironment(
     'FLASHSALE_CHECKOUT_ENABLED',
-    defaultValue: false,
+    defaultValue: true,
   );
   static const livestreamViewerEnabled = bool.fromEnvironment(
     'LIVESTREAM_CLIENT_API_ENABLED',
-    defaultValue: false,
+    defaultValue: true,
   );
   static const vnpayPaymentEnabled = bool.fromEnvironment(
     'VNPAY_PAYMENT_ENABLED',
@@ -34,7 +34,7 @@ class RuntimeConfig {
   );
   static const supportChatEnabled = bool.fromEnvironment(
     'SUPPORT_CHAT_ENABLED',
-    defaultValue: false,
+    defaultValue: true,
   );
   static const _vnpayReturnUri = String.fromEnvironment(
     'VNPAY_RETURN_URI',

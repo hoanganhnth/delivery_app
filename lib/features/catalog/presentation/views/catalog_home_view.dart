@@ -13,18 +13,21 @@ class CatalogHomeView extends StatelessWidget {
     required this.state,
     required this.onIntent,
     this.flashSaleBanner,
+    this.livestreamBanner,
     this.deliveryAddress,
   });
 
   final CatalogHomeViewState state;
   final ValueChanged<CatalogHomeIntent> onIntent;
   final Widget? flashSaleBanner;
+  final Widget? livestreamBanner;
   final String? deliveryAddress;
 
   @override
   Widget build(BuildContext context) {
     final strings = S.of(context);
     return Scaffold(
+      backgroundColor: const Color(0xFFF7F8FA),
       body: SafeArea(
         bottom: false,
         child: CustomScrollView(
@@ -38,8 +41,13 @@ class CatalogHomeView extends StatelessWidget {
             SliverToBoxAdapter(
               child: CatalogHomeSearchLauncher(onIntent: onIntent),
             ),
+            SliverToBoxAdapter(
+              child: HomeServiceGrid(onIntent: onIntent),
+            ),
             if (flashSaleBanner != null)
               SliverToBoxAdapter(child: flashSaleBanner),
+            if (livestreamBanner != null)
+              SliverToBoxAdapter(child: livestreamBanner),
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(
                 AppSpacing.page,

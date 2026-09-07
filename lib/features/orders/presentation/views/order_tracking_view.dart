@@ -22,70 +22,114 @@ class OrderTrackingView extends StatelessWidget {
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Card(
-        margin: EdgeInsets.zero,
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.card),
-          child: Row(
-            children: [
-              Icon(
-                Icons.local_shipping_outlined,
+      Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: AppRadii.container,
+          border: Border.all(color: const Color(0xFFEDEFF2), width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(AppSpacing.card),
+        child: Row(
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.two_wheeler_rounded,
                 color: Theme.of(context).colorScheme.primary,
+                size: 22,
               ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      S.of(context).trackDelivery,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    S.of(context).trackDelivery,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: const Color(0xFF1A1D20),
                     ),
-                    const SizedBox(height: AppSpacing.xxs),
-                    Text(
-                      _phaseText(state.phase),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    _phaseText(state.phase),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: const Color(0xFF757F8A),
+                      fontWeight: FontWeight.w500,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              _ConnectionBadge(state: state),
-            ],
-          ),
+            ),
+            _ConnectionBadge(state: state),
+          ],
         ),
       ),
       if (state.hasError) ...[
         const SizedBox(height: AppSpacing.sm),
-        Card(
-          margin: EdgeInsets.zero,
-          color: Theme.of(context).colorScheme.errorContainer,
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.sm),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  color: Theme.of(context).colorScheme.onErrorContainer,
+        Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFFFDEDEC),
+            borderRadius: AppRadii.control,
+            border: Border.all(color: const Color(0xFFFADBD8), width: 1),
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.xs,
+          ),
+          child: Row(
+            children: [
+              const Icon(
+                Icons.error_outline_rounded,
+                color: Color(0xFFE74C3C),
+                size: 20,
+              ),
+              const SizedBox(width: AppSpacing.xs),
+              Expanded(
+                child: Text(
+                  state.errorMessage!,
+                  style: const TextStyle(
+                    color: Color(0xFFC0392B),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-                const SizedBox(width: AppSpacing.xs),
-                Expanded(child: Text(state.errorMessage!)),
-                TextButton(
-                  onPressed: () =>
-                      onIntent(const OrderTrackingRetryRequested()),
-                  child: const Text('Thử lại'),
+              ),
+              TextButton(
+                onPressed: () =>
+                    onIntent(const OrderTrackingRetryRequested()),
+                child: const Text(
+                  'Thử lại',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFFE74C3C),
+                  ),
                 ),
-                IconButton(
-                  tooltip: 'Đóng',
-                  onPressed: () =>
-                      onIntent(const OrderTrackingErrorDismissed()),
-                  icon: const Icon(Icons.close),
+              ),
+              IconButton(
+                tooltip: 'Đóng',
+                onPressed: () =>
+                    onIntent(const OrderTrackingErrorDismissed()),
+                icon: const Icon(
+                  Icons.close,
+                  size: 18,
+                  color: Color(0xFF757F8A),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],
@@ -117,24 +161,23 @@ class _ConnectionBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (label, color) = state.isLoading
-        ? ('Đang tải', Colors.orange)
+    final (label, bg, fg) = state.isLoading
+        ? ('Đang tải', const Color(0xFFFFF7EC), const Color(0xFFE67E22))
         : state.isConnected
-        ? ('Đã kết nối', Colors.green)
-        : ('Chưa kết nối', Colors.grey);
-    return DecoratedBox(
+        ? ('Đã kết nối', const Color(0xFFE8F8F5), const Color(0xFF27AE60))
+        : ('Chưa kết nối', const Color(0xFFF0F2F5), const Color(0xFF757F8A));
+    return Container(
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.14),
+        color: bg,
         borderRadius: AppRadii.pillRadius,
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: Text(
-          label,
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: color,
-            fontWeight: FontWeight.w700,
-          ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: fg,
+          fontWeight: FontWeight.w700,
+          fontSize: 11,
         ),
       ),
     );

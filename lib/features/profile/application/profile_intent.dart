@@ -14,6 +14,18 @@ final class ProfileSettingsRequested extends ProfileIntent {
   const ProfileSettingsRequested();
 }
 
+final class ProfileVouchersRequested extends ProfileIntent {
+  const ProfileVouchersRequested();
+}
+
+final class ProfileSupportRequested extends ProfileIntent {
+  const ProfileSupportRequested();
+}
+
+final class ProfileLivestreamRequested extends ProfileIntent {
+  const ProfileLivestreamRequested();
+}
+
 final class ProfileLogoutRequested extends ProfileIntent {
   const ProfileLogoutRequested();
 }

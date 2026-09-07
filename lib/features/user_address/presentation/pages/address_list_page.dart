@@ -40,11 +40,13 @@ class _AddressListPageState extends ConsumerState<AddressListPage>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    ref
-        .read(addressListViewModelProvider.notifier)
-        .activateContext(widget.effectiveSelectionContext);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _load();
+      if (mounted) {
+        ref
+            .read(addressListViewModelProvider.notifier)
+            .activateContext(widget.effectiveSelectionContext);
+        _load();
+      }
     });
   }
 

@@ -25,6 +25,27 @@ final class ProfileNavigateSettings extends ProfileEffect {
   List<Object?> get props => const [];
 }
 
+final class ProfileNavigateVouchers extends ProfileEffect {
+  const ProfileNavigateVouchers();
+
+  @override
+  List<Object?> get props => const [];
+}
+
+final class ProfileNavigateSupport extends ProfileEffect {
+  const ProfileNavigateSupport();
+
+  @override
+  List<Object?> get props => const [];
+}
+
+final class ProfileNavigateLivestream extends ProfileEffect {
+  const ProfileNavigateLivestream();
+
+  @override
+  List<Object?> get props => const [];
+}
+
 final class ProfileNavigateLogin extends ProfileEffect {
   const ProfileNavigateLogin();
 

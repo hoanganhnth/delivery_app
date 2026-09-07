@@ -6,6 +6,10 @@ final class SettingsShowAbout extends SettingsEffect {
   const SettingsShowAbout();
 }
 
+final class SettingsOpenSupport extends SettingsEffect {
+  const SettingsOpenSupport();
+}
+
 final class SettingsOpenDebugTools extends SettingsEffect {
   const SettingsOpenDebugTools();
 }

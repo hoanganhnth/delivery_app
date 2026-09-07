@@ -84,19 +84,38 @@ class SettingsView extends StatelessWidget {
                 const SizedBox(height: AppSpacing.xs),
                 AppSurfaceCard(
                   padding: EdgeInsets.zero,
-                  child: ListTile(
-                    minVerticalPadding: 12,
-                    leading: _IconTile(
-                      icon: Icons.info_outline,
-                      color: scheme.primary,
-                    ),
-                    title: Text(
-                      strings.settingsAboutApp,
-                      style: const TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                    subtitle: Text(strings.settingsAboutAppDesc),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () => onIntent(const SettingsAboutRequested()),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        minVerticalPadding: 12,
+                        leading: _IconTile(
+                          icon: Icons.info_outline,
+                          color: scheme.primary,
+                        ),
+                        title: Text(
+                          strings.settingsAboutApp,
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                        subtitle: Text(strings.settingsAboutAppDesc),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () => onIntent(const SettingsAboutRequested()),
+                      ),
+                      const Divider(height: 1),
+                      ListTile(
+                        minVerticalPadding: 12,
+                        leading: _IconTile(
+                          icon: Icons.headset_mic_outlined,
+                          color: scheme.primary,
+                        ),
+                        title: const Text(
+                          'Hỗ trợ & Trợ giúp',
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                        subtitle: const Text('Hotline CSKH, câu hỏi thường gặp & liên hệ'),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () => onIntent(const SettingsSupportRequested()),
+                      ),
+                    ],
                   ),
                 ),
                 if (kDebugMode) ...[

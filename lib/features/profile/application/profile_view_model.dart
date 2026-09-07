@@ -39,6 +39,12 @@ class ProfileViewModel extends Notifier<ProfileViewState> {
         _emit(const ProfileNavigateAddresses());
       case ProfileSettingsRequested():
         _emit(const ProfileNavigateSettings());
+      case ProfileVouchersRequested():
+        _emit(const ProfileNavigateVouchers());
+      case ProfileSupportRequested():
+        _emit(const ProfileNavigateSupport());
+      case ProfileLivestreamRequested():
+        _emit(const ProfileNavigateLivestream());
       case ProfileLogoutRequested():
         await _logout();
       case ProfileRefreshRequested():

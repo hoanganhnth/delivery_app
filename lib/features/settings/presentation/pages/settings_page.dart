@@ -54,6 +54,8 @@ class SettingsPage extends ConsumerWidget {
             ],
           ),
         );
+      case SettingsOpenSupport():
+        if (context.mounted) context.pushSupport();
       case SettingsOpenDebugTools():
         if (context.mounted) context.pushDebugTools();
     }

@@ -16,7 +16,11 @@ class OrdersListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+    backgroundColor: const Color(0xFFF7F8FA),
     appBar: AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      scrolledUnderElevation: 0,
       leading: IconButton(
         key: const Key('orders_back'),
         icon: const Icon(Icons.arrow_back),
@@ -123,39 +127,53 @@ class _OrdersFilterBar extends StatelessWidget {
   final ValueChanged<OrdersListIntent> onIntent;
 
   @override
-  Widget build(BuildContext context) => SingleChildScrollView(
-    scrollDirection: Axis.horizontal,
-    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
-    child: Row(
-      children: [
-        _FilterChip(
-          label: 'Tất cả',
-          selected: filter == OrdersListFilter.all,
-          onTap: () =>
-              onIntent(const OrdersListFilterChanged(OrdersListFilter.all)),
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: const Color(0xFFEAECEF),
+          borderRadius: AppRadii.pillRadius,
         ),
-        const SizedBox(width: AppSpacing.xs),
-        _FilterChip(
-          label: 'Đang xử lý',
-          selected: filter == OrdersListFilter.active,
-          onTap: () =>
-              onIntent(const OrdersListFilterChanged(OrdersListFilter.active)),
+        child: Row(
+          children: [
+            Expanded(
+              child: _FilterPillTab(
+                label: 'Tất cả',
+                selected: filter == OrdersListFilter.all,
+                onTap: () => onIntent(
+                  const OrdersListFilterChanged(OrdersListFilter.all),
+                ),
+              ),
+            ),
+            Expanded(
+              child: _FilterPillTab(
+                label: 'Đang xử lý',
+                selected: filter == OrdersListFilter.active,
+                onTap: () => onIntent(
+                  const OrdersListFilterChanged(OrdersListFilter.active),
+                ),
+              ),
+            ),
+            Expanded(
+              child: _FilterPillTab(
+                label: 'Hoàn thành',
+                selected: filter == OrdersListFilter.completed,
+                onTap: () => onIntent(
+                  const OrdersListFilterChanged(OrdersListFilter.completed),
+                ),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: AppSpacing.xs),
-        _FilterChip(
-          label: 'Hoàn thành',
-          selected: filter == OrdersListFilter.completed,
-          onTap: () => onIntent(
-            const OrdersListFilterChanged(OrdersListFilter.completed),
-          ),
-        ),
-      ],
-    ),
-  );
+      ),
+    );
+  }
 }
 
-class _FilterChip extends StatelessWidget {
-  const _FilterChip({
+class _FilterPillTab extends StatelessWidget {
+  const _FilterPillTab({
     required this.label,
     required this.selected,
     required this.onTap,
@@ -166,11 +184,41 @@ class _FilterChip extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) => ChoiceChip(
-    label: Text(label),
-    selected: selected,
-    onSelected: (_) => onTap(),
-  );
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        decoration: BoxDecoration(
+          color: selected ? Colors.white : Colors.transparent,
+          borderRadius: AppRadii.pillRadius,
+          boxShadow: selected
+              ? [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.06),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+              color: selected ? scheme.onSurface : const Color(0xFF6C7278),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _OrderListCard extends StatelessWidget {
@@ -187,79 +235,192 @@ class _OrderListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Card(
-      margin: EdgeInsets.zero,
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        key: Key('order_card_${order.id}'),
-        onTap: isActionRunning
-            ? null
-            : () => onIntent(OrdersListDetailsRequested(order.id)),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.card),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      order.restaurantName,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w800,
+    final scheme = theme.colorScheme;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: AppRadii.container,
+        border: Border.all(color: const Color(0xFFEDEFF2), width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: AppRadii.container,
+        child: InkWell(
+          key: Key('order_card_${order.id}'),
+          borderRadius: AppRadii.container,
+          onTap: isActionRunning
+              ? null
+              : () => onIntent(OrdersListDetailsRequested(order.id)),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: scheme.primary.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Icon(
+                        Icons.restaurant_rounded,
+                        color: scheme.primary,
+                        size: 22,
                       ),
                     ),
-                  ),
-                  _StatusBadge(
-                    tone: order.statusTone,
-                    label: order.statusLabel,
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.xxs),
-              Text(
-                '${_dateLabel(order.createdAt)} · ${order.itemCount} ${order.itemCount == 1 ? 'món' : 'món'}',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            order.restaurantName,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '${_dateLabel(order.createdAt)} · ${order.itemCount} món',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: const Color(0xFF757F8A),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    _StatusBadge(
+                      tone: order.statusTone,
+                      label: order.statusLabel,
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      '${order.totalAmount.toStringAsFixed(0)} ₫',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w900,
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
+                  child: Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Color(0xFFF3F4F6),
+                  ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Tổng thanh toán',
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: const Color(0xFF8C939D),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '${order.totalAmount.toStringAsFixed(0)} ₫',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w900,
+                              color: const Color(0xFF1A1D20),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  if (isActionRunning)
-                    const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  else ...[
-                    if (order.canCancel)
-                      TextButton(
-                        key: Key('order_cancel_${order.id}'),
-                        onPressed: () =>
-                            onIntent(OrdersListCancelRequested(order.id)),
-                        child: const Text('Hủy đơn'),
-                      ),
-                    if (order.canReorder)
-                      TextButton.icon(
-                        key: Key('order_reorder_${order.id}'),
-                        onPressed: () =>
-                            onIntent(OrdersListReorderRequested(order.id)),
-                        icon: const Icon(Icons.refresh, size: 18),
-                        label: const Text('Đặt lại'),
+                    if (isActionRunning)
+                      const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2.5),
+                      )
+                    else
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (order.canCancel)
+                            OutlinedButton(
+                              key: Key('order_cancel_${order.id}'),
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 6,
+                                ),
+                                minimumSize: Size.zero,
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                side: const BorderSide(
+                                  color: Color(0xFFE0E2E6),
+                                ),
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: AppRadii.pillRadius,
+                                ),
+                              ),
+                              onPressed: () =>
+                                  onIntent(OrdersListCancelRequested(order.id)),
+                              child: Text(
+                                'Hủy đơn',
+                                style: TextStyle(
+                                  color: scheme.error,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          if (order.canReorder)
+                            OutlinedButton.icon(
+                              key: Key('order_reorder_${order.id}'),
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 6,
+                                ),
+                                minimumSize: Size.zero,
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                side: BorderSide(
+                                  color: scheme.primary.withValues(alpha: 0.5),
+                                ),
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: AppRadii.pillRadius,
+                                ),
+                              ),
+                              onPressed: () => onIntent(
+                                OrdersListReorderRequested(order.id),
+                              ),
+                              icon: Icon(
+                                Icons.refresh_rounded,
+                                size: 15,
+                                color: scheme.primary,
+                              ),
+                              label: Text(
+                                'Đặt lại',
+                                style: TextStyle(
+                                  color: scheme.primary,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                   ],
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -280,27 +441,26 @@ class _StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     final (background, foreground) = switch (tone) {
       OrdersListStatusTone.pending => (
-        scheme.secondaryContainer,
-        scheme.onSecondaryContainer,
+        const Color(0xFFFFF7EC),
+        const Color(0xFFE67E22),
       ),
       OrdersListStatusTone.delivering => (
-        scheme.primaryContainer,
-        scheme.onPrimaryContainer,
+        const Color(0xFFE6FAF7),
+        const Color(0xFF00A38C),
       ),
       OrdersListStatusTone.delivered => (
-        Colors.green.shade100,
-        Colors.green.shade900,
+        const Color(0xFFE8F8F5),
+        const Color(0xFF27AE60),
       ),
       OrdersListStatusTone.cancelled => (
-        scheme.errorContainer,
-        scheme.onErrorContainer,
+        const Color(0xFFFDEDEC),
+        const Color(0xFFE74C3C),
       ),
       OrdersListStatusTone.noDriver => (
-        Colors.deepOrange.shade100,
-        Colors.deepOrange.shade900,
+        const Color(0xFFFEF5E7),
+        const Color(0xFFD35400),
       ),
     };
     return DecoratedBox(
@@ -309,11 +469,12 @@ class _StatusBadge extends StatelessWidget {
         borderRadius: AppRadii.pillRadius,
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Text(
           label,
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+          style: TextStyle(
             color: foreground,
+            fontSize: 12,
             fontWeight: FontWeight.w700,
           ),
         ),

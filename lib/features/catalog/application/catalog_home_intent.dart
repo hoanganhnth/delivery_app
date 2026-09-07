@@ -15,6 +15,14 @@ final class CatalogHomeAllRestaurantsRequested extends CatalogHomeIntent {
   const CatalogHomeAllRestaurantsRequested();
 }
 
+final class CatalogHomeVouchersRequested extends CatalogHomeIntent {
+  const CatalogHomeVouchersRequested();
+}
+
+final class CatalogHomeLivestreamRequested extends CatalogHomeIntent {
+  const CatalogHomeLivestreamRequested();
+}
+
 final class CatalogHomeAddressRequested extends CatalogHomeIntent {
   const CatalogHomeAddressRequested();
 }

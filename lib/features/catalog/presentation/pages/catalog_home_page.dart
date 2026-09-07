@@ -13,6 +13,7 @@ import '../../application/catalog_home_effect.dart';
 import '../../application/catalog_home_intent.dart';
 import '../../application/catalog_home_state.dart';
 import '../../application/catalog_home_view_model.dart';
+import '../components/catalog_home_components.dart';
 import '../views/catalog_home_view.dart';
 
 /// Riverpod and navigation adapter for the catalog landing tab.
@@ -120,6 +121,13 @@ class _CatalogHomePageState extends ConsumerState<CatalogHomePage> {
       state: ref.watch(catalogHomeViewModelProvider),
       deliveryAddress: deliveryAddress,
       flashSaleBanner: const FlashSaleBannerPage(),
+      livestreamBanner: HomeLivestreamBanner(
+        onTap: () => unawaited(
+          ref
+              .read(catalogHomeViewModelProvider.notifier)
+              .dispatch(const CatalogHomeLivestreamRequested()),
+        ),
+      ),
       onIntent: (intent) => unawaited(
         ref.read(catalogHomeViewModelProvider.notifier).dispatch(intent),
       ),
@@ -133,6 +141,14 @@ class _CatalogHomePageState extends ConsumerState<CatalogHomePage> {
         context.push(AppRoutes.search);
       case CatalogHomeNavigateToAllRestaurants():
         context.pushToRestaurants();
+      case CatalogHomeNavigateToVouchers():
+        context.push(AppRoutes.vouchers);
+      case CatalogHomeNavigateToLivestream():
+        context.push(
+          AppRoutes.livestreamViewerPath(
+            '00000000-0000-0000-0000-000000000001',
+          ),
+        );
       case CatalogHomeNavigateToAddresses():
         await context.push('${AppRoutes.addressList}?context=home');
         if (mounted) {

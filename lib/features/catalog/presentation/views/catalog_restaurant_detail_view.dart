@@ -43,6 +43,7 @@ class CatalogRestaurantDetailView extends StatelessWidget {
     }
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF7F8FA),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -52,10 +53,15 @@ class CatalogRestaurantDetailView extends StatelessWidget {
             scrolledUnderElevation: 0,
             surfaceTintColor: Colors.transparent,
             automaticallyImplyLeading: false,
-            leading: AppIconButton(
-              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-              icon: Icons.arrow_back,
-              onPressed: _back,
+            leading: Padding(
+              padding: const EdgeInsets.only(left: 8, top: 4),
+              child: AppIconButton(
+                tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                icon: Icons.arrow_back,
+                hasBackground: true,
+                backgroundColor: Colors.white.withValues(alpha: 0.92),
+                onPressed: _back,
+              ),
             ),
             flexibleSpace: FlexibleSpaceBar(
               background: CatalogRestaurantHero(restaurant: restaurant),

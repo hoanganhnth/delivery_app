@@ -4,6 +4,8 @@ import 'package:delivery_app/features/user_address/application/address_list_cont
 import 'package:delivery_app/features/user_address/application/address_list_intent.dart';
 import 'package:delivery_app/features/user_address/application/address_list_state.dart';
 import 'package:delivery_app/features/user_address/presentation/components/address_list_card.dart';
+import 'package:delivery_app/features/user_address/presentation/pages/address_list_page.dart';
+import 'package:delivery_app/features/user_address/presentation/screens/address_list_screen.dart';
 import 'package:delivery_app/features/user_address/presentation/views/address_form_view.dart';
 import 'package:delivery_app/features/user_address/presentation/views/address_list_view.dart';
 import 'package:flutter/material.dart';
@@ -128,4 +130,20 @@ void main() {
     expect((intents[1] as AddressFormFieldChanged).value, 'Công ty');
     expect(intents[2], isA<AddressFormSubmitRequested>());
   });
+
+  testWidgets(
+    'AddressListScreen mounts cleanly without Riverpod building assertion',
+    (tester) async {
+      await pumpTestApp(
+        tester,
+        child: const AddressListScreen(
+          selectionContext: AddressListContext.management,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AddressListScreen), findsOneWidget);
+      expect(find.byType(AddressListPage), findsOneWidget);
+    },
+  );
 }
