@@ -14,6 +14,9 @@ class FlashSaleItemCard extends StatelessWidget {
     return SizedBox(
       width: 164,
       child: Card(
+        elevation: 0,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+        color: scheme.surface,
         margin: const EdgeInsets.only(right: 12),
         clipBehavior: Clip.antiAlias,
         child: InkWell(

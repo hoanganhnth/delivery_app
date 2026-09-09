@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:delivery_app/core/design_system/design_system.dart';
 import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/features/cart/di/checkout_providers.dart';
 import 'package:delivery_app/features/cart/di/checkout_voucher_provider.dart';
@@ -26,6 +28,7 @@ class _VoucherWalletPageState extends ConsumerState<VoucherWalletPage> {
   }
 
   Future<void> _redeemCode() async {
+    if (_isRedeeming) return;
     final code = _codeController.text.trim().toUpperCase();
     if (code.isEmpty) return;
 
@@ -42,15 +45,17 @@ class _VoucherWalletPageState extends ConsumerState<VoucherWalletPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Đã lưu mã "$code" vào ví voucher thành công!'),
-          backgroundColor: const Color(0xFF00A38C),
+          backgroundColor: Theme.of(context).colorScheme.primary,
           behavior: SnackBarBehavior.floating,
         ),
       );
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Mã voucher không hợp lệ, đã hết hạn hoặc đã được lưu.'),
+        SnackBar(
+          content: Text(
+            'Mã voucher không hợp lệ, đã hết hạn hoặc đã được lưu.',
+          ),
           backgroundColor: Colors.redAccent,
           behavior: SnackBarBehavior.floating,
         ),
@@ -60,21 +65,26 @@ class _VoucherWalletPageState extends ConsumerState<VoucherWalletPage> {
     }
   }
 
+  void _goBack() {
+    if (context.canPop()) {
+      context.pop();
+    } else {
+      context.go(AppRoutes.main);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final walletAsync = ref.watch(checkoutVoucherWalletProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
-      appBar: AppBar(
-        title: const Text(
-          'Ví Voucher & Ưu đãi',
-          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
-        ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF2C3E50),
+      backgroundColor: PreviewUi.canvas(context),
+      appBar: PreviewPageHeader(
+        title: 'Ví Voucher & Ưu đãi',
+        onBack: _goBack,
+        onCart: () => context.pushCart(),
+        // Keep the existing 52px contract while using preview styling.
+        toolbarHeight: 52,
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -87,28 +97,30 @@ class _VoucherWalletPageState extends ConsumerState<VoucherWalletPage> {
             // Code input section
             SliverToBoxAdapter(
               child: Container(
-                color: Colors.white,
+                color: PreviewUi.surface(context),
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Nhập mã ưu đãi',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF2C3E50),
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Row(
                       children: [
                         Expanded(
                           child: Container(
                             height: 46,
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF1F3F5),
-                              borderRadius: BorderRadius.circular(10),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.surfaceContainerHighest,
+                              borderRadius: PreviewUi.controlRadius,
                             ),
                             child: TextField(
                               controller: _codeController,
@@ -118,16 +130,20 @@ class _VoucherWalletPageState extends ConsumerState<VoucherWalletPage> {
                                   RegExp(r'[a-zA-Z0-9_-]'),
                                 ),
                               ],
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 hintText: 'Nhập mã (ví dụ: FREESHIP, FOOD20)',
                                 hintStyle: TextStyle(
-                                  color: Color(0xFF95A5A6),
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
                                   fontSize: 13,
                                 ),
                                 prefixIcon: Icon(
                                   Icons.confirmation_number_outlined,
                                   size: 20,
-                                  color: Color(0xFF7F8C8D),
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
                                 ),
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.symmetric(
@@ -138,33 +154,41 @@ class _VoucherWalletPageState extends ConsumerState<VoucherWalletPage> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        SizedBox(width: 10),
                         SizedBox(
                           height: 46,
                           child: ElevatedButton(
                             onPressed: _isRedeeming ? null : _redeemCode,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF00A38C),
-                              foregroundColor: Colors.white,
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary,
+                              foregroundColor: Theme.of(
+                                context,
+                              ).colorScheme.onPrimary,
                               elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(3),
+                                ),
                               ),
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 18,
                               ),
                             ),
                             child: _isRedeeming
-                                ? const SizedBox(
+                                ? SizedBox(
                                     width: 20,
                                     height: 20,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      color: Colors.white,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.surface,
                                     ),
                                   )
-                                : const Text(
-                                    'Áp dụng',
+                                : Text(
+                                    'Lưu mã',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                     ),
@@ -191,20 +215,20 @@ class _VoucherWalletPageState extends ConsumerState<VoucherWalletPage> {
                         isSelected: _selectedFilter == 'ALL',
                         onTap: () => setState(() => _selectedFilter = 'ALL'),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       _FilterChip(
                         label: 'Freeship',
                         isSelected: _selectedFilter == 'FREESHIP',
                         onTap: () =>
                             setState(() => _selectedFilter = 'FREESHIP'),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       _FilterChip(
                         label: 'Giảm quán ăn',
                         isSelected: _selectedFilter == 'SHOP',
                         onTap: () => setState(() => _selectedFilter = 'SHOP'),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       _FilterChip(
                         label: 'Ưu đãi sàn',
                         isSelected: _selectedFilter == 'PLATFORM',
@@ -222,8 +246,7 @@ class _VoucherWalletPageState extends ConsumerState<VoucherWalletPage> {
               data: (vouchers) {
                 final filtered = vouchers.where((v) {
                   if (_selectedFilter == 'FREESHIP') {
-                    return v.rewardType == 'FREESHIP' ||
-                        v.layer == 'FREESHIP';
+                    return v.rewardType == 'FREESHIP' || v.layer == 'FREESHIP';
                   }
                   if (_selectedFilter == 'SHOP') {
                     return v.layer == 'SHOP_DISCOUNT' ||
@@ -249,46 +272,52 @@ class _VoucherWalletPageState extends ConsumerState<VoucherWalletPage> {
                               width: 80,
                               height: 80,
                               decoration: BoxDecoration(
-                                color: const Color(0xFF00A38C).withValues(alpha: 0.1),
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.primary.withValues(alpha: 0.1),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.card_giftcard_rounded,
                                 size: 42,
-                                color: Color(0xFF00A38C),
+                                color: Theme.of(context).colorScheme.primary,
                               ),
                             ),
-                            const SizedBox(height: 16),
-                            const Text(
+                            SizedBox(height: 16),
+                            Text(
                               'Chưa có mã ưu đãi nào',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
-                                color: Color(0xFF2C3E50),
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            const Text(
+                            SizedBox(height: 8),
+                            Text(
                               'Nhập mã voucher phía trên hoặc kiểm tra lại các chương trình khuyến mãi hiện có.',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 13,
-                                color: Color(0xFF7F8C8D),
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                               ),
                             ),
-                            const SizedBox(height: 20),
+                            SizedBox(height: 20),
                             OutlinedButton(
                               onPressed: () => context.pushToRestaurants(),
                               style: OutlinedButton.styleFrom(
-                                foregroundColor: const Color(0xFF00A38C),
-                                side: const BorderSide(
-                                  color: Color(0xFF00A38C),
+                                foregroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.primary,
+                                side: BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
                                 ),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(4),
                                 ),
                               ),
-                              child: const Text('Khám phá món ngon ngay'),
+                              child: Text('Khám phá món ngon ngay'),
                             ),
                           ],
                         ),
@@ -298,26 +327,36 @@ class _VoucherWalletPageState extends ConsumerState<VoucherWalletPage> {
                 }
 
                 return SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                  padding: const EdgeInsets.fromLTRB(12, 4, 12, 24),
                   sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final voucher = filtered[index];
-                        return _VoucherCard(
-                          voucher: voucher,
-                          onUseNow: () => context.pushToRestaurants(),
-                        );
-                      },
-                      childCount: filtered.length,
-                    ),
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final voucher = filtered[index];
+                      return _VoucherCard(
+                        voucher: voucher,
+                        onUseNow: () {
+                          if (voucher.unavailableReasonAt(DateTime.now()) !=
+                              null) {
+                            setState(() {});
+                            return;
+                          }
+                          if (voucher.scopeType == 'SHOP') {
+                            context.pushToRestaurantDetails(
+                              voucher.scopeRefId.toString(),
+                            );
+                          } else {
+                            context.pushToRestaurants();
+                          }
+                        },
+                      );
+                    }, childCount: filtered.length),
                   ),
                 );
               },
-              loading: () => const SliverFillRemaining(
+              loading: () => SliverFillRemaining(
                 hasScrollBody: false,
                 child: Center(
                   child: CircularProgressIndicator(
-                    color: Color(0xFF00A38C),
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ),
@@ -329,24 +368,24 @@ class _VoucherWalletPageState extends ConsumerState<VoucherWalletPage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.error_outline_rounded,
                           size: 48,
                           color: Colors.redAccent,
                         ),
-                        const SizedBox(height: 12),
-                        const Text(
+                        SizedBox(height: 12),
+                        Text(
                           'Không thể tải ví voucher',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         ElevatedButton(
                           onPressed: () =>
                               ref.invalidate(checkoutVoucherWalletProvider),
-                          child: const Text('Thử lại'),
+                          child: Text('Thử lại'),
                         ),
                       ],
                     ),
@@ -374,35 +413,35 @@ class _FilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF00A38C) : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
+    return Semantics(
+      selected: isSelected,
+      button: true,
+      child: InkWell(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          constraints: const BoxConstraints(minHeight: 44),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
             color: isSelected
-                ? const Color(0xFF00A38C)
-                : const Color(0xFFE0E0E0),
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.surface,
+            borderRadius: PreviewUi.controlRadius,
+            border: Border.all(
+              color: isSelected
+                  ? Theme.of(context).colorScheme.primary
+                  : const Color(0xFFE0E0E0),
+            ),
           ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: const Color(0xFF00A38C).withValues(alpha: 0.25),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : null,
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-            color: isSelected ? Colors.white : const Color(0xFF555555),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+              color: isSelected
+                  ? Theme.of(context).colorScheme.onPrimary
+                  : Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
         ),
       ),
@@ -411,10 +450,7 @@ class _FilterChip extends StatelessWidget {
 }
 
 class _VoucherCard extends StatelessWidget {
-  const _VoucherCard({
-    required this.voucher,
-    required this.onUseNow,
-  });
+  const _VoucherCard({required this.voucher, required this.onUseNow});
 
   final CheckoutVoucher voucher;
   final VoidCallback onUseNow;
@@ -423,21 +459,17 @@ class _VoucherCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isFreeship =
         voucher.rewardType == 'FREESHIP' || voucher.layer == 'FREESHIP';
-    final primaryColor =
-        isFreeship ? const Color(0xFF00A38C) : const Color(0xFFE67E22);
+    final unavailableReason = voucher.unavailableReasonAt(DateTime.now());
+    final primaryColor = isFreeship
+        ? Theme.of(context).colorScheme.primary
+        : const Color(0xFFE67E22);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        color: PreviewUi.surface(context),
+        borderRadius: PreviewUi.controlRadius,
+        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
       ),
       child: IntrinsicHeight(
         child: Row(
@@ -450,7 +482,7 @@ class _VoucherCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: primaryColor.withValues(alpha: 0.1),
                 borderRadius: const BorderRadius.horizontal(
-                  left: Radius.circular(14),
+                  left: Radius.circular(3),
                 ),
               ),
               child: Column(
@@ -463,7 +495,7 @@ class _VoucherCard extends StatelessWidget {
                     color: primaryColor,
                     size: 28,
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   Text(
                     voucher.displayBenefit,
                     textAlign: TextAlign.center,
@@ -493,19 +525,21 @@ class _VoucherCard extends StatelessWidget {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF1F3F5),
-                            borderRadius: BorderRadius.circular(4),
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerHighest,
+                            borderRadius: PreviewUi.controlRadius,
                           ),
                           child: Text(
                             voucher.code,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF2C3E50),
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                         ),
-                        const SizedBox(width: 6),
+                        SizedBox(width: 6),
                         GestureDetector(
                           onTap: () {
                             Clipboard.setData(
@@ -518,35 +552,59 @@ class _VoucherCard extends StatelessWidget {
                               ),
                             );
                           },
-                          child: const Icon(
+                          child: Icon(
                             Icons.copy_rounded,
                             size: 14,
-                            color: Color(0xFF95A5A6),
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       voucher.name,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF2C3E50),
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
-                      voucher.minOrderValue != null && voucher.minOrderValue! > 0
+                      voucher.minOrderValue != null &&
+                              voucher.minOrderValue! > 0
                           ? 'Đơn tối thiểu ${(voucher.minOrderValue!).toStringAsFixed(0)}đ'
-                          : 'Áp dụng cho mọi đơn',
-                      style: const TextStyle(
+                          : 'Không yêu cầu đơn tối thiểu',
+                      style: TextStyle(
                         fontSize: 11,
-                        color: Color(0xFF7F8C8D),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
+                    Text(
+                      voucher.scopeType == 'SHOP'
+                          ? 'Chỉ áp dụng tại quán #${voucher.scopeRefId}'
+                          : 'Áp dụng tại tất cả quán',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    if (voucher.maxDiscountValue != null)
+                      Text(
+                        'Giảm tối đa ${voucher.maxDiscountValue!.toStringAsFixed(0)}đ',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    if (voucher.endTime != null)
+                      Text(
+                        'Hạn dùng: ${DateFormat('dd/MM/yyyy HH:mm').format(voucher.endTime!.toLocal())}',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    if (unavailableReason != null)
+                      Text(
+                        unavailableReason,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                   ],
                 ),
               ),
@@ -557,18 +615,18 @@ class _VoucherCard extends StatelessWidget {
               padding: const EdgeInsets.only(right: 12),
               child: Center(
                 child: SizedBox(
-                  height: 32,
+                  height: 48,
                   child: OutlinedButton(
-                    onPressed: onUseNow,
+                    onPressed: unavailableReason == null ? onUseNow : null,
                     style: OutlinedButton.styleFrom(
                       foregroundColor: primaryColor,
                       side: BorderSide(color: primaryColor),
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(3)),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Dùng ngay',
                       style: TextStyle(
                         fontSize: 11,

@@ -1,4 +1,3 @@
-import 'package:delivery_app/core/design_system/components/app_button.dart';
 import 'package:delivery_app/core/design_system/components/app_navigation.dart';
 import 'package:delivery_app/core/design_system/foundations/app_spacing.dart';
 import 'package:delivery_app/features/cart/application/order_confirmation_intent.dart';
@@ -28,6 +27,32 @@ class OrderConfirmationView extends StatelessWidget {
       appBar: AppTopBar(
         title: strings.orderConfirmed,
         onBack: onHome,
+        backgroundColor: scheme.surface,
+      ),
+      bottomNavigationBar: Material(
+        color: scheme.surface,
+        child: SafeArea(
+          top: false,
+          minimum: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FilledButton(
+                key: const Key('confirmation_tracking'),
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size.fromHeight(48),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
+                onPressed: () =>
+                    onIntent(const OrderConfirmationTrackingRequested()),
+                child: Text(strings.trackOrder),
+              ),
+              TextButton(onPressed: onHome, child: Text(strings.backToHome)),
+            ],
+          ),
+        ),
       ),
       body: SafeArea(
         child: Center(
@@ -42,11 +67,11 @@ class OrderConfirmationView extends StatelessWidget {
                     padding: const EdgeInsets.all(AppSpacing.lg),
                     decoration: BoxDecoration(
                       color: scheme.primaryContainer.withValues(alpha: 0.35),
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(3),
                     ),
                     child: Icon(
                       Icons.check_circle_rounded,
-                      size: 80,
+                      size: 56,
                       color: scheme.primary,
                     ),
                   ),
@@ -65,22 +90,6 @@ class OrderConfirmationView extends StatelessWidget {
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: scheme.onSurfaceVariant,
                     ),
-                  ),
-                  const SizedBox(height: AppSpacing.xxl),
-                  AppButton(
-                    label: strings.trackOrder,
-                    icon: Icons.delivery_dining,
-                    expand: true,
-                    onPressed: () =>
-                        onIntent(const OrderConfirmationTrackingRequested()),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  AppButton(
-                    variant: AppButtonVariant.secondary,
-                    label: strings.backToHome,
-                    icon: Icons.home_outlined,
-                    expand: true,
-                    onPressed: onHome,
                   ),
                 ],
               ),

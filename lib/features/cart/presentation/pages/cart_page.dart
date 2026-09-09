@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/routing/routing.dart';
+import 'package:delivery_app/core/design_system/components/preview_bottom_navigation.dart';
 import 'package:delivery_app/generated/l10n.dart';
 import '../../application/cart_view_effect.dart';
 import '../../application/cart_view_intent.dart';
@@ -10,11 +11,7 @@ import '../../application/cart_view_model.dart';
 import '../views/cart_view.dart';
 
 class CartPage extends ConsumerStatefulWidget {
-  const CartPage({
-    super.key,
-    this.isTab = false,
-    this.showBackButton,
-  });
+  const CartPage({super.key, this.isTab = false, this.showBackButton});
 
   final bool isTab;
   final bool? showBackButton;
@@ -41,6 +38,7 @@ class _CartPageState extends ConsumerState<CartPage> {
   @override
   Widget build(BuildContext context) {
     ref.listen<CartViewState>(cartViewModelProvider, (previous, next) {
+      if (ModalRoute.of(context)?.isCurrent == false) return;
       final ids = {
         for (final effect in previous?.effects ?? const []) effect.id,
       };
@@ -56,6 +54,25 @@ class _CartPageState extends ConsumerState<CartPage> {
       state: ref.watch(cartViewModelProvider),
       isTab: widget.isTab,
       showBackButton: shouldShowBack,
+      previewMode: true,
+      bottomNavigationBar: widget.isTab
+          ? null
+          : PreviewBottomNavigation(
+              currentIndex: 2,
+              cartItemCount: ref.watch(cartViewModelProvider).totalItems,
+              onTap: (index) {
+                switch (index) {
+                  case 0:
+                    context.go(AppRoutes.main);
+                  case 1:
+                    context.go(AppRoutes.orders);
+                  case 2:
+                    context.go(AppRoutes.cart);
+                  case 3:
+                    context.go(AppRoutes.profile);
+                }
+              },
+            ),
       onIntent: (intent) =>
           unawaited(ref.read(cartViewModelProvider.notifier).dispatch(intent)),
     );

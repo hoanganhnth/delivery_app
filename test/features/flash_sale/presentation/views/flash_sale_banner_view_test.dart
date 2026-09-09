@@ -106,7 +106,7 @@ void main() {
     expect(find.byKey(const Key('flash_sale_loading')), findsOneWidget);
   });
 
-  testWidgets('shows a retryable error when the catalog request fails', (
+  testWidgets('hides failed flash sale without a blank status block', (
     tester,
   ) async {
     var refreshes = 0;
@@ -119,9 +119,10 @@ void main() {
       ),
     );
 
-    expect(find.byKey(const Key('flash_sale_error')), findsOneWidget);
-    await tester.tap(find.byKey(const Key('flash_sale_retry')));
-    expect(refreshes, 1);
+    expect(find.byKey(const Key('flash_sale_error')), findsNothing);
+    expect(find.byKey(const Key('flash_sale_retry')), findsNothing);
+    expect(find.text('Không thể tải Flash Sale'), findsNothing);
+    expect(refreshes, 0);
   });
 }
 

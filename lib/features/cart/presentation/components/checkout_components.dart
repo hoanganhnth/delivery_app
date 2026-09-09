@@ -50,18 +50,9 @@ class CheckoutBody extends StatelessWidget {
         Expanded(
           child: ListView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            padding: const EdgeInsets.all(AppSpacing.page),
+            padding: EdgeInsets.zero,
             children: [
-              AppSection(
-                title: strings.pilotCheckoutRestaurant,
-                icon: Icons.restaurant_outlined,
-                child: CheckoutRestaurantSummary(
-                  name: state.restaurantName ?? strings.restaurants,
-                  itemCount: state.itemCount,
-                  distinctItems: state.lines.length,
-                ),
-              ),
-              AppSection(
+              _PhoneSection(
                 title: strings.checkoutDeliveryAddress,
                 icon: Icons.location_on_outlined,
                 child: CheckoutDeliveryAddress(
@@ -70,13 +61,28 @@ class CheckoutBody extends StatelessWidget {
                       onIntent(const CheckoutAddressSelectionRequested()),
                 ),
               ),
-              AppSection(
-                title: strings.checkoutPaymentMethodTitle,
-                icon: Icons.payments_outlined,
-                child: const CheckoutPaymentMethod(),
+              _PhoneSection(
+                title: state.restaurantName ?? strings.restaurants,
+                icon: Icons.restaurant_outlined,
+                child: Column(
+                  children: [
+                    CheckoutOrderSummary(state: state, linesOnly: true),
+                    AppTextField(
+                      key: const Key('checkout_notes'),
+                      controller: notesController,
+                      semanticLabel: strings.checkoutNotesTitle,
+                      label: strings.checkoutNotesTitle,
+                      hintText: strings.pilotCheckoutNotesHint,
+                      maxLines: 2,
+                      textInputAction: TextInputAction.newline,
+                      onChanged: (notes) =>
+                          onIntent(CheckoutNotesChanged(notes)),
+                    ),
+                  ],
+                ),
               ),
               if (state.isVoucherAvailable)
-                AppSection(
+                _PhoneSection(
                   title: strings.pilotCheckoutVoucher,
                   icon: Icons.local_offer_outlined,
                   child: CheckoutVoucherSelector(
@@ -84,23 +90,15 @@ class CheckoutBody extends StatelessWidget {
                     onIntent: onIntent,
                   ),
                 ),
-              AppSection(
+              _PhoneSection(
                 title: strings.checkoutOrderDetailsTitle,
                 icon: Icons.receipt_long_outlined,
-                child: CheckoutOrderSummary(state: state),
+                child: CheckoutOrderSummary(state: state, pricesOnly: true),
               ),
-              AppSection(
-                title: strings.checkoutNotesTitle,
-                icon: Icons.note_outlined,
-                child: AppTextField(
-                  key: const Key('checkout_notes'),
-                  controller: notesController,
-                  semanticLabel: strings.checkoutNotesTitle,
-                  hintText: strings.pilotCheckoutNotesHint,
-                  maxLines: 3,
-                  textInputAction: TextInputAction.newline,
-                  onChanged: (notes) => onIntent(CheckoutNotesChanged(notes)),
-                ),
+              _PhoneSection(
+                title: strings.checkoutPaymentMethodTitle,
+                icon: Icons.payments_outlined,
+                child: const CheckoutPaymentMethod(),
               ),
               const SizedBox(height: AppSpacing.lg),
             ],
@@ -204,7 +202,7 @@ class CheckoutRestaurantSummary extends StatelessWidget {
               name,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w800,
-                color: const Color(0xFF1A1D20),
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 2),
@@ -213,7 +211,7 @@ class CheckoutRestaurantSummary extends StatelessWidget {
                   .of(context)
                   .pilotCheckoutRestaurantItems(distinctItems, itemCount),
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: const Color(0xFF757F8A),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
           ],
@@ -253,7 +251,9 @@ class CheckoutDeliveryAddress extends StatelessWidget {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -270,18 +270,20 @@ class CheckoutDeliveryAddress extends StatelessWidget {
                         children: [
                           Text(
                             strings.pilotCheckoutSelectAddress,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.w800,
                               fontSize: 15,
-                              color: Color(0xFF1A1D20),
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: AppSpacing.xxs),
                           Text(
                             strings.pilotCheckoutSelectAddressMessage,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
-                              color: Color(0xFF757F8A),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -293,10 +295,12 @@ class CheckoutDeliveryAddress extends StatelessWidget {
                             children: [
                               Text(
                                 value.label,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontWeight: FontWeight.w800,
                                   fontSize: 15,
-                                  color: Color(0xFF1A1D20),
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
                                 ),
                               ),
                               if (value.isDefault) ...[
@@ -311,18 +315,22 @@ class CheckoutDeliveryAddress extends StatelessWidget {
                           const SizedBox(height: 2),
                           Text(
                             '${value.recipientName} · ${value.phoneNumber}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
-                              color: Color(0xFF555B62),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
                             ),
                           ),
                           const SizedBox(height: 2),
                           Text(
                             value.fullAddress,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
-                              color: Color(0xFF757F8A),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -373,18 +381,18 @@ class CheckoutPaymentMethod extends StatelessWidget {
             children: [
               Text(
                 strings.pilotCheckoutCash,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 15,
-                  color: Color(0xFF1A1D20),
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 2),
               Text(
                 strings.pilotCheckoutCashMessage,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
-                  color: Color(0xFF757F8A),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -539,9 +547,16 @@ class _SingleVoucherChoices extends StatelessWidget {
 }
 
 class CheckoutOrderSummary extends StatelessWidget {
-  const CheckoutOrderSummary({super.key, required this.state});
+  const CheckoutOrderSummary({
+    super.key,
+    required this.state,
+    this.linesOnly = false,
+    this.pricesOnly = false,
+  });
 
   final CheckoutViewState state;
+  final bool linesOnly;
+  final bool pricesOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -549,84 +564,87 @@ class CheckoutOrderSummary extends StatelessWidget {
     final strings = S.of(context);
     return Column(
       children: [
-        for (final line in state.lines)
-          Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 7,
-                    vertical: 2,
+        if (!pricesOnly)
+          for (final line in state.lines)
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 7,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF0F2F5),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      '${line.quantity}×',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
                   ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF0F2F5),
-                    borderRadius: BorderRadius.circular(6),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      line.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
                   ),
-                  child: Text(
-                    '${line.quantity}×',
+                  Text(
+                    _currency(line.lineTotal),
                     style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 12,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: Text(
-                    line.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w700,
                       fontSize: 14,
-                      color: Color(0xFF1A1D20),
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
-                ),
-                Text(
-                  _currency(line.lineTotal),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                    color: Color(0xFF1A1D20),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
+        if (!linesOnly) ...[
+          const Divider(color: Color(0xFFEDEFF2), height: 20, thickness: 1),
+          CheckoutPriceRow(
+            label: strings.checkoutSubtotal,
+            value: price?.subtotal,
           ),
-        const Divider(color: Color(0xFFEDEFF2), height: 20, thickness: 1),
-        CheckoutPriceRow(
-          label: strings.checkoutSubtotal,
-          value: price?.subtotal,
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        CheckoutPriceRow(
-          label: strings.checkoutShippingFee,
-          value: price?.shippingFee,
-        ),
-        if (price != null && price.discountAmount > 0) ...[
           const SizedBox(height: AppSpacing.xs),
           CheckoutPriceRow(
-            label: strings.checkoutDiscount,
-            value: -price.discountAmount,
-            isDiscount: true,
+            label: strings.checkoutShippingFee,
+            value: price?.shippingFee,
           ),
-        ],
-        if (price != null && price.appliedVouchers.isNotEmpty)
-          for (final voucher in price.appliedVouchers) ...[
+          if (price != null && price.discountAmount > 0) ...[
             const SizedBox(height: AppSpacing.xs),
             CheckoutPriceRow(
-              label: '${voucher.code} · ${voucher.layer}',
-              value: voucher.discountAmount,
+              label: strings.checkoutDiscount,
+              value: -price.discountAmount,
               isDiscount: true,
             ),
           ],
-        const Divider(color: Color(0xFFEDEFF2), height: 20, thickness: 1),
-        CheckoutPriceRow(
-          label: strings.checkoutTotal,
-          value: price?.total,
-          isEmphasized: true,
-        ),
+          if (price != null && price.appliedVouchers.isNotEmpty)
+            for (final voucher in price.appliedVouchers) ...[
+              const SizedBox(height: AppSpacing.xs),
+              CheckoutPriceRow(
+                label: '${voucher.code} · ${voucher.layer}',
+                value: voucher.discountAmount,
+                isDiscount: true,
+              ),
+            ],
+          const Divider(color: Color(0xFFEDEFF2), height: 20, thickness: 1),
+          CheckoutPriceRow(
+            label: strings.checkoutTotal,
+            value: price?.total,
+            isEmphasized: true,
+          ),
+        ],
       ],
     );
   }
@@ -654,14 +672,14 @@ class CheckoutPriceRow extends StatelessWidget {
         child: Text(
           label,
           style: isEmphasized
-              ? const TextStyle(
+              ? TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 15,
-                  color: Color(0xFF1A1D20),
+                  color: Theme.of(context).colorScheme.onSurface,
                 )
-              : const TextStyle(
+              : TextStyle(
                   fontSize: 14,
-                  color: Color(0xFF757F8A),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
         ),
       ),
@@ -673,9 +691,7 @@ class CheckoutPriceRow extends StatelessWidget {
         style: TextStyle(
           fontWeight: isEmphasized ? FontWeight.w800 : FontWeight.w700,
           fontSize: isEmphasized ? 17 : 14,
-          color: isDiscount
-              ? const Color(0xFF27AE60)
-              : const Color(0xFF1A1D20),
+          color: isDiscount ? const Color(0xFF27AE60) : const Color(0xFF1A1D20),
         ),
       ),
     ],
@@ -696,45 +712,97 @@ class CheckoutStickyAction extends StatelessWidget {
   Widget build(BuildContext context) {
     final strings = S.of(context);
     final price = state.price;
-    return AppStickyAction(
-      summary: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Text(
-              strings.checkoutTotal,
-              style: const TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 15,
-                color: Color(0xFF555B62),
+    return Material(
+      color: Theme.of(context).colorScheme.surface,
+      child: SafeArea(
+        top: false,
+        minimum: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    strings.checkoutTotal,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  Text(
+                    price == null ? '—' : _currency(price.total),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          Text(
-            price == null ? '—' : _currency(price.total),
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-              fontWeight: FontWeight.w900,
-              fontSize: 20,
+            const SizedBox(width: 12),
+            Flexible(
+              child: Semantics(
+                label: strings.pilotCheckoutPlaceOrder,
+                child: FilledButton(
+                  key: const Key('checkout_place_order'),
+                  style: FilledButton.styleFrom(
+                    minimumSize: const Size(120, 48),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                  ),
+                  onPressed: state.canPlaceOrder
+                      ? () => onIntent(const CheckoutPlaceOrderRequested())
+                      : null,
+                  child: state.isPlacingOrder
+                      ? const SizedBox.square(
+                          dimension: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Text(
+                          state.isPreviewLoading
+                              ? strings.checkoutLoadingPrice
+                              : strings.checkoutOrderBtn,
+                          textAlign: TextAlign.center,
+                        ),
+                ),
+              ),
             ),
-          ),
-        ],
-      ),
-      child: AppButton(
-        key: const Key('checkout_place_order'),
-        label: state.isPreviewLoading
-            ? strings.checkoutLoadingPrice
-            : strings.checkoutOrderBtn,
-        semanticLabel: strings.pilotCheckoutPlaceOrder,
-        isLoading: state.isPlacingOrder,
-        onPressed: state.canPlaceOrder
-            ? () => onIntent(const CheckoutPlaceOrderRequested())
-            : null,
-        expand: true,
+          ],
+        ),
       ),
     );
   }
 }
 
 String _currency(double value) => '${value.toStringAsFixed(0)} ₫';
+
+/// Flat, separated blocks matching the web phone checkout hierarchy.
+class _PhoneSection extends StatelessWidget {
+  const _PhoneSection({
+    required this.title,
+    required this.icon,
+    required this.child,
+  });
+  final String title;
+  final IconData icon;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    margin: const EdgeInsets.only(bottom: 8),
+    padding: const EdgeInsets.all(16),
+    color: Theme.of(context).colorScheme.surface,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+        ),
+        const SizedBox(height: 12),
+        child,
+      ],
+    ),
+  );
+}

@@ -46,6 +46,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
       }
     });
     return CheckoutView(
+      previewMode: true,
       state: ref.watch(checkoutViewModelProvider),
       onIntent: (intent) => unawaited(
         ref.read(checkoutViewModelProvider.notifier).dispatch(intent),

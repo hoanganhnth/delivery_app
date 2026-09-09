@@ -14,6 +14,14 @@ class CheckoutVoucher {
     required this.fundingSource,
     this.scopeRefId,
     this.minOrderValue,
+    this.maxDiscountValue,
+    this.startTime,
+    this.endTime,
+    this.active,
+    this.approvalStatus,
+    this.totalQuantity,
+    this.usedQuantity,
+    this.usageLimitPerUser,
   });
 
   final int id;
@@ -26,6 +34,44 @@ class CheckoutVoucher {
   final String fundingSource;
   final int? scopeRefId;
   final double? minOrderValue;
+  final double? maxDiscountValue;
+  final DateTime? startTime;
+  final DateTime? endTime;
+  final bool? active;
+  final String? approvalStatus;
+  final int? totalQuantity;
+  final int? usedQuantity;
+  final int? usageLimitPerUser;
+
+  // The legacy server serializes UTC LocalDateTime without a zone suffix.
+  static DateTime? _parseUtc(dynamic value) {
+    if (value == null) return null;
+    if (value is! String) throw const FormatException('Invalid voucher date');
+    final text = value.trim();
+    final hasZone = RegExp(
+      r'(Z|[+-]\d{2}:?\d{2})$',
+      caseSensitive: false,
+    ).hasMatch(text);
+    return DateTime.parse(hasZone ? text : '${text}Z').toUtc();
+  }
+
+  /// Missing legacy fields remain compatible; explicit restrictions always win.
+  String? unavailableReasonAt(DateTime now) {
+    if (active == false) return 'Đã tạm dừng';
+    if (approvalStatus != null && approvalStatus!.toUpperCase() != 'APPROVED') {
+      return approvalStatus!.toUpperCase() == 'REJECTED'
+          ? 'Không được duyệt'
+          : 'Chưa được duyệt';
+    }
+    if (endTime != null && !now.isBefore(endTime!)) return 'Đã hết hạn';
+    if (startTime != null && now.isBefore(startTime!)) {
+      return 'Chưa đến thời gian sử dụng';
+    }
+    if (totalQuantity != null && (usedQuantity ?? 0) >= totalQuantity!) {
+      return 'Đã hết lượt';
+    }
+    return null;
+  }
 
   factory CheckoutVoucher.fromJson(Map<String, dynamic> json) {
     final id = json['id'];
@@ -90,6 +136,14 @@ class CheckoutVoucher {
       fundingSource: fundingSource,
       scopeRefId: scopeRefId is num ? scopeRefId.toInt() : null,
       minOrderValue: minOrderValue is num ? minOrderValue.toDouble() : null,
+      maxDiscountValue: (json['maxDiscountValue'] as num?)?.toDouble(),
+      startTime: _parseUtc(json['startTime']),
+      endTime: _parseUtc(json['endTime']),
+      active: json['active'] as bool?,
+      approvalStatus: json['approvalStatus'] as String?,
+      totalQuantity: (json['totalQuantity'] as num?)?.toInt(),
+      usedQuantity: (json['usedQuantity'] as num?)?.toInt(),
+      usageLimitPerUser: (json['usageLimitPerUser'] as num?)?.toInt(),
     );
   }
 

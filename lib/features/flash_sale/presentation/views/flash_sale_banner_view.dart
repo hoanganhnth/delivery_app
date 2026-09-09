@@ -26,19 +26,7 @@ class FlashSaleBannerView extends StatelessWidget {
       );
     }
     if (state.hasError) {
-      return _FlashSaleStatusCard(
-        key: const Key('flash_sale_error'),
-        child: Row(
-          children: [
-            const Expanded(child: Text('Không thể tải Flash Sale')),
-            TextButton(
-              key: const Key('flash_sale_retry'),
-              onPressed: onRefreshRequested,
-              child: const Text('Thử lại'),
-            ),
-          ],
-        ),
-      );
+      return const SizedBox.shrink();
     }
     if (campaign?.isActive == true && state.items.isEmpty) {
       return const _FlashSaleStatusCard(
@@ -49,12 +37,10 @@ class FlashSaleBannerView extends StatelessWidget {
     if (!state.isVisible || campaign == null) return const SizedBox.shrink();
     final endAt = campaign.endAt();
     if (endAt == null) return const SizedBox.shrink();
-    return Card(
+    return Container(
       key: const Key('flash_sale_banner'),
-      margin: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-      color: Theme.of(
-        context,
-      ).colorScheme.errorContainer.withValues(alpha: 0.45),
+      margin: const EdgeInsets.only(top: 8, bottom: 4),
+      color: Theme.of(context).colorScheme.surface,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(14, 12, 2, 14),
         child: Column(
@@ -83,7 +69,9 @@ class FlashSaleBannerView extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             SizedBox(
-              height: 232,
+              height:
+                  232 *
+                  MediaQuery.textScalerOf(context).scale(1).clamp(1.0, 2.0),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: state.items.length,
@@ -109,8 +97,8 @@ class _FlashSaleStatusCard extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) => Card(
-    margin: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+  Widget build(BuildContext context) => Container(
+    margin: const EdgeInsets.only(top: 8, bottom: 4),
     child: Padding(
       padding: const EdgeInsets.all(14),
       child: Center(child: child),
