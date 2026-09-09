@@ -11,6 +11,7 @@ class ApiConstants {
   static const userRegistration = "/users/registrations";
   static const refreshToken = "$auth/refresh-token";
   static const logout = "$auth/logout";
+  static const firebaseChatToken = "$auth/firebase/chat-token";
   static const forgotPassword = "$auth/forgot-password";
   static const resetPassword = "$auth/reset-password";
   static const getProfile = "/users";

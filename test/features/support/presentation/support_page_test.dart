@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  testWidgets('shows a safe unavailable state before support backend exists', (tester) async {
-    await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: SupportPage())));
+  testWidgets('fails closed when Firebase has not been initialized', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: SupportPage())),
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Support unavailable'), findsOneWidget);

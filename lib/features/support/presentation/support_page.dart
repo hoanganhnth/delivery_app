@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:delivery_app/core/design_system/design_system.dart';
+import 'package:delivery_app/core/routing/routing.dart';
 
 import '../application/support_coordinator.dart';
 import '../di/support_providers.dart';
@@ -14,6 +18,15 @@ class SupportPage extends ConsumerStatefulWidget {
 
 class _SupportPageState extends ConsumerState<SupportPage> {
   final TextEditingController _messageController = TextEditingController();
+  late Future<SupportState> _stateFuture;
+  bool _sending = false;
+  String? _markedConversationId;
+
+  @override
+  void initState() {
+    super.initState();
+    _stateFuture = ref.read(supportCoordinatorProvider).load();
+  }
 
   @override
   void dispose() {
@@ -21,24 +34,81 @@ class _SupportPageState extends ConsumerState<SupportPage> {
     super.dispose();
   }
 
+  void _goBack() {
+    if (context.canPop()) {
+      context.pop();
+    } else {
+      context.go(AppRoutes.main);
+    }
+  }
+
+  Future<void> _send(String conversationId) async {
+    final content = _messageController.text.trim();
+    if (content.isEmpty || _sending) return;
+    setState(() => _sending = true);
+    try {
+      await ref
+          .read(supportCoordinatorProvider)
+          .sendTextMessage(conversationId, content);
+      _messageController.clear();
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error.toString())));
+      }
+    } finally {
+      if (mounted) setState(() => _sending = false);
+    }
+  }
+
+  Future<void> _close(String conversationId) async {
+    try {
+      await ref
+          .read(supportCoordinatorProvider)
+          .closeConversation(
+            conversationId,
+            reason: 'Customer closed the support conversation',
+          );
+      if (!mounted) return;
+      setState(() {
+        _markedConversationId = null;
+        _stateFuture = ref.read(supportCoordinatorProvider).load();
+      });
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error.toString())));
+      }
+    }
+  }
+
+  void _markReadIfNeeded(String conversationId, List<SupportMessage> messages) {
+    final hasUnreadSupportMessage = messages.any(
+      (message) =>
+          message.sender == SupportMessageSender.support && !message.isRead,
+    );
+    if (!hasUnreadSupportMessage || _markedConversationId == conversationId) {
+      return;
+    }
+    _markedConversationId = conversationId;
+    unawaited(
+      ref.read(supportCoordinatorProvider).markConversationRead(conversationId),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final coordinator = ref.watch(supportCoordinatorProvider);
-
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
-      appBar: AppBar(
-        title: const Text(
-          'Trung tâm Hỗ trợ & CSKH',
-          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
-        ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF2C3E50),
+      backgroundColor: PreviewUi.canvas(context),
+      appBar: PreviewPageHeader(
+        title: 'Trung tâm Hỗ trợ & CSKH',
+        onBack: _goBack,
+        onCart: () => context.pushCart(),
       ),
       body: FutureBuilder<SupportState>(
-        future: coordinator.load(),
+        future: _stateFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -48,176 +118,70 @@ class _SupportPageState extends ConsumerState<SupportPage> {
           final isOpen = state?.status == SupportStatus.open;
 
           return SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+            padding: const EdgeInsets.only(top: 8, bottom: 32),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 24/7 Hotline Banner
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF00A38C), Color(0xFF007A68)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                PreviewSurface(
+                  padding: EdgeInsets.zero,
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.headset_mic_outlined,
+                      color: PreviewUi.accent,
                     ),
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF00A38C).withValues(alpha: 0.25),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
+                    title: const Text('Liên hệ CSKH'),
+                    subtitle: Text(
+                      'Đội ngũ CSKH đang trực tuyến và sẽ phản hồi sớm.',
+                      style: TextStyle(
+                        color: PreviewUi.lightMuted,
+                        fontSize: 12,
                       ),
-                    ],
+                    ),
                   ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.headset_mic_rounded,
-                          color: Colors.white,
-                          size: 26,
-                        ),
-                      ),
-                      const SizedBox(width: 14),
-                      const Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Hotline CSKH 24/7',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                              ),
-                            ),
-                            SizedBox(height: 2),
-                            Text(
-                              '1900 1234 (Miễn phí cuộc gọi)',
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Đang kết nối tới tổng đài 1900 1234...'),
-                              behavior: SnackBarBehavior.floating,
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: const Color(0xFF00A38C),
-                          elevation: 0,
-                          padding: const EdgeInsets.symmetric(horizontal: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        child: const Text(
-                          'Gọi ngay',
-                          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
-                        ),
-                      ),
-                    ],
+                ),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(12, 8, 12, 10),
+                  child: Text(
+                    'Hỗ trợ trực tuyến',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                   ),
                 ),
 
-                const SizedBox(height: 20),
-
-                // Live Chat Status / Messages Card
-                const Text(
-                  'Hỗ trợ trực tuyến',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF2C3E50),
-                  ),
-                ),
-                const SizedBox(height: 10),
-
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.03),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
+                PreviewSurface(
+                  padding: EdgeInsets.zero,
                   child: isOpen
-                      ? Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                children: state!.messages
-                                    .map(
-                                      (message) => Container(
-                                        alignment: Alignment.centerLeft,
-                                        margin: const EdgeInsets.only(bottom: 8),
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFF1F3F5),
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                        child: Text(
-                                          message.body,
-                                          style: const TextStyle(fontSize: 14),
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            ),
-                            const Divider(height: 1),
-                            Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      controller: _messageController,
-                                      decoration: const InputDecoration(
-                                        hintText: 'Nhập tin nhắn hỗ trợ...',
-                                        border: InputBorder.none,
-                                        contentPadding:
-                                            EdgeInsets.symmetric(horizontal: 12),
-                                      ),
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.send_rounded,
-                                      color: Color(0xFF00A38C),
-                                    ),
-                                    onPressed: () {
-                                      _messageController.clear();
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                      ? _SupportChatPanel(
+                          conversationId: state!.conversationId,
+                          initialMessages: state.messages,
+                          messageController: _messageController,
+                          sending: _sending,
+                          onSend: () {
+                            final id = state.conversationId;
+                            if (id != null) unawaited(_send(id));
+                          },
+                          onSubmit: () {
+                            final id = state.conversationId;
+                            if (id != null) unawaited(_send(id));
+                          },
+                          onClose: () {
+                            final id = state.conversationId;
+                            if (id != null) unawaited(_close(id));
+                          },
+                          stream: state.conversationId == null
+                              ? const Stream.empty()
+                              : ref
+                                    .read(supportCoordinatorProvider)
+                                    .watchMessages(state.conversationId!),
+                          onMessages: (messages) {
+                            final id = state.conversationId;
+                            if (id != null) _markReadIfNeeded(id, messages);
+                          },
                         )
-                      : const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 28, horizontal: 20),
+                      : Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 28,
+                            horizontal: 20,
+                          ),
                           child: Center(
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
@@ -225,22 +189,32 @@ class _SupportPageState extends ConsumerState<SupportPage> {
                                 Icon(
                                   Icons.support_agent_outlined,
                                   size: 44,
-                                  color: Color(0xFF95A5A6),
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
                                 ),
                                 SizedBox(height: 12),
                                 Text(
-                                  'Support unavailable',
+                                  state?.status == SupportStatus.closed
+                                      ? 'Cuộc trò chuyện đã đóng'
+                                      : 'Support unavailable',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 15,
-                                    color: Color(0xFF2C3E50),
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
                                   ),
                                 ),
                                 SizedBox(height: 6),
                                 Text(
-                                  'Please try again later.',
+                                  state?.status == SupportStatus.closed
+                                      ? 'Mở lại Trung tâm Hỗ trợ để bắt đầu cuộc trò chuyện mới.'
+                                      : 'Please try again later.',
                                   style: TextStyle(
-                                    color: Color(0xFF7F8C8D),
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
                                     fontSize: 13,
                                   ),
                                 ),
@@ -250,18 +224,14 @@ class _SupportPageState extends ConsumerState<SupportPage> {
                         ),
                 ),
 
-                const SizedBox(height: 24),
-
                 // Common FAQs
-                const Text(
-                  'Câu hỏi thường gặp (FAQ)',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF2C3E50),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(12, 8, 12, 10),
+                  child: Text(
+                    'Câu hỏi thường gặp (FAQ)',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                   ),
                 ),
-                const SizedBox(height: 10),
 
                 _FaqAccordion(
                   question: 'Làm thế nào để áp dụng mã giảm giá và Freeship?',
@@ -274,7 +244,8 @@ class _SupportPageState extends ConsumerState<SupportPage> {
                       'Thời gian giao hàng trung bình từ 15 - 30 phút tùy thuộc vào khoảng cách quán ăn đến địa chỉ của bạn và điều kiện thời tiết.',
                 ),
                 _FaqAccordion(
-                  question: 'Chính sách hoàn tiền khi hủy đơn hàng như thế nào?',
+                  question:
+                      'Chính sách hoàn tiền khi hủy đơn hàng như thế nào?',
                   answer:
                       'Nếu đơn hàng bị hủy khi quán chưa chuẩn bị, số tiền thanh toán qua thẻ hoặc ví điện tử sẽ được hoàn lại tự động trong vòng 1 - 3 ngày làm việc.',
                 ),
@@ -288,6 +259,176 @@ class _SupportPageState extends ConsumerState<SupportPage> {
           );
         },
       ),
+    );
+  }
+}
+
+class _SupportChatPanel extends StatelessWidget {
+  const _SupportChatPanel({
+    required this.conversationId,
+    required this.initialMessages,
+    required this.messageController,
+    required this.sending,
+    required this.onSend,
+    required this.onSubmit,
+    required this.onClose,
+    required this.stream,
+    required this.onMessages,
+  });
+
+  final String? conversationId;
+  final List<SupportMessage> initialMessages;
+  final TextEditingController messageController;
+  final bool sending;
+  final VoidCallback onSend;
+  final VoidCallback onSubmit;
+  final VoidCallback onClose;
+  final Stream<List<SupportMessage>> stream;
+  final ValueChanged<List<SupportMessage>> onMessages;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<SupportMessage>>(
+      stream: stream,
+      initialData: initialMessages,
+      builder: (context, snapshot) {
+        final messages = snapshot.data ?? initialMessages;
+        if (messages.isNotEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            onMessages(messages);
+          });
+        }
+
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 8, 8),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      'Trao đổi với CSKH',
+                      style: TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: 'Đóng cuộc trò chuyện',
+                    onPressed: conversationId == null || sending
+                        ? null
+                        : onClose,
+                    icon: const Icon(Icons.close_rounded),
+                  ),
+                ],
+              ),
+            ),
+            if (snapshot.connectionState == ConnectionState.waiting &&
+                messages.isEmpty)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 32),
+                child: CircularProgressIndicator(),
+              )
+            else if (snapshot.hasError)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+                child: Text(
+                  'Không thể đồng bộ tin nhắn realtime. Vui lòng thử lại.',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                    fontSize: 13,
+                  ),
+                ),
+              )
+            else if (messages.isEmpty)
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 8, 16, 20),
+                child: Text(
+                  'Hãy mô tả vấn đề của bạn, CSKH sẽ phản hồi tại đây.',
+                  style: TextStyle(fontSize: 13),
+                ),
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                child: Column(
+                  children: messages
+                      .map(
+                        (message) => Align(
+                          alignment:
+                              message.sender == SupportMessageSender.customer
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
+                          child: Container(
+                            constraints: const BoxConstraints(maxWidth: 300),
+                            margin: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color:
+                                  message.sender ==
+                                      SupportMessageSender.customer
+                                  ? PreviewUi.accent
+                                  : Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceContainerHighest,
+                              borderRadius: PreviewUi.controlRadius,
+                            ),
+                            child: Text(
+                              message.body,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color:
+                                    message.sender ==
+                                        SupportMessageSender.customer
+                                    ? Colors.white
+                                    : Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            const Divider(height: 1),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: messageController,
+                      enabled: conversationId != null && !sending,
+                      textInputAction: TextInputAction.send,
+                      onSubmitted: (_) => onSubmit(),
+                      maxLength: 2000,
+                      decoration: const InputDecoration(
+                        hintText: 'Nhập tin nhắn...',
+                        counterText: '',
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: sending
+                        ? const SizedBox.square(
+                            dimension: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Icon(
+                            Icons.send_rounded,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                    tooltip: 'Gửi tin nhắn',
+                    onPressed: conversationId == null || sending
+                        ? null
+                        : onSend,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -310,9 +451,8 @@ class _FaqAccordionState extends State<_FaqAccordion> {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFEAECEF)),
+        color: Theme.of(context).colorScheme.surface,
+        border: const Border(bottom: BorderSide(color: PreviewUi.line)),
       ),
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
@@ -321,20 +461,22 @@ class _FaqAccordionState extends State<_FaqAccordion> {
           onExpansionChanged: (val) => setState(() => _expanded = val),
           title: Text(
             widget.question,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF2C3E50),
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
+          tilePadding: const EdgeInsets.symmetric(horizontal: 16),
+          childrenPadding: EdgeInsets.zero,
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
               child: Text(
                 widget.answer,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
-                  color: Color(0xFF555555),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                   height: 1.4,
                 ),
               ),
