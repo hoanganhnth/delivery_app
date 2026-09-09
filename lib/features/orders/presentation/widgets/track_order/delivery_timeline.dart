@@ -155,8 +155,8 @@ class _TimelineStep extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final reduceMotion = MediaQuery.of(context).disableAnimations;
-    final iconSize = isLarge ? 40.0 : 32.0;
-    final titleSize = isLarge ? 16.0 : 14.0;
+    const iconSize = 12.0;
+    const titleSize = 14.0;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,7 +165,9 @@ class _TimelineStep extends StatelessWidget {
         Column(
           children: [
             AnimatedContainer(
-              duration: reduceMotion ? Duration.zero : const Duration(milliseconds: 300),
+              duration: reduceMotion
+                  ? Duration.zero
+                  : const Duration(milliseconds: 300),
               width: iconSize,
               height: iconSize,
               decoration: BoxDecoration(
@@ -173,34 +175,12 @@ class _TimelineStep extends StatelessWidget {
                     ? colors.primary
                     : colors.outlineVariant,
                 shape: BoxShape.circle,
-                boxShadow: isActive
-                    ? [
-                        BoxShadow(
-                          color: colors.primary.withValues(alpha: 0.4),
-                          blurRadius: 12,
-                          spreadRadius: 2,
-                        ),
-                      ]
-                    : [],
-                border: isActive
-                    ? Border.all(
-                        color: colors.primary.withValues(alpha: 0.3),
-                        width: 4,
-                      )
-                    : null,
-              ),
-              child: Icon(
-                icon,
-                color: isCompleted || isActive
-                    ? Colors.white
-                    : colors.onSurfaceVariant,
-                size: isLarge ? 20.0 : 16.0,
               ),
             ),
             if (!isLast)
               Container(
                 width: 2.0,
-                height: isLarge ? 48.0 : 40.0,
+                height: 48,
                 color: isCompleted ? colors.primary : colors.outlineVariant,
               ),
           ],
@@ -235,7 +215,7 @@ class _TimelineStep extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                       color: isCompleted
                           ? colors.onSurfaceVariant
-                          : colors.onSurfaceVariant.withValues(alpha: 0.5),
+                          : colors.onSurfaceVariant,
                     ),
                   ),
                 ],

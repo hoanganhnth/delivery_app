@@ -1,4 +1,5 @@
 import 'package:delivery_app/features/orders/domain/entities/refund_case_entity.dart';
+import 'package:delivery_app/core/design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -22,10 +23,10 @@ class RefundStatusCaseCard extends StatelessWidget {
     final timestamp =
         refundCase.processedAt ?? refundCase.updatedAt ?? refundCase.createdAt;
 
-    return Card(
+    return Material(
+      color: PreviewUi.surface(context),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -44,6 +45,7 @@ class RefundStatusCaseCard extends StatelessWidget {
                       ),
                     ),
                   ),
+                  if (onTap != null) const Icon(Icons.chevron_right),
                 ],
               ),
               if (showOrderId) ...[
@@ -55,6 +57,8 @@ class RefundStatusCaseCard extends StatelessWidget {
                   ),
                 ),
               ],
+              const SizedBox(height: 12),
+              const Divider(height: 1),
               const SizedBox(height: 12),
               Text(
                 presentation.title,

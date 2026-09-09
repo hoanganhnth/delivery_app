@@ -16,6 +16,10 @@ class OrderPaymentCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Card(
+      margin: EdgeInsets.zero,
+      elevation: 0,
+      shape: const RoundedRectangleBorder(),
+      color: theme.colorScheme.surface,
       child: Padding(
         padding: EdgeInsets.all(16.w),
         child: Column(

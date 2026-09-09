@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:delivery_app/core/design_system/design_system.dart';
 import 'package:delivery_app/generated/l10n.dart';
 
 class TrackingFindingShipperCard extends StatelessWidget {
@@ -7,38 +7,31 @@ class TrackingFindingShipperCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Container(
-        height: 200.w,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: Colors.blue.withValues(alpha: 0.05),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.person_search, size: 48, color: Colors.blue[400]),
-              SizedBox(height: 16.w),
-              Text(
-                S.of(context).findingDriver,
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-              SizedBox(height: 8.w),
-              Text(
-                S.of(context).mapWillShowWhenDriverAccepts,
-                style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
-                textAlign: TextAlign.center,
-              ),
-            ],
+    return PreviewSurface(
+      padding: const EdgeInsets.fromLTRB(24, 32, 24, 30),
+      child: Column(
+        children: [
+          const Icon(
+            Icons.person_search_outlined,
+            size: 48,
+            color: PreviewUi.accent,
           ),
-        ),
+          const SizedBox(height: 16),
+          Text(
+            S.of(context).findingDriver,
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w600,
+              color: PreviewUi.text(context),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            S.of(context).mapWillShowWhenDriverAccepts,
+            style: TextStyle(fontSize: 12, color: PreviewUi.muted(context)),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

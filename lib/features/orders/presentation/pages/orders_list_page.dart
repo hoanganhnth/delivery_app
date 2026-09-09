@@ -7,12 +7,15 @@ import 'package:delivery_app/features/orders/application/orders_list_state.dart'
 import 'package:delivery_app/features/orders/application/orders_list_view_model.dart';
 import 'package:delivery_app/features/orders/presentation/views/orders_list_view.dart';
 import 'package:delivery_app/generated/l10n.dart';
+import 'package:delivery_app/core/design_system/components/preview_bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Page adapter for the orders-history pure view.
 class OrdersListPage extends ConsumerWidget {
-  const OrdersListPage({super.key});
+  const OrdersListPage({super.key, this.isTab = false});
+
+  final bool isTab;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,6 +23,7 @@ class OrdersListPage extends ConsumerWidget {
       previous,
       next,
     ) {
+      if (ModalRoute.of(context)?.isCurrent == false) return;
       final previousIds = {
         for (final effect in previous?.effects ?? const []) effect.id,
       };
@@ -30,6 +34,34 @@ class OrdersListPage extends ConsumerWidget {
       }
     });
     return OrdersListView(
+      showBackButton: !isTab,
+      previewMode: true,
+      onBack: () {
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go(AppRoutes.main);
+        }
+      },
+      onCart: () => context.go(AppRoutes.cart),
+      onRefundHistory: () => context.push(AppRoutes.refundHistory),
+      bottomNavigationBar: isTab
+          ? null
+          : PreviewBottomNavigation(
+              currentIndex: 1,
+              onTap: (index) {
+                switch (index) {
+                  case 0:
+                    context.go(AppRoutes.main);
+                  case 1:
+                    context.go(AppRoutes.orders);
+                  case 2:
+                    context.go(AppRoutes.cart);
+                  case 3:
+                    context.go(AppRoutes.profile);
+                }
+              },
+            ),
       state: ref.watch(ordersListViewModelProvider),
       onIntent: (intent) => unawaited(
         ref.read(ordersListViewModelProvider.notifier).dispatch(intent),

@@ -3,11 +3,16 @@ import 'package:flutter/material.dart';
 
 /// Compatibility route entry point during the Orders presentation migration.
 class OrderDetailScreen extends StatelessWidget {
-  const OrderDetailScreen({super.key, required this.orderId});
+  const OrderDetailScreen({
+    super.key,
+    required this.orderId,
+    this.previewMode = false,
+  });
 
   final num orderId;
+  final bool previewMode;
 
   @override
   Widget build(BuildContext context) =>
-      OrderDetailPage(orderId: orderId.toInt());
+      OrderDetailPage(orderId: orderId.toInt(), previewMode: previewMode);
 }

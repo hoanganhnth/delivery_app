@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:delivery_app/core/design_system/design_system.dart';
 import 'package:delivery_app/generated/l10n.dart';
 
 class TrackingDeliveredCard extends StatelessWidget {
@@ -7,39 +7,28 @@ class TrackingDeliveredCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Container(
-        padding: EdgeInsets.all(24.w),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: Colors.green.withValues(alpha: 0.05),
-        ),
-        child: Column(
-          children: [
-            Icon(
-              Icons.check_circle_rounded,
-              size: 64,
-              color: Colors.green[600],
+    const success = Color(0xFF229A69);
+    return PreviewSurface(
+      padding: const EdgeInsets.fromLTRB(24, 32, 24, 30),
+      child: Column(
+        children: [
+          const Icon(Icons.check_circle_outline, size: 52, color: success),
+          const SizedBox(height: 12),
+          Text(
+            S.of(context).deliveredSuccess,
+            style: const TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+              color: success,
             ),
-            SizedBox(height: 12.w),
-            Text(
-              S.of(context).deliveredSuccess,
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.green[700],
-              ),
-            ),
-            SizedBox(height: 4.w),
-            Text(
-              S.of(context).deliveredSuccessMessage,
-              style: TextStyle(fontSize: 13.sp, color: Colors.grey[600]),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            S.of(context).deliveredSuccessMessage,
+            style: TextStyle(fontSize: 12, color: PreviewUi.muted(context)),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

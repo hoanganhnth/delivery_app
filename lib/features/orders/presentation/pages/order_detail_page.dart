@@ -14,9 +14,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Riverpod/navigation adapter for the otherwise pure Order Detail view.
 class OrderDetailPage extends ConsumerWidget {
-  const OrderDetailPage({super.key, required this.orderId});
+  const OrderDetailPage({
+    super.key,
+    required this.orderId,
+    this.previewMode = false,
+  });
 
   final int orderId;
+  final bool previewMode;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,6 +42,17 @@ class OrderDetailPage extends ConsumerWidget {
       orderId: orderId,
       state: ref.watch(provider),
       tracking: OrderTrackingPage(orderId: orderId, trackingRealtime: true),
+      previewMode: previewMode,
+      onBack: previewMode
+          ? () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go(AppRoutes.orders);
+              }
+            }
+          : null,
+      onCart: previewMode ? () => context.go(AppRoutes.cart) : null,
       onIntent: (intent) =>
           unawaited(ref.read(provider.notifier).dispatch(intent)),
     );

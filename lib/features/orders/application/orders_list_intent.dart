@@ -2,7 +2,7 @@ sealed class OrdersListIntent {
   const OrdersListIntent();
 }
 
-enum OrdersListFilter { all, active, completed }
+enum OrdersListFilter { all, active, completed, history }
 
 final class OrdersListRefreshRequested extends OrdersListIntent {
   const OrdersListRefreshRequested();

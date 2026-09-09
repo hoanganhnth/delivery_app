@@ -79,6 +79,8 @@ final class OrdersListViewState extends Equatable {
       items
           .where((item) => item.statusTone == OrdersListStatusTone.delivered)
           .toList(growable: false),
+    OrdersListFilter.history =>
+      items.where((item) => !item.isActive).toList(growable: false),
   };
 
   bool get isEmpty => !isLoading && !hasError && filteredItems.isEmpty;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:delivery_app/core/design_system/design_system.dart';
 import 'package:delivery_app/core/utils/logger/app_logger.dart';
 import 'package:delivery_app/features/orders/domain/entities/delivery_tracking_entity.dart';
 import 'package:delivery_app/features/orders/domain/entities/delivery_status.dart';
@@ -100,7 +101,7 @@ class _OptimizedDeliveryTrackingMapWidgetState
     // Tính toán kích thước dựa trên trạng thái expanded - đảm bảo tối thiểu 64px cho MapBox
     final mapHeight = _isExpanded
         ? (screenHeight * 0.7).clamp(300.0, double.infinity)
-        : 300.0.clamp(64.0, double.infinity);
+        : 210.0.clamp(64.0, double.infinity);
 
     final mapWidth = screenWidth.clamp(64.0, double.infinity);
 
@@ -126,21 +127,9 @@ class _OptimizedDeliveryTrackingMapWidgetState
           curve: Curves.easeInOutCubic,
           height: mapHeight,
           width: mapWidth,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade300),
-            boxShadow: _isExpanded
-                ? [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ]
-                : [],
-          ),
+          decoration: BoxDecoration(color: PreviewUi.canvas(context)),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.zero,
             child: LayoutBuilder(
               builder: (context, constraints) {
                 // Đảm bảo MapWidget có size hợp lệ, tối thiểu 64x64
@@ -217,14 +206,17 @@ class _OptimizedDeliveryTrackingMapWidgetState
 
   Widget _buildLoadingState() {
     return Container(
-      color: Colors.grey[200],
+      color: PreviewUi.canvas(context),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(),
+            CircularProgressIndicator(color: PreviewUi.accent),
             SizedBox(height: 8.w),
-            Text('Đang tải bản đồ...', style: TextStyle(color: Colors.grey)),
+            Text(
+              'Đang tải bản đồ...',
+              style: TextStyle(color: PreviewUi.muted(context)),
+            ),
           ],
         ),
       ),
@@ -340,30 +332,23 @@ class _OptimizedDeliveryTrackingMapWidgetState
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: PreviewUi.surface(context),
+        borderRadius: PreviewUi.controlRadius,
+        border: Border.all(color: PreviewUi.divider(context)),
       ),
       child: IconButton(
         onPressed: onPressed,
         icon: Icon(icon),
         iconSize: 20,
-        color: isActive ? Colors.blue : Colors.grey[700],
+        color: isActive ? PreviewUi.accent : PreviewUi.muted(context),
         tooltip: tooltip,
       ),
     );
   }
 
   Widget _buildExternalInfoCard() {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return Container(
+      color: PreviewUi.surface(context),
       child: Padding(
         padding: EdgeInsets.all(16.w),
         child: Column(
@@ -398,15 +383,9 @@ class _OptimizedDeliveryTrackingMapWidgetState
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 12.w),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: PreviewUi.surface(context),
+        borderRadius: PreviewUi.controlRadius,
+        border: Border.all(color: PreviewUi.divider(context)),
       ),
       child: Row(
         children: [
@@ -414,7 +393,11 @@ class _OptimizedDeliveryTrackingMapWidgetState
           SizedBox(width: 8.w),
           Text(
             _getStatusTitle(widget.deliveryTracking!.status),
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14.sp,
+              color: PreviewUi.text(context),
+            ),
           ),
         ],
       ),
@@ -428,19 +411,19 @@ class _OptimizedDeliveryTrackingMapWidgetState
       case DeliveryStatus.pending:
       case DeliveryStatus.findingShipper:
       case DeliveryStatus.waitShipperConfirm:
-        return Icon(Icons.access_time, color: Colors.grey);
+        return const Icon(Icons.access_time, color: Color(0xFF888888));
       case DeliveryStatus.shipperNotFound:
-        return Icon(Icons.error_outline, color: Colors.red);
+        return const Icon(Icons.error_outline, color: Color(0xFFE74C3C));
       case DeliveryStatus.assigned:
-        return Icon(Icons.check_circle, color: Colors.green);
+        return const Icon(Icons.check_circle, color: Color(0xFF229A69));
       case DeliveryStatus.pickedUp:
-        return Icon(Icons.directions_bike, color: Colors.blue);
+        return const Icon(Icons.directions_bike, color: PreviewUi.accent);
       case DeliveryStatus.delivering:
-        return Icon(Icons.local_shipping, color: Colors.orange);
+        return const Icon(Icons.local_shipping, color: PreviewUi.accent);
       case DeliveryStatus.delivered:
-        return Icon(Icons.done_all, color: Colors.green);
+        return const Icon(Icons.done_all, color: Color(0xFF229A69));
       case DeliveryStatus.cancelled:
-        return Icon(Icons.cancel, color: Colors.red);
+        return const Icon(Icons.cancel, color: Color(0xFFE74C3C));
     }
   }
 

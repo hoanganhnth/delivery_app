@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:delivery_app/core/design_system/design_system.dart';
 
 class TrackingErrorMessage extends StatelessWidget {
   final String error;
@@ -9,27 +9,29 @@ class TrackingErrorMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Container(
-      padding: EdgeInsets.all(12.w),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.red.shade50,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.red.shade200),
+        color: scheme.error.withValues(alpha: 0.07),
+        borderRadius: PreviewUi.controlRadius,
+        border: Border.all(color: scheme.error.withValues(alpha: 0.24)),
       ),
       child: Row(
         children: [
-          Icon(Icons.error_outline, color: Colors.red.shade600, size: 20),
-          SizedBox(width: 8.w),
+          Icon(Icons.error_outline, color: scheme.error, size: 20),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
               error,
-              style: TextStyle(color: Colors.red.shade800, fontSize: 14.sp),
+              style: TextStyle(color: scheme.error, fontSize: 13),
             ),
           ),
           if (onClear != null)
             IconButton(
               onPressed: onClear,
-              icon: Icon(Icons.close, color: Colors.red.shade600, size: 20),
+              tooltip: 'Đóng',
+              icon: Icon(Icons.close, color: scheme.error, size: 20),
             ),
         ],
       ),

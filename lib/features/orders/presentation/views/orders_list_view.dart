@@ -2,6 +2,8 @@ import 'package:delivery_app/core/design_system/design_system.dart';
 import 'package:delivery_app/features/orders/application/orders_list_intent.dart';
 import 'package:delivery_app/features/orders/application/orders_list_state.dart';
 import 'package:flutter/material.dart';
+import 'package:delivery_app/generated/l10n.dart';
+import '../components/orders_preview_components.dart';
 
 /// Pure orders-history rendering. It emits typed intents only.
 class OrdersListView extends StatelessWidget {
@@ -9,63 +11,77 @@ class OrdersListView extends StatelessWidget {
     super.key,
     required this.state,
     required this.onIntent,
+    this.showBackButton = true,
+    this.previewMode = false,
+    this.bottomNavigationBar,
+    this.onBack,
+    this.onCart,
+    this.onRefundHistory,
+    this.cartItemCount = 0,
   });
 
   final OrdersListViewState state;
   final ValueChanged<OrdersListIntent> onIntent;
+  final bool showBackButton;
+  final bool previewMode;
+  final Widget? bottomNavigationBar;
+  final VoidCallback? onBack;
+  final VoidCallback? onCart;
+  final VoidCallback? onRefundHistory;
+  final int cartItemCount;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: const Color(0xFFF7F8FA),
-    appBar: AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      scrolledUnderElevation: 0,
-      leading: IconButton(
-        key: const Key('orders_back'),
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () => onIntent(const OrdersListBackRequested()),
+  Widget build(BuildContext context) {
+    if (previewMode) {
+      return Scaffold(
+        backgroundColor: const Color(0xFFF5F5F5),
+        appBar: OrdersPreviewHeader(
+          itemCount: cartItemCount,
+          onBack: showBackButton ? onBack : null,
+          onCart: onCart ?? () {},
+          onRefundHistory: onRefundHistory,
+        ),
+        body: OrdersPreviewBody(state: state, onIntent: onIntent),
+        bottomNavigationBar: bottomNavigationBar,
+      );
+    }
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text(
+          S.of(context).orders,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+        ),
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        automaticallyImplyLeading: false,
+        leading: !showBackButton
+            ? null
+            : IconButton(
+                key: const Key('orders_back'),
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => onIntent(const OrdersListBackRequested()),
+              ),
+        actions: [
+          IconButton(
+            key: const Key('orders_refund_history'),
+            tooltip: 'Lịch sử hoàn tiền',
+            icon: const Icon(Icons.receipt_long_outlined),
+            onPressed: () => onIntent(const OrdersListRefundHistoryRequested()),
+          ),
+        ],
       ),
-      actions: [
-        IconButton(
-          key: const Key('orders_refund_history'),
-          tooltip: 'Lịch sử hoàn tiền',
-          icon: const Icon(Icons.receipt_long_outlined),
-          onPressed: () => onIntent(const OrdersListRefundHistoryRequested()),
-        ),
-      ],
-    ),
-    body: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.fromLTRB(
-            AppSpacing.page,
-            AppSpacing.lg,
-            AppSpacing.page,
-            AppSpacing.xs,
-          ),
-          child: Text(
-            'Đơn hàng của bạn',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
-          child: Text(
-            'Theo dõi các món ăn đang giao và lịch sử đặt hàng.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        _OrdersFilterBar(filter: state.filter, onIntent: onIntent),
-        const SizedBox(height: AppSpacing.xs),
-        Expanded(child: _body(context)),
-      ],
-    ),
-  );
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _OrdersFilterBar(filter: state.filter, onIntent: onIntent),
+          const SizedBox(height: AppSpacing.xs),
+          Expanded(child: _body(context)),
+        ],
+      ),
+    );
+  }
 
   Widget _body(BuildContext context) {
     if (state.isLoading) {
@@ -97,7 +113,8 @@ class OrdersListView extends StatelessWidget {
           return false;
         },
         child: ListView.separated(
-          padding: const EdgeInsets.all(AppSpacing.page),
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           itemCount: state.filteredItems.length + (state.isLoadingMore ? 1 : 0),
           separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
           itemBuilder: (context, index) {
@@ -129,12 +146,16 @@ class _OrdersFilterBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
+      padding: EdgeInsets.zero,
       child: Container(
-        padding: const EdgeInsets.all(4),
+        padding: EdgeInsets.zero,
         decoration: BoxDecoration(
-          color: const Color(0xFFEAECEF),
-          borderRadius: AppRadii.pillRadius,
+          color: Theme.of(context).colorScheme.surface,
+          border: Border(
+            bottom: BorderSide(
+              color: Theme.of(context).colorScheme.outlineVariant,
+            ),
+          ),
         ),
         child: Row(
           children: [
@@ -187,32 +208,30 @@ class _FilterPillTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        decoration: BoxDecoration(
-          color: selected ? Colors.white : Colors.transparent,
-          borderRadius: AppRadii.pillRadius,
-          boxShadow: selected
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.06),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : null,
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-              color: selected ? scheme.onSurface : const Color(0xFF6C7278),
+    return Semantics(
+      selected: selected,
+      button: true,
+      child: InkWell(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: selected ? scheme.primary : Colors.transparent,
+                width: 2,
+              ),
+            ),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                color: selected ? scheme.primary : scheme.onSurfaceVariant,
+              ),
             ),
           ),
         ),
@@ -238,24 +257,11 @@ class _OrderListCard extends StatelessWidget {
     final scheme = theme.colorScheme;
 
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: AppRadii.container,
-        border: Border.all(color: const Color(0xFFEDEFF2), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+      decoration: BoxDecoration(color: scheme.surface),
       child: Material(
         color: Colors.transparent,
-        borderRadius: AppRadii.container,
         child: InkWell(
           key: Key('order_card_${order.id}'),
-          borderRadius: AppRadii.container,
           onTap: isActionRunning
               ? null
               : () => onIntent(OrdersListDetailsRequested(order.id)),
@@ -264,6 +270,13 @@ class _OrderListCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(
+                  '${S.of(context).order} #${order.id}',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: scheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -305,12 +318,11 @@ class _OrderListCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: AppSpacing.xs),
-                    _StatusBadge(
-                      tone: order.statusTone,
-                      label: order.statusLabel,
-                    ),
+                    const Icon(Icons.chevron_right, size: 20),
                   ],
                 ),
+                const SizedBox(height: 8),
+                _StatusBadge(tone: order.statusTone, label: order.statusLabel),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
                   child: Divider(

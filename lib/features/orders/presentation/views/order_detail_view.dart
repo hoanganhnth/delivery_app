@@ -8,6 +8,7 @@ import 'package:delivery_app/features/orders/presentation/widgets/order_detail/o
 import 'package:delivery_app/features/orders/presentation/widgets/shared/order_progress_bar.dart';
 import 'package:delivery_app/features/orders/presentation/widgets/track_order/delivery_timeline.dart';
 import 'package:flutter/material.dart';
+import '../components/order_detail_preview_components.dart';
 
 /// Pure detail screen. Its inputs contain every observable state and it only
 /// emits typed intents; data loading, navigation and mutations live in the
@@ -19,20 +20,42 @@ class OrderDetailView extends StatelessWidget {
     required this.state,
     required this.tracking,
     required this.onIntent,
+    this.previewMode = false,
+    this.onBack,
+    this.onCart,
   });
 
   final int orderId;
   final OrderDetailViewState state;
   final Widget tracking;
   final ValueChanged<OrderDetailIntent> onIntent;
+  final bool previewMode;
+  final VoidCallback? onBack;
+  final VoidCallback? onCart;
 
   @override
   Widget build(BuildContext context) {
     final order = state.order;
+    if (previewMode) {
+      return Scaffold(
+        backgroundColor: PreviewUi.canvas(context),
+        appBar: OrderDetailPreviewHeader(
+          orderId: orderId,
+          onBack: onBack ?? () => onIntent(const OrderDetailBackRequested()),
+          onCart: onCart ?? () {},
+        ),
+        body: OrderDetailPreviewBody(
+          orderId: orderId,
+          state: state,
+          tracking: tracking,
+          onIntent: onIntent,
+        ),
+      );
+    }
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         scrolledUnderElevation: 0,
         title: Text(
@@ -64,22 +87,22 @@ class OrderDetailView extends StatelessWidget {
           onRefresh: () async => onIntent(const OrderDetailRefreshRequested()),
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: EdgeInsets.zero,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _OrderStatusCard(order: currentOrder),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: 8),
+                if (currentOrder.canTrackingRealtime) ...[
+                  tracking,
+                  const SizedBox(height: 8),
+                ],
                 if (currentOrder.status != OrderStatus.cancelled &&
                     currentOrder.status != OrderStatus.shipperNotFound) ...[
                   _TimelineCard(
                     order: currentOrder,
                     rawTrackingStatus: state.trackingRawStatus,
                   ),
-                  const SizedBox(height: AppSpacing.md),
-                ],
-                if (currentOrder.canTrackingRealtime) ...[
-                  tracking,
                   const SizedBox(height: AppSpacing.md),
                 ],
                 _OrderItemsCard(order: currentOrder),
@@ -125,22 +148,25 @@ class _OrderStatusCard extends StatelessWidget {
       OrderStatus.cancelled => ('Đơn hàng đã hủy', 0.0),
     };
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: AppRadii.container,
-        border: Border.all(color: const Color(0xFFEDEFF2), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.all(AppSpacing.card),
+      key: const Key('order_status_hero'),
+      decoration: BoxDecoration(color: scheme.primary.withValues(alpha: 0.08)),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Center(
+            child: Icon(
+              switch (order.status) {
+                OrderStatus.delivered => Icons.check_circle_outline,
+                OrderStatus.cancelled => Icons.cancel_outlined,
+                OrderStatus.shipperNotFound => Icons.person_search_outlined,
+                _ => Icons.delivery_dining,
+              },
+              size: 48,
+              color: scheme.primary,
+            ),
+          ),
+          const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
@@ -209,10 +235,14 @@ class _TimelineCard extends StatelessWidget {
   final String? rawTrackingStatus;
 
   @override
-  Widget build(BuildContext context) => AppSurfaceCard(
-    child: DeliveryTimeline(
-      status: order.status,
-      rawBackendStatus: rawTrackingStatus ?? order.rawBackendStatus,
+  Widget build(BuildContext context) => ColoredBox(
+    color: Theme.of(context).colorScheme.surface,
+    child: Padding(
+      padding: const EdgeInsets.all(20),
+      child: DeliveryTimeline(
+        status: order.status,
+        rawBackendStatus: rawTrackingStatus ?? order.rawBackendStatus,
+      ),
     ),
   );
 }
@@ -226,18 +256,7 @@ class _OrderItemsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: AppRadii.container,
-        border: Border.all(color: const Color(0xFFEDEFF2), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+      decoration: BoxDecoration(color: scheme.surface),
       padding: const EdgeInsets.all(AppSpacing.card),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -386,18 +405,7 @@ class _OrderActions extends StatelessWidget {
     if (hidesActions) return const SizedBox.shrink();
     final scheme = Theme.of(context).colorScheme;
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: AppRadii.container,
-        border: Border.all(color: const Color(0xFFEDEFF2), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+      decoration: BoxDecoration(color: scheme.surface),
       padding: const EdgeInsets.all(AppSpacing.card),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -439,11 +447,7 @@ class _OrderActions extends StatelessWidget {
                 onPressed: isSubmitting
                     ? null
                     : () => onIntent(const OrderDetailRatingRequested()),
-                icon: Icon(
-                  Icons.star_rounded,
-                  size: 20,
-                  color: scheme.primary,
-                ),
+                icon: Icon(Icons.star_rounded, size: 20, color: scheme.primary),
                 label: const Text('Đánh giá Quán ăn'),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: scheme.primary,

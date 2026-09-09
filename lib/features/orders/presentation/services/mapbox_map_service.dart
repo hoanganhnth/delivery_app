@@ -111,10 +111,10 @@ class MapboxMapService implements IMapService<MapboxMap, CameraOptions> {
     }
 
     try {
-      final pickupBytes = await _createMarkerImage('🏪', bgColor: Colors.green);
+      final pickupBytes = await _createMarkerImage('Q', bgColor: Colors.green);
       final deliveryBytes = await _createMarkerImage(
-        '🏠',
-        bgColor: Colors.blue,
+        'N',
+        bgColor: const Color(0xFFEE4D2D),
       );
 
       // Thêm pickup marker (nhà hàng)
@@ -159,8 +159,8 @@ class MapboxMapService implements IMapService<MapboxMap, CameraOptions> {
       // final Uint8List list = bytes.buffer.asUint8List();
       // Tạo shipper marker mới
       final shipperBytes = await _createMarkerImage(
-        '🛵',
-        bgColor: Colors.red,
+        '→',
+        bgColor: const Color(0xFFEE4D2D),
         size: 90,
       );
 

@@ -22,18 +22,15 @@ class OrderTrackingView extends StatelessWidget {
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
+      map,
       Container(
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: AppRadii.container,
-          border: Border.all(color: const Color(0xFFEDEFF2), width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
-              blurRadius: 10,
-              offset: const Offset(0, 3),
+          color: Theme.of(context).colorScheme.surface,
+          border: Border(
+            bottom: BorderSide(
+              color: Theme.of(context).colorScheme.outlineVariant,
             ),
-          ],
+          ),
         ),
         padding: const EdgeInsets.all(AppSpacing.card),
         child: Row(
@@ -42,7 +39,9 @@ class OrderTrackingView extends StatelessWidget {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -60,21 +59,21 @@ class OrderTrackingView extends StatelessWidget {
                     S.of(context).trackDelivery,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w800,
-                      color: const Color(0xFF1A1D20),
+                      color: PreviewUi.text(context),
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     _phaseText(state.phase),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: const Color(0xFF757F8A),
+                      color: PreviewUi.muted(context),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
               ),
             ),
-            _ConnectionBadge(state: state),
+            Flexible(child: _ConnectionBadge(state: state)),
           ],
         ),
       ),
@@ -109,8 +108,7 @@ class OrderTrackingView extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () =>
-                    onIntent(const OrderTrackingRetryRequested()),
+                onPressed: () => onIntent(const OrderTrackingRetryRequested()),
                 child: const Text(
                   'Thử lại',
                   style: TextStyle(
@@ -121,8 +119,7 @@ class OrderTrackingView extends StatelessWidget {
               ),
               IconButton(
                 tooltip: 'Đóng',
-                onPressed: () =>
-                    onIntent(const OrderTrackingErrorDismissed()),
+                onPressed: () => onIntent(const OrderTrackingErrorDismissed()),
                 icon: const Icon(
                   Icons.close,
                   size: 18,
@@ -133,8 +130,6 @@ class OrderTrackingView extends StatelessWidget {
           ),
         ),
       ],
-      const SizedBox(height: AppSpacing.sm),
-      map,
       const SizedBox(height: AppSpacing.sm),
     ],
   );
@@ -167,18 +162,11 @@ class _ConnectionBadge extends StatelessWidget {
         ? ('Đã kết nối', const Color(0xFFE8F8F5), const Color(0xFF27AE60))
         : ('Chưa kết nối', const Color(0xFFF0F2F5), const Color(0xFF757F8A));
     return Container(
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: AppRadii.pillRadius,
-      ),
+      decoration: BoxDecoration(color: bg, borderRadius: AppRadii.pillRadius),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       child: Text(
         label,
-        style: TextStyle(
-          color: fg,
-          fontWeight: FontWeight.w700,
-          fontSize: 11,
-        ),
+        style: TextStyle(color: fg, fontWeight: FontWeight.w700, fontSize: 11),
       ),
     );
   }

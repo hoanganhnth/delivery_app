@@ -13,6 +13,10 @@ class OrderCustomerInfoCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Card(
+      margin: EdgeInsets.zero,
+      elevation: 0,
+      shape: const RoundedRectangleBorder(),
+      color: theme.colorScheme.surface,
       child: Padding(
         padding: EdgeInsets.all(16.w),
         child: Column(
@@ -20,7 +24,11 @@ class OrderCustomerInfoCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.person, color: theme.primaryColor, size: 24),
+                Icon(
+                  Icons.location_on_outlined,
+                  color: theme.primaryColor,
+                  size: 22,
+                ),
                 SizedBox(width: 8.w),
                 Expanded(
                   child: Text(
