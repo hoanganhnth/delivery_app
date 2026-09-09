@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
+import 'package:delivery_app/core/routing/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -51,6 +52,7 @@ class _AddressFormPageState extends ConsumerState<AddressFormPage> {
     });
     return AddressFormView(
       state: ref.watch(_provider),
+      onCart: () => context.go(AppRoutes.cart),
       onIntent: (intent) =>
           unawaited(ref.read(_provider.notifier).dispatch(intent)),
     );

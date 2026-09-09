@@ -141,6 +141,24 @@ void main() {
     expect(find.text('PROFILE'), findsOneWidget);
   });
 
+  testWidgets('personal information has a private authenticated route', (
+    tester,
+  ) async {
+    final router = createAppRouter(
+      authNotifier: _FakeAuthNotifier(authenticated: true),
+      config: const AppRouterConfig(
+        initialLocation: '/profile/personal-information',
+      ),
+      pages: const _TestPages(),
+    );
+    addTearDown(router.dispose);
+
+    await pumpTestRouter(tester, router: router);
+    await tester.pumpAndSettle();
+
+    expect(find.text('PERSONAL INFORMATION'), findsOneWidget);
+  });
+
   testWidgets('address route keeps the requested selection context', (
     tester,
   ) async {
@@ -214,6 +232,9 @@ class _TestPages extends AppRouterPages {
 
   @override
   Widget profile() => _page('PROFILE');
+
+  @override
+  Widget personalInformation() => _page('PERSONAL INFORMATION');
 
   @override
   Widget addressList({

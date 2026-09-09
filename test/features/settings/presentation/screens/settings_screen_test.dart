@@ -7,6 +7,19 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../../support/app_harness.dart';
 
 void main() {
+  testWidgets('settings uses a compact header and flat full-width groups', (
+    tester,
+  ) async {
+    await pumpTestApp(
+      tester,
+      child: const SettingsScreen(),
+      overrides: [themeStorageProvider.overrideWithValue(_FakeThemeStorage())],
+    );
+    expect(find.byType(FlexibleSpaceBar), findsNothing);
+    expect(find.byType(AppBar), findsOneWidget);
+    expect(tester.getTopLeft(find.byType(ListTile).first).dx, 0);
+  });
+
   testWidgets('dark-mode switch persists through the injected theme port', (
     tester,
   ) async {

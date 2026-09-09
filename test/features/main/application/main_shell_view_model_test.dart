@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('maps 3-tab intents inside the shell ViewModel', () {
+  test('maps four web mobile destinations and rejects invalid indices', () {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
@@ -15,13 +15,22 @@ void main() {
     container
         .read(mainShellViewModelProvider.notifier)
         .dispatch(const MainTabSelected(1));
-    expect(container.read(mainShellViewModelProvider).tab, MainTab.search);
+    expect(container.read(mainShellViewModelProvider).tab.name, 'orders');
     expect(container.read(mainShellViewModelProvider).index, 1);
 
     container
         .read(mainShellViewModelProvider.notifier)
         .dispatch(const MainTabSelected(2));
-    expect(container.read(mainShellViewModelProvider).tab, MainTab.account);
+    expect(container.read(mainShellViewModelProvider).tab.name, 'cart');
     expect(container.read(mainShellViewModelProvider).index, 2);
+    container
+        .read(mainShellViewModelProvider.notifier)
+        .dispatch(const MainTabSelected(3));
+    expect(container.read(mainShellViewModelProvider).tab, MainTab.account);
+    expect(container.read(mainShellViewModelProvider).index, 3);
+    container
+        .read(mainShellViewModelProvider.notifier)
+        .dispatch(const MainTabSelected(42));
+    expect(container.read(mainShellViewModelProvider).tab, MainTab.home);
   });
 }

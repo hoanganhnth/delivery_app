@@ -3,6 +3,7 @@ library;
 
 // Screens
 export 'presentation/screens/profile_screen.dart';
+export 'presentation/screens/profile_personal_information_screen.dart';
 
 // Add other exports as the feature grows:
 // export 'domain/entities/profile_entity.dart';

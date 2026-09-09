@@ -28,7 +28,7 @@ class GetUserProfileUseCase implements UseCase<UserEntity, GetUserProfileParams>
 
     // First try to get cached profile
     final cachedResult = await repository.getCachedUserProfile();
-    
+
     // If cached profile exists, return it
     if (cachedResult.isRight()) {
       final cachedUser = cachedResult.fold((l) => null, (r) => r);
@@ -37,7 +37,7 @@ class GetUserProfileUseCase implements UseCase<UserEntity, GetUserProfileParams>
         return right(cachedUser);
       }
     }
-    
+
     // Otherwise, fetch from remote
     return await _fetchFromRemote();
   }

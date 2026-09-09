@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:delivery_app/core/design_system/components/app_button.dart';
-import 'package:delivery_app/core/design_system/components/app_fields.dart';
-import 'package:delivery_app/core/design_system/components/app_navigation.dart';
-import 'package:delivery_app/core/design_system/foundations/app_spacing.dart';
 import 'package:delivery_app/generated/l10n.dart';
 
 import '../../application/password_recovery/password_recovery_state.dart';
+import '../widgets/auth_components.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({
@@ -53,113 +50,94 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
     final strings = S.of(context);
+    final scheme = Theme.of(context).colorScheme;
     final state = widget.state;
 
     return Scaffold(
-      appBar: AppTopBar(
-        title: strings.forgotPasswordTitle,
-        onBack: state.isSubmitting ? null : widget.onBack,
-      ),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.page,
-              vertical: AppSpacing.lg,
-            ),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 440),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Center(
-                    child: Container(
-                      padding: const EdgeInsets.all(AppSpacing.md),
-                      decoration: BoxDecoration(
-                        color: scheme.primaryContainer.withValues(alpha: 0.3),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.lock_reset,
-                        size: 56,
-                        color: scheme.primary,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  Text(
-                    strings.forgotPasswordPrompt,
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(
-                    strings.forgotPasswordInstruction,
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: scheme.onSurfaceVariant,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.xl),
-                  AppTextField(
-                    key: const Key('forgot_password_email'),
-                    controller: _emailController,
-                    label: strings.emailAddress,
-                    hintText: strings.emailHint,
-                    prefixIcon: const Icon(Icons.mail_outline),
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.done,
-                    enabled: !state.isSubmitting,
-                    onChanged: widget.onEmailChanged,
-                    onSubmitted: (_) {
-                      if (!state.isSubmitting) widget.onSubmit();
-                    },
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  AppButton(
-                    key: const Key('forgot_password_submit'),
-                    label: strings.forgotPasswordSubmit,
-                    expand: true,
-                    isLoading: state.isSubmitting,
-                    onPressed: state.isSubmitting ? null : widget.onSubmit,
-                  ),
-                  if (state.isSubmitted)
-                    Padding(
-                      padding: const EdgeInsets.only(top: AppSpacing.lg),
-                      child: Container(
-                        padding: const EdgeInsets.all(AppSpacing.md),
-                        decoration: BoxDecoration(
-                          color: scheme.primaryContainer.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: scheme.primary.withValues(alpha: 0.3),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.check_circle, color: scheme.primary),
-                            const SizedBox(width: AppSpacing.sm),
-                            Expanded(
-                              child: Text(
-                                strings.forgotPasswordSent,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: scheme.onSurface,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                ],
+      backgroundColor: scheme.surface,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        toolbarHeight: 50,
+        leadingWidth: 44,
+        leading: widget.onBack == null
+            ? null
+            : IconButton(
+                tooltip: 'Quay lại',
+                onPressed: state.isSubmitting ? null : widget.onBack,
+                padding: EdgeInsets.zero,
+                icon: const Icon(Icons.arrow_back, color: Color(0xFFEE4D2D)),
               ),
-            ),
+        title: Text(
+          shopeeFoodPreviewTitle(strings.forgotPasswordTitle),
+          style: const TextStyle(
+            color: Color(0xFF222222),
+            fontSize: 17,
+            fontWeight: FontWeight.w600,
           ),
+        ),
+        centerTitle: true,
+        backgroundColor: scheme.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        actions: const [SizedBox(width: 44)],
+      ),
+      body: ShopeeFoodPreviewAuthShell(
+        title: strings.forgotPasswordPrompt,
+        subtitle: strings.forgotPasswordInstruction,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ShopeeFoodPreviewAuthField(
+              key: const Key('forgot_password_email'),
+              controller: _emailController,
+              hintText: 'Email',
+              semanticLabel: strings.emailAddress,
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.done,
+              enabled: !state.isSubmitting,
+              onChanged: widget.onEmailChanged,
+              onSubmitted: (_) {
+                if (!state.isSubmitting) widget.onSubmit();
+              },
+            ),
+            const SizedBox(height: 20),
+            ShopeeFoodPreviewAuthButton(
+              key: const Key('forgot_password_submit'),
+              label: shopeeFoodPreviewTitle(strings.forgotPasswordSubmit),
+              isLoading: state.isSubmitting,
+              onPressed: state.isSubmitting ? null : widget.onSubmit,
+            ),
+            if (state.isSubmitted) ...[
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: const BoxDecoration(color: Color(0xFFFFF8F2)),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      Icons.check_circle,
+                      color: Color(0xFFEE4D2D),
+                      size: 18,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        strings.forgotPasswordSent,
+                        style: const TextStyle(
+                          color: Color(0xFF777777),
+                          fontSize: 11,
+                          height: 1.4,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ],
         ),
       ),
     );

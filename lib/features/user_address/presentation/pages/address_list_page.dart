@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:delivery_app/core/routing/routing.dart';
+import 'package:delivery_app/core/design_system/components/preview_bottom_navigation.dart';
 import 'package:delivery_app/core/widgets/amber_widgets.dart';
 import 'package:delivery_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
@@ -87,6 +88,37 @@ class _AddressListPageState extends ConsumerState<AddressListPage>
     return AddressListView(
       state: ref.watch(addressListViewModelProvider),
       selectionContext: widget.effectiveSelectionContext,
+      previewMode: true,
+      // Address management can be opened before the local cart store has
+      // been initialized. Keep this route independent from cart I/O.
+      cartItemCount: 0,
+      onBack: () {
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go(AppRoutes.main);
+        }
+      },
+      onCart: () => context.go(AppRoutes.cart),
+      bottomNavigationBar:
+          widget.effectiveSelectionContext == AddressListContext.management
+          ? PreviewBottomNavigation(
+              currentIndex: 3,
+              cartItemCount: 0,
+              onTap: (index) {
+                switch (index) {
+                  case 0:
+                    context.go(AppRoutes.main);
+                  case 1:
+                    context.go(AppRoutes.orders);
+                  case 2:
+                    context.go(AppRoutes.cart);
+                  case 3:
+                    context.go(AppRoutes.profile);
+                }
+              },
+            )
+          : null,
       onIntent: (intent) => unawaited(
         ref.read(addressListViewModelProvider.notifier).dispatch(intent),
       ),

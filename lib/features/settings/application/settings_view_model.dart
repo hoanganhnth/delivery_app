@@ -32,6 +32,8 @@ class SettingsViewModel extends Notifier<SettingsViewState> {
     switch (intent) {
       case SettingsThemeToggled():
         await _toggleTheme();
+      case SettingsDebugPreviewToggled():
+        state = state.copyWith(debugEnabled: !state.debugEnabled);
       case SettingsAboutRequested():
         _emit(const SettingsShowAbout());
       case SettingsSupportRequested():

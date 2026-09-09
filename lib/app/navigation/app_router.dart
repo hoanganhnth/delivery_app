@@ -63,14 +63,17 @@ class AppRouterPages {
   Widget notifications() => const NotificationScreen();
   Widget home() => const HomePage();
   Widget profile() => const ProfileScreen();
-  Widget settings() => const SettingsScreen();
+  Widget personalInformation() =>
+      const ProfilePersonalInformationScreen(previewMode: true);
+  Widget settings() => const SettingsScreen(previewMode: true);
   Widget entitlements() => const EntitlementStatusPage();
   Widget vouchers() => const VoucherWalletPage();
   Widget support() => const SupportPage();
   Widget debugTools() => const DebugToolsScreen();
   Widget orders() => const OrdersScreen();
   Widget refundHistory() => const RefundStatusHistoryScreen();
-  Widget orderDetail(int orderId) => OrderDetailScreen(orderId: orderId);
+  Widget orderDetail(int orderId) =>
+      OrderDetailScreen(orderId: orderId, previewMode: true);
   Widget restaurants() => const CatalogAllRestaurantsPage();
   Widget restaurantDetail(int restaurantId) =>
       CatalogRestaurantDetailPage(restaurantId: restaurantId);
@@ -180,6 +183,11 @@ GoRouter createAppRouter({
         path: AppRoutes.profile,
         name: 'profile',
         builder: (context, state) => pages.profile(),
+      ),
+      GoRoute(
+        path: AppRoutes.personalInformation,
+        name: 'personal-information',
+        builder: (context, state) => pages.personalInformation(),
       ),
       GoRoute(
         path: AppRoutes.settings,

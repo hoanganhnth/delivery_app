@@ -7,6 +7,25 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../../support/app_harness.dart';
 
 void main() {
+  testWidgets('phone login has a compact header and visible primary action', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await pumpTestApp(
+      tester,
+      child: LoginView(state: const LoginViewState(), onIntent: (_) {}),
+    );
+    expect(find.byType(AppBar), findsOneWidget);
+    expect(
+      tester.getBottomRight(find.byKey(const Key('login_button'))).dy,
+      lessThan(844),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('shows a password recovery entry point', (tester) async {
     await pumpTestApp(
       tester,

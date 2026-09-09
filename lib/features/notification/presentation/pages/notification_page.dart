@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/services/push/customer_push_wake_coordinator.dart';
+import 'package:delivery_app/core/routing/routing.dart';
 
 import '../../application/notification_effect.dart';
 import '../../application/notification_intent.dart';
@@ -59,6 +60,14 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
 
     return NotificationView(
       state: ref.watch(notificationViewModelProvider),
+      onBack: () {
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go(AppRoutes.main);
+        }
+      },
+      onCart: () => context.pushCart(),
       onIntent: (intent) =>
           ref.read(notificationViewModelProvider.notifier).dispatch(intent),
     );

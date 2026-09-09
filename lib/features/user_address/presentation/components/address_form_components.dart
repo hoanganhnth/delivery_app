@@ -20,8 +20,13 @@ class AddressLocationRequestCard extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final strings = S.of(context);
     return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(3),
+        side: BorderSide(color: PreviewUi.divider(context)),
+      ),
       margin: EdgeInsets.zero,
-      color: scheme.primaryContainer,
+      color: scheme.surface,
       child: InkWell(
         onTap: isLoading ? null : onPressed,
         borderRadius: AppRadii.card,
@@ -285,7 +290,9 @@ class _AddressTextField extends StatelessWidget {
       hintText: hint,
       prefixIcon: Icon(icon),
       errorText: error,
-      border: const OutlineInputBorder(borderRadius: AppRadii.control),
+      filled: true,
+      fillColor: Theme.of(context).colorScheme.surface,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(3)),
     ),
   );
 }

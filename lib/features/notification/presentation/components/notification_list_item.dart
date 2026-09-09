@@ -31,27 +31,23 @@ class NotificationListItem extends StatelessWidget {
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        margin: EdgeInsets.zero,
         decoration: BoxDecoration(
           color: scheme.error,
-          borderRadius: AppRadii.control,
+          borderRadius: BorderRadius.zero,
         ),
         child: Icon(Icons.delete_outline, color: scheme.onError),
       ),
       confirmDismiss: (_) => onDismissed(),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        margin: EdgeInsets.zero,
         decoration: BoxDecoration(
           color: surfaceColor,
-          borderRadius: AppRadii.control,
-          border: Border.all(
-            color: item.isRead
-                ? scheme.outlineVariant
-                : toneColor.withValues(alpha: 0.3),
-          ),
+          borderRadius: BorderRadius.zero,
+          border: Border(bottom: BorderSide(color: scheme.outlineVariant)),
         ),
         child: InkWell(
-          borderRadius: AppRadii.control,
+          borderRadius: BorderRadius.zero,
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(14),
@@ -63,7 +59,7 @@ class NotificationListItem extends StatelessWidget {
                   height: 44,
                   decoration: BoxDecoration(
                     color: toneColor.withValues(alpha: 0.1),
-                    borderRadius: AppRadii.control,
+                    borderRadius: BorderRadius.zero,
                   ),
                   child: Icon(_icon(item.tone), color: toneColor, size: 22),
                 ),

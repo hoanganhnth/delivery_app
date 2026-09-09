@@ -4,15 +4,42 @@ import 'package:delivery_app/generated/l10n.dart';
 
 import '../../application/profile_intent.dart';
 import '../../application/profile_view_state.dart';
+import '../components/profile_preview_components.dart';
 
 class ProfileView extends StatelessWidget {
-  const ProfileView({super.key, required this.state, required this.onIntent});
+  const ProfileView({
+    super.key,
+    required this.state,
+    required this.onIntent,
+    this.previewMode = false,
+    this.bottomNavigationBar,
+    this.onBack,
+    this.onCart,
+    this.cartItemCount = 0,
+  });
 
   final ProfileViewState state;
   final ValueChanged<ProfileIntent> onIntent;
+  final bool previewMode;
+  final Widget? bottomNavigationBar;
+  final VoidCallback? onBack;
+  final VoidCallback? onCart;
+  final int cartItemCount;
 
   @override
   Widget build(BuildContext context) {
+    if (previewMode) {
+      return Scaffold(
+        backgroundColor: PreviewUi.canvas(context),
+        appBar: ProfilePreviewHeader(
+          itemCount: cartItemCount,
+          onBack: onBack,
+          onCart: onCart ?? () {},
+        ),
+        body: ProfilePreviewBody(state: state, onIntent: onIntent),
+        bottomNavigationBar: bottomNavigationBar,
+      );
+    }
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final strings = S.of(context);
@@ -28,62 +55,42 @@ class ProfileView extends StatelessWidget {
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
-            SliverAppBar(
-              expandedHeight: 140,
-              pinned: true,
-              elevation: 0,
-              scrolledUnderElevation: 0,
-              surfaceTintColor: Colors.transparent,
-              backgroundColor: scheme.primary,
-              foregroundColor: scheme.onPrimary,
-              flexibleSpace: FlexibleSpaceBar(
-                background: DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [scheme.primary, scheme.primaryContainer],
-                    ),
-                  ),
-                  child: SafeArea(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundColor: scheme.onPrimary.withValues(
-                            alpha: 0.18,
-                          ),
-                          child: Text(
-                            data.initial ?? '?',
-                            style: TextStyle(
-                              color: scheme.onPrimary,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
+            SliverToBoxAdapter(
+              child: Container(
+                color: scheme.primary,
+                padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
+                child: SafeArea(
+                  bottom: false,
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 28,
+                        backgroundColor: scheme.onPrimary.withValues(
+                          alpha: .18,
                         ),
-                        const SizedBox(height: 6),
-                        Text(
-                          displayName,
+                        child: Text(
+                          data.initial ?? '?',
                           style: TextStyle(
                             color: scheme.onPrimary,
-                            fontSize: 18,
+                            fontSize: 21,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
-                        if (data.email?.isNotEmpty == true) ...[
-                          const SizedBox(height: 2),
-                          Text(
-                            data.email!,
-                            style: TextStyle(
-                              color: scheme.onPrimary.withValues(alpha: 0.82),
-                              fontSize: 12,
-                            ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Text(
+                          displayName,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: scheme.onPrimary,
+                            fontSize: 19,
+                            fontWeight: FontWeight.w800,
                           ),
-                        ],
-                      ],
-                    ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -92,12 +99,19 @@ class ProfileView extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
               sliver: SliverList.list(
                 children: [
-                  AppSectionHeading(title: strings.profileTitle),
-                  const SizedBox(height: AppSpacing.xs),
                   AppSurfaceCard(
                     padding: EdgeInsets.zero,
                     child: Column(
                       children: [
+                        _ProfileAction(
+                          icon: Icons.person_outline_rounded,
+                          title: strings.profileEditProfile,
+                          subtitle: strings.profileEditProfileDesc,
+                          onTap: () => onIntent(
+                            const ProfilePersonalInformationRequested(),
+                          ),
+                        ),
+                        const Divider(height: 1),
                         _ProfileAction(
                           icon: Icons.receipt_long_outlined,
                           title: strings.orderHistory,
@@ -207,7 +221,10 @@ class _ProfileAction extends StatelessWidget {
           child: Icon(icon, color: scheme.primary, size: 20),
         ),
       ),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+      title: Text(
+        title,
+        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+      ),
       subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
       trailing: const Icon(Icons.chevron_right, size: 20),
       onTap: onTap,

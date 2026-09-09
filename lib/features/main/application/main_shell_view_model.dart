@@ -41,16 +41,18 @@ class MainShellViewModel extends Notifier<MainShellViewState> {
   int _indexFor(MainTab tab) {
     return switch (tab) {
       MainTab.home => 0,
-      MainTab.search => 1,
-      MainTab.account => 2,
+      MainTab.orders => 1,
+      MainTab.cart => 2,
+      MainTab.account => 3,
     };
   }
 
   MainTab _fromIndex(int index) {
     return switch (index) {
       0 => MainTab.home,
-      1 => MainTab.search,
-      2 => MainTab.account,
+      1 => MainTab.orders,
+      2 => MainTab.cart,
+      3 => MainTab.account,
       _ => MainTab.home,
     };
   }

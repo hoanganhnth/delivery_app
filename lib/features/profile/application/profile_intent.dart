@@ -6,6 +6,10 @@ final class ProfileOrdersRequested extends ProfileIntent {
   const ProfileOrdersRequested();
 }
 
+final class ProfilePersonalInformationRequested extends ProfileIntent {
+  const ProfilePersonalInformationRequested();
+}
+
 final class ProfileAddressesRequested extends ProfileIntent {
   const ProfileAddressesRequested();
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:delivery_app/core/design_system/design_system.dart';
 import 'package:delivery_app/generated/l10n.dart';
 
 import '../../application/notification_intent.dart';
@@ -14,10 +15,14 @@ class NotificationView extends StatelessWidget {
     super.key,
     required this.state,
     required this.onIntent,
+    this.onBack,
+    this.onCart,
   });
 
   final NotificationViewState state;
   final Future<bool> Function(NotificationIntent intent) onIntent;
+  final VoidCallback? onBack;
+  final VoidCallback? onCart;
 
   @override
   Widget build(BuildContext context) {
@@ -26,40 +31,44 @@ class NotificationView extends StatelessWidget {
     final strings = S.of(context);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flexible(
-              child: Text(
-                strings.notificationTitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w800,
+      backgroundColor: PreviewUi.canvas(context),
+      appBar: PreviewPageHeader(
+        title: strings.notificationTitle,
+        onBack: onBack,
+        onCart: onCart,
+        actions: [
+          if (state.unreadCount > 0)
+            Padding(
+              padding: const EdgeInsets.only(right: 2),
+              child: Center(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: PreviewUi.accent,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 5,
+                      vertical: 2,
+                    ),
+                    child: Text(
+                      '${state.unreadCount}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
-            if (state.unreadCount > 0) ...[
-              const SizedBox(width: 8),
-              _UnreadBadge(count: state.unreadCount),
-            ],
-          ],
-        ),
-        actions: [
           if (state.canMarkAllRead)
-            TextButton.icon(
+            IconButton(
               onPressed: () =>
                   onIntent(const NotificationMarkAllReadRequested()),
               icon: Icon(Icons.done_all, size: 18, color: scheme.primary),
-              label: Text(
-                strings.notificationMarkAllRead,
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: scheme.primary,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              tooltip: strings.notificationMarkAllRead,
             ),
         ],
       ),
@@ -69,7 +78,9 @@ class NotificationView extends StatelessWidget {
 
   Widget _body(BuildContext context, S strings) {
     if (state.isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(
+        child: CircularProgressIndicator(color: PreviewUi.accent),
+      );
     }
     if (state.hasLoadError) {
       return _NotificationLoadError(
@@ -85,7 +96,8 @@ class NotificationView extends StatelessWidget {
         await onIntent(const NotificationRefreshRequested());
       },
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: EdgeInsets.zero,
+        physics: const AlwaysScrollableScrollPhysics(),
         itemCount: state.items.length,
         itemBuilder: (context, index) {
           final item = state.items[index];
@@ -95,31 +107,6 @@ class NotificationView extends StatelessWidget {
             onDismissed: () => onIntent(NotificationDeleteRequested(item.id)),
           );
         },
-      ),
-    );
-  }
-}
-
-class _UnreadBadge extends StatelessWidget {
-  const _UnreadBadge({required this.count});
-
-  final int count;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(
-        color: scheme.error,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        '$count',
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: scheme.onError,
-          fontWeight: FontWeight.w700,
-        ),
       ),
     );
   }
@@ -150,10 +137,17 @@ class _NotificationLoadError extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton.icon(
+            FilledButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh, size: 18),
               label: Text(S.of(context).supportRetry),
+              style: FilledButton.styleFrom(
+                backgroundColor: PreviewUi.accent,
+                foregroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(3)),
+                ),
+              ),
             ),
           ],
         ),

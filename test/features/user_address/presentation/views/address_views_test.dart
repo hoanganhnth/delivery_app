@@ -14,6 +14,53 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../../support/app_harness.dart';
 
 void main() {
+  for (final selectionContext in AddressListContext.values) {
+    testWidgets(
+      'phone address row preserves ${selectionContext.name} context',
+      (tester) async {
+        final intents = <AddressListIntent>[];
+        await pumpTestApp(
+          tester,
+          viewport: const Size(320, 740),
+          child: AddressListView(
+            selectionContext: selectionContext,
+            state: const AddressListViewState(
+              isLoading: false,
+              selectedAddressId: 401,
+              items: [
+                AddressListItemViewData(
+                  id: 401,
+                  label: 'Nhà',
+                  recipientName: 'Khách thử nghiệm',
+                  phoneNumber: '0900000002',
+                  fullAddress: '2 Đường Khách, Quận 1',
+                  isDefault: true,
+                  hasCoordinates: true,
+                ),
+              ],
+            ),
+            onIntent: intents.add,
+          ),
+        );
+        expect(find.byType(FloatingActionButton), findsNothing);
+        await tester.tap(find.text('Khách thử nghiệm'));
+        if (selectionContext == AddressListContext.management) {
+          expect(intents.single, isA<AddressListEditRequested>());
+        } else {
+          expect(
+            (intents.single as AddressListSelectRequested).context,
+            selectionContext,
+          );
+        }
+        await tester.tap(find.byKey(const Key('address_edit_401')));
+        expect(intents.last, isA<AddressListEditRequested>());
+        await tester.tap(find.byKey(const Key('address_list_add_fab')));
+        expect(intents.last, isA<AddressListAddRequested>());
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
   testWidgets('address list renders data and emits typed intents', (
     tester,
   ) async {

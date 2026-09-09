@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:delivery_app/core/design_system/components/app_button.dart';
-import 'package:delivery_app/core/design_system/components/app_fields.dart';
-import 'package:delivery_app/core/design_system/foundations/app_spacing.dart';
 import 'package:delivery_app/generated/l10n.dart';
 
 import '../../application/login/login_intent.dart';
@@ -13,10 +10,16 @@ import '../widgets/auth_components.dart';
 /// Handles soft keyboard clearance, accessible semantics, light/dark themes,
 /// and typed user intents.
 class LoginView extends StatefulWidget {
-  const LoginView({super.key, required this.state, required this.onIntent});
+  const LoginView({
+    super.key,
+    required this.state,
+    required this.onIntent,
+    this.onBack,
+  });
 
   final LoginViewState state;
   final ValueChanged<LoginIntent> onIntent;
+  final VoidCallback? onBack;
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -49,145 +52,184 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
     final strings = S.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final isVietnamese = Localizations.localeOf(context).languageCode == 'vi';
+    final authTitle = isVietnamese
+        ? 'Chào mừng đến với ShopeeFood'
+        : 'Welcome to ShopeeFood';
+    final authSubtitle = isVietnamese
+        ? 'Đăng nhập để khám phá món ngon mỗi ngày'
+        : 'Sign in to discover delicious food every day';
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      body: SafeArea(
-        top: false,
-        child: SingleChildScrollView(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 480),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const AuthHeader(),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.page,
-                      AppSpacing.lg,
-                      AppSpacing.page,
-                      AppSpacing.xxl,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          strings.welcomeBack,
-                          style: theme.textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.xxs),
-                        Text(
-                          strings.loginSubtitle,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: scheme.onSurfaceVariant,
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.lg),
-                        AppTextField(
-                          key: const Key('email_field'),
-                          controller: _emailController,
-                          label: strings.emailAddress,
-                          hintText: strings.emailHint,
-                          prefixIcon: const Icon(Icons.mail_outline),
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                          enabled: !widget.state.isSubmitting,
-                          errorText: _emailError(strings, widget.state.emailError),
-                          onChanged: (value) =>
-                              widget.onIntent(LoginEmailChanged(value)),
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        AuthPasswordField(
-                          key: const Key('password_field'),
-                          controller: _passwordController,
-                          label: strings.password,
-                          hint: strings.passwordHint,
-                          obscurePassword: widget.state.obscurePassword,
-                          enabled: !widget.state.isSubmitting,
-                          errorText:
-                              _passwordError(strings, widget.state.passwordError),
-                          onChanged: (value) =>
-                              widget.onIntent(LoginPasswordChanged(value)),
-                          textInputAction: TextInputAction.done,
-                          onSubmitted: (_) {
-                            if (!widget.state.isSubmitting) {
-                              widget.onIntent(const LoginSubmitted());
-                            }
-                          },
-                          onToggleVisibility: () => widget.onIntent(
-                            const LoginPasswordVisibilityToggled(),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            key: const Key('forgot_password_button'),
-                            onPressed: widget.state.isSubmitting
-                                ? null
-                                : () => widget.onIntent(
-                                      const LoginForgotPasswordRequested(),
-                                    ),
-                            child: Text(strings.forgotPassword),
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.sm),
-                        AppButton(
-                          key: const Key('login_button'),
-                          label: strings.signIn,
-                          expand: true,
-                          isLoading: widget.state.isSubmitting,
-                          onPressed: widget.state.isSubmitting
-                              ? null
-                              : () => widget.onIntent(const LoginSubmitted()),
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        AppButton(
-                          variant: AppButtonVariant.secondary,
-                          label: strings.signInWithGoogle,
-                          icon: Icons.g_mobiledata,
-                          expand: true,
-                          onPressed: widget.state.isSubmitting
-                              ? null
-                              : () => widget.onIntent(const LoginGoogleRequested()),
-                        ),
-                        const SizedBox(height: AppSpacing.lg),
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            Text(
-                              strings.dontHaveAccount,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: scheme.onSurfaceVariant,
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: widget.state.isSubmitting
-                                  ? null
-                                  : () => widget.onIntent(
-                                        const LoginRegisterRequested(),
-                                      ),
-                              child: Text(
-                                strings.register,
-                                style: const TextStyle(fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+      backgroundColor: scheme.surface,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        toolbarHeight: 50,
+        leadingWidth: 44,
+        leading: widget.onBack == null
+            ? null
+            : IconButton(
+                tooltip: 'Quay lại',
+                onPressed: widget.onBack,
+                padding: EdgeInsets.zero,
+                icon: const Icon(Icons.arrow_back, color: Color(0xFFEE4D2D)),
+              ),
+        title: Text(
+          shopeeFoodPreviewTitle(strings.signIn),
+          style: const TextStyle(
+            color: Color(0xFF222222),
+            fontSize: 17,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: scheme.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        actions: const [SizedBox(width: 44)],
+      ),
+      body: ShopeeFoodPreviewAuthShell(
+        title: authTitle,
+        subtitle: authSubtitle,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ShopeeFoodPreviewAuthField(
+              key: const Key('email_field'),
+              controller: _emailController,
+              hintText: 'Email',
+              semanticLabel: strings.emailAddress,
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
+              enabled: !widget.state.isSubmitting,
+              errorText: _emailError(strings, widget.state.emailError),
+              onChanged: (value) => widget.onIntent(LoginEmailChanged(value)),
+            ),
+            const SizedBox(height: 12),
+            ShopeeFoodPreviewAuthField(
+              key: const Key('password_field'),
+              controller: _passwordController,
+              hintText: 'Mật khẩu',
+              semanticLabel: strings.password,
+              obscureText: widget.state.obscurePassword,
+              enabled: !widget.state.isSubmitting,
+              errorText: _passwordError(strings, widget.state.passwordError),
+              textInputAction: TextInputAction.done,
+              suffixIcon: IconButton(
+                tooltip: widget.state.obscurePassword
+                    ? strings.showPassword
+                    : strings.hidePassword,
+                onPressed: widget.state.isSubmitting
+                    ? null
+                    : () => widget.onIntent(
+                        const LoginPasswordVisibilityToggled(),
+                      ),
+                icon: Icon(
+                  widget.state.obscurePassword
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined,
+                  size: 20,
+                  color: const Color(0xFF777777),
+                ),
+              ),
+              onChanged: (value) =>
+                  widget.onIntent(LoginPasswordChanged(value)),
+              onSubmitted: (_) {
+                if (!widget.state.isSubmitting) {
+                  widget.onIntent(const LoginSubmitted());
+                }
+              },
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                key: const Key('forgot_password_button'),
+                onPressed: widget.state.isSubmitting
+                    ? null
+                    : () =>
+                          widget.onIntent(const LoginForgotPasswordRequested()),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: Text(
+                  strings.forgotPassword,
+                  style: const TextStyle(
+                    color: Color(0xFF888888),
+                    fontSize: 11,
                   ),
-                ],
+                ),
               ),
             ),
-          ),
+            const SizedBox(height: 12),
+            ShopeeFoodPreviewAuthButton(
+              key: const Key('login_button'),
+              label: shopeeFoodPreviewTitle(strings.signIn),
+              isLoading: widget.state.isSubmitting,
+              onPressed: widget.state.isSubmitting
+                  ? null
+                  : () => widget.onIntent(const LoginSubmitted()),
+            ),
+            const SizedBox(height: 12),
+            TextButton(
+              onPressed: widget.state.isSubmitting
+                  ? null
+                  : () => widget.onIntent(const LoginGoogleRequested()),
+              style: TextButton.styleFrom(
+                foregroundColor: const Color(0xFFEE4D2D),
+                minimumSize: const Size.fromHeight(40),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(
+                strings.signInWithGoogle,
+                style: const TextStyle(fontSize: 12),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              isVietnamese
+                  ? 'Tài khoản chỉ được mô phỏng, không lưu thông tin đăng nhập.'
+                  : 'This account is simulated; no login information is stored.',
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Color(0xFF999999), fontSize: 11),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Text(
+                  strings.dontHaveAccount,
+                  style: const TextStyle(
+                    color: Color(0xFF888888),
+                    fontSize: 12,
+                  ),
+                ),
+                TextButton(
+                  onPressed: widget.state.isSubmitting
+                      ? null
+                      : () => widget.onIntent(const LoginRegisterRequested()),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: Text(
+                    strings.register,
+                    style: const TextStyle(
+                      color: Color(0xFFEE4D2D),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

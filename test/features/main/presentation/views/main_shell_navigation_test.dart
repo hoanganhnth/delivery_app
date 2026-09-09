@@ -13,7 +13,7 @@ import '../../../../support/app_harness.dart';
 
 void main() {
   group('Customer Navigation Shell — Task 3', () {
-    testWidgets('switches between all 3 tabs and preserves tab state', (
+    testWidgets('switches between all four tabs and preserves tab state', (
       tester,
     ) async {
       var selectedIndex = 0;
@@ -26,14 +26,16 @@ void main() {
               state: MainShellViewState(
                 tab: switch (selectedIndex) {
                   0 => MainTab.home,
-                  1 => MainTab.search,
+                  1 => MainTab.orders,
+                  2 => MainTab.cart,
                   _ => MainTab.account,
                 },
                 index: selectedIndex,
               ),
               pages: const [
                 _TabContent(title: 'HOME_PAGE', inputKey: 'input_home'),
-                _TabContent(title: 'SEARCH_PAGE', inputKey: 'input_search'),
+                _TabContent(title: 'ORDERS_PAGE', inputKey: 'input_orders'),
+                _TabContent(title: 'CART_PAGE', inputKey: 'input_cart'),
                 _TabContent(title: 'ACCOUNT_PAGE', inputKey: 'input_account'),
               ],
               onIntent: (intent) {
@@ -49,7 +51,8 @@ void main() {
       // 1. Initial tab is Home
       expect(find.text('HOME_PAGE'), findsOneWidget);
       expect(find.byKey(const Key('bottom_nav_home')), findsOneWidget);
-      expect(find.byKey(const Key('bottom_nav_search')), findsOneWidget);
+      expect(find.byKey(const Key('bottom_nav_orders')), findsOneWidget);
+      expect(find.byKey(const Key('bottom_nav_cart')), findsOneWidget);
       expect(find.byKey(const Key('bottom_nav_account')), findsOneWidget);
 
       // Enter text into Home tab input
@@ -59,27 +62,32 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // 2. Switch to Search tab
-      await tester.tap(find.byKey(const Key('bottom_nav_search')));
+      // Switch to orders and retain its local state.
+      await tester.tap(find.byKey(const Key('bottom_nav_orders')));
       await tester.pumpAndSettle();
       expect(selectedIndex, 1);
-      expect(find.text('SEARCH_PAGE'), findsOneWidget);
+      expect(find.text('ORDERS_PAGE'), findsOneWidget);
 
-      // Enter text into Search tab input
+      // Enter text into orders tab input.
       await tester.enterText(
-        find.byKey(const Key('input_search')),
+        find.byKey(const Key('input_orders')),
         'Query pizza',
       );
       await tester.pumpAndSettle();
 
-      // 3. Switch to Account tab
-      await tester.tap(find.byKey(const Key('bottom_nav_account')));
+      await tester.tap(find.byKey(const Key('bottom_nav_cart')));
       await tester.pumpAndSettle();
       expect(selectedIndex, 2);
+      expect(find.text('CART_PAGE'), findsOneWidget);
+
+      // Switch to Account tab.
+      await tester.tap(find.byKey(const Key('bottom_nav_account')));
+      await tester.pumpAndSettle();
+      expect(selectedIndex, 3);
       expect(find.text('ACCOUNT_PAGE'), findsOneWidget);
 
-      // 4. Switch back to Search tab — verify state is preserved!
-      await tester.tap(find.byKey(const Key('bottom_nav_search')));
+      // Switch back to orders — verify state is preserved.
+      await tester.tap(find.byKey(const Key('bottom_nav_orders')));
       await tester.pumpAndSettle();
       expect(selectedIndex, 1);
       expect(find.text('Query pizza'), findsOneWidget);
@@ -91,53 +99,54 @@ void main() {
       expect(find.text('Saved in Home'), findsOneWidget);
     });
 
-    testWidgets('AppBottomNavBar displays badge count and handles touch targets', (
-      tester,
-    ) async {
-      var tappedIndex = -1;
+    testWidgets(
+      'AppBottomNavBar displays badge count and handles touch targets',
+      (tester) async {
+        var tappedIndex = -1;
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            bottomNavigationBar: AppBottomNavBar(
-              currentIndex: 0,
-              onTap: (i) => tappedIndex = i,
-              items: const [
-                AppNavItem(
-                  key: Key('item_home'),
-                  icon: Icons.home_outlined,
-                  label: 'Home',
-                ),
-                AppNavItem(
-                  key: Key('item_cart'),
-                  icon: Icons.shopping_bag_outlined,
-                  label: 'Cart',
-                  badgeCount: 3,
-                ),
-                AppNavItem(
-                  key: Key('item_overflow'),
-                  icon: Icons.notifications_outlined,
-                  label: 'Alerts',
-                  badgeCount: 120,
-                ),
-              ],
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              bottomNavigationBar: AppBottomNavBar(
+                currentIndex: 0,
+                onTap: (i) => tappedIndex = i,
+                items: const [
+                  AppNavItem(
+                    key: Key('item_home'),
+                    icon: Icons.home_outlined,
+                    label: 'Home',
+                  ),
+                  AppNavItem(
+                    key: Key('item_cart'),
+                    icon: Icons.shopping_bag_outlined,
+                    label: 'Cart',
+                    badgeCount: 3,
+                  ),
+                  AppNavItem(
+                    key: Key('item_overflow'),
+                    icon: Icons.notifications_outlined,
+                    label: 'Alerts',
+                    badgeCount: 120,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      expect(find.text('3'), findsOneWidget);
-      expect(find.text('99+'), findsOneWidget);
+        expect(find.text('3'), findsOneWidget);
+        expect(find.text('99+'), findsOneWidget);
 
-      final homeFinder = find.byKey(const Key('item_home'));
-      expect(homeFinder, findsOneWidget);
-      final homeSize = tester.getSize(homeFinder);
-      // Accessible touch target is at least 48x48
-      expect(homeSize.height, greaterThanOrEqualTo(48.0));
+        final homeFinder = find.byKey(const Key('item_home'));
+        expect(homeFinder, findsOneWidget);
+        final homeSize = tester.getSize(homeFinder);
+        // Accessible touch target is at least 48x48
+        expect(homeSize.height, greaterThanOrEqualTo(48.0));
 
-      await tester.tap(find.byKey(const Key('item_cart')));
-      expect(tappedIndex, 1);
-    });
+        await tester.tap(find.byKey(const Key('item_cart')));
+        expect(tappedIndex, 1);
+      },
+    );
 
     testWidgets('sticky CTA sits above bottom navigation bar without occlusion', (
       tester,
@@ -166,10 +175,12 @@ void main() {
         ),
       );
 
-      final ctaBottom =
-          tester.getBottomLeft(find.byKey(const Key('sticky_cta'))).dy;
-      final navTop =
-          tester.getTopLeft(find.byKey(const Key('test_bottom_nav'))).dy;
+      final ctaBottom = tester
+          .getBottomLeft(find.byKey(const Key('sticky_cta')))
+          .dy;
+      final navTop = tester
+          .getTopLeft(find.byKey(const Key('test_bottom_nav')))
+          .dy;
 
       // The bottom of the sticky CTA is above or equal to the top of bottom nav
       expect(ctaBottom, lessThanOrEqualTo(navTop + 0.1));
@@ -254,10 +265,7 @@ class _TabContentState extends State<_TabContent> {
     return Column(
       children: [
         Text(widget.title),
-        TextField(
-          key: Key(widget.inputKey),
-          controller: _controller,
-        ),
+        TextField(key: Key(widget.inputKey), controller: _controller),
       ],
     );
   }
@@ -306,5 +314,6 @@ class _NavTestPages extends AppRouterPages {
   Widget orderDetail(int orderId) => _page('ORDER $orderId');
 
   @override
-  Widget restaurantDetail(int restaurantId) => _page('RESTAURANT $restaurantId');
+  Widget restaurantDetail(int restaurantId) =>
+      _page('RESTAURANT $restaurantId');
 }

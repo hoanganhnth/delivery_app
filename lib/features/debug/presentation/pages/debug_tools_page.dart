@@ -3,6 +3,7 @@ import 'package:delivery_app/core/debug/debug_log_store.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:delivery_app/core/design_system/design_system.dart';
 
 final debugLogStoreProvider = Provider<DebugLogStore>((ref) {
   return DebugLogStore.instance;
@@ -47,7 +48,11 @@ class _DebugToolsPageState extends ConsumerState<DebugToolsPage> {
     final logs = ref.read(debugLogStoreProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Debug tools')),
+      backgroundColor: PreviewUi.canvas(context),
+      appBar: PreviewPageHeader(
+        title: 'Debug tools',
+        onBack: () => Navigator.of(context).maybePop(),
+      ),
       body: ListenableBuilder(
         listenable: endpoint,
         builder: (context, _) {
@@ -56,7 +61,7 @@ class _DebugToolsPageState extends ConsumerState<DebugToolsPage> {
             builder: (context, _) => CustomScrollView(
               slivers: [
                 SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  padding: const EdgeInsets.only(top: 8, bottom: 8),
                   sliver: SliverToBoxAdapter(
                     child: _BackendCard(
                       endpoint: endpoint,
@@ -96,7 +101,7 @@ class _DebugToolsPageState extends ConsumerState<DebugToolsPage> {
                   )
                 else
                   SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
+                    padding: const EdgeInsets.only(bottom: 32),
                     sliver: SliverList.builder(
                       itemCount: logs.entries.length,
                       itemBuilder: (context, index) {
@@ -177,7 +182,8 @@ class _BackendCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return Card(
+    return Material(
+      color: PreviewUi.surface(context),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -202,7 +208,16 @@ class _BackendCard extends StatelessWidget {
               decoration: const InputDecoration(
                 labelText: 'Gateway origin',
                 hintText: 'http://10.0.2.2:8079',
-                border: OutlineInputBorder(),
+                filled: true,
+                fillColor: Color(0xFFF5F5F5),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(3)),
+                  borderSide: BorderSide(color: Color(0xFFDDDDDD)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(3)),
+                  borderSide: BorderSide(color: Color(0xFFDDDDDD)),
+                ),
               ),
             ),
             const SizedBox(height: 8),
@@ -219,11 +234,25 @@ class _BackendCard extends StatelessWidget {
                           )
                         : const Icon(Icons.save_outlined),
                     label: const Text('Lưu URL'),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: PreviewUi.accent,
+                      foregroundColor: Colors.white,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(3)),
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
                 OutlinedButton(
                   onPressed: isSaving ? null : onReset,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: PreviewUi.accent,
+                    side: const BorderSide(color: PreviewUi.accent),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                    ),
+                  ),
                   child: const Text('Mặc định'),
                 ),
               ],
@@ -264,7 +293,8 @@ class _LogCard extends StatelessWidget {
       DebugLogLevel.error => colorScheme.error,
     };
 
-    return Card(
+    return Material(
+      color: PreviewUi.surface(context),
       child: ExpansionTile(
         leading: Icon(
           entry.kind == DebugLogKind.api
@@ -277,6 +307,8 @@ class _LogCard extends StatelessWidget {
           '$time${entry.phase == null ? '' : ' · ${entry.phase!.name}'}$status$duration',
         ),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        shape: const RoundedRectangleBorder(),
+        collapsedShape: const RoundedRectangleBorder(),
         children: [
           if (entry.kind == DebugLogKind.app)
             Align(

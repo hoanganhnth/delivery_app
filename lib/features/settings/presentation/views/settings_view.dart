@@ -5,61 +5,66 @@ import 'package:delivery_app/core/design_system/design_system.dart';
 
 import '../../application/settings_intent.dart';
 import '../../application/settings_state.dart';
+import '../components/settings_preview_components.dart';
 
 /// Pure settings rendering. It receives immutable state and emits typed
 /// intents; Riverpod and one-shot effects stay in the page adapter.
 class SettingsView extends StatelessWidget {
-  const SettingsView({super.key, required this.state, required this.onIntent});
+  const SettingsView({
+    super.key,
+    required this.state,
+    required this.onIntent,
+    this.previewMode = false,
+    this.bottomNavigationBar,
+    this.onBack,
+    this.onCart,
+  });
 
   final SettingsViewState state;
   final ValueChanged<SettingsIntent> onIntent;
+  final bool previewMode;
+  final Widget? bottomNavigationBar;
+  final VoidCallback? onBack;
+  final VoidCallback? onCart;
 
   @override
   Widget build(BuildContext context) {
+    if (previewMode) {
+      return Scaffold(
+        backgroundColor: PreviewUi.canvas(context),
+        appBar: SettingsPreviewHeader(
+          onBack: onBack ?? () => Navigator.of(context).maybePop(),
+          onCart: onCart ?? () => Navigator.of(context).maybePop(),
+        ),
+        body: SettingsPreviewBody(state: state, onIntent: onIntent),
+        bottomNavigationBar: bottomNavigationBar,
+      );
+    }
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final strings = S.of(context);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: Text(strings.settingsTitle),
+        centerTitle: true,
+        toolbarHeight: 52,
+        backgroundColor: scheme.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+      ),
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            expandedHeight: 120,
-            pinned: true,
-            elevation: 0,
-            scrolledUnderElevation: 0,
-            surfaceTintColor: Colors.transparent,
-            backgroundColor: scheme.primary,
-            foregroundColor: scheme.onPrimary,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                strings.settingsTitle,
-                style: TextStyle(
-                  color: scheme.onPrimary,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              centerTitle: true,
-              background: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [scheme.primary, scheme.primaryContainer],
-                  ),
-                ),
-              ),
-            ),
-          ),
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 24, 16, 40),
+            padding: const EdgeInsets.only(top: 8, bottom: 40),
             sliver: SliverList.list(
               children: [
-                AppSectionHeading(title: strings.settingsAppearance),
+                _SectionHeading(title: strings.settingsAppearance),
                 const SizedBox(height: AppSpacing.xs),
-                AppSurfaceCard(
-                  padding: EdgeInsets.zero,
+                Material(
+                  color: scheme.surface,
                   child: ListTile(
                     minVerticalPadding: 12,
                     leading: _IconTile(
@@ -80,10 +85,10 @@ class SettingsView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                AppSectionHeading(title: strings.settingsAbout),
+                _SectionHeading(title: strings.settingsAbout),
                 const SizedBox(height: AppSpacing.xs),
-                AppSurfaceCard(
-                  padding: EdgeInsets.zero,
+                Material(
+                  color: scheme.surface,
                   child: Column(
                     children: [
                       ListTile(
@@ -111,7 +116,9 @@ class SettingsView extends StatelessWidget {
                           'Hỗ trợ & Trợ giúp',
                           style: TextStyle(fontWeight: FontWeight.w700),
                         ),
-                        subtitle: const Text('Hotline CSKH, câu hỏi thường gặp & liên hệ'),
+                        subtitle: const Text(
+                          'Hotline CSKH, câu hỏi thường gặp & liên hệ',
+                        ),
                         trailing: const Icon(Icons.chevron_right),
                         onTap: () => onIntent(const SettingsSupportRequested()),
                       ),
@@ -120,10 +127,10 @@ class SettingsView extends StatelessWidget {
                 ),
                 if (kDebugMode) ...[
                   const SizedBox(height: AppSpacing.lg),
-                  const AppSectionHeading(title: 'Developer'),
+                  const _SectionHeading(title: 'Developer'),
                   const SizedBox(height: AppSpacing.xs),
-                  AppSurfaceCard(
-                    padding: EdgeInsets.zero,
+                  Material(
+                    color: scheme.surface,
                     child: ListTile(
                       minVerticalPadding: 12,
                       leading: _IconTile(
@@ -160,12 +167,17 @@ class _IconTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: SizedBox(width: 44, height: 44, child: Icon(icon, color: color)),
-    );
+    return SizedBox(width: 24, height: 44, child: Icon(icon, color: color));
   }
+}
+
+class _SectionHeading extends StatelessWidget {
+  const _SectionHeading({required this.title});
+  final String title;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    child: Text(title, style: Theme.of(context).textTheme.titleSmall),
+  );
 }

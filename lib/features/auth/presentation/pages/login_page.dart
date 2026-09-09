@@ -32,6 +32,13 @@ class LoginPage extends ConsumerWidget {
     final state = ref.watch(loginViewModelProvider);
     return LoginView(
       state: state,
+      onBack: () {
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.goToMain();
+        }
+      },
       onIntent: (intent) =>
           unawaited(ref.read(loginViewModelProvider.notifier).dispatch(intent)),
     );

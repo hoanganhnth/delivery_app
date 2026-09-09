@@ -1,5 +1,6 @@
 import 'package:delivery_app/core/design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:delivery_app/generated/l10n.dart';
 
 import '../../application/address_list_state.dart';
 
@@ -31,10 +32,13 @@ class AddressListCard extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final active = isSelectMode && isSelected;
     return Card(
+      elevation: 0,
+      color: active ? scheme.primary.withValues(alpha: 0.05) : scheme.surface,
+      surfaceTintColor: Colors.transparent,
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
-        borderRadius: AppRadii.card,
+        borderRadius: BorderRadius.zero,
         side: BorderSide(
           color: active ? scheme.primary : scheme.outlineVariant,
           width: active ? 2 : 1,
@@ -44,21 +48,25 @@ class AddressListCard extends StatelessWidget {
         onTap: isBusy
             ? null
             : isSelectMode
-                ? onSelect
-                : onEdit,
+            ? onSelect
+            : onEdit,
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.card),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _AddressIcon(label: address.label, isDefault: address.isDefault),
               const SizedBox(width: AppSpacing.sm),
               Expanded(
-                child: _AddressDetails(
-                  address: address,
-                  isSelected: active,
-                ),
+                child: _AddressDetails(address: address, isSelected: active),
               ),
+              if (!isBusy)
+                IconButton(
+                  key: ValueKey('address_edit_${address.id}'),
+                  onPressed: onEdit,
+                  tooltip: S.of(context).addressEditTitle,
+                  icon: const Icon(Icons.edit_outlined, size: 20),
+                ),
               if (isBusy)
                 const Padding(
                   padding: EdgeInsets.all(AppSpacing.xs),
@@ -134,14 +142,11 @@ class _AddressIcon extends StatelessWidget {
         : Icons.location_on_outlined;
     final scheme = Theme.of(context).colorScheme;
     return DecoratedBox(
-      decoration: BoxDecoration(
-        color: scheme.primaryContainer,
-        borderRadius: AppRadii.control,
-      ),
+      decoration: BoxDecoration(color: Colors.transparent),
       child: SizedBox(
-        width: 44,
-        height: 44,
-        child: Icon(icon, color: scheme.onPrimaryContainer),
+        width: 24,
+        height: 24,
+        child: Icon(icon, color: scheme.onSurfaceVariant, size: 20),
       ),
     );
   }
@@ -160,6 +165,25 @@ class _AddressDetails extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          address.recipientName,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        if (address.phoneNumber.trim().isNotEmpty)
+          Text(
+            address.phoneNumber,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: scheme.onSurfaceVariant,
+            ),
+          ),
+        const SizedBox(height: 6),
+        Text(
+          address.fullAddress,
+          style: theme.textTheme.bodySmall?.copyWith(height: 1.6),
+        ),
+        const SizedBox(height: 8),
         Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           spacing: AppSpacing.xs,
@@ -167,8 +191,8 @@ class _AddressDetails extends StatelessWidget {
           children: [
             Text(
               address.label,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w800,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: scheme.onSurfaceVariant,
               ),
             ),
             if (address.isDefault)
@@ -186,23 +210,6 @@ class _AddressDetails extends StatelessWidget {
                 foreground: scheme.onSecondaryContainer,
               ),
           ],
-        ),
-        if (address.recipientName.trim().isNotEmpty) ...[
-          const SizedBox(height: AppSpacing.xxs),
-          Text(
-            address.phoneNumber.trim().isEmpty
-                ? address.recipientName
-                : '${address.recipientName} · ${address.phoneNumber}',
-            style: theme.textTheme.bodyMedium,
-          ),
-        ],
-        const SizedBox(height: AppSpacing.xs),
-        Text(
-          address.fullAddress,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: scheme.onSurfaceVariant,
-            height: 1.35,
-          ),
         ),
         if (address.hasCoordinates) ...[
           const SizedBox(height: AppSpacing.xs),
@@ -242,7 +249,8 @@ class _Pill extends StatelessWidget {
   Widget build(BuildContext context) => DecoratedBox(
     decoration: BoxDecoration(
       color: background,
-      borderRadius: AppRadii.pillRadius,
+      borderRadius: BorderRadius.circular(2),
+      border: Border.all(color: foreground),
     ),
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

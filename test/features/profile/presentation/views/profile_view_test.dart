@@ -25,6 +25,9 @@ void main() {
     );
 
     expect(find.text('Customer Test'), findsOneWidget);
+    expect(find.text('customer@test.dev'), findsNothing);
+    await tester.tap(find.text('Personal information'));
+    expect(intents.last, isA<ProfilePersonalInformationRequested>());
     await tester.tap(find.text('Ví Voucher & Khuyến mãi'));
     expect(intents.last, isA<ProfileVouchersRequested>());
 

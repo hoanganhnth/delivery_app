@@ -6,16 +6,22 @@ import 'profile_effect.dart';
 /// Render-ready profile data. It deliberately contains no repository or
 /// Riverpod type so [ProfileView] can remain a pure UI component.
 final class ProfileViewData extends Equatable {
-  const ProfileViewData({this.displayName, this.email, this.initial});
+  const ProfileViewData({
+    this.displayName,
+    this.email,
+    this.phone,
+    this.initial,
+  });
 
   final String? displayName;
   final String? email;
+  final String? phone;
   final String? initial;
 
   bool get hasUser => email != null && email!.isNotEmpty;
 
   @override
-  List<Object?> get props => [displayName, email, initial];
+  List<Object?> get props => [displayName, email, phone, initial];
 }
 
 final class ProfileViewState extends Equatable {

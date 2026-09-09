@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:delivery_app/core/design_system/components/app_button.dart';
-import 'package:delivery_app/core/design_system/components/app_fields.dart';
-import 'package:delivery_app/core/design_system/components/app_navigation.dart';
-import 'package:delivery_app/core/design_system/foundations/app_spacing.dart';
 import 'package:delivery_app/generated/l10n.dart';
 
 import '../../application/register/register_intent.dart';
@@ -57,143 +53,191 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
     final strings = S.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final isVietnamese = Localizations.localeOf(context).languageCode == 'vi';
+    final authTitle = isVietnamese
+        ? 'Chào mừng đến với ShopeeFood'
+        : 'Welcome to ShopeeFood';
+    final authSubtitle = isVietnamese
+        ? 'Đăng nhập để khám phá món ngon mỗi ngày'
+        : 'Sign in to discover delicious food every day';
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppTopBar(
-        title: strings.register,
-        onBack: widget.state.isSubmitting
-            ? null
-            : () => widget.onIntent(const RegisterBackRequested()),
+      backgroundColor: scheme.surface,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        toolbarHeight: 50,
+        leadingWidth: 44,
+        leading: IconButton(
+          tooltip: 'Quay lại',
+          onPressed: widget.state.isSubmitting
+              ? null
+              : () => widget.onIntent(const RegisterBackRequested()),
+          padding: EdgeInsets.zero,
+          icon: const Icon(Icons.arrow_back, color: Color(0xFFEE4D2D)),
+        ),
+        title: Text(
+          shopeeFoodPreviewTitle(strings.register),
+          style: const TextStyle(
+            color: Color(0xFF222222),
+            fontSize: 17,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: scheme.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        actions: const [SizedBox(width: 44)],
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.page,
-            vertical: AppSpacing.lg,
-          ),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 480),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    strings.registerSubtitle,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: scheme.onSurfaceVariant,
-                      height: 1.5,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  AppTextField(
-                    key: const Key('register_name_field'),
-                    controller: _nameController,
-                    label: strings.fullName,
-                    hintText: strings.fullNameHint,
-                    prefixIcon: const Icon(Icons.person_outline),
-                    textInputAction: TextInputAction.next,
-                    enabled: !widget.state.isSubmitting,
-                    onChanged: (value) =>
-                        widget.onIntent(RegisterNameChanged(value)),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  AppTextField(
-                    key: const Key('register_email_field'),
-                    controller: _emailController,
-                    label: strings.emailAddress,
-                    hintText: strings.emailHint,
-                    prefixIcon: const Icon(Icons.mail_outline),
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    enabled: !widget.state.isSubmitting,
-                    errorText: _emailError(strings, widget.state.emailError),
-                    onChanged: (value) =>
-                        widget.onIntent(RegisterEmailChanged(value)),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  AuthPasswordField(
-                    key: const Key('register_password_field'),
-                    controller: _passwordController,
-                    label: strings.password,
-                    hint: strings.passwordHint,
-                    obscurePassword: widget.state.obscurePassword,
-                    enabled: !widget.state.isSubmitting,
-                    errorText:
-                        _passwordError(strings, widget.state.passwordError),
-                    onChanged: (value) =>
-                        widget.onIntent(RegisterPasswordChanged(value)),
-                    textInputAction: TextInputAction.next,
-                    onToggleVisibility: () => widget.onIntent(
-                      const RegisterPasswordVisibilityToggled(),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  AuthPasswordField(
-                    key: const Key('register_confirmation_field'),
-                    controller: _confirmationController,
-                    label: strings.confirmPassword,
-                    hint: strings.passwordHint,
-                    obscurePassword: widget.state.obscureConfirmation,
-                    enabled: !widget.state.isSubmitting,
-                    errorText: _confirmationError(
-                      strings,
-                      widget.state.confirmationError,
-                    ),
-                    onChanged: (value) =>
-                        widget.onIntent(RegisterConfirmationChanged(value)),
-                    textInputAction: TextInputAction.done,
-                    onSubmitted: (_) {
-                      if (!widget.state.isSubmitting) {
-                        widget.onIntent(const RegisterSubmitted());
-                      }
-                    },
-                    onToggleVisibility: () => widget.onIntent(
-                      const RegisterConfirmationVisibilityToggled(),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.xl),
-                  AppButton(
-                    key: const Key('register_button'),
-                    label: strings.createAccountBtn,
-                    icon: Icons.arrow_forward,
-                    expand: true,
-                    isLoading: widget.state.isSubmitting,
-                    onPressed: widget.state.isSubmitting
-                        ? null
-                        : () => widget.onIntent(const RegisterSubmitted()),
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      Text(
-                        strings.alreadyHaveAccount,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: scheme.onSurfaceVariant,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: widget.state.isSubmitting
-                            ? null
-                            : () => widget.onIntent(
-                                  const RegisterBackRequested(),
-                                ),
-                        child: Text(
-                          strings.backToLogin,
-                          style: const TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+      body: ShopeeFoodPreviewAuthShell(
+        title: authTitle,
+        subtitle: authSubtitle,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ShopeeFoodPreviewAuthField(
+              key: const Key('register_name_field'),
+              controller: _nameController,
+              hintText: isVietnamese ? 'Họ và tên' : 'Full name',
+              semanticLabel: strings.fullName,
+              textInputAction: TextInputAction.next,
+              enabled: !widget.state.isSubmitting,
+              onChanged: (value) => widget.onIntent(RegisterNameChanged(value)),
             ),
-          ),
+            const SizedBox(height: 12),
+            ShopeeFoodPreviewAuthField(
+              key: const Key('register_email_field'),
+              controller: _emailController,
+              hintText: 'Email',
+              semanticLabel: strings.emailAddress,
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
+              enabled: !widget.state.isSubmitting,
+              errorText: _emailError(strings, widget.state.emailError),
+              onChanged: (value) =>
+                  widget.onIntent(RegisterEmailChanged(value)),
+            ),
+            const SizedBox(height: 12),
+            ShopeeFoodPreviewAuthField(
+              key: const Key('register_password_field'),
+              controller: _passwordController,
+              hintText: isVietnamese ? 'Mật khẩu' : 'Password',
+              semanticLabel: strings.password,
+              obscureText: widget.state.obscurePassword,
+              enabled: !widget.state.isSubmitting,
+              errorText: _passwordError(strings, widget.state.passwordError),
+              textInputAction: TextInputAction.next,
+              suffixIcon: IconButton(
+                tooltip: widget.state.obscurePassword
+                    ? strings.showPassword
+                    : strings.hidePassword,
+                onPressed: widget.state.isSubmitting
+                    ? null
+                    : () => widget.onIntent(
+                        const RegisterPasswordVisibilityToggled(),
+                      ),
+                icon: Icon(
+                  widget.state.obscurePassword
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined,
+                  size: 20,
+                  color: const Color(0xFF777777),
+                ),
+              ),
+              onChanged: (value) =>
+                  widget.onIntent(RegisterPasswordChanged(value)),
+            ),
+            const SizedBox(height: 12),
+            ShopeeFoodPreviewAuthField(
+              key: const Key('register_confirmation_field'),
+              controller: _confirmationController,
+              hintText: isVietnamese ? 'Xác nhận mật khẩu' : 'Confirm password',
+              semanticLabel: strings.confirmPassword,
+              obscureText: widget.state.obscureConfirmation,
+              enabled: !widget.state.isSubmitting,
+              errorText: _confirmationError(
+                strings,
+                widget.state.confirmationError,
+              ),
+              textInputAction: TextInputAction.done,
+              suffixIcon: IconButton(
+                tooltip: widget.state.obscureConfirmation
+                    ? strings.showPassword
+                    : strings.hidePassword,
+                onPressed: widget.state.isSubmitting
+                    ? null
+                    : () => widget.onIntent(
+                        const RegisterConfirmationVisibilityToggled(),
+                      ),
+                icon: Icon(
+                  widget.state.obscureConfirmation
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined,
+                  size: 20,
+                  color: const Color(0xFF777777),
+                ),
+              ),
+              onChanged: (value) =>
+                  widget.onIntent(RegisterConfirmationChanged(value)),
+              onSubmitted: (_) {
+                if (!widget.state.isSubmitting) {
+                  widget.onIntent(const RegisterSubmitted());
+                }
+              },
+            ),
+            const SizedBox(height: 20),
+            ShopeeFoodPreviewAuthButton(
+              key: const Key('register_button'),
+              label: shopeeFoodPreviewTitle(strings.register),
+              isLoading: widget.state.isSubmitting,
+              onPressed: widget.state.isSubmitting
+                  ? null
+                  : () => widget.onIntent(const RegisterSubmitted()),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              isVietnamese
+                  ? 'Tài khoản chỉ được mô phỏng, không lưu thông tin đăng nhập.'
+                  : 'This account is simulated; no login information is stored.',
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Color(0xFF999999), fontSize: 11),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Text(
+                  strings.alreadyHaveAccount,
+                  style: const TextStyle(
+                    color: Color(0xFF888888),
+                    fontSize: 12,
+                  ),
+                ),
+                TextButton(
+                  onPressed: widget.state.isSubmitting
+                      ? null
+                      : () => widget.onIntent(const RegisterBackRequested()),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: Text(
+                    strings.backToLogin,
+                    style: const TextStyle(
+                      color: Color(0xFFEE4D2D),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

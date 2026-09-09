@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/generated/l10n.dart';
+import 'package:delivery_app/core/design_system/components/preview_bottom_navigation.dart';
 
 import '../../application/settings_effect.dart';
 import '../../application/settings_intent.dart';
@@ -13,7 +14,9 @@ import '../views/settings_view.dart';
 
 /// Riverpod/platform adapter for the pure SettingsView.
 class SettingsPage extends ConsumerWidget {
-  const SettingsPage({super.key});
+  const SettingsPage({super.key, this.previewMode = false});
+
+  final bool previewMode;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,6 +35,34 @@ class SettingsPage extends ConsumerWidget {
     return SettingsView(
       state: state,
       onIntent: (intent) => dispatchSettingsIntent(ref, intent),
+      previewMode: previewMode,
+      onBack: previewMode
+          ? () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go(AppRoutes.profile);
+              }
+            }
+          : null,
+      onCart: previewMode ? () => context.go(AppRoutes.cart) : null,
+      bottomNavigationBar: previewMode
+          ? PreviewBottomNavigation(
+              currentIndex: 3,
+              onTap: (index) {
+                switch (index) {
+                  case 0:
+                    context.go(AppRoutes.main);
+                  case 1:
+                    context.go(AppRoutes.orders);
+                  case 2:
+                    context.go(AppRoutes.cart);
+                  case 3:
+                    context.go(AppRoutes.profile);
+                }
+              },
+            )
+          : null,
     );
   }
 

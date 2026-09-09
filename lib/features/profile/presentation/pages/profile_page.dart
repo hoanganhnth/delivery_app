@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/routing/routing.dart';
+import 'package:delivery_app/core/design_system/components/preview_bottom_navigation.dart';
 import 'package:delivery_app/core/widgets/feedback/toast/toast_extensions.dart';
 
 import '../../application/profile_effect.dart';
@@ -12,7 +13,9 @@ import '../../application/profile_view_model.dart';
 import '../views/profile_view.dart';
 
 class ProfilePage extends ConsumerWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, this.isTab = false});
+
+  final bool isTab;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,6 +36,34 @@ class ProfilePage extends ConsumerWidget {
       onIntent: (intent) => unawaited(
         ref.read(profileViewModelProvider.notifier).dispatch(intent),
       ),
+      previewMode: true,
+      onBack: isTab
+          ? null
+          : () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go(AppRoutes.main);
+              }
+            },
+      onCart: () => context.go(AppRoutes.cart),
+      bottomNavigationBar: isTab
+          ? null
+          : PreviewBottomNavigation(
+              currentIndex: 3,
+              onTap: (index) {
+                switch (index) {
+                  case 0:
+                    context.go(AppRoutes.main);
+                  case 1:
+                    context.go(AppRoutes.orders);
+                  case 2:
+                    context.go(AppRoutes.cart);
+                  case 3:
+                    context.go(AppRoutes.profile);
+                }
+              },
+            ),
     );
   }
 
@@ -45,6 +76,8 @@ class ProfilePage extends ConsumerWidget {
     switch (effect) {
       case ProfileNavigateOrders():
         if (context.mounted) context.pushOrders();
+      case ProfileNavigatePersonalInformation():
+        if (context.mounted) context.pushNamed('personal-information');
       case ProfileNavigateAddresses():
         if (context.mounted) context.pushAddressList();
       case ProfileNavigateSettings():

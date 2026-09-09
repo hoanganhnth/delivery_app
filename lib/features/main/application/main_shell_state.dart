@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum MainTab { home, search, account }
+enum MainTab { home, orders, cart, account }
 
 final class MainShellViewState extends Equatable {
   const MainShellViewState({
@@ -13,11 +13,7 @@ final class MainShellViewState extends Equatable {
   final int index;
   final int cartItemCount;
 
-  MainShellViewState copyWith({
-    MainTab? tab,
-    int? index,
-    int? cartItemCount,
-  }) {
+  MainShellViewState copyWith({MainTab? tab, int? index, int? cartItemCount}) {
     return MainShellViewState(
       tab: tab ?? this.tab,
       index: index ?? this.index,

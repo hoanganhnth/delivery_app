@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:delivery_app/core/design_system/components/app_button.dart';
-import 'package:delivery_app/core/design_system/components/app_fields.dart';
-import 'package:delivery_app/core/design_system/components/app_navigation.dart';
-import 'package:delivery_app/core/design_system/foundations/app_spacing.dart';
 import 'package:delivery_app/generated/l10n.dart';
 
 import '../../application/password_recovery/password_reset_state.dart';
+import '../widgets/auth_components.dart';
 
 class ResetPasswordView extends StatefulWidget {
   const ResetPasswordView({
@@ -58,143 +55,134 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
     final strings = S.of(context);
+    final scheme = Theme.of(context).colorScheme;
     final state = widget.state;
 
     return Scaffold(
-      appBar: AppTopBar(
-        title: strings.resetPasswordTitle,
-        onBack: state.isSubmitting ? null : widget.onBack,
+      backgroundColor: scheme.surface,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        toolbarHeight: 50,
+        leadingWidth: 44,
+        leading: widget.onBack == null
+            ? null
+            : IconButton(
+                tooltip: 'Quay lại',
+                onPressed: state.isSubmitting ? null : widget.onBack,
+                padding: EdgeInsets.zero,
+                icon: const Icon(Icons.arrow_back, color: Color(0xFFEE4D2D)),
+              ),
+        title: Text(
+          shopeeFoodPreviewTitle(strings.resetPasswordTitle),
+          style: const TextStyle(
+            color: Color(0xFF222222),
+            fontSize: 17,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: scheme.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        actions: const [SizedBox(width: 44)],
       ),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.page,
-              vertical: AppSpacing.lg,
+      body: ShopeeFoodPreviewAuthShell(
+        title: strings.resetPasswordPrompt,
+        subtitle: strings.resetPasswordTitle,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ShopeeFoodPreviewAuthField(
+              key: const Key('reset_password_new_password'),
+              controller: _newPasswordController,
+              hintText: strings.resetPasswordNewPassword,
+              semanticLabel: strings.resetPasswordNewPassword,
+              obscureText: true,
+              enabled: !state.isSubmitting,
+              textInputAction: TextInputAction.next,
+              onChanged: widget.onNewPasswordChanged,
             ),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 440),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Center(
-                    child: Container(
-                      padding: const EdgeInsets.all(AppSpacing.md),
-                      decoration: BoxDecoration(
-                        color: scheme.primaryContainer.withValues(alpha: 0.3),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.lock_reset,
-                        size: 56,
-                        color: scheme.primary,
-                      ),
+            const SizedBox(height: 12),
+            ShopeeFoodPreviewAuthField(
+              key: const Key('reset_password_confirm_password'),
+              controller: _confirmPasswordController,
+              hintText: strings.resetPasswordConfirm,
+              semanticLabel: strings.resetPasswordConfirm,
+              obscureText: true,
+              enabled: !state.isSubmitting,
+              textInputAction: TextInputAction.done,
+              onChanged: widget.onConfirmPasswordChanged,
+              onSubmitted: (_) {
+                if (!state.isSubmitting) widget.onSubmit();
+              },
+            ),
+            if (state.errorMessage != null) ...[
+              const SizedBox(height: 12),
+              Container(
+                key: const Key('reset_password_error'),
+                padding: const EdgeInsets.all(12),
+                decoration: const BoxDecoration(color: Color(0xFFFFF2F0)),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      color: Color(0xFFB3261E),
+                      size: 18,
                     ),
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  Text(
-                    strings.resetPasswordPrompt,
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.xl),
-                  AppTextField(
-                    key: const Key('reset_password_new_password'),
-                    controller: _newPasswordController,
-                    obscureText: true,
-                    label: strings.resetPasswordNewPassword,
-                    hintText: strings.passwordHint,
-                    prefixIcon: const Icon(Icons.lock_outline),
-                    enabled: !state.isSubmitting,
-                    textInputAction: TextInputAction.next,
-                    onChanged: widget.onNewPasswordChanged,
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  AppTextField(
-                    key: const Key('reset_password_confirm_password'),
-                    controller: _confirmPasswordController,
-                    obscureText: true,
-                    label: strings.resetPasswordConfirm,
-                    hintText: strings.authConfirmPasswordHint,
-                    prefixIcon: const Icon(Icons.lock_outline),
-                    enabled: !state.isSubmitting,
-                    textInputAction: TextInputAction.done,
-                    onChanged: widget.onConfirmPasswordChanged,
-                    onSubmitted: (_) {
-                      if (!state.isSubmitting) widget.onSubmit();
-                    },
-                  ),
-                  if (state.errorMessage != null) ...[
-                    const SizedBox(height: AppSpacing.sm),
-                    Container(
-                      padding: const EdgeInsets.all(AppSpacing.sm),
-                      decoration: BoxDecoration(
-                        color: scheme.errorContainer.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.error_outline, color: scheme.error, size: 20),
-                          const SizedBox(width: AppSpacing.xs),
-                          Expanded(
-                            child: Text(
-                              state.errorMessage!,
-                              key: const Key('reset_password_error'),
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: scheme.error,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ],
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        state.errorMessage!,
+                        style: const TextStyle(
+                          color: Color(0xFFB3261E),
+                          fontSize: 11,
+                          height: 1.4,
+                        ),
                       ),
                     ),
                   ],
-                  const SizedBox(height: AppSpacing.lg),
-                  AppButton(
-                    key: const Key('reset_password_submit'),
-                    label: strings.resetPasswordSubmit,
-                    expand: true,
-                    isLoading: state.isSubmitting,
-                    onPressed: state.isSubmitting ? null : widget.onSubmit,
-                  ),
-                  if (state.isSubmitted)
-                    Padding(
-                      padding: const EdgeInsets.only(top: AppSpacing.lg),
-                      child: Container(
-                        padding: const EdgeInsets.all(AppSpacing.md),
-                        decoration: BoxDecoration(
-                          color: scheme.primaryContainer.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: scheme.primary.withValues(alpha: 0.3),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.check_circle, color: scheme.primary),
-                            const SizedBox(width: AppSpacing.sm),
-                            Expanded(
-                              child: Text(
-                                strings.resetPasswordSuccess,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: scheme.onSurface,
-                                ),
-                              ),
-                            ),
-                          ],
+                ),
+              ),
+            ],
+            const SizedBox(height: 20),
+            ShopeeFoodPreviewAuthButton(
+              key: const Key('reset_password_submit'),
+              label: shopeeFoodPreviewTitle(strings.resetPasswordSubmit),
+              isLoading: state.isSubmitting,
+              onPressed: state.isSubmitting ? null : widget.onSubmit,
+            ),
+            if (state.isSubmitted) ...[
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: const BoxDecoration(color: Color(0xFFFFF8F2)),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      Icons.check_circle,
+                      color: Color(0xFFEE4D2D),
+                      size: 18,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        strings.resetPasswordSuccess,
+                        style: const TextStyle(
+                          color: Color(0xFF777777),
+                          fontSize: 11,
+                          height: 1.4,
                         ),
                       ),
                     ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ),
+            ],
+          ],
         ),
       ),
     );

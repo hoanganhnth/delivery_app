@@ -6,6 +6,10 @@ final class SettingsThemeToggled extends SettingsIntent {
   const SettingsThemeToggled();
 }
 
+final class SettingsDebugPreviewToggled extends SettingsIntent {
+  const SettingsDebugPreviewToggled();
+}
+
 final class SettingsAboutRequested extends SettingsIntent {
   const SettingsAboutRequested();
 }

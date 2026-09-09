@@ -35,6 +35,8 @@ class ProfileViewModel extends Notifier<ProfileViewState> {
     switch (intent) {
       case ProfileOrdersRequested():
         _emit(const ProfileNavigateOrders());
+      case ProfilePersonalInformationRequested():
+        _emit(const ProfileNavigatePersonalInformation());
       case ProfileAddressesRequested():
         _emit(const ProfileNavigateAddresses());
       case ProfileSettingsRequested():
@@ -90,6 +92,7 @@ class ProfileViewModel extends Notifier<ProfileViewState> {
       data: ProfileViewData(
         displayName: user?.displayName,
         email: user?.email,
+        phone: user?.phone,
         initial: _initial(user),
       ),
       isLoading: profile.isLoading,

@@ -7,19 +7,21 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../../support/app_harness.dart';
 
 void main() {
-  testWidgets('splash view displays the Amber Hearth identity while loading', (
-    tester,
-  ) async {
-    await pumpTestApp(
-      tester,
-      child: SplashView(state: const SplashViewState(), onIntent: (_) {}),
-    );
+  testWidgets(
+    'splash view displays the compact native identity while loading',
+    (tester) async {
+      await pumpTestApp(
+        tester,
+        child: SplashView(state: const SplashViewState(), onIntent: (_) {}),
+      );
 
-    expect(find.byIcon(Icons.local_fire_department_rounded), findsOneWidget);
-    expect(find.text('Delivery'), findsOneWidget);
-    expect(find.text('Fast • Fresh • Delivered'), findsOneWidget);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-  });
+      expect(find.byIcon(Icons.restaurant), findsOneWidget);
+      expect(find.text('Delivery'), findsOneWidget);
+      expect(find.text('URBAN HEARTH'), findsNothing);
+      expect(find.byType(SingleChildScrollView), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    },
+  );
 
   testWidgets('splash view exposes retry as a typed intent', (tester) async {
     final intents = <SplashIntent>[];

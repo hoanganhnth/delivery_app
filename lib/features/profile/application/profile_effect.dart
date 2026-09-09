@@ -11,6 +11,13 @@ final class ProfileNavigateOrders extends ProfileEffect {
   List<Object?> get props => const [];
 }
 
+final class ProfileNavigatePersonalInformation extends ProfileEffect {
+  const ProfileNavigatePersonalInformation();
+
+  @override
+  List<Object?> get props => const [];
+}
+
 final class ProfileNavigateAddresses extends ProfileEffect {
   const ProfileNavigateAddresses();
 

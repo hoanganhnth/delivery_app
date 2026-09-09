@@ -6,6 +6,7 @@ import '../../application/address_list_context.dart';
 import '../../application/address_list_intent.dart';
 import '../../application/address_list_state.dart';
 import '../components/address_list_card.dart';
+import '../components/address_preview_components.dart';
 
 /// Pure list rendering: it knows only presentation state and typed intents.
 class AddressListView extends StatelessWidget {
@@ -15,12 +16,22 @@ class AddressListView extends StatelessWidget {
     required this.onIntent,
     this.selectionContext = AddressListContext.management,
     this.isSelectMode,
+    this.previewMode = false,
+    this.bottomNavigationBar,
+    this.cartItemCount = 0,
+    this.onBack,
+    this.onCart,
   });
 
   final AddressListViewState state;
   final ValueChanged<AddressListIntent> onIntent;
   final AddressListContext selectionContext;
   final bool? isSelectMode;
+  final bool previewMode;
+  final Widget? bottomNavigationBar;
+  final int cartItemCount;
+  final VoidCallback? onBack;
+  final VoidCallback? onCart;
 
   AddressListContext get _effectiveSelectionContext => isSelectMode == null
       ? selectionContext
@@ -31,9 +42,26 @@ class AddressListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final strings = S.of(context);
+    final title = _effectiveSelectionContext == AddressListContext.management
+        ? strings.myAddresses
+        : strings.pilotCheckoutSelectAddress;
+    if (previewMode) {
+      return Scaffold(
+        backgroundColor: PreviewUi.canvas(context),
+        appBar: AddressPreviewHeader(
+          title: title,
+          itemCount: cartItemCount,
+          onBack: onBack ?? () => Navigator.of(context).maybePop(),
+          onCart: onCart ?? () => Navigator.of(context).maybePop(),
+        ),
+        body: _body(context),
+        bottomNavigationBar: bottomNavigationBar,
+      );
+    }
     return Scaffold(
       appBar: AppBar(
-        title: Text(strings.myAddresses),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text(title),
         actions: [
           IconButton(
             key: const Key('address_list_add_action'),
@@ -44,12 +72,6 @@ class AddressListView extends StatelessWidget {
         ],
       ),
       body: _body(context),
-      floatingActionButton: FloatingActionButton.extended(
-        key: const Key('address_list_add_fab'),
-        onPressed: () => onIntent(const AddressListAddRequested()),
-        icon: const Icon(Icons.add),
-        label: Text(strings.addAddress),
-      ),
     );
   }
 
@@ -70,20 +92,53 @@ class AddressListView extends StatelessWidget {
         onAdd: () => onIntent(const AddressListAddRequested()),
       );
     }
-    return RefreshIndicator(
+    final list = RefreshIndicator(
       onRefresh: () async =>
           onIntent(AddressListRefreshRequested(context: selectionContext)),
       child: ListView.separated(
-        padding: const EdgeInsets.all(AppSpacing.page),
-        itemCount: state.items.length,
-        separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.only(bottom: 24),
+        itemCount: state.items.length + 1,
+        separatorBuilder: (_, _) => const SizedBox.shrink(),
         itemBuilder: (context, index) {
+          if (index == state.items.length) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Material(
+                color: Theme.of(context).colorScheme.surface,
+                child: TextButton.icon(
+                  key: const Key('address_list_add_fab'),
+                  style: TextButton.styleFrom(
+                    minimumSize: const Size.fromHeight(56),
+                  ),
+                  onPressed: () => onIntent(const AddressListAddRequested()),
+                  icon: const Icon(Icons.add_circle_outline),
+                  label: Text(S.of(context).addAddress),
+                ),
+              ),
+            );
+          }
           final address = state.items[index];
+          final isSelected =
+              selectionContext != AddressListContext.management &&
+              state.selectedAddressId == address.id;
+          if (previewMode) {
+            return AddressPreviewCard(
+              address: address,
+              isSelected: isSelected,
+              isSelectMode: selectionContext != AddressListContext.management,
+              onSelect: () => onIntent(
+                AddressListSelectRequested(
+                  address.id,
+                  context: selectionContext,
+                ),
+              ),
+              onEdit: () => onIntent(AddressListEditRequested(address.id)),
+            );
+          }
           return AddressListCard(
             address: address,
-            isSelected:
-                selectionContext != AddressListContext.management &&
-                state.selectedAddressId == address.id,
+            isSelected: isSelected,
             isBusy: state.operationInProgressId == address.id,
             isSelectMode: selectionContext != AddressListContext.management,
             onSelect: () => onIntent(
@@ -97,6 +152,7 @@ class AddressListView extends StatelessWidget {
         },
       ),
     );
+    return list;
   }
 }
 
