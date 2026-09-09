@@ -3,6 +3,7 @@ import 'package:delivery_app/features/catalog/application/catalog_restaurant_det
 import 'package:delivery_app/features/catalog/application/catalog_restaurant_detail_state.dart';
 import 'package:delivery_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CatalogRestaurantHero extends StatelessWidget {
   const CatalogRestaurantHero({super.key, required this.restaurant});
@@ -10,60 +11,10 @@ class CatalogRestaurantHero extends StatelessWidget {
   final CatalogRestaurantDetailData restaurant;
 
   @override
-  Widget build(BuildContext context) => Stack(
-    fit: StackFit.expand,
-    children: [
-      ClipRRect(
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
-        child: AppContentImage(
-          imageUrl: restaurant.imageUrl,
-          semanticLabel: S.of(context).pilotRestaurantImage(restaurant.name),
-          borderRadius: BorderRadius.zero,
-        ),
-      ),
-      DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.vertical(
-            bottom: Radius.circular(24),
-          ),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.black.withValues(alpha: 0.35),
-              Colors.transparent,
-              Colors.black.withValues(alpha: 0.72),
-            ],
-          ),
-        ),
-      ),
-      Positioned(
-        left: AppSpacing.page,
-        right: AppSpacing.page,
-        bottom: AppSpacing.md,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              restaurant.name,
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            if (restaurant.description?.trim().isNotEmpty == true) ...[
-              const SizedBox(height: AppSpacing.xxs),
-              Text(
-                restaurant.description!,
-                style: const TextStyle(color: Colors.white70, fontSize: 13),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ],
-        ),
-      ),
-    ],
+  Widget build(BuildContext context) => AppContentImage(
+    imageUrl: restaurant.imageUrl,
+    semanticLabel: S.of(context).pilotRestaurantImage(restaurant.name),
+    borderRadius: BorderRadius.zero,
   );
 }
 
@@ -78,37 +29,54 @@ class CatalogRestaurantInfo extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final openingHours =
         restaurant.openingHour != null && restaurant.closingHour != null
-        ? '${restaurant.openingHour} – ${restaurant.closingHour}'
-        : strings.pilotRestaurantOpeningUnknown;
+            ? '${restaurant.openingHour} – ${restaurant.closingHour}'
+            : strings.pilotRestaurantOpeningUnknown;
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.page,
-        vertical: AppSpacing.sm,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: AppRadii.container,
-          border: Border.all(color: const Color(0xFFEDEFF2), width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          color: scheme.surface,
+          border: Border(bottom: BorderSide(color: scheme.outlineVariant)),
         ),
         padding: const EdgeInsets.all(AppSpacing.card),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              restaurant.name,
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+            ),
+            if (restaurant.description?.trim().isNotEmpty == true) ...[
+              const SizedBox(height: 6),
+              Text(restaurant.description!),
+            ],
+            if (restaurant.rating != null ||
+                restaurant.deliveryTimeMinutes != null) ...[
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 12,
+                children: [
+                  if (restaurant.rating != null)
+                    Text(
+                      '★ ${restaurant.rating!.toStringAsFixed(1)}'
+                      '${restaurant.reviewCount == null ? '' : ' (${restaurant.reviewCount})'}',
+                    ),
+                  if (restaurant.deliveryTimeMinutes != null)
+                    Text('${restaurant.deliveryTimeMinutes} ${strings.min}'),
+                ],
+              ),
+            ],
+            const SizedBox(height: 10),
             _InfoRow(
               icon: Icons.location_on_outlined,
               color: scheme.primary,
               child: Text(
                 restaurant.address,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF2C3E50),
+                  color: scheme.onSurfaceVariant,
                 ),
               ),
             ),
@@ -124,18 +92,19 @@ class CatalogRestaurantInfo extends StatelessWidget {
                   Expanded(
                     child: Text(
                       openingHours,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        color: Color(0xFF2C3E50),
+                        color: scheme.onSurfaceVariant,
                       ),
                     ),
                   ),
                   if (restaurant.isOpen != null)
                     DecoratedBox(
                       decoration: BoxDecoration(
-                        color: restaurant.isOpen!
-                            ? const Color(0xFFE8F8F5)
-                            : const Color(0xFFF0F2F5),
+                        color:
+                            restaurant.isOpen!
+                                ? const Color(0xFFE8F8F5)
+                                : const Color(0xFFF0F2F5),
                         borderRadius: AppRadii.pillRadius,
                       ),
                       child: Padding(
@@ -148,9 +117,10 @@ class CatalogRestaurantInfo extends StatelessWidget {
                               ? strings.pilotRestaurantOpen
                               : strings.pilotRestaurantClosed,
                           style: TextStyle(
-                            color: restaurant.isOpen!
-                                ? const Color(0xFF27AE60)
-                                : const Color(0xFF757F8A),
+                            color:
+                                restaurant.isOpen!
+                                    ? const Color(0xFF27AE60)
+                                    : const Color(0xFF757F8A),
                             fontWeight: FontWeight.w700,
                             fontSize: 12,
                           ),
@@ -194,10 +164,12 @@ class CatalogMenuItemCard extends StatelessWidget {
     super.key,
     required this.item,
     required this.onIntent,
+    this.onOpen,
   });
 
   final CatalogMenuItemViewData item;
   final ValueChanged<CatalogRestaurantDetailIntent> onIntent;
+  final VoidCallback? onOpen;
 
   @override
   Widget build(BuildContext context) {
@@ -210,85 +182,323 @@ class CatalogMenuItemCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.page,
-        vertical: AppSpacing.xs,
+        vertical: 0,
       ),
       child: Opacity(
         opacity: item.isAvailable ? 1 : 0.62,
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: AppRadii.container,
-            border: Border.all(color: const Color(0xFFEDEFF2), width: 1),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.02),
-                blurRadius: 10,
-                offset: const Offset(0, 3),
+            color: Theme.of(context).colorScheme.surface,
+            border: Border(
+              bottom: BorderSide(
+                color: Theme.of(context).colorScheme.outlineVariant,
               ),
-            ],
+            ),
           ),
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(14),
-                child: AppContentImage(
-                  imageUrl: item.imageUrl,
-                  semanticLabel: strings.pilotRestaurantImage(item.name),
-                  width: 88,
-                  height: 88,
-                  borderRadius: BorderRadius.zero,
-                  placeholderIcon: Icons.fastfood_outlined,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: InkWell(
+            onTap: onOpen,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(3),
+                  child: AppContentImage(
+                    imageUrl: item.imageUrl,
+                    semanticLabel: strings.pilotRestaurantImage(item.name),
+                    width: 95,
+                    height: 95,
+                    borderRadius: BorderRadius.zero,
+                    placeholderIcon: Icons.fastfood_outlined,
+                  ),
                 ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.name,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w800,
-                        color: const Color(0xFF1A1D20),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.name,
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      item.description,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: const Color(0xFF757F8A),
+                      const SizedBox(height: 2),
+                      Text(
+                        item.description,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Expanded(child: _MenuPrice(item: item)),
-                        if (statusText != null)
-                          AppBadge(
-                            label: statusText,
-                            tone: AppBadgeTone.warning,
-                          )
-                        else
-                          _QuantityControl(item: item, onIntent: onIntent),
-                      ],
-                    ),
-                  ],
+                      const SizedBox(height: AppSpacing.xs),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 4,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          _MenuPrice(item: item),
+                          if (statusText != null)
+                            AppBadge(
+                              label: statusText,
+                              tone: AppBadgeTone.warning,
+                            )
+                          else
+                            _QuantityControl(item: item, onIntent: onIntent),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+class CatalogMenuItemSheet extends StatefulWidget {
+  const CatalogMenuItemSheet({
+    super.key,
+    required this.item,
+    required this.onClose,
+    required this.onAdd,
+    this.onAddWithDetails,
+  });
+  final CatalogMenuItemViewData item;
+  final VoidCallback onClose;
+  final void Function(int quantity, String? notes) onAdd;
+  final void Function(int quantity, String? notes)? onAddWithDetails;
+
+  @override
+  State<CatalogMenuItemSheet> createState() => _CatalogMenuItemSheetState();
+}
+
+class _CatalogMenuItemSheetState extends State<CatalogMenuItemSheet> {
+  late final TextEditingController _notesController;
+  int _quantity = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _notesController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _notesController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => ConstrainedBox(
+    constraints: BoxConstraints(
+      maxHeight: MediaQuery.sizeOf(context).height * 0.85,
+    ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 4, 4),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  widget.item.name,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+              IconButton(
+                tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+                icon: const Icon(Icons.close),
+                onPressed: widget.onClose,
+              ),
+            ],
+          ),
+        ),
+        const Divider(height: 1),
+        Flexible(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AppContentImage(
+                  imageUrl: widget.item.imageUrl,
+                  semanticLabel: widget.item.name,
+                  height: 230,
+                  borderRadius: BorderRadius.zero,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.item.name,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        _formattedDescription(widget.item),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF888888),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        _sheetMoney(widget.item.displayedPrice),
+                        style: const TextStyle(
+                          color: Color(0xFFEE4D2D),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 22),
+                      const Text('Ghi chú', style: TextStyle(fontSize: 12)),
+                      TextField(
+                        key: const Key('catalog_item_sheet_note'),
+                        controller: _notesController,
+                        maxLength: 500,
+                        maxLines: 1,
+                        style: const TextStyle(fontSize: 12),
+                        decoration: const InputDecoration(
+                          hintText: 'Ít cay, không hành…',
+                          hintStyle: TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFFAAAAAA),
+                          ),
+                          counterText: '',
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(vertical: 10),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                _SheetQuantityControl(
+                  quantity: _quantity,
+                  onDecrement:
+                      _quantity <= 1
+                          ? null
+                          : () => setState(() => _quantity -= 1),
+                  onIncrement: () => setState(() => _quantity += 1),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: AppButton(
+                    key: const Key('catalog_item_sheet_add'),
+                    expand: true,
+                    label:
+                        widget.item.isAvailable
+                            ? 'Thêm · ${_sheetMoney(widget.item.displayedPrice * _quantity)}'
+                            : widget.item.availability ==
+                                CatalogMenuAvailability.soldOut
+                            ? S.of(context).outOfStock
+                            : S.of(context).unavailable,
+                    onPressed:
+                        widget.item.canAdd
+                            ? () {
+                              final notes = _notesController.text.trim();
+                              if (widget.onAddWithDetails != null) {
+                                widget.onAddWithDetails!(
+                                  _quantity,
+                                  notes.isEmpty ? null : notes,
+                                );
+                              } else {
+                                widget.onAdd(
+                                  _quantity,
+                                  notes.isEmpty ? null : notes,
+                                );
+                              }
+                            }
+                            : null,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class _SheetQuantityControl extends StatelessWidget {
+  const _SheetQuantityControl({
+    required this.quantity,
+    required this.onDecrement,
+    required this.onIncrement,
+  });
+
+  final int quantity;
+  final VoidCallback? onDecrement;
+  final VoidCallback onIncrement;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    height: 44,
+    decoration: BoxDecoration(
+      border: Border.all(color: const Color(0xFFDDDDDD)),
+      borderRadius: BorderRadius.circular(3),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          key: const Key('catalog_item_sheet_decrement'),
+          tooltip: 'Giảm số lượng',
+          onPressed: onDecrement,
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints.tightFor(width: 31, height: 42),
+          icon: const Icon(Icons.remove, size: 15, color: Color(0xFFEE4D2D)),
+        ),
+        SizedBox(
+          width: 22,
+          child: Text(
+            '$quantity',
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+          ),
+        ),
+        IconButton(
+          key: const Key('catalog_item_sheet_increment'),
+          tooltip: 'Tăng số lượng',
+          onPressed: onIncrement,
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints.tightFor(width: 31, height: 42),
+          icon: const Icon(Icons.add, size: 15, color: Color(0xFFEE4D2D)),
+        ),
+      ],
+    ),
+  );
+}
+
+String _formattedDescription(CatalogMenuItemViewData item) =>
+    item.description.trim().isEmpty
+        ? 'Chuẩn vị, chế biến khi nhận đơn'
+        : item.description;
+
+String _sheetMoney(num value) =>
+    '${NumberFormat('#,###', 'vi_VN').format(value)}đ';
 
 class _MenuPrice extends StatelessWidget {
   const _MenuPrice({required this.item});
@@ -337,11 +547,11 @@ class _QuantityControl extends StatelessWidget {
             enabled: true,
             label: strings.pilotRestaurantRemoveItem(item.name),
             child: Container(
-              width: 32,
-              height: 32,
-              decoration: const BoxDecoration(
-                color: Color(0xFFF0F2F5),
-                shape: BoxShape.circle,
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: scheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(3),
               ),
               child: IconButton(
                 key: Key('menu_decrement_${item.id}'),
@@ -350,10 +560,12 @@ class _QuantityControl extends StatelessWidget {
                 icon: Icon(
                   item.quantity > 1 ? Icons.remove : Icons.delete_outline,
                   size: 16,
-                  color: const Color(0xFF555B62),
+                  color: scheme.onSurface,
                 ),
-                onPressed: () =>
-                    onIntent(CatalogRestaurantDetailDecrementRequested(item.id!)),
+                onPressed:
+                    () => onIntent(
+                      CatalogRestaurantDetailDecrementRequested(item.id!),
+                    ),
               ),
             ),
           ),
@@ -376,22 +588,23 @@ class _QuantityControl extends StatelessWidget {
           enabled: item.canAdd,
           label: strings.pilotRestaurantAddItem(item.name),
           child: Container(
-            width: 32,
-            height: 32,
+            width: 44,
+            height: 44,
             decoration: BoxDecoration(
               color: scheme.primary,
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(3),
             ),
             child: IconButton(
               key: Key('menu_increment_${item.id}'),
               tooltip: strings.pilotRestaurantAddItem(item.name),
               padding: EdgeInsets.zero,
               icon: const Icon(Icons.add, size: 18, color: Colors.white),
-              onPressed: item.canAdd
-                  ? () => onIntent(
-                      CatalogRestaurantDetailIncrementRequested(item.id!),
-                    )
-                  : null,
+              onPressed:
+                  item.canAdd
+                      ? () => onIntent(
+                        CatalogRestaurantDetailIncrementRequested(item.id!),
+                      )
+                      : null,
             ),
           ),
         ),
@@ -419,13 +632,15 @@ class CatalogRestaurantCartButton extends StatelessWidget {
     final formattedTotal = '${totalAmount.toStringAsFixed(0)} ₫';
     return AppStickyAction(
       child: AppButton(
-        label: isEmpty
-            ? strings.pilotRestaurantEmptyCart
-            : '${strings.pilotRestaurantViewCartLabel(itemCount)} · '
-                  '$formattedTotal',
-        semanticLabel: isEmpty
-            ? strings.pilotRestaurantEmptyCart
-            : '${strings.pilotRestaurantViewCart(itemCount)}, $formattedTotal',
+        label:
+            isEmpty
+                ? strings.pilotRestaurantEmptyCart
+                : '${strings.pilotRestaurantViewCartLabel(itemCount)} · '
+                    '$formattedTotal',
+        semanticLabel:
+            isEmpty
+                ? strings.pilotRestaurantEmptyCart
+                : '${strings.pilotRestaurantViewCart(itemCount)}, $formattedTotal',
         icon: Icons.shopping_bag_outlined,
         onPressed: isEmpty ? null : onPressed,
         expand: true,

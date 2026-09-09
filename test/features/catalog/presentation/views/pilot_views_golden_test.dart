@@ -7,10 +7,24 @@ import 'package:delivery_app/features/catalog/presentation/views/catalog_home_vi
 import 'package:delivery_app/features/catalog/presentation/views/catalog_restaurant_detail_view.dart';
 import 'package:delivery_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  setUpAll(() async {
+    final font = FontLoader('Plus Jakarta Sans');
+    for (final weight in ['Regular', 'Medium', 'SemiBold', 'Bold', 'ExtraBold']) {
+      font.addFont(rootBundle.load(
+        'assets/fonts/plus_jakarta_sans/PlusJakartaSans-$weight.ttf',
+      ));
+    }
+    await font.load();
+    final icons = FontLoader('MaterialIcons')
+      ..addFont(rootBundle.load('fonts/MaterialIcons-Regular.otf'));
+    await icons.load();
+  });
+
   testWidgets('home light Vietnamese at 360px', (tester) async {
     await _pumpGolden(
       tester,

@@ -10,13 +10,13 @@ import 'package:delivery_app/features/flash_sale/domain/entities/flash_sale_item
 import 'catalog_restaurant_detail_effect.dart';
 import 'catalog_restaurant_detail_intent.dart';
 import 'catalog_restaurant_detail_state.dart';
+import 'catalog_preview_fixtures.dart';
 
-final catalogRestaurantDetailViewModelProvider =
-    NotifierProvider.family<
-      CatalogRestaurantDetailViewModel,
-      CatalogRestaurantDetailViewState,
-      num
-    >((restaurantId) => CatalogRestaurantDetailViewModel(restaurantId));
+final catalogRestaurantDetailViewModelProvider = NotifierProvider.family<
+  CatalogRestaurantDetailViewModel,
+  CatalogRestaurantDetailViewState,
+  num
+>((restaurantId) => CatalogRestaurantDetailViewModel(restaurantId));
 
 /// Catalog detail orchestrator. Restaurant data enters through the neutral
 /// browse port; cart and gated flash-sale ports remain separate seams.
@@ -37,26 +37,25 @@ class CatalogRestaurantDetailViewModel
   CatalogRestaurantDetailViewState build() {
     final reader = ref.read(cartReaderPortProvider);
     _cart = reader.current;
-    _flashSales =
-        ref
-            .read(
-              restaurantFlashSaleItemsProvider(_asPositiveInt(_restaurantId)),
-            )
-            .value ??
-        const {};
+    final flashSaleProvider = restaurantFlashSaleItemsProvider(
+      _asPositiveInt(_restaurantId),
+    );
+    if (!_isPreviewRestaurant) {
+      _flashSales = ref.read(flashSaleProvider).value ?? const {};
+      ref.listen<AsyncValue<Map<int, FlashSaleItemEntity>>>(flashSaleProvider, (
+        _,
+        next,
+      ) {
+        _flashSales = next.value ?? const {};
+        _publish();
+      });
+    }
     final cartSubscription = reader.changes.listen((next) {
       if (!ref.mounted) return;
       _cart = next;
       _publish();
     });
     ref.onDispose(cartSubscription.cancel);
-    ref.listen<AsyncValue<Map<int, FlashSaleItemEntity>>>(
-      restaurantFlashSaleItemsProvider(_asPositiveInt(_restaurantId)),
-      (_, next) {
-        _flashSales = next.value ?? const {};
-        _publish();
-      },
-    );
     return _compose();
   }
 
@@ -73,9 +72,13 @@ class CatalogRestaurantDetailViewModel
         if (_loading) return;
         _loading = true;
         state = state.copyWith(isLoading: true, clearError: true);
-        final detail = await ref
-            .read(catalogBrowsePortProvider)
-            .loadDetail(_restaurantId.toInt());
+        if (_isPreviewRestaurant) {
+          _detail = catalogPreviewDetailFor(_restaurantId);
+          _loading = false;
+          _publish();
+          return;
+        }
+        final detail = await _loadDetailFromApi();
         if (!ref.mounted) return;
         _loading = false;
         _detail = detail;
@@ -88,6 +91,17 @@ class CatalogRestaurantDetailViewModel
         await _increment(menuItemId, replaceRestaurant: false);
       case CatalogRestaurantDetailDecrementRequested(:final menuItemId):
         await _decrement(menuItemId);
+      case CatalogRestaurantDetailAddRequested(
+        :final menuItemId,
+        :final quantity,
+        :final notes,
+      ):
+        await _add(
+          menuItemId,
+          quantity: quantity,
+          notes: notes,
+          replaceRestaurant: false,
+        );
       case CatalogRestaurantDetailRestaurantChangeConfirmed(:final menuItemId):
         await _increment(menuItemId, replaceRestaurant: true);
       case CatalogRestaurantDetailEffectConsumed(:final effectId):
@@ -97,13 +111,19 @@ class CatalogRestaurantDetailViewModel
     }
   }
 
-  Future<void> _increment(
+  Future<void> _increment(num menuItemId, {required bool replaceRestaurant}) =>
+      _add(menuItemId, quantity: 1, replaceRestaurant: replaceRestaurant);
+
+  Future<void> _add(
     num menuItemId, {
+    required int quantity,
+    String? notes,
     required bool replaceRestaurant,
   }) async {
     if (_cartCommandRunning) {
       return;
     }
+    if (quantity <= 0) return;
     final menuItem = _menuItemsById[menuItemId];
     final restaurant = _detail?.restaurant;
     if (menuItem == null || restaurant == null || !menuItem.canAddToCart) {
@@ -123,9 +143,12 @@ class CatalogRestaurantDetailViewModel
     try {
       final commands = ref.read(cartCommandsPortProvider);
       if (replaceRestaurant) await commands.clear();
-      final quantity = _quantityFor(menuItemId);
-      if (quantity > 0 && !replaceRestaurant) {
-        await commands.setQuantity(menuItemId.toInt(), quantity + 1);
+      final currentQuantity = _quantityFor(menuItemId);
+      if (currentQuantity > 0 && !replaceRestaurant && notes == null) {
+        await commands.setQuantity(
+          menuItemId.toInt(),
+          currentQuantity + quantity,
+        );
       } else {
         final flash = _flashSales[menuItemId.toInt()];
         await commands.addLine(
@@ -135,8 +158,9 @@ class CatalogRestaurantDetailViewModel
             restaurantName: restaurant.name,
             name: menuItem.name,
             unitPrice: flash?.flashSalePrice ?? menuItem.price,
-            quantity: 1,
+            quantity: quantity,
             imageUrl: menuItem.image,
+            notes: notes?.trim().isEmpty == true ? null : notes?.trim(),
             flashSaleItemId: flash?.id,
           ),
         );
@@ -184,6 +208,18 @@ class CatalogRestaurantDetailViewModel
     }
   }
 
+  Future<CatalogDetailResult> _loadDetailFromApi() async {
+    try {
+      return await ref
+          .read(catalogBrowsePortProvider)
+          .loadDetail(_restaurantId.toInt());
+    } catch (_) {
+      return const CatalogDetailResult(
+        errorMessage: 'Không thể tải thông tin nhà hàng',
+      );
+    }
+  }
+
   void _publish() {
     if (!ref.mounted) {
       return;
@@ -204,9 +240,10 @@ class CatalogRestaurantDetailViewModel
       );
     final cart = _cart;
     return CatalogRestaurantDetailViewState(
-      restaurant: detail.restaurant == null
-          ? null
-          : _restaurantData(detail.restaurant!),
+      restaurant:
+          detail.restaurant == null
+              ? null
+              : _restaurantData(detail.restaurant!),
       menuItems: detail.menuItems.map(_menuItemData).toList(growable: false),
       isLoading: _loading,
       errorMessage: detail.errorMessage,
@@ -228,6 +265,7 @@ class CatalogRestaurantDetailViewModel
       rating: restaurant.rating,
       reviewCount: restaurant.reviewCount,
       deliveryTimeMinutes: restaurant.deliveryTimeMinutes?.toInt(),
+      distanceKm: restaurant.distanceKm,
       openingHour: restaurant.openingHour,
       closingHour: restaurant.closingHour,
       isOpen: restaurant.isOpen,
@@ -254,6 +292,9 @@ class CatalogRestaurantDetailViewModel
   }
 
   int _asPositiveInt(num value) => value > 0 ? value.toInt() : 0;
+
+  bool get _isPreviewRestaurant =>
+      catalogPreviewDetailFor(_restaurantId) != null;
 
   int _quantityFor(num menuItemId) =>
       _cart?.lines

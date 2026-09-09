@@ -24,10 +24,12 @@ void main() {
 
     expect(find.text('Deliver to'), findsOneWidget);
     expect(find.text('What are you craving today?'), findsOneWidget);
-    expect(find.text('Featured restaurants'), findsOneWidget);
     expect(find.text('See all'), findsOneWidget);
     expect(find.bySemanticsLabel('Open notifications'), findsOneWidget);
     expect(find.bySemanticsLabel('Open cart'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Featured restaurants'), 200,
+      scrollable: find.byType(Scrollable).first);
+    expect(find.text('Featured restaurants'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -65,7 +67,7 @@ void main() {
     );
 
     expect(find.text('Checkout'), findsOneWidget);
-    expect(find.text('Restaurant'), findsOneWidget);
+    expect(find.text('Hearth Kitchen'), findsOneWidget);
     expect(find.text('Cash on delivery'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.byKey(const Key('checkout_notes')),

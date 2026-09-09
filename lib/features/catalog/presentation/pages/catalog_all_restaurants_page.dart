@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:delivery_app/core/routing/routing.dart';
+import 'package:delivery_app/core/design_system/components/preview_bottom_navigation.dart';
 import 'package:delivery_app/features/catalog/application/catalog_all_restaurants_effect.dart';
 import 'package:delivery_app/features/catalog/application/catalog_all_restaurants_intent.dart';
 import 'package:delivery_app/features/catalog/application/catalog_all_restaurants_state.dart';
@@ -50,6 +51,30 @@ class _CatalogAllRestaurantsPageState
     );
     return CatalogAllRestaurantsView(
       state: ref.watch(catalogAllRestaurantsViewModelProvider),
+      previewMode: true,
+      onBack: () {
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go(AppRoutes.main);
+        }
+      },
+      onCart: () => context.go(AppRoutes.cart),
+      bottomNavigationBar: PreviewBottomNavigation(
+        currentIndex: 0,
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              context.go(AppRoutes.main);
+            case 1:
+              context.go(AppRoutes.orders);
+            case 2:
+              context.go(AppRoutes.cart);
+            case 3:
+              context.go(AppRoutes.profile);
+          }
+        },
+      ),
       onIntent: (intent) => unawaited(
         ref
             .read(catalogAllRestaurantsViewModelProvider.notifier)

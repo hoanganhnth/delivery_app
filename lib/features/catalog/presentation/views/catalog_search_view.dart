@@ -1,12 +1,13 @@
 import 'package:delivery_app/core/design_system/components/app_button.dart';
 import 'package:delivery_app/core/design_system/components/app_feedback.dart';
-import 'package:delivery_app/core/design_system/foundations/app_radii.dart';
 import 'package:delivery_app/core/design_system/foundations/app_spacing.dart';
 import 'package:flutter/material.dart';
 
 import '../../application/catalog_search_intent.dart';
 import '../../application/catalog_search_state.dart';
+import '../components/catalog_search_preview_components.dart';
 import '../components/catalog_search_result_tiles.dart';
+import '../components/home/home_style.dart';
 
 /// Pure search rendering using canonical design system foundations.
 class CatalogSearchView extends StatefulWidget {
@@ -14,10 +15,22 @@ class CatalogSearchView extends StatefulWidget {
     super.key,
     required this.state,
     required this.onIntent,
+    this.previewMode = false,
+    this.deliveryAddress,
+    this.onBack,
+    this.onManageAddress,
+    this.onHome,
+    this.bottomNavigationBar,
   });
 
   final CatalogSearchViewState state;
   final ValueChanged<CatalogSearchIntent> onIntent;
+  final bool previewMode;
+  final String? deliveryAddress;
+  final VoidCallback? onBack;
+  final VoidCallback? onManageAddress;
+  final VoidCallback? onHome;
+  final Widget? bottomNavigationBar;
 
   @override
   State<CatalogSearchView> createState() => _CatalogSearchViewState();
@@ -51,18 +64,19 @@ class _CatalogSearchViewState extends State<CatalogSearchView> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.previewMode) return _buildPreview(context);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: scheme.surface,
       appBar: AppBar(
         titleSpacing: AppSpacing.page,
         title: Container(
           height: 44,
           decoration: BoxDecoration(
             color: scheme.surfaceContainerHighest.withValues(alpha: 0.5),
-            borderRadius: AppRadii.control,
+            borderRadius: BorderRadius.circular(3),
           ),
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
           child: Row(
@@ -83,8 +97,9 @@ class _CatalogSearchViewState extends State<CatalogSearchView> {
                       fontSize: 14,
                     ),
                   ),
-                  onChanged: (value) =>
-                      widget.onIntent(CatalogSearchQueryChanged(value)),
+                  onChanged:
+                      (value) =>
+                          widget.onIntent(CatalogSearchQueryChanged(value)),
                 ),
               ),
             ],
@@ -134,6 +149,37 @@ class _CatalogSearchViewState extends State<CatalogSearchView> {
       body: _SearchResults(state: widget.state, onIntent: widget.onIntent),
     );
   }
+
+  Widget _buildPreview(BuildContext context) => Scaffold(
+    backgroundColor: HomeStyle.canvas(context),
+    body: SafeArea(
+      bottom: false,
+      child: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: CatalogSearchPreviewHeader(
+              controller: _controller,
+              deliveryAddress: widget.deliveryAddress,
+              onChanged:
+                  (value) => widget.onIntent(CatalogSearchQueryChanged(value)),
+              onSubmitted:
+                  (value) => widget.onIntent(CatalogSearchQueryChanged(value)),
+              onBack: widget.onBack,
+              onManageAddress: widget.onManageAddress,
+              onHome: widget.onHome,
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: CatalogSearchPreviewResults(
+              state: widget.state,
+              onIntent: widget.onIntent,
+            ),
+          ),
+        ],
+      ),
+    ),
+    bottomNavigationBar: widget.bottomNavigationBar,
+  );
 }
 
 class _SearchTab extends StatelessWidget {
@@ -197,9 +243,10 @@ class _SearchResults extends StatelessWidget {
     if (state.isQueryEmpty) {
       return Center(
         child: AppStateFeedback.empty(
-          title: state.tab == CatalogSearchTab.dishes
-              ? 'Nhập tên món ăn để tìm kiếm'
-              : 'Nhập tên nhà hàng để tìm kiếm',
+          title:
+              state.tab == CatalogSearchTab.dishes
+                  ? 'Nhập tên món ăn để tìm kiếm'
+                  : 'Nhập tên nhà hàng để tìm kiếm',
           message: 'Khám phá hàng ngàn món ăn ngon và nhà hàng phong phú.',
           icon: Icons.search,
         ),
@@ -213,13 +260,13 @@ class _SearchResults extends StatelessWidget {
     if (state.hasVisibleError) {
       return Center(
         child: AppStateFeedback.error(
-          title: state.tab == CatalogSearchTab.dishes
-              ? 'Không thể tải kết quả món ăn'
-              : 'Không thể tải kết quả nhà hàng',
+          title:
+              state.tab == CatalogSearchTab.dishes
+                  ? 'Không thể tải kết quả món ăn'
+                  : 'Không thể tải kết quả nhà hàng',
           message: 'Vui lòng kiểm tra kết nối mạng và thử lại.',
           actionLabel: 'Thử lại',
-          onAction: () =>
-              onIntent(CatalogSearchQueryChanged(state.query)),
+          onAction: () => onIntent(CatalogSearchQueryChanged(state.query)),
         ),
       );
     }
@@ -254,15 +301,18 @@ class _DishResults extends StatelessWidget {
       );
     }
     return ListView.separated(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       itemCount: dishes.length,
-      separatorBuilder: (_, _) => const Divider(height: 1, indent: 72),
+      separatorBuilder: (_, _) => const Divider(height: 1),
       itemBuilder: (context, index) {
         final dish = dishes[index];
         return CatalogDishSearchResultTile(
           item: dish,
-          onTap: dish.canOpenRestaurant
-              ? () => onIntent(CatalogSearchDishSelected(dish.restaurantId!))
-              : null,
+          onTap:
+              dish.canOpenRestaurant
+                  ? () =>
+                      onIntent(CatalogSearchDishSelected(dish.restaurantId!))
+                  : null,
         );
       },
     );
@@ -287,8 +337,9 @@ class _RestaurantResults extends StatelessWidget {
       );
     }
     return ListView.separated(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       itemCount: restaurants.length,
-      separatorBuilder: (_, _) => const Divider(height: 1, indent: 72),
+      separatorBuilder: (_, _) => const SizedBox.shrink(),
       itemBuilder: (context, index) {
         final restaurant = restaurants[index];
         return CatalogRestaurantSearchResultTile(

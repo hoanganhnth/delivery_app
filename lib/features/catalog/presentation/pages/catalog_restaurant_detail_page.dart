@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:delivery_app/core/routing/routing.dart';
 import 'package:delivery_app/generated/l10n.dart';
+import 'package:delivery_app/features/user_address/application/address_list_notifier.dart';
 
 import '../../application/catalog_restaurant_detail_effect.dart';
 import '../../application/catalog_restaurant_detail_intent.dart';
 import '../../application/catalog_restaurant_detail_state.dart';
 import '../../application/catalog_restaurant_detail_view_model.dart';
 import '../views/catalog_restaurant_detail_view.dart';
+import '../components/catalog_restaurant_detail_parts.dart';
 
 class CatalogRestaurantDetailPage extends ConsumerStatefulWidget {
   const CatalogRestaurantDetailPage({super.key, required this.restaurantId});
@@ -55,10 +57,38 @@ class _CatalogRestaurantDetailPageState
         }
       }
     });
+    final addressState = ref.watch(userAddressListProvider);
+    final selectedAddress =
+        addressState.selectedAddress ?? addressState.defaultAddress;
     return CatalogRestaurantDetailView(
       state: ref.watch(provider),
-      onIntent: (intent) =>
-          unawaited(ref.read(provider.notifier).dispatch(intent)),
+      previewMode: true,
+      deliveryAddressLabel: selectedAddress?.label,
+      onManageAddress:
+          () => context.push('${AppRoutes.addressList}?context=home'),
+      onOpenVoucher: () => context.push(AppRoutes.vouchers),
+      onIntent:
+          (intent) => unawaited(ref.read(provider.notifier).dispatch(intent)),
+      onItemOpen:
+          (item) => unawaited(
+            showCatalogMenuItemSheet(
+              context: context,
+              item: item,
+              onAdd: () {},
+              onAddWithDetails:
+                  (quantity, notes) => unawaited(
+                    ref
+                        .read(provider.notifier)
+                        .dispatch(
+                          CatalogRestaurantDetailAddRequested(
+                            item.id!,
+                            quantity: quantity,
+                            notes: notes,
+                          ),
+                        ),
+                  ),
+            ),
+          ),
     );
   }
 
@@ -100,20 +130,21 @@ class _CatalogRestaurantDetailPageState
   ) async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(S.of(dialogContext).cannotAddItem),
-        content: Text(S.of(dialogContext).differentRestaurantError),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: Text(S.of(dialogContext).cancel),
+      builder:
+          (dialogContext) => AlertDialog(
+            title: Text(S.of(dialogContext).cannotAddItem),
+            content: Text(S.of(dialogContext).differentRestaurantError),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+                child: Text(S.of(dialogContext).cancel),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                child: Text(S.of(dialogContext).clearCurrentCart),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(S.of(dialogContext).clearCurrentCart),
-          ),
-        ],
-      ),
     );
     if (confirm == true && mounted) {
       await ref
@@ -124,3 +155,32 @@ class _CatalogRestaurantDetailPageState
     }
   }
 }
+
+/// Route adapter owns sheet navigation; content only emits callbacks.
+Future<void> showCatalogMenuItemSheet({
+  required BuildContext context,
+  required CatalogMenuItemViewData item,
+  required VoidCallback onAdd,
+  void Function(int quantity, String? notes)? onAddWithDetails,
+}) => showModalBottomSheet<void>(
+  context: context,
+  isScrollControlled: true,
+  useSafeArea: true,
+  shape: const RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+  ),
+  clipBehavior: Clip.antiAlias,
+  builder:
+      (sheetContext) => CatalogMenuItemSheet(
+        item: item,
+        onClose: () => Navigator.of(sheetContext).pop(),
+        onAdd: (quantity, notes) {
+          Navigator.of(sheetContext).pop();
+          if (onAddWithDetails != null) {
+            onAddWithDetails(quantity, notes);
+          } else {
+            onAdd();
+          }
+        },
+      ),
+);

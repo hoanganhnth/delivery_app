@@ -15,6 +15,7 @@ final class CatalogRestaurantDetailData extends Equatable {
     this.rating,
     this.reviewCount,
     this.deliveryTimeMinutes,
+    this.distanceKm,
     this.openingHour,
     this.closingHour,
     this.isOpen,
@@ -28,6 +29,7 @@ final class CatalogRestaurantDetailData extends Equatable {
   final double? rating;
   final int? reviewCount;
   final int? deliveryTimeMinutes;
+  final double? distanceKm;
   final String? openingHour;
   final String? closingHour;
   final bool? isOpen;
@@ -42,6 +44,7 @@ final class CatalogRestaurantDetailData extends Equatable {
     rating,
     reviewCount,
     deliveryTimeMinutes,
+    distanceKm,
     openingHour,
     closingHour,
     isOpen,

@@ -13,6 +13,8 @@ import '../../application/catalog_home_effect.dart';
 import '../../application/catalog_home_intent.dart';
 import '../../application/catalog_home_state.dart';
 import '../../application/catalog_home_view_model.dart';
+import '../../application/catalog_preview_fixtures.dart';
+import '../../application/home_suggested_dishes_provider.dart';
 import '../components/catalog_home_components.dart';
 import '../views/catalog_home_view.dart';
 
@@ -118,19 +120,23 @@ class _CatalogHomePageState extends ConsumerState<CatalogHomePage> {
         addressState.defaultAddress?.fullAddress;
 
     return CatalogHomeView(
+      suggestedDishes:
+          ref.watch(homeSuggestedDishesProvider).asData?.value ?? const [],
       state: ref.watch(catalogHomeViewModelProvider),
       deliveryAddress: deliveryAddress,
       flashSaleBanner: const FlashSaleBannerPage(),
       livestreamBanner: HomeLivestreamBanner(
-        onTap: () => unawaited(
-          ref
-              .read(catalogHomeViewModelProvider.notifier)
-              .dispatch(const CatalogHomeLivestreamRequested()),
-        ),
+        onTap:
+            () => unawaited(
+              ref
+                  .read(catalogHomeViewModelProvider.notifier)
+                  .dispatch(const CatalogHomeLivestreamRequested()),
+            ),
       ),
-      onIntent: (intent) => unawaited(
-        ref.read(catalogHomeViewModelProvider.notifier).dispatch(intent),
-      ),
+      onIntent:
+          (intent) => unawaited(
+            ref.read(catalogHomeViewModelProvider.notifier).dispatch(intent),
+          ),
     );
   }
 
@@ -163,7 +169,11 @@ class _CatalogHomePageState extends ConsumerState<CatalogHomePage> {
       case CatalogHomeNavigateToCart():
         context.pushCart();
       case CatalogHomeNavigateToRestaurant(:final restaurantId):
-        context.pushToRestaurantDetails(restaurantId.toString());
+        final targetId =
+            restaurantId > 0
+                ? restaurantId
+                : catalogPreviewRestaurantIdOffset + restaurantId.abs();
+        context.pushToRestaurantDetails(targetId.toString());
     }
     await ref
         .read(catalogHomeViewModelProvider.notifier)

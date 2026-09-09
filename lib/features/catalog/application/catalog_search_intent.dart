@@ -2,6 +2,10 @@ sealed class CatalogSearchIntent {
   const CatalogSearchIntent();
 }
 
+final class CatalogSearchLoadRequested extends CatalogSearchIntent {
+  const CatalogSearchLoadRequested();
+}
+
 final class CatalogSearchQueryChanged extends CatalogSearchIntent {
   const CatalogSearchQueryChanged(this.value);
 
@@ -14,10 +18,18 @@ final class CatalogSearchCleared extends CatalogSearchIntent {
 
 enum CatalogSearchTab { dishes, restaurants }
 
+enum CatalogSearchSort { recommended, nearby, rating }
+
 final class CatalogSearchTabSelected extends CatalogSearchIntent {
   const CatalogSearchTabSelected(this.tab);
 
   final CatalogSearchTab tab;
+}
+
+final class CatalogSearchSortSelected extends CatalogSearchIntent {
+  const CatalogSearchSortSelected(this.sort);
+
+  final CatalogSearchSort sort;
 }
 
 final class CatalogSearchDishSelected extends CatalogSearchIntent {

@@ -1,6 +1,5 @@
 import 'package:delivery_app/core/design_system/components/app_image.dart';
-import 'package:delivery_app/core/design_system/foundations/app_radii.dart';
-import 'package:delivery_app/core/design_system/foundations/app_spacing.dart';
+import 'package:delivery_app/features/restaurants/presentation/widgets/shared/restaurant_card.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -12,48 +11,69 @@ class CatalogDishSearchResultTile extends StatelessWidget {
     required this.item,
     required this.onTap,
   });
-
   final CatalogDishSearchViewData item;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-
-    return ListTile(
-      leading: AppContentImage(
-        imageUrl: item.imageUrl,
-        semanticLabel: item.name,
-        width: 48,
-        height: 48,
-        borderRadius: AppRadii.control,
-        placeholderIcon: Icons.fastfood_outlined,
-      ),
-      title: Text(
-        item.name,
-        style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
-      ),
-      subtitle: item.description?.trim().isNotEmpty == true
-          ? Text(
-              item.description!.trim(),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: scheme.onSurfaceVariant,
+    return Material(
+      color: theme.colorScheme.surface,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppContentImage(
+                imageUrl: item.imageUrl,
+                semanticLabel: item.name,
+                width: 86,
+                height: 86,
+                borderRadius: BorderRadius.circular(3),
+                placeholderIcon: Icons.fastfood_outlined,
               ),
-            )
-          : null,
-      trailing: item.price == null
-          ? null
-          : Text(
-              '${NumberFormat('#,###', 'vi_VN').format(item.price)} ₫',
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: scheme.primary,
+              const SizedBox(width: 11),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    if (item.description?.trim().isNotEmpty == true) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        item.description!.trim(),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                    if (item.price != null) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        '${NumberFormat('#,###', 'vi_VN').format(item.price)} ₫',
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
-            ),
-      onTap: onTap,
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -64,54 +84,23 @@ class CatalogRestaurantSearchResultTile extends StatelessWidget {
     required this.item,
     required this.onTap,
   });
-
   final CatalogRestaurantSearchViewData item;
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-
-    return ListTile(
-      leading: AppContentImage(
-        imageUrl: item.imageUrl,
-        semanticLabel: item.name,
-        width: 48,
-        height: 48,
-        borderRadius: AppRadii.control,
-        placeholderIcon: Icons.storefront_outlined,
-      ),
-      title: Text(
-        item.name,
-        style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
-      ),
-      subtitle: item.cuisine?.trim().isNotEmpty == true
-          ? Text(
-              item.cuisine!.trim(),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: scheme.onSurfaceVariant,
-              ),
-            )
-          : null,
-      trailing: item.rating == null
-          ? null
-          : Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.star_rounded, color: scheme.primary, size: 18),
-                const SizedBox(width: AppSpacing.xxs),
-                Text(
-                  item.rating!.toStringAsFixed(1),
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-      onTap: onTap,
-    );
-  }
+  Widget build(BuildContext context) => RestaurantCard(
+    name: item.name,
+    imageUrl: item.imageUrl,
+    rating: item.rating ?? 4.8,
+    distance: item.distanceKm == null
+        ? '1.2 km'
+        : '${item.distanceKm!.toStringAsFixed(1)} km',
+    deliveryTime: item.deliveryTimeMinutes == null
+        ? '20–30 phút'
+        : '${item.deliveryTimeMinutes} phút',
+    badgeLabel: 'Yêu thích',
+    promotionLabels: const ['Freeship Xtra', 'Giảm 15.000đ'],
+    metadataSeparator: ' | ',
+    onTap: onTap,
+  );
 }

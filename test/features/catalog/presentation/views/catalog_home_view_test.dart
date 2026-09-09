@@ -2,7 +2,6 @@ import 'package:delivery_app/core/error/failures.dart';
 import 'package:delivery_app/core/contracts/catalog_contract.dart';
 import 'package:delivery_app/core/contracts/catalog_port_provider.dart';
 import 'package:delivery_app/features/catalog/application/catalog_home_effect.dart';
-import 'package:delivery_app/core/widgets/amber_widgets.dart';
 import 'package:delivery_app/features/catalog/application/catalog_home_intent.dart';
 import 'package:delivery_app/features/catalog/application/catalog_home_state.dart';
 import 'package:delivery_app/features/catalog/application/catalog_home_view_model.dart';
@@ -81,11 +80,15 @@ void main() {
       find.text('456 Nguyễn Huệ, Bến Nghé, Quận 1, TP.HCM'),
       findsOneWidget,
     );
-    tester.widget<AmberSearchBar>(find.byType(AmberSearchBar)).onTap!();
+    await tester.tap(find.text('Bạn muốn ăn gì hôm nay?'));
     await tester.tap(find.text('Giao đến'));
     await tester.tap(find.byIcon(Icons.notifications_outlined));
     await tester.tap(find.byIcon(Icons.shopping_cart_outlined));
+    await tester.ensureVisible(find.text('Xem tất cả'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Xem tất cả'));
+    await tester.ensureVisible(find.text('Bếp test'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Bếp test'));
 
     expect(intents[0], isA<CatalogHomeSearchRequested>());

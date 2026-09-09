@@ -41,6 +41,8 @@ final class CatalogRestaurantSearchViewData extends Equatable {
     required this.name,
     this.cuisine,
     this.rating,
+    this.distanceKm,
+    this.deliveryTimeMinutes,
     this.imageUrl,
   });
 
@@ -48,16 +50,27 @@ final class CatalogRestaurantSearchViewData extends Equatable {
   final String name;
   final String? cuisine;
   final double? rating;
+  final double? distanceKm;
+  final num? deliveryTimeMinutes;
   final String? imageUrl;
 
   @override
-  List<Object?> get props => [id, name, cuisine, rating, imageUrl];
+  List<Object?> get props => [
+    id,
+    name,
+    cuisine,
+    rating,
+    distanceKm,
+    deliveryTimeMinutes,
+    imageUrl,
+  ];
 }
 
 final class CatalogSearchViewState extends Equatable {
   const CatalogSearchViewState({
     this.query = '',
     this.tab = CatalogSearchTab.dishes,
+    this.sort = CatalogSearchSort.recommended,
     this.dishes = const <CatalogDishSearchViewData>[],
     this.restaurants = const <CatalogRestaurantSearchViewData>[],
     this.isSearching = false,
@@ -68,6 +81,7 @@ final class CatalogSearchViewState extends Equatable {
 
   final String query;
   final CatalogSearchTab tab;
+  final CatalogSearchSort sort;
   final List<CatalogDishSearchViewData> dishes;
   final List<CatalogRestaurantSearchViewData> restaurants;
   final bool isSearching;
@@ -85,6 +99,7 @@ final class CatalogSearchViewState extends Equatable {
     String? query,
     bool clearQuery = false,
     CatalogSearchTab? tab,
+    CatalogSearchSort? sort,
     List<CatalogDishSearchViewData>? dishes,
     List<CatalogRestaurantSearchViewData>? restaurants,
     bool? isSearching,
@@ -95,6 +110,7 @@ final class CatalogSearchViewState extends Equatable {
     return CatalogSearchViewState(
       query: clearQuery ? '' : (query ?? this.query),
       tab: tab ?? this.tab,
+      sort: sort ?? this.sort,
       dishes: dishes ?? this.dishes,
       restaurants: restaurants ?? this.restaurants,
       isSearching: isSearching ?? this.isSearching,
@@ -108,6 +124,7 @@ final class CatalogSearchViewState extends Equatable {
   List<Object?> get props => [
     query,
     tab,
+    sort,
     dishes,
     restaurants,
     isSearching,

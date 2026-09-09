@@ -10,28 +10,22 @@ class CatalogAllRestaurantsView extends StatelessWidget {
     super.key,
     required this.state,
     required this.onIntent,
+    this.previewMode = false,
+    this.bottomNavigationBar,
+    this.onBack,
+    this.onCart,
   });
 
   final CatalogAllRestaurantsViewState state;
   final ValueChanged<CatalogAllRestaurantsIntent> onIntent;
+  final bool previewMode;
+  final Widget? bottomNavigationBar;
+  final VoidCallback? onBack;
+  final VoidCallback? onCart;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: const Color(0xFFF7F8FA),
-    appBar: AppTopBar(
-      title: 'Tất cả nhà hàng',
-      onBack: () => onIntent(const CatalogAllRestaurantsBackRequested()),
-      backTooltip: 'Quay lại',
-      actions: [
-        AppIconButton(
-          tooltip: 'Tìm kiếm',
-          icon: Icons.search,
-          onPressed: () =>
-              onIntent(const CatalogAllRestaurantsSearchRequested()),
-        ),
-      ],
-    ),
-    body: switch ((state.isLoading, state.hasError, state.isEmpty)) {
+  Widget build(BuildContext context) {
+    final body = switch ((state.isLoading, state.hasError, state.isEmpty)) {
       (true, _, _) => const AppStateFeedback.loading(
         title: 'Đang tải danh sách nhà hàng',
       ),
@@ -53,7 +47,7 @@ class CatalogAllRestaurantsView extends StatelessWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.all(AppSpacing.md),
           itemCount: state.restaurants.length,
-          separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.md),
+          separatorBuilder: (_, _) => const SizedBox.shrink(),
           itemBuilder: (context, index) {
             final restaurant = state.restaurants[index];
             return CatalogRestaurantCard(
@@ -65,6 +59,47 @@ class CatalogAllRestaurantsView extends StatelessWidget {
           },
         ),
       ),
-    },
-  );
+    };
+
+    if (previewMode) {
+      return Scaffold(
+        backgroundColor: PreviewUi.canvas(context),
+        appBar: PreviewPageHeader(
+          title: 'Tất cả nhà hàng',
+          onBack:
+              onBack ??
+              () => onIntent(const CatalogAllRestaurantsBackRequested()),
+          onCart: onCart,
+          actions: [
+            IconButton(
+              tooltip: 'Tìm kiếm',
+              onPressed: () =>
+                  onIntent(const CatalogAllRestaurantsSearchRequested()),
+              icon: const Icon(Icons.search, size: 21),
+            ),
+          ],
+        ),
+        body: body,
+        bottomNavigationBar: bottomNavigationBar,
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppTopBar(
+        title: 'Tất cả nhà hàng',
+        onBack: () => onIntent(const CatalogAllRestaurantsBackRequested()),
+        backTooltip: 'Quay lại',
+        actions: [
+          AppIconButton(
+            tooltip: 'Tìm kiếm',
+            icon: Icons.search,
+            onPressed: () =>
+                onIntent(const CatalogAllRestaurantsSearchRequested()),
+          ),
+        ],
+      ),
+      body: body,
+    );
+  }
 }

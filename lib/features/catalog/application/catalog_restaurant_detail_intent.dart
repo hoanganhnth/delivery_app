@@ -31,6 +31,19 @@ final class CatalogRestaurantDetailDecrementRequested
   final num menuItemId;
 }
 
+final class CatalogRestaurantDetailAddRequested
+    extends CatalogRestaurantDetailIntent {
+  const CatalogRestaurantDetailAddRequested(
+    this.menuItemId, {
+    this.quantity = 1,
+    this.notes,
+  });
+
+  final num menuItemId;
+  final int quantity;
+  final String? notes;
+}
+
 final class CatalogRestaurantDetailRestaurantChangeConfirmed
     extends CatalogRestaurantDetailIntent {
   const CatalogRestaurantDetailRestaurantChangeConfirmed(this.menuItemId);

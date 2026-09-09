@@ -8,6 +8,8 @@ final class CatalogRestaurantSearchResult {
     this.description,
     this.cuisine,
     this.rating,
+    this.distanceKm,
+    this.deliveryTimeMinutes,
     this.imageUrl,
   });
 
@@ -16,6 +18,8 @@ final class CatalogRestaurantSearchResult {
   final String? description;
   final String? cuisine;
   final double? rating;
+  final double? distanceKm;
+  final num? deliveryTimeMinutes;
   final String? imageUrl;
 }
 

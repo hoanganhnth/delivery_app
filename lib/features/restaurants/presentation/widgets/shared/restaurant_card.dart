@@ -1,45 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:delivery_app/core/design_system/components/app_image.dart';
 import 'package:flutter/material.dart';
 
-/// Amber Hearth style restaurant card
-///
-/// Features:
-/// - Border radius: 40px (rounded-[2.5rem])
-/// - Image height: 192px (h-48)
-/// - Hover: Image scale-105 transition-500
-/// - Badge position: Absolute top-4 right-4
-/// - Time badge: Bottom-4 left-4 with backdrop-blur
-class RestaurantCard extends StatefulWidget {
-  /// Restaurant name
-  final String name;
-
-  /// Restaurant image URL
-  final String? imageUrl;
-
-  /// Restaurant rating (0-5)
-  final double? rating;
-
-  /// Delivery time (e.g., "15-25 min")
-  final String? deliveryTime;
-
-  /// Restaurant category (e.g., "Modern American")
-  final String? category;
-
-  /// Price level (e.g., "$$$")
-  final String? priceLevel;
-
-  /// Distance (e.g., "1.2 miles")
-  final String? distance;
-
-  /// Delivery fee (e.g., "Free Delivery" or "$2.99 Delivery")
-  final String? deliveryFee;
-
-  /// Whether delivery is free
-  final bool isFreeDelivery;
-
-  /// Callback when card is tapped
-  final VoidCallback? onTap;
-
+/// Compact, full-width restaurant row. Only supplied catalog facts are shown.
+class RestaurantCard extends StatelessWidget {
   const RestaurantCard({
     super.key,
     required this.name,
@@ -52,254 +15,221 @@ class RestaurantCard extends StatefulWidget {
     this.deliveryFee,
     this.isFreeDelivery = false,
     this.onTap,
+    this.badgeLabel,
+    this.promotionLabels = const [],
+    this.metadataSeparator = '  ·  ',
   });
 
-  @override
-  State<RestaurantCard> createState() => _RestaurantCardState();
-}
-
-class _RestaurantCardState extends State<RestaurantCard> {
-  bool _isHovered = false;
+  final String name;
+  final String? imageUrl;
+  final double? rating;
+  final String? deliveryTime;
+  final String? category;
+  final String? priceLevel;
+  final String? distance;
+  final String? deliveryFee;
+  final bool isFreeDelivery;
+  final VoidCallback? onTap;
+  final String? badgeLabel;
+  final List<String> promotionLabels;
+  final String metadataSeparator;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     final details = [
-      widget.category,
-      widget.priceLevel,
-      widget.distance,
-    ].whereType<String>().where((value) => value.trim().isNotEmpty).toList();
-
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: MouseRegion(
-        onEnter: (_) => setState(() => _isHovered = true),
-        onExit: (_) => setState(() => _isHovered = false),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image with overlays
-            Stack(
-              children: [
-                // Image container
-                Container(
-                  height: 192,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
-                        blurRadius: 16,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(40),
-                    child: AnimatedScale(
-                      scale: _isHovered ? 1.05 : 1.0,
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeOut,
-                      child: widget.imageUrl != null
-                          ? CachedNetworkImage(
-                              imageUrl: widget.imageUrl!,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              placeholder: (context, url) => Container(
-                                color: const Color(0xFFF4EEE7),
-                                child: const Center(
-                                  child: CircularProgressIndicator(
-                                    color: Color(0xFFF49D25),
-                                  ),
-                                ),
-                              ),
-                              errorWidget: (context, url, error) => Container(
-                                color: const Color(0xFFF4EEE7),
-                                child: const Icon(
-                                  Icons.restaurant,
-                                  size: 64,
-                                  color: Color(0xFF9C7A49),
-                                ),
-                              ),
-                            )
-                          : Container(
-                              color: const Color(0xFFF4EEE7),
-                              child: const Icon(
-                                Icons.restaurant,
-                                size: 64,
-                                color: Color(0xFF9C7A49),
+      category,
+      priceLevel,
+    ].whereType<String>().where((value) => value.trim().isNotEmpty);
+    final metadata = [
+      if (rating != null) rating!.toStringAsFixed(1),
+      if (distance?.trim().isNotEmpty == true) distance!,
+      if (deliveryTime?.trim().isNotEmpty == true) deliveryTime!,
+    ];
+    return Material(
+      color: scheme.surface,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: scheme.outlineVariant)),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppContentImage(
+                imageUrl: imageUrl,
+                semanticLabel: name,
+                width: 86,
+                height: 86,
+                borderRadius: BorderRadius.circular(3),
+                placeholderIcon: Icons.restaurant,
+              ),
+              const SizedBox(width: 11),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (badgeLabel != null)
+                          Container(
+                            margin: const EdgeInsets.only(right: 4, top: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 3,
+                              vertical: 1,
+                            ),
+                            decoration: BoxDecoration(
+                              color: scheme.primary,
+                              borderRadius: BorderRadius.circular(1),
+                            ),
+                            child: Text(
+                              badgeLabel!,
+                              style: TextStyle(
+                                color: scheme.onPrimary,
+                                fontSize: 9,
+                                height: 1.1,
                               ),
                             ),
-                    ),
-                  ),
-                ),
-
-                // Rating badge (top-right)
-                if (widget.rating != null)
-                  Positioned(
-                    top: 16,
-                    right: 16,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.9),
-                        borderRadius: BorderRadius.circular(9999),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.1),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
                           ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.star,
-                            size: 14,
-                            color: Color(0xFFF59E0B), // amber-500
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            widget.rating!.toStringAsFixed(1),
-                            style: const TextStyle(
-                              fontFamily: 'Plus Jakarta Sans',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w900,
-                              color: Color(0xFF1C160D),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                // Delivery time badge (bottom-left)
-                if (widget.deliveryTime != null &&
-                    widget.deliveryTime!.trim().isNotEmpty)
-                  Positioned(
-                    bottom: 16,
-                    left: 16,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1C160D).withValues(alpha: 0.8),
-                        borderRadius: BorderRadius.circular(9999),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.2),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.schedule,
-                            size: 14,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            widget.deliveryTime!.toUpperCase(),
-                            style: const TextStyle(
-                              fontFamily: 'Plus Jakarta Sans',
-                              fontSize: 11,
+                        Expanded(
+                          child: Text(
+                            name,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w700,
-                              letterSpacing: 1.5,
-                              color: Colors.white,
+                              height: 1.45,
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-
-            const SizedBox(height: 16),
-
-            // Restaurant info
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Name and details
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.name,
-                        style: const TextStyle(
-                          fontFamily: 'Plus Jakarta Sans',
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xFF1C160D),
-                          letterSpacing: -0.5,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      if (details.isNotEmpty) ...[
-                        const SizedBox(height: 4),
-                        Text(
-                          details.join(' • '),
-                          style: const TextStyle(
-                            fontFamily: 'Plus Jakarta Sans',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF9C7A49),
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
-                    ],
-                  ),
-                ),
-
-                if (widget.deliveryFee != null &&
-                    widget.deliveryFee!.trim().isNotEmpty)
-                  const SizedBox(width: 12),
-
-                // Delivery fee badge
-                if (widget.deliveryFee != null &&
-                    widget.deliveryFee!.trim().isNotEmpty)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 4,
                     ),
-                    decoration: BoxDecoration(
-                      color: widget.isFreeDelivery
-                          ? const Color(0xFFF49D25).withValues(alpha: 0.1)
-                          : const Color(0xFFEDE7E0),
-                      borderRadius: BorderRadius.circular(9999),
-                    ),
-                    child: Text(
-                      widget.deliveryFee!.toUpperCase(),
-                      style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
-                        fontSize: 10,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1.5,
-                        color: widget.isFreeDelivery
-                            ? const Color(0xFFF49D25)
-                            : const Color(0xFF9C7A49),
+                    if (metadata.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            if (rating != null)
+                              WidgetSpan(
+                                child: Icon(
+                                  Icons.star,
+                                  size: 14,
+                                  color: scheme.primary,
+                                ),
+                              ),
+                            TextSpan(text: metadata.join(metadataSeparator)),
+                          ],
+                        ),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
                       ),
-                    ),
-                  ),
-              ],
-            ),
-          ],
+                    ],
+                    if (details.isNotEmpty) ...[
+                      const SizedBox(height: 5),
+                      Text(
+                        details.join(' · '),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                    if (deliveryFee?.trim().isNotEmpty == true) ...[
+                      const SizedBox(height: 7),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color:
+                                isFreeDelivery
+                                    ? scheme.primary
+                                    : scheme.outlineVariant,
+                          ),
+                        ),
+                        child: Text(
+                          deliveryFee!,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color:
+                                isFreeDelivery
+                                    ? scheme.primary
+                                    : scheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                    ],
+                    if (promotionLabels.isNotEmpty) ...[
+                      const SizedBox(height: 7),
+                      Wrap(
+                        spacing: 4,
+                        runSpacing: 4,
+                        children: [
+                          for (
+                            var index = 0;
+                            index < promotionLabels.length;
+                            index++
+                          )
+                            _PromotionTag(
+                              label: promotionLabels[index],
+                              highlighted: index == 0,
+                            ),
+                        ],
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PromotionTag extends StatelessWidget {
+  const _PromotionTag({required this.label, required this.highlighted});
+
+  final String label;
+  final bool highlighted;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color:
+            highlighted
+                ? Colors.transparent
+                : scheme.primary.withValues(alpha: .08),
+        border: Border.all(
+          color:
+              highlighted
+                  ? scheme.primary
+                  : scheme.primary.withValues(alpha: .08),
+        ),
+        borderRadius: BorderRadius.circular(1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+        child: Text(
+          label,
+          style: TextStyle(
+            color:
+                highlighted
+                    ? scheme.primary
+                    : scheme.primary.withValues(alpha: .78),
+            fontSize: 9,
+            height: 1.1,
+          ),
         ),
       ),
     );

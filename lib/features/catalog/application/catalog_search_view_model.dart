@@ -1,10 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:delivery_app/core/contracts/catalog_contract.dart';
+import 'package:delivery_app/core/contracts/catalog_port_provider.dart';
 import 'package:delivery_app/core/presentation/mvvm/mvvm.dart';
 import 'package:delivery_app/features/catalog/di/catalog_search_providers.dart';
 import 'package:delivery_app/features/catalog/domain/catalog_search_repository.dart';
 
 import 'catalog_search_effect.dart';
 import 'catalog_search_intent.dart';
+import 'catalog_search_preview_fixtures.dart';
 import 'catalog_search_state.dart';
 
 final catalogSearchViewModelProvider =
@@ -23,18 +26,14 @@ class CatalogSearchViewModel extends Notifier<CatalogSearchViewState> {
     switch (intent) {
       case CatalogSearchQueryChanged(:final value):
         await _changeQuery(value);
+      case CatalogSearchLoadRequested():
+        await _loadInitialRestaurants();
       case CatalogSearchCleared():
-        _requestEpoch += 1;
-        state = state.copyWith(
-          clearQuery: true,
-          dishes: const [],
-          restaurants: const [],
-          isSearching: false,
-          hasDishError: false,
-          hasRestaurantError: false,
-        );
+        await _changeQuery('');
       case CatalogSearchTabSelected(:final tab):
         state = state.copyWith(tab: tab);
+      case CatalogSearchSortSelected(:final sort):
+        state = state.copyWith(sort: sort);
       case CatalogSearchDishSelected(:final restaurantId):
         if (restaurantId.trim().isNotEmpty) {
           _emit(CatalogSearchNavigateToRestaurant(restaurantId.trim()));
@@ -52,35 +51,88 @@ class CatalogSearchViewModel extends Notifier<CatalogSearchViewState> {
 
   Future<void> _changeQuery(String query) async {
     final requestEpoch = ++_requestEpoch;
+    final normalizedQuery = query.trim();
     state = state.copyWith(
-      query: query,
+      query: normalizedQuery,
       dishes: const [],
-      restaurants: const [],
-      isSearching: query.isNotEmpty,
+      restaurants: normalizedQuery.isEmpty ? state.restaurants : const [],
+      isSearching: true,
       hasDishError: false,
       hasRestaurantError: false,
     );
-    if (query.isEmpty) return;
+    if (normalizedQuery.isEmpty) {
+      await _loadInitialRestaurants(requestEpoch: requestEpoch);
+      return;
+    }
 
     await ref.read(catalogSearchDelayProvider).wait();
     if (!ref.mounted || requestEpoch != _requestEpoch) return;
 
     final repository = ref.read(catalogSearchRepositoryProvider);
-    final dishesFuture = _captureDishes(repository, query);
-    final restaurantsFuture = _captureRestaurants(repository, query);
+    final dishesFuture = _captureDishes(repository, normalizedQuery);
+    final restaurantsFuture = _captureRestaurants(repository, normalizedQuery);
     final dishes = await dishesFuture;
     final restaurants = await restaurantsFuture;
     if (!ref.mounted || requestEpoch != _requestEpoch) return;
 
+    final fallbackRestaurants = _matchingFixtures(normalizedQuery);
+    final useFallbackRestaurants =
+        restaurants.data.isEmpty && fallbackRestaurants.isNotEmpty;
     state = state.copyWith(
       dishes: dishes.data.map(_dishViewData).toList(growable: false),
-      restaurants: restaurants.data
-          .map(_restaurantViewData)
-          .toList(growable: false),
+      restaurants:
+          useFallbackRestaurants
+              ? fallbackRestaurants
+              : restaurants.data
+                  .map(_restaurantViewData)
+                  .toList(growable: false),
       isSearching: false,
       hasDishError: dishes.hasError,
-      hasRestaurantError: restaurants.hasError,
+      hasRestaurantError: restaurants.hasError && !useFallbackRestaurants,
     );
+  }
+
+  Future<void> _loadInitialRestaurants({int? requestEpoch}) async {
+    final epoch = requestEpoch ?? ++_requestEpoch;
+    if (requestEpoch == null && state.restaurants.isNotEmpty) {
+      state = state.copyWith(isSearching: false);
+      return;
+    }
+    state = state.copyWith(
+      clearQuery: requestEpoch != null,
+      restaurants: const [],
+      dishes: const [],
+      isSearching: true,
+      hasDishError: false,
+      hasRestaurantError: false,
+    );
+    final result = await _captureBrowseRestaurants();
+    if (!ref.mounted || epoch != _requestEpoch) return;
+    final rows = result.restaurants
+        .map(_browseRestaurantViewData)
+        .toList(growable: false);
+    state = state.copyWith(
+      restaurants: rows.isEmpty ? catalogSearchPreviewFixtures : rows,
+      isSearching: false,
+      hasRestaurantError: false,
+    );
+  }
+
+  Future<CatalogBrowseResult> _captureBrowseRestaurants() async {
+    try {
+      return await ref.read(catalogBrowsePortProvider).loadRestaurants();
+    } catch (_) {
+      return const CatalogBrowseResult();
+    }
+  }
+
+  List<CatalogRestaurantSearchViewData> _matchingFixtures(String query) {
+    final normalized = query.toLowerCase();
+    return catalogSearchPreviewFixtures
+        .where(
+          (restaurant) => restaurant.name.toLowerCase().contains(normalized),
+        )
+        .toList(growable: false);
   }
 
   Future<_SearchOutcome<List<CatalogDishSearchResult>>> _captureDishes(
@@ -122,6 +174,22 @@ class CatalogSearchViewModel extends Notifier<CatalogSearchViewState> {
       name: result.name,
       cuisine: result.cuisine,
       rating: result.rating,
+      distanceKm: result.distanceKm,
+      deliveryTimeMinutes: result.deliveryTimeMinutes,
+      imageUrl: result.imageUrl,
+    );
+  }
+
+  CatalogRestaurantSearchViewData _browseRestaurantViewData(
+    CatalogRestaurantSnapshot result,
+  ) {
+    return CatalogRestaurantSearchViewData(
+      id: result.id.toString(),
+      name: result.name,
+      cuisine: result.category,
+      rating: result.rating,
+      distanceKm: result.distanceKm,
+      deliveryTimeMinutes: result.deliveryTimeMinutes,
       imageUrl: result.imageUrl,
     );
   }

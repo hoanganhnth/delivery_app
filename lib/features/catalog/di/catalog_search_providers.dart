@@ -68,6 +68,10 @@ final class _CatalogSearchRepository implements CatalogSearchRepository {
             description: _nullableString(row['description']),
             cuisine: _nullableString(row['cuisine']),
             rating: _double(row['rating']),
+            distanceKm: _double(row['distanceKm'] ?? row['distance']),
+            deliveryTimeMinutes: _number(
+              row['deliveryTimeMinutes'] ?? row['deliveryTime'],
+            ),
             imageUrl: _nullableString(row['imageUrl'] ?? row['image']),
           ),
         )
@@ -112,6 +116,12 @@ final class _CatalogSearchRepository implements CatalogSearchRepository {
   static double? _double(Object? value) => switch (value) {
     num number => number.toDouble(),
     String text => double.tryParse(text),
+    _ => null,
+  };
+
+  static num? _number(Object? value) => switch (value) {
+    num number => number,
+    String text => num.tryParse(text),
     _ => null,
   };
 }
