@@ -510,9 +510,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "mexican": MessageLookupByLibrary.simpleMessage("Mexican"),
     "min": MessageLookupByLibrary.simpleMessage("min"),
     "myAddresses": MessageLookupByLibrary.simpleMessage("My Addresses"),
-    "navAccount": MessageLookupByLibrary.simpleMessage("Account"),
+    "navAccount": MessageLookupByLibrary.simpleMessage("Me"),
     "navCart": MessageLookupByLibrary.simpleMessage("Cart"),
-    "navHome": MessageLookupByLibrary.simpleMessage("Home"),
+    "navHome": MessageLookupByLibrary.simpleMessage("Discover"),
     "navOrders": MessageLookupByLibrary.simpleMessage("Orders"),
     "navSearch": MessageLookupByLibrary.simpleMessage("Search"),
     "newConversationStarted": MessageLookupByLibrary.simpleMessage(
@@ -706,9 +706,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "profileCustomerSupportDesc": MessageLookupByLibrary.simpleMessage(
       "Chat with CS 24/7",
     ),
-    "profileEditProfile": MessageLookupByLibrary.simpleMessage("Edit Profile"),
+    "profileEditProfile": MessageLookupByLibrary.simpleMessage(
+      "Personal information",
+    ),
     "profileEditProfileDesc": MessageLookupByLibrary.simpleMessage(
-      "Update personal info",
+      "Your account details",
     ),
     "profileHelpFAQ": MessageLookupByLibrary.simpleMessage("Help & FAQ"),
     "profileHelpFAQDesc": MessageLookupByLibrary.simpleMessage(

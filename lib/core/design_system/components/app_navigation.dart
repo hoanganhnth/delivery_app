@@ -122,17 +122,21 @@ class AppBottomNavBar extends StatelessWidget {
     required this.onTap,
     required this.items,
     this.elevation = 8.0,
+    this.topBorderColor,
   });
 
   final int currentIndex;
   final ValueChanged<int> onTap;
   final List<AppNavItem> items;
   final double elevation;
+  final Color? topBorderColor;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final borderColor =
+        topBorderColor ?? scheme.outlineVariant.withValues(alpha: 0.2);
 
     return Material(
       color: scheme.surface,
@@ -141,7 +145,7 @@ class AppBottomNavBar extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(
-              color: scheme.outlineVariant.withValues(alpha: 0.2),
+              color: borderColor,
               width: 1,
             ),
           ),

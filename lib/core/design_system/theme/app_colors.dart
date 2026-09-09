@@ -52,13 +52,13 @@ abstract class AppColors {
 /// Light theme colors - Amber Hearth Design System
 class LightColors implements AppColors {
   @override
-  Color get primary => const Color(0xFFf49d25); // Amber - flagship color
+  Color get primary => const Color(0xFFEE4D2D);
 
   @override
-  Color get primaryLight => const Color(0xFFffc266); // Lighter amber
+  Color get primaryLight => const Color(0xFFFF8066);
 
   @override
-  Color get primaryDark => const Color(0xFFc77700); // Darker amber
+  Color get primaryDark => const Color(0xFFB93820);
 
   @override
   Color get onPrimary => Colors.white;
@@ -76,7 +76,7 @@ class LightColors implements AppColors {
   Color get onSecondary => Colors.white;
 
   @override
-  Color get background => const Color(0xFFf8f7f5); // Warm neutral background
+  Color get background => const Color(0xFFF5F5F5);
 
   @override
   Color get surface => Colors.white; // Pure white for maximum content clarity
@@ -91,7 +91,7 @@ class LightColors implements AppColors {
   Color get textPrimary => const Color(0xFF212121);
 
   @override
-  Color get textSecondary => const Color(0xFF9c7a49); // Warm muted instead of grey
+  Color get textSecondary => const Color(0xFF666666);
 
   @override
   Color get textDisabled => const Color(0xFFc9b89a); // Warm disabled state
@@ -109,10 +109,10 @@ class LightColors implements AppColors {
   Color get info => const Color(0xFF2196F3);
 
   @override
-  Color get border => const Color(0xFFe8e4df); // Warm border color
+  Color get border => const Color(0xFFEEEEEE);
 
   @override
-  Color get divider => const Color(0xFFe8e4df); // Warm divider
+  Color get divider => border;
 
   @override
   Color get cardBackground => Colors.white; // Surface Lowest: Pure white
@@ -139,7 +139,7 @@ class LightColors implements AppColors {
 /// Dark theme colors
 class DarkColors implements AppColors {
   @override
-  Color get primary => const Color(0xFF90CAF9);
+  Color get primary => const Color(0xFFFF8066);
 
   @override
   Color get primaryLight => const Color(0xFFBBDEFB);

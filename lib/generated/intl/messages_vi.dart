@@ -498,9 +498,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "mexican": MessageLookupByLibrary.simpleMessage("Món Mexico"),
     "min": MessageLookupByLibrary.simpleMessage("phút"),
     "myAddresses": MessageLookupByLibrary.simpleMessage("Địa chỉ của tôi"),
-    "navAccount": MessageLookupByLibrary.simpleMessage("Tài khoản"),
+    "navAccount": MessageLookupByLibrary.simpleMessage("Tôi"),
     "navCart": MessageLookupByLibrary.simpleMessage("Giỏ hàng"),
-    "navHome": MessageLookupByLibrary.simpleMessage("Trang chủ"),
+    "navHome": MessageLookupByLibrary.simpleMessage("Khám phá"),
     "navOrders": MessageLookupByLibrary.simpleMessage("Đơn hàng"),
     "navSearch": MessageLookupByLibrary.simpleMessage("Tìm kiếm"),
     "newConversationStarted": MessageLookupByLibrary.simpleMessage(
@@ -695,10 +695,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Chat với CSKH 24/7",
     ),
     "profileEditProfile": MessageLookupByLibrary.simpleMessage(
-      "Chỉnh sửa hồ sơ",
+      "Thông tin cá nhân",
     ),
     "profileEditProfileDesc": MessageLookupByLibrary.simpleMessage(
-      "Cập nhật thông tin cá nhân",
+      "Thông tin tài khoản của bạn",
     ),
     "profileHelpFAQ": MessageLookupByLibrary.simpleMessage("Trợ giúp & FAQ"),
     "profileHelpFAQDesc": MessageLookupByLibrary.simpleMessage(

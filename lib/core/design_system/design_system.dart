@@ -14,4 +14,6 @@ export 'components/app_fields.dart';
 export 'components/app_image.dart';
 export 'components/app_indicators.dart';
 export 'components/app_navigation.dart';
+export 'components/preview_bottom_navigation.dart';
+export 'components/preview_page_shell.dart';
 export 'components/app_surface.dart';

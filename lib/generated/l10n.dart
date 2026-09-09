@@ -1549,20 +1549,20 @@ class S {
     return Intl.message('Account', name: 'profileTitle', desc: '', args: []);
   }
 
-  /// `Edit Profile`
+  /// `Personal information`
   String get profileEditProfile {
     return Intl.message(
-      'Edit Profile',
+      'Personal information',
       name: 'profileEditProfile',
       desc: '',
       args: [],
     );
   }
 
-  /// `Update personal info`
+  /// `Your account details`
   String get profileEditProfileDesc {
     return Intl.message(
-      'Update personal info',
+      'Your account details',
       name: 'profileEditProfileDesc',
       desc: '',
       args: [],
@@ -3929,9 +3929,9 @@ class S {
     );
   }
 
-  /// `Home`
+  /// `Discover`
   String get navHome {
-    return Intl.message('Home', name: 'navHome', desc: '', args: []);
+    return Intl.message('Discover', name: 'navHome', desc: '', args: []);
   }
 
   /// `Search`
@@ -3944,9 +3944,9 @@ class S {
     return Intl.message('Orders', name: 'navOrders', desc: '', args: []);
   }
 
-  /// `Account`
+  /// `Me`
   String get navAccount {
-    return Intl.message('Account', name: 'navAccount', desc: '', args: []);
+    return Intl.message('Me', name: 'navAccount', desc: '', args: []);
   }
 
   /// `Cart`
