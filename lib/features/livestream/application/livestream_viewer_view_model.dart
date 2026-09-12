@@ -15,6 +15,8 @@ abstract interface class LivestreamMediaPort {
   Future<void> leave();
 }
 
+/// Explicit no-op media adapter used until the approved Agora Flutter SDK is
+/// available to the customer app. It never simulates playback.
 final class UnsupportedLivestreamMediaPort implements LivestreamMediaPort {
   const UnsupportedLivestreamMediaPort();
   @override
@@ -28,7 +30,14 @@ final class LivestreamMediaUnavailableException implements Exception {
   const LivestreamMediaUnavailableException();
 }
 
-enum LivestreamViewerPhase { disabled, idle, loading, mediaUnavailable, error }
+enum LivestreamViewerPhase {
+  disabled,
+  idle,
+  loading,
+  joined,
+  mediaUnavailable,
+  error,
+}
 
 final class LivestreamViewerState {
   const LivestreamViewerState({
@@ -90,7 +99,12 @@ class LivestreamViewerViewModel extends Notifier<LivestreamViewerState> {
       if (_disposed) return;
       try {
         await ref.read(livestreamMediaPortProvider).join(session);
-        if (!_disposed) state = LivestreamViewerState(session: session);
+        if (!_disposed) {
+          state = LivestreamViewerState(
+            phase: LivestreamViewerPhase.joined,
+            session: session,
+          );
+        }
       } on LivestreamMediaUnavailableException {
         if (!_disposed) {
           state = LivestreamViewerState(

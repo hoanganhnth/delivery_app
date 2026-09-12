@@ -37,7 +37,8 @@ class _LivestreamViewerPageState extends ConsumerState<LivestreamViewerPage> {
       LivestreamViewerPhase.loading => 'Đang kết nối phòng livestream...',
       LivestreamViewerPhase.error => state.message ?? 'Không thể tham gia',
       LivestreamViewerPhase.mediaUnavailable =>
-        'Thiết bị không hỗ trợ phát livestream',
+        'Phát livestream tạm thời chưa khả dụng (Agora RTC chưa được tích hợp trong ứng dụng)',
+      LivestreamViewerPhase.joined => 'Đã tham gia phòng livestream',
       LivestreamViewerPhase.idle => 'Sẵn sàng tham gia livestream',
     };
     return Scaffold(
