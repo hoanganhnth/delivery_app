@@ -1,8 +1,10 @@
 import 'package:delivery_app/features/livestream/application/livestream_viewer_view_model.dart';
+import 'package:delivery_app/features/livestream/application/livestream_media_port.dart';
 import 'package:delivery_app/features/livestream/domain/entities/livestream_join_session.dart';
 import 'package:delivery_app/features/livestream/domain/repositories/livestream_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/widgets.dart';
 
 void main() {
   const id = '00000000-0000-4000-8000-000000000001';
@@ -51,6 +53,7 @@ void main() {
       final state = container.read(livestreamViewerProvider(id));
       expect(state.phase, LivestreamViewerPhase.mediaUnavailable);
       expect(state.session?.channelName, 'server-channel');
+      expect(state.message, 'Phát livestream tạm thời chưa khả dụng');
     },
   );
 
@@ -147,4 +150,7 @@ final class _FakeMediaPort implements LivestreamMediaPort {
 
   @override
   Future<void> leave() async => leaveCount++;
+
+  @override
+  Widget buildVideoView() => const SizedBox.shrink();
 }

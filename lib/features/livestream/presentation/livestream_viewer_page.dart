@@ -37,7 +37,7 @@ class _LivestreamViewerPageState extends ConsumerState<LivestreamViewerPage> {
       LivestreamViewerPhase.loading => 'Đang kết nối phòng livestream...',
       LivestreamViewerPhase.error => state.message ?? 'Không thể tham gia',
       LivestreamViewerPhase.mediaUnavailable =>
-        'Phát livestream tạm thời chưa khả dụng (Agora RTC chưa được tích hợp trong ứng dụng)',
+        state.message ?? 'Phát livestream tạm thời chưa khả dụng',
       LivestreamViewerPhase.joined => 'Đã tham gia phòng livestream',
       LivestreamViewerPhase.idle => 'Sẵn sàng tham gia livestream',
     };
@@ -54,15 +54,17 @@ class _LivestreamViewerPageState extends ConsumerState<LivestreamViewerPage> {
             color: const Color(0xFF171717),
             child: AspectRatio(
               aspectRatio: 16 / 9,
-              child: Center(
-                child: loading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : Icon(
-                        Icons.videocam_off_outlined,
-                        size: 48,
-                        color: Colors.white.withValues(alpha: .72),
-                      ),
-              ),
+              child: state.phase == LivestreamViewerPhase.joined
+                  ? ref.read(livestreamMediaPortProvider).buildVideoView()
+                  : Center(
+                      child: loading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : Icon(
+                              Icons.videocam_off_outlined,
+                              size: 48,
+                              color: Colors.white.withValues(alpha: .72),
+                            ),
+                    ),
             ),
           ),
           PreviewSurface(

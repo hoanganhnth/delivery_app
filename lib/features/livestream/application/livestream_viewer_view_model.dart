@@ -6,29 +6,11 @@ import 'package:delivery_app/core/network/_riverpod/authenticated_network_provid
 
 import '../data/livestream_gateway.dart';
 import '../data/livestream_repository_impl.dart';
+import 'livestream_media_port.dart';
 import '../domain/entities/livestream_join_session.dart';
 import '../domain/repositories/livestream_repository.dart';
 import '../domain/usecases/join_livestream_use_case.dart';
-
-abstract interface class LivestreamMediaPort {
-  Future<void> join(LivestreamJoinSession session);
-  Future<void> leave();
-}
-
-/// Explicit no-op media adapter used until the approved Agora Flutter SDK is
-/// available to the customer app. It never simulates playback.
-final class UnsupportedLivestreamMediaPort implements LivestreamMediaPort {
-  const UnsupportedLivestreamMediaPort();
-  @override
-  Future<void> join(LivestreamJoinSession session) =>
-      Future.error(const LivestreamMediaUnavailableException());
-  @override
-  Future<void> leave() async {}
-}
-
-final class LivestreamMediaUnavailableException implements Exception {
-  const LivestreamMediaUnavailableException();
-}
+import '../platform/agora_livestream_media_port.dart';
 
 enum LivestreamViewerPhase {
   disabled,
@@ -59,7 +41,7 @@ final joinLivestreamUseCaseProvider = Provider<JoinLivestreamUseCase>(
   (ref) => JoinLivestreamUseCase(ref.watch(livestreamRepositoryProvider)),
 );
 final livestreamMediaPortProvider = Provider<LivestreamMediaPort>(
-  (ref) => const UnsupportedLivestreamMediaPort(),
+  (ref) => AgoraLivestreamMediaPort(appId: RuntimeConfig.agoraAppId),
 );
 final livestreamEnabledProvider = Provider<bool>(
   (ref) => RuntimeConfig.livestreamViewerEnabled,
@@ -105,11 +87,12 @@ class LivestreamViewerViewModel extends Notifier<LivestreamViewerState> {
             session: session,
           );
         }
-      } on LivestreamMediaUnavailableException {
+      } on LivestreamMediaUnavailableException catch (error) {
         if (!_disposed) {
           state = LivestreamViewerState(
             phase: LivestreamViewerPhase.mediaUnavailable,
             session: session,
+            message: error.message,
           );
         }
       }

@@ -1,4 +1,5 @@
 import 'package:delivery_app/features/livestream/application/livestream_viewer_view_model.dart';
+import 'package:delivery_app/features/livestream/application/livestream_media_port.dart';
 import 'package:delivery_app/features/livestream/domain/entities/livestream_join_session.dart';
 import 'package:delivery_app/features/livestream/domain/repositories/livestream_repository.dart';
 import 'package:delivery_app/features/livestream/presentation/livestream_viewer_page.dart';
@@ -48,13 +49,32 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(
-      find.text(
-        'Phát livestream tạm thời chưa khả dụng (Agora RTC chưa được tích hợp trong ứng dụng)',
-      ),
-      findsOneWidget,
-    );
+    expect(find.text('Phát livestream tạm thời chưa khả dụng'), findsOneWidget);
     expect(find.byIcon(Icons.videocam_off_outlined), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('renders the injected media surface after a successful join', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          livestreamEnabledProvider.overrideWithValue(true),
+          livestreamRepositoryProvider.overrideWithValue(_FakeRepository()),
+          livestreamMediaPortProvider.overrideWithValue(_FakeMediaPort()),
+        ],
+        child: const MaterialApp(
+          home: LivestreamViewerPage(
+            livestreamId: '00000000-0000-4000-8000-000000000001',
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('fake-livestream-video')), findsOneWidget);
+    expect(find.byIcon(Icons.videocam_off_outlined), findsNothing);
     expect(tester.takeException(), isNull);
   });
 }
@@ -71,4 +91,16 @@ final class _FakeRepository implements LivestreamRepository {
         title: 'Live kitchen',
         restaurantId: 42,
       );
+}
+
+final class _FakeMediaPort implements LivestreamMediaPort {
+  @override
+  Future<void> join(LivestreamJoinSession session) async {}
+
+  @override
+  Future<void> leave() async {}
+
+  @override
+  Widget buildVideoView() =>
+      const ColoredBox(key: Key('fake-livestream-video'), color: Colors.black);
 }

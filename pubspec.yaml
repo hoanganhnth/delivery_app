@@ -39,6 +39,7 @@ dependencies:
   cached_network_image: ^3.4.1
   flutter_screenutil: ^5.9.3
   auto_size_text: ^3.0.0
+  agora_rtc_engine: ^6.6.4
   geolocator: ^14.0.2
   geocoding: ^3.0.0
   rxdart: ^0.28.0

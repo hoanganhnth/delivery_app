@@ -24,6 +24,7 @@ class RuntimeConfig {
     'LIVESTREAM_CLIENT_API_ENABLED',
     defaultValue: true,
   );
+  static const agoraAppId = String.fromEnvironment('AGORA_APP_ID');
   static const vnpayPaymentEnabled = bool.fromEnvironment(
     'VNPAY_PAYMENT_ENABLED',
     defaultValue: false,

@@ -94,6 +94,12 @@ fvm flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8079
 
 # iOS simulator hoặc Gateway staging
 fvm flutter run --dart-define=API_BASE_URL=https://gateway.example.com
+
+# Enable Agora viewer playback with the public App ID from Agora Console.
+# The join endpoint supplies short-lived channel tokens; never ship an App Certificate.
+fvm flutter run \
+  --dart-define=API_BASE_URL=https://gateway.example.com \
+  --dart-define=AGORA_APP_ID=your_32_character_app_id
 ```
 
 Thiết bị thật phải dùng hostname/IP mà thiết bị truy cập được, không dùng
