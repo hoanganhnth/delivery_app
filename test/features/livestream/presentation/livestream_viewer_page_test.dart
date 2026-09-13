@@ -1,5 +1,6 @@
 import 'package:delivery_app/features/livestream/application/livestream_viewer_view_model.dart';
 import 'package:delivery_app/features/livestream/application/livestream_media_port.dart';
+import 'package:delivery_app/features/livestream/domain/entities/livestream.dart';
 import 'package:delivery_app/features/livestream/domain/entities/livestream_join_session.dart';
 import 'package:delivery_app/features/livestream/domain/repositories/livestream_repository.dart';
 import 'package:delivery_app/features/livestream/presentation/livestream_viewer_page.dart';
@@ -81,6 +82,9 @@ void main() {
 
 final class _FakeRepository implements LivestreamRepository {
   @override
+  Future<List<Livestream>> getActive() async => const [];
+
+  @override
   Future<LivestreamJoinSession> join(String livestreamId) async =>
       LivestreamJoinSession(
         livestreamId: livestreamId,
@@ -91,11 +95,18 @@ final class _FakeRepository implements LivestreamRepository {
         title: 'Live kitchen',
         restaurantId: 42,
       );
+
+  @override
+  Future<String> renewToken(LivestreamJoinSession session) async =>
+      'renewed-server-token';
 }
 
 final class _FakeMediaPort implements LivestreamMediaPort {
   @override
-  Future<void> join(LivestreamJoinSession session) async {}
+  Future<void> join(
+    LivestreamJoinSession session, {
+    required Future<String> Function() renewToken,
+  }) async {}
 
   @override
   Future<void> leave() async {}

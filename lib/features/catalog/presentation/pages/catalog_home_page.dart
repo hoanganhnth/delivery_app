@@ -150,11 +150,7 @@ class _CatalogHomePageState extends ConsumerState<CatalogHomePage> {
       case CatalogHomeNavigateToVouchers():
         context.push(AppRoutes.vouchers);
       case CatalogHomeNavigateToLivestream():
-        context.push(
-          AppRoutes.livestreamViewerPath(
-            '00000000-0000-0000-0000-000000000001',
-          ),
-        );
+        context.push(AppRoutes.livestreams);
       case CatalogHomeNavigateToAddresses():
         await context.push('${AppRoutes.addressList}?context=home');
         if (mounted) {

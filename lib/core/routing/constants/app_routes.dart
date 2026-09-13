@@ -33,7 +33,8 @@ class AppRoutes {
   // Restaurant routes
   static const String restaurants = '/restaurants';
   static const String restaurantDetails = '/restaurants/:restaurantId';
-  static const String livestreamViewer = '/livestreams/:livestreamId';
+  static const String livestreams = '/livestreams';
+  static const String livestreamViewer = '$livestreams/:livestreamId';
 
   // Cart and checkout
   static const String cart = '/cart';

@@ -59,11 +59,13 @@ class LivestreamViewerViewModel extends Notifier<LivestreamViewerState> {
 
   final String _livestreamId;
   bool _disposed = false;
+  var _joinGeneration = 0;
   @override
   LivestreamViewerState build() {
     final media = ref.read(livestreamMediaPortProvider);
     ref.onDispose(() {
       _disposed = true;
+      _joinGeneration++;
       unawaited(media.leave());
     });
     return ref.read(livestreamEnabledProvider)
@@ -73,22 +75,26 @@ class LivestreamViewerViewModel extends Notifier<LivestreamViewerState> {
 
   Future<void> join() async {
     if (!ref.read(livestreamEnabledProvider)) return;
+    final generation = ++_joinGeneration;
     state = const LivestreamViewerState(phase: LivestreamViewerPhase.loading);
     try {
       final session = await ref.read(joinLivestreamUseCaseProvider)(
         _livestreamId,
       );
-      if (_disposed) return;
+      if (_disposed || generation != _joinGeneration) return;
       try {
-        await ref.read(livestreamMediaPortProvider).join(session);
-        if (!_disposed) {
+        final repository = ref.read(livestreamRepositoryProvider);
+        await ref
+            .read(livestreamMediaPortProvider)
+            .join(session, renewToken: () => repository.renewToken(session));
+        if (!_disposed && generation == _joinGeneration) {
           state = LivestreamViewerState(
             phase: LivestreamViewerPhase.joined,
             session: session,
           );
         }
       } on LivestreamMediaUnavailableException catch (error) {
-        if (!_disposed) {
+        if (!_disposed && generation == _joinGeneration) {
           state = LivestreamViewerState(
             phase: LivestreamViewerPhase.mediaUnavailable,
             session: session,
@@ -97,14 +103,14 @@ class LivestreamViewerViewModel extends Notifier<LivestreamViewerState> {
         }
       }
     } on FormatException catch (_) {
-      if (!_disposed) {
+      if (!_disposed && generation == _joinGeneration) {
         state = const LivestreamViewerState(
           phase: LivestreamViewerPhase.error,
           message: 'Livestream data is unavailable',
         );
       }
     } catch (_) {
-      if (!_disposed) {
+      if (!_disposed && generation == _joinGeneration) {
         state = const LivestreamViewerState(
           phase: LivestreamViewerPhase.error,
           message: 'Unable to join livestream',

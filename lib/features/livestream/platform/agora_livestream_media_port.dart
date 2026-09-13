@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../application/livestream_media_port.dart';
 import '../domain/entities/livestream_join_session.dart';
+import 'agora_media_operation_queue.dart';
+import 'agora_token_renewal.dart';
 
 /// Agora RTC 6.x audience adapter for the customer livestream viewer.
 ///
@@ -18,20 +20,42 @@ final class AgoraLivestreamMediaPort implements LivestreamMediaPort {
   );
   RtcEngine? _engine;
   LivestreamJoinSession? _session;
+  AgoraTokenRenewal? _tokenRenewal;
+  final AgoraMediaOperationQueue _operations = AgoraMediaOperationQueue();
 
   @override
-  Future<void> join(LivestreamJoinSession session) async {
+  Future<void> join(
+    LivestreamJoinSession session, {
+    required Future<String> Function() renewToken,
+  }) => _operations.run(() => _join(session, renewToken: renewToken));
+
+  Future<void> _join(
+    LivestreamJoinSession session, {
+    required Future<String> Function() renewToken,
+  }) async {
     if (!_agoraAppId.hasMatch(_appId)) {
       throw const LivestreamMediaUnavailableException(
         'Thiếu cấu hình AGORA_APP_ID cho ứng dụng',
       );
     }
 
-    await leave();
+    await _leaveCurrent();
     _session = session;
     _videoState.value = const _RemoteVideoState.waiting();
     final engine = createAgoraRtcEngine();
     _engine = engine;
+    final tokenRenewal = AgoraTokenRenewal(
+      fetchToken: renewToken,
+      applyToken: engine.renewToken,
+      onFailure: () {
+        if (_engine == engine) {
+          _videoState.value = const _RemoteVideoState.failed(
+            'Không thể gia hạn phiên xem. Vui lòng kết nối lại.',
+          );
+        }
+      },
+    );
+    _tokenRenewal = tokenRenewal;
 
     try {
       await engine.initialize(
@@ -43,26 +67,37 @@ final class AgoraLivestreamMediaPort implements LivestreamMediaPort {
       engine.registerEventHandler(
         RtcEngineEventHandler(
           onUserJoined: (connection, remoteUid, elapsed) {
-            if (connection.channelId == session.channelName &&
+            if (_engine == engine &&
+                connection.channelId == session.channelName &&
                 _videoState.value.remoteUid == null) {
               _videoState.value = _RemoteVideoState.remote(remoteUid);
             }
           },
           onUserOffline: (connection, remoteUid, reason) {
-            if (connection.channelId == session.channelName &&
+            if (_engine == engine &&
+                connection.channelId == session.channelName &&
                 _videoState.value.remoteUid == remoteUid) {
               _videoState.value = const _RemoteVideoState.waiting();
             }
           },
           onError: (error, message) {
-            _videoState.value = const _RemoteVideoState.failed(
-              'Kết nối phát trực tiếp gặp lỗi. Vui lòng thử lại.',
-            );
+            if (_engine == engine) {
+              _videoState.value = const _RemoteVideoState.failed(
+                'Kết nối phát trực tiếp gặp lỗi. Vui lòng thử lại.',
+              );
+            }
           },
           onRequestToken: (connection) {
-            _videoState.value = const _RemoteVideoState.failed(
-              'Phiên xem đã hết hạn. Vui lòng thử lại để kết nối lại.',
-            );
+            if (connection.channelId == session.channelName &&
+                _engine == engine) {
+              tokenRenewal.request();
+            }
+          },
+          onTokenPrivilegeWillExpire: (connection, token) {
+            if (connection.channelId == session.channelName &&
+                _engine == engine) {
+              tokenRenewal.request();
+            }
           },
         ),
       );
@@ -83,7 +118,7 @@ final class AgoraLivestreamMediaPort implements LivestreamMediaPort {
         ),
       );
     } catch (_) {
-      await leave();
+      await _leaveCurrent();
       throw const LivestreamMediaUnavailableException(
         'Không thể khởi tạo trình phát livestream',
       );
@@ -117,8 +152,12 @@ final class AgoraLivestreamMediaPort implements LivestreamMediaPort {
   );
 
   @override
-  Future<void> leave() async {
+  Future<void> leave() => _operations.run(_leaveCurrent);
+
+  Future<void> _leaveCurrent() async {
     final engine = _engine;
+    _tokenRenewal?.dispose();
+    _tokenRenewal = null;
     _engine = null;
     _session = null;
     _videoState.value = const _RemoteVideoState.waiting();

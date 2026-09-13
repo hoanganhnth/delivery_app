@@ -3,7 +3,10 @@ import 'package:flutter/widgets.dart';
 import '../domain/entities/livestream_join_session.dart';
 
 abstract interface class LivestreamMediaPort {
-  Future<void> join(LivestreamJoinSession session);
+  Future<void> join(
+    LivestreamJoinSession session, {
+    required Future<String> Function() renewToken,
+  });
   Future<void> leave();
   Widget buildVideoView();
 }
@@ -23,8 +26,10 @@ final class UnsupportedLivestreamMediaPort implements LivestreamMediaPort {
   const UnsupportedLivestreamMediaPort();
 
   @override
-  Future<void> join(LivestreamJoinSession session) =>
-      Future.error(const LivestreamMediaUnavailableException());
+  Future<void> join(
+    LivestreamJoinSession session, {
+    required Future<String> Function() renewToken,
+  }) => Future.error(const LivestreamMediaUnavailableException());
 
   @override
   Future<void> leave() async {}

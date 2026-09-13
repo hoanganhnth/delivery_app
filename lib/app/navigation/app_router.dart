@@ -28,6 +28,7 @@ import 'package:delivery_app/features/settings/settings.dart';
 import 'package:delivery_app/features/debug/debug.dart';
 import 'package:delivery_app/features/orders/orders.dart';
 import 'package:delivery_app/features/livestream/presentation/livestream_viewer_page.dart';
+import 'package:delivery_app/features/livestream/presentation/active_livestreams_page.dart';
 import 'package:delivery_app/features/entitlements/presentation/entitlement_status_page.dart';
 import 'package:delivery_app/features/promotion/presentation/pages/voucher_wallet_page.dart';
 import 'package:delivery_app/features/support/presentation/support_page.dart';
@@ -77,6 +78,7 @@ class AppRouterPages {
   Widget restaurants() => const CatalogAllRestaurantsPage();
   Widget restaurantDetail(int restaurantId) =>
       CatalogRestaurantDetailPage(restaurantId: restaurantId);
+  Widget livestreamList() => const ActiveLivestreamsPage();
   Widget livestreamViewer(String livestreamId) =>
       LivestreamViewerPage(livestreamId: livestreamId);
   Widget cart() => const CartScreen();
@@ -294,6 +296,11 @@ GoRouter createAppRouter({
         builder: (context, state) => pages.orderConfirmation(),
       ),
       GoRoute(
+        path: AppRoutes.livestreams,
+        name: 'livestreams',
+        builder: (context, state) => pages.livestreamList(),
+      ),
+      GoRoute(
         path: AppRoutes.livestreamViewer,
         name: 'livestream-viewer',
         builder: (context, state) {
@@ -381,6 +388,7 @@ extension GoRouterExtension on GoRouter {
   void pushOrders() => pushNamed('orders');
   void pushRefundHistory() => pushNamed('refund-history');
   void pushRestaurants() => pushNamed('restaurants');
+  void pushLivestreams() => pushNamed('livestreams');
   void pushCart() => pushNamed('cart');
 
   void pushOrderDetails(String orderId) =>

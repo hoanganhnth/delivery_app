@@ -1,3 +1,4 @@
+import 'package:delivery_app/features/livestream/domain/entities/livestream.dart';
 import 'package:delivery_app/features/livestream/domain/entities/livestream_join_session.dart';
 import 'package:delivery_app/features/livestream/domain/repositories/livestream_repository.dart';
 import 'package:delivery_app/features/livestream/domain/usecases/join_livestream_use_case.dart';
@@ -19,6 +20,9 @@ final class _FakeLivestreamRepository implements LivestreamRepository {
   String? joinedId;
 
   @override
+  Future<List<Livestream>> getActive() async => const [];
+
+  @override
   Future<LivestreamJoinSession> join(String livestreamId) async {
     joinedId = livestreamId;
     return LivestreamJoinSession(
@@ -31,4 +35,8 @@ final class _FakeLivestreamRepository implements LivestreamRepository {
       restaurantId: 42,
     );
   }
+
+  @override
+  Future<String> renewToken(LivestreamJoinSession session) async =>
+      'renewed-server-token';
 }

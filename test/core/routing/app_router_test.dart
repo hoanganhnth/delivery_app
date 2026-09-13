@@ -183,6 +183,28 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('ADDRESS management'), findsOneWidget);
   });
+
+  testWidgets('livestream list is a real route before UUID viewer routing', (
+    tester,
+  ) async {
+    final router = createAppRouter(
+      authNotifier: _FakeAuthNotifier(authenticated: true),
+      config: const AppRouterConfig(initialLocation: '/livestreams'),
+      pages: const _TestPages(),
+    );
+    addTearDown(router.dispose);
+
+    await pumpTestRouter(tester, router: router);
+    await tester.pumpAndSettle();
+    expect(find.text('LIVESTREAM LIST'), findsOneWidget);
+
+    router.go('/livestreams/00000000-0000-4000-8000-000000000001');
+    await tester.pumpAndSettle();
+    expect(
+      find.text('LIVESTREAM 00000000-0000-4000-8000-000000000001'),
+      findsOneWidget,
+    );
+  });
 }
 
 class _FakeAuthNotifier extends ChangeNotifier implements IAuthNotifier {
@@ -249,6 +271,13 @@ class _TestPages extends AppRouterPages {
 
   @override
   Widget refundHistory() => _page('REFUNDS');
+
+  @override
+  Widget livestreamList() => _page('LIVESTREAM LIST');
+
+  @override
+  Widget livestreamViewer(String livestreamId) =>
+      _page('LIVESTREAM $livestreamId');
 
   @override
   Widget orderDetail(int orderId) => _page('ORDER $orderId');

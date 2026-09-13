@@ -88,12 +88,7 @@ class ProfilePage extends ConsumerWidget {
         if (context.mounted) context.pushSupport();
       case ProfileNavigateLivestream():
         if (context.mounted) {
-          context.pushNamed(
-            'livestream-viewer',
-            pathParameters: {
-              'livestreamId': '00000000-0000-0000-0000-000000000001',
-            },
-          );
+          context.pushNamed('livestreams');
         }
       case ProfileNavigateLogin():
         if (context.mounted) context.goToLogin();
