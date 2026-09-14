@@ -68,6 +68,33 @@ void main() {
       );
     }
   });
+  test('rejects pins outside the room or restaurant association', () {
+    expect(
+      () => Livestream.fromJson(
+        room()
+          ..['pinnedProducts'] = [
+            product()
+              ..['livestreamId'] =
+                  '00000000-0000-4000-8000-000000000002',
+          ],
+      ),
+      throwsFormatException,
+    );
+    expect(
+      () => Livestream.fromJson(
+        room()
+          ..['pinnedProducts'] = [product()..['restaurantId'] = 99],
+      ),
+      throwsFormatException,
+    );
+    expect(
+      () => Livestream.fromJson(
+        room()
+          ..['pinnedProducts'] = [product()..['isPinned'] = false],
+      ),
+      throwsFormatException,
+    );
+  });
   test('rejects malformed optional counters and dates', () {
     for (final value in ['1', 1.5, -1]) {
       expect(

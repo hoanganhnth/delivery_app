@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CartEntity {
 
- List<CartItemEntity> get items; num? get currentRestaurantId; String? get currentRestaurantName;
+ List<CartItemEntity> get items; num? get currentRestaurantId; String? get currentRestaurantName; String? get livestreamId;
 /// Create a copy of CartEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $CartEntityCopyWith<CartEntity> get copyWith => _$CartEntityCopyWithImpl<CartEnt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CartEntity&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.currentRestaurantId, currentRestaurantId) || other.currentRestaurantId == currentRestaurantId)&&(identical(other.currentRestaurantName, currentRestaurantName) || other.currentRestaurantName == currentRestaurantName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CartEntity&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.currentRestaurantId, currentRestaurantId) || other.currentRestaurantId == currentRestaurantId)&&(identical(other.currentRestaurantName, currentRestaurantName) || other.currentRestaurantName == currentRestaurantName)&&(identical(other.livestreamId, livestreamId) || other.livestreamId == livestreamId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items),currentRestaurantId,currentRestaurantName);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items),currentRestaurantId,currentRestaurantName,livestreamId);
 
 @override
 String toString() {
-  return 'CartEntity(items: $items, currentRestaurantId: $currentRestaurantId, currentRestaurantName: $currentRestaurantName)';
+  return 'CartEntity(items: $items, currentRestaurantId: $currentRestaurantId, currentRestaurantName: $currentRestaurantName, livestreamId: $livestreamId)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $CartEntityCopyWith<$Res>  {
   factory $CartEntityCopyWith(CartEntity value, $Res Function(CartEntity) _then) = _$CartEntityCopyWithImpl;
 @useResult
 $Res call({
- List<CartItemEntity> items, num? currentRestaurantId, String? currentRestaurantName
+ List<CartItemEntity> items, num? currentRestaurantId, String? currentRestaurantName, String? livestreamId
 });
 
 
@@ -62,11 +62,12 @@ class _$CartEntityCopyWithImpl<$Res>
 
 /// Create a copy of CartEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? currentRestaurantId = freezed,Object? currentRestaurantName = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? currentRestaurantId = freezed,Object? currentRestaurantName = freezed,Object? livestreamId = freezed,}) {
   return _then(_self.copyWith(
 items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<CartItemEntity>,currentRestaurantId: freezed == currentRestaurantId ? _self.currentRestaurantId : currentRestaurantId // ignore: cast_nullable_to_non_nullable
 as num?,currentRestaurantName: freezed == currentRestaurantName ? _self.currentRestaurantName : currentRestaurantName // ignore: cast_nullable_to_non_nullable
+as String?,livestreamId: freezed == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -149,10 +150,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<CartItemEntity> items,  num? currentRestaurantId,  String? currentRestaurantName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<CartItemEntity> items,  num? currentRestaurantId,  String? currentRestaurantName,  String? livestreamId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CartEntity() when $default != null:
-return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantName);case _:
+return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantName,_that.livestreamId);case _:
   return orElse();
 
 }
@@ -170,10 +171,10 @@ return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantNam
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<CartItemEntity> items,  num? currentRestaurantId,  String? currentRestaurantName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<CartItemEntity> items,  num? currentRestaurantId,  String? currentRestaurantName,  String? livestreamId)  $default,) {final _that = this;
 switch (_that) {
 case _CartEntity():
-return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantName);}
+return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantName,_that.livestreamId);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -187,10 +188,10 @@ return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantNam
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<CartItemEntity> items,  num? currentRestaurantId,  String? currentRestaurantName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<CartItemEntity> items,  num? currentRestaurantId,  String? currentRestaurantName,  String? livestreamId)?  $default,) {final _that = this;
 switch (_that) {
 case _CartEntity() when $default != null:
-return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantName);case _:
+return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantName,_that.livestreamId);case _:
   return null;
 
 }
@@ -202,7 +203,7 @@ return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantNam
 
 
 class _CartEntity extends CartEntity {
-  const _CartEntity({required final  List<CartItemEntity> items, required this.currentRestaurantId, required this.currentRestaurantName}): _items = items,super._();
+  const _CartEntity({required final  List<CartItemEntity> items, required this.currentRestaurantId, required this.currentRestaurantName, this.livestreamId}): _items = items,super._();
   
 
  final  List<CartItemEntity> _items;
@@ -214,6 +215,7 @@ class _CartEntity extends CartEntity {
 
 @override final  num? currentRestaurantId;
 @override final  String? currentRestaurantName;
+@override final  String? livestreamId;
 
 /// Create a copy of CartEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -225,16 +227,16 @@ _$CartEntityCopyWith<_CartEntity> get copyWith => __$CartEntityCopyWithImpl<_Car
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CartEntity&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.currentRestaurantId, currentRestaurantId) || other.currentRestaurantId == currentRestaurantId)&&(identical(other.currentRestaurantName, currentRestaurantName) || other.currentRestaurantName == currentRestaurantName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CartEntity&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.currentRestaurantId, currentRestaurantId) || other.currentRestaurantId == currentRestaurantId)&&(identical(other.currentRestaurantName, currentRestaurantName) || other.currentRestaurantName == currentRestaurantName)&&(identical(other.livestreamId, livestreamId) || other.livestreamId == livestreamId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),currentRestaurantId,currentRestaurantName);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),currentRestaurantId,currentRestaurantName,livestreamId);
 
 @override
 String toString() {
-  return 'CartEntity(items: $items, currentRestaurantId: $currentRestaurantId, currentRestaurantName: $currentRestaurantName)';
+  return 'CartEntity(items: $items, currentRestaurantId: $currentRestaurantId, currentRestaurantName: $currentRestaurantName, livestreamId: $livestreamId)';
 }
 
 
@@ -245,7 +247,7 @@ abstract mixin class _$CartEntityCopyWith<$Res> implements $CartEntityCopyWith<$
   factory _$CartEntityCopyWith(_CartEntity value, $Res Function(_CartEntity) _then) = __$CartEntityCopyWithImpl;
 @override @useResult
 $Res call({
- List<CartItemEntity> items, num? currentRestaurantId, String? currentRestaurantName
+ List<CartItemEntity> items, num? currentRestaurantId, String? currentRestaurantName, String? livestreamId
 });
 
 
@@ -262,11 +264,12 @@ class __$CartEntityCopyWithImpl<$Res>
 
 /// Create a copy of CartEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? items = null,Object? currentRestaurantId = freezed,Object? currentRestaurantName = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? items = null,Object? currentRestaurantId = freezed,Object? currentRestaurantName = freezed,Object? livestreamId = freezed,}) {
   return _then(_CartEntity(
 items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
 as List<CartItemEntity>,currentRestaurantId: freezed == currentRestaurantId ? _self.currentRestaurantId : currentRestaurantId // ignore: cast_nullable_to_non_nullable
 as num?,currentRestaurantName: freezed == currentRestaurantName ? _self.currentRestaurantName : currentRestaurantName // ignore: cast_nullable_to_non_nullable
+as String?,livestreamId: freezed == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

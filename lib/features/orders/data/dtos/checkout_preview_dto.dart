@@ -16,10 +16,10 @@ sealed class CheckoutPreviewItemRequest with _$CheckoutPreviewItemRequest {
   factory CheckoutPreviewItemRequest.fromJson(Map<String, dynamic> json) =>
       _$CheckoutPreviewItemRequestFromJson(json);
 }
-
 @freezed
 sealed class CheckoutPreviewRequest with _$CheckoutPreviewRequest {
   const factory CheckoutPreviewRequest({
+    String? livestreamId,
     required int restaurantId,
     required double deliveryLat,
     required double deliveryLng,

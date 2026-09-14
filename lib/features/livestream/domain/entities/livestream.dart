@@ -47,10 +47,29 @@ final class Livestream {
     if (products != null && products is! List) {
       throw const FormatException('Invalid livestream pinnedProducts');
     }
+    final restaurantId = _requiredInt(json, 'restaurantId');
+    final pinnedProducts = products is List
+        ? products
+              .map((item) {
+                if (item is! Map<String, dynamic>) {
+                  throw const FormatException('Invalid livestream product');
+                }
+                return LivestreamProduct.fromJson(item);
+              })
+              .toList(growable: false)
+        : const <LivestreamProduct>[];
+    if (pinnedProducts.any(
+      (product) =>
+          product.livestreamId != id ||
+          product.restaurantId != restaurantId ||
+          !product.isPinned,
+    )) {
+      throw const FormatException('Invalid livestream product association');
+    }
     return Livestream(
       id: id,
       sellerId: _optionalInt(json['sellerId']),
-      restaurantId: _requiredInt(json, 'restaurantId'),
+      restaurantId: restaurantId,
       title: _requiredString(json, 'title'),
       description: json['description'] as String?,
       status: LivestreamStatus.parse(_requiredString(json, 'status')),
@@ -60,16 +79,7 @@ final class Livestream {
       startedAt: _optionalDate(json['startedAt']),
       endedAt: _optionalDate(json['endedAt']),
       viewCount: _optionalInt(json['viewCount']),
-      pinnedProducts: products is List
-          ? products
-                .map((item) {
-                  if (item is! Map<String, dynamic>) {
-                    throw const FormatException('Invalid livestream product');
-                  }
-                  return LivestreamProduct.fromJson(item);
-                })
-                .toList(growable: false)
-          : const [],
+      pinnedProducts: pinnedProducts,
     );
   }
 }

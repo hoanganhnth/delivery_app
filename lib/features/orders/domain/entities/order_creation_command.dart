@@ -5,6 +5,7 @@
 final class OrderCreationCommand {
   const OrderCreationCommand({
     this.quoteId,
+    this.livestreamId,
     this.idempotencyKey,
     required this.restaurantId,
     required this.deliveryAddress,
@@ -20,6 +21,7 @@ final class OrderCreationCommand {
   });
 
   final String? quoteId;
+  final String? livestreamId;
   final String? idempotencyKey;
   final int restaurantId;
   final String deliveryAddress;

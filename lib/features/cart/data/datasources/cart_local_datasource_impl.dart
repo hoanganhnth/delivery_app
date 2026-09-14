@@ -70,7 +70,10 @@ class CartLocalDataSourceImpl implements CartLocalDataSource {
   }
 
   @override
-  Future<Either<Exception, CartDto>> addItem(CartItemDto item) async {
+  Future<Either<Exception, CartDto>> addItem(
+    CartItemDto item, {
+    String? livestreamId,
+  }) async {
     try {
       final getCartResult = await getCart();
 
@@ -100,6 +103,7 @@ class CartLocalDataSourceImpl implements CartLocalDataSource {
             items: updatedItems,
             currentRestaurantId: item.restaurantId,
             currentRestaurantName: item.restaurantName,
+            livestreamId: livestreamId,
           );
 
           // Save updated cart
@@ -159,6 +163,7 @@ class CartLocalDataSourceImpl implements CartLocalDataSource {
             items: updatedItems,
             currentRestaurantId: updatedItems.isEmpty ? null : currentCart.currentRestaurantId,
             currentRestaurantName: updatedItems.isEmpty ? null : currentCart.currentRestaurantName,
+            livestreamId: updatedItems.isEmpty ? null : currentCart.livestreamId,
           );
 
           // Save updated cart

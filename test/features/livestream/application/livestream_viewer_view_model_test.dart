@@ -96,6 +96,7 @@ void main() {
       expect(state.phase, LivestreamViewerPhase.joined);
       expect(state.session?.livestreamId, id);
       expect(state.session?.token, 'server-token');
+      expect(state.room?.pinnedProducts.single.productName, 'Món live');
     },
   );
 
@@ -154,6 +155,7 @@ void main() {
     addTearDown(container.dispose);
 
     final older = container.read(livestreamViewerProvider(id).notifier).join();
+    await Future<void>.delayed(Duration.zero);
     await container.read(livestreamViewerProvider(id).notifier).join();
     repository.first.complete(_session(id, channel: 'older-channel'));
     await older;
@@ -188,6 +190,9 @@ final class _FakeRepository implements LivestreamRepository {
   Future<List<Livestream>> getActive() async => const [];
 
   @override
+  Future<Livestream> getById(String livestreamId) async => _room(livestreamId);
+
+  @override
   Future<LivestreamJoinSession> join(String livestreamId) async {
     joinCount++;
     return _session(livestreamId);
@@ -204,6 +209,10 @@ final class _FakeRepository implements LivestreamRepository {
 final class _FailingRepository implements LivestreamRepository {
   @override
   Future<List<Livestream>> getActive() =>
+      Future.error(const FormatException('bad response'));
+
+  @override
+  Future<Livestream> getById(String livestreamId) =>
       Future.error(const FormatException('bad response'));
 
   @override
@@ -245,6 +254,9 @@ final class _SequencedJoinRepository implements LivestreamRepository {
   Future<List<Livestream>> getActive() async => const [];
 
   @override
+  Future<Livestream> getById(String livestreamId) async => _room(livestreamId);
+
+  @override
   Future<LivestreamJoinSession> join(String livestreamId) {
     calls++;
     return calls == 1
@@ -256,6 +268,27 @@ final class _SequencedJoinRepository implements LivestreamRepository {
   Future<String> renewToken(LivestreamJoinSession session) async =>
       'renewed-server-token';
 }
+
+Livestream _room(String id) => Livestream(
+  id: id,
+  sellerId: 7,
+  restaurantId: 42,
+  title: 'Live kitchen',
+  status: LivestreamStatus.live,
+  streamProvider: LivestreamProvider.agora,
+  pinnedProducts: [
+    LivestreamProduct(
+      id: 91,
+      livestreamId: id,
+      productId: 501,
+      productName: 'Món live',
+      restaurantId: 42,
+      restaurantName: 'Live kitchen',
+      priceAtLive: 42000,
+      isPinned: true,
+    ),
+  ],
+);
 
 final class _SessionCapturingMediaPort implements LivestreamMediaPort {
   final joinedChannels = <String>[];

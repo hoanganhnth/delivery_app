@@ -78,6 +78,7 @@ class OrderRepositoryImpl implements OrderRepository {
   CreateOrderRequestDto _toDto(OrderCreationCommand command) =>
       CreateOrderRequestDto(
         quoteId: command.quoteId,
+        livestreamId: command.livestreamId,
         idempotencyKey: command.idempotencyKey,
         restaurantId: command.restaurantId,
         deliveryAddress: command.deliveryAddress,

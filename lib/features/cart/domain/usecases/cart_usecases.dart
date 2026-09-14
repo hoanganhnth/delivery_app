@@ -16,7 +16,6 @@ class GetCartUseCase extends UseCase<CartEntity, NoParams> {
     return await repository.getCart();
   }
 }
-
 /// Use case for adding item to cart
 class AddToCartUseCase extends UseCase<CartEntity, AddToCartParams> {
   final CartRepository repository;
@@ -25,14 +24,18 @@ class AddToCartUseCase extends UseCase<CartEntity, AddToCartParams> {
 
   @override
   Future<Either<Failure, CartEntity>> call(AddToCartParams params) async {
-    return await repository.addItem(params.item);
+    return await repository.addItem(
+      params.item,
+      livestreamId: params.livestreamId,
+    );
   }
 }
 
 class AddToCartParams {
   final CartItemEntity item;
+  final String? livestreamId;
 
-  AddToCartParams({required this.item});
+  AddToCartParams({required this.item, this.livestreamId});
 }
 
 /// Use case for updating item quantity

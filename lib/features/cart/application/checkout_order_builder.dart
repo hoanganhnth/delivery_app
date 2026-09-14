@@ -31,6 +31,7 @@ class CheckoutOrderBuilder {
     final longitude = address?.longitude;
     if (address == null ||
         restaurantId == null ||
+        !_isValidLivestreamId(cart.livestreamId) ||
         !_isVietnamCoordinate(latitude, longitude) ||
         !_hasValidCartItems(cart) ||
         address.recipientName.trim().isEmpty ||
@@ -58,6 +59,7 @@ class CheckoutOrderBuilder {
     }
     final hasFlashSale = cart.items.any((item) => item.flashSaleItemId != null);
     if ((hasFlashSale && !RuntimeConfig.flashSaleCheckoutEnabled) ||
+        (hasFlashSale && cart.livestreamId != null) ||
         (hasFlashSale && voucherIds.isNotEmpty)) {
       throw const CheckoutOrderBuildException(
         CheckoutOrderBuildFailure.invalidInput,
@@ -65,6 +67,7 @@ class CheckoutOrderBuilder {
     }
 
     return CheckoutPreviewRequest(
+      livestreamId: cart.livestreamId,
       restaurantId: restaurantId,
       deliveryLat: latitude!,
       deliveryLng: longitude!,
@@ -122,6 +125,7 @@ class CheckoutOrderBuilder {
 
     return OrderCreationCommand(
       quoteId: preview.quoteId,
+      livestreamId: cart.livestreamId,
       idempotencyKey: idempotencyKey,
       restaurantId: previewRequest.restaurantId,
       deliveryAddress: address!.fullAddress,
@@ -172,4 +176,12 @@ class CheckoutOrderBuilder {
         longitude >= 102.0 &&
         longitude <= 110.0;
   }
+
+  static bool _isValidLivestreamId(String? value) {
+    return value == null || _uuid.hasMatch(value);
+  }
 }
+
+final _uuid = RegExp(
+  r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$',
+);

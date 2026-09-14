@@ -281,7 +281,7 @@ as int?,
 /// @nodoc
 mixin _$CreateOrderRequestDto {
 
- String? get quoteId;@JsonKey(includeFromJson: false, includeToJson: false) String? get idempotencyKey; int get restaurantId; String get deliveryAddress; double get deliveryLat; double get deliveryLng; String get customerName; String get customerPhone; String get paymentMethod;// COD-only in the current MVP
+ String? get quoteId; String? get livestreamId;@JsonKey(includeFromJson: false, includeToJson: false) String? get idempotencyKey; int get restaurantId; String get deliveryAddress; double get deliveryLat; double get deliveryLng; String get customerName; String get customerPhone; String get paymentMethod;// COD-only in the current MVP
  String? get notes; List<int>? get voucherIds; String? get selectionMode; List<OrderItemRequest> get items;
 /// Create a copy of CreateOrderRequestDto
 /// with the given fields replaced by the non-null parameter values.
@@ -295,16 +295,16 @@ $CreateOrderRequestDtoCopyWith<CreateOrderRequestDto> get copyWith => _$CreateOr
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateOrderRequestDto&&(identical(other.quoteId, quoteId) || other.quoteId == quoteId)&&(identical(other.idempotencyKey, idempotencyKey) || other.idempotencyKey == idempotencyKey)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.deliveryAddress, deliveryAddress) || other.deliveryAddress == deliveryAddress)&&(identical(other.deliveryLat, deliveryLat) || other.deliveryLat == deliveryLat)&&(identical(other.deliveryLng, deliveryLng) || other.deliveryLng == deliveryLng)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&(identical(other.customerPhone, customerPhone) || other.customerPhone == customerPhone)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.notes, notes) || other.notes == notes)&&const DeepCollectionEquality().equals(other.voucherIds, voucherIds)&&(identical(other.selectionMode, selectionMode) || other.selectionMode == selectionMode)&&const DeepCollectionEquality().equals(other.items, items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateOrderRequestDto&&(identical(other.quoteId, quoteId) || other.quoteId == quoteId)&&(identical(other.livestreamId, livestreamId) || other.livestreamId == livestreamId)&&(identical(other.idempotencyKey, idempotencyKey) || other.idempotencyKey == idempotencyKey)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.deliveryAddress, deliveryAddress) || other.deliveryAddress == deliveryAddress)&&(identical(other.deliveryLat, deliveryLat) || other.deliveryLat == deliveryLat)&&(identical(other.deliveryLng, deliveryLng) || other.deliveryLng == deliveryLng)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&(identical(other.customerPhone, customerPhone) || other.customerPhone == customerPhone)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.notes, notes) || other.notes == notes)&&const DeepCollectionEquality().equals(other.voucherIds, voucherIds)&&(identical(other.selectionMode, selectionMode) || other.selectionMode == selectionMode)&&const DeepCollectionEquality().equals(other.items, items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,quoteId,idempotencyKey,restaurantId,deliveryAddress,deliveryLat,deliveryLng,customerName,customerPhone,paymentMethod,notes,const DeepCollectionEquality().hash(voucherIds),selectionMode,const DeepCollectionEquality().hash(items));
+int get hashCode => Object.hash(runtimeType,quoteId,livestreamId,idempotencyKey,restaurantId,deliveryAddress,deliveryLat,deliveryLng,customerName,customerPhone,paymentMethod,notes,const DeepCollectionEquality().hash(voucherIds),selectionMode,const DeepCollectionEquality().hash(items));
 
 @override
 String toString() {
-  return 'CreateOrderRequestDto(quoteId: $quoteId, idempotencyKey: $idempotencyKey, restaurantId: $restaurantId, deliveryAddress: $deliveryAddress, deliveryLat: $deliveryLat, deliveryLng: $deliveryLng, customerName: $customerName, customerPhone: $customerPhone, paymentMethod: $paymentMethod, notes: $notes, voucherIds: $voucherIds, selectionMode: $selectionMode, items: $items)';
+  return 'CreateOrderRequestDto(quoteId: $quoteId, livestreamId: $livestreamId, idempotencyKey: $idempotencyKey, restaurantId: $restaurantId, deliveryAddress: $deliveryAddress, deliveryLat: $deliveryLat, deliveryLng: $deliveryLng, customerName: $customerName, customerPhone: $customerPhone, paymentMethod: $paymentMethod, notes: $notes, voucherIds: $voucherIds, selectionMode: $selectionMode, items: $items)';
 }
 
 
@@ -315,7 +315,7 @@ abstract mixin class $CreateOrderRequestDtoCopyWith<$Res>  {
   factory $CreateOrderRequestDtoCopyWith(CreateOrderRequestDto value, $Res Function(CreateOrderRequestDto) _then) = _$CreateOrderRequestDtoCopyWithImpl;
 @useResult
 $Res call({
- String? quoteId,@JsonKey(includeFromJson: false, includeToJson: false) String? idempotencyKey, int restaurantId, String deliveryAddress, double deliveryLat, double deliveryLng, String customerName, String customerPhone, String paymentMethod, String? notes, List<int>? voucherIds, String? selectionMode, List<OrderItemRequest> items
+ String? quoteId, String? livestreamId,@JsonKey(includeFromJson: false, includeToJson: false) String? idempotencyKey, int restaurantId, String deliveryAddress, double deliveryLat, double deliveryLng, String customerName, String customerPhone, String paymentMethod, String? notes, List<int>? voucherIds, String? selectionMode, List<OrderItemRequest> items
 });
 
 
@@ -332,9 +332,10 @@ class _$CreateOrderRequestDtoCopyWithImpl<$Res>
 
 /// Create a copy of CreateOrderRequestDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? quoteId = freezed,Object? idempotencyKey = freezed,Object? restaurantId = null,Object? deliveryAddress = null,Object? deliveryLat = null,Object? deliveryLng = null,Object? customerName = null,Object? customerPhone = null,Object? paymentMethod = null,Object? notes = freezed,Object? voucherIds = freezed,Object? selectionMode = freezed,Object? items = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? quoteId = freezed,Object? livestreamId = freezed,Object? idempotencyKey = freezed,Object? restaurantId = null,Object? deliveryAddress = null,Object? deliveryLat = null,Object? deliveryLng = null,Object? customerName = null,Object? customerPhone = null,Object? paymentMethod = null,Object? notes = freezed,Object? voucherIds = freezed,Object? selectionMode = freezed,Object? items = null,}) {
   return _then(_self.copyWith(
 quoteId: freezed == quoteId ? _self.quoteId : quoteId // ignore: cast_nullable_to_non_nullable
+as String?,livestreamId: freezed == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
 as String?,idempotencyKey: freezed == idempotencyKey ? _self.idempotencyKey : idempotencyKey // ignore: cast_nullable_to_non_nullable
 as String?,restaurantId: null == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
 as int,deliveryAddress: null == deliveryAddress ? _self.deliveryAddress : deliveryAddress // ignore: cast_nullable_to_non_nullable
@@ -429,10 +430,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? quoteId, @JsonKey(includeFromJson: false, includeToJson: false)  String? idempotencyKey,  int restaurantId,  String deliveryAddress,  double deliveryLat,  double deliveryLng,  String customerName,  String customerPhone,  String paymentMethod,  String? notes,  List<int>? voucherIds,  String? selectionMode,  List<OrderItemRequest> items)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? quoteId,  String? livestreamId, @JsonKey(includeFromJson: false, includeToJson: false)  String? idempotencyKey,  int restaurantId,  String deliveryAddress,  double deliveryLat,  double deliveryLng,  String customerName,  String customerPhone,  String paymentMethod,  String? notes,  List<int>? voucherIds,  String? selectionMode,  List<OrderItemRequest> items)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CreateOrderRequestDto() when $default != null:
-return $default(_that.quoteId,_that.idempotencyKey,_that.restaurantId,_that.deliveryAddress,_that.deliveryLat,_that.deliveryLng,_that.customerName,_that.customerPhone,_that.paymentMethod,_that.notes,_that.voucherIds,_that.selectionMode,_that.items);case _:
+return $default(_that.quoteId,_that.livestreamId,_that.idempotencyKey,_that.restaurantId,_that.deliveryAddress,_that.deliveryLat,_that.deliveryLng,_that.customerName,_that.customerPhone,_that.paymentMethod,_that.notes,_that.voucherIds,_that.selectionMode,_that.items);case _:
   return orElse();
 
 }
@@ -450,10 +451,10 @@ return $default(_that.quoteId,_that.idempotencyKey,_that.restaurantId,_that.deli
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? quoteId, @JsonKey(includeFromJson: false, includeToJson: false)  String? idempotencyKey,  int restaurantId,  String deliveryAddress,  double deliveryLat,  double deliveryLng,  String customerName,  String customerPhone,  String paymentMethod,  String? notes,  List<int>? voucherIds,  String? selectionMode,  List<OrderItemRequest> items)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? quoteId,  String? livestreamId, @JsonKey(includeFromJson: false, includeToJson: false)  String? idempotencyKey,  int restaurantId,  String deliveryAddress,  double deliveryLat,  double deliveryLng,  String customerName,  String customerPhone,  String paymentMethod,  String? notes,  List<int>? voucherIds,  String? selectionMode,  List<OrderItemRequest> items)  $default,) {final _that = this;
 switch (_that) {
 case _CreateOrderRequestDto():
-return $default(_that.quoteId,_that.idempotencyKey,_that.restaurantId,_that.deliveryAddress,_that.deliveryLat,_that.deliveryLng,_that.customerName,_that.customerPhone,_that.paymentMethod,_that.notes,_that.voucherIds,_that.selectionMode,_that.items);}
+return $default(_that.quoteId,_that.livestreamId,_that.idempotencyKey,_that.restaurantId,_that.deliveryAddress,_that.deliveryLat,_that.deliveryLng,_that.customerName,_that.customerPhone,_that.paymentMethod,_that.notes,_that.voucherIds,_that.selectionMode,_that.items);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -467,10 +468,10 @@ return $default(_that.quoteId,_that.idempotencyKey,_that.restaurantId,_that.deli
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? quoteId, @JsonKey(includeFromJson: false, includeToJson: false)  String? idempotencyKey,  int restaurantId,  String deliveryAddress,  double deliveryLat,  double deliveryLng,  String customerName,  String customerPhone,  String paymentMethod,  String? notes,  List<int>? voucherIds,  String? selectionMode,  List<OrderItemRequest> items)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? quoteId,  String? livestreamId, @JsonKey(includeFromJson: false, includeToJson: false)  String? idempotencyKey,  int restaurantId,  String deliveryAddress,  double deliveryLat,  double deliveryLng,  String customerName,  String customerPhone,  String paymentMethod,  String? notes,  List<int>? voucherIds,  String? selectionMode,  List<OrderItemRequest> items)?  $default,) {final _that = this;
 switch (_that) {
 case _CreateOrderRequestDto() when $default != null:
-return $default(_that.quoteId,_that.idempotencyKey,_that.restaurantId,_that.deliveryAddress,_that.deliveryLat,_that.deliveryLng,_that.customerName,_that.customerPhone,_that.paymentMethod,_that.notes,_that.voucherIds,_that.selectionMode,_that.items);case _:
+return $default(_that.quoteId,_that.livestreamId,_that.idempotencyKey,_that.restaurantId,_that.deliveryAddress,_that.deliveryLat,_that.deliveryLng,_that.customerName,_that.customerPhone,_that.paymentMethod,_that.notes,_that.voucherIds,_that.selectionMode,_that.items);case _:
   return null;
 
 }
@@ -482,10 +483,11 @@ return $default(_that.quoteId,_that.idempotencyKey,_that.restaurantId,_that.deli
 @JsonSerializable()
 
 class _CreateOrderRequestDto implements CreateOrderRequestDto {
-  const _CreateOrderRequestDto({this.quoteId, @JsonKey(includeFromJson: false, includeToJson: false) this.idempotencyKey, required this.restaurantId, required this.deliveryAddress, required this.deliveryLat, required this.deliveryLng, required this.customerName, required this.customerPhone, required this.paymentMethod, this.notes, final  List<int>? voucherIds, this.selectionMode, required final  List<OrderItemRequest> items}): _voucherIds = voucherIds,_items = items;
+  const _CreateOrderRequestDto({this.quoteId, this.livestreamId, @JsonKey(includeFromJson: false, includeToJson: false) this.idempotencyKey, required this.restaurantId, required this.deliveryAddress, required this.deliveryLat, required this.deliveryLng, required this.customerName, required this.customerPhone, required this.paymentMethod, this.notes, final  List<int>? voucherIds, this.selectionMode, required final  List<OrderItemRequest> items}): _voucherIds = voucherIds,_items = items;
   factory _CreateOrderRequestDto.fromJson(Map<String, dynamic> json) => _$CreateOrderRequestDtoFromJson(json);
 
 @override final  String? quoteId;
+@override final  String? livestreamId;
 @override@JsonKey(includeFromJson: false, includeToJson: false) final  String? idempotencyKey;
 @override final  int restaurantId;
 @override final  String deliveryAddress;
@@ -527,16 +529,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateOrderRequestDto&&(identical(other.quoteId, quoteId) || other.quoteId == quoteId)&&(identical(other.idempotencyKey, idempotencyKey) || other.idempotencyKey == idempotencyKey)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.deliveryAddress, deliveryAddress) || other.deliveryAddress == deliveryAddress)&&(identical(other.deliveryLat, deliveryLat) || other.deliveryLat == deliveryLat)&&(identical(other.deliveryLng, deliveryLng) || other.deliveryLng == deliveryLng)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&(identical(other.customerPhone, customerPhone) || other.customerPhone == customerPhone)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.notes, notes) || other.notes == notes)&&const DeepCollectionEquality().equals(other._voucherIds, _voucherIds)&&(identical(other.selectionMode, selectionMode) || other.selectionMode == selectionMode)&&const DeepCollectionEquality().equals(other._items, _items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateOrderRequestDto&&(identical(other.quoteId, quoteId) || other.quoteId == quoteId)&&(identical(other.livestreamId, livestreamId) || other.livestreamId == livestreamId)&&(identical(other.idempotencyKey, idempotencyKey) || other.idempotencyKey == idempotencyKey)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.deliveryAddress, deliveryAddress) || other.deliveryAddress == deliveryAddress)&&(identical(other.deliveryLat, deliveryLat) || other.deliveryLat == deliveryLat)&&(identical(other.deliveryLng, deliveryLng) || other.deliveryLng == deliveryLng)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&(identical(other.customerPhone, customerPhone) || other.customerPhone == customerPhone)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.notes, notes) || other.notes == notes)&&const DeepCollectionEquality().equals(other._voucherIds, _voucherIds)&&(identical(other.selectionMode, selectionMode) || other.selectionMode == selectionMode)&&const DeepCollectionEquality().equals(other._items, _items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,quoteId,idempotencyKey,restaurantId,deliveryAddress,deliveryLat,deliveryLng,customerName,customerPhone,paymentMethod,notes,const DeepCollectionEquality().hash(_voucherIds),selectionMode,const DeepCollectionEquality().hash(_items));
+int get hashCode => Object.hash(runtimeType,quoteId,livestreamId,idempotencyKey,restaurantId,deliveryAddress,deliveryLat,deliveryLng,customerName,customerPhone,paymentMethod,notes,const DeepCollectionEquality().hash(_voucherIds),selectionMode,const DeepCollectionEquality().hash(_items));
 
 @override
 String toString() {
-  return 'CreateOrderRequestDto(quoteId: $quoteId, idempotencyKey: $idempotencyKey, restaurantId: $restaurantId, deliveryAddress: $deliveryAddress, deliveryLat: $deliveryLat, deliveryLng: $deliveryLng, customerName: $customerName, customerPhone: $customerPhone, paymentMethod: $paymentMethod, notes: $notes, voucherIds: $voucherIds, selectionMode: $selectionMode, items: $items)';
+  return 'CreateOrderRequestDto(quoteId: $quoteId, livestreamId: $livestreamId, idempotencyKey: $idempotencyKey, restaurantId: $restaurantId, deliveryAddress: $deliveryAddress, deliveryLat: $deliveryLat, deliveryLng: $deliveryLng, customerName: $customerName, customerPhone: $customerPhone, paymentMethod: $paymentMethod, notes: $notes, voucherIds: $voucherIds, selectionMode: $selectionMode, items: $items)';
 }
 
 
@@ -547,7 +549,7 @@ abstract mixin class _$CreateOrderRequestDtoCopyWith<$Res> implements $CreateOrd
   factory _$CreateOrderRequestDtoCopyWith(_CreateOrderRequestDto value, $Res Function(_CreateOrderRequestDto) _then) = __$CreateOrderRequestDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String? quoteId,@JsonKey(includeFromJson: false, includeToJson: false) String? idempotencyKey, int restaurantId, String deliveryAddress, double deliveryLat, double deliveryLng, String customerName, String customerPhone, String paymentMethod, String? notes, List<int>? voucherIds, String? selectionMode, List<OrderItemRequest> items
+ String? quoteId, String? livestreamId,@JsonKey(includeFromJson: false, includeToJson: false) String? idempotencyKey, int restaurantId, String deliveryAddress, double deliveryLat, double deliveryLng, String customerName, String customerPhone, String paymentMethod, String? notes, List<int>? voucherIds, String? selectionMode, List<OrderItemRequest> items
 });
 
 
@@ -564,9 +566,10 @@ class __$CreateOrderRequestDtoCopyWithImpl<$Res>
 
 /// Create a copy of CreateOrderRequestDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? quoteId = freezed,Object? idempotencyKey = freezed,Object? restaurantId = null,Object? deliveryAddress = null,Object? deliveryLat = null,Object? deliveryLng = null,Object? customerName = null,Object? customerPhone = null,Object? paymentMethod = null,Object? notes = freezed,Object? voucherIds = freezed,Object? selectionMode = freezed,Object? items = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? quoteId = freezed,Object? livestreamId = freezed,Object? idempotencyKey = freezed,Object? restaurantId = null,Object? deliveryAddress = null,Object? deliveryLat = null,Object? deliveryLng = null,Object? customerName = null,Object? customerPhone = null,Object? paymentMethod = null,Object? notes = freezed,Object? voucherIds = freezed,Object? selectionMode = freezed,Object? items = null,}) {
   return _then(_CreateOrderRequestDto(
 quoteId: freezed == quoteId ? _self.quoteId : quoteId // ignore: cast_nullable_to_non_nullable
+as String?,livestreamId: freezed == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
 as String?,idempotencyKey: freezed == idempotencyKey ? _self.idempotencyKey : idempotencyKey // ignore: cast_nullable_to_non_nullable
 as String?,restaurantId: null == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
 as int,deliveryAddress: null == deliveryAddress ? _self.deliveryAddress : deliveryAddress // ignore: cast_nullable_to_non_nullable

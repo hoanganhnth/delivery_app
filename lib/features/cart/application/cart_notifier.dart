@@ -104,6 +104,7 @@ class CartNotifier extends _$CartNotifier {
           currentRestaurantName: updatedItems.isEmpty
               ? null
               : currentCart.currentRestaurantName,
+          livestreamId: updatedItems.isEmpty ? null : currentCart.livestreamId,
         );
 
         // Cập nhật state
@@ -209,6 +210,7 @@ class CartNotifier extends _$CartNotifier {
         currentRestaurantName: updatedItems.isEmpty
             ? null
             : currentCart.currentRestaurantName,
+        livestreamId: updatedItems.isEmpty ? null : currentCart.livestreamId,
       );
 
       state = AsyncValue.data(updatedCart);
@@ -225,14 +227,18 @@ class CartNotifier extends _$CartNotifier {
 
     final addToCartUseCase = ref.read(addToCartUseCaseProvider);
     for (final item in cart.items) {
-      await addToCartUseCase(AddToCartParams(item: item));
+      await addToCartUseCase(
+        AddToCartParams(item: item, livestreamId: cart.livestreamId),
+      );
     }
   }
 
   /// Add item to cart
-  Future<void> addItem(CartItemEntity item) async {
+  Future<void> addItem(CartItemEntity item, {String? livestreamId}) async {
     final addToCartUseCase = ref.read(addToCartUseCaseProvider);
-    final result = await addToCartUseCase(AddToCartParams(item: item));
+    final result = await addToCartUseCase(
+      AddToCartParams(item: item, livestreamId: livestreamId),
+    );
 
     result.fold(
       (failure) => throw failure,

@@ -14,7 +14,10 @@ abstract class CartLocalDataSource {
   Future<Either<Exception, Unit>> clearCart();
 
   /// Add item to cart in local storage
-  Future<Either<Exception, CartDto>> addItem(CartItemDto item);
+  Future<Either<Exception, CartDto>> addItem(
+    CartItemDto item, {
+    String? livestreamId,
+  });
 
   /// Update item quantity in local storage
   Future<Either<Exception, CartDto>> updateItemQuantity(num menuItemId, int quantity);

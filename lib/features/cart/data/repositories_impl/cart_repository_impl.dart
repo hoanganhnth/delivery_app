@@ -29,7 +29,10 @@ class CartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<Either<Failure, CartEntity>> addItem(CartItemEntity item) async {
+  Future<Either<Failure, CartEntity>> addItem(
+    CartItemEntity item, {
+    String? livestreamId,
+  }) async {
     try {
       final currentCartResult = await getCart();
       final crossRestaurantFailure = currentCartResult.fold<Failure?>(
@@ -56,7 +59,10 @@ class CartRepositoryImpl implements CartRepository {
         flashSaleItemId: item.flashSaleItemId,
       );
 
-      final result = await localDataSource.addItem(cartItemDto);
+      final result = await localDataSource.addItem(
+        cartItemDto,
+        livestreamId: livestreamId,
+      );
 
       return result.fold(
         (exception) => left(mapExceptionToFailure(exception)),
@@ -154,6 +160,7 @@ extension CartDtoExtension on CartDto {
       items: items.map((item) => item.toEntity()).toList(),
       currentRestaurantId: currentRestaurantId,
       currentRestaurantName: currentRestaurantName,
+      livestreamId: livestreamId,
     );
   }
 }

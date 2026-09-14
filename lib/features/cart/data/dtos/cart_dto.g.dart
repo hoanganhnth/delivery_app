@@ -12,10 +12,12 @@ _CartDto _$CartDtoFromJson(Map<String, dynamic> json) => _CartDto(
       .toList(),
   currentRestaurantId: json['currentRestaurantId'] as num?,
   currentRestaurantName: json['currentRestaurantName'] as String?,
+  livestreamId: json['livestreamId'] as String?,
 );
 
 Map<String, dynamic> _$CartDtoToJson(_CartDto instance) => <String, dynamic>{
   'items': instance.items,
   'currentRestaurantId': instance.currentRestaurantId,
   'currentRestaurantName': instance.currentRestaurantName,
+  'livestreamId': instance.livestreamId,
 };

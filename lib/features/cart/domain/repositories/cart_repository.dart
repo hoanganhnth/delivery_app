@@ -9,7 +9,10 @@ abstract class CartRepository {
   Future<Either<Failure, CartEntity>> getCart();
 
   /// Add item to cart
-  Future<Either<Failure, CartEntity>> addItem(CartItemEntity item);
+  Future<Either<Failure, CartEntity>> addItem(
+    CartItemEntity item, {
+    String? livestreamId,
+  });
 
   /// Update item quantity in cart
   Future<Either<Failure, CartEntity>> updateItemQuantity(num menuItemId, int quantity);

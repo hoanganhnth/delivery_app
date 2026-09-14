@@ -5,6 +5,46 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 
 void main() {
+  test('loads a matching room detail with pinned products', () async {
+    final dio = Dio(BaseOptions(baseUrl: 'https://gateway.example.test/api'));
+    final adapter = DioAdapter(dio: dio);
+    const id = '00000000-0000-4000-8000-000000000001';
+    adapter.onGet(
+      '/livestreams/$id',
+      (server) => server.reply(200, {
+        'status': 1,
+        'data': {
+          'id': id,
+          'sellerId': 7,
+          'restaurantId': 42,
+          'title': 'Bếp đang live',
+          'status': 'LIVE',
+          'streamProvider': 'AGORA',
+          'roomId': 'room-$id',
+          'channelName': 'channel-$id',
+          'viewCount': 12,
+          'pinnedProducts': [
+            {
+              'id': 91,
+              'livestreamId': id,
+              'productId': 501,
+              'productName': 'Món live',
+              'restaurantId': 42,
+              'restaurantName': 'Bếp đang live',
+              'priceAtLive': 42000,
+              'isPinned': true,
+            },
+          ],
+        },
+      }),
+    );
+
+    final room = await LivestreamGateway(dio).getById(id);
+
+    expect(room.id, id);
+    expect(room.pinnedProducts.single.productId, 501);
+  });
+
   test('loads active rooms from the authenticated active endpoint', () async {
     final dio = Dio(BaseOptions(baseUrl: 'https://gateway.example.test/api'));
     final adapter = DioAdapter(dio: dio);

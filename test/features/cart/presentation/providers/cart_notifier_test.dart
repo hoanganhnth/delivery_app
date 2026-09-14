@@ -61,6 +61,21 @@ void main() {
     expect(container.read(cartProvider).value?.isEmpty, isTrue);
   });
 
+  test('livestream cart identity survives quantity and note updates', () async {
+    const livestreamId = '00000000-0000-4000-8000-000000000001';
+    final repository = _InMemoryCartRepository();
+    final container = _container(repository);
+    addTearDown(container.dispose);
+    await container.read(cartProvider.future);
+    final notifier = container.read(cartProvider.notifier);
+
+    await notifier.addItem(buildCartItem(), livestreamId: livestreamId);
+    await notifier.updateItemQuantity(301, 2);
+    await notifier.updateItemNotes(301, 'Không hành');
+
+    expect(container.read(cartProvider).value?.livestreamId, livestreamId);
+  });
+
   test(
     'cross-restaurant and storage failures preserve the current cart for retry',
     () async {
@@ -114,7 +129,10 @@ class _InMemoryCartRepository implements CartRepository {
   Future<Either<Failure, CartEntity>> getCart() async => Right(cart);
 
   @override
-  Future<Either<Failure, CartEntity>> addItem(CartItemEntity item) async {
+  Future<Either<Failure, CartEntity>> addItem(
+    CartItemEntity item, {
+    String? livestreamId,
+  }) async {
     final failure = _takeFailure<CartEntity>();
     if (failure != null) return failure;
     if (!cart.canAddFromRestaurant(item.restaurantId)) {
@@ -132,7 +150,7 @@ class _InMemoryCartRepository implements CartRepository {
     } else {
       items.add(item);
     }
-    cart = buildCart(items: items);
+    cart = buildCart(items: items).copyWith(livestreamId: livestreamId);
     return Right(cart);
   }
 
@@ -151,7 +169,7 @@ class _InMemoryCartRepository implements CartRepository {
                 : item,
           )
           .toList(),
-    );
+    ).copyWith(livestreamId: cart.livestreamId);
     return Right(cart);
   }
 
@@ -161,7 +179,7 @@ class _InMemoryCartRepository implements CartRepository {
     if (failure != null) return failure;
     cart = buildCart(
       items: cart.items.where((item) => item.menuItemId != menuItemId).toList(),
-    );
+    ).copyWith(livestreamId: cart.items.length == 1 ? null : cart.livestreamId);
     return Right(cart);
   }
 
@@ -188,7 +206,7 @@ class _InMemoryCartRepository implements CartRepository {
                 : item,
           )
           .toList(),
-    );
+    ).copyWith(livestreamId: cart.livestreamId);
     return Right(cart);
   }
 

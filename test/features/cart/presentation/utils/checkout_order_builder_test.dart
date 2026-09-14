@@ -29,6 +29,43 @@ void main() {
     },
   );
 
+  test('propagates livestream identity through preview and create order', () {
+    const livestreamId = '00000000-0000-4000-8000-000000000001';
+    final cart = buildCart().copyWith(livestreamId: livestreamId);
+
+    final previewRequest = CheckoutOrderBuilder.buildPreviewRequest(
+      cart: cart,
+      address: buildAddress(),
+    );
+    final orderRequest = CheckoutOrderBuilder.buildOrderRequest(
+      cart: cart,
+      address: buildAddress(),
+      preview: _preview,
+    );
+
+    expect(previewRequest.livestreamId, livestreamId);
+    expect(orderRequest.livestreamId, livestreamId);
+  });
+
+  test('rejects malformed livestream identity and livestream flash sales', () {
+    expect(
+      () => CheckoutOrderBuilder.buildPreviewRequest(
+        cart: buildCart().copyWith(livestreamId: 'not-a-uuid'),
+        address: buildAddress(),
+      ),
+      throwsA(isA<CheckoutOrderBuildException>()),
+    );
+    expect(
+      () => CheckoutOrderBuilder.buildPreviewRequest(
+        cart: buildCart(
+          items: [buildCartItem(flashSaleItemId: 88)],
+        ).copyWith(livestreamId: '00000000-0000-4000-8000-000000000001'),
+        address: buildAddress(),
+      ),
+      throwsA(isA<CheckoutOrderBuildException>()),
+    );
+  });
+
   test(
     'rejects missing address and mixed-restaurant carts before preview I/O',
     () {

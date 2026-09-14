@@ -23,6 +23,9 @@ final class _FakeLivestreamRepository implements LivestreamRepository {
   Future<List<Livestream>> getActive() async => const [];
 
   @override
+  Future<Livestream> getById(String livestreamId) => throw UnimplementedError();
+
+  @override
   Future<LivestreamJoinSession> join(String livestreamId) async {
     joinedId = livestreamId;
     return LivestreamJoinSession(

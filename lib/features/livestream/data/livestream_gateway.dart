@@ -7,6 +7,28 @@ final class LivestreamGateway {
   const LivestreamGateway(this._dio);
   final Dio _dio;
 
+  Future<Livestream> getById(String livestreamId) async {
+    if (!_uuid.hasMatch(livestreamId)) {
+      throw const FormatException('Invalid livestream identity');
+    }
+    final response = await _dio.get<Map<String, dynamic>>(
+      '/livestreams/$livestreamId',
+    );
+    final envelope = response.data;
+    if (envelope == null ||
+        envelope['status'] != 1 ||
+        envelope['data'] is! Map) {
+      throw const FormatException('Invalid livestream detail envelope');
+    }
+    final room = Livestream.fromJson(
+      Map<String, dynamic>.from(envelope['data'] as Map),
+    );
+    if (room.id != livestreamId) {
+      throw const FormatException('Mismatched livestream identity');
+    }
+    return room;
+  }
+
   Future<List<Livestream>> getActive() async {
     final response = await _dio.get<Map<String, dynamic>>(
       '/livestreams/active',

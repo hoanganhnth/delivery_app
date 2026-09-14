@@ -278,7 +278,7 @@ as int?,
 /// @nodoc
 mixin _$CheckoutPreviewRequest {
 
- int get restaurantId; double get deliveryLat; double get deliveryLng; String? get couponCode; int? get voucherId; List<int>? get selectedVoucherIds; String? get selectionMode; List<CheckoutPreviewItemRequest> get items;
+ String? get livestreamId; int get restaurantId; double get deliveryLat; double get deliveryLng; String? get couponCode; int? get voucherId; List<int>? get selectedVoucherIds; String? get selectionMode; List<CheckoutPreviewItemRequest> get items;
 /// Create a copy of CheckoutPreviewRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -291,16 +291,16 @@ $CheckoutPreviewRequestCopyWith<CheckoutPreviewRequest> get copyWith => _$Checko
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CheckoutPreviewRequest&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.deliveryLat, deliveryLat) || other.deliveryLat == deliveryLat)&&(identical(other.deliveryLng, deliveryLng) || other.deliveryLng == deliveryLng)&&(identical(other.couponCode, couponCode) || other.couponCode == couponCode)&&(identical(other.voucherId, voucherId) || other.voucherId == voucherId)&&const DeepCollectionEquality().equals(other.selectedVoucherIds, selectedVoucherIds)&&(identical(other.selectionMode, selectionMode) || other.selectionMode == selectionMode)&&const DeepCollectionEquality().equals(other.items, items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CheckoutPreviewRequest&&(identical(other.livestreamId, livestreamId) || other.livestreamId == livestreamId)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.deliveryLat, deliveryLat) || other.deliveryLat == deliveryLat)&&(identical(other.deliveryLng, deliveryLng) || other.deliveryLng == deliveryLng)&&(identical(other.couponCode, couponCode) || other.couponCode == couponCode)&&(identical(other.voucherId, voucherId) || other.voucherId == voucherId)&&const DeepCollectionEquality().equals(other.selectedVoucherIds, selectedVoucherIds)&&(identical(other.selectionMode, selectionMode) || other.selectionMode == selectionMode)&&const DeepCollectionEquality().equals(other.items, items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,restaurantId,deliveryLat,deliveryLng,couponCode,voucherId,const DeepCollectionEquality().hash(selectedVoucherIds),selectionMode,const DeepCollectionEquality().hash(items));
+int get hashCode => Object.hash(runtimeType,livestreamId,restaurantId,deliveryLat,deliveryLng,couponCode,voucherId,const DeepCollectionEquality().hash(selectedVoucherIds),selectionMode,const DeepCollectionEquality().hash(items));
 
 @override
 String toString() {
-  return 'CheckoutPreviewRequest(restaurantId: $restaurantId, deliveryLat: $deliveryLat, deliveryLng: $deliveryLng, couponCode: $couponCode, voucherId: $voucherId, selectedVoucherIds: $selectedVoucherIds, selectionMode: $selectionMode, items: $items)';
+  return 'CheckoutPreviewRequest(livestreamId: $livestreamId, restaurantId: $restaurantId, deliveryLat: $deliveryLat, deliveryLng: $deliveryLng, couponCode: $couponCode, voucherId: $voucherId, selectedVoucherIds: $selectedVoucherIds, selectionMode: $selectionMode, items: $items)';
 }
 
 
@@ -311,7 +311,7 @@ abstract mixin class $CheckoutPreviewRequestCopyWith<$Res>  {
   factory $CheckoutPreviewRequestCopyWith(CheckoutPreviewRequest value, $Res Function(CheckoutPreviewRequest) _then) = _$CheckoutPreviewRequestCopyWithImpl;
 @useResult
 $Res call({
- int restaurantId, double deliveryLat, double deliveryLng, String? couponCode, int? voucherId, List<int>? selectedVoucherIds, String? selectionMode, List<CheckoutPreviewItemRequest> items
+ String? livestreamId, int restaurantId, double deliveryLat, double deliveryLng, String? couponCode, int? voucherId, List<int>? selectedVoucherIds, String? selectionMode, List<CheckoutPreviewItemRequest> items
 });
 
 
@@ -328,9 +328,10 @@ class _$CheckoutPreviewRequestCopyWithImpl<$Res>
 
 /// Create a copy of CheckoutPreviewRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? restaurantId = null,Object? deliveryLat = null,Object? deliveryLng = null,Object? couponCode = freezed,Object? voucherId = freezed,Object? selectedVoucherIds = freezed,Object? selectionMode = freezed,Object? items = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? livestreamId = freezed,Object? restaurantId = null,Object? deliveryLat = null,Object? deliveryLng = null,Object? couponCode = freezed,Object? voucherId = freezed,Object? selectedVoucherIds = freezed,Object? selectionMode = freezed,Object? items = null,}) {
   return _then(_self.copyWith(
-restaurantId: null == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
+livestreamId: freezed == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
+as String?,restaurantId: null == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
 as int,deliveryLat: null == deliveryLat ? _self.deliveryLat : deliveryLat // ignore: cast_nullable_to_non_nullable
 as double,deliveryLng: null == deliveryLng ? _self.deliveryLng : deliveryLng // ignore: cast_nullable_to_non_nullable
 as double,couponCode: freezed == couponCode ? _self.couponCode : couponCode // ignore: cast_nullable_to_non_nullable
@@ -420,10 +421,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int restaurantId,  double deliveryLat,  double deliveryLng,  String? couponCode,  int? voucherId,  List<int>? selectedVoucherIds,  String? selectionMode,  List<CheckoutPreviewItemRequest> items)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? livestreamId,  int restaurantId,  double deliveryLat,  double deliveryLng,  String? couponCode,  int? voucherId,  List<int>? selectedVoucherIds,  String? selectionMode,  List<CheckoutPreviewItemRequest> items)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CheckoutPreviewRequest() when $default != null:
-return $default(_that.restaurantId,_that.deliveryLat,_that.deliveryLng,_that.couponCode,_that.voucherId,_that.selectedVoucherIds,_that.selectionMode,_that.items);case _:
+return $default(_that.livestreamId,_that.restaurantId,_that.deliveryLat,_that.deliveryLng,_that.couponCode,_that.voucherId,_that.selectedVoucherIds,_that.selectionMode,_that.items);case _:
   return orElse();
 
 }
@@ -441,10 +442,10 @@ return $default(_that.restaurantId,_that.deliveryLat,_that.deliveryLng,_that.cou
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int restaurantId,  double deliveryLat,  double deliveryLng,  String? couponCode,  int? voucherId,  List<int>? selectedVoucherIds,  String? selectionMode,  List<CheckoutPreviewItemRequest> items)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? livestreamId,  int restaurantId,  double deliveryLat,  double deliveryLng,  String? couponCode,  int? voucherId,  List<int>? selectedVoucherIds,  String? selectionMode,  List<CheckoutPreviewItemRequest> items)  $default,) {final _that = this;
 switch (_that) {
 case _CheckoutPreviewRequest():
-return $default(_that.restaurantId,_that.deliveryLat,_that.deliveryLng,_that.couponCode,_that.voucherId,_that.selectedVoucherIds,_that.selectionMode,_that.items);}
+return $default(_that.livestreamId,_that.restaurantId,_that.deliveryLat,_that.deliveryLng,_that.couponCode,_that.voucherId,_that.selectedVoucherIds,_that.selectionMode,_that.items);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -458,10 +459,10 @@ return $default(_that.restaurantId,_that.deliveryLat,_that.deliveryLng,_that.cou
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int restaurantId,  double deliveryLat,  double deliveryLng,  String? couponCode,  int? voucherId,  List<int>? selectedVoucherIds,  String? selectionMode,  List<CheckoutPreviewItemRequest> items)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? livestreamId,  int restaurantId,  double deliveryLat,  double deliveryLng,  String? couponCode,  int? voucherId,  List<int>? selectedVoucherIds,  String? selectionMode,  List<CheckoutPreviewItemRequest> items)?  $default,) {final _that = this;
 switch (_that) {
 case _CheckoutPreviewRequest() when $default != null:
-return $default(_that.restaurantId,_that.deliveryLat,_that.deliveryLng,_that.couponCode,_that.voucherId,_that.selectedVoucherIds,_that.selectionMode,_that.items);case _:
+return $default(_that.livestreamId,_that.restaurantId,_that.deliveryLat,_that.deliveryLng,_that.couponCode,_that.voucherId,_that.selectedVoucherIds,_that.selectionMode,_that.items);case _:
   return null;
 
 }
@@ -473,9 +474,10 @@ return $default(_that.restaurantId,_that.deliveryLat,_that.deliveryLng,_that.cou
 @JsonSerializable()
 
 class _CheckoutPreviewRequest implements CheckoutPreviewRequest {
-  const _CheckoutPreviewRequest({required this.restaurantId, required this.deliveryLat, required this.deliveryLng, this.couponCode, this.voucherId, final  List<int>? selectedVoucherIds, this.selectionMode, required final  List<CheckoutPreviewItemRequest> items}): _selectedVoucherIds = selectedVoucherIds,_items = items;
+  const _CheckoutPreviewRequest({this.livestreamId, required this.restaurantId, required this.deliveryLat, required this.deliveryLng, this.couponCode, this.voucherId, final  List<int>? selectedVoucherIds, this.selectionMode, required final  List<CheckoutPreviewItemRequest> items}): _selectedVoucherIds = selectedVoucherIds,_items = items;
   factory _CheckoutPreviewRequest.fromJson(Map<String, dynamic> json) => _$CheckoutPreviewRequestFromJson(json);
 
+@override final  String? livestreamId;
 @override final  int restaurantId;
 @override final  double deliveryLat;
 @override final  double deliveryLng;
@@ -512,16 +514,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CheckoutPreviewRequest&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.deliveryLat, deliveryLat) || other.deliveryLat == deliveryLat)&&(identical(other.deliveryLng, deliveryLng) || other.deliveryLng == deliveryLng)&&(identical(other.couponCode, couponCode) || other.couponCode == couponCode)&&(identical(other.voucherId, voucherId) || other.voucherId == voucherId)&&const DeepCollectionEquality().equals(other._selectedVoucherIds, _selectedVoucherIds)&&(identical(other.selectionMode, selectionMode) || other.selectionMode == selectionMode)&&const DeepCollectionEquality().equals(other._items, _items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CheckoutPreviewRequest&&(identical(other.livestreamId, livestreamId) || other.livestreamId == livestreamId)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.deliveryLat, deliveryLat) || other.deliveryLat == deliveryLat)&&(identical(other.deliveryLng, deliveryLng) || other.deliveryLng == deliveryLng)&&(identical(other.couponCode, couponCode) || other.couponCode == couponCode)&&(identical(other.voucherId, voucherId) || other.voucherId == voucherId)&&const DeepCollectionEquality().equals(other._selectedVoucherIds, _selectedVoucherIds)&&(identical(other.selectionMode, selectionMode) || other.selectionMode == selectionMode)&&const DeepCollectionEquality().equals(other._items, _items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,restaurantId,deliveryLat,deliveryLng,couponCode,voucherId,const DeepCollectionEquality().hash(_selectedVoucherIds),selectionMode,const DeepCollectionEquality().hash(_items));
+int get hashCode => Object.hash(runtimeType,livestreamId,restaurantId,deliveryLat,deliveryLng,couponCode,voucherId,const DeepCollectionEquality().hash(_selectedVoucherIds),selectionMode,const DeepCollectionEquality().hash(_items));
 
 @override
 String toString() {
-  return 'CheckoutPreviewRequest(restaurantId: $restaurantId, deliveryLat: $deliveryLat, deliveryLng: $deliveryLng, couponCode: $couponCode, voucherId: $voucherId, selectedVoucherIds: $selectedVoucherIds, selectionMode: $selectionMode, items: $items)';
+  return 'CheckoutPreviewRequest(livestreamId: $livestreamId, restaurantId: $restaurantId, deliveryLat: $deliveryLat, deliveryLng: $deliveryLng, couponCode: $couponCode, voucherId: $voucherId, selectedVoucherIds: $selectedVoucherIds, selectionMode: $selectionMode, items: $items)';
 }
 
 
@@ -532,7 +534,7 @@ abstract mixin class _$CheckoutPreviewRequestCopyWith<$Res> implements $Checkout
   factory _$CheckoutPreviewRequestCopyWith(_CheckoutPreviewRequest value, $Res Function(_CheckoutPreviewRequest) _then) = __$CheckoutPreviewRequestCopyWithImpl;
 @override @useResult
 $Res call({
- int restaurantId, double deliveryLat, double deliveryLng, String? couponCode, int? voucherId, List<int>? selectedVoucherIds, String? selectionMode, List<CheckoutPreviewItemRequest> items
+ String? livestreamId, int restaurantId, double deliveryLat, double deliveryLng, String? couponCode, int? voucherId, List<int>? selectedVoucherIds, String? selectionMode, List<CheckoutPreviewItemRequest> items
 });
 
 
@@ -549,9 +551,10 @@ class __$CheckoutPreviewRequestCopyWithImpl<$Res>
 
 /// Create a copy of CheckoutPreviewRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? restaurantId = null,Object? deliveryLat = null,Object? deliveryLng = null,Object? couponCode = freezed,Object? voucherId = freezed,Object? selectedVoucherIds = freezed,Object? selectionMode = freezed,Object? items = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? livestreamId = freezed,Object? restaurantId = null,Object? deliveryLat = null,Object? deliveryLng = null,Object? couponCode = freezed,Object? voucherId = freezed,Object? selectedVoucherIds = freezed,Object? selectionMode = freezed,Object? items = null,}) {
   return _then(_CheckoutPreviewRequest(
-restaurantId: null == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
+livestreamId: freezed == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
+as String?,restaurantId: null == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
 as int,deliveryLat: null == deliveryLat ? _self.deliveryLat : deliveryLat // ignore: cast_nullable_to_non_nullable
 as double,deliveryLng: null == deliveryLng ? _self.deliveryLng : deliveryLng // ignore: cast_nullable_to_non_nullable
 as double,couponCode: freezed == couponCode ? _self.couponCode : couponCode // ignore: cast_nullable_to_non_nullable

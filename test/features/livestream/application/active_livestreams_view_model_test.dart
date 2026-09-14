@@ -84,6 +84,10 @@ Livestream _room({String title = 'Bếp đang live'}) => Livestream(
 );
 
 class _ActiveRepository implements LivestreamRepository {
+  @override
+  Future<Livestream> getById(String livestreamId) =>
+      throw UnimplementedError();
+
   int loadCount = 0;
 
   @override
@@ -102,6 +106,10 @@ class _ActiveRepository implements LivestreamRepository {
 }
 
 final class _SequencedRepository implements LivestreamRepository {
+  @override
+  Future<Livestream> getById(String livestreamId) =>
+      throw UnimplementedError();
+
   _SequencedRepository(this.first);
 
   final Completer<List<Livestream>> first;

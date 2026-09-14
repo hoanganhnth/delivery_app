@@ -50,6 +50,13 @@ void main() {
     expect(preview().validateFor(request).totalPrice, 108000);
   });
 
+  test('serializes the optional livestream checkout source', () {
+    const livestreamId = '00000000-0000-4000-8000-000000000001';
+    final json = request.copyWith(livestreamId: livestreamId).toJson();
+
+    expect(json['livestreamId'], livestreamId);
+  });
+
   test('rejects missing prices and inconsistent totals', () {
     expect(
       () => preview(unitPrice: null).validateFor(request),

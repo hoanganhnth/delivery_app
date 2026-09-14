@@ -18,19 +18,22 @@ class CartDtoAdapter extends TypeAdapter<CartDto> {
       items: (fields[0] as List).cast<CartItemDto>(),
       currentRestaurantId: fields[1] as num?,
       currentRestaurantName: fields[2] as String?,
+      livestreamId: fields[3] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, CartDto obj) {
     writer
-      ..writeByte(3) // number of fields
+      ..writeByte(4) // number of fields
       ..writeByte(0)
       ..write(obj.items)
       ..writeByte(1)
       ..write(obj.currentRestaurantId)
       ..writeByte(2)
-      ..write(obj.currentRestaurantName);
+      ..write(obj.currentRestaurantName)
+      ..writeByte(3)
+      ..write(obj.livestreamId);
   }
 
   @override

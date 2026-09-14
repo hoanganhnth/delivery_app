@@ -20,6 +20,7 @@ sealed class OrderItemRequest with _$OrderItemRequest {
 sealed class CreateOrderRequestDto with _$CreateOrderRequestDto {
   const factory CreateOrderRequestDto({
     String? quoteId,
+    String? livestreamId,
     @JsonKey(includeFromJson: false, includeToJson: false)
     String? idempotencyKey,
     required int restaurantId,

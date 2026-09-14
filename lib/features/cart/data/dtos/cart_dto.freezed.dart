@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CartDto {
 
-@HiveField(0) List<CartItemDto> get items;@HiveField(1) num? get currentRestaurantId;@HiveField(2) String? get currentRestaurantName;
+@HiveField(0) List<CartItemDto> get items;@HiveField(1) num? get currentRestaurantId;@HiveField(2) String? get currentRestaurantName;@HiveField(3) String? get livestreamId;
 /// Create a copy of CartDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $CartDtoCopyWith<CartDto> get copyWith => _$CartDtoCopyWithImpl<CartDto>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CartDto&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.currentRestaurantId, currentRestaurantId) || other.currentRestaurantId == currentRestaurantId)&&(identical(other.currentRestaurantName, currentRestaurantName) || other.currentRestaurantName == currentRestaurantName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CartDto&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.currentRestaurantId, currentRestaurantId) || other.currentRestaurantId == currentRestaurantId)&&(identical(other.currentRestaurantName, currentRestaurantName) || other.currentRestaurantName == currentRestaurantName)&&(identical(other.livestreamId, livestreamId) || other.livestreamId == livestreamId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items),currentRestaurantId,currentRestaurantName);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items),currentRestaurantId,currentRestaurantName,livestreamId);
 
 @override
 String toString() {
-  return 'CartDto(items: $items, currentRestaurantId: $currentRestaurantId, currentRestaurantName: $currentRestaurantName)';
+  return 'CartDto(items: $items, currentRestaurantId: $currentRestaurantId, currentRestaurantName: $currentRestaurantName, livestreamId: $livestreamId)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $CartDtoCopyWith<$Res>  {
   factory $CartDtoCopyWith(CartDto value, $Res Function(CartDto) _then) = _$CartDtoCopyWithImpl;
 @useResult
 $Res call({
-@HiveField(0) List<CartItemDto> items,@HiveField(1) num? currentRestaurantId,@HiveField(2) String? currentRestaurantName
+@HiveField(0) List<CartItemDto> items,@HiveField(1) num? currentRestaurantId,@HiveField(2) String? currentRestaurantName,@HiveField(3) String? livestreamId
 });
 
 
@@ -65,11 +65,12 @@ class _$CartDtoCopyWithImpl<$Res>
 
 /// Create a copy of CartDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? currentRestaurantId = freezed,Object? currentRestaurantName = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? currentRestaurantId = freezed,Object? currentRestaurantName = freezed,Object? livestreamId = freezed,}) {
   return _then(_self.copyWith(
 items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<CartItemDto>,currentRestaurantId: freezed == currentRestaurantId ? _self.currentRestaurantId : currentRestaurantId // ignore: cast_nullable_to_non_nullable
 as num?,currentRestaurantName: freezed == currentRestaurantName ? _self.currentRestaurantName : currentRestaurantName // ignore: cast_nullable_to_non_nullable
+as String?,livestreamId: freezed == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -152,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)  List<CartItemDto> items, @HiveField(1)  num? currentRestaurantId, @HiveField(2)  String? currentRestaurantName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)  List<CartItemDto> items, @HiveField(1)  num? currentRestaurantId, @HiveField(2)  String? currentRestaurantName, @HiveField(3)  String? livestreamId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CartDto() when $default != null:
-return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantName);case _:
+return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantName,_that.livestreamId);case _:
   return orElse();
 
 }
@@ -173,10 +174,10 @@ return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantNam
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)  List<CartItemDto> items, @HiveField(1)  num? currentRestaurantId, @HiveField(2)  String? currentRestaurantName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)  List<CartItemDto> items, @HiveField(1)  num? currentRestaurantId, @HiveField(2)  String? currentRestaurantName, @HiveField(3)  String? livestreamId)  $default,) {final _that = this;
 switch (_that) {
 case _CartDto():
-return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantName);}
+return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantName,_that.livestreamId);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -190,10 +191,10 @@ return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantNam
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)  List<CartItemDto> items, @HiveField(1)  num? currentRestaurantId, @HiveField(2)  String? currentRestaurantName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)  List<CartItemDto> items, @HiveField(1)  num? currentRestaurantId, @HiveField(2)  String? currentRestaurantName, @HiveField(3)  String? livestreamId)?  $default,) {final _that = this;
 switch (_that) {
 case _CartDto() when $default != null:
-return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantName);case _:
+return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantName,_that.livestreamId);case _:
   return null;
 
 }
@@ -205,7 +206,7 @@ return $default(_that.items,_that.currentRestaurantId,_that.currentRestaurantNam
 @JsonSerializable()
 
 class _CartDto implements CartDto {
-  const _CartDto({@HiveField(0) required final  List<CartItemDto> items, @HiveField(1) this.currentRestaurantId, @HiveField(2) this.currentRestaurantName}): _items = items;
+  const _CartDto({@HiveField(0) required final  List<CartItemDto> items, @HiveField(1) this.currentRestaurantId, @HiveField(2) this.currentRestaurantName, @HiveField(3) this.livestreamId}): _items = items;
   factory _CartDto.fromJson(Map<String, dynamic> json) => _$CartDtoFromJson(json);
 
  final  List<CartItemDto> _items;
@@ -217,6 +218,7 @@ class _CartDto implements CartDto {
 
 @override@HiveField(1) final  num? currentRestaurantId;
 @override@HiveField(2) final  String? currentRestaurantName;
+@override@HiveField(3) final  String? livestreamId;
 
 /// Create a copy of CartDto
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CartDto&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.currentRestaurantId, currentRestaurantId) || other.currentRestaurantId == currentRestaurantId)&&(identical(other.currentRestaurantName, currentRestaurantName) || other.currentRestaurantName == currentRestaurantName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CartDto&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.currentRestaurantId, currentRestaurantId) || other.currentRestaurantId == currentRestaurantId)&&(identical(other.currentRestaurantName, currentRestaurantName) || other.currentRestaurantName == currentRestaurantName)&&(identical(other.livestreamId, livestreamId) || other.livestreamId == livestreamId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),currentRestaurantId,currentRestaurantName);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),currentRestaurantId,currentRestaurantName,livestreamId);
 
 @override
 String toString() {
-  return 'CartDto(items: $items, currentRestaurantId: $currentRestaurantId, currentRestaurantName: $currentRestaurantName)';
+  return 'CartDto(items: $items, currentRestaurantId: $currentRestaurantId, currentRestaurantName: $currentRestaurantName, livestreamId: $livestreamId)';
 }
 
 
@@ -251,7 +253,7 @@ abstract mixin class _$CartDtoCopyWith<$Res> implements $CartDtoCopyWith<$Res> {
   factory _$CartDtoCopyWith(_CartDto value, $Res Function(_CartDto) _then) = __$CartDtoCopyWithImpl;
 @override @useResult
 $Res call({
-@HiveField(0) List<CartItemDto> items,@HiveField(1) num? currentRestaurantId,@HiveField(2) String? currentRestaurantName
+@HiveField(0) List<CartItemDto> items,@HiveField(1) num? currentRestaurantId,@HiveField(2) String? currentRestaurantName,@HiveField(3) String? livestreamId
 });
 
 
@@ -268,11 +270,12 @@ class __$CartDtoCopyWithImpl<$Res>
 
 /// Create a copy of CartDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? items = null,Object? currentRestaurantId = freezed,Object? currentRestaurantName = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? items = null,Object? currentRestaurantId = freezed,Object? currentRestaurantName = freezed,Object? livestreamId = freezed,}) {
   return _then(_CartDto(
 items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
 as List<CartItemDto>,currentRestaurantId: freezed == currentRestaurantId ? _self.currentRestaurantId : currentRestaurantId // ignore: cast_nullable_to_non_nullable
 as num?,currentRestaurantName: freezed == currentRestaurantName ? _self.currentRestaurantName : currentRestaurantName // ignore: cast_nullable_to_non_nullable
+as String?,livestreamId: freezed == livestreamId ? _self.livestreamId : livestreamId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

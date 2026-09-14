@@ -15,8 +15,9 @@ class _RiverpodCartCommands implements CartCommands {
   final Ref _ref;
 
   @override
-  Future<void> addItem(CartItemEntity item) =>
-      _ref.read(cartProvider.notifier).addItem(item);
+  Future<void> addItem(CartItemEntity item, {String? livestreamId}) => _ref
+      .read(cartProvider.notifier)
+      .addItem(item, livestreamId: livestreamId);
 
   @override
   Future<void> clearCart() => _ref.read(cartProvider.notifier).clearCart();

@@ -55,6 +55,9 @@ const _id = '00000000-0000-4000-8000-000000000001';
 
 final class _Repository implements LivestreamRepository {
   @override
+  Future<Livestream> getById(String livestreamId) => throw UnimplementedError();
+
+  @override
   Future<List<Livestream>> getActive() async => const [
     Livestream(
       id: _id,

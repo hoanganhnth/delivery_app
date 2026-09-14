@@ -25,6 +25,7 @@ Map<String, dynamic> _$CheckoutPreviewItemRequestToJson(
 _CheckoutPreviewRequest _$CheckoutPreviewRequestFromJson(
   Map<String, dynamic> json,
 ) => _CheckoutPreviewRequest(
+  livestreamId: json['livestreamId'] as String?,
   restaurantId: (json['restaurantId'] as num).toInt(),
   deliveryLat: (json['deliveryLat'] as num).toDouble(),
   deliveryLng: (json['deliveryLng'] as num).toDouble(),
@@ -44,6 +45,7 @@ _CheckoutPreviewRequest _$CheckoutPreviewRequestFromJson(
 Map<String, dynamic> _$CheckoutPreviewRequestToJson(
   _CheckoutPreviewRequest instance,
 ) => <String, dynamic>{
+  'livestreamId': instance.livestreamId,
   'restaurantId': instance.restaurantId,
   'deliveryLat': instance.deliveryLat,
   'deliveryLng': instance.deliveryLng,

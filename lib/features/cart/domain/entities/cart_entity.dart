@@ -10,6 +10,7 @@ sealed class CartEntity with _$CartEntity {
     required List<CartItemEntity> items,
     required num? currentRestaurantId,
     required String? currentRestaurantName,
+    String? livestreamId,
   }) = _CartEntity;
 
   const CartEntity._();

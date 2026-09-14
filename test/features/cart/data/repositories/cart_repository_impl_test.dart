@@ -63,6 +63,50 @@ void main() {
     expect(dataSource.cart.items.single.menuItemId, 301);
     expect(dataSource.cart.items.single.flashSaleItemId, 8801);
   });
+
+  test('repository persists and returns livestream cart identity', () async {
+    const livestreamId = '00000000-0000-4000-8000-000000000001';
+    final dataSource = _FakeCartLocalDataSource(
+      const CartDto(
+        items: [],
+        currentRestaurantId: null,
+        currentRestaurantName: null,
+      ),
+    );
+    final repository = CartRepositoryImpl(dataSource);
+
+    final result = await repository.addItem(
+      buildCartItem(),
+      livestreamId: livestreamId,
+    );
+
+    expect(
+      result.getOrElse((_) => throw StateError('expected cart')).livestreamId,
+      livestreamId,
+    );
+    expect(dataSource.cart.livestreamId, livestreamId);
+  });
+
+  test('normal catalog add clears a stale livestream identity', () async {
+    const livestreamId = '00000000-0000-4000-8000-000000000001';
+    final dataSource = _FakeCartLocalDataSource(
+      const CartDto(
+        items: [],
+        currentRestaurantId: null,
+        currentRestaurantName: null,
+        livestreamId: livestreamId,
+      ),
+    );
+    final repository = CartRepositoryImpl(dataSource);
+
+    final result = await repository.addItem(buildCartItem());
+
+    expect(
+      result.getOrElse((_) => throw StateError('expected cart')).livestreamId,
+      isNull,
+    );
+    expect(dataSource.cart.livestreamId, isNull);
+  });
 }
 
 class _FakeCartLocalDataSource implements CartLocalDataSource {
@@ -75,12 +119,16 @@ class _FakeCartLocalDataSource implements CartLocalDataSource {
   Future<Either<Exception, CartDto>> getCart() async => Right(cart);
 
   @override
-  Future<Either<Exception, CartDto>> addItem(CartItemDto item) async {
+  Future<Either<Exception, CartDto>> addItem(
+    CartItemDto item, {
+    String? livestreamId,
+  }) async {
     addCalls += 1;
     cart = CartDto(
       items: [...cart.items, item],
       currentRestaurantId: item.restaurantId,
       currentRestaurantName: item.restaurantName,
+      livestreamId: livestreamId,
     );
     return Right(cart);
   }

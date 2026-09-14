@@ -58,5 +58,23 @@ void main() {
       expect(createOrderRequest.notes, isNull);
       expect(createOrderRequest.items.single.notes, isNull);
     });
+
+    test('serializes the optional livestream checkout source', () {
+      const livestreamId = '00000000-0000-4000-8000-000000000001';
+      final request = CreateOrderRequestDto(
+        quoteId: '00000000-0000-0000-0000-000000000002',
+        livestreamId: livestreamId,
+        restaurantId: 1,
+        deliveryAddress: '456 Đường XYZ',
+        deliveryLat: 10.78,
+        deliveryLng: 106.69,
+        customerName: 'Nguyễn Văn A',
+        customerPhone: '0123456789',
+        paymentMethod: 'COD',
+        items: const [OrderItemRequest(menuItemId: 1, quantity: 1)],
+      );
+
+      expect(request.toJson()['livestreamId'], livestreamId);
+    });
   });
 }

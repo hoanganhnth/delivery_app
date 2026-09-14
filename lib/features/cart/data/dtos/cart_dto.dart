@@ -13,6 +13,7 @@ sealed class CartDto with _$CartDto {
     @HiveField(0) required List<CartItemDto> items,
     @HiveField(1) num? currentRestaurantId,
     @HiveField(2) String? currentRestaurantName,
+    @HiveField(3) String? livestreamId,
   }) = _CartDto;
 
   factory CartDto.fromJson(Map<String, dynamic> json) =>

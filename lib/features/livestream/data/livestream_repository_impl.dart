@@ -11,6 +11,10 @@ final class LivestreamRepositoryImpl implements LivestreamRepository {
   Future<List<Livestream>> getActive() => _gateway.getActive();
 
   @override
+  Future<Livestream> getById(String livestreamId) =>
+      _gateway.getById(livestreamId);
+
+  @override
   Future<LivestreamJoinSession> join(String livestreamId) =>
       _gateway.join(livestreamId);
 

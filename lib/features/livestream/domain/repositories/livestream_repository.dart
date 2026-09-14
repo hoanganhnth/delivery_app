@@ -3,6 +3,7 @@ import '../entities/livestream_join_session.dart';
 
 abstract interface class LivestreamRepository {
   Future<List<Livestream>> getActive();
+  Future<Livestream> getById(String livestreamId);
   Future<LivestreamJoinSession> join(String livestreamId);
   Future<String> renewToken(LivestreamJoinSession session);
 }

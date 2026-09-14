@@ -180,7 +180,6 @@ void main() {
     },
   );
 }
-
 class _FakeRestaurantRepository implements RestaurantRepository {
   @override
   Future<Either<Failure, List<RestaurantEntity>>> getRestaurants({
@@ -337,7 +336,10 @@ class _FakeCartRepository implements CartRepository {
 
 
   @override
-  Future<Either<Failure, CartEntity>> addItem(CartItemEntity item) async {
+  Future<Either<Failure, CartEntity>> addItem(
+    CartItemEntity item, {
+    String? livestreamId,
+  }) async {
     final current = [..._cart.items];
     final index = current.indexWhere(
       (row) => row.menuItemId == item.menuItemId,
@@ -349,7 +351,7 @@ class _FakeCartRepository implements CartRepository {
     } else {
       current.add(item);
     }
-    _cart = _withItems(current);
+    _cart = _withItems(current).copyWith(livestreamId: livestreamId);
     return Right(_cart);
   }
 

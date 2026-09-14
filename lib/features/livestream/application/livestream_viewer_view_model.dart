@@ -7,6 +7,7 @@ import 'package:delivery_app/core/network/_riverpod/authenticated_network_provid
 import '../data/livestream_gateway.dart';
 import '../data/livestream_repository_impl.dart';
 import 'livestream_media_port.dart';
+import '../domain/entities/livestream.dart';
 import '../domain/entities/livestream_join_session.dart';
 import '../domain/repositories/livestream_repository.dart';
 import '../domain/usecases/join_livestream_use_case.dart';
@@ -24,10 +25,12 @@ enum LivestreamViewerPhase {
 final class LivestreamViewerState {
   const LivestreamViewerState({
     this.phase = LivestreamViewerPhase.idle,
+    this.room,
     this.session,
     this.message,
   });
   final LivestreamViewerPhase phase;
+  final Livestream? room;
   final LivestreamJoinSession? session;
   final String? message;
 }
@@ -78,18 +81,27 @@ class LivestreamViewerViewModel extends Notifier<LivestreamViewerState> {
     final generation = ++_joinGeneration;
     state = const LivestreamViewerState(phase: LivestreamViewerPhase.loading);
     try {
+      final repository = ref.read(livestreamRepositoryProvider);
+      final room = await repository.getById(_livestreamId);
+      if (_disposed || generation != _joinGeneration) return;
+      if (room.status != LivestreamStatus.live) {
+        throw const FormatException('Livestream is not live');
+      }
       final session = await ref.read(joinLivestreamUseCaseProvider)(
         _livestreamId,
       );
       if (_disposed || generation != _joinGeneration) return;
+      if (session.restaurantId != room.restaurantId) {
+        throw const FormatException('Mismatched livestream restaurant');
+      }
       try {
-        final repository = ref.read(livestreamRepositoryProvider);
         await ref
             .read(livestreamMediaPortProvider)
             .join(session, renewToken: () => repository.renewToken(session));
         if (!_disposed && generation == _joinGeneration) {
           state = LivestreamViewerState(
             phase: LivestreamViewerPhase.joined,
+            room: room,
             session: session,
           );
         }
@@ -97,6 +109,7 @@ class LivestreamViewerViewModel extends Notifier<LivestreamViewerState> {
         if (!_disposed && generation == _joinGeneration) {
           state = LivestreamViewerState(
             phase: LivestreamViewerPhase.mediaUnavailable,
+            room: room,
             session: session,
             message: error.message,
           );
