@@ -5,6 +5,41 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 
 void main() {
+  test('preserves structured backend error codes without parsing messages', () async {
+    final dio = Dio(BaseOptions(baseUrl: 'https://gateway.example.test/api'));
+    final adapter = DioAdapter(dio: dio);
+    adapter.onGet(
+      '/livestreams/active',
+      (server) => server.reply(404, {
+        'status': 0,
+        'message': 'Nội dung hiển thị có thể thay đổi',
+        'data': null,
+        'error': {
+          'code': 'LIVESTREAM_DISABLED',
+          'details': {'retryable': false},
+        },
+      }),
+    );
+
+    await expectLater(
+      LivestreamGateway(dio).getActive(),
+      throwsA(
+        isA<LivestreamApiException>()
+            .having((error) => error.status, 'status', 404)
+            .having(
+              (error) => error.code,
+              'code',
+              'LIVESTREAM_DISABLED',
+            )
+            .having(
+              (error) => error.details,
+              'details',
+              {'retryable': false},
+            ),
+      ),
+    );
+  });
+
   test('loads a matching room detail with pinned products', () async {
     final dio = Dio(BaseOptions(baseUrl: 'https://gateway.example.test/api'));
     final adapter = DioAdapter(dio: dio);

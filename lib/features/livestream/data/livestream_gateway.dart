@@ -11,8 +11,8 @@ final class LivestreamGateway {
     if (!_uuid.hasMatch(livestreamId)) {
       throw const FormatException('Invalid livestream identity');
     }
-    final response = await _dio.get<Map<String, dynamic>>(
-      '/livestreams/$livestreamId',
+    final response = await _request(
+      () => _dio.get<Map<String, dynamic>>('/livestreams/$livestreamId'),
     );
     final envelope = response.data;
     if (envelope == null ||
@@ -30,8 +30,8 @@ final class LivestreamGateway {
   }
 
   Future<List<Livestream>> getActive() async {
-    final response = await _dio.get<Map<String, dynamic>>(
-      '/livestreams/active',
+    final response = await _request(
+      () => _dio.get<Map<String, dynamic>>('/livestreams/active'),
     );
     final envelope = response.data;
     if (envelope == null ||
@@ -59,8 +59,10 @@ final class LivestreamGateway {
     if (!_uuid.hasMatch(livestreamId)) {
       throw const FormatException('Invalid livestream identity');
     }
-    final response = await _dio.post<Map<String, dynamic>>(
-      '/livestreams/$livestreamId/join',
+    final response = await _request(
+      () => _dio.post<Map<String, dynamic>>(
+        '/livestreams/$livestreamId/join',
+      ),
     );
     final envelope = response.data;
     if (envelope == null ||
@@ -108,8 +110,10 @@ final class LivestreamGateway {
   }
 
   Future<String> renewToken(LivestreamJoinSession session) async {
-    final response = await _dio.post<Map<String, dynamic>>(
-      '/livestreams/${session.livestreamId}/token/renew',
+    final response = await _request(
+      () => _dio.post<Map<String, dynamic>>(
+        '/livestreams/${session.livestreamId}/token/renew',
+      ),
     );
     final envelope = response.data;
     if (envelope == null ||
@@ -140,6 +144,53 @@ final class LivestreamGateway {
     }
     return token.trim();
   }
+
+  Future<Response<Map<String, dynamic>>> _request(
+    Future<Response<Map<String, dynamic>>> Function() send,
+  ) async {
+    try {
+      return await send();
+    } on DioException catch (error) {
+      final apiError = LivestreamApiException.tryParse(error);
+      if (apiError != null) throw apiError;
+      rethrow;
+    }
+  }
+}
+
+final class LivestreamApiException implements Exception {
+  const LivestreamApiException({
+    required this.status,
+    required this.code,
+    required this.message,
+    this.details,
+  });
+
+  final int status;
+  final String code;
+  final String message;
+  final Object? details;
+
+  static LivestreamApiException? tryParse(DioException exception) {
+    final payload = exception.response?.data;
+    if (payload is! Map) return null;
+    final rawError = payload['error'];
+    if (rawError is! Map) return null;
+    final code = rawError['code'];
+    if (code is! String || code.trim().isEmpty) return null;
+    final message = payload['message'];
+    return LivestreamApiException(
+      status: exception.response?.statusCode ?? 0,
+      code: code.trim(),
+      message: message is String && message.trim().isNotEmpty
+          ? message.trim()
+          : 'Livestream request failed',
+      details: rawError['details'],
+    );
+  }
+
+  @override
+  String toString() => '$code: $message';
 }
 
 final _uuid = RegExp(
