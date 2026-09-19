@@ -103,8 +103,13 @@ class AuthInterceptor extends Interceptor {
     _isRefreshing = true;
     AppLogger.d('Starting token refresh');
 
+    final refreshAccessToken = await tokenStorage!.getAccessToken();
+    final refreshToken = await tokenStorage!.getRefreshToken();
+    Future<bool> isRefreshSessionCurrent() async =>
+        await tokenStorage!.getAccessToken() == refreshAccessToken &&
+        await tokenStorage!.getRefreshToken() == refreshToken;
+
     try {
-      final refreshToken = await tokenStorage!.getRefreshToken();
       if (refreshToken == null || refreshToken.isEmpty) {
         await _handleUnauthorized(err, handler, 'No refresh token available');
         return;
@@ -138,6 +143,15 @@ class AuthInterceptor extends Interceptor {
         return;
       }
 
+      if (!await isRefreshSessionCurrent()) {
+        await _handleSessionChanged(
+          err,
+          handler,
+          'Session changed while refreshing',
+        );
+        return;
+      }
+
       await tokenStorage!.saveTokens(
         accessToken: newAccessToken,
         refreshToken: newRefreshToken,
@@ -162,6 +176,14 @@ class AuthInterceptor extends Interceptor {
         handler.reject(error);
         return;
       }
+      if (!await isRefreshSessionCurrent()) {
+        await _handleSessionChanged(
+          err,
+          handler,
+          'Session changed while refreshing',
+        );
+        return;
+      }
       await _handleUnauthorized(
         err,
         handler,
@@ -169,6 +191,14 @@ class AuthInterceptor extends Interceptor {
         stackTrace,
       );
     } catch (error, stackTrace) {
+      if (!await isRefreshSessionCurrent()) {
+        await _handleSessionChanged(
+          err,
+          handler,
+          'Session changed while refreshing',
+        );
+        return;
+      }
       await _handleUnauthorized(
         err,
         handler,
@@ -247,5 +277,28 @@ class AuthInterceptor extends Interceptor {
     }
 
     handler.reject(unauthorizedError);
+  }
+
+  Future<void> _handleSessionChanged(
+    DioException err,
+    ErrorInterceptorHandler handler,
+    String reason,
+  ) async {
+    AppLogger.w(
+      '$reason; rejecting ${_pendingRequests.length} queued request(s)',
+    );
+    final sessionChangedError = DioException(
+      requestOptions: err.requestOptions,
+      error: StateError(reason),
+      response: err.response,
+      type: DioExceptionType.badResponse,
+    );
+    final pendingRequests = List<_PendingRequest>.of(_pendingRequests);
+    _pendingRequests.clear();
+    for (final pending in pendingRequests) {
+      pending.completer.completeError(sessionChangedError);
+    }
+    // The newer session owns the storage and must not be cleared or notified.
+    handler.next(sessionChangedError);
   }
 }

@@ -11,6 +11,7 @@ import 'package:delivery_app/features/auth/domain/usecases/enable_biometric_usec
 import 'package:delivery_app/features/auth/domain/usecases/get_available_biometrics_usecase.dart';
 import 'package:delivery_app/features/auth/domain/usecases/get_auth_session_usecase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:delivery_app/core/storage/secure_value_store.dart';
 
 part 'biometric_di_providers.g.dart';
 
@@ -39,7 +40,11 @@ Box biometricBox(Ref ref) {
 BiometricLocalDataSource biometricLocalDataSource(Ref ref) {
   final localAuth = ref.watch(localAuthProvider);
   final box = ref.watch(biometricBoxProvider);
-  return BiometricLocalDataSourceImpl(localAuth, box);
+  return BiometricLocalDataSourceImpl(
+    localAuth,
+    box,
+    PlatformSecureValueStore(),
+  );
 }
 
 // ============================================================================

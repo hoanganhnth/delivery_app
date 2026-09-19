@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'package:hive/hive.dart';
 import 'package:local_auth/local_auth.dart' as local_auth;
 import '../../../../core/utils/logger/app_logger.dart';
+import '../../../../core/storage/secure_value_store.dart';
 import '../../domain/entities/biometric_entity.dart';
 import '../models/token_model.dart';
 import 'biometric_local_datasource.dart';
@@ -9,12 +11,18 @@ import 'biometric_local_datasource.dart';
 class BiometricLocalDataSourceImpl implements BiometricLocalDataSource {
   final local_auth.LocalAuthentication _localAuth;
   final Box _secureBox;
+  final SecureValueStore _secureStore;
 
   // Keys for Hive storage
   static const String _sessionKey = 'biometric_auth_session';
+  static const String _secureSessionKey = 'delivery.auth.biometric-session.v1';
   static const String _enabledKey = 'biometric_enabled';
 
-  BiometricLocalDataSourceImpl(this._localAuth, this._secureBox);
+  BiometricLocalDataSourceImpl(
+    this._localAuth,
+    this._secureBox,
+    this._secureStore,
+  );
 
   @override
   Future<bool> canCheckBiometrics() async {
@@ -99,7 +107,11 @@ class BiometricLocalDataSourceImpl implements BiometricLocalDataSource {
         refreshToken: refreshToken ?? '',
       );
 
-      await _secureBox.put(_sessionKey, tokenModel.toJson());
+      await _secureStore.write(
+        _secureSessionKey,
+        jsonEncode(tokenModel.toJson()),
+      );
+      await _secureBox.delete(_sessionKey);
       await _secureBox.put(_enabledKey, true);
 
       AppLogger.i('Biometric auth session saved successfully');
@@ -114,14 +126,16 @@ class BiometricLocalDataSourceImpl implements BiometricLocalDataSource {
     try {
       AppLogger.d('Getting saved biometric auth session');
 
-      final data = _secureBox.get(_sessionKey);
+      // Old Hive credentials are deliberately deleted, never imported.
+      await _secureBox.delete(_sessionKey);
+      final data = await _secureStore.read(_secureSessionKey);
       if (data == null) {
         AppLogger.i('No biometric auth session found');
         return null;
       }
 
       final tokenModel = TokenModel.fromJson(
-        Map<String, dynamic>.from(data as Map),
+        jsonDecode(data) as Map<String, dynamic>,
       );
 
       AppLogger.i('Biometric auth session retrieved successfully');
@@ -138,6 +152,7 @@ class BiometricLocalDataSourceImpl implements BiometricLocalDataSource {
       AppLogger.d('Clearing biometric auth session');
 
       await _secureBox.delete(_sessionKey);
+      await _secureStore.delete(_secureSessionKey);
       await _secureBox.put(_enabledKey, false);
 
       AppLogger.i('Biometric auth session cleared successfully');
@@ -168,6 +183,7 @@ class BiometricLocalDataSourceImpl implements BiometricLocalDataSource {
       if (!enabled) {
         // Clear session when disabling
         await _secureBox.delete(_sessionKey);
+        await _secureStore.delete(_secureSessionKey);
       }
 
       AppLogger.i('Biometric enabled status updated to: $enabled');

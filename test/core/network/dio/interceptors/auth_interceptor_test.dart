@@ -182,6 +182,62 @@ void main() {
     );
 
     test(
+      'late refresh does not overwrite a newer session or clear its tokens',
+      () async {
+        final storage = _FakeTokenStorage(
+          accessToken: 'expired-access',
+          refreshToken: 'session-a-refresh',
+        );
+        final refreshGate = Completer<ResponseBody>();
+        final adapter = _ScriptedAdapter((options) {
+          if (options.headers['Authorization'] == 'Bearer expired-access') {
+            return _jsonResponse(401);
+          }
+          return _jsonResponse(200, body: {'data': options.path});
+        });
+        final refreshAdapter = _ScriptedAdapter((_) => refreshGate.future);
+        final dio = _createDio(adapter: adapter);
+        dio.interceptors.add(
+          AuthInterceptor(
+            dio: dio,
+            refreshDio: _createDio(adapter: refreshAdapter),
+            tokenStorage: storage,
+          ),
+        );
+
+        final request = dio.get<dynamic>('/orders');
+        await refreshAdapter.firstCallStarted.future;
+        storage.accessToken = 'session-b-access';
+        storage.refreshToken = 'session-b-refresh';
+        refreshGate.complete(
+          _jsonResponse(
+            200,
+            body: {
+              'data': {
+                'accessToken': 'session-a-new-access',
+                'refreshToken': 'session-a-new-refresh',
+              },
+            },
+          ),
+        );
+
+        await expectLater(
+          request,
+          throwsA(
+            isA<DioException>().having(
+              (error) => error.error,
+              'error',
+              isA<StateError>(),
+            ),
+          ),
+        );
+        expect(storage.accessToken, 'session-b-access');
+        expect(storage.refreshToken, 'session-b-refresh');
+        expect(storage.clearCalls, 0);
+      },
+    );
+
+    test(
       'a retried request that remains 401 terminates without deadlock',
       () async {
         final storage = _FakeTokenStorage(

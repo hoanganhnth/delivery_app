@@ -1,144 +1,89 @@
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/storage/secure_value_store.dart';
 import '../../../../core/utils/logger/app_logger.dart';
 import '../models/token_model.dart';
 import 'token_local_data_source.dart';
 
-/// Implementation of TokenLocalDataSource using SharedPreferences
+/// Token persistence backed only by Keychain/Keystore secure storage.
 class TokenLocalDataSourceImpl implements TokenLocalDataSource {
-  final SharedPreferences _prefs;
+  TokenLocalDataSourceImpl(
+    this._secureStore, {
+    SharedPreferences? legacyPreferences,
+  }) : _legacyPreferences = legacyPreferences;
 
-  TokenLocalDataSourceImpl(this._prefs);
+  static const String _tokenKey = 'delivery.auth.tokens.v1';
+  static const List<String> _legacyKeys = [
+    'auth_tokens',
+    'access_token',
+    'refresh_token',
+  ];
+  final SecureValueStore _secureStore;
+  final SharedPreferences? _legacyPreferences;
 
-  static const String _tokenKey = 'auth_tokens';
-  static const String _accessTokenKey = 'access_token';
-  static const String _refreshTokenKey = 'refresh_token';
+  Future<void> _purgeLegacyCopies() async {
+    final preferences = _legacyPreferences;
+    if (preferences == null) return;
+    for (final key in _legacyKeys) {
+      await preferences.remove(key);
+    }
+  }
 
   @override
   Future<Either<Failure, void>> storeTokens(TokenModel tokens) async {
     try {
-      AppLogger.d('TokenLocalDataSource: Storing tokens');
-      
-      // Store as JSON
-      final tokenJson = tokens.toJson();
-      final tokenString = json.encode(tokenJson);
-      
-      final success = await _prefs.setString(_tokenKey, tokenString);
-      
-      if (!success) {
-        AppLogger.e('TokenLocalDataSource: Failed to store tokens');
-        return left(const CacheFailure('Failed to store tokens'));
-      }
-      
-      // Also store individual tokens for easy access
-      await Future.wait([
-        _prefs.setString(_accessTokenKey, tokens.accessToken),
-        _prefs.setString(_refreshTokenKey, tokens.refreshToken),
-      ]);
-      
-      AppLogger.d('TokenLocalDataSource: Tokens stored successfully');
+      await _purgeLegacyCopies();
+      await _secureStore.write(_tokenKey, json.encode(tokens.toJson()));
       return right(null);
-    } catch (e) {
-      AppLogger.e('TokenLocalDataSource: Error storing tokens - $e');
-      return left(CacheFailure('Failed to store tokens: $e'));
+    } catch (error) {
+      AppLogger.e('Secure token write failed', error);
+      return left(CacheFailure('Failed to securely store tokens: $error'));
     }
   }
 
   @override
   Future<Either<Failure, TokenModel?>> getTokens() async {
     try {
-      AppLogger.d('TokenLocalDataSource: Getting tokens');
-      
-      final tokenString = _prefs.getString(_tokenKey);
-      
-      if (tokenString == null) {
-        AppLogger.d('TokenLocalDataSource: No tokens found');
-        return right(null);
-      }
-      
-      final tokenJson = json.decode(tokenString) as Map<String, dynamic>;
-      final tokens = TokenModel.fromJson(tokenJson);
-      
-      AppLogger.d('TokenLocalDataSource: Tokens retrieved successfully');
-      return right(tokens);
-    } catch (e) {
-      AppLogger.e('TokenLocalDataSource: Error getting tokens - $e');
-      return left(CacheFailure('Failed to get tokens: $e'));
+      await _purgeLegacyCopies();
+      final encoded = await _secureStore.read(_tokenKey);
+      if (encoded == null) return right(null);
+      return right(
+        TokenModel.fromJson(json.decode(encoded) as Map<String, dynamic>),
+      );
+    } catch (error) {
+      AppLogger.e('Secure token read failed', error);
+      return left(CacheFailure('Failed to securely read tokens: $error'));
     }
   }
 
   @override
   Future<Either<Failure, void>> clearTokens() async {
     try {
-      AppLogger.d('TokenLocalDataSource: Clearing tokens');
-      
-      await Future.wait([
-        _prefs.remove(_tokenKey),
-        _prefs.remove(_accessTokenKey),
-        _prefs.remove(_refreshTokenKey),
-      ]);
-      
-      AppLogger.d('TokenLocalDataSource: Tokens cleared successfully');
+      await _secureStore.delete(_tokenKey);
+      await _purgeLegacyCopies();
       return right(null);
-    } catch (e) {
-      AppLogger.e('TokenLocalDataSource: Error clearing tokens - $e');
-      return left(CacheFailure('Failed to clear tokens: $e'));
+    } catch (error) {
+      AppLogger.e('Secure token clear failed', error);
+      return left(CacheFailure('Failed to securely clear tokens: $error'));
     }
   }
 
   @override
   Future<Either<Failure, bool>> hasTokens() async {
-    try {
-      final hasTokens = _prefs.containsKey(_tokenKey) || 
-                       _prefs.containsKey(_accessTokenKey);
-      
-      AppLogger.d('TokenLocalDataSource: Has tokens - $hasTokens');
-      return right(hasTokens);
-    } catch (e) {
-      AppLogger.e('TokenLocalDataSource: Error checking tokens - $e');
-      return left(CacheFailure('Failed to check tokens: $e'));
-    }
+    final result = await getTokens();
+    return result.map((tokens) => tokens != null);
   }
 
   @override
   Future<Either<Failure, void>> updateAccessToken(String accessToken) async {
-    try {
-      AppLogger.d('TokenLocalDataSource: Updating access token');
-      
-      // Get current tokens
-      final currentResult = await getTokens();
-      
-      return currentResult.fold(
-        (failure) => left(failure),
-        (currentTokens) async {
-          if (currentTokens == null) {
-            return left(const CacheFailure('No existing tokens to update'));
-          }
-          
-          // Create updated tokens
-          final updatedTokens = currentTokens.copyWith(
-            accessToken: accessToken,
-          );
-          
-          // Store updated tokens
-          return await storeTokens(updatedTokens);
-        },
-      );
-    } catch (e) {
-      AppLogger.e('TokenLocalDataSource: Error updating access token - $e');
-      return left(CacheFailure('Failed to update access token: $e'));
-    }
-  }
-
-  /// Get access token directly
-  Future<String?> getAccessToken() async {
-    return _prefs.getString(_accessTokenKey);
-  }
-
-  /// Get refresh token directly
-  Future<String?> getRefreshToken() async {
-    return _prefs.getString(_refreshTokenKey);
+    final current = await getTokens();
+    return current.fold(
+      left,
+      (tokens) => tokens == null
+          ? left(const CacheFailure('No existing tokens to update'))
+          : storeTokens(tokens.copyWith(accessToken: accessToken)),
+    );
   }
 }

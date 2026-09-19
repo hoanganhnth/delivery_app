@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:delivery_app/core/storage/secure_value_store.dart';
 
 import 'package:delivery_app/features/auth/data/datasources/token_local_data_source.dart';
 import 'package:delivery_app/features/auth/data/datasources/token_local_data_source_impl.dart';
@@ -20,8 +21,10 @@ SharedPreferences sharedPreferences(Ref ref) {
 /// Provider for TokenLocalDataSource
 @Riverpod(keepAlive: true)
 TokenLocalDataSource tokenLocalDataSource(Ref ref) {
-  final prefs = ref.read(sharedPreferencesProvider);
-  return TokenLocalDataSourceImpl(prefs);
+  return TokenLocalDataSourceImpl(
+    PlatformSecureValueStore(),
+    legacyPreferences: ref.read(sharedPreferencesProvider),
+  );
 }
 
 /// Provider for TokenStorageRepository
