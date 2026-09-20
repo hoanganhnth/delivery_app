@@ -21,8 +21,8 @@ Map<String, dynamic> _restaurant() => {
   'image': null,
   'openingHour': '08:00:00',
   'closingHour': '22:00:00',
-  'addressLat': 10.7769,
-  'addressLng': 106.7009,
+  'latitude': 10.7769,
+  'longitude': 106.7009,
 };
 
 Map<String, dynamic> _menuItem() => {
@@ -56,7 +56,7 @@ void main() {
       (server) => server.reply(200, _response(_restaurant())),
     );
     adapter.onGet(
-      '/menu-items/restaurant/11',
+      '/menu-items/restaurant/11/available',
       (server) => server.reply(200, _response([_menuItem()])),
     );
 
@@ -67,6 +67,8 @@ void main() {
     final menu = await service.getMenuItems(11);
 
     expect(restaurants.data, hasLength(1));
+    expect(restaurants.data?.single.addressLat, 10.7769);
+    expect(restaurants.data?.single.addressLng, 106.7009);
     expect(detail.data?.id, 11);
     expect(menu.data?.single.name, 'Phở bò');
   });
@@ -92,7 +94,7 @@ void main() {
         ..['status'] = 'DISCONTINUED'
         ..['description'] = null;
       adapter.onGet(
-        '/menu-items/restaurant/11',
+        '/menu-items/restaurant/11/available',
         (server) => server.reply(200, _response([item])),
       );
 

@@ -27,8 +27,12 @@ sealed class RestaurantDto with _$RestaurantDto {
     // DateTime? closeTime,
   }) = _RestaurantDto;
 
-  factory RestaurantDto.fromJson(Map<String, dynamic> json) =>
-      _$RestaurantDtoFromJson(json);
+  factory RestaurantDto.fromJson(Map<String, dynamic> json) {
+    final normalized = Map<String, dynamic>.from(json);
+    normalized['addressLat'] ??= normalized['latitude'];
+    normalized['addressLng'] ??= normalized['longitude'];
+    return _$RestaurantDtoFromJson(normalized);
+  }
 }
 
 extension RestaurantDtoX on RestaurantDto {

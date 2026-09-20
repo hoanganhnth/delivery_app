@@ -18,7 +18,7 @@ class ApiConstants {
 
   static const getRestaurant = "/restaurants";
   static const getMenuItemsByRestaurant =
-      "/menu-items/restaurant/{restaurantId}";
+      "/menu-items/restaurant/{restaurantId}/available";
   static const order = "/orders";
   static const getOrdersByUser = "$order/my-orders";
   static const customerRefundCases = "/settlement/refunds/my";
