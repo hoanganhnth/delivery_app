@@ -5,6 +5,9 @@ import 'failures.dart';
 class DioExceptionHandler {
   static Failure handleException(DioException exception) {
     switch (exception.type) {
+      case DioExceptionType.transformTimeout:
+        return const Failure.network('Response processing timeout');
+
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:

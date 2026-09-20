@@ -4,6 +4,7 @@ import 'package:delivery_app/features/restaurants/data/dtos/search_restaurants_r
 import 'package:delivery_app/features/restaurants/domain/entities/menu_item_entity.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:delivery_app/features/restaurants/data/dtos/restaurant_dto.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 
 Map<String, dynamic> _response(Object? data) => {
@@ -36,6 +37,15 @@ Map<String, dynamic> _menuItem() => {
 };
 
 void main() {
+  test('canonical coordinates win over legacy, including explicit null', () {
+    final payload = _restaurant()..['addressLat'] = 1.0..['addressLng'] = 2.0;
+    expect(RestaurantDto.fromJson(payload).addressLat, 10.7769);
+    expect(RestaurantDto.fromJson(payload).addressLng, 106.7009);
+    payload['latitude'] = null;
+    expect(RestaurantDto.fromJson(payload).addressLat, isNull);
+    payload.remove('latitude');
+    expect(RestaurantDto.fromJson(payload).addressLat, 1.0);
+  });
   late Dio dio;
   late DioAdapter adapter;
   late RestaurantApiService service;

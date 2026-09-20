@@ -29,8 +29,8 @@ sealed class RestaurantDto with _$RestaurantDto {
 
   factory RestaurantDto.fromJson(Map<String, dynamic> json) {
     final normalized = Map<String, dynamic>.from(json);
-    normalized['addressLat'] ??= normalized['latitude'];
-    normalized['addressLng'] ??= normalized['longitude'];
+    if (json.containsKey('latitude')) normalized['addressLat'] = json['latitude'];
+    if (json.containsKey('longitude')) normalized['addressLng'] = json['longitude'];
     return _$RestaurantDtoFromJson(normalized);
   }
 }

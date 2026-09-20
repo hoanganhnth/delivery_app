@@ -100,7 +100,7 @@ class _RestaurantApiService implements RestaurantApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/menu-items/restaurant/${restaurantId}',
+            '/menu-items/restaurant/${restaurantId}/available',
             queryParameters: queryParameters,
             data: _data,
           )
