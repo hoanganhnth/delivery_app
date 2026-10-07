@@ -234,3 +234,93 @@ asset-dependent full suite. The parent must provide the normal local `.env`
 fixture and resolve or separately accept the existing analyzer issues, then
 rerun the required commands. This task must not be marked DONE while those
 acceptance criteria remain unmet.
+
+---
+
+# Auth, profile and restaurant data coverage
+
+Validation uses `/Users/a/fvm/versions/3.32.8/bin/flutter` (Flutter 3.32.8).
+Coverage is the sum of hit `DA` lines divided by all `DA` lines for each exact
+`lib/features/<feature>/data/` prefix in `coverage/lcov.info`. No generated-file
+exclusions or coverage-policy filters are applied. The generated `.g.dart`
+records emitted by Flutter are included.
+
+## Measured baseline
+
+The full baseline `flutter test --coverage` passed 485 tests before adding these
+test files. Its measured coverage differs from the supplied historical baseline:
+
+| Path | Before |
+| --- | ---: |
+| `lib/features/auth/data` | 271/680 (39.85%) |
+| `lib/features/profile/data` | 66/337 (19.58%) |
+| `lib/features/restaurants/data` | 104/262 (39.69%) |
+
+## Test coverage added
+
+- Real Dio/Retrofit API and repository pipelines with a recording interceptor
+  and the existing `http_mock_adapter` dependency; no network calls.
+- Exact methods, paths, query parameters and body fields; success, rejected and
+  empty envelopes, 401/500 responses, receive timeouts and malformed JSON fields.
+- Registration handoff recovery: linked/pending profiles, failed status lookup,
+  rejected status envelope and missing recovery handle.
+- Profile caching through an in-memory port; all DTO/entity/model fields,
+  missing/invalid dates, date-only update bodies and stable Hive field indexes
+  with fake binary readers/writers (no Hive initialization).
+- Secure token storage, rotation retaining the refresh token, absent tokens,
+  corrupt stored JSON and storage failures; biometric native-type mapping,
+  authentication options, legacy credential removal, enable/disable and secure
+  session lifecycle through fake sensor/storage/box ports (no device plugins).
+
+## Backend compatibility findings
+
+Contract reference:
+`backend_delivery/docs/platform/system/api/http-contract.json`.
+The tested request routes and field names match the manifest: auth login/social
+login/register/registration-status/refresh/logout/password recovery, user
+registration and GET/PUT users, restaurant list/detail/search and available menu.
+Catalog filtering/pagination fields stay off the wire; search sends `keyword`.
+Auth registration excludes `name`; profile handoff sends `provisioningToken` and
+`fullName`; profile updates send `fullName`, `phone`, `dob`, `address`.
+
+Remaining contract risk: `LoginRequestDto.deviceId` and
+`SocialLoginRequestDto.deviceId` are nullable and default to null, while backend
+`LoginRequest` and `SocialLoginRequest` require a `@NotBlank` deviceId. These
+low-level DTOs can therefore serialize a request the backend rejects if a caller
+omits device identity. The new HTTP pipeline fixtures supply valid identity;
+this finding does not establish that current login UI flows omit it. Likewise,
+`RegisterRequestDto.role` is nullable although backend registration requires
+`@NotBlank`; the repository supplies `USER`. No production compatibility change
+was made.
+
+The restaurant generated list parser currently maps a non-list `data` value to
+an empty list; malformed list elements and malformed detail fields fail through
+the datasource wrapper. This is existing response behavior, not a request
+contract finding.
+
+## Final validation
+
+| Path | Before | After full suite |
+| --- | ---: | ---: |
+| `lib/features/auth/data` | 271/680 (39.85%) | 672/680 (98.82%) |
+| `lib/features/profile/data` | 66/337 (19.58%) | 311/337 (92.28%) |
+| `lib/features/restaurants/data` | 104/262 (39.69%) | 249/262 (95.04%) |
+
+- Full `flutter test --coverage`: **604 tests passed**, exit 0.
+- Focused data-layer `flutter test --coverage test/features/auth/data
+  test/features/profile/data test/features/restaurants/data`: **155 tests passed**,
+  exit 0.
+- Strengthened malformed/rejected auth error-message assertions subsequently
+  verified with `flutter test
+  test/features/auth/data/datasources/auth_data_pipeline_test.dart`:
+  **65 tests passed**, exit 0. Assertions changed only; exercised production
+  lines and coverage counts are unchanged.
+- `flutter analyze`: **No issues found**, exit 0.
+
+Original `coverage/lcov.info` restored byte-for-byte after measurement.
+Production `lib/`, `pubspec.lock` and macOS source content were not changed.
+The full baseline and final measurement copies and command logs are retained in
+`/tmp/app-cov-3-{baseline,final}-lcov.info`,
+`/tmp/app-cov-3-baseline.log`, `/tmp/app-cov-3-final-test.log`,
+`/tmp/app-cov-3-data2.log`, `/tmp/app-cov-3-auth-final.log`, and
+`/tmp/app-cov-3-analyze-final.log` for local review.
