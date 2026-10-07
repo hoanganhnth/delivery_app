@@ -9047,11 +9047,11 @@
       },
       "java": {
         "signature": "public ResponseEntity<Map<String, String>> vnpayIpn(@RequestParam Map<String, String> params)",
-        "returnType": "c ResponseEntity<Map<String, String>>",
+        "returnType": "ResponseEntity<Map<String, String>>",
         "parameters": [
           {
-            "name": "param",
-            "type": "( Map<String, String>",
+            "name": "params",
+            "type": "Map<String, String>",
             "annotations": [
               {
                 "name": "RequestParam"
@@ -9059,7 +9059,7 @@
             ],
             "required": true,
             "binding": "query",
-            "wireName": "param"
+            "wireName": "params"
           }
         ]
       }
@@ -9111,11 +9111,11 @@
       },
       "java": {
         "signature": "public ResponseEntity<BaseResponse<PaymentOrderResponse>> getPaymentStatus( @PathVariable Long paymentId)",
-        "returnType": "ic ResponseEntity<BaseResponse<PaymentOrderResponse>",
+        "returnType": "ResponseEntity<BaseResponse<PaymentOrderResponse>>",
         "parameters": [
           {
-            "name": "payment",
-            "type": "s( Long",
+            "name": "paymentId",
+            "type": "Long",
             "annotations": [
               {
                 "name": "PathVariable"
@@ -9123,7 +9123,7 @@
             ],
             "required": true,
             "binding": "path",
-            "wireName": "payment"
+            "wireName": "paymentId"
           }
         ]
       }
@@ -9143,11 +9143,11 @@
       },
       "java": {
         "signature": "public ResponseEntity<BaseResponse<PaymentOrderResponse>> getPaymentByRef( @PathVariable String paymentRef)",
-        "returnType": "ic ResponseEntity<BaseResponse<PaymentOrderResponse>",
+        "returnType": "ResponseEntity<BaseResponse<PaymentOrderResponse>>",
         "parameters": [
           {
-            "name": "paymentR",
-            "type": "f( String",
+            "name": "paymentRef",
+            "type": "String",
             "annotations": [
               {
                 "name": "PathVariable"
@@ -9155,7 +9155,7 @@
             ],
             "required": true,
             "binding": "path",
-            "wireName": "paymentR"
+            "wireName": "paymentRef"
           }
         ]
       }
@@ -9175,7 +9175,7 @@
       },
       "java": {
         "signature": "public ResponseEntity<BaseResponse<Set<String>>> getAvailableProviders()",
-        "returnType": "ic ResponseEntity<BaseResponse<Set<String>>",
+        "returnType": "ResponseEntity<BaseResponse<Set<String>>>",
         "parameters": []
       }
     },
@@ -12786,6 +12786,73 @@
           ]
         },
         {
+          "name": "rejectReason",
+          "type": "String",
+          "annotations": [
+            {
+              "name": "Size",
+              "arguments": "max = 500"
+            }
+          ],
+          "required": false,
+          "constraints": [
+            {
+              "name": "Size",
+              "arguments": "max = 500"
+            }
+          ]
+        },
+        {
+          "name": "estimatedPickupTime",
+          "type": "Double",
+          "annotations": [
+            {
+              "name": "DecimalMin",
+              "arguments": "value = \"0.0\", inclusive = false"
+            },
+            {
+              "name": "DecimalMax",
+              "arguments": "\"240.0\""
+            }
+          ],
+          "required": false,
+          "constraints": [
+            {
+              "name": "DecimalMin",
+              "arguments": "value = \"0.0\", inclusive = false"
+            },
+            {
+              "name": "DecimalMax",
+              "arguments": "\"240.0\""
+            }
+          ]
+        },
+        {
+          "name": "currentLat",
+          "type": "Double",
+          "annotations": [
+            {
+              "name": "DecimalMin",
+              "arguments": "\"8.0\""
+            },
+            {
+              "name": "DecimalMax",
+              "arguments": "\"24.0\""
+            }
+          ],
+          "required": false,
+          "constraints": [
+            {
+              "name": "DecimalMin",
+              "arguments": "\"8.0\""
+            },
+            {
+              "name": "DecimalMax",
+              "arguments": "\"24.0\""
+            }
+          ]
+        },
+        {
           "name": "currentLng",
           "type": "Double",
           "annotations": [
@@ -12871,8 +12938,8 @@
       },
       "fields": [
         {
-          "name": "message",
-          "type": "\",",
+          "name": "contentType",
+          "type": "String",
           "annotations": [
             {
               "name": "NotBlank",
@@ -12880,7 +12947,7 @@
             },
             {
               "name": "Pattern",
-              "arguments": "regexp = \"image/(jpeg|png|webp"
+              "arguments": "regexp = \"image/(jpeg|png|webp)\", message = \"contentType must be image/jpeg, image/png or image/webp\""
             }
           ],
           "required": true,
@@ -12891,7 +12958,7 @@
             },
             {
               "name": "Pattern",
-              "arguments": "regexp = \"image/(jpeg|png|webp"
+              "arguments": "regexp = \"image/(jpeg|png|webp)\", message = \"contentType must be image/jpeg, image/png or image/webp\""
             }
           ]
         },
@@ -13471,6 +13538,12 @@
           "required": false
         },
         {
+          "name": "grossShippingFee",
+          "type": "BigDecimal",
+          "annotations": [],
+          "required": false
+        },
+        {
           "name": "customerShippingFee",
           "type": "BigDecimal",
           "annotations": [],
@@ -13497,6 +13570,30 @@
         {
           "name": "estimatedEarnings",
           "type": "BigDecimal",
+          "annotations": [],
+          "required": false
+        },
+        {
+          "name": "platformCommission",
+          "type": "BigDecimal",
+          "annotations": [],
+          "required": false
+        },
+        {
+          "name": "totalPrice",
+          "type": "BigDecimal",
+          "annotations": [],
+          "required": false
+        },
+        {
+          "name": "paymentMethod",
+          "type": "String",
+          "annotations": [],
+          "required": false
+        },
+        {
+          "name": "restaurantId",
+          "type": "Long",
           "annotations": [],
           "required": false
         }
@@ -16132,6 +16229,12 @@
           "type": "double",
           "annotations": [],
           "required": false
+        },
+        {
+          "name": "maxShippers",
+          "type": "int",
+          "annotations": [],
+          "required": false
         }
       ]
     },
@@ -17306,6 +17409,24 @@
           "required": false
         },
         {
+          "name": "shippingFee",
+          "type": "BigDecimal",
+          "annotations": [],
+          "required": false
+        },
+        {
+          "name": "discountAmount",
+          "type": "BigDecimal",
+          "annotations": [],
+          "required": false
+        },
+        {
+          "name": "totalPrice",
+          "type": "BigDecimal",
+          "annotations": [],
+          "required": false
+        },
+        {
           "name": "itemDiscount",
           "type": "BigDecimal",
           "annotations": [],
@@ -17343,6 +17464,12 @@
         },
         {
           "name": "couponCode",
+          "type": "String",
+          "annotations": [],
+          "required": false
+        },
+        {
+          "name": "couponMessage",
           "type": "String",
           "annotations": [],
           "required": false
@@ -17499,6 +17626,12 @@
               "type": "BigDecimal",
               "annotations": [],
               "required": false
+            },
+            {
+              "name": "newPrice",
+              "type": "BigDecimal",
+              "annotations": [],
+              "required": false
             }
           ]
         }
@@ -17615,6 +17748,12 @@
         },
         {
           "name": "oldPrice",
+          "type": "BigDecimal",
+          "annotations": [],
+          "required": false
+        },
+        {
+          "name": "newPrice",
           "type": "BigDecimal",
           "annotations": [],
           "required": false
@@ -17874,6 +18013,12 @@
         {
           "name": "creatorId",
           "type": "Long",
+          "annotations": [],
+          "required": false
+        },
+        {
+          "name": "cancelReason",
+          "type": "String",
           "annotations": [],
           "required": false
         },
@@ -25367,6 +25512,12 @@
           "required": false
         },
         {
+          "name": "entityType",
+          "type": "String",
+          "annotations": [],
+          "required": false
+        },
+        {
           "name": "amount",
           "type": "BigDecimal",
           "annotations": [
@@ -25393,6 +25544,24 @@
         },
         {
           "name": "provider",
+          "type": "String",
+          "annotations": [],
+          "required": false
+        },
+        {
+          "name": "purpose",
+          "type": "String",
+          "annotations": [],
+          "required": false
+        },
+        {
+          "name": "returnUrl",
+          "type": "String",
+          "annotations": [],
+          "required": false
+        },
+        {
+          "name": "ipAddress",
           "type": "String",
           "annotations": [],
           "required": false
@@ -25564,6 +25733,12 @@
         },
         {
           "name": "depositBalance",
+          "type": "BigDecimal",
+          "annotations": [],
+          "required": false
+        },
+        {
+          "name": "reservedDepositBalance",
           "type": "BigDecimal",
           "annotations": [],
           "required": false
