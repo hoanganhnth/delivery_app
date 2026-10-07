@@ -19,11 +19,4 @@ _SearchRestaurantsRequestDto _$SearchRestaurantsRequestDtoFromJson(
 
 Map<String, dynamic> _$SearchRestaurantsRequestDtoToJson(
   _SearchRestaurantsRequestDto instance,
-) => <String, dynamic>{
-  'keyword': instance.keyword,
-  'latitude': instance.latitude,
-  'longitude': instance.longitude,
-  'category': instance.category,
-  'page': instance.page,
-  'limit': instance.limit,
-};
+) => <String, dynamic>{'keyword': instance.keyword};

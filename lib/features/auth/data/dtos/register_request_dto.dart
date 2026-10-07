@@ -8,7 +8,7 @@ sealed class RegisterRequestDto with _$RegisterRequestDto {
   const factory RegisterRequestDto({
     required String email,
     required String password,
-    String? name,
+    @JsonKey(includeToJson: false) String? name,
     String? role,
   }) = _RegisterRequestDto;
 

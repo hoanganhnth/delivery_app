@@ -18,7 +18,6 @@ Map<String, dynamic> _$RegisterRequestDtoToJson(_RegisterRequestDto instance) =>
     <String, dynamic>{
       'email': instance.email,
       'password': instance.password,
-      'name': instance.name,
       'role': instance.role,
     };
 

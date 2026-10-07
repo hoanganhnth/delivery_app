@@ -1,3 +1,4 @@
+import 'package:delivery_app/features/profile/data/dtos/user_profile_dto.dart';
 import 'package:delivery_app/features/profile/data/datasources/profile_remote_datasource_impl.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -20,6 +21,8 @@ void main() {
           'email': 'customer@test.dev',
           'role': 'USER',
           'fullName': 'Khách Test',
+          'createdAt': '2026-10-01T10:00:00',
+          'updatedAt': '2026-10-02T11:00:00',
         },
       }),
     );
@@ -28,6 +31,9 @@ void main() {
 
     expect(response.status, 1);
     expect(response.data?.authId, 10);
+    final user = response.data!.toEntity();
+    expect(user.createdAt, DateTime(2026, 10, 1, 10));
+    expect(user.updatedAt, DateTime(2026, 10, 2, 11));
   });
 
   test('updates the current profile through canonical PUT /users', () async {

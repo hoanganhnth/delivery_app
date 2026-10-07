@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GetRestaurantsRequestDto {
 
- double? get latitude; double? get longitude; String? get category; String? get searchQuery; int? get page; int? get limit;
+@JsonKey(includeToJson: false) double? get latitude;@JsonKey(includeToJson: false) double? get longitude;@JsonKey(includeToJson: false) String? get category;@JsonKey(includeToJson: false) String? get searchQuery;@JsonKey(includeToJson: false) int? get page;@JsonKey(includeToJson: false) int? get limit;
 /// Create a copy of GetRestaurantsRequestDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $GetRestaurantsRequestDtoCopyWith<$Res>  {
   factory $GetRestaurantsRequestDtoCopyWith(GetRestaurantsRequestDto value, $Res Function(GetRestaurantsRequestDto) _then) = _$GetRestaurantsRequestDtoCopyWithImpl;
 @useResult
 $Res call({
- double? latitude, double? longitude, String? category, String? searchQuery, int? page, int? limit
+@JsonKey(includeToJson: false) double? latitude,@JsonKey(includeToJson: false) double? longitude,@JsonKey(includeToJson: false) String? category,@JsonKey(includeToJson: false) String? searchQuery,@JsonKey(includeToJson: false) int? page,@JsonKey(includeToJson: false) int? limit
 });
 
 
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? latitude,  double? longitude,  String? category,  String? searchQuery,  int? page,  int? limit)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  double? latitude, @JsonKey(includeToJson: false)  double? longitude, @JsonKey(includeToJson: false)  String? category, @JsonKey(includeToJson: false)  String? searchQuery, @JsonKey(includeToJson: false)  int? page, @JsonKey(includeToJson: false)  int? limit)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GetRestaurantsRequestDto() when $default != null:
 return $default(_that.latitude,_that.longitude,_that.category,_that.searchQuery,_that.page,_that.limit);case _:
@@ -176,7 +176,7 @@ return $default(_that.latitude,_that.longitude,_that.category,_that.searchQuery,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? latitude,  double? longitude,  String? category,  String? searchQuery,  int? page,  int? limit)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  double? latitude, @JsonKey(includeToJson: false)  double? longitude, @JsonKey(includeToJson: false)  String? category, @JsonKey(includeToJson: false)  String? searchQuery, @JsonKey(includeToJson: false)  int? page, @JsonKey(includeToJson: false)  int? limit)  $default,) {final _that = this;
 switch (_that) {
 case _GetRestaurantsRequestDto():
 return $default(_that.latitude,_that.longitude,_that.category,_that.searchQuery,_that.page,_that.limit);}
@@ -193,7 +193,7 @@ return $default(_that.latitude,_that.longitude,_that.category,_that.searchQuery,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? latitude,  double? longitude,  String? category,  String? searchQuery,  int? page,  int? limit)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  double? latitude, @JsonKey(includeToJson: false)  double? longitude, @JsonKey(includeToJson: false)  String? category, @JsonKey(includeToJson: false)  String? searchQuery, @JsonKey(includeToJson: false)  int? page, @JsonKey(includeToJson: false)  int? limit)?  $default,) {final _that = this;
 switch (_that) {
 case _GetRestaurantsRequestDto() when $default != null:
 return $default(_that.latitude,_that.longitude,_that.category,_that.searchQuery,_that.page,_that.limit);case _:
@@ -208,15 +208,15 @@ return $default(_that.latitude,_that.longitude,_that.category,_that.searchQuery,
 @JsonSerializable()
 
 class _GetRestaurantsRequestDto implements GetRestaurantsRequestDto {
-  const _GetRestaurantsRequestDto({this.latitude, this.longitude, this.category, this.searchQuery, this.page, this.limit});
+  const _GetRestaurantsRequestDto({@JsonKey(includeToJson: false) this.latitude, @JsonKey(includeToJson: false) this.longitude, @JsonKey(includeToJson: false) this.category, @JsonKey(includeToJson: false) this.searchQuery, @JsonKey(includeToJson: false) this.page, @JsonKey(includeToJson: false) this.limit});
   factory _GetRestaurantsRequestDto.fromJson(Map<String, dynamic> json) => _$GetRestaurantsRequestDtoFromJson(json);
 
-@override final  double? latitude;
-@override final  double? longitude;
-@override final  String? category;
-@override final  String? searchQuery;
-@override final  int? page;
-@override final  int? limit;
+@override@JsonKey(includeToJson: false) final  double? latitude;
+@override@JsonKey(includeToJson: false) final  double? longitude;
+@override@JsonKey(includeToJson: false) final  String? category;
+@override@JsonKey(includeToJson: false) final  String? searchQuery;
+@override@JsonKey(includeToJson: false) final  int? page;
+@override@JsonKey(includeToJson: false) final  int? limit;
 
 /// Create a copy of GetRestaurantsRequestDto
 /// with the given fields replaced by the non-null parameter values.
@@ -251,7 +251,7 @@ abstract mixin class _$GetRestaurantsRequestDtoCopyWith<$Res> implements $GetRes
   factory _$GetRestaurantsRequestDtoCopyWith(_GetRestaurantsRequestDto value, $Res Function(_GetRestaurantsRequestDto) _then) = __$GetRestaurantsRequestDtoCopyWithImpl;
 @override @useResult
 $Res call({
- double? latitude, double? longitude, String? category, String? searchQuery, int? page, int? limit
+@JsonKey(includeToJson: false) double? latitude,@JsonKey(includeToJson: false) double? longitude,@JsonKey(includeToJson: false) String? category,@JsonKey(includeToJson: false) String? searchQuery,@JsonKey(includeToJson: false) int? page,@JsonKey(includeToJson: false) int? limit
 });
 
 

@@ -19,6 +19,19 @@ Map<String, dynamic> _authData() => {
 };
 
 void main() {
+  test('registration sends only Auth RegisterRequest fields', () {
+    const request = RegisterRequestDto(
+      email: 'new@test.dev',
+      password: 'secret',
+      role: 'USER',
+      name: 'Customer',
+    );
+    expect(request.toJson(), {
+      'email': 'new@test.dev',
+      'password': 'secret',
+      'role': 'USER',
+    });
+  });
   late Dio dio;
   late DioAdapter adapter;
   late AuthApiService service;

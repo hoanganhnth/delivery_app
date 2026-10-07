@@ -7,10 +7,15 @@ part 'search_restaurants_request_dto.g.dart';
 sealed class SearchRestaurantsRequestDto with _$SearchRestaurantsRequestDto {
   const factory SearchRestaurantsRequestDto({
     required String keyword,
+    @JsonKey(includeToJson: false)
     double? latitude,
+    @JsonKey(includeToJson: false)
     double? longitude,
+    @JsonKey(includeToJson: false)
     String? category,
+    @JsonKey(includeToJson: false)
     int? page,
+    @JsonKey(includeToJson: false)
     int? limit,
   }) = _SearchRestaurantsRequestDto;
 

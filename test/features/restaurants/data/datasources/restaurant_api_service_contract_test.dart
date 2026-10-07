@@ -37,8 +37,30 @@ Map<String, dynamic> _menuItem() => {
 };
 
 void main() {
+  test('catalog query DTOs send only controller-bound parameters', () {
+    const catalog = GetRestaurantsRequestDto(
+      latitude: 10.7,
+      longitude: 106.7,
+      category: 'pho',
+      searchQuery: 'pho',
+      page: 1,
+      limit: 20,
+    );
+    const search = SearchRestaurantsRequestDto(
+      keyword: 'pho',
+      latitude: 10.7,
+      longitude: 106.7,
+      category: 'pho',
+      page: 1,
+      limit: 20,
+    );
+    expect(catalog.toJson(), isEmpty);
+    expect(search.toJson(), {'keyword': 'pho'});
+  });
   test('canonical coordinates win over legacy, including explicit null', () {
-    final payload = _restaurant()..['addressLat'] = 1.0..['addressLng'] = 2.0;
+    final payload = _restaurant()
+      ..['addressLat'] = 1.0
+      ..['addressLng'] = 2.0;
     expect(RestaurantDto.fromJson(payload).addressLat, 10.7769);
     expect(RestaurantDto.fromJson(payload).addressLng, 106.7009);
     payload['latitude'] = null;

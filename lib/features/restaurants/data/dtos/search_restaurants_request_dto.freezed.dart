@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SearchRestaurantsRequestDto {
 
- String get keyword; double? get latitude; double? get longitude; String? get category; int? get page; int? get limit;
+ String get keyword;@JsonKey(includeToJson: false) double? get latitude;@JsonKey(includeToJson: false) double? get longitude;@JsonKey(includeToJson: false) String? get category;@JsonKey(includeToJson: false) int? get page;@JsonKey(includeToJson: false) int? get limit;
 /// Create a copy of SearchRestaurantsRequestDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $SearchRestaurantsRequestDtoCopyWith<$Res>  {
   factory $SearchRestaurantsRequestDtoCopyWith(SearchRestaurantsRequestDto value, $Res Function(SearchRestaurantsRequestDto) _then) = _$SearchRestaurantsRequestDtoCopyWithImpl;
 @useResult
 $Res call({
- String keyword, double? latitude, double? longitude, String? category, int? page, int? limit
+ String keyword,@JsonKey(includeToJson: false) double? latitude,@JsonKey(includeToJson: false) double? longitude,@JsonKey(includeToJson: false) String? category,@JsonKey(includeToJson: false) int? page,@JsonKey(includeToJson: false) int? limit
 });
 
 
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String keyword,  double? latitude,  double? longitude,  String? category,  int? page,  int? limit)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String keyword, @JsonKey(includeToJson: false)  double? latitude, @JsonKey(includeToJson: false)  double? longitude, @JsonKey(includeToJson: false)  String? category, @JsonKey(includeToJson: false)  int? page, @JsonKey(includeToJson: false)  int? limit)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SearchRestaurantsRequestDto() when $default != null:
 return $default(_that.keyword,_that.latitude,_that.longitude,_that.category,_that.page,_that.limit);case _:
@@ -176,7 +176,7 @@ return $default(_that.keyword,_that.latitude,_that.longitude,_that.category,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String keyword,  double? latitude,  double? longitude,  String? category,  int? page,  int? limit)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String keyword, @JsonKey(includeToJson: false)  double? latitude, @JsonKey(includeToJson: false)  double? longitude, @JsonKey(includeToJson: false)  String? category, @JsonKey(includeToJson: false)  int? page, @JsonKey(includeToJson: false)  int? limit)  $default,) {final _that = this;
 switch (_that) {
 case _SearchRestaurantsRequestDto():
 return $default(_that.keyword,_that.latitude,_that.longitude,_that.category,_that.page,_that.limit);}
@@ -193,7 +193,7 @@ return $default(_that.keyword,_that.latitude,_that.longitude,_that.category,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String keyword,  double? latitude,  double? longitude,  String? category,  int? page,  int? limit)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String keyword, @JsonKey(includeToJson: false)  double? latitude, @JsonKey(includeToJson: false)  double? longitude, @JsonKey(includeToJson: false)  String? category, @JsonKey(includeToJson: false)  int? page, @JsonKey(includeToJson: false)  int? limit)?  $default,) {final _that = this;
 switch (_that) {
 case _SearchRestaurantsRequestDto() when $default != null:
 return $default(_that.keyword,_that.latitude,_that.longitude,_that.category,_that.page,_that.limit);case _:
@@ -208,15 +208,15 @@ return $default(_that.keyword,_that.latitude,_that.longitude,_that.category,_tha
 @JsonSerializable()
 
 class _SearchRestaurantsRequestDto implements SearchRestaurantsRequestDto {
-  const _SearchRestaurantsRequestDto({required this.keyword, this.latitude, this.longitude, this.category, this.page, this.limit});
+  const _SearchRestaurantsRequestDto({required this.keyword, @JsonKey(includeToJson: false) this.latitude, @JsonKey(includeToJson: false) this.longitude, @JsonKey(includeToJson: false) this.category, @JsonKey(includeToJson: false) this.page, @JsonKey(includeToJson: false) this.limit});
   factory _SearchRestaurantsRequestDto.fromJson(Map<String, dynamic> json) => _$SearchRestaurantsRequestDtoFromJson(json);
 
 @override final  String keyword;
-@override final  double? latitude;
-@override final  double? longitude;
-@override final  String? category;
-@override final  int? page;
-@override final  int? limit;
+@override@JsonKey(includeToJson: false) final  double? latitude;
+@override@JsonKey(includeToJson: false) final  double? longitude;
+@override@JsonKey(includeToJson: false) final  String? category;
+@override@JsonKey(includeToJson: false) final  int? page;
+@override@JsonKey(includeToJson: false) final  int? limit;
 
 /// Create a copy of SearchRestaurantsRequestDto
 /// with the given fields replaced by the non-null parameter values.
@@ -251,7 +251,7 @@ abstract mixin class _$SearchRestaurantsRequestDtoCopyWith<$Res> implements $Sea
   factory _$SearchRestaurantsRequestDtoCopyWith(_SearchRestaurantsRequestDto value, $Res Function(_SearchRestaurantsRequestDto) _then) = __$SearchRestaurantsRequestDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String keyword, double? latitude, double? longitude, String? category, int? page, int? limit
+ String keyword,@JsonKey(includeToJson: false) double? latitude,@JsonKey(includeToJson: false) double? longitude,@JsonKey(includeToJson: false) String? category,@JsonKey(includeToJson: false) int? page,@JsonKey(includeToJson: false) int? limit
 });
 
 

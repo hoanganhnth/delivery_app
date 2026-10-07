@@ -66,6 +66,7 @@ dependencies:
 
 
 dev_dependencies:
+  analyzer: ^7.7.1 # Source-derived API route check (no handwritten route list).
   retrofit_generator: ^10.2.0
   build_runner: ^2.6.0
   intl_utils: ^2.8.1 # for localization

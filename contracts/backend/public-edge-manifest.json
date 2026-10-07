@@ -1,0 +1,2548 @@
+{
+  "format": 1,
+  "title": "Delivery public-edge route manifest",
+  "generatedFrom": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+  "scope": "Exact Spring Cloud Gateway route declarations. This projection does not auto-publish controllers and does not replace downstream authentication, role or ownership checks.",
+  "counts": {
+    "routes": 93,
+    "pathPatterns": 157,
+    "byGate": {
+      "always": 81,
+      "app.livestream.client-api-enabled": 10,
+      "app.payment.client-api-enabled": 2
+    }
+  },
+  "routes": [
+    {
+      "id": "analytics-service-admin-dashboard",
+      "paths": [
+        "/api/analytics/dashboard/admin"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "analytics-service",
+        "uriVariable": "analyticsServiceUri",
+        "property": "app.analytics-service.uri",
+        "defaultUri": "lb://analytics-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 478
+      }
+    },
+    {
+      "id": "auth-service-account-admin",
+      "paths": [
+        "/api/auth/accounts/{id:[0-9]+}"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "auth-service",
+        "uriVariable": "authServiceUri",
+        "property": "app.auth-service.uri",
+        "defaultUri": "lb://auth-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 120
+      }
+    },
+    {
+      "id": "auth-service-admin",
+      "paths": [
+        "/api/auth/admin/accounts/{id:[0-9]+}/block",
+        "/api/auth/admin/accounts/{id:[0-9]+}/unblock"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "auth-service",
+        "uriVariable": "authServiceUri",
+        "property": "app.auth-service.uri",
+        "defaultUri": "lb://auth-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 115
+      }
+    },
+    {
+      "id": "auth-service-firebase-chat-token",
+      "paths": [
+        "/api/auth/firebase/chat-token"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "auth-service",
+        "uriVariable": "authServiceUri",
+        "property": "app.auth-service.uri",
+        "defaultUri": "lb://auth-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 101
+      }
+    },
+    {
+      "id": "auth-service-jwks",
+      "paths": [
+        "/.well-known/jwks.json"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "auth-service",
+        "uriVariable": "authServiceUri",
+        "property": "app.auth-service.uri",
+        "defaultUri": "lb://auth-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 83
+      }
+    },
+    {
+      "id": "auth-service-protected",
+      "paths": [
+        "/api/auth/sessions"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "auth-service",
+        "uriVariable": "authServiceUri",
+        "property": "app.auth-service.uri",
+        "defaultUri": "lb://auth-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 123
+      }
+    },
+    {
+      "id": "auth-service-public",
+      "paths": [
+        "/api/auth/login",
+        "/api/auth/register",
+        "/api/auth/social-login",
+        "/api/auth/refresh-token",
+        "/api/auth/logout",
+        "/api/auth/forgot-password",
+        "/api/auth/reset-password",
+        "/api/auth/email-verification/request",
+        "/api/auth/email-verification/confirm"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "auth-service",
+        "uriVariable": "authServiceUri",
+        "property": "app.auth-service.uri",
+        "defaultUri": "lb://auth-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 86
+      }
+    },
+    {
+      "id": "auth-service-registration-status",
+      "paths": [
+        "/api/auth/registrations/{handle}"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "auth-service",
+        "uriVariable": "authServiceUri",
+        "property": "app.auth-service.uri",
+        "defaultUri": "lb://auth-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 98
+      }
+    },
+    {
+      "id": "auth-service-session-revoke",
+      "paths": [
+        "/api/auth/sessions/{deviceId}"
+      ],
+      "methods": [
+        "DELETE"
+      ],
+      "downstream": {
+        "service": "auth-service",
+        "uriVariable": "authServiceUri",
+        "property": "app.auth-service.uri",
+        "defaultUri": "lb://auth-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 126
+      }
+    },
+    {
+      "id": "delivery-service-batch-actions",
+      "paths": [
+        "/api/deliveries/batch/accept",
+        "/api/deliveries/batch/reject"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "delivery-service",
+        "uriVariable": "deliveryServiceUri",
+        "property": "app.delivery-service.uri",
+        "defaultUri": "lb://delivery-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 269
+      }
+    },
+    {
+      "id": "delivery-service-batch-snapshot",
+      "paths": [
+        "/api/deliveries/batches/{batchId}"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "delivery-service",
+        "uriVariable": "deliveryServiceUri",
+        "property": "app.delivery-service.uri",
+        "defaultUri": "lb://delivery-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 311
+      }
+    },
+    {
+      "id": "delivery-service-current-batch-offer",
+      "paths": [
+        "/api/deliveries/offers/current-batch"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "delivery-service",
+        "uriVariable": "deliveryServiceUri",
+        "property": "app.delivery-service.uri",
+        "defaultUri": "lb://delivery-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 307
+      }
+    },
+    {
+      "id": "delivery-service-current-offer",
+      "paths": [
+        "/api/deliveries/offers/current"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "delivery-service",
+        "uriVariable": "deliveryServiceUri",
+        "property": "app.delivery-service.uri",
+        "defaultUri": "lb://delivery-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 303
+      }
+    },
+    {
+      "id": "delivery-service-exception-actions",
+      "paths": [
+        "/api/deliveries/{deliveryId:[0-9]+}/exceptions/failed",
+        "/api/deliveries/{deliveryId:[0-9]+}/exceptions/retry",
+        "/api/deliveries/{deliveryId:[0-9]+}/exceptions/return/confirm"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "delivery-service",
+        "uriVariable": "deliveryServiceUri",
+        "property": "app.delivery-service.uri",
+        "defaultUri": "lb://delivery-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 288
+      }
+    },
+    {
+      "id": "delivery-service-exception-read",
+      "paths": [
+        "/api/deliveries/{deliveryId:[0-9]+}/exception"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "delivery-service",
+        "uriVariable": "deliveryServiceUri",
+        "property": "app.delivery-service.uri",
+        "defaultUri": "lb://delivery-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 294
+      }
+    },
+    {
+      "id": "delivery-service-pod-actions",
+      "paths": [
+        "/api/deliveries/{deliveryId:[0-9]+}/proofs/upload-intent",
+        "/api/deliveries/{deliveryId:[0-9]+}/proofs/{proofId:[0-9a-fA-F-]+}/confirm"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "delivery-service",
+        "uriVariable": "deliveryServiceUri",
+        "property": "app.delivery-service.uri",
+        "defaultUri": "lb://delivery-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 279
+      }
+    },
+    {
+      "id": "delivery-service-pod-read",
+      "paths": [
+        "/api/deliveries/{deliveryId:[0-9]+}/proofs/{proofId:[0-9a-fA-F-]+}/access"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "delivery-service",
+        "uriVariable": "deliveryServiceUri",
+        "property": "app.delivery-service.uri",
+        "defaultUri": "lb://delivery-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 284
+      }
+    },
+    {
+      "id": "delivery-service-read",
+      "paths": [
+        "/api/deliveries/{id:[0-9]+}",
+        "/api/deliveries/order/{orderId:[0-9]+}"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "delivery-service",
+        "uriVariable": "deliveryServiceUri",
+        "property": "app.delivery-service.uri",
+        "defaultUri": "lb://delivery-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 298
+      }
+    },
+    {
+      "id": "delivery-service-shipper-actions",
+      "paths": [
+        "/api/deliveries/accept",
+        "/api/deliveries/cancel-assignment"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "delivery-service",
+        "uriVariable": "deliveryServiceUri",
+        "property": "app.delivery-service.uri",
+        "defaultUri": "lb://delivery-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 264
+      }
+    },
+    {
+      "id": "delivery-service-shipper-read",
+      "paths": [
+        "/api/deliveries/shipper/{shipperId:[0-9]+}",
+        "/api/deliveries/shipper/{shipperId:[0-9]+}/active"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "delivery-service",
+        "uriVariable": "deliveryServiceUri",
+        "property": "app.delivery-service.uri",
+        "defaultUri": "lb://delivery-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 315
+      }
+    },
+    {
+      "id": "delivery-service-status",
+      "paths": [
+        "/api/deliveries/{id:[0-9]+}/status"
+      ],
+      "methods": [
+        "PUT"
+      ],
+      "downstream": {
+        "service": "delivery-service",
+        "uriVariable": "deliveryServiceUri",
+        "property": "app.delivery-service.uri",
+        "defaultUri": "lb://delivery-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 274
+      }
+    },
+    {
+      "id": "firebase-service",
+      "paths": [
+        "/api/firebase/register-token",
+        "/api/firebase/unregister-token"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "notification-service",
+        "uriVariable": "notificationServiceUri",
+        "property": "app.notification-service.uri",
+        "defaultUri": "lb://notification-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 362
+      }
+    },
+    {
+      "id": "flashsale-admin-create",
+      "paths": [
+        "/api/flashsales/admin/campaigns"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "flashsale-service",
+        "uriVariable": "flashsaleServiceUri",
+        "property": "app.flashsale-service.uri",
+        "defaultUri": "lb://flashsale-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 465
+      }
+    },
+    {
+      "id": "flashsale-admin-read",
+      "paths": [
+        "/api/flashsales/admin/campaigns",
+        "/api/flashsales/admin/campaigns/page",
+        "/api/flashsales/admin/campaigns/{id:[0-9]+}/items",
+        "/api/flashsales/admin/campaigns/{id:[0-9]+}/items/page"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "flashsale-service",
+        "uriVariable": "flashsaleServiceUri",
+        "property": "app.flashsale-service.uri",
+        "defaultUri": "lb://flashsale-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 458
+      }
+    },
+    {
+      "id": "flashsale-admin-update",
+      "paths": [
+        "/api/flashsales/admin/campaigns/{id:[0-9]+}/status",
+        "/api/flashsales/admin/items/{id:[0-9]+}/approve"
+      ],
+      "methods": [
+        "PUT"
+      ],
+      "downstream": {
+        "service": "flashsale-service",
+        "uriVariable": "flashsaleServiceUri",
+        "property": "app.flashsale-service.uri",
+        "defaultUri": "lb://flashsale-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 469
+      }
+    },
+    {
+      "id": "flashsale-public",
+      "paths": [
+        "/api/flashsales/public/campaigns",
+        "/api/flashsales/public/campaigns/{campaignId:[0-9]+}/items"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "flashsale-service",
+        "uriVariable": "flashsaleServiceUri",
+        "property": "app.flashsale-service.uri",
+        "defaultUri": "lb://flashsale-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 453
+      }
+    },
+    {
+      "id": "livestream-admin-list",
+      "paths": [
+        "/api/livestreams/admin"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "livestream-service",
+        "uriVariable": "livestreamServiceUri",
+        "property": "app.livestream-service.uri",
+        "defaultUri": "lb://livestream-service"
+      },
+      "featureGate": {
+        "mode": "property",
+        "variable": "livestreamClientApiEnabled",
+        "property": "app.livestream.client-api-enabled",
+        "default": false
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 504
+      }
+    },
+    {
+      "id": "livestream-host",
+      "paths": [
+        "/api/livestreams",
+        "/api/livestreams/{id:[0-9a-fA-F-]{36}}/start",
+        "/api/livestreams/{id:[0-9a-fA-F-]{36}}/end"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "livestream-service",
+        "uriVariable": "livestreamServiceUri",
+        "property": "app.livestream-service.uri",
+        "defaultUri": "lb://livestream-service"
+      },
+      "featureGate": {
+        "mode": "property",
+        "variable": "livestreamClientApiEnabled",
+        "property": "app.livestream.client-api-enabled",
+        "default": false
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 519
+      }
+    },
+    {
+      "id": "livestream-moderation",
+      "paths": [
+        "/api/livestreams/{id:[0-9a-fA-F-]{36}}/moderation"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "livestream-service",
+        "uriVariable": "livestreamServiceUri",
+        "property": "app.livestream-service.uri",
+        "defaultUri": "lb://livestream-service"
+      },
+      "featureGate": {
+        "mode": "property",
+        "variable": "livestreamClientApiEnabled",
+        "property": "app.livestream.client-api-enabled",
+        "default": false
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 543
+      }
+    },
+    {
+      "id": "livestream-products-host",
+      "paths": [
+        "/api/livestreams/{id:[0-9a-fA-F-]{36}}/products/pin"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "livestream-service",
+        "uriVariable": "livestreamServiceUri",
+        "property": "app.livestream-service.uri",
+        "defaultUri": "lb://livestream-service"
+      },
+      "featureGate": {
+        "mode": "property",
+        "variable": "livestreamClientApiEnabled",
+        "property": "app.livestream.client-api-enabled",
+        "default": false
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 534
+      }
+    },
+    {
+      "id": "livestream-products-read",
+      "paths": [
+        "/api/livestreams/{id:[0-9a-fA-F-]{36}}/products",
+        "/api/livestreams/{id:[0-9a-fA-F-]{36}}/products/pinned"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "livestream-service",
+        "uriVariable": "livestreamServiceUri",
+        "property": "app.livestream-service.uri",
+        "defaultUri": "lb://livestream-service"
+      },
+      "featureGate": {
+        "mode": "property",
+        "variable": "livestreamClientApiEnabled",
+        "property": "app.livestream.client-api-enabled",
+        "default": false
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 529
+      }
+    },
+    {
+      "id": "livestream-products-remove",
+      "paths": [
+        "/api/livestreams/{id:[0-9a-fA-F-]{36}}/products/{productId:[0-9]+}/pin",
+        "/api/livestreams/{id:[0-9a-fA-F-]{36}}/products/{productId:[0-9]+}"
+      ],
+      "methods": [
+        "DELETE"
+      ],
+      "downstream": {
+        "service": "livestream-service",
+        "uriVariable": "livestreamServiceUri",
+        "property": "app.livestream-service.uri",
+        "defaultUri": "lb://livestream-service"
+      },
+      "featureGate": {
+        "mode": "property",
+        "variable": "livestreamClientApiEnabled",
+        "property": "app.livestream.client-api-enabled",
+        "default": false
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 538
+      }
+    },
+    {
+      "id": "livestream-restaurant",
+      "paths": [
+        "/api/livestreams/restaurant/{restaurantId:[0-9]+}"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "livestream-service",
+        "uriVariable": "livestreamServiceUri",
+        "property": "app.livestream-service.uri",
+        "defaultUri": "lb://livestream-service"
+      },
+      "featureGate": {
+        "mode": "property",
+        "variable": "livestreamClientApiEnabled",
+        "property": "app.livestream.client-api-enabled",
+        "default": false
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 525
+      }
+    },
+    {
+      "id": "livestream-token-renewal",
+      "paths": [
+        "/api/livestreams/{id:[0-9a-fA-F-]{36}}/token/renew"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "livestream-service",
+        "uriVariable": "livestreamServiceUri",
+        "property": "app.livestream-service.uri",
+        "defaultUri": "lb://livestream-service"
+      },
+      "featureGate": {
+        "mode": "property",
+        "variable": "livestreamClientApiEnabled",
+        "property": "app.livestream.client-api-enabled",
+        "default": false
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 511
+      }
+    },
+    {
+      "id": "livestream-viewer",
+      "paths": [
+        "/api/livestreams/active",
+        "/api/livestreams/{id:[0-9a-fA-F-]{36}}"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "livestream-service",
+        "uriVariable": "livestreamServiceUri",
+        "property": "app.livestream-service.uri",
+        "defaultUri": "lb://livestream-service"
+      },
+      "featureGate": {
+        "mode": "property",
+        "variable": "livestreamClientApiEnabled",
+        "property": "app.livestream.client-api-enabled",
+        "default": false
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 506
+      }
+    },
+    {
+      "id": "livestream-viewer-join",
+      "paths": [
+        "/api/livestreams/{id:[0-9a-fA-F-]{36}}/join"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "livestream-service",
+        "uriVariable": "livestreamServiceUri",
+        "property": "app.livestream-service.uri",
+        "defaultUri": "lb://livestream-service"
+      },
+      "featureGate": {
+        "mode": "property",
+        "variable": "livestreamClientApiEnabled",
+        "property": "app.livestream.client-api-enabled",
+        "default": false
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 515
+      }
+    },
+    {
+      "id": "notification-service-delete",
+      "paths": [
+        "/api/notifications/{id:[0-9]+}"
+      ],
+      "methods": [
+        "DELETE"
+      ],
+      "downstream": {
+        "service": "notification-service",
+        "uriVariable": "notificationServiceUri",
+        "property": "app.notification-service.uri",
+        "defaultUri": "lb://notification-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 358
+      }
+    },
+    {
+      "id": "notification-service-read",
+      "paths": [
+        "/api/notifications/user/{userId:[0-9]+}",
+        "/api/notifications/unread",
+        "/api/notifications/unread-count",
+        "/api/notifications/preferences",
+        "/api/notifications/{id:[0-9]+}"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "notification-service",
+        "uriVariable": "notificationServiceUri",
+        "property": "app.notification-service.uri",
+        "defaultUri": "lb://notification-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 344
+      }
+    },
+    {
+      "id": "notification-service-update",
+      "paths": [
+        "/api/notifications/{id:[0-9]+}/read",
+        "/api/notifications/mark-all-read",
+        "/api/notifications/preferences/marketing"
+      ],
+      "methods": [
+        "PUT"
+      ],
+      "downstream": {
+        "service": "notification-service",
+        "uriVariable": "notificationServiceUri",
+        "property": "app.notification-service.uri",
+        "defaultUri": "lb://notification-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 352
+      }
+    },
+    {
+      "id": "order-service-admin-queries",
+      "paths": [
+        "/api/orders/all",
+        "/api/orders/status/{status}"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "order-service",
+        "uriVariable": "orderServiceUri",
+        "property": "app.order-service.uri",
+        "defaultUri": "lb://order-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 236
+      }
+    },
+    {
+      "id": "order-service-cancel",
+      "paths": [
+        "/api/orders/{id:[0-9]+}/cancel"
+      ],
+      "methods": [
+        "PUT"
+      ],
+      "downstream": {
+        "service": "order-service",
+        "uriVariable": "orderServiceUri",
+        "property": "app.order-service.uri",
+        "defaultUri": "lb://order-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 258
+      }
+    },
+    {
+      "id": "order-service-create",
+      "paths": [
+        "/api/orders",
+        "/api/orders/checkout-preview"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "order-service",
+        "uriVariable": "orderServiceUri",
+        "property": "app.order-service.uri",
+        "defaultUri": "lb://order-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 241
+      }
+    },
+    {
+      "id": "order-service-customer-self",
+      "paths": [
+        "/api/orders/my-orders"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "order-service",
+        "uriVariable": "orderServiceUri",
+        "property": "app.order-service.uri",
+        "defaultUri": "lb://order-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 250
+      }
+    },
+    {
+      "id": "order-service-read",
+      "paths": [
+        "/api/orders/{id:[0-9]+}"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "order-service",
+        "uriVariable": "orderServiceUri",
+        "property": "app.order-service.uri",
+        "defaultUri": "lb://order-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 246
+      }
+    },
+    {
+      "id": "order-service-restaurant-self",
+      "paths": [
+        "/api/orders/my-restaurant-orders"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "order-service",
+        "uriVariable": "orderServiceUri",
+        "property": "app.order-service.uri",
+        "defaultUri": "lb://order-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 254
+      }
+    },
+    {
+      "id": "promotion-service-admin-create",
+      "paths": [
+        "/api/promotions/platform"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "promotion-service",
+        "uriVariable": "promotionServiceUri",
+        "property": "app.promotion-service.uri",
+        "defaultUri": "lb://promotion-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 427
+      }
+    },
+    {
+      "id": "promotion-service-admin-delete",
+      "paths": [
+        "/api/promotions/{id:[0-9]+}"
+      ],
+      "methods": [
+        "DELETE"
+      ],
+      "downstream": {
+        "service": "promotion-service",
+        "uriVariable": "promotionServiceUri",
+        "property": "app.promotion-service.uri",
+        "defaultUri": "lb://promotion-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 446
+      }
+    },
+    {
+      "id": "promotion-service-admin-list",
+      "paths": [
+        "/api/promotions/admin",
+        "/api/promotions/admin/page"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "promotion-service",
+        "uriVariable": "promotionServiceUri",
+        "property": "app.promotion-service.uri",
+        "defaultUri": "lb://promotion-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 431
+      }
+    },
+    {
+      "id": "promotion-service-admin-shop-review-read",
+      "paths": [
+        "/api/promotions/admin/pending-shop"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "promotion-service",
+        "uriVariable": "promotionServiceUri",
+        "property": "app.promotion-service.uri",
+        "defaultUri": "lb://promotion-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 435
+      }
+    },
+    {
+      "id": "promotion-service-admin-shop-review-write",
+      "paths": [
+        "/api/promotions/admin/{id:[0-9]+}/approve",
+        "/api/promotions/admin/{id:[0-9]+}/reject",
+        "/api/promotions/admin/{id:[0-9]+}/pause",
+        "/api/promotions/admin/{id:[0-9]+}/resume"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "promotion-service",
+        "uriVariable": "promotionServiceUri",
+        "property": "app.promotion-service.uri",
+        "defaultUri": "lb://promotion-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 439
+      }
+    },
+    {
+      "id": "promotion-service-merchant-list",
+      "paths": [
+        "/api/promotions/merchant"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "promotion-service",
+        "uriVariable": "promotionServiceUri",
+        "property": "app.promotion-service.uri",
+        "defaultUri": "lb://promotion-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 415
+      }
+    },
+    {
+      "id": "promotion-service-shop-create",
+      "paths": [
+        "/api/promotions/shop"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "promotion-service",
+        "uriVariable": "promotionServiceUri",
+        "property": "app.promotion-service.uri",
+        "defaultUri": "lb://promotion-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 419
+      }
+    },
+    {
+      "id": "promotion-service-shop-list",
+      "paths": [
+        "/api/promotions/shop"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "promotion-service",
+        "uriVariable": "promotionServiceUri",
+        "property": "app.promotion-service.uri",
+        "defaultUri": "lb://promotion-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 423
+      }
+    },
+    {
+      "id": "promotion-service-user-capability",
+      "paths": [
+        "/api/promotions/capability"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "promotion-service",
+        "uriVariable": "promotionServiceUri",
+        "property": "app.promotion-service.uri",
+        "defaultUri": "lb://promotion-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 408
+      }
+    },
+    {
+      "id": "promotion-service-user-collect",
+      "paths": [
+        "/api/promotions/collect/{code}"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "promotion-service",
+        "uriVariable": "promotionServiceUri",
+        "property": "app.promotion-service.uri",
+        "defaultUri": "lb://promotion-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 400
+      }
+    },
+    {
+      "id": "promotion-service-user-vouchers",
+      "paths": [
+        "/api/promotions/my-vouchers"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "promotion-service",
+        "uriVariable": "promotionServiceUri",
+        "property": "app.promotion-service.uri",
+        "defaultUri": "lb://promotion-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 404
+      }
+    },
+    {
+      "id": "restaurant-admin-ratings-read",
+      "paths": [
+        "/api/restaurants/admin/ratings",
+        "/api/restaurants/admin/ratings/page"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "restaurant-service",
+        "uriVariable": "restaurantServiceUri",
+        "property": "app.restaurant-service.uri",
+        "defaultUri": "lb://restaurant-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 186
+      }
+    },
+    {
+      "id": "restaurant-admin-ratings-update",
+      "paths": [
+        "/api/restaurants/admin/ratings/{id:[0-9]+}/status"
+      ],
+      "methods": [
+        "PUT"
+      ],
+      "downstream": {
+        "service": "restaurant-service",
+        "uriVariable": "restaurantServiceUri",
+        "property": "app.restaurant-service.uri",
+        "defaultUri": "lb://restaurant-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 191
+      }
+    },
+    {
+      "id": "restaurant-catalog-public",
+      "paths": [
+        "/api/restaurants",
+        "/api/restaurants/page",
+        "/api/restaurants/search",
+        "/api/restaurants/{id:[0-9]+}",
+        "/api/restaurants/{restaurantId:[0-9]+}/ratings",
+        "/api/restaurants/{restaurantId:[0-9]+}/ratings/page"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "restaurant-service",
+        "uriVariable": "restaurantServiceUri",
+        "property": "app.restaurant-service.uri",
+        "defaultUri": "lb://restaurant-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 170
+      }
+    },
+    {
+      "id": "restaurant-create",
+      "paths": [
+        "/api/restaurants"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "restaurant-service",
+        "uriVariable": "restaurantServiceUri",
+        "property": "app.restaurant-service.uri",
+        "defaultUri": "lb://restaurant-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 212
+      }
+    },
+    {
+      "id": "restaurant-customer-ratings-self",
+      "paths": [
+        "/api/restaurants/me/ratings"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "restaurant-service",
+        "uriVariable": "restaurantServiceUri",
+        "property": "app.restaurant-service.uri",
+        "defaultUri": "lb://restaurant-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 204
+      }
+    },
+    {
+      "id": "restaurant-menu-create",
+      "paths": [
+        "/api/menu-items"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "restaurant-service",
+        "uriVariable": "restaurantServiceUri",
+        "property": "app.restaurant-service.uri",
+        "defaultUri": "lb://restaurant-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 223
+      }
+    },
+    {
+      "id": "restaurant-menu-inventory",
+      "paths": [
+        "/api/menu-items/{menuItemId:[0-9]+}/inventory"
+      ],
+      "methods": [
+        "GET",
+        "PUT"
+      ],
+      "downstream": {
+        "service": "restaurant-service",
+        "uriVariable": "restaurantServiceUri",
+        "property": "app.restaurant-service.uri",
+        "defaultUri": "lb://restaurant-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 229
+      }
+    },
+    {
+      "id": "restaurant-menu-public",
+      "paths": [
+        "/api/menu-items/restaurant/{restaurantId:[0-9]+}",
+        "/api/menu-items/restaurant/{restaurantId:[0-9]+}/page",
+        "/api/menu-items/restaurant/{restaurantId:[0-9]+}/available",
+        "/api/menu-items/restaurant/{restaurantId:[0-9]+}/available/page"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "restaurant-service",
+        "uriVariable": "restaurantServiceUri",
+        "property": "app.restaurant-service.uri",
+        "defaultUri": "lb://restaurant-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 179
+      }
+    },
+    {
+      "id": "restaurant-menu-self",
+      "paths": [
+        "/api/menu-items/my-menu-items",
+        "/api/menu-items/my-menu-items/page"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "restaurant-service",
+        "uriVariable": "restaurantServiceUri",
+        "property": "app.restaurant-service.uri",
+        "defaultUri": "lb://restaurant-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 218
+      }
+    },
+    {
+      "id": "restaurant-menu-update-delete",
+      "paths": [
+        "/api/menu-items/{id:[0-9]+}"
+      ],
+      "methods": [
+        "PUT",
+        "DELETE"
+      ],
+      "downstream": {
+        "service": "restaurant-service",
+        "uriVariable": "restaurantServiceUri",
+        "property": "app.restaurant-service.uri",
+        "defaultUri": "lb://restaurant-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 226
+      }
+    },
+    {
+      "id": "restaurant-order-actions",
+      "paths": [
+        "/api/restaurants/orders/{orderId:[0-9]+}/confirm",
+        "/api/restaurants/orders/{orderId:[0-9]+}/reject"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "restaurant-service",
+        "uriVariable": "restaurantServiceUri",
+        "property": "app.restaurant-service.uri",
+        "defaultUri": "lb://restaurant-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 195
+      }
+    },
+    {
+      "id": "restaurant-owner-self",
+      "paths": [
+        "/api/restaurants/my-restaurants"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "restaurant-service",
+        "uriVariable": "restaurantServiceUri",
+        "property": "app.restaurant-service.uri",
+        "defaultUri": "lb://restaurant-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 200
+      }
+    },
+    {
+      "id": "restaurant-rating-submit",
+      "paths": [
+        "/api/restaurants/{restaurantId:[0-9]+}/ratings"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "restaurant-service",
+        "uriVariable": "restaurantServiceUri",
+        "property": "app.restaurant-service.uri",
+        "defaultUri": "lb://restaurant-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 208
+      }
+    },
+    {
+      "id": "restaurant-serviceability-zones",
+      "paths": [
+        "/api/restaurants/{restaurantId:[0-9]+}/serviceability-zones",
+        "/api/restaurants/{restaurantId:[0-9]+}/serviceability-zones/{zoneId:[0-9]+}"
+      ],
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ],
+      "downstream": {
+        "service": "restaurant-service",
+        "uriVariable": "restaurantServiceUri",
+        "property": "app.restaurant-service.uri",
+        "defaultUri": "lb://restaurant-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 165
+      }
+    },
+    {
+      "id": "restaurant-update-delete",
+      "paths": [
+        "/api/restaurants/{id:[0-9]+}"
+      ],
+      "methods": [
+        "PUT",
+        "DELETE"
+      ],
+      "downstream": {
+        "service": "restaurant-service",
+        "uriVariable": "restaurantServiceUri",
+        "property": "app.restaurant-service.uri",
+        "defaultUri": "lb://restaurant-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 215
+      }
+    },
+    {
+      "id": "search-service-public",
+      "paths": [
+        "/api/search/restaurants",
+        "/api/search/dishes"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "search-service",
+        "uriVariable": "searchServiceUri",
+        "property": "app.search-service.uri",
+        "defaultUri": "lb://search-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 104
+      }
+    },
+    {
+      "id": "settlement-service-admin-read",
+      "paths": [
+        "/api/settlement/admin/balances",
+        "/api/settlement/admin/transactions",
+        "/api/settlement/admin/transactions/pending",
+        "/api/settlement/admin/revenue",
+        "/api/settlement/admin/refunds",
+        "/api/settlement/admin/refunds/{refundId:[0-9a-fA-F-]+}"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "settlement-service",
+        "uriVariable": "settlementServiceUri",
+        "property": "app.settlement-service.uri",
+        "defaultUri": "lb://settlement-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 390
+      }
+    },
+    {
+      "id": "settlement-service-customer-payment-create",
+      "paths": [
+        "/api/settlement/payments/create"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "settlement-service",
+        "uriVariable": "settlementServiceUri",
+        "property": "app.settlement-service.uri",
+        "defaultUri": "lb://settlement-service"
+      },
+      "featureGate": {
+        "mode": "property",
+        "variable": "paymentClientApiEnabled",
+        "property": "app.payment.client-api-enabled",
+        "default": false
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 494
+      }
+    },
+    {
+      "id": "settlement-service-customer-payment-reference",
+      "paths": [
+        "/api/settlement/payments/ref/{paymentRef}"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "settlement-service",
+        "uriVariable": "settlementServiceUri",
+        "property": "app.settlement-service.uri",
+        "defaultUri": "lb://settlement-service"
+      },
+      "featureGate": {
+        "mode": "property",
+        "variable": "paymentClientApiEnabled",
+        "property": "app.payment.client-api-enabled",
+        "default": false
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 498
+      }
+    },
+    {
+      "id": "settlement-service-customer-refund-read",
+      "paths": [
+        "/api/settlement/refunds/my"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "settlement-service",
+        "uriVariable": "settlementServiceUri",
+        "property": "app.settlement-service.uri",
+        "defaultUri": "lb://settlement-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 386
+      }
+    },
+    {
+      "id": "shipper-service-admin",
+      "paths": [
+        "/api/shippers",
+        "/api/shippers/online",
+        "/api/shippers/{id:[0-9]+}"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "shipper-service",
+        "uriVariable": "shipperServiceUri",
+        "property": "app.shipper-service.uri",
+        "defaultUri": "lb://shipper-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 335
+      }
+    },
+    {
+      "id": "shipper-service-online",
+      "paths": [
+        "/api/shippers/online-status"
+      ],
+      "methods": [
+        "PATCH"
+      ],
+      "downstream": {
+        "service": "shipper-service",
+        "uriVariable": "shipperServiceUri",
+        "property": "app.shipper-service.uri",
+        "defaultUri": "lb://shipper-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 332
+      }
+    },
+    {
+      "id": "shipper-service-self",
+      "paths": [
+        "/api/shippers/my-profile",
+        "/api/shippers/me/ratings"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "shipper-service",
+        "uriVariable": "shipperServiceUri",
+        "property": "app.shipper-service.uri",
+        "defaultUri": "lb://shipper-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 324
+      }
+    },
+    {
+      "id": "shipper-service-self-create",
+      "paths": [
+        "/api/shippers"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "shipper-service",
+        "uriVariable": "shipperServiceUri",
+        "property": "app.shipper-service.uri",
+        "defaultUri": "lb://shipper-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 321
+      }
+    },
+    {
+      "id": "shipper-service-self-update",
+      "paths": [
+        "/api/shippers"
+      ],
+      "methods": [
+        "PUT"
+      ],
+      "downstream": {
+        "service": "shipper-service",
+        "uriVariable": "shipperServiceUri",
+        "property": "app.shipper-service.uri",
+        "defaultUri": "lb://shipper-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 329
+      }
+    },
+    {
+      "id": "simulator-admin-control",
+      "paths": [
+        "/api/admin/simulations",
+        "/api/admin/simulations/**"
+      ],
+      "methods": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "downstream": {
+        "service": "simulator-service",
+        "uriVariable": "simulatorServiceUri",
+        "property": "app.simulator-service.uri",
+        "defaultUri": "lb://simulator-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 485
+      },
+      "rewrite": {
+        "from": "/api/admin/simulations(?<segment>/?.*)",
+        "to": "/api/simulator${segment}"
+      }
+    },
+    {
+      "id": "tracking-service-shipper",
+      "paths": [
+        "/api/tracking/shipper-locations/update",
+        "/api/tracking/shipper-locations/offline"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "tracking-service",
+        "uriVariable": "trackingServiceUri",
+        "property": "app.tracking-service.uri",
+        "defaultUri": "lb://tracking-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 371
+      }
+    },
+    {
+      "id": "tracking-service-ws",
+      "paths": [
+        "/ws/shipper-locations"
+      ],
+      "methods": [
+        "ANY"
+      ],
+      "downstream": {
+        "service": "tracking-service",
+        "uriVariable": "trackingServiceWsUri",
+        "property": "app.tracking-service.ws-uri",
+        "defaultUri": "lb:ws://tracking-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 378
+      }
+    },
+    {
+      "id": "user-address-service-create",
+      "paths": [
+        "/api/addresses/users/{userId:[0-9]+}/addresses"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "user-service",
+        "uriVariable": "userServiceUri",
+        "property": "app.user-service.uri",
+        "defaultUri": "lb://user-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 145
+      }
+    },
+    {
+      "id": "user-address-service-default",
+      "paths": [
+        "/api/addresses/{id:[0-9]+}/default"
+      ],
+      "methods": [
+        "PATCH"
+      ],
+      "downstream": {
+        "service": "user-service",
+        "uriVariable": "userServiceUri",
+        "property": "app.user-service.uri",
+        "defaultUri": "lb://user-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 153
+      }
+    },
+    {
+      "id": "user-address-service-delete",
+      "paths": [
+        "/api/addresses/{id:[0-9]+}"
+      ],
+      "methods": [
+        "DELETE"
+      ],
+      "downstream": {
+        "service": "user-service",
+        "uriVariable": "userServiceUri",
+        "property": "app.user-service.uri",
+        "defaultUri": "lb://user-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 157
+      }
+    },
+    {
+      "id": "user-address-service-read",
+      "paths": [
+        "/api/addresses/users/{userId:[0-9]+}/addresses",
+        "/api/addresses/{id:[0-9]+}"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "user-service",
+        "uriVariable": "userServiceUri",
+        "property": "app.user-service.uri",
+        "defaultUri": "lb://user-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 140
+      }
+    },
+    {
+      "id": "user-address-service-update",
+      "paths": [
+        "/api/addresses/{id:[0-9]+}"
+      ],
+      "methods": [
+        "PUT"
+      ],
+      "downstream": {
+        "service": "user-service",
+        "uriVariable": "userServiceUri",
+        "property": "app.user-service.uri",
+        "defaultUri": "lb://user-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 149
+      }
+    },
+    {
+      "id": "user-service-admin-read",
+      "paths": [
+        "/api/users/admin/statistics",
+        "/api/users/admin/all"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "downstream": {
+        "service": "user-service",
+        "uriVariable": "userServiceUri",
+        "property": "app.user-service.uri",
+        "defaultUri": "lb://user-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 135
+      }
+    },
+    {
+      "id": "user-service-current",
+      "paths": [
+        "/api/users"
+      ],
+      "methods": [
+        "GET",
+        "PUT"
+      ],
+      "downstream": {
+        "service": "user-service",
+        "uriVariable": "userServiceUri",
+        "property": "app.user-service.uri",
+        "defaultUri": "lb://user-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 132
+      }
+    },
+    {
+      "id": "user-service-registration",
+      "paths": [
+        "/api/users/registrations"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "downstream": {
+        "service": "user-service",
+        "uriVariable": "userServiceUri",
+        "property": "app.user-service.uri",
+        "defaultUri": "lb://user-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 109
+      }
+    },
+    {
+      "id": "web-bff-service",
+      "paths": [
+        "/bff/**"
+      ],
+      "methods": [
+        "ANY"
+      ],
+      "downstream": {
+        "service": "web-bff-service",
+        "uriVariable": "webBffServiceUri",
+        "property": "app.web-bff-service.uri",
+        "defaultUri": "lb://web-bff-service"
+      },
+      "featureGate": {
+        "mode": "always"
+      },
+      "rateLimit": {
+        "classification": "request-dependent",
+        "source": "api-gateway/src/main/java/com/delivery/api_gateway/ratelimit/GatewayRateLimitFilter.java"
+      },
+      "source": {
+        "file": "api-gateway/src/main/java/com/delivery/api_gateway/config/GatewayRouteConfig.java",
+        "line": 80
+      }
+    }
+  ]
+}

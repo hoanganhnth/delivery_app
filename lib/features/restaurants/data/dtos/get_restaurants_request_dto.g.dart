@@ -19,11 +19,4 @@ _GetRestaurantsRequestDto _$GetRestaurantsRequestDtoFromJson(
 
 Map<String, dynamic> _$GetRestaurantsRequestDtoToJson(
   _GetRestaurantsRequestDto instance,
-) => <String, dynamic>{
-  'latitude': instance.latitude,
-  'longitude': instance.longitude,
-  'category': instance.category,
-  'searchQuery': instance.searchQuery,
-  'page': instance.page,
-  'limit': instance.limit,
-};
+) => <String, dynamic>{};

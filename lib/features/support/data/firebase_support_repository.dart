@@ -195,7 +195,12 @@ final class FirebaseSupportRepository implements SupportRepository {
 
     final response = await _dio.post(ApiConstants.firebaseChatToken);
     final envelope = response.data;
-    final payload = envelope is Map ? envelope['data'] : null;
+    // Backend BaseResponse: only status == 1 is a success; never trust data
+    // carried by a failed envelope.
+    if (envelope is! Map || envelope['status'] != 1) {
+      throw const SupportBackendUnavailableException();
+    }
+    final payload = envelope['data'];
     final token = payload is Map ? payload['token'] : null;
     final principalId = payload is Map ? payload['principalId'] : null;
     if (token is! String ||

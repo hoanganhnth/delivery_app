@@ -17,8 +17,8 @@ _UserProfileDto _$UserProfileDtoFromJson(Map<String, dynamic> json) =>
       dob: json['dob'] as String?,
       avatarUrl: json['avatarUrl'] as String?,
       address: json['address'] as String?,
-      createdAtString: json['createdAtString'] as String?,
-      updatedAtString: json['updatedAtString'] as String?,
+      createdAtString: json['createdAt'] as String?,
+      updatedAtString: json['updatedAt'] as String?,
     );
 
 Map<String, dynamic> _$UserProfileDtoToJson(_UserProfileDto instance) =>
@@ -32,6 +32,6 @@ Map<String, dynamic> _$UserProfileDtoToJson(_UserProfileDto instance) =>
       'dob': instance.dob,
       'avatarUrl': instance.avatarUrl,
       'address': instance.address,
-      'createdAtString': instance.createdAtString,
-      'updatedAtString': instance.updatedAtString,
+      'createdAt': instance.createdAtString,
+      'updatedAt': instance.updatedAtString,
     };

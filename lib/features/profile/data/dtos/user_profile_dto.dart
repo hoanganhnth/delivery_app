@@ -16,8 +16,8 @@ sealed class UserProfileDto with _$UserProfileDto {
     String? dob,
     String? avatarUrl,
     String? address,
-    String? createdAtString,
-    String? updatedAtString,
+    @JsonKey(name: 'createdAt') String? createdAtString,
+    @JsonKey(name: 'updatedAt') String? updatedAtString,
   }) = _UserProfileDto;
 
   factory UserProfileDto.fromJson(Map<String, dynamic> json) =>
