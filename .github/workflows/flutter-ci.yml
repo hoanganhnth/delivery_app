@@ -4,53 +4,18 @@ on:
   push:
     branches:
       - main
-     
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
-  required:
-    name: required / analyze-test-debug-build
-    runs-on: ubuntu-latest
-
-    steps:
-      # 1️⃣ Clone source code
-      - name: Checkout source
-        uses: actions/checkout@v4
-
-      # 2️⃣ Cài đặt Flutter SDK
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.32.8"
-          cache: true
-
-      # The real .env is intentionally ignored. CI only needs the tracked
-      # placeholder so Flutter can package the dotenv asset without exposing
-      # a Mapbox/Firebase credential.
-      - name: Prepare non-secret environment asset
-        run: cp .env.example .env
-
-      # 3️⃣ Lấy dependencies
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Analyze
-        run: flutter analyze
-
-      # 5️⃣ Chạy test
-      - name: Run tests with coverage
-        run: flutter test --coverage
-
-      # 6️⃣ Build APK
-      - name: Build debug APK without an emulator
-        run: flutter build apk --debug --dart-define=API_BASE_URL=http://10.0.2.2:8079
-
-      # 7️⃣ Upload artifact để tải về
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: flutter-reports-and-debug-apk
-          path: |
-            coverage/lcov.info
-            build/app/outputs/flutter-apk/app-debug.apk
-          if-no-files-found: warn
+  build:
+    name: "Customer App CI"
+    uses: hoanganhnth/cicd.centralized-pipelines/.github/workflows/build-flutter.yml@main
+    with:
+      app_name: delivery-app
+      flutter_version: "3.32.8"
+      build_target: apk
+      build_args: "--debug --dart-define=API_BASE_URL=http://10.0.2.2:8079"
+      run_coverage: true
